@@ -7,15 +7,15 @@ class SettingsListItemModel {
   final String asset;
   final String actionUri;
   SettingsListItemModel({
-    @required this.title,
-    @required this.asset,
-    @required this.actionUri,
+    required this.title,
+    required this.asset,
+    required this.actionUri,
   });
 
   SettingsListItemModel copyWith({
-    String title,
-    String asset,
-    String actionUri,
+    required String title,
+    required String asset,
+    required String actionUri,
   }) {
     return SettingsListItemModel(
       title: title ?? this.title,

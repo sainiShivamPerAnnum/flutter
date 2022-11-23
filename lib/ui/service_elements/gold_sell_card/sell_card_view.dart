@@ -20,7 +20,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class SellCardView extends StatelessWidget {
   final InvestmentType investmentType;
 
-  const SellCardView({Key key, @required this.investmentType})
+  const SellCardView({Key? key, required this.investmentType})
       : super(key: key);
 
   @override
@@ -85,7 +85,7 @@ class SellCardView extends StatelessWidget {
                           ),
                         );
                       },
-                      isActive: sellService.getButtonAvailibility(),
+                      isActive: sellService!.getButtonAvailibility(),
                     ),
                   ],
                 ),
@@ -107,7 +107,7 @@ class SellCardView extends StatelessWidget {
                 ),
               ),
               SizedBox(height: SizeConfig.padding12),
-              if (!sellService.isKYCVerified || sellService.userPan == null)
+              if (!sellService.isKYCVerified || sellService.userKycData == null)
                 SellActionButton(
                   title: 'Complete KYC',
                   onTap: navigateToKycScreen,
@@ -152,14 +152,14 @@ class SellCardView extends StatelessWidget {
       "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
       "Amount invested in Flo": AnalyticsProperties.getFelloFloAmount(),
     });
-    return AppState.delegate.appState.currentAction = PageAction(
+    return AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: KycDetailsPageConfig,
     );
   }
 
   navigateToBankDetailsScreen() =>
-      AppState.delegate.appState.currentAction = PageAction(
+      AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addPage,
         page: BankDetailsPageConfig,
       );

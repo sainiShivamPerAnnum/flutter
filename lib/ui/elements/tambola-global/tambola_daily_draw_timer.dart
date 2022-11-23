@@ -12,11 +12,11 @@ import 'package:provider/provider.dart';
 
 class DailyPicksTimer extends StatefulWidget {
   final Widget replacementWidget;
-  final Color bgColor;
-  final MainAxisAlignment alignment;
+  final Color? bgColor;
+  final MainAxisAlignment? alignment;
 
   DailyPicksTimer({
-    @required this.replacementWidget,
+    required this.replacementWidget,
     this.bgColor,
     this.alignment,
   });
@@ -25,12 +25,12 @@ class DailyPicksTimer extends StatefulWidget {
 }
 
 class _DailyPicksTimerState extends State<DailyPicksTimer> {
-  Duration duration;
-  Timer timer;
+  late Duration duration;
+  Timer? timer;
   bool showClock = true;
   bool countDown = true;
-  BaseUtil baseProvider;
-  TambolaService _tambolaService = locator<TambolaService>();
+  BaseUtil? baseProvider;
+  TambolaService? _tambolaService = locator<TambolaService>();
 
   @override
   void initState() {
@@ -55,7 +55,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
 
   void addTime() async {
     if (!getDifferance().isNegative) {
-      await _tambolaService.fetchWeeklyPicks(forcedRefresh: true);
+      await _tambolaService?.fetchWeeklyPicks(forcedRefresh: true);
       setState(() {
         showClock = false;
         timer?.cancel();
@@ -99,9 +99,9 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
     return widget.replacementWidget;
   }
 
-  Widget buildTimeCard({@required String time}) => Container(
-        height: SizeConfig.screenWidth * 0.16,
-        width: SizeConfig.screenWidth * 0.16,
+  Widget buildTimeCard({required String time}) => Container(
+        height: SizeConfig.screenWidth! * 0.16,
+        width: SizeConfig.screenWidth! * 0.16,
         // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
         decoration: BoxDecoration(
           color: UiConstants.kBackgroundColor,
@@ -114,13 +114,13 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
 
 class TimerDots extends StatelessWidget {
   const TimerDots({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: SizeConfig.screenWidth * 0.14,
+      height: SizeConfig.screenWidth! * 0.14,
       width: SizeConfig.padding20,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

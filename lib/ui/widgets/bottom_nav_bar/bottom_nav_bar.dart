@@ -1,3 +1,4 @@
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -14,7 +15,7 @@ import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatelessWidget {
   final RootViewModel parentModel;
-  BottomNavBar({@required this.parentModel});
+  BottomNavBar({required this.parentModel});
 
   final List<NavBarItemModel> navbarItems = [
     NavBarItemModel('Journey', Assets.navJourneyLottie),
@@ -80,8 +81,7 @@ class NavBarIcon extends StatelessWidget {
   final bool animate;
   final NavBarItemModel item;
   final TextStyle style;
-  NavBarIcon(
-      {@required this.animate, @required this.item, @required this.style});
+  NavBarIcon({required this.animate, required this.item, required this.style});
   @override
   Widget build(BuildContext context) {
     return Container(

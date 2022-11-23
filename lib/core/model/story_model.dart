@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class StoryItemModel {
   static Log log = new Log('StoryItemModel');
 
-  final String _richText;
-  final String _assetUri;
+  final String? _richText;
+  final String? _assetUri;
 
   static final helper =
       HelperModel<StoryItemModel>((map) => StoryItemModel.fromMap(map));
@@ -16,7 +16,7 @@ class StoryItemModel {
   StoryItemModel.fromMap(Map<String, dynamic> cMap)
       : this(cMap['richText'], cMap['asset']);
 
-  String get richText => this._richText;
+  String? get richText => this._richText;
 
-  String get assetUri => this._assetUri;
+  String? get assetUri => this._assetUri;
 }

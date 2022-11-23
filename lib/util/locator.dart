@@ -91,6 +91,8 @@ import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_v
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
+import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
+import 'package:felloapp/ui/service_elements/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
@@ -219,4 +221,5 @@ void setupLocator() {
   locator.registerFactory(() => SourceAdaptiveAssetViewModel());
   locator.registerFactory(() => SubscriptionCardViewModel());
   locator.registerFactory(() => TambolaCardModel());
+  locator.registerFactory(() => UsernameInputViewModel());
 }

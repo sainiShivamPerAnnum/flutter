@@ -22,57 +22,56 @@ import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.d
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class JourneyPageViewModel extends BaseViewModel {
-  final logger = locator<CustomLogger>();
+  final CustomLogger? logger = locator<CustomLogger>();
 
-  final _dbModel = locator<DBModel>();
-  final _journeyService = locator<JourneyService>();
-  final _userService = locator<UserService>();
-  final _analyticsService = locator<AnalyticsService>();
+  final DBModel? _dbModel = locator<DBModel>();
+  final JourneyService? _journeyService = locator<JourneyService>();
+  final UserService? _userService = locator<UserService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
-  DocumentSnapshot lastDoc;
+  DocumentSnapshot? lastDoc;
 
-  get avatarAnimation => _journeyService.avatarAnimation;
-  List<JourneyPage> get pages => _journeyService.pages;
+  get avatarAnimation => _journeyService!.avatarAnimation;
+  List<JourneyPage>? get pages => _journeyService!.pages;
   List<AvatarPathModel> get customPathDataList =>
-      _journeyService.customPathDataList;
+      _journeyService!.customPathDataList;
   List<MilestoneModel> get currentMilestoneList =>
-      _journeyService.currentMilestoneList;
+      _journeyService!.currentMilestoneList;
   List<JourneyPathModel> get journeyPathItemsList =>
-      _journeyService.journeyPathItemsList;
+      _journeyService!.journeyPathItemsList;
 
   List<MilestoneModel> get completedMilestoneList =>
-      _journeyService.completedMilestoneList;
+      _journeyService!.completedMilestoneList;
   List<GoldenTicket> get completedMilestonePrizeList =>
-      _journeyService.completedMilestonesPrizeList;
-  ScrollController get mainController => _journeyService.mainController;
+      _journeyService!.completedMilestonesPrizeList;
+  ScrollController? get mainController => _journeyService!.mainController;
 
   // set avatarAnimation(value) => this._avatarAnimation = value;
-  double get pageWidth => _journeyService.pageWidth;
-  double get pageHeight => _journeyService.pageHeight;
-  double get currentFullViewHeight => _journeyService.currentFullViewHeight;
-  int get lastPage => _journeyService.lastPage;
-  int get startPage => _journeyService.startPage;
-  int get pageCount => _journeyService.pageCount;
-  int get avatarActiveMilestoneLevel => _journeyService.avatarRemoteMlIndex;
+  double? get pageWidth => _journeyService!.pageWidth;
+  double? get pageHeight => _journeyService!.pageHeight;
+  double? get currentFullViewHeight => _journeyService!.currentFullViewHeight;
+  int get lastPage => _journeyService!.lastPage;
+  int get startPage => _journeyService!.startPage;
+  int get pageCount => _journeyService!.pageCount;
+  int? get avatarActiveMilestoneLevel => _journeyService!.avatarRemoteMlIndex;
   int userMilestoneLevel = 1, userJourneyLevel = 1;
   bool _isLoading = false,
       isEnd = false,
       _isRefreshing = false,
       _isLoaderRequired = false;
 
-  AnimationController get controller => _journeyService.controller;
+  AnimationController? get controller => _journeyService!.controller;
 
-  Offset get avatarPosition => _journeyService.avatarPosition;
+  Offset? get avatarPosition => _journeyService!.avatarPosition;
 
-  set controller(AnimationController c) {
-    _journeyService.controller = c;
+  set controller(AnimationController? c) {
+    _journeyService!.controller = c;
   }
 
-  Path get avatarPath => _journeyService.avatarPath;
+  Path? get avatarPath => _journeyService!.avatarPath;
 
   // set controller(value) => this._controller = value;
 
@@ -100,46 +99,47 @@ class JourneyPageViewModel extends BaseViewModel {
   }
 
   journeyRepo() {
-    print(_journeyService.vsync.toString());
+    print(_journeyService!.vsync.toString());
   }
 
 //Milestones helper getter methods
-  isComplete(int index) => (_journeyService.avatarRemoteMlIndex > index);
-  isOngoing(int index) => (_journeyService.avatarRemoteMlIndex == index);
-  isInComplete(int index) => (_journeyService.avatarRemoteMlIndex < index);
+  isComplete(int index) => (_journeyService!.avatarRemoteMlIndex > index);
+  isOngoing(int index) => (_journeyService!.avatarRemoteMlIndex == index);
+  isInComplete(int? index) => (_journeyService!.avatarRemoteMlIndex < index);
 
   init(TickerProvider ticker) async {
     log("Journey VM init Called");
     isLoading = true;
-    _journeyService.vsync = ticker;
-    logger.d("Pages length: ${_journeyService.pages.length}");
-    _journeyService.getAvatarCachedMilestoneIndex();
-    await _journeyService.updateUserJourneyStats();
-    if (_journeyService.isThereAnyMilestoneLevelChange()) {
-      _journeyService.createPathForAvatarAnimation(
-          _journeyService.avatarCachedMlIndex,
-          _journeyService.avatarRemoteMlIndex);
-      _journeyService.createAvatarAnimationObject();
+    _journeyService!.vsync = ticker;
+    logger!.d("Pages length: ${_journeyService!.pages!.length ?? 0}");
+    _journeyService!.getAvatarCachedMilestoneIndex();
+    await _journeyService!.updateUserJourneyStats();
+    if (_journeyService!.isThereAnyMilestoneLevelChange()!) {
+      _journeyService!.createPathForAvatarAnimation(
+          _journeyService!.avatarCachedMlIndex,
+          _journeyService!.avatarRemoteMlIndex);
+      _journeyService!.createAvatarAnimationObject();
     } else {
-      _journeyService.placeAvatarAtTheCurrentMileStone();
+      _journeyService!.placeAvatarAtTheCurrentMileStone();
     }
 
-    _journeyService.mainController = ScrollController(initialScrollOffset: 600);
+    _journeyService!.mainController =
+        ScrollController(initialScrollOffset: 600);
     isLoading = false;
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
-      if (_journeyService.avatarRemoteMlIndex < 3) {
-        await _journeyService.mainController.animateTo(
+      if (_journeyService!.avatarRemoteMlIndex < 3) {
+        await _journeyService!.mainController!.animateTo(
           0,
           duration: const Duration(seconds: 2),
           curve: Curves.easeOutCubic,
         );
       } else
-        await _journeyService.scrollPageToAvatarPosition();
-      await _journeyService.animateAvatar();
-      _journeyService.updateRewardSTooltips();
-      _journeyService.mainController.addListener(() {
-        if (_journeyService.mainController.offset >
-            _journeyService.mainController.position.maxScrollExtent) {
+        await _journeyService!.scrollPageToAvatarPosition();
+      await _journeyService!.animateAvatar();
+      _journeyService!.updateRewardSTooltips();
+      _journeyService!.mainController!.addListener(() {
+        if (_journeyService!.mainController!.offset >
+            _journeyService!.mainController!.position.maxScrollExtent) {
           if (!canMorePagesBeFetched())
             return updatingJourneyView();
           else
@@ -148,15 +148,15 @@ class JourneyPageViewModel extends BaseViewModel {
       });
     });
 
-    checkIfUserIsNewAndNeedsStoryView();
+    // checkIfUserIsNewAndNeedsStoryView();
   }
 
   checkIfUserIsNewAndNeedsStoryView() {
     Future.delayed(
       Duration(seconds: 4),
       () {
-        if (_userService.userJourneyStats.mlIndex == 1 &&
-            !_journeyService.isUserJourneyOnboarded) {
+        if (_userService!.userJourneyStats!.mlIndex == 1 &&
+            !_journeyService!.isUserJourneyOnboarded) {
           openStoryView();
         }
       },
@@ -164,11 +164,11 @@ class JourneyPageViewModel extends BaseViewModel {
   }
 
   openStoryView() {
-    _journeyService.isJourneyOnboardingInView = true;
+    _journeyService!.isJourneyOnboardingInView = true;
     PreferenceHelper.setBool(
         PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
     AppState.screenStack.add(ScreenItem.dialog);
-    Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, anotherAnimation) {
           return InfoStories(
@@ -191,43 +191,43 @@ class JourneyPageViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> updatingJourneyView() async {
+  updatingJourneyView() async {
     if (isRefreshing) return;
-    logger.d("Refreshing Journey Stats");
+    logger!.d("Refreshing Journey Stats");
     isRefreshing = true;
-    await _journeyService.checkForMilestoneLevelChange();
+    await _journeyService!.checkForMilestoneLevelChange();
     isRefreshing = false;
   }
 
   Future<void> checkIfThereIsAMilestoneLevelChange() async =>
-      _journeyService.checkForMilestoneLevelChange();
+      _journeyService!.checkForMilestoneLevelChange();
 
   addPageToTop() async {
     if (isLoading) return;
-    logger.d("Adding page to top");
+    logger!.d("Adding page to top");
     if (!canMorePagesBeFetched()) return;
     isLoading = true;
     isLoaderRequired = true;
-    final prevPageslength = pages.length;
-    await _journeyService.fetchMoreNetworkPages();
-    logger.d("Total Pages length: ${pages.length}");
-    if (prevPageslength < pages.length)
-      await mainController.animateTo(
-        mainController.offset + 100,
+    final prevPageslength = pages!.length;
+    await _journeyService!.fetchMoreNetworkPages();
+    logger!.d("Total Pages length: ${pages!.length}");
+    if (prevPageslength < pages!.length)
+      await mainController!.animateTo(
+        mainController!.offset + 100,
         curve: Curves.easeOutCubic,
         duration: Duration(seconds: 1),
       );
-    _journeyService.placeAvatarAtTheCurrentMileStone();
+    _journeyService!.placeAvatarAtTheCurrentMileStone();
     // _journeyService.refreshJourneyPath();
     isLoaderRequired = false;
     isLoading = false;
   }
 
   canMorePagesBeFetched() =>
-      _journeyService.getJourneyLevelBlurData() == null ? true : false;
+      _journeyService!.getJourneyLevelBlurData() == null ? true : false;
 
   animateAvatar() {
-    _journeyService.animateAvatar();
+    _journeyService!.animateAvatar();
   }
 
   // addPageToBottom(pgs) {
@@ -262,9 +262,9 @@ class JourneyPageViewModel extends BaseViewModel {
   showMilestoneDetailsModalSheet(
       MilestoneModel milestone, BuildContext context) {
     JOURNEY_MILESTONE_STATUS status = JOURNEY_MILESTONE_STATUS.INCOMPLETE;
-    if (_journeyService.avatarRemoteMlIndex > milestone.index) {
+    if (_journeyService!.avatarRemoteMlIndex > milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.COMPLETED;
-      _analyticsService.track(
+      _analyticsService!.track(
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -275,9 +275,9 @@ class JourneyPageViewModel extends BaseViewModel {
             "MileStone number": milestone.index,
             "Milestone completed": true,
           }));
-    } else if (_journeyService.avatarRemoteMlIndex == milestone.index) {
+    } else if (_journeyService!.avatarRemoteMlIndex == milestone.index) {
       status = JOURNEY_MILESTONE_STATUS.ACTIVE;
-      _analyticsService.track(
+      _analyticsService!.track(
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -289,7 +289,7 @@ class JourneyPageViewModel extends BaseViewModel {
             "Milestone completed": false,
           }));
     } else {
-      _analyticsService.track(
+      _analyticsService!.track(
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {

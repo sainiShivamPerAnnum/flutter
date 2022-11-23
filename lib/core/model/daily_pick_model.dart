@@ -2,13 +2,13 @@ import 'package:felloapp/util/logger.dart';
 
 class DailyPick {
   static Log log = new Log('DailyPick');
-  List<int> mon;
-  List<int> tue;
-  List<int> wed;
-  List<int> thu;
-  List<int> fri;
-  List<int> sat;
-  List<int> sun;
+  List<int>? mon;
+  List<int>? tue;
+  List<int>? wed;
+  List<int>? thu;
+  List<int>? fri;
+  List<int>? sat;
+  List<int>? sun;
   // int weekCode;
 
   static final fldWeekDay = [
@@ -34,8 +34,8 @@ class DailyPick {
       this.sun});
 
   factory DailyPick.fromMap(Map<String, dynamic> picksData) {
-    final Map<String, dynamic> data = picksData['picks'] ?? {};
-    if (data != null && data.isNotEmpty)
+    final Map<String, dynamic> data  = Map.from(picksData);
+    if (data.isNotEmpty)
       return DailyPick(
         // weekCode: data[fldWeekCode],
         mon: (data[fldWeekDay[0]] != null)
@@ -84,7 +84,7 @@ class DailyPick {
     );
   }
 
-  List<int> getWeekdayDraws(int weekday) {
+  List<int>? getWeekdayDraws(int weekday) {
     switch (weekday) {
       case 0:
         return mon;
@@ -105,13 +105,13 @@ class DailyPick {
 
   List<int> toList() {
     List<int> allDigits = [];
-    if (mon != null && mon.isNotEmpty) allDigits.addAll(mon);
-    if (tue != null && tue.isNotEmpty) allDigits.addAll(tue);
-    if (wed != null && wed.isNotEmpty) allDigits.addAll(wed);
-    if (thu != null && thu.isNotEmpty) allDigits.addAll(thu);
-    if (fri != null && fri.isNotEmpty) allDigits.addAll(fri);
-    if (sat != null && sat.isNotEmpty) allDigits.addAll(sat);
-    if (sun != null && sun.isNotEmpty) allDigits.addAll(sun);
+    if (mon != null && mon!.isNotEmpty) allDigits.addAll(mon!);
+    if (tue != null && tue!.isNotEmpty) allDigits.addAll(tue!);
+    if (wed != null && wed!.isNotEmpty) allDigits.addAll(wed!);
+    if (thu != null && thu!.isNotEmpty) allDigits.addAll(thu!);
+    if (fri != null && fri!.isNotEmpty) allDigits.addAll(fri!);
+    if (sat != null && sat!.isNotEmpty) allDigits.addAll(sat!);
+    if (sun != null && sun!.isNotEmpty) allDigits.addAll(sun!);
 
     return allDigits;
   }
@@ -120,20 +120,20 @@ class DailyPick {
   ///if dayCode = 4, return picks from thu,fri,sat,sun
   List<int> getPicksPostDate(int dayCode) {
     List<int> relevantDigits = [];
-    if (mon != null && mon.isNotEmpty && dayCode == DateTime.monday)
-      relevantDigits.addAll(mon);
-    if (tue != null && tue.isNotEmpty && dayCode <= DateTime.tuesday)
-      relevantDigits.addAll(tue);
-    if (wed != null && wed.isNotEmpty && dayCode <= DateTime.wednesday)
-      relevantDigits.addAll(wed);
-    if (thu != null && thu.isNotEmpty && dayCode <= DateTime.thursday)
-      relevantDigits.addAll(thu);
-    if (fri != null && fri.isNotEmpty && dayCode <= DateTime.friday)
-      relevantDigits.addAll(fri);
-    if (sat != null && sat.isNotEmpty && dayCode <= DateTime.saturday)
-      relevantDigits.addAll(sat);
-    if (sun != null && sun.isNotEmpty && dayCode <= DateTime.sunday)
-      relevantDigits.addAll(sun);
+    if (mon != null && mon!.isNotEmpty && dayCode == DateTime.monday)
+      relevantDigits.addAll(mon!);
+    if (tue != null && tue!.isNotEmpty && dayCode <= DateTime.tuesday)
+      relevantDigits.addAll(tue!);
+    if (wed != null && wed!.isNotEmpty && dayCode <= DateTime.wednesday)
+      relevantDigits.addAll(wed!);
+    if (thu != null && thu!.isNotEmpty && dayCode <= DateTime.thursday)
+      relevantDigits.addAll(thu!);
+    if (fri != null && fri!.isNotEmpty && dayCode <= DateTime.friday)
+      relevantDigits.addAll(fri!);
+    if (sat != null && sat!.isNotEmpty && dayCode <= DateTime.saturday)
+      relevantDigits.addAll(sat!);
+    if (sun != null && sun!.isNotEmpty && dayCode <= DateTime.sunday)
+      relevantDigits.addAll(sun!);
 
     return relevantDigits;
   }

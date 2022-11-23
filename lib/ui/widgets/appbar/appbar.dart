@@ -1,4 +1,6 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/help_fab.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
@@ -9,16 +11,17 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class FAppBar extends StatelessWidget with PreferredSizeWidget {
-  final FaqsType type;
-  final String title;
+  final FaqsType? type;
+  final String? title;
   final bool showCoinBar;
   final bool showAvatar;
   final bool showHelpButton;
-  final Color backgroundColor;
-  final Widget action;
+  final Color? backgroundColor;
+  final Widget? action;
+  final double? leftPad;
 
   const FAppBar({
-    Key key,
+    Key? key,
     this.type,
     this.title,
     this.showCoinBar = true,
@@ -26,6 +29,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     this.showHelpButton = true,
     this.backgroundColor,
     this.action,
+    this.leftPad,
   }) : super(key: key);
 
   @override
@@ -36,7 +40,11 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          showAvatar ? ProfileImageSE() : SizedBox(),
+          showAvatar
+              ? Container(
+                  margin: EdgeInsets.only(left: leftPad ?? 0),
+                  child: ProfileImageSE())
+              : SizedBox(),
           Text(
             '${title ?? ''}',
             style: TextStyles.rajdhaniSB.title3,
@@ -50,8 +58,8 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
         Row(
           children: [
             if (showCoinBar) FelloCoinBar(svgAsset: Assets.token),
-            if (type != null) FaqButtonRounded(type: type),
-            if (action != null) action,
+            if (type != null) FaqPill(type: type),
+            if (action != null) action!,
             SizedBox(width: SizeConfig.padding20)
           ],
         )

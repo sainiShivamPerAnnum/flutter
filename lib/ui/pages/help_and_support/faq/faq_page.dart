@@ -18,10 +18,10 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
 
 class FAQPage extends StatelessWidget {
-  final FaqsType type;
+  final FaqsType? type;
 
   const FAQPage({
-    @required this.type,
+    required this.type,
   });
 
   @override
@@ -49,7 +49,7 @@ class FAQPage extends StatelessWidget {
               ),
               onPressed: () {
                 Haptic.vibrate();
-                AppState.delegate.appState.currentAction = PageAction(
+                AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.addPage,
                   page: FreshDeskHelpPageConfig,
                 );
@@ -57,7 +57,7 @@ class FAQPage extends StatelessWidget {
             ),
           )),
       body: BaseView<FaqPageViewModel>(
-        onModelReady: (model) => model.init(type),
+        onModelReady: (model) => model.init(type!),
         builder: (ctx, model, child) {
           return model.state == ViewState.Busy
               ? Center(
@@ -66,7 +66,7 @@ class FAQPage extends StatelessWidget {
               : Padding(
                   padding: EdgeInsets.only(top: SizeConfig.padding8),
                   child: ListView.separated(
-                    itemCount: model.list.length,
+                    itemCount: model.list!.length,
                     padding: EdgeInsets.only(
                       bottom: SizeConfig.padding12,
                     ),
@@ -74,7 +74,7 @@ class FAQPage extends StatelessWidget {
                       contentPadding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.pageHorizontalMargins),
                       title: Text(
-                        model.list[index].title,
+                        model.list![index].title!,
                         style: TextStyles.sourceSans.body3,
                       ),
                       trailing: Container(
@@ -87,7 +87,7 @@ class FAQPage extends StatelessWidget {
                       minVerticalPadding: SizeConfig.padding8,
                       style: ListTileStyle.list,
                       onTap: () {
-                        showFaqBottomSheet(context, model.list[index]);
+                        showFaqBottomSheet(context, model.list![index]);
                       },
                     ),
                     separatorBuilder: (context, index) => Divider(
@@ -128,7 +128,7 @@ class FAQPage extends StatelessWidget {
             children: [
               ListTile(
                 title: Text(
-                  data.title,
+                  data.title!,
                   style: TextStyles.sourceSans.body1.semiBold,
                 ),
                 contentPadding: EdgeInsets.symmetric(
@@ -160,7 +160,7 @@ class FAQPage extends StatelessWidget {
           ),
         ),
         onWillPop: () async {
-          AppState.backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher!.didPopRoute();
           return Future.value(true);
         },
       ),

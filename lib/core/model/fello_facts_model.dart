@@ -5,34 +5,34 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:flutter/material.dart';
 
 class FelloFactsModel {
-  final String id;
-  final String title;
-  final String type;
-  final String subTitle;
-  final String bgColor;
-  final String asset;
-  final String actionUri;
+  final String? id;
+  final String? title;
+  final String? type;
+  final String? subTitle;
+  final String? bgColor;
+  final String? asset;
+  final String? actionUri;
   final TimestampModel createdOn;
   FelloFactsModel({
-    @required this.id,
-    @required this.title,
-    @required this.type,
-    @required this.subTitle,
-    @required this.bgColor,
-    @required this.asset,
-    @required this.actionUri,
-    @required this.createdOn,
+    required this.id,
+    required this.title,
+    required this.type,
+    required this.subTitle,
+    required this.bgColor,
+    required this.asset,
+    required this.actionUri,
+    required this.createdOn,
   });
 
   FelloFactsModel copyWith({
-    String id,
-    String title,
-    String type,
-    String subTitle,
-    String bgColor,
-    String asset,
-    String actionUri,
-    TimestampModel createdOn,
+    String? id,
+    String? title,
+    String? type,
+    String? subTitle,
+    String? bgColor,
+    String? asset,
+    String? actionUri,
+    TimestampModel? createdOn,
   }) {
     return FelloFactsModel(
       id: id ?? this.id,
@@ -61,13 +61,13 @@ class FelloFactsModel {
 
   factory FelloFactsModel.fromMap(Map<String, dynamic> map) {
     return FelloFactsModel(
-      id: map['id'] as String,
-      title: map['title'] as String,
-      type: map['type'] as String,
-      subTitle: map['subTitle'] as String,
-      bgColor: map['bgColor'] as String,
-      asset: map['asset'] as String,
-      actionUri: map['actionUri'] as String,
+      id: map['id'] as String?,
+      title: map['title'] as String?,
+      type: map['type'] as String?,
+      subTitle: map['subTitle'] as String?,
+      bgColor: map['bgColor'] as String?,
+      asset: map['asset'] as String?,
+      actionUri: map['actionUri'] as String?,
       createdOn: TimestampModel.fromMap(map['createdOn']),
     );
   }

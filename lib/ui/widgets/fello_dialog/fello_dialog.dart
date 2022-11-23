@@ -3,7 +3,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class FelloDialog extends StatelessWidget {
-  final Widget content;
+  final Widget? content;
   final bool showCrossIcon;
 
   final bool isAddedToScreenStack;
@@ -24,7 +24,7 @@ class FelloDialog extends StatelessWidget {
             padding: EdgeInsets.all(
                 defaultPadding ? SizeConfig.pageHorizontalMargins : 0),
             child: Wrap(
-              children: [content],
+              children: [content!],
             ),
           ),
           backgroundColor: Colors.white,
@@ -41,7 +41,7 @@ class FelloDialog extends StatelessWidget {
                   icon: Icon(Icons.close, color: Colors.grey[700]),
                   onPressed: () {
                     if (isAddedToScreenStack)
-                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
                     else
                       Navigator.pop(context);
                   }),

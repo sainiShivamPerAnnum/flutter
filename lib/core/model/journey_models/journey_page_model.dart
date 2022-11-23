@@ -14,20 +14,20 @@ class JourneyPage {
   List<MilestoneModel> milestones;
 
   JourneyPage({
-    @required this.bgAsset,
-    @required this.paths,
-    @required this.page,
-    @required this.avatarPath,
-    @required this.milestones,
+    required this.bgAsset,
+    required this.paths,
+    required this.page,
+    required this.avatarPath,
+    required this.milestones,
   });
 
   JourneyPage copyWith({
-    JourneyBackgroundModel bgAsset,
-    List<JourneyPathModel> paths,
-    List<AvatarPathModel> avatarPath,
-    int level,
-    int page,
-    List<MilestoneModel> milestones,
+    JourneyBackgroundModel? bgAsset,
+    List<JourneyPathModel>? paths,
+    List<AvatarPathModel>? avatarPath,
+    int? level,
+    int? page,
+    List<MilestoneModel>? milestones,
   }) {
     return JourneyPage(
       bgAsset: bgAsset ?? this.bgAsset,

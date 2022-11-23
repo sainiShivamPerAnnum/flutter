@@ -20,30 +20,30 @@ import 'package:intl/intl.dart';
 enum MsgSource { Foreground, Background, Terminated }
 
 class FcmHandler extends ChangeNotifier {
-  final _logger = locator<CustomLogger>();
-  final _userservice = locator<UserService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService? _userservice = locator<UserService>();
 
   // final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
-  final _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
-  final _webGameViewModel = locator<WebGameViewModel>();
-  final _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
-  final _paytmService = locator<PaytmService>();
-  final _augTxnService = locator<AugmontTransactionService>();
+  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
+  final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
+  final AutosaveProcessViewModel? _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
+  final PaytmService? _paytmService = locator<PaytmService>();
+  final AugmontTransactionService? _augTxnService = locator<AugmontTransactionService>();
 
-  final _journeyService = locator<JourneyService>();
-  final _augOps = locator<GoldSellViewModel>();
-  ValueChanged<Map> notifListener;
+  final JourneyService? _journeyService = locator<JourneyService>();
+  final GoldSellViewModel? _augOps = locator<GoldSellViewModel>();
+  ValueChanged<Map>? notifListener;
   // Timestamp latestFcmtimeStamp;
-  String latestFcmCommand;
+  String? latestFcmCommand;
 
-  Map lastFcmData;
-  Future<bool> handleMessage(Map data, MsgSource source) async {
-    _logger.d(
+  Map? lastFcmData;
+  Future<bool> handleMessage(Map? data, MsgSource source) async {
+    _logger!.d(
       "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data",
     );
     if (lastFcmData != null) {
       if (lastFcmData == data) {
-        _logger.d(
+        _logger!.d(
           "Duplicate Fcm Data, exiting method",
         );
         return false;
@@ -52,10 +52,10 @@ class FcmHandler extends ChangeNotifier {
       lastFcmData = data;
     }
     bool showSnackbar = true;
-    String title = data['dialog_title'];
-    String body = data['dialog_body'];
-    String command = data['command'];
-    String url = data['deep_uri'];
+    String? title = data!['dialog_title'];
+    String? body = data['dialog_body'];
+    String? command = data['command'];
+    String? url = data['deep_uri'];
 
     // if (data["test_txn"] == "paytm") {
     // _augTxnService.isOngoingTxn = false;
@@ -64,13 +64,13 @@ class FcmHandler extends ChangeNotifier {
 
     // If notifications contains an url for navigation
     if (url != null && url.isNotEmpty) {
-      if (_augTxnService.isIOSTxnInProgress) {
+      if (_augTxnService!.isIOSTxnInProgress) {
         // TODO
         // ios transaction completed and app is in background
       } else if (source == MsgSource.Background ||
           source == MsgSource.Terminated) {
         showSnackbar = false;
-        AppState.delegate.parseRoute(Uri.parse(url));
+        AppState.delegate!.parseRoute(Uri.parse(url));
         return true;
       }
     }
@@ -86,44 +86,44 @@ class FcmHandler extends ChangeNotifier {
         //   break;
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
           log("User journey stats update fcm response");
-          _journeyService.fcmHandleJourneyUpdateStats(data);
+          _journeyService!.fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
         case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
           log("Golden Ticket win update fcm response");
-          _journeyService.fcmHandleJourneyUpdateStats(data);
+          _journeyService!.fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
         case FcmCommands.COMMAND_WITHDRAWAL_RESPONSE:
-          _augOps.handleWithdrawalFcmResponse(data['payload']);
+          _augOps!.handleWithdrawalFcmResponse(data['payload']);
           break;
 
         case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:
-          _webGameViewModel.handleCricketHeroRoundEnd(
-              data, Constants.GAME_TYPE_CRICKET);
+          _webGameViewModel!.handleCricketHeroRoundEnd(
+              data as Map<String, dynamic>, Constants.GAME_TYPE_CRICKET);
           break;
         case FcmCommands.COMMAND_POOL_CLUB_GAME_END:
-          _webGameViewModel.handlePoolClubRoundEnd(
-              data, Constants.GAME_TYPE_POOLCLUB);
+          _webGameViewModel!.handlePoolClubRoundEnd(
+              data as Map<String, dynamic>, Constants.GAME_TYPE_POOLCLUB);
           break;
         case FcmCommands.COMMAND_FOOT_BALL_GAME_END:
-          _webGameViewModel.handleFootBallRoundEnd(
-              data, Constants.GAME_TYPE_FOOTBALL);
+          _webGameViewModel!.handleFootBallRoundEnd(
+              data as Map<String, dynamic>, Constants.GAME_TYPE_FOOTBALL);
           break;
         case FcmCommands.COMMAND_CANDY_FIESTA_GAME_END:
-          _webGameViewModel.handleCandyFiestaRoundEnd(
-              data, Constants.GAME_TYPE_CANDYFIESTA);
+          _webGameViewModel!.handleCandyFiestaRoundEnd(
+              data as Map<String, dynamic>, Constants.GAME_TYPE_CANDYFIESTA);
           break;
         case FcmCommands.COMMAND_LOW_BALANCE_ALERT:
-          _webGameViewModel.handleLowBalanceAlert();
+          _webGameViewModel!.handleLowBalanceAlert();
           break;
         case FcmCommands.COMMAND_SHOW_DIALOG:
-          _fcmHandlerDataPayloads.showDialog(title, body);
+          _fcmHandlerDataPayloads!.showDialog(title, body);
           break;
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
-          await _fcmHandlerDataPayloads.userPrizeWinPrompt();
+          await _fcmHandlerDataPayloads!.userPrizeWinPrompt();
           break;
         case FcmCommands.COMMAND_SUBSCRIPTION_RESPONSE:
-          if (_paytmService.isOnSubscriptionFlow)
-            await _autosaveProcessViewModel.handleSubscriptionPayload(data);
+          if (_paytmService!.isOnSubscriptionFlow)
+            await _autosaveProcessViewModel!.handleSubscriptionPayload(data as Map<String, dynamic>);
           // else
           //   await _paytmService.handleFCMStatusUpdate(data);
           break;
@@ -135,19 +135,19 @@ class FcmHandler extends ChangeNotifier {
     if (source == MsgSource.Foreground && showSnackbar == true) {
       handleNotification(title, body);
     }
-    _userservice.checkForNewNotifications();
+    _userservice!.checkForNewNotifications();
     return true;
   }
 
-  Future<bool> handleNotification(String title, String body) async {
+  Future<bool> handleNotification(String? title, String? body) async {
     if (title != null && title.isNotEmpty && body != null && body.isNotEmpty) {
       Map<String, String> _map = {'title': title, 'body': body};
-      if (this.notifListener != null) this.notifListener(_map);
+      if (this.notifListener != null) this.notifListener!(_map);
     }
     return true;
   }
 
-  addIncomingMessageListener(ValueChanged<Map> listener) {
+  addIncomingMessageListener(ValueChanged<Map>? listener) {
     this.notifListener = listener;
   }
 }

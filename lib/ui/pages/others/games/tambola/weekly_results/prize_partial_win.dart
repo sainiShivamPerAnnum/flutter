@@ -8,8 +8,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class PrizePWin extends StatefulWidget {
-  final Map<String, int> winningsMap;
-  const PrizePWin({Key key, this.winningsMap}) : super(key: key);
+  final Map<String, int>? winningsMap;
+  const PrizePWin({Key? key, this.winningsMap}) : super(key: key);
 
   @override
   _PrizePWinState createState() => _PrizePWinState();
@@ -24,7 +24,7 @@ class _PrizePWinState extends State<PrizePWin> {
       Future.delayed(Duration(seconds: 1), () {
         setState(() {
           slothOpacity = 1;
-          slothPos = SizeConfig.screenWidth * 0.16;
+          slothPos = SizeConfig.screenWidth! * 0.16;
         });
       });
     });
@@ -33,7 +33,7 @@ class _PrizePWinState extends State<PrizePWin> {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S locale = S.of(context)!;
     return SafeArea(
       child: Container(
         padding:
@@ -49,12 +49,12 @@ class _PrizePWinState extends State<PrizePWin> {
             ),
             Spacer(),
             Container(
-              height: SizeConfig.screenHeight / 2.5,
+              height: SizeConfig.screenHeight! / 2.5,
               width: SizeConfig.screenWidth,
               child: Stack(
                 children: [
                   WinnerBox(
-                    winningsmap: widget.winningsMap,
+                    winningsmap: widget.winningsMap, tPrize: null,
                   ),
                   // AnimatedPositioned(
                   //   child: AnimatedOpacity(
@@ -93,10 +93,10 @@ class _PrizePWinState extends State<PrizePWin> {
                     style: TextStyles.body3.bold.colour(Colors.white),
                   ),
                   onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
-                    AppState.backButtonDispatcher.didPopRoute();
-                    AppState.backButtonDispatcher.didPopRoute();
-                    AppState.delegate.appState.setCurrentTabIndex = 0;
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.delegate!.appState.setCurrentTabIndex = 0;
                   }),
             ),
             Spacer(

@@ -13,8 +13,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
 class InternalOpsService extends ChangeNotifier {
-  String phoneModel;
-  String softwareVersion;
+  String? phoneModel;
+  String? softwareVersion;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   bool isDeviceInfoInitiated = false;
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
@@ -25,20 +25,20 @@ class InternalOpsService extends ChangeNotifier {
   Future<bool> checkIfDeviceIsReal() async {
     if (Platform.isIOS) {
       IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
-      logger.d("Device info: ${iosDeviceInfo?.isPhysicalDevice}");
+      logger!.d("Device info: ${iosDeviceInfo?.isPhysicalDevice}");
       return iosDeviceInfo?.isPhysicalDevice ?? true;
     } else {
       AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
-      logger.d("Device info: ${androidDeviceInfo?.isPhysicalDevice}");
+      logger!.d("Device info: ${androidDeviceInfo?.isPhysicalDevice}");
       return androidDeviceInfo?.isPhysicalDevice ?? true;
     }
   }
 
   Future<Map<String, dynamic>> initDeviceInfo() async {
-    String _deviceId;
-    String _platform;
-    String brand;
-    bool isPhysicalDevice;
+    String? _deviceId;
+    String? _platform;
+    String? brand;
+    bool? isPhysicalDevice;
 
     if (!isDeviceInfoInitiated) {
       try {
@@ -51,7 +51,7 @@ class InternalOpsService extends ChangeNotifier {
           isPhysicalDevice = iosDeviceInfo.isPhysicalDevice;
           brand = "apple";
           _platform = "ios";
-          logger.d(
+          logger!.d(
               "Device Information - $phoneModel \n $softwareVersion \n $_deviceId");
         } else if (Platform.isAndroid) {
           AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
@@ -61,7 +61,7 @@ class InternalOpsService extends ChangeNotifier {
           brand = androidDeviceInfo.brand;
           isPhysicalDevice = androidDeviceInfo.isPhysicalDevice;
           _platform = "android";
-          logger.d(
+          logger!.d(
               "Device Information - phoneModel: $phoneModel \nSoftware version: $softwareVersion \nDeviceId $_deviceId");
         }
         isDeviceInfoInitiated = true;
@@ -81,7 +81,7 @@ class InternalOpsService extends ChangeNotifier {
   }
 
   Future<bool> logFailure(
-    String userId,
+    String? userId,
     FailType failType,
     Map<String, dynamic> data,
   ) async {

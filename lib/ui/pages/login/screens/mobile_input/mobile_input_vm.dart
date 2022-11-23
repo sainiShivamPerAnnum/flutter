@@ -15,8 +15,8 @@ class LoginMobileViewModel extends BaseViewModel {
   final _formKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
   final _referralCodeController = TextEditingController();
-  final _analyticsService = locator<AnalyticsService>();
-  final logger = locator<CustomLogger>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final CustomLogger? logger = locator<CustomLogger>();
   final FocusNode mobileFocusNode = FocusNode();
   bool _validate = true;
   bool _showTickCheck = false;
@@ -44,12 +44,14 @@ class LoginMobileViewModel extends BaseViewModel {
       showAvailableMobileNos = false;
       mobileFocusNode.unfocus();
       final SmsAutoFill _autoFill = SmsAutoFill();
-      String completePhoneNumber = await _autoFill.hint;
+      String? completePhoneNumber = await _autoFill.hint;
       if (completePhoneNumber != null) {
         _mobileController.text =
             completePhoneNumber.substring(completePhoneNumber.length - 10);
         upDateCheckTick();
         // notifyListeners();
+      } else {
+        mobileFocusNode.requestFocus();
       }
       Future.delayed(Duration(milliseconds: 500), () {
         mobileFocusNode.requestFocus();
@@ -61,9 +63,9 @@ class LoginMobileViewModel extends BaseViewModel {
   //   validate = false;
   // }
 
-  String validateMobile() {
+  String? validateMobile() {
     Pattern pattern = "^[0-9]*\$";
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = new RegExp(pattern as String);
     if (!regex.hasMatch(_mobileController.text) ||
         _mobileController.text.length != 10)
       return "Enter a valid mobile number";
@@ -90,7 +92,7 @@ class LoginMobileViewModel extends BaseViewModel {
   void onTermsAndConditionsClicked() {
     Haptic.vibrate();
     BaseUtil.launchUrl('https://fello.in/policy/terms-of-use');
-    _analyticsService.track(eventName: AnalyticsEvents.termsAndConditions);
+    _analyticsService!.track(eventName: AnalyticsEvents.termsAndConditions);
   }
 
   String getMobile() => _mobileController.text;

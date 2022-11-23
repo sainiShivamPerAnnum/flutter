@@ -18,7 +18,7 @@ class ReferralPolicy extends StatefulWidget {
 
 class _ReferralPolicyState extends State<ReferralPolicy> {
   Log log = new Log('ReferralPolicy');
-  String htmlString;
+  String? htmlString;
   bool _downloadFailed = false;
   bool _isLoadComplete = false;
 

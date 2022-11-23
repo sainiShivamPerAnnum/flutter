@@ -20,29 +20,39 @@ import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 class LendboxWithdrawalViewModel extends BaseViewModel {
-  final _logger = locator<CustomLogger>();
-  final _txnService = locator<LendboxTransactionService>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _lendboxRepo = locator<LendboxRepo>();
-  final _paymentRepo = locator<PaymentRepository>();
-  final _userService = locator<UserService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final LendboxTransactionService? _txnService =
+      locator<LendboxTransactionService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final LendboxRepo? _lendboxRepo = locator<LendboxRepo>();
+  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
+  final UserService? _userService = locator<UserService>();
 
   List<ApplicationMeta> appMetaList = [];
-  UpiApplication upiApplication;
-  String selectedUpiApplicationName;
+  UpiApplication? upiApplication;
+  String? selectedUpiApplicationName;
   int lastTappedChipIndex = 1;
   final double minAmount = 1;
 
   FocusNode fieldNode = FocusNode();
-  String buyNotice;
+  String? buyNotice;
 
   bool _inProgress = false;
   get inProgress => this._inProgress;
 
-  TextEditingController amountController;
-  TextEditingController vpaController;
+  TextEditingController? amountController;
+  TextEditingController? vpaController;
 
-  LendboxWithdrawableQuantity withdrawableQuantity;
+  LendboxWithdrawableQuantity? withdrawableQuantity;
+
+  bool _readOnly = true;
+
+  bool get readOnly => this._readOnly;
+
+  set readOnly(value) {
+    this._readOnly = value;
+    notifyListeners();
+  }
 
   Future<void> init() async {
     setState(ViewState.Busy);
@@ -50,7 +60,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       text: "1",
     );
 
-    final response = await _lendboxRepo.getWithdrawableQuantity();
+    final response = await _lendboxRepo!.getWithdrawableQuantity();
     if (response.isSuccess()) {
       withdrawableQuantity = response.model;
     }
@@ -59,7 +69,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   }
 
   void resetBuyOptions() {
-    amountController.text = '1';
+    amountController!.text = '1';
     lastTappedChipIndex = 1;
     notifyListeners();
   }
@@ -78,11 +88,11 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
         description: '₹$amount will be credited to your linked bank account',
         buttonText: 'SELL',
         confirmAction: () async {
-          AppState.backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher!.didPopRoute();
           await this.processWithdraw(amount);
         },
         cancelAction: () {
-          AppState.backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher!.didPopRoute();
         },
       ),
     );
@@ -93,37 +103,37 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     _inProgress = true;
     notifyListeners();
 
-    _analyticsService.track(
+    _analyticsService!.track(
       eventName: AnalyticsEvents.sellInitiate,
       properties: {
-        'Amount to be sold': amountController.text,
+        'Amount to be sold': amountController!.text,
         "Weight (Gold)": "",
         "Asset": "Flo"
       },
     );
 
     AppState.blockNavigation();
-    final bankRes = await _paymentRepo.getActiveBankAccountDetails();
+    final bankRes = await _paymentRepo!.getActiveBankAccountDetails();
     if (bankRes.isSuccess()) {
-      final withdrawalTxn = await _lendboxRepo.createWithdrawal(
+      final withdrawalTxn = await _lendboxRepo!.createWithdrawal(
         amount,
-        bankRes.model.id,
+        bankRes.model!.id,
       );
 
       if (withdrawalTxn.isSuccess()) {
-        await _txnService.initiateWithdrawal(
+        await _txnService!.initiateWithdrawal(
           amount.toDouble(),
           withdrawalTxn.model,
         );
       } else {
-        _logger.e(withdrawalTxn.errorMessage);
+        _logger!.e(withdrawalTxn.errorMessage);
         BaseUtil.showNegativeAlert(
           'Withdrawal Failed',
           withdrawalTxn.errorMessage,
         );
       }
     } else {
-      _logger.e(bankRes.errorMessage);
+      _logger!.e(bankRes.errorMessage);
       BaseUtil.showNegativeAlert('Withdrawal Failed', bankRes.errorMessage);
     }
 
@@ -133,7 +143,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   }
 
   Future<int> initChecks() async {
-    final amount = int.tryParse(this.amountController.text) ?? 0;
+    final amount = int.tryParse(this.amountController!.text) ?? 0;
 
     if (amount == 0) {
       BaseUtil.showNegativeAlert('No amount entered', 'Please enter an amount');
@@ -148,10 +158,10 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       return 0;
     }
 
-    if (amount > withdrawableQuantity.amount) {
+    if (amount > withdrawableQuantity!.amount) {
       BaseUtil.showNegativeAlert(
-        'Max amount is ${this.withdrawableQuantity.amount}',
-        'Please enter an amount lower than ${this.withdrawableQuantity.amount}',
+        'Max amount is ${this.withdrawableQuantity!.amount}',
+        'Please enter an amount lower than ${this.withdrawableQuantity!.amount}',
       );
       return 0;
     }

@@ -11,10 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class WinnerBox extends StatelessWidget {
-  final Map<String, int> winningsmap;
-  final PrizesModel tPrize;
+  final Map<String, int>? winningsmap;
+  final PrizesModel? tPrize;
 
-  WinnerBox({Key key, this.winningsmap, @required this.tPrize})
+  WinnerBox({Key? key, this.winningsmap, required this.tPrize})
       : super(key: key);
   getValue(int val) {
     switch (val) {
@@ -34,8 +34,8 @@ class WinnerBox extends StatelessWidget {
   }
 
   getTokenWonAmount(String title) {
-    int flcAmount = 0;
-    for (PrizesA e in tPrize.prizesA) {
+    int? flcAmount = 0;
+    for (PrizesA e in tPrize!.prizesA!) {
       if (e.displayName == title) {
         flcAmount = e.flc;
       }
@@ -53,8 +53,8 @@ class WinnerBox extends StatelessWidget {
     ];
     List<Widget> ticketTiles = [];
 
-    winningsmap.forEach((key, value) {
-      totalFlcAmount = totalFlcAmount + getTokenWonAmount(getValue(value));
+    winningsmap!.forEach((key, value) {
+      totalFlcAmount = totalFlcAmount + getTokenWonAmount(getValue(value)) as int;
       ticketTiles.add(Column(
         children: [
           Row(

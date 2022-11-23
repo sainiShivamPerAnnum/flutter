@@ -16,40 +16,40 @@ class EventModel {
   List<dynamic> info;
   String url; //only for new fello
   String formUrl;
-  String todayMatch; //Only for FPL
+  String? todayMatch; //Only for FPL
   List<dynamic> winners; //only for bug_Bounty and new_Fello
 
   EventModel({
-    @required this.title,
-    @required this.subtitle,
-    @required this.thumbnail,
-    @required this.type,
-    @required this.position,
-    @required this.textColor,
-    @required this.image,
-    @required this.maxWin,
-    @required this.minVersion,
-    @required this.info,
-    @required this.url,
-    @required this.formUrl,
-    @required this.instructions,
-    @required this.winners,
+    required this.title,
+    required this.subtitle,
+    required this.thumbnail,
+    required this.type,
+    required this.position,
+    required this.textColor,
+    required this.image,
+    required this.maxWin,
+    required this.minVersion,
+    required this.info,
+    required this.url,
+    required this.formUrl,
+    required this.instructions,
+    required this.winners,
     this.todayMatch,
   });
 
   EventModel copyWith({
-    String title,
-    String subtitle,
-    String thumbnail,
-    String type,
-    int position,
-    int maxWin,
-    String color,
-    int minVersion,
-    List<String> info,
-    String image,
-    List<dynamic> instructions,
-    List<dynamic> winners,
+    String? title,
+    String? subtitle,
+    String? thumbnail,
+    String? type,
+    int? position,
+    int? maxWin,
+    String? color,
+    int? minVersion,
+    List<String>? info,
+    String? image,
+    List<dynamic>? instructions,
+    List<dynamic>? winners,
   }) {
     return EventModel(
       title: title ?? this.title,

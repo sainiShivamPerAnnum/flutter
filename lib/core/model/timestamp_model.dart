@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class TimestampModel extends Timestamp {
-  TimestampModel({@required int seconds, @required int nanoseconds})
+  TimestampModel({required int seconds, required int nanoseconds})
       : super(seconds, nanoseconds);
 
   factory TimestampModel.fromMap(dynamic map) {

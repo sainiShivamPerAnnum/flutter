@@ -18,9 +18,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class FelloAppBar extends StatelessWidget {
-  final Widget leading;
-  final List<Widget> actions;
-  final String title;
+  final Widget? leading;
+  final List<Widget>? actions;
+  final String? title;
   final bool showAppBar;
 
   FelloAppBar(
@@ -28,15 +28,15 @@ class FelloAppBar extends StatelessWidget {
       this.actions,
       this.title,
       this.showAppBar = true,
-      Key key,
-      int elevation,
-      Color backgroundColor})
+      Key? key,
+      int? elevation,
+      Color? backgroundColor})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
         width: SizeConfig.screenWidth,
-        height: SizeConfig.screenHeight / 8,
+        height: SizeConfig.screenHeight! / 8,
         color: showAppBar ? UiConstants.kBackgroundColor : Colors.transparent,
         child: AppBar(
           elevation: 0,
@@ -45,7 +45,7 @@ class FelloAppBar extends StatelessWidget {
           title: title != null
               ? FittedBox(
                   child: Text(
-                  title,
+                  title!,
                   maxLines: 1,
                   overflow: TextOverflow.clip,
                   style: TextStyles.rajdhaniSB.title4,
@@ -60,7 +60,7 @@ class FelloAppBar extends StatelessWidget {
 }
 
 class NotificationButton extends StatelessWidget {
-  final _analytics = locator<AnalyticsService>();
+  final AnalyticsService? _analytics = locator<AnalyticsService>();
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +71,12 @@ class NotificationButton extends StatelessWidget {
                 if (JourneyService.isAvatarAnimationInProgress) return;
 
                 Haptic.vibrate();
-                _analytics.track(
+                _analytics!.track(
                     eventName: AnalyticsEvents.notificationsClicked,
                     properties: AnalyticsProperties.getDefaultPropertiesMap());
-                model.hasNewNotifications = false;
+                model!.hasNewNotifications = false;
 
-                AppState.delegate.appState.currentAction = PageAction(
+                AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.addPage,
                   page: NotificationsConfig,
                 );
@@ -94,7 +94,7 @@ class NotificationButton extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (model.hasNewNotifications)
+                  if (model!.hasNewNotifications)
                     Positioned(
                       right: 2,
                       top: 2,

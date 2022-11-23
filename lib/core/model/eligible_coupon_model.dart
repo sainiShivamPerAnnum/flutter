@@ -1,12 +1,17 @@
 import 'dart:developer';
 
 class EligibleCouponResponseModel {
-  bool flag;
-  String message;
-  String code;
-  String desc;
-  double minAmountRequired;
-
+  bool? flag;
+  String? message;
+  String? code;
+  String? desc;
+  double? minAmountRequired;
+  EligibleCouponResponseModel.base() {
+    flag = false;
+    message = '';
+    desc = '';
+    minAmountRequired = 0;
+  }
   EligibleCouponResponseModel(
       {this.flag, this.message, this.code, this.desc, this.minAmountRequired});
 

@@ -33,32 +33,32 @@ class CustomLogger {
   }
 
   /// Log a message at level [Level.verbose].
-  void v(dynamic message, [dynamic error, StackTrace stackTrace]) {
+  void v(dynamic message, [dynamic error, StackTrace? stackTrace]) {
     log(Level.verbose, _processMessage(message), error, StackTrace.current);
   }
 
   /// Log a message at level [Level.debug].
-  void d(dynamic message, [dynamic error, StackTrace stackTrace]) {
+  void d(dynamic message, [dynamic error, StackTrace? stackTrace]) {
     log(Level.debug, _processMessage(message), error, StackTrace.current);
   }
 
   /// Log a message at level [Level.info].
-  void i(dynamic message, [dynamic error, StackTrace stackTrace]) {
+  void i(dynamic message, [dynamic error, StackTrace? stackTrace]) {
     log(Level.info, _processMessage(message), error, StackTrace.current);
   }
 
   /// Log a message at level [Level.warning].
-  void w(dynamic message, [dynamic error, StackTrace stackTrace]) {
+  void w(dynamic message, [dynamic error, StackTrace? stackTrace]) {
     log(Level.warning, _processMessage(message), error, StackTrace.current);
   }
 
   /// Log a message at level [Level.error].
-  void e(dynamic message, [dynamic error, StackTrace stackTrace]) {
+  void e(dynamic message, [dynamic error, StackTrace? stackTrace]) {
     log(Level.error, _processMessage(message), error, StackTrace.current);
   }
 
   /// Log a message at level [Level.wtf].
-  void wtf(dynamic message, [dynamic error, StackTrace stackTrace]) {
+  void wtf(dynamic message, [dynamic error, StackTrace? stackTrace]) {
     log(Level.wtf, _processMessage(message), error, StackTrace.current);
   }
 
@@ -74,7 +74,7 @@ class CustomLogger {
     }
   }
 
-  String _castString<T>(x) {
+  String? _castString<T>(x) {
     if (x is String)
       return x;
     else {
@@ -88,7 +88,7 @@ class CustomLogger {
 
   /// Log a message with [level].
   void log(Level level, dynamic message,
-      [dynamic error, StackTrace stackTrace]) {
+      [dynamic error, StackTrace? stackTrace]) {
     if (!_active) {
       throw ArgumentError('Logger has already been closed.');
     } else if (error != null && error is StackTrace) {

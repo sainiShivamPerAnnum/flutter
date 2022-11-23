@@ -6,8 +6,8 @@ import 'dart:convert';
 
 class AssetOptionsModel {
   AssetOptionsModel({
-    this.message,
-    this.data,
+    required this.message,
+    required this.data,
   });
 
   String message;
@@ -27,8 +27,8 @@ class AssetOptionsModel {
 
 class Data {
   Data({
-    this.banner,
-    this.userOptions,
+    required this.banner,
+    required this.userOptions,
   });
 
   Banner banner;
@@ -48,8 +48,8 @@ class Data {
 
 class Banner {
   Banner({
-    this.image,
-    this.title,
+    required this.image,
+    required this.title,
   });
 
   String image;
@@ -68,9 +68,9 @@ class Banner {
 
 class UserOption {
   UserOption({
-    this.order,
-    this.value,
-    this.best,
+    required this.order,
+    required this.value,
+    required this.best,
   });
 
   int order;

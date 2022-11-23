@@ -34,7 +34,7 @@ class JourneyMilestoneDetailsModalSheet extends StatefulWidget {
   final JOURNEY_MILESTONE_STATUS status;
 
   JourneyMilestoneDetailsModalSheet(
-      {@required this.milestone, @required this.status});
+      {required this.milestone, required this.status});
   @override
   State<JourneyMilestoneDetailsModalSheet> createState() =>
       _JourneyMilestoneDetailsModalSheetState();
@@ -43,12 +43,12 @@ class JourneyMilestoneDetailsModalSheet extends StatefulWidget {
 class _JourneyMilestoneDetailsModalSheetState
     extends State<JourneyMilestoneDetailsModalSheet> {
   final double scaleFactor = 2.5;
-  final double pageHeight = SizeConfig.screenWidth * 2.165;
-  final GoldenTicketRepository _gtService = locator<GoldenTicketRepository>();
-  final JourneyService _journeyService = locator<JourneyService>();
-  final _analyticsService = locator<AnalyticsService>();
+  final double pageHeight = SizeConfig.screenWidth! * 2.165;
+  final GoldenTicketRepository? _gtService = locator<GoldenTicketRepository>();
+  final JourneyService? _journeyService = locator<JourneyService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   bool _isLoading = false;
-  GoldenTicket ticket;
+  GoldenTicket? ticket;
 
   get isLoading => this._isLoading;
 
@@ -63,7 +63,7 @@ class _JourneyMilestoneDetailsModalSheetState
     if (widget.status != JOURNEY_MILESTONE_STATUS.COMPLETED) return;
     isLoading = true;
     final res =
-        await _gtService.getGTByPrizeSubtype(widget.milestone.prizeSubType);
+        await _gtService!.getGTByPrizeSubtype(widget.milestone.prizeSubType);
     if (res.isSuccess()) ticket = res.model;
     // else
     // BaseUtil.showNegativeAlert(res.errorMessage, "");
@@ -71,8 +71,8 @@ class _JourneyMilestoneDetailsModalSheetState
   }
 
   String getTicketType(mlIndex) {
-    for (int i = 0; i < _journeyService.levels.length; i++) {
-      if (_journeyService.levels[i].end == mlIndex) {
+    for (int i = 0; i < _journeyService!.levels!.length; i++) {
+      if (_journeyService!.levels![i].end == mlIndex) {
         return "Green";
       }
     }
@@ -80,8 +80,8 @@ class _JourneyMilestoneDetailsModalSheetState
   }
 
   Color getTicketColor(mlIndex) {
-    for (int i = 0; i < _journeyService.levels.length; i++) {
-      if (_journeyService.levels[i].end == mlIndex) {
+    for (int i = 0; i < _journeyService!.levels!.length; i++) {
+      if (_journeyService!.levels![i].end == mlIndex) {
         return UiConstants.primaryColor;
       }
     }
@@ -126,14 +126,14 @@ class _JourneyMilestoneDetailsModalSheetState
                           height: SizeConfig.padding54,
                           alignment: Alignment.bottomCenter,
                           child: SourceAdaptiveAssetView(
-                            asset: widget.milestone.shadow.asset,
-                            height: SizeConfig.screenWidth *
+                            asset: widget.milestone.shadow!.asset,
+                            height: SizeConfig.screenWidth! *
                                 0.2 *
-                                (widget.milestone.shadow.asset.height /
+                                (widget.milestone.shadow!.asset.height /
                                     widget.milestone.asset.height),
-                            width: SizeConfig.screenWidth *
+                            width: SizeConfig.screenWidth! *
                                 0.2 *
-                                (widget.milestone.shadow.asset.width /
+                                (widget.milestone.shadow!.asset.width /
                                     widget.milestone.asset.width),
                           ),
                         ),
@@ -144,15 +144,15 @@ class _JourneyMilestoneDetailsModalSheetState
                         offset: Offset(0, -SizeConfig.padding54),
                         child: SourceAdaptiveAssetView(
                           asset: widget.milestone.asset,
-                          height: SizeConfig.screenWidth * 0.2,
-                          width: SizeConfig.screenWidth * 0.2,
+                          height: SizeConfig.screenWidth! * 0.2,
+                          width: SizeConfig.screenWidth! * 0.2,
                         ),
                       ),
                     ),
                     if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)
                       Positioned(
                           bottom: SizeConfig.padding40,
-                          left: SizeConfig.screenWidth / 2 -
+                          left: SizeConfig.screenWidth! / 2 -
                               SizeConfig.pageHorizontalMargins * 2,
                           child: MileStoneCheck())
                   ],
@@ -164,7 +164,7 @@ class _JourneyMilestoneDetailsModalSheetState
               ),
               SizedBox(height: SizeConfig.padding12),
               Text(
-                widget.milestone.steps.first.title,
+                widget.milestone.steps.first.title!,
                 style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
               ),
               SizedBox(height: SizeConfig.padding4),
@@ -178,7 +178,7 @@ class _JourneyMilestoneDetailsModalSheetState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.milestone.steps.first.subtitle,
+                          widget.milestone.steps.first.subtitle!,
                           style:
                               TextStyles.body3.colour(UiConstants.kTextColor3),
                         ),
@@ -195,13 +195,13 @@ class _JourneyMilestoneDetailsModalSheetState
                     ? CircularProgressIndicator(strokeWidth: 1)
                     : ticket == null
                         ? SizedBox()
-                        : (ticket.isRewarding &&
-                                (ticket.redeemedTimestamp == null ||
-                                    ticket.redeemedTimestamp ==
+                        : (ticket!.isRewarding! &&
+                                (ticket!.redeemedTimestamp == null ||
+                                    ticket!.redeemedTimestamp ==
                                         TimestampModel(
                                             seconds: 0, nanoseconds: 0)))
-                            ? goldenTicketWidget(ticket.isLevelChange)
-                            : rewardWidget(ticket.rewardArr),
+                            ? goldenTicketWidget(ticket!.isLevelChange!)
+                            : rewardWidget(ticket!.rewardArr),
               SizedBox(height: SizeConfig.padding24),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
                   ? SizedBox()
@@ -211,21 +211,13 @@ class _JourneyMilestoneDetailsModalSheetState
                             AppPositiveBtn(
                                 btnText: "Let's Go",
                                 onPressed: () {
-                                  AppState.backButtonDispatcher.didPopRoute();
-                                  if (widget.milestone.index == 1)
-                                    return AppState
-                                            .delegate.appState.currentAction =
-                                        PageAction(
-                                            page: UserProfileDetailsConfig,
-                                            state: PageState.addWidget,
-                                            widget: UserProfileDetails(
-                                                isNewUser: true));
+                                  AppState.backButtonDispatcher!.didPopRoute();
                                   if (widget.milestone.actionUri != null &&
-                                      widget.milestone.actionUri.isNotEmpty)
-                                    AppState.delegate.parseRoute(
-                                        Uri.parse(widget.milestone.actionUri));
+                                      widget.milestone.actionUri!.isNotEmpty)
+                                    AppState.delegate!.parseRoute(
+                                        Uri.parse(widget.milestone.actionUri!));
                                   try {
-                                    _analyticsService.track(
+                                    _analyticsService!.track(
                                         eventName:
                                             AnalyticsEvents.journeyMileStarted,
                                         properties: AnalyticsProperties
@@ -247,7 +239,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                 },
                                 width: SizeConfig.screenWidth),
                             if (widget.milestone.skipCost != null &&
-                                widget.milestone.skipCost.isNotEmpty)
+                                widget.milestone.skipCost!.isNotEmpty)
                               Container(
                                 width: SizeConfig.screenWidth,
                                 alignment: Alignment.center,
@@ -288,8 +280,8 @@ class _JourneyMilestoneDetailsModalSheetState
         children: [
           GestureDetector(
             onTap: () {
-              AppState.backButtonDispatcher.didPopRoute();
-              AppState.delegate.parseRoute(Uri.parse("/myWinnings"));
+              AppState.backButtonDispatcher!.didPopRoute();
+              AppState.delegate!.parseRoute(Uri.parse("/myWinnings"));
             },
             child: SvgPicture.asset(
               isLevelChange
@@ -304,7 +296,7 @@ class _JourneyMilestoneDetailsModalSheetState
     );
   }
 
-  Widget rewardWidget(List<Reward> rewards) {
+  Widget rewardWidget(List<Reward>? rewards) {
     return (rewards == null || rewards.isEmpty)
         ? SizedBox()
         : Column(
@@ -357,7 +349,7 @@ class _JourneyMilestoneDetailsModalSheetState
           );
   }
 
-  getLeadingAsset(String type) {
+  getLeadingAsset(String? type) {
     switch (type) {
       case 'flc':
         return Assets.token;
@@ -370,7 +362,7 @@ class _JourneyMilestoneDetailsModalSheetState
     }
   }
 
-  getSuffix(String type) {
+  getSuffix(String? type) {
     switch (type) {
       case 'flc':
         return " tokens";
@@ -383,7 +375,7 @@ class _JourneyMilestoneDetailsModalSheetState
     }
   }
 
-  getPrefix(String type) {
+  getPrefix(String? type) {
     switch (type) {
       case 'flc':
         return "";

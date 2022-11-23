@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class EventInstructionsModal extends StatelessWidget {
   final List instructions;
-  EventInstructionsModal({@required this.instructions});
+  EventInstructionsModal({required this.instructions});
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -36,7 +36,7 @@ class EventInstructionsModal extends StatelessWidget {
                       backgroundColor: Colors.black,
                       child: IconButton(
                         onPressed: () {
-                          AppState.backButtonDispatcher.didPopRoute();
+                          AppState.backButtonDispatcher!.didPopRoute();
                         },
                         icon: Icon(
                           Icons.close,

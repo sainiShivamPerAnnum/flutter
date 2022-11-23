@@ -7,90 +7,97 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SaveAssetsFooter extends StatelessWidget {
-  const SaveAssetsFooter({Key key}) : super(key: key);
+  const SaveAssetsFooter({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding54),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SaveInfoSection(
-                    title: 'Govt. Accredited',
-                    imageAsset: Assets.augmontLogo,
-                    imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.16,
-                  ),
-                  VerticalDivider(
-                    color: Colors.white,
-                    thickness: 0.2,
-                    width: 10,
-                    indent: 2,
-                    endIndent: 2,
-                  ),
-                  SaveInfoSection(
-                    title: 'RBI Certified',
-                    imageAsset: Assets.lendboxLogo,
-                    imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.16,
-                  ),
-                  VerticalDivider(
-                    color: Colors.white,
-                    thickness: 0.2,
-                    width: 10,
-                    indent: 2,
-                    endIndent: 2,
-                  ),
-                  SaveInfoSection(
-                    title: 'Gold Insurer',
-                    imageAsset: Assets.idbiTrustee,
-                    imageHeight: SizeConfig.screenWidth * 0.07,
-                    imageWidth: SizeConfig.screenWidth * 0.16,
-                  ),
-                ],
-              ),
+      padding: EdgeInsets.only(
+          left: SizeConfig.pageHorizontalMargins,
+          right: SizeConfig.pageHorizontalMargins,
+          top: SizeConfig.padding6,
+          bottom: SizeConfig.padding20),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SaveInfoSection(
+              title: 'Govt. Accredited',
+              imageAsset: Assets.augmontLogo,
+              imageHeight: SizeConfig.screenWidth! * 0.07,
+              imageWidth: SizeConfig.screenWidth! * 0.16,
             ),
-          ),
-        ],
+            VerticalDivider(
+              color: Colors.white,
+              thickness: 0.2,
+              width: 10,
+              indent: 2,
+              endIndent: 2,
+            ),
+            SaveInfoSection(
+              title: 'RBI Certified',
+              imageAsset: Assets.lendboxLogo,
+              imageHeight: SizeConfig.screenWidth! * 0.07,
+              imageWidth: SizeConfig.screenWidth! * 0.16,
+            ),
+            VerticalDivider(
+              color: Colors.white,
+              thickness: 0.2,
+              width: 10,
+              indent: 2,
+              endIndent: 2,
+            ),
+            SaveInfoSection(
+              title: 'Trusted by',
+              imageAsset: Assets.rbiLogo,
+              imageHeight: SizeConfig.screenWidth! * 0.07,
+              imageWidth: SizeConfig.screenWidth! * 0.16,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class SaveInfoSection extends StatelessWidget {
-  final String title;
-  final String imageAsset;
-  final double imageHeight;
-  final double imageWidth;
+  final String? title;
+  final String? imageAsset;
+  final double? imageHeight;
+  final double? imageWidth;
 
   const SaveInfoSection(
-      {Key key, this.title, this.imageAsset, this.imageHeight, this.imageWidth})
+      {Key? key,
+      this.title,
+      this.imageAsset,
+      this.imageHeight,
+      this.imageWidth})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          title,
-          style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
-        ),
-        SizedBox(
-          height: SizeConfig.padding20,
-        ),
-        SizedBox(
-            height: imageHeight,
-            width: imageWidth,
-            child: SvgPicture.asset(imageAsset)),
-      ],
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            title ?? '',
+            style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
+          ),
+          SizedBox(
+            height: SizeConfig.padding6,
+          ),
+          SizedBox(
+            height: imageHeight ?? 0,
+            width: imageWidth ?? 0,
+            child: SvgPicture.asset(
+              imageAsset ?? '',
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

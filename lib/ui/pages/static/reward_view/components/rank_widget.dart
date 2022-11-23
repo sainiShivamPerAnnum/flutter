@@ -7,7 +7,7 @@ import 'package:flutter_svg/svg.dart';
 
 class RankWidget extends StatelessWidget {
   const RankWidget({
-    Key key,
+    Key? key,
     this.firstPriceMoney,
     this.secondPriceMoney,
     this.thirdPriceMoney,
@@ -16,8 +16,8 @@ class RankWidget extends StatelessWidget {
     this.thirdPricePoint,
   }) : super(key: key);
 
-  final int firstPriceMoney, secondPriceMoney, thirdPriceMoney;
-  final int firstPricePoint, secondPricePoint, thirdPricePoint;
+  final int? firstPriceMoney, secondPriceMoney, thirdPriceMoney;
+  final int? firstPricePoint, secondPricePoint, thirdPricePoint;
 
   @override
   Widget build(BuildContext context) {
@@ -61,20 +61,20 @@ class RankWidget extends StatelessWidget {
   }
 
   _buildRankPiller({
-    int rank,
-    String image,
-    int priceMoney,
-    int pricePoint,
-    Color color,
-    BuildContext context,
+    required int rank,
+    required String image,
+    int? priceMoney,
+    int? pricePoint,
+    required Color color,
+    BuildContext? context,
   }) {
-    double pillerBoxHeight = SizeConfig.screenWidth * 0.5556 -
+    double pillerBoxHeight = SizeConfig.screenWidth! * 0.5556 -
         ((rank - 1.0) *
-            SizeConfig.screenWidth *
+            SizeConfig.screenWidth! *
             0.055); // 200 - (rank - 1) * 20
-    double pillerHeight = SizeConfig.screenWidth * 0.5 -
+    double pillerHeight = SizeConfig.screenWidth! * 0.5 -
         ((rank - 1.0) *
-            SizeConfig.screenWidth *
+            SizeConfig.screenWidth! *
             0.055); // 180 - (rank - 1) * 20
     return SizedBox(
       height: pillerBoxHeight,
@@ -96,7 +96,7 @@ class RankWidget extends StatelessWidget {
                 color: color.withOpacity(0.1),
               ),
               height: pillerHeight,
-              width: SizeConfig.screenWidth * 0.25, // 90
+              width: SizeConfig.screenWidth! * 0.25, // 90
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -144,8 +144,8 @@ class RankWidget extends StatelessWidget {
           ),
           Positioned(
             left: rank == 1
-                ? SizeConfig.screenWidth * 0.045
-                : SizeConfig.screenWidth * 0.0694,
+                ? SizeConfig.screenWidth! * 0.045
+                : SizeConfig.screenWidth! * 0.0694,
             child: SvgPicture.asset(
               image,
               width: rank == 1 ? SizeConfig.iconSize7 : SizeConfig.iconSize6,

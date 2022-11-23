@@ -19,7 +19,8 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class SaveNetWorthSection extends StatelessWidget {
   final SaveViewModel saveViewModel;
 
-  const SaveNetWorthSection({Key key, this.saveViewModel}) : super(key: key);
+  const SaveNetWorthSection({Key? key, required this.saveViewModel})
+      : super(key: key);
 
   getAssetsOrder() {
     List<Widget> orderedAssests = [];
@@ -28,7 +29,7 @@ class SaveNetWorthSection extends StatelessWidget {
         case 'LB':
           orderedAssests.add(
             SaveCustomCard(
-              title: 'Fello Flo',
+              title: 'Fello Flo (10%)',
               subtitle: "Current Value",
               key: ValueKey(Constants.ASSET_TYPE_LENDBOX),
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
@@ -109,9 +110,9 @@ class SaveNetWorthSection extends StatelessWidget {
                           height: SizeConfig.padding12,
                         ),
                         Text(
-                          'Your Networth',
+                          'Total Savings',
                           style: TextStyles.rajdhani.body2
-                              .colour(UiConstants.kTextColor2),
+                              .colour(UiConstants.kTextColor),
                         ),
                         NetWorthValue(
                           style: TextStyles.sourceSans.title0.bold,

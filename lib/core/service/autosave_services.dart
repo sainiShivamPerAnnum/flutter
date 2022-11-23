@@ -11,14 +11,14 @@ class AutosaveServices {
       );
     if (subscription.status == Constants.SUBSCRIPTION_INACTIVE &&
         subscription.autoAmount != 0.0 &&
-        subscription.resumeDate.isNotEmpty) {
+        subscription.resumeDate!.isNotEmpty) {
       return new LinearGradient(
           colors: [Color(0xffFD746C), Color(0xffFF9068)],
           begin: Alignment.topLeft,
           end: Alignment.centerRight);
     } else if (subscription.status == Constants.SUBSCRIPTION_INACTIVE &&
         subscription.autoAmount != 0.0 &&
-        subscription.resumeDate.isEmpty) {
+        subscription.resumeDate!.isEmpty) {
       return new LinearGradient(
         colors: [UiConstants.autosaveColor, UiConstants.autosaveColor],
       );

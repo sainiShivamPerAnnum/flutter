@@ -81,7 +81,7 @@ class BankDetailsView extends StatelessWidget {
                               validator: (value) {
                                 print(value);
 
-                                if (value == null && value.trim().isEmpty)
+                                if (value == null && value!.trim().isEmpty)
                                   return 'Please enter a valid account number';
                                 else if (value.trim().length < 9 ||
                                     value.trim().length > 18)
@@ -105,10 +105,10 @@ class BankDetailsView extends StatelessWidget {
                               ],
                               validator: (value) {
                                 print(value);
-                                if (value == null && value.trim().isEmpty)
+                                if (value == null && value!.trim().isEmpty)
                                   return 'Please enter a valid account number';
                                 else if (value.trim() !=
-                                    model.bankAccNoController.text.trim())
+                                    model.bankAccNoController!.text.trim())
                                   return "Bank account numbers did not match";
                                 else if (value.trim().length < 9 ||
                                     value.trim().length > 18)
@@ -132,7 +132,7 @@ class BankDetailsView extends StatelessWidget {
                               ],
                               validator: (value) {
                                 print(value);
-                                if (value == null && value.trim().isEmpty)
+                                if (value == null && value!.trim().isEmpty)
                                   return 'Please enter a valid bank IFSC';
                                 else if (value.trim().length < 6 ||
                                     value.trim().length > 25)
@@ -141,7 +141,7 @@ class BankDetailsView extends StatelessWidget {
                               },
                             ),
                             SizedBox(
-                              height: SizeConfig.screenHeight / 2,
+                              height: SizeConfig.screenHeight! / 2,
                             )
                           ],
                         ),
@@ -196,7 +196,7 @@ class BankDetailsView extends StatelessWidget {
                                     if (model.isDetailsUpdating) return;
                                     if (BaseUtil.showNoInternetAlert()) return;
                                     FocusScope.of(context).unfocus();
-                                    if (model.formKey.currentState.validate())
+                                    if (model.formKey.currentState!.validate())
                                       await model.updateBankDetails();
                                   },
                                 )

@@ -18,8 +18,8 @@ import 'package:shimmer/shimmer.dart';
 class MoreGamesSection extends StatelessWidget {
   final PlayViewModel model;
   const MoreGamesSection({
-    @required this.model,
-    Key key,
+    required this.model,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -55,13 +55,13 @@ class MoreGamesSection extends StatelessWidget {
 }
 
 class MoreGames extends StatelessWidget {
-  final GameModel game;
-  final bool showDivider;
+  final GameModel? game;
+  final bool? showDivider;
   final _analyticsService = locator<AnalyticsService>();
   MoreGames({
     this.game,
     this.showDivider,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -69,17 +69,16 @@ class MoreGames extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
-
-        AppState.delegate.parseRoute(
-          Uri.parse(game.route),
+        AppState.delegate!.parseRoute(
+          Uri.parse(game!.route!),
         );
         _analyticsService.track(
             eventName: AnalyticsEvents.gameTapped,
             properties:
                 AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-              'Game name': game.gameName,
-              "Entry fee": game.playCost,
-              "Win upto": game.prizeAmount,
+              'Game name': game?.gameName,
+              "Entry fee": game?.playCost,
+              "Win upto": game?.prizeAmount,
               "Time left for draw Tambola (mins)":
                   AnalyticsProperties.getTimeLeftForTambolaDraw(),
               "Tambola Tickets Owned":
@@ -98,15 +97,15 @@ class MoreGames extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(
                         Radius.circular(SizeConfig.roundness24)),
-                    color: game.shadowColor,
+                    color: game!.shadowColor,
                   ),
-                  height: SizeConfig.screenWidth * 0.38,
-                  width: SizeConfig.screenWidth * 0.291,
+                  height: SizeConfig.screenWidth! * 0.38,
+                  width: SizeConfig.screenWidth! * 0.291,
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(
                         Radius.circular(SizeConfig.roundness24)),
                     child: SvgPicture.network(
-                      game.icon,
+                      game!.icon!,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -120,7 +119,7 @@ class MoreGames extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          game.gameName,
+                          game!.gameName!,
                           style: TextStyles.rajdhaniSB.bold.body1
                               .colour(Colors.white),
                         ),
@@ -128,7 +127,7 @@ class MoreGames extends StatelessWidget {
                           height: SizeConfig.padding8,
                         ),
                         Text(
-                          "Win upto ₹${game.prizeAmount.toString()}",
+                          "Win upto ₹${game!.prizeAmount.toString()}",
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.kTextColor2),
                         ),
@@ -147,7 +146,7 @@ class MoreGames extends StatelessWidget {
                                 ),
                                 SizedBox(width: SizeConfig.padding6),
                                 Text(
-                                  game.playCost.toString(),
+                                  game!.playCost.toString(),
                                   style: TextStyles.sourceSans.body2
                                       .colour(Colors.white),
                                 )
@@ -156,8 +155,8 @@ class MoreGames extends StatelessWidget {
                             GestureDetector(
                               onTap: () {
                                 Haptic.vibrate();
-                                AppState.delegate.parseRoute(
-                                  Uri.parse(game.route),
+                                AppState.delegate!.parseRoute(
+                                  Uri.parse(game!.route!),
                                 );
                               },
                               child: Container(
@@ -185,7 +184,7 @@ class MoreGames extends StatelessWidget {
                 ),
               ],
             ),
-            if (showDivider)
+            if (showDivider!)
               Container(
                 width: double.infinity,
                 height: 0.4,
@@ -204,7 +203,7 @@ class MoreGames extends StatelessWidget {
 
 class MoreGamesShimmer extends StatelessWidget {
   const MoreGamesShimmer({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -225,8 +224,8 @@ class MoreGamesShimmer extends StatelessWidget {
                     BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
                 color: Colors.grey.shade600,
               ),
-              height: SizeConfig.screenWidth * 0.36,
-              width: SizeConfig.screenWidth * 0.291,
+              height: SizeConfig.screenWidth! * 0.36,
+              width: SizeConfig.screenWidth! * 0.291,
               child: ClipRRect(
                 borderRadius:
                     BorderRadius.all(Radius.circular(SizeConfig.roundness24)),
@@ -241,7 +240,7 @@ class MoreGamesShimmer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: SizeConfig.screenWidth * 0.4,
+                      width: SizeConfig.screenWidth! * 0.4,
                       height: SizeConfig.padding14,
                       color: Colors.grey.shade600,
                     ),
@@ -249,7 +248,7 @@ class MoreGamesShimmer extends StatelessWidget {
                       height: SizeConfig.padding8,
                     ),
                     Container(
-                      width: SizeConfig.screenWidth * 0.3,
+                      width: SizeConfig.screenWidth! * 0.3,
                       height: SizeConfig.padding10,
                       color: Colors.grey.shade600,
                     ),
@@ -266,8 +265,8 @@ class MoreGamesShimmer extends StatelessWidget {
                           color: Colors.grey.shade600,
                         ),
                         Container(
-                          width: SizeConfig.screenWidth * 0.2,
-                          height: SizeConfig.screenWidth * 0.1,
+                          width: SizeConfig.screenWidth! * 0.2,
+                          height: SizeConfig.screenWidth! * 0.1,
                           decoration: BoxDecoration(
                               color: Colors.grey.shade600,
                               borderRadius: BorderRadius.all(

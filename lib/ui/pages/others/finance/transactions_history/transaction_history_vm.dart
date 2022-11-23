@@ -19,27 +19,28 @@ import 'package:felloapp/util/custom_logger.dart';
 enum TranFilterType { Type, Subtype }
 
 class TransactionsHistoryViewModel extends BaseViewModel {
-  final _logger = locator<CustomLogger>();
-  final _userService = locator<UserService>();
-  final _paytmService = locator<PaytmService>();
-  final _subcriptionRepo = locator<SubscriptionRepo>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService? _userService = locator<UserService>();
+  final PaytmService? _paytmService = locator<PaytmService>();
+  final SubscriptionRepo? _subcriptionRepo = locator<SubscriptionRepo>();
 
-  final _txnHistoryService = locator<TransactionHistoryService>();
+  final TransactionHistoryService? _txnHistoryService =
+      locator<TransactionHistoryService>();
 
   //local variables
   int _filter = 1;
   bool _isMoreTxnsBeingFetched = false;
   List<UserTransaction> apiTxns = [];
-  String _filterValue = "All";
-  String lastSipTxnDocId;
-  List<String> _tranTypeFilterItems = [
+  String? _filterValue = "All";
+  String? lastSipTxnDocId;
+  List<String?> _tranTypeFilterItems = [
     "All",
     "Deposits",
     "Withdrawals",
   ];
-  List<UserTransaction> _filteredList;
-  ScrollController _scrollController;
-  ScrollController _sipScrollController;
+  List<UserTransaction>? _filteredList;
+  ScrollController? _scrollController;
+  ScrollController? _sipScrollController;
 
   get sipScrollController => this._sipScrollController;
 
@@ -47,27 +48,27 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     this._sipScrollController = value;
   }
 
-  PageController _pageController;
+  PageController? _pageController;
   int _tabIndex = 0;
   int get filter => _filter;
-  String get filterValue => _filterValue;
-  ActiveSubscriptionModel _activeSubscription;
-  List<AutosaveTransactionModel> _filteredSIPList = [];
+  String? get filterValue => _filterValue;
+  ActiveSubscriptionModel? _activeSubscription;
+  List<AutosaveTransactionModel>? _filteredSIPList = [];
   bool _hasMoreSIPTxns = false;
 
   // Map<String, int> get tranTypeFilterItems => _tranTypeFilterItems;
 
-  ActiveSubscriptionModel get activeSubscription => _activeSubscription;
-  List<String> get tranTypeFilterItems => _tranTypeFilterItems;
-  List<UserTransaction> get filteredList => _filteredList;
-  List<AutosaveTransactionModel> get filteredSIPList => _filteredSIPList;
+  ActiveSubscriptionModel? get activeSubscription => _activeSubscription;
+  List<String?> get tranTypeFilterItems => _tranTypeFilterItems;
+  List<UserTransaction>? get filteredList => _filteredList;
+  List<AutosaveTransactionModel>? get filteredSIPList => _filteredSIPList;
 
-  ScrollController get tranListController => _scrollController;
-  PageController get pageController => _pageController;
+  ScrollController? get tranListController => _scrollController;
+  PageController? get pageController => _pageController;
   int get tabIndex => _tabIndex;
   bool get getHasMoreTxns => this._hasMoreSIPTxns;
   bool get isMoreTxnsBeingFetched => _isMoreTxnsBeingFetched;
-  InvestmentType _investmentType;
+  InvestmentType? _investmentType;
 
   //setters
   set filter(int val) {
@@ -75,7 +76,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set filteredList(List<UserTransaction> val) {
+  set filteredList(List<UserTransaction>? val) {
     _filteredList = val;
     notifyListeners();
   }
@@ -85,7 +86,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set filterValue(String filter) {
+  set filterValue(String? filter) {
     _filterValue = filter;
     notifyListeners();
   }
@@ -95,13 +96,13 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set filteredSIPList(List<AutosaveTransactionModel> value) {
+  set filteredSIPList(List<AutosaveTransactionModel>? value) {
     _filteredSIPList = value;
     notifyListeners();
   }
 
   appendToSipList(List<AutosaveTransactionModel> value) {
-    _filteredSIPList.addAll(value);
+    _filteredSIPList!.addAll(value);
     notifyListeners();
   }
 
@@ -115,7 +116,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init(InvestmentType investmentType, bool showAutosave) {
+  init(InvestmentType? investmentType, bool showAutosave) {
     this._investmentType = investmentType;
     _scrollController = ScrollController();
     if (investmentType == InvestmentType.AUGGOLD99)
@@ -123,38 +124,38 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     _pageController = PageController(initialPage: 0);
     if (showAutosave) {
       tabIndex = 1;
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        pageController.animateToPage(1,
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+        pageController!.animateToPage(1,
             duration: Duration(milliseconds: 200), curve: Curves.linear);
       });
     }
-    if (_txnHistoryService.txnList == null ||
-        _txnHistoryService.txnList.length <= 5) {
+    if (_txnHistoryService!.txnList == null ||
+        _txnHistoryService!.txnList!.length <= 5) {
       getTransactions();
     }
 
-    if (_txnHistoryService.txnList != null) {
-      filteredList = _txnHistoryService.txnList;
+    if (_txnHistoryService!.txnList != null) {
+      filteredList = _txnHistoryService!.txnList;
     } else {
       filteredList = [];
     }
 
     if (investmentType == InvestmentType.AUGGOLD99)
-      _sipScrollController.addListener(() async {
-        if (_sipScrollController.offset >=
-                _sipScrollController.position.maxScrollExtent &&
-            !_sipScrollController.position.outOfRange) {
-          if (_txnHistoryService.hasMoreTxns && state == ViewState.Idle) {
+      _sipScrollController!.addListener(() async {
+        if (_sipScrollController!.offset >=
+                _sipScrollController!.position.maxScrollExtent &&
+            !_sipScrollController!.position.outOfRange) {
+          if (_txnHistoryService!.hasMoreTxns && state == ViewState.Idle) {
             getMoreSipTransactions();
           }
         }
       });
 
-    _scrollController.addListener(() async {
-      if (_scrollController.offset >=
-              _scrollController.position.maxScrollExtent &&
-          !_scrollController.position.outOfRange) {
-        if (_txnHistoryService.hasMoreTxns && state == ViewState.Idle) {
+    _scrollController!.addListener(() async {
+      if (_scrollController!.offset >=
+              _scrollController!.position.maxScrollExtent &&
+          !_scrollController!.position.outOfRange) {
+        if (_txnHistoryService!.hasMoreTxns && state == ViewState.Idle) {
           getMoreTransactions();
         }
       }
@@ -165,45 +166,45 @@ class TransactionsHistoryViewModel extends BaseViewModel {
 
   Future getTransactions() async {
     setState(ViewState.Busy);
-    await _txnHistoryService.fetchTransactions(
-      subtype: _investmentType,
+    await _txnHistoryService!.fetchTransactions(
+      subtype: _investmentType!,
     );
-    _filteredList = _txnHistoryService.txnList;
+    _filteredList = _txnHistoryService!.txnList;
     setState(ViewState.Idle);
   }
 
   getMoreTransactions() async {
-    _logger.d("fetching more transactions...");
+    _logger!.d("fetching more transactions...");
     isMoreTxnsBeingFetched = true;
     switch (filter) {
       case 1:
-        if (_txnHistoryService.hasMoreTxns)
-          await _txnHistoryService.fetchTransactions(
-            subtype: _investmentType,
+        if (_txnHistoryService!.hasMoreTxns)
+          await _txnHistoryService!.fetchTransactions(
+            subtype: _investmentType!,
           );
         break;
       case 2:
-        if (_txnHistoryService.hasMoreDepositTxns)
-          await _txnHistoryService.fetchTransactions(
-              subtype: _investmentType,
+        if (_txnHistoryService!.hasMoreDepositTxns)
+          await _txnHistoryService!.fetchTransactions(
+              subtype: _investmentType!,
               type: UserTransaction.TRAN_TYPE_DEPOSIT);
         break;
       case 3:
-        if (_txnHistoryService.hasMoreWithdrawalTxns)
-          await _txnHistoryService.fetchTransactions(
-              subtype: _investmentType,
+        if (_txnHistoryService!.hasMoreWithdrawalTxns)
+          await _txnHistoryService!.fetchTransactions(
+              subtype: _investmentType!,
               type: UserTransaction.TRAN_TYPE_WITHDRAW);
         break;
       case 4:
-        if (_txnHistoryService.hasMorePrizeTxns)
-          await _txnHistoryService.fetchTransactions(
-              subtype: _investmentType, type: UserTransaction.TRAN_TYPE_PRIZE);
+        if (_txnHistoryService!.hasMorePrizeTxns)
+          await _txnHistoryService!.fetchTransactions(
+              subtype: _investmentType!, type: UserTransaction.TRAN_TYPE_PRIZE);
 
         break;
       case 5:
-        if (_txnHistoryService.hasMoreRefundedTxns)
-          await _txnHistoryService.fetchTransactions(
-              subtype: _investmentType,
+        if (_txnHistoryService!.hasMoreRefundedTxns)
+          await _txnHistoryService!.fetchTransactions(
+              subtype: _investmentType!,
               status: UserTransaction.TRAN_STATUS_REFUNDED);
         break;
       default:
@@ -215,61 +216,61 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     isMoreTxnsBeingFetched = false;
   }
 
-  filterTransactions({@required bool update}) {
+  filterTransactions({required bool update}) {
     switch (filter) {
       case 1:
-        filteredList = _txnHistoryService.txnList;
+        filteredList = _txnHistoryService!.txnList;
         break;
       case 2:
         filteredList = [
-          ..._txnHistoryService.txnList
+          ..._txnHistoryService!.txnList!
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_DEPOSIT)
         ];
         break;
       case 3:
         filteredList = [
-          ..._txnHistoryService.txnList
+          ..._txnHistoryService!.txnList!
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_WITHDRAW)
         ];
         break;
       case 4:
         filteredList = [
-          ..._txnHistoryService.txnList
+          ..._txnHistoryService!.txnList!
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_PRIZE)
         ];
         break;
       case 5:
         filteredList = [
-          ..._txnHistoryService.txnList.where(
+          ..._txnHistoryService!.txnList!.where(
               (txn) => txn.tranStatus == UserTransaction.TRAN_STATUS_REFUNDED)
         ];
         break;
       default:
-        filteredList = _txnHistoryService.txnList;
+        filteredList = _txnHistoryService!.txnList;
         break;
     }
-    if (update && filteredList.length < 30) getMoreTransactions();
+    if (update && filteredList!.length < 30) getMoreTransactions();
   }
 
   getLatestSIPTransactions() async {
     setState(ViewState.Busy);
-    activeSubscription = _paytmService.activeSubscription;
+    activeSubscription = _paytmService!.activeSubscription;
     if (activeSubscription == null) {
       setState(ViewState.Idle);
       return;
     }
     final ApiResponse<List<AutosaveTransactionModel>> result =
-        await _subcriptionRepo.getAutosaveTransactions(
-      uid: _userService.baseUser.uid,
+        await _subcriptionRepo!.getAutosaveTransactions(
+      uid: _userService!.baseUser!.uid,
       lastDocument: null,
       limit: 30,
     );
     if (result.code == 200) {
-      if (result.model != null && result.model.isNotEmpty) {
+      if (result.model != null && result.model!.isNotEmpty) {
         filteredSIPList = result.model;
-        if (filteredSIPList.isNotEmpty && filteredSIPList.length == 30) {
+        if (filteredSIPList!.isNotEmpty && filteredSIPList!.length == 30) {
           _hasMoreSIPTxns = true;
-          lastSipTxnDocId = filteredSIPList.last.id;
+          lastSipTxnDocId = filteredSIPList!.last.id;
         } else {
           _hasMoreSIPTxns = false;
           lastSipTxnDocId = null;
@@ -283,8 +284,8 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     if (_hasMoreSIPTxns) {
       isMoreTxnsBeingFetched = true;
       final ApiResponse<List<AutosaveTransactionModel>> result =
-          await _subcriptionRepo.getAutosaveTransactions(
-        uid: _userService.baseUser.uid,
+          await _subcriptionRepo!.getAutosaveTransactions(
+        uid: _userService!.baseUser!.uid,
         lastDocument: lastSipTxnDocId,
         limit: 30,
       );
@@ -292,7 +293,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
       if (result.isSuccess()) {
         final moreSIPTxns = result.model;
         if (moreSIPTxns != null && moreSIPTxns.isNotEmpty) {
-          appendToSipList(result.model);
+          appendToSipList(result.model!);
           if (moreSIPTxns.length == 30) {
             _hasMoreSIPTxns = true;
             lastSipTxnDocId = moreSIPTxns.last.id;

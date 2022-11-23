@@ -6,7 +6,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
   final String url;
-  WebViewScreen({@required this.url});
+  WebViewScreen({required this.url});
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -19,7 +19,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   set viewLoader(value) {
     if (mounted)
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         this._viewLoader = value;
         setState(() {});
       });

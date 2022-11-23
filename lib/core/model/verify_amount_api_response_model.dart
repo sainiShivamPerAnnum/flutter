@@ -1,12 +1,12 @@
 class VerifyAmountApiResponseModel {
-  bool flag;
-  String message;
+  bool ?flag;
+  String? message;
 
   VerifyAmountApiResponseModel({this.flag, this.message});
 
   VerifyAmountApiResponseModel.fromJson(Map<String, dynamic> json) {
-    flag = json['flag'];
-    message = json['message'];
+    flag = json['flag'] ?? false;
+    message = json['message'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -18,7 +18,7 @@ class VerifyAmountApiResponseModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'flag': flag,
+      'flag': flag,  
       'message': message,
     };
   }

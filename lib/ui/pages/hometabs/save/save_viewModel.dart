@@ -39,18 +39,20 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class SaveViewModel extends BaseViewModel {
-  final _campaignRepo = locator<CampaignRepo>();
-  final _saveRepo = locator<SaveRepo>();
-  final _userService = locator<UserService>();
-  BaseUtil baseProvider;
-  final BankAndPanService _sellService = locator<BankAndPanService>();
-  final _transactionHistoryRepo = locator<TransactionHistoryRepository>();
-  final _paymentRepo = locator<PaymentRepository>();
-  final _txnHistoryService = locator<TransactionHistoryService>();
-  final _userCoinService = locator<UserCoinService>();
-  final _baseUtil = locator<BaseUtil>();
+  final CampaignRepo _campaignRepo = locator<CampaignRepo>();
+  final SaveRepo? _saveRepo = locator<SaveRepo>();
+  final UserService? _userService = locator<UserService>();
+  BaseUtil? baseProvider;
+  final BankAndPanService? _sellService = locator<BankAndPanService>();
+  final TransactionHistoryRepository? _transactionHistoryRepo =
+      locator<TransactionHistoryRepository>();
+  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
+  final TransactionHistoryService? _txnHistoryService =
+      locator<TransactionHistoryService>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final BaseUtil? _baseUtil = locator<BaseUtil>();
 
-  final _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final List<Color> randomBlogCardCornerColors = [
     UiConstants.kBlogCardRandomColor1,
     UiConstants.kBlogCardRandomColor2,
@@ -61,10 +63,9 @@ class SaveViewModel extends BaseViewModel {
   double _nonWithdrawableQnt = 0.0;
   double _withdrawableQnt = 0.0;
 
-  List<EventModel> _ongoingEvents;
-  List<BlogPostModel> _blogPosts;
-  List<BlogPostModelByCategory> _blogPostsByCategory;
-
+  List<EventModel>? _ongoingEvents;
+  List<BlogPostModel>? _blogPosts;
+  List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
   List<String> _sellingReasons = [];
@@ -102,9 +103,9 @@ class SaveViewModel extends BaseViewModel {
     '48 hour lock-in period',
   ];
 
-  List<EventModel> get ongoingEvents => this._ongoingEvents;
-  List<BlogPostModel> get blogPosts => this._blogPosts;
-  List<BlogPostModelByCategory> get blogPostsByCategory =>
+  List<EventModel>? get ongoingEvents => this._ongoingEvents;
+  List<BlogPostModel>? get blogPosts => this._blogPosts;
+  List<BlogPostModelByCategory>? get blogPostsByCategory =>
       this._blogPostsByCategory;
   bool get isLoading => _isLoading;
   bool get isChallengesLoading => _isChallenegsLoading;
@@ -117,17 +118,17 @@ class SaveViewModel extends BaseViewModel {
   bool get isongoing => _isongoing;
   bool get isLockInReached => _isLockInReached;
   bool get isSellButtonVisible => _isSellButtonVisible;
-  UserService get userService => _userService;
-  UserFundWallet get userFundWallet => _userService.userFundWallet;
+  UserService? get userService => _userService;
+  UserFundWallet? get userFundWallet => _userService!.userFundWallet;
   double get nonWithdrawableQnt => _nonWithdrawableQnt;
   double get withdrawableQnt => _withdrawableQnt;
 
-  set ongoingEvents(List<EventModel> value) {
+  set ongoingEvents(List<EventModel>? value) {
     this._ongoingEvents = value;
     notifyListeners();
   }
 
-  set blogPosts(List<BlogPostModel> value) {
+  set blogPosts(List<BlogPostModel>? value) {
     this._blogPosts = value;
     notifyListeners();
   }
@@ -149,13 +150,15 @@ class SaveViewModel extends BaseViewModel {
 
   init() {
     // _baseUtil.fetchUserAugmontDetail();
-    print("ABC: save init called");
-    // setupSaveViewItemsOrder();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    baseProvider = BaseUtil();
+    getCampaignEvents();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      // fetchLockedGoldQnt();
+      _sellService!.init();
       getCampaignEvents();
-      _sellService.init();
+
       getSaveViewBlogs();
+      // _sellService.updateSellButtonDetails();
     });
   }
 
@@ -171,7 +174,7 @@ class SaveViewModel extends BaseViewModel {
   }
 
   openProfile() {
-    _baseUtil.openProfileDetailsScreen();
+    _baseUtil!.openProfileDetailsScreen();
   }
 
   getSaveViewItems(SaveViewModel smodel) {
@@ -199,7 +202,7 @@ class SaveViewModel extends BaseViewModel {
     final response = await _campaignRepo.getOngoingEvents();
     if (response.isSuccess()) {
       ongoingEvents = response.model;
-      ongoingEvents.sort((a, b) => a.position.compareTo(b.position));
+      ongoingEvents!.sort((a, b) => a.position.compareTo(b.position));
     } else {
       ongoingEvents = [];
     }
@@ -208,10 +211,10 @@ class SaveViewModel extends BaseViewModel {
   }
 
   getSaveViewBlogs() async {
-    final response = await _saveRepo.getBlogs(5);
+    final response = await _saveRepo!.getBlogs(5);
     if (response.isSuccess()) {
       blogPosts = response.model;
-      print(blogPosts.length);
+      print(blogPosts!.length);
     } else {
       print(response.errorMessage);
     }
@@ -220,23 +223,24 @@ class SaveViewModel extends BaseViewModel {
 
   getAllBlogs() async {
     updateIsLoading(true);
-    final response = await _saveRepo.getBlogs(30);
+    final response = await _saveRepo!.getBlogs(30);
     blogPosts = response.model;
-    blogPosts.sort(((a, b) => a.acf.categories.compareTo(b.acf.categories)));
+    blogPosts!
+        .sort(((a, b) => a.acf!.categories!.compareTo(b.acf!.categories!)));
     this._blogPostsByCategory = getAllBlogsByCategory();
-    print(blogPosts.length);
+    print(blogPosts!.length);
     updateIsLoading(false);
     notifyListeners();
   }
 
   refreshTransactions(InvestmentType investmentType) async {
-    await _txnHistoryService.updateTransactions(investmentType);
-    await _userCoinService.getUserCoinBalance();
-    await _userService.getUserFundWalletData();
+    await _txnHistoryService!.updateTransactions(investmentType);
+    await _userCoinService!.getUserCoinBalance();
+    await _userService!.getUserFundWalletData();
   }
 
   double getQuantity(
-    UserFundWallet fund,
+    UserFundWallet? fund,
     var investmentType,
   ) {
     final quantity = investmentType == InvestmentType.AUGGOLD99
@@ -250,7 +254,7 @@ class SaveViewModel extends BaseViewModel {
     }
   }
 
-  double getInvestedQuantity(UserFundWallet fund) {
+  double getInvestedQuantity(UserFundWallet? fund) {
     final quantity = fund?.wLbPrinciple;
 
     if (quantity != null) {
@@ -262,13 +266,13 @@ class SaveViewModel extends BaseViewModel {
   List<BlogPostModelByCategory> getAllBlogsByCategory() {
     List<BlogPostModelByCategory> result = [];
 
-    String cat = this.blogPosts[0].acf.categories;
+    String? cat = this.blogPosts![0].acf!.categories;
     List<BlogPostModel> blogs = [];
 
-    this.blogPosts.forEach((blog) {
-      if (blog.acf.categories != cat) {
+    this.blogPosts!.forEach((blog) {
+      if (blog.acf!.categories != cat) {
         result.add(new BlogPostModelByCategory(category: cat, blogs: blogs));
-        cat = blog.acf.categories;
+        cat = blog.acf!.categories;
         blogs = [blog];
       } else {
         blogs.add(blog);
@@ -280,15 +284,15 @@ class SaveViewModel extends BaseViewModel {
   }
 
   /// `Navigation`
-  navigateToBlogWebView(String slug, String title) {
-    _analyticsService.track(eventName: AnalyticsEvents.blogWebView);
+  navigateToBlogWebView(String? slug, String? title) {
+    _analyticsService!.track(eventName: AnalyticsEvents.blogWebView);
 
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: BlogPostWebViewConfig,
         widget: BlogWebView(
           initialUrl: 'https://fello.in/blogs/$slug?content_only=true',
-          title: title,
+          title: title!,
         ));
   }
 
@@ -298,7 +302,7 @@ class SaveViewModel extends BaseViewModel {
     Haptic.vibrate();
 
     if (investmentType == InvestmentType.AUGGOLD99) {
-      _analyticsService.track(
+      _analyticsService!.track(
           eventName: AnalyticsEvents.assetBannerTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -310,13 +314,13 @@ class SaveViewModel extends BaseViewModel {
                 AnalyticsProperties.getPendingTxnCount(),
           }));
 
-      AppState.delegate.appState.currentAction = PageAction(
+      AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SaveAssetsViewConfig,
         widget: SaveAssetView(),
       );
     } else {
-      _analyticsService.track(
+      _analyticsService!.track(
           eventName: AnalyticsEvents.assetBannerTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -328,7 +332,7 @@ class SaveViewModel extends BaseViewModel {
                 AnalyticsProperties.getPendingTxnCount(),
           }));
 
-      AppState.delegate.appState.currentAction = PageAction(
+      AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: LendboxDetailsPageConfig,
         widget: LendboxDetailsView(),
@@ -337,8 +341,8 @@ class SaveViewModel extends BaseViewModel {
   }
 
   trackChallangeTapped(String name, int order) {
-    _analyticsService.track(
-        eventName: AnalyticsEvents.challengeTapped,
+    _analyticsService!.track(
+        eventName: AnalyticsEvents.challengeCtaTapped,
         properties: AnalyticsProperties.getDefaultPropertiesMap(
             extraValuesMap: {
               "Challlaneg Name": name,
@@ -348,7 +352,7 @@ class SaveViewModel extends BaseViewModel {
   }
 
   trackBannerClickEvent(int orderNumber) {
-    _analyticsService
+    _analyticsService!
         .track(eventName: AnalyticsEvents.bannerClick, properties: {
       "Location": "Fin Gyaan",
       "Order": orderNumber,
@@ -357,9 +361,9 @@ class SaveViewModel extends BaseViewModel {
 
   navigateToCompleteKYC() {
     Haptic.vibrate();
-    _analyticsService.track(eventName: AnalyticsEvents.openKYCSection);
+    _analyticsService!.track(eventName: AnalyticsEvents.openKYCSection);
 
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: KycDetailsPageConfig,
     );
@@ -368,7 +372,7 @@ class SaveViewModel extends BaseViewModel {
   navigateToVerifyVPA() {
     Haptic.vibrate();
 
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: EditAugBankDetailsPageConfig,
     );
@@ -376,8 +380,8 @@ class SaveViewModel extends BaseViewModel {
 
   navigateToViewAllBlogs() {
     Haptic.vibrate();
-    _analyticsService.track(eventName: AnalyticsEvents.allblogsview);
-    AppState.delegate.appState.currentAction = PageAction(
+    _analyticsService!.track(eventName: AnalyticsEvents.allblogsview);
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: ViewAllBlogsViewConfig,
       widget: ViewAllBlogsView(),

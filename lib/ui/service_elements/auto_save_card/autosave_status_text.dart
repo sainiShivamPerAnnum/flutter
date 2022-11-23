@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class AutosaveStatusText extends StatelessWidget {
-  const AutosaveStatusText({Key key}) : super(key: key);
+  const AutosaveStatusText({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
       builder: (context, model, property) => Container(
-        child: model.activeSubscription != null &&
-                model.activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE
+        child: model!.activeSubscription != null &&
+                model.activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE
             ? Text(
                 "ACTIVE SIP",
                 style:

@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -28,14 +29,14 @@ class LowerCaseTextFormatter extends TextInputFormatter {
 class LoginNameInputView extends StatefulWidget {
   static const int index = 2;
   final LoginControllerViewModel loginModel;
-  const LoginNameInputView({Key key, @required this.loginModel})
+  const LoginNameInputView({Key? key, required this.loginModel})
       : super(key: key);
   @override
   State<LoginNameInputView> createState() => LoginUserNameViewState();
 }
 
 class LoginUserNameViewState extends State<LoginNameInputView> {
-  LoginNameInputViewModel model;
+  late LoginNameInputViewModel model;
   @override
   Widget build(BuildContext context) {
     return BaseView<LoginNameInputViewModel>(
@@ -50,94 +51,204 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
           controller: widget.loginModel.nameViewScrollController,
           shrinkWrap: true,
           children: [
-            SizedBox(height: SizeConfig.padding64),
-            Padding(
-              padding: EdgeInsets.all(SizeConfig.padding12),
-              child: LoginImage(),
-            ),
-            SizedBox(
-              child: Padding(padding: EdgeInsets.all(SizeConfig.padding4)),
-            ),
+            LoginImage(),
+            SizedBox(height: SizeConfig.padding8),
             Align(
               alignment: Alignment.center,
-              child: Text(
-                'Enter Name',
-                style: TextStyles.rajdhaniB.title2,
+              child: Column(
+                children: [
+                  Text(
+                    'Enter Details',
+                    style: TextStyles.rajdhaniB.title2,
+                  ),
+                  Text(
+                    "You're one step away from 10% returns",
+                    style: TextStyles.body3.colour(UiConstants.kTextColor2),
+                  )
+                ],
               ),
             ),
+
             SizedBox(height: SizeConfig.padding20),
 
             //input
-            Form(
-              key: model.formKey,
-              child: AppTextField(
-                textEditingController: model.nameController,
-                isEnabled: model.enabled,
-                margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins * 2,
-                ),
-                hintText: "Enter your name as per your PAN",
-                focusNode: model.nameFocusNode,
-                textCapitalization: TextCapitalization.words,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                    RegExp(r'[a-zA-Z ]'),
-                  ),
-                ],
-                onSubmit: (_) => widget.loginModel.processScreenInput(2),
-                // suffix: SizedBox(),
-                validator: (value) {
-                  if (value != null && value.isNotEmpty) {
-                    // model.hasInputError = false;
-                    return null;
-                  } else {
-                    // model.hasInputError = true;
-                    return 'Please enter your name as per PAN';
-                  }
-                },
-              ),
-            ),
-            SizedBox(height: SizeConfig.padding20),
-            model.hasReferralCode
-                ? AppTextField(
-                    textEditingController: model.referralCodeController,
-                    onChanged: (val) {},
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins * 2),
-                    maxLength: 6,
-                    isEnabled: true,
-                    scrollPadding:
-                        EdgeInsets.only(bottom: SizeConfig.padding80),
-                    hintText: "Enter your referral code here",
-                    textAlign: TextAlign.left,
-                    onSubmit: (_) => widget.loginModel.processScreenInput(2),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'[a-zA-Z0-9]'),
-                      )
-                    ],
-                    validator: (val) {
-                      if (val.trim().length == 0 || val == null) return null;
-                      if (val.trim().length < 6 || val.trim().length > 10)
-                        return "Invalid referral code";
-                      return null;
-                    },
-                  )
-                : TextButton(
-                    onPressed: () {
-                      if (widget.loginModel.state == ViewState.Busy) return;
-                      model.hasReferralCode = true;
-                    },
-                    child: Center(
-                      child: Text(
-                        "Have a referral code?",
-                        style: TextStyles.body2.bold
-                            .colour(UiConstants.kPrimaryColor),
-                        textAlign: TextAlign.center,
-                      ),
+            Container(
+              margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins * 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppTextFieldLabel("Name", leftPadding: 0),
+                  Form(
+                    key: model.formKey,
+                    child: AppTextField(
+                      textEditingController: model.nameController,
+                      isEnabled: model.enabled,
+
+                      hintText: "Enter Full Name",
+                      focusNode: model.nameFocusNode,
+                      textCapitalization: TextCapitalization.words,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'[a-zA-Z ]'),
+                        ),
+                      ],
+                      onSubmit: (_) => widget.loginModel.processScreenInput(2),
+                      // suffix: SizedBox(),
+                      validator: (value) {
+                        if (value != null && value.isNotEmpty) {
+                          // model.hasInputError = false;
+                          return null;
+                        } else {
+                          // model.hasInputError = true;
+                          return 'Please enter your name as per PAN';
+                        }
+                      },
                     ),
                   ),
+                  SizedBox(height: SizeConfig.padding20),
+                  AppTextFieldLabel("Gender", leftPadding: 0),
+                  Row(
+                    children: List.generate(
+                      3,
+                      (index) {
+                        return Expanded(
+                          child: Container(
+                            margin: index == 0
+                                ? EdgeInsets.only(right: SizeConfig.padding8)
+                                : index == 1
+                                    ? EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding4)
+                                    : EdgeInsets.only(
+                                        left: SizeConfig.padding8),
+                            child: OutlinedButton(
+                              onPressed: () {
+                                Haptic.vibrate();
+                                setState(() {
+                                  model.genderValue = index;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding12,
+                                  vertical: SizeConfig.padding12,
+                                ),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    model.genderOptions[index],
+                                    style: TextStyles.sourceSans.body3.colour(
+                                      (model.genderValue == index)
+                                          ? UiConstants.primaryColor
+                                          : UiConstants.kTextColor2,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                  model.genderValue == index
+                                      ? UiConstants.primaryColor
+                                          .withOpacity(0.1)
+                                      : UiConstants.kTextFieldColor,
+                                ),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness8),
+                                    side: BorderSide(
+                                        style: BorderStyle.solid,
+                                        width: 2,
+                                        color: (model.genderValue == index)
+                                            ? UiConstants.primaryColor
+                                            : Colors.black),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.padding14),
+                  model.hasReferralCode
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: SizeConfig.padding10),
+                            AppTextFieldLabel(
+                              "Referral Code (Optional)",
+                              leftPadding: 0,
+                            ),
+                            AppTextField(
+                              textEditingController:
+                                  model.referralCodeController,
+                              onChanged: (val) {},
+                              maxLength: 6,
+                              isEnabled: true,
+                              scrollPadding:
+                                  EdgeInsets.only(bottom: SizeConfig.padding80),
+                              hintText: "Enter your referral code here",
+                              textAlign: TextAlign.left,
+                              onSubmit: (_) =>
+                                  widget.loginModel.processScreenInput(2),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'[a-zA-Z0-9]'),
+                                )
+                              ],
+                              validator: (val) {
+                                if (val!.trim().length == 0) return null;
+                                if (val.trim().length < 6 ||
+                                    val.trim().length > 10)
+                                  return "Invalid referral code";
+                                return null;
+                              },
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MaterialButton(
+                              onPressed: () {
+                                if (widget.loginModel.state == ViewState.Busy)
+                                  return;
+                                model.hasReferralCode = true;
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(SizeConfig.padding8),
+                                child: Text(
+                                  "Have a referral code?",
+                                  style: TextStyles.body2.bold
+                                      .colour(UiConstants.kPrimaryColor),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                ],
+              ),
+            ),
+
+            Container(
+              width: SizeConfig.screenWidth,
+              margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins * 2,
+                  vertical: SizeConfig.padding12),
+              alignment: Alignment.center,
+              child: Text(
+                "By proceeding, you agree that you are 18 years and older.",
+                textAlign: TextAlign.center,
+                style: TextStyles.body3.colour(
+                  UiConstants.kTextColor2,
+                ),
+              ),
+            ),
+
             SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 100),
           ],
         );
@@ -147,8 +258,8 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
 }
 
 class FelloUserAvatar extends StatelessWidget {
-  final Widget child;
-  const FelloUserAvatar({Key key, this.child}) : super(key: key);
+  const FelloUserAvatar({Key? key, this.child}) : super(key: key);
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -156,10 +267,10 @@ class FelloUserAvatar extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Container(
-          width: SizeConfig.screenWidth * 0.54,
-          height: SizeConfig.screenWidth * 0.54,
+          width: SizeConfig.screenWidth! * 0.54,
+          height: SizeConfig.screenWidth! * 0.54,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.screenWidth),
+            borderRadius: BorderRadius.circular(SizeConfig.screenWidth!),
             boxShadow: [
               BoxShadow(
                 color: UiConstants.primaryColor.withOpacity(0.2),
@@ -174,8 +285,8 @@ class FelloUserAvatar extends StatelessWidget {
           ),
         ),
         Container(
-          width: SizeConfig.screenWidth * 0.501,
-          height: SizeConfig.screenWidth * 0.501,
+          width: SizeConfig.screenWidth! * 0.501,
+          height: SizeConfig.screenWidth! * 0.501,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -185,8 +296,8 @@ class FelloUserAvatar extends StatelessWidget {
           ),
         ),
         Container(
-          width: SizeConfig.screenWidth * 0.424, // 142
-          height: SizeConfig.screenWidth * 0.424,
+          width: SizeConfig.screenWidth! * 0.424, // 142
+          height: SizeConfig.screenWidth! * 0.424,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -208,8 +319,8 @@ class FelloUserAvatar extends StatelessWidget {
           ),
         ),
         Container(
-          width: SizeConfig.screenWidth * 0.32,
-          height: SizeConfig.screenWidth * 0.32,
+          width: SizeConfig.screenWidth! * 0.32,
+          height: SizeConfig.screenWidth! * 0.32,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -221,8 +332,8 @@ class FelloUserAvatar extends StatelessWidget {
         child ??
             SvgPicture.asset(
               Assets.cvtar2,
-              height: SizeConfig.screenWidth * 0.3067,
-              width: SizeConfig.screenWidth * 0.3067,
+              height: SizeConfig.screenWidth! * 0.3067,
+              width: SizeConfig.screenWidth! * 0.3067,
             ),
       ],
     );

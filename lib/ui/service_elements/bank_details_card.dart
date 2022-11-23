@@ -12,7 +12,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class BankDetailsCard extends StatelessWidget {
-  const BankDetailsCard({Key key}) : super(key: key);
+  const BankDetailsCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class BankDetailsCard extends StatelessWidget {
             BankAndPanServiceProperties>(
         properties: [BankAndPanServiceProperties.bankDetailsVerified],
         builder: (context, model, property) =>
-            model.isBankDetailsAdded && model.activeBankAccountDetails != null
+            model!.isBankDetailsAdded && model.activeBankAccountDetails != null
                 ? Column(
                     children: [
                       SvgPicture.asset(Assets.magicalSpiritBall),
@@ -45,10 +45,10 @@ class BankDetailsCard extends StatelessWidget {
                               height: SizeConfig.padding24,
                             ),
                           ),
-                          title: Text(model.activeBankAccountDetails.account,
+                          title: Text(model.activeBankAccountDetails!.account!,
                               style: TextStyles.sourceSansB.body2),
                           subtitle: Text(
-                            model.activeBankAccountDetails.name,
+                            model.activeBankAccountDetails!.name!,
                             style: TextStyles.sourceSans.body3
                                 .colour(UiConstants.kTextColor2),
                           ),
@@ -58,7 +58,7 @@ class BankDetailsCard extends StatelessWidget {
                               color: UiConstants.kTextColor,
                             ),
                             onPressed: () {
-                              AppState.delegate.appState.currentAction =
+                              AppState.delegate!.appState.currentAction =
                                   PageAction(
                                       page: BankDetailsPageConfig,
                                       state: PageState.addPage);

@@ -22,7 +22,7 @@ class SubProcessText extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding4),
             Text(
-              model.processText,
+              model!.processText,
               style: TextStyles.rajdhaniSB.body3,
             ),
           ],

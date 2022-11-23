@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LifeTimeWin extends StatelessWidget {
-  final TextStyle style;
+  final TextStyle? style;
 
   LifeTimeWin({
     this.style,

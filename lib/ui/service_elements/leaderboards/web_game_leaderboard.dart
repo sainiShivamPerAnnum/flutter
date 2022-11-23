@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class WebGameLeaderBoardView extends StatelessWidget {
-  final String game;
+  final String? game;
 
   WebGameLeaderBoardView({this.game});
 
@@ -24,7 +24,7 @@ class WebGameLeaderBoardView extends StatelessWidget {
         LeaderBoardServiceProperties>(
       properties: [LeaderBoardServiceProperties.WebGameLeaderBoard],
       builder: (context, m, properties) {
-        return m.WebGameLeaderBoard == null
+        return m!.WebGameLeaderBoard == null
             ? NoRecordDisplayWidget(
                 assetSvg: Assets.noWinnersAsset,
                 text: "Leaderboard will be updated soon",
@@ -40,9 +40,9 @@ class WebGameLeaderBoardView extends StatelessWidget {
 }
 
 class LeaderBoardView extends StatelessWidget {
-  final LeaderboardModel model;
-  final ScrollController controller, ownController;
-  final _userService = locator<UserService>();
+  final LeaderboardModel? model;
+  final ScrollController? controller, ownController;
+  final UserService? _userService = locator<UserService>();
 
   LeaderBoardView({this.model, this.controller, this.ownController});
   @override
@@ -60,7 +60,7 @@ class LeaderBoardView extends StatelessWidget {
                 style: TextStyles.body4.colour(Colors.grey),
               ),
               Text(
-                "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model.lastupdated.toDate())}",
+                "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model!.lastupdated!.toDate())}",
                 style: TextStyles.body4.colour(Colors.grey),
               )
             ],
@@ -70,24 +70,24 @@ class LeaderBoardView extends StatelessWidget {
           child: NotificationListener<OverscrollNotification>(
             onNotification: (OverscrollNotification value) {
               if (value.overscroll < 0 &&
-                  controller.offset + value.overscroll <= 0) {
-                if (controller.offset != 0) controller.jumpTo(0);
+                  controller!.offset + value.overscroll <= 0) {
+                if (controller!.offset != 0) controller!.jumpTo(0);
                 return true;
               }
-              if (controller.offset + value.overscroll >=
-                  controller.position.maxScrollExtent) {
-                if (controller.offset != controller.position.maxScrollExtent)
-                  controller.jumpTo(controller.position.maxScrollExtent);
+              if (controller!.offset + value.overscroll >=
+                  controller!.position.maxScrollExtent) {
+                if (controller!.offset != controller!.position.maxScrollExtent)
+                  controller!.jumpTo(controller!.position.maxScrollExtent);
                 return true;
               }
-              controller.jumpTo(controller.offset + value.overscroll);
+              controller!.jumpTo(controller!.offset + value.overscroll);
               return true;
             },
             child: ListView.builder(
               // physics: ClampingScrollPhysics(),
               controller: ownController,
               padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
-              itemCount: model.scoreboard.length,
+              itemCount: model!.scoreboard!.length,
               itemBuilder: (ctx, i) {
                 return Container(
                   width: SizeConfig.screenWidth,
@@ -96,13 +96,13 @@ class LeaderBoardView extends StatelessWidget {
                       vertical: SizeConfig.padding8, horizontal: 1),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: model.scoreboard[i].userid ==
-                              _userService.baseUser.uid
+                      color: model!.scoreboard![i].userid ==
+                              _userService!.baseUser!.uid
                           ? UiConstants.primaryColor
                           : Colors.white,
                     ),
                     color:
-                        model.scoreboard[i].userid == _userService.baseUser.uid
+                        model!.scoreboard![i].userid == _userService!.baseUser!.uid
                             ? UiConstants.primaryLight.withOpacity(0.4)
                             : UiConstants.primaryLight.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(SizeConfig.roundness16),
@@ -120,20 +120,20 @@ class LeaderBoardView extends StatelessWidget {
                       SizedBox(width: SizeConfig.padding12),
                       Expanded(
                         child: Text(
-                            model.scoreboard[i].username.replaceAll('@', '.') ??
+                            model!.scoreboard![i].username!.replaceAll('@', '.') ??
                                 "username",
                             style: TextStyles.body3),
                       ),
                       TextButton.icon(
                           icon: CircleAvatar(
-                            radius: SizeConfig.screenWidth * 0.029,
-                            backgroundColor: Colors.blue[900].withOpacity(0.2),
+                            radius: SizeConfig.screenWidth! * 0.029,
+                            backgroundColor: Colors.blue[900]!.withOpacity(0.2),
                             child: SvgPicture.asset(Assets.scoreIcon,
                                 color: Colors.blue[900],
                                 height: SizeConfig.iconSize3),
                           ),
                           label: Text(
-                              model.scoreboard[i].score.toInt().toString() ??
+                              model!.scoreboard![i].score!.toInt().toString() ??
                                   "00",
                               style: TextStyles.body3.colour(Colors.black54)),
                           onPressed: () {}),

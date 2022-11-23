@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 enum TambolaWidgetType { Banner, Timer, Tickets }
 
 class TambolaWidgetController extends ChangeNotifier {
-  TambolaWidgetController({TambolaWidgetType tambolaWidgetType})
+  TambolaWidgetController({TambolaWidgetType? tambolaWidgetType})
       : _tambolaWidgetType = tambolaWidgetType ?? TambolaWidgetType.Banner,
         super() {
     setTambolaWidgetType();
@@ -17,7 +17,7 @@ class TambolaWidgetController extends ChangeNotifier {
 
   TambolaWidgetType get tambolaWidgetType => _tambolaWidgetType;
 
-  Timer timer;
+  Timer? timer;
 
   int timeLeftForTambola = 0;
 
@@ -29,7 +29,7 @@ class TambolaWidgetController extends ChangeNotifier {
       _tambolaWidgetType = TambolaWidgetType.Banner;
     } else if (_dateTime.hour >= 18) {
       if (timer != null) {
-        if (timer.isActive) timer.cancel();
+        if (timer!.isActive) timer!.cancel();
       }
       _tambolaWidgetType = TambolaWidgetType.Tickets;
       diffToChangeWidget = _dateTime.difference(

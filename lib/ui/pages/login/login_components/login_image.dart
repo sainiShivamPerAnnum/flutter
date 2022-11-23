@@ -6,21 +6,23 @@ import 'package:flutter_svg/svg.dart';
 class LoginImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
-      height: SizeConfig.screenHeight * 0.3,
-      width: SizeConfig.navBarWidth,
-      child: Center(
+    return SafeArea(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+        height: SizeConfig.screenWidth! * 0.64,
+        width: SizeConfig.screenWidth,
+        child: Center(
           child: BaseRemoteConfig.remoteConfig
                       .getString(BaseRemoteConfig.LOGIN_ASSET_URL) !=
                   ''
               ? SvgPicture.network(
                   BaseRemoteConfig.remoteConfig
                       .getString(BaseRemoteConfig.LOGIN_ASSET_URL),
-                  
+                  fit: BoxFit.contain,
                 )
-              : Container()),
+              : Container(),
+        ),
+      ),
     );
   }
 }

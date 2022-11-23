@@ -20,8 +20,8 @@ class TrendingGamesSection extends StatelessWidget {
   final PlayViewModel model;
 
   const TrendingGamesSection({
-    @required this.model,
-    Key key,
+    required this.model,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -34,8 +34,8 @@ class TrendingGamesSection extends StatelessWidget {
         ),
         Container(
           width: SizeConfig.screenWidth,
-          margin:
-              EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
+          margin: EdgeInsets.symmetric(
+              vertical: SizeConfig.pageHorizontalMargins / 2),
           child: GridView.builder(
             physics: BouncingScrollPhysics(),
             itemCount: model.isGamesListDataLoading
@@ -52,7 +52,7 @@ class TrendingGamesSection extends StatelessWidget {
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: .68,
+                childAspectRatio: .58,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12),
           ),
@@ -63,24 +63,24 @@ class TrendingGamesSection extends StatelessWidget {
 }
 
 class TrendingGames extends StatelessWidget {
-  final GameModel game;
+  final GameModel? game;
   const TrendingGames({
     this.game,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     return GestureDetector(
       onTap: () {
-        _analyticsService.track(
+        _analyticsService!.track(
             eventName: AnalyticsEvents.gameTapped,
             properties:
                 AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-              'Game name': game.gameName,
-              "Entry fee": game.playCost,
-              "Win upto": game.prizeAmount,
+              'Game name': game!.gameName,
+              "Entry fee": game!.playCost,
+              "Win upto": game!.prizeAmount,
               "Time left for draw Tambola (mins)":
                   AnalyticsProperties.getTimeLeftForTambolaDraw(),
               "Tambola Tickets Owned":
@@ -88,8 +88,8 @@ class TrendingGames extends StatelessWidget {
               "location": "Trending games"
             }));
         Haptic.vibrate();
-        AppState.delegate.parseRoute(
-          Uri.parse(game.route),
+        AppState.delegate!.parseRoute(
+          Uri.parse(game!.route!),
         );
       },
       child: Container(
@@ -100,29 +100,31 @@ class TrendingGames extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SvgPicture.network(
-              game.thumbnailUri,
+              game!.thumbnailUri!,
               fit: BoxFit.cover,
-              width: SizeConfig.screenWidth * 0.2,
+              width: SizeConfig.screenWidth! * 0.24,
+              height: SizeConfig.screenWidth! * 0.24,
             ),
             Text(
-              game.gameName,
+              game!.gameName!,
               textAlign: TextAlign.center,
-              style: TextStyles.sourceSans.body3.colour(Colors.white),
+              style: TextStyles.rajdhani.body3
+                  .colour(Colors.white.withOpacity(0.7)),
             ),
+            SizedBox(height: SizeConfig.padding4),
             RichText(
                 text: TextSpan(
-                    text: 'Win upto ',
-                    style:
-                        TextStyles.sourceSans.body5.colour(Color(0xff919193)),
+                    text: 'Win ',
+                    style: TextStyles.sourceSans.body3.colour(Colors.white),
                     children: [
                   TextSpan(
                       text:
-                          '${NumberFormat.compact().format(game.prizeAmount)}',
-                      style: TextStyles.sourceSans.colour(Color(0xffA9C6D6)))
+                          '${NumberFormat.compact().format(game!.prizeAmount)}',
+                      style: TextStyles.sourceSansB.body3.colour(Colors.white))
                 ])),
             SizedBox(height: SizeConfig.padding10),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
               decoration: BoxDecoration(
                 color: Color(0xff232326),
                 border: Border.all(color: Color(0xff919193)),
@@ -133,11 +135,11 @@ class TrendingGames extends StatelessWidget {
                 children: [
                   SvgPicture.asset(
                     Assets.token,
-                    height: SizeConfig.padding16,
-                    width: SizeConfig.padding16,
+                    height: SizeConfig.padding12,
+                    width: SizeConfig.padding12,
                   ),
                   SizedBox(width: SizeConfig.padding4),
-                  Text(game.playCost.toString(),
+                  Text(game!.playCost.toString(),
                       style: TextStyles.sourceSans.body3),
                 ],
               ),
@@ -151,14 +153,14 @@ class TrendingGames extends StatelessWidget {
 
 class TrendingGamesShimmer extends StatelessWidget {
   const TrendingGamesShimmer({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(right: SizeConfig.padding20),
-      width: SizeConfig.screenWidth * 0.32,
+      width: SizeConfig.screenWidth! * 0.32,
       padding: EdgeInsets.all(SizeConfig.padding12),
       decoration: BoxDecoration(
           color: UiConstants.kSecondaryBackgroundColor,
@@ -173,8 +175,8 @@ class TrendingGamesShimmer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                height: SizeConfig.screenWidth * 0.23,
-                width: SizeConfig.screenWidth * 0.23,
+                height: SizeConfig.screenWidth! * 0.23,
+                width: SizeConfig.screenWidth! * 0.23,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.grey.shade600,

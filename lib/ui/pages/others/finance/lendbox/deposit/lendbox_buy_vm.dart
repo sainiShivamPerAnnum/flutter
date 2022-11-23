@@ -19,28 +19,29 @@ import 'package:upi_pay/upi_pay.dart';
 import '../../../../../../core/repository/getters_repo.dart';
 
 class LendboxBuyViewModel extends BaseViewModel {
-  final _txnService = locator<LendboxTransactionService>();
-  final _analyticsService = locator<AnalyticsService>();
+  final LendboxTransactionService? _txnService =
+      locator<LendboxTransactionService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
-  double incomingAmount;
+  double? incomingAmount;
   List<ApplicationMeta> appMetaList = [];
-  UpiApplication upiApplication;
-  String selectedUpiApplicationName;
+  UpiApplication? upiApplication;
+  String? selectedUpiApplicationName;
   int lastTappedChipIndex = 1;
   bool _skipMl = false;
 
   FocusNode buyFieldNode = FocusNode();
-  String buyNotice;
+  String? buyNotice;
 
   bool _isBuyInProgress = false;
   bool get isBuyInProgress => this._isBuyInProgress;
 
-  TextEditingController amountController;
-  TextEditingController vpaController;
+  TextEditingController? amountController;
+  TextEditingController? vpaController;
 
   final double minAmount = 100;
   final double maxAmount = 50000;
-  AssetOptionsModel assetOptionsModel;
+  AssetOptionsModel? assetOptionsModel;
   bool get skipMl => this._skipMl;
 
   set skipMl(bool value) {
@@ -48,21 +49,22 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   init(
-    int amount,
+    int? amount,
     bool isSkipMilestone,
   ) async {
     setState(ViewState.Busy);
     await getAssetOptionsModel();
     skipMl = isSkipMilestone;
     amountController = TextEditingController(
-      text: assetOptionsModel.data.userOptions[1].value.toString(),
+      text: amount?.toString() ??
+          assetOptionsModel!.data.userOptions[1].value.toString(),
     );
 
     setState(ViewState.Idle);
   }
 
   resetBuyOptions() {
-    amountController.text = assetOptionsModel.data.userOptions[2].toString();
+    amountController?.text = assetOptionsModel!.data.userOptions[2].toString();
     lastTappedChipIndex = 2;
     notifyListeners();
   }
@@ -71,7 +73,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     final res =
         await locator<GetterRepository>().getAssetOptions('weekly', 'flo');
     if (res.code == 200) assetOptionsModel = res.model;
-    log(res.model.message);
+    log(res.model?.message ?? '');
   }
 
   initiateBuy() async {
@@ -88,14 +90,23 @@ class LendboxBuyViewModel extends BaseViewModel {
     _isBuyInProgress = true;
     notifyListeners();
 
-    await _txnService.initiateTransaction(amount.toDouble(), skipMl);
+    await _txnService!.initiateTransaction(amount.toDouble(), skipMl);
     _isBuyInProgress = false;
     notifyListeners();
   }
 
+  bool readOnly = true;
+
+  showKeyBoard() {
+    if (readOnly) {
+      readOnly = false;
+      notifyListeners();
+    }
+  }
+
   //2 Basic Checks
   Future<int> initChecks() async {
-    final buyAmount = int.tryParse(this.amountController.text) ?? 0;
+    final buyAmount = int.tryParse(this.amountController!.text) ?? 0;
 
     if (buyAmount == 0) {
       BaseUtil.showNegativeAlert('No amount entered', 'Please enter an amount');
@@ -118,22 +129,22 @@ class LendboxBuyViewModel extends BaseViewModel {
       return 0;
     }
 
-    _analyticsService.track(
+    _analyticsService!.track(
         eventName: AnalyticsEvents.saveCheckout,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
           "Asset": "Flo",
-          "Amount Entered": amountController.text,
-          "Best flag": assetOptionsModel.data.userOptions
+          "Amount Entered": amountController?.text,
+          "Best flag": assetOptionsModel?.data.userOptions
               .firstWhere((element) =>
-                  element.value.toString() == amountController.text)
+                  element.value.toString() == amountController!.text)
               .value
         }));
     return buyAmount;
   }
 
   void navigateToKycScreen() {
-    _analyticsService
+    _analyticsService!
         .track(eventName: AnalyticsEvents.completeKYCTapped, properties: {
       "location": "Fello Felo Invest",
       "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
@@ -142,7 +153,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
       "Amount invested in Flo": AnalyticsProperties.getFelloFloAmount(),
     });
-    AppState.delegate.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: KycDetailsPageConfig,
     );

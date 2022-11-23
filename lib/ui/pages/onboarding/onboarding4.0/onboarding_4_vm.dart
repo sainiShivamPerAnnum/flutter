@@ -19,14 +19,14 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingViewModel extends BaseViewModel {
-  final _analyticsService = locator<AnalyticsService>();
-  final _userService = locator<UserService>();
-  final UserRepository _userRepository = locator<UserRepository>();
-  final JourneyService _journeyService = locator<JourneyService>();
-  PageController _pageController;
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final UserService? _userService = locator<UserService>();
+  final UserRepository? _userRepository = locator<UserRepository>();
+  final JourneyService? _journeyService = locator<JourneyService>();
+  PageController? _pageController;
   int _currentPage = 0;
   double dragStartPosition = 0, dragUpdatePosition = 0;
-  List<List<String>> _onboardingData;
+  List<List<String>>? _onboardingData;
   bool _isWalkthroughRegistrationInProgress = false;
 
   get isWalkthroughRegistrationInProgress =>
@@ -37,14 +37,14 @@ class OnboardingViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  PageController get pageController => _pageController;
+  PageController? get pageController => _pageController;
 
   int get currentPage => _currentPage;
 
   List<Widget> assetWidgets = [
     SvgPicture.asset(
       "assets/svg/partner_assets_frame.svg",
-      width: SizeConfig.screenWidth * 0.9,
+      width: SizeConfig.screenWidth! * 0.9,
     ),
     Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -52,8 +52,8 @@ class OnboardingViewModel extends BaseViewModel {
       children: List.generate(Assets.assetList2OnBoarding.length, (index) {
         return SvgPicture.asset(
           Assets.assetList2OnBoarding[index],
-          height: SizeConfig.screenWidth * 0.1,
-          width: SizeConfig.screenWidth * 0.1,
+          height: SizeConfig.screenWidth! * 0.1,
+          width: SizeConfig.screenWidth! * 0.1,
           fit: BoxFit.cover,
         );
       }),
@@ -61,9 +61,9 @@ class OnboardingViewModel extends BaseViewModel {
     SizedBox.shrink(),
   ];
 
-  List<List<String>> get onboardingData => _onboardingData;
+  List<List<String>>? get onboardingData => _onboardingData;
 
-  set pageController(PageController val) {
+  set pageController(PageController? val) {
     _pageController = val;
     notifyListeners();
   }
@@ -73,7 +73,7 @@ class OnboardingViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set onboardingData(List<List<String>> val) {
+  set onboardingData(List<List<String>>? val) {
     _onboardingData = val;
     notifyListeners();
   }
@@ -103,16 +103,16 @@ class OnboardingViewModel extends BaseViewModel {
     onBoardingCompleted(comingFrom);
 
     if (_analyticsService != null)
-      _analyticsService.track(eventName: AnalyticsEvents.splashScrenProceed);
+      _analyticsService!.track(eventName: AnalyticsEvents.splashScrenProceed);
   }
 
   onBoardingCompleted(String comingFrom) {
     if (comingFrom == COMING_FROM_SPLASH)
-      AppState.delegate.appState.currentAction = PageAction(
+      AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.replaceAll,
         page: LoginPageConfig,
       );
     else
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
   }
 }

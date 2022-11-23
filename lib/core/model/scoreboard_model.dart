@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class ScoreBoard {
-  bool isUserEligible;
-  TimestampModel timestamp;
-  String userid;
-  String username;
-  double score;
-  int gameDuration, refCount;
-  String displayScore;
+  bool? isUserEligible;
+  TimestampModel? timestamp;
+  String? userid;
+  String? username;
+  double? score;
+  int ?gameDuration, refCount;
+  String? displayScore;
 
   ScoreBoard(
       {this.isUserEligible,
@@ -23,14 +23,14 @@ class ScoreBoard {
       this.refCount});
 
   ScoreBoard copyWith({
-    bool isUserEligible,
-    TimestampModel timestamp,
-    String userid,
-    String username,
-    double score,
-    int gameDuration,
-    int refCount,
-    String displayScore,
+    bool ?isUserEligible,
+    TimestampModel ?timestamp,
+    String ?userid,
+    String ?username,
+    double? score,
+    int? gameDuration,
+    int? refCount,
+    String ?displayScore,
   }) {
     return ScoreBoard(
       isUserEligible: isUserEligible ?? this.isUserEligible,
@@ -47,7 +47,7 @@ class ScoreBoard {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'isUserEligible': isUserEligible,
-      'timestamp': timestamp.toMap(),
+      'timestamp': timestamp!.toMap(),
       'userid': userid,
       'username': username,
       'score': score,
@@ -106,3 +106,4 @@ class ScoreBoard {
         refCount.hashCode;
   }
 }
+

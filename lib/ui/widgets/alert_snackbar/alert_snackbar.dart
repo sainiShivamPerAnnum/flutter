@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 SnackBar alertSnackBar(
-    {String title,
-    String message,
-    Function() onTap,
-    final int seconds,
-    Color alertColor,
-    String alertAsset}) {
+    {required String title,
+    required String message,
+    Function()? onTap,
+    final int? seconds,
+    Color? alertColor,
+    required String alertAsset}) {
   return SnackBar(
       onVisible: onTap,
       backgroundColor: Colors.transparent,
@@ -20,7 +20,7 @@ SnackBar alertSnackBar(
       duration: Duration(seconds: seconds ?? 3),
       dismissDirection: DismissDirection.down,
       content: Container(
-        height: SizeConfig.screenHeight * 0.08,
+        height: SizeConfig.screenHeight! * 0.08,
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -31,8 +31,8 @@ SnackBar alertSnackBar(
           child: Row(
             children: [
               Container(
-                  height: SizeConfig.screenHeight * 0.05,
-                  width: SizeConfig.screenWidth * 0.15,
+                  height: SizeConfig.screenHeight! * 0.05,
+                  width: SizeConfig.screenWidth! * 0.15,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       color: alertColor),
@@ -41,7 +41,7 @@ SnackBar alertSnackBar(
                       width: SizeConfig.padding20,
                       child: SvgPicture.asset(alertAsset))),
               SizedBox(
-                width: SizeConfig.screenWidth * 0.06,
+                width: SizeConfig.screenWidth! * 0.06,
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -53,7 +53,7 @@ SnackBar alertSnackBar(
                   ),
                   ConstrainedBox(
                     constraints:
-                        BoxConstraints(maxWidth: SizeConfig.screenWidth * 0.6),
+                        BoxConstraints(maxWidth: SizeConfig.screenWidth! * 0.6),
                     child: Text(
                       message,
                       style: TextStyles.body4.colour(UiConstants.textColor),

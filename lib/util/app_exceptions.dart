@@ -10,17 +10,17 @@ class AppException implements Exception {
 }
 
 class FetchDataException extends AppException {
-  FetchDataException([String message]) : super(message, "");
+  FetchDataException([String? message]) : super(message, "");
 }
 
 class BadRequestException extends AppException {
   BadRequestException([message]) : super(message, "");
 }
 
-class UnauthorisedException extends AppException {
-  UnauthorisedException([message]) : super(message, "Unauthorised: ");
+class UnauthorizedException extends AppException {
+  UnauthorizedException([message]) : super(message, "Unauthorized: ");
 }
 
 class InvalidInputException extends AppException {
-  InvalidInputException([String message]) : super(message, "Invalid Input: ");
+  InvalidInputException([String? message]) : super(message, "Invalid Input: ");
 }

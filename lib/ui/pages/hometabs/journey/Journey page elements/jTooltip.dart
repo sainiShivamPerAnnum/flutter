@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class MilestoneTooltip extends StatelessWidget {
-  final JourneyPageViewModel model;
-  const MilestoneTooltip({Key key, this.model}) : super(key: key);
+  final JourneyPageViewModel? model;
+  const MilestoneTooltip({Key? key, this.model}) : super(key: key);
 
   @override
   build(BuildContext context) {
@@ -21,24 +21,24 @@ class MilestoneTooltip extends StatelessWidget {
         ],
         builder: (context, serviceModel, properties) {
           return SizedBox(
-            width: model.pageWidth,
-            height: model.currentFullViewHeight,
+            width: model!.pageWidth,
+            height: model!.currentFullViewHeight,
             child: Stack(
-              children: List.generate(model.currentMilestoneList.length, (i) {
-                if (model.currentMilestoneList[i].index ==
-                        model.avatarActiveMilestoneLevel &&
-                    model.currentMilestoneList[i].index != 1 &&
-                    model.currentMilestoneList[i].tooltip != null &&
-                    model.currentMilestoneList[i].tooltip.isNotEmpty) {
-                  final milestone = model.currentMilestoneList[i];
+              children: List.generate(model!.currentMilestoneList.length, (i) {
+                if (model!.currentMilestoneList[i].index ==
+                        model!.avatarActiveMilestoneLevel &&
+                    model!.currentMilestoneList[i].index != 1 &&
+                    model!.currentMilestoneList[i].tooltip != null &&
+                    model!.currentMilestoneList[i].tooltip!.isNotEmpty) {
+                  final milestone = model!.currentMilestoneList[i];
                   return Positioned(
-                    left: model.pageWidth * milestone.x / 2,
-                    bottom: (model.pageHeight * (milestone.page - 1) +
-                            model.pageHeight * milestone.y) +
-                        model.pageHeight * milestone.asset.height * 1.2,
+                    left: model!.pageWidth! * milestone.x! / 2,
+                    bottom: (model!.pageHeight! * (milestone.page - 1) +
+                            model!.pageHeight! * milestone.y!) +
+                        model!.pageHeight! * milestone.asset.height * 1.2,
                     child: SafeArea(
                       child: GestureDetector(
-                          onTap: () => model.showMilestoneDetailsModalSheet(
+                          onTap: () => model!.showMilestoneDetailsModalSheet(
                               milestone, context),
                           child: Container(
                             decoration: ShapeDecoration(

@@ -21,12 +21,12 @@ import '../../../core/service/analytics/analytics_service.dart';
 import '../../../util/locator.dart';
 
 class FelloCoinBar extends StatelessWidget {
-  final _analytics = locator<AnalyticsService>();
+  final AnalyticsService? _analytics = locator<AnalyticsService>();
 
-  final String svgAsset;
-  final Color borderColor;
-  final TextStyle style;
-  final double size;
+  final String? svgAsset;
+  final Color? borderColor;
+  final TextStyle? style;
+  final double? size;
 
   FelloCoinBar({
     this.svgAsset,
@@ -48,8 +48,8 @@ class FelloCoinBar extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 if (JourneyService.isAvatarAnimationInProgress) return;
-                _analytics.track(
-                    eventName: AnalyticsEvents.addFLCTokensTopRight);
+                _analytics!
+                    .track(eventName: AnalyticsEvents.addFLCTokensTopRight);
                 BaseUtil.openModalBottomSheet(
                   addToScreenStack: true,
                   backgroundColor: UiConstants.gameCardColor,
@@ -85,7 +85,7 @@ class FelloCoinBar extends StatelessWidget {
                       width: size ?? SizeConfig.padding20,
                     ),
                     SizedBox(width: SizeConfig.padding4),
-                    model.flcBalance == null
+                    model!.flcBalance == null
                         ? SpinKitThreeBounce(
                             size: SizeConfig.padding16,
                             color: Colors.white,
@@ -104,7 +104,7 @@ class FelloCoinBar extends StatelessWidget {
 
 class CoinBar extends StatelessWidget {
   final Widget child;
-  const CoinBar({Key key, @required this.child}) : super(key: key);
+  const CoinBar({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

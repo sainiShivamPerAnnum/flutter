@@ -18,7 +18,7 @@ import 'package:shimmer/shimmer.dart';
 
 class AutosaveCard extends StatefulWidget {
   final ValueKey locationKey;
-  AutosaveCard({@required this.locationKey});
+  AutosaveCard({required this.locationKey});
 
   @override
   State<AutosaveCard> createState() => _AutosaveCardState();
@@ -36,20 +36,20 @@ class _AutosaveCardState extends State<AutosaveCard> {
       onModelReady: (model) async => await model.init(),
       builder: (context, subscriptionModel, child) =>
           PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
-        builder: (context, model, property) => model.autosaveVisible
+        builder: (context, model, property) => model!.autosaveVisible
             ? GestureDetector(
                 onTap: () async {
                   if (connectivityStatus == ConnectivityStatus.Offline)
                     return BaseUtil.showNoInternetAlert();
-                  if (!subscriptionModel.isUserProfileComplete())
-                    return BaseUtil.openDialog(
-                        addToScreenStack: true,
-                        isBarrierDismissible: true,
-                        hapticVibrate: false,
-                        content: CompleteProfileDialog(
-                          subtitle:
-                              'Please complete your profile to win your first reward and to start autosaving',
-                        ));
+                  // if (!subscriptionModel.isUserProfileComplete())
+                  //   return BaseUtil.openDialog(
+                  //       addToScreenStack: true,
+                  //       isBarrierDismissible: true,
+                  //       hapticVibrate: false,
+                  //       content: CompleteProfileDialog(
+                  //         subtitle:
+                  //             'Please complete your profile to win your first reward and to start autosaving',
+                  //       ));
                   if (isLoading) return;
                   setState(() {
                     isLoading = true;
@@ -60,7 +60,7 @@ class _AutosaveCardState extends State<AutosaveCard> {
                   });
                 },
                 child: (model.activeSubscription != null &&
-                        model.activeSubscription.status ==
+                        model.activeSubscription!.status ==
                             Constants.SUBSCRIPTION_ACTIVE)
                     ? (widget.locationKey.value == 'save'
                         ? SizedBox()
@@ -82,9 +82,9 @@ class _AutosaveCardState extends State<AutosaveCard> {
 }
 
 class InitAutosaveCard extends StatelessWidget {
-  final Function() onTap;
+  final Function()? onTap;
 
-  const InitAutosaveCard({Key key, this.onTap}) : super(key: key);
+  const InitAutosaveCard({Key? key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +131,7 @@ class InitAutosaveCard extends StatelessWidget {
                       children: [
                         ConstrainedBox(
                           constraints: BoxConstraints(
-                            maxWidth: SizeConfig.screenWidth * 0.5,
+                            maxWidth: SizeConfig.screenWidth! * 0.5,
                           ),
                           child: Text('Setup Fello Autosave today',
                               style: TextStyles.sourceSans.bold.body1),
@@ -179,12 +179,12 @@ class InitAutosaveCard extends StatelessWidget {
 }
 
 class ActiveOrPausedAutosaveCard extends StatelessWidget {
-  final SubscriptionCardViewModel subscriptionModel;
+  final SubscriptionCardViewModel? subscriptionModel;
   final bool isLoading;
   final bool isResumingInProgress;
 
   const ActiveOrPausedAutosaveCard(
-      {Key key,
+      {Key? key,
       this.subscriptionModel,
       this.isLoading = false,
       this.isResumingInProgress = false})
@@ -200,7 +200,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
               child: Stack(
                 children: [
                   Container(
-                    height: SizeConfig.screenWidth * 0.38,
+                    height: SizeConfig.screenWidth! * 0.38,
                     width: SizeConfig.screenWidth,
                     decoration: BoxDecoration(
                         color: UiConstants.kSecondaryBackgroundColor,
@@ -216,8 +216,8 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                             child: Row(
                               children: [
                                 SvgPicture.asset(
-                                  model.activeSubscription != null &&
-                                          model.activeSubscription.status ==
+                                  model!.activeSubscription != null &&
+                                          model.activeSubscription!.status ==
                                               Constants.SUBSCRIPTION_ACTIVE
                                       ? Assets.autoSaveOngoing
                                       : Assets.autoSavePaused,
@@ -236,7 +236,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        subscriptionModel
+                                        subscriptionModel!
                                             .getActiveTitle(
                                                 model.activeSubscription)
                                             .toUpperCase(),
@@ -276,8 +276,8 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                                     width: SizeConfig.padding6,
                                                   ),
                                                   Text(
-                                                    model
-                                                        .activeSubscription.vpa,
+                                                    model.activeSubscription!
+                                                        .vpa!,
                                                     style: TextStyles
                                                         .sourceSans.body4
                                                         .colour(UiConstants
@@ -321,7 +321,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                                     ),
                                                     TextSpan(
                                                       text:
-                                                          "${subscriptionModel.getFreq(model.activeSubscription?.autoFrequency ?? "")}",
+                                                          "${subscriptionModel!.getFreq(model.activeSubscription?.autoFrequency ?? "")}",
                                                       style: TextStyles
                                                           .sourceSans.body4
                                                           .colour(UiConstants

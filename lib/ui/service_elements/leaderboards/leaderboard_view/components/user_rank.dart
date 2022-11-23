@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 
 class UserRank extends StatelessWidget {
   const UserRank({
-    Key key,
-    @required this.currentUserScore,
-    @required this.currentUserRank,
+    Key? key,
+    required this.currentUserScore,
+    required this.currentUserRank,
   }) : super(key: key);
 
   final ScoreBoard currentUserScore;
@@ -66,7 +66,7 @@ class UserRank extends StatelessWidget {
                     style: TextStyles.rajdhani.body3,
                   ),
                   TextSpan(
-                    text: "${(currentUserScore.score).toInt()} points",
+                    text: "${currentUserScore.score!.toInt()} points",
                     style: TextStyles.rajdhaniSB.body3,
                   ),
                 ],

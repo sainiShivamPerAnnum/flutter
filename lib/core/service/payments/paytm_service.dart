@@ -46,9 +46,9 @@ const int ERR_PROCESS_SUBSCRIPTION_FAILED = 6;
 //PAYMENT MODE
 
 class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
-  final _logger = locator<CustomLogger>();
-  final _paytmRepo = locator<PaytmRepository>();
-  final _getterRepo = locator<GetterRepository>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
+  final GetterRepository? _getterRepo = locator<GetterRepository>();
 
   // final String devMid = "qpHRfp13374268724583";
   // final String prodMid = "CMTNKX90967647249644";
@@ -58,61 +58,61 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final PageController subscriptionFlowPageController = new PageController();
   int _fraction = 0;
   bool isOnSubscriptionFlow = false;
-  bool _isFirstTime = true;
+  bool? _isFirstTime = true;
   bool _autosaveVisible = false;
-  bool isStaging;
-  String _nextDebitString;
+  late bool isStaging;
+  String? _nextDebitString;
   String _processText = "processing";
-  String currentSubscriptionId;
-  String mid;
-  String postPrefix;
-  String callbackUrl;
-  String orderId;
-  ActiveSubscriptionModel _activeSubscription;
+  String? currentSubscriptionId;
+  String? mid;
+  String? postPrefix;
+  String? callbackUrl;
+  String? orderId;
+  ActiveSubscriptionModel? _activeSubscription;
 
   int get fraction => this._fraction;
   bool get autosaveVisible => this._autosaveVisible;
-  bool get isFirstTime => this._isFirstTime;
-  String get nextDebitString => this._nextDebitString;
+  bool? get isFirstTime => this._isFirstTime;
+  String? get nextDebitString => this._nextDebitString;
   String get processText => this._processText;
-  ActiveSubscriptionModel get activeSubscription => this._activeSubscription;
+  ActiveSubscriptionModel? get activeSubscription => this._activeSubscription;
 
-  BaseTransactionService _txnService;
+  BaseTransactionService? _txnService;
 
-  set nextDebitString(String nextDebitString) {
+  set nextDebitString(String? nextDebitString) {
     this._nextDebitString = nextDebitString;
     notifyListeners(PaytmServiceProperties.NextDebitString);
-    _logger.d("Paytm Service: Next Debit String properties notified");
+    _logger!.d("Paytm Service: Next Debit String properties notified");
   }
 
   set autosaveVisible(bool autosaveVisible) {
     this._autosaveVisible = autosaveVisible;
     notifyListeners(PaytmServiceProperties.AutosaveVisibility);
-    _logger.d("Paytm Service: Autosave Visibility Properties notified");
+    _logger!.d("Paytm Service: Autosave Visibility Properties notified");
   }
 
   set isFirstTime(isFirstTime) {
     this._isFirstTime = isFirstTime;
     notifyListeners(PaytmServiceProperties.FirstTimeView);
-    _logger.d("Paytm Service:Active Subscription Properties notified");
+    _logger!.d("Paytm Service:Active Subscription Properties notified");
   }
 
   set fraction(value) {
     this._fraction = value;
     notifyListeners(PaytmServiceProperties.ProcessFraction);
-    _logger.d("Fraction value: $_fraction");
+    _logger!.d("Fraction value: $_fraction");
   }
 
-  set activeSubscription(ActiveSubscriptionModel value) {
+  set activeSubscription(ActiveSubscriptionModel? value) {
     this._activeSubscription = value;
     notifyListeners(PaytmServiceProperties.ActiveSubscription);
-    _logger.d("Paytm Service:Active Subscription Properties notified");
+    _logger!.d("Paytm Service:Active Subscription Properties notified");
   }
 
   set processText(value) {
     this._processText = value;
     notifyListeners(PaytmServiceProperties.SubscriptionProcess);
-    _logger.d("Paytm Service: Subscription process notified");
+    _logger!.d("Paytm Service: Subscription process notified");
   }
 
   List<AmountChipsModel> defaultAmountChipList = [
@@ -125,7 +125,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   //CONSTRUCTOR
   PaytmService() {
-    final stage = FlavorConfig.instance.values.paytmStage;
+    final stage = FlavorConfig.instance!.values.paytmStage;
     if (stage == PaytmStage.DEV) {
       isStaging = true;
       postPrefix = devPostPrefix;
@@ -141,7 +141,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         ? BaseRemoteConfig.PATYM_DEV_MID
         : BaseRemoteConfig.PATYM_PROD_MID);
     autosaveVisible = BaseRemoteConfig.AUTOSAVE_ACTIVE;
-    await getActiveSubscriptionDetails();
+    // await getActiveSubscriptionDetails();
 
     if (await CacheManager.exits(
         CacheManager.CACHE_IS_SUBSCRIPTION_FIRST_TIME)) {
@@ -166,34 +166,34 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   //Initiate paytm pg transaction
   Future<bool> initiatePaytmPGTransaction({
     bool restrictAppInvoke = false,
-    CreatePaytmTransactionModel paytmSubscriptionModel,
-    @required InvestmentType investmentType,
+    required CreatePaytmTransactionModel paytmSubscriptionModel,
+    required InvestmentType investmentType,
   }) async {
     try {
       _txnService = investmentType == InvestmentType.LENDBOXP2P
           ? locator<LendboxTransactionService>()
           : locator<AugmontTransactionService>();
 
-      _logger.d("Transaction order id: ${paytmSubscriptionModel.data.txnId}");
-      _logger.d("Transaction app invoke: $restrictAppInvoke");
+      _logger!.d("Transaction order id: ${paytmSubscriptionModel.data!.txnId}");
+      _logger!.d("Transaction app invoke: $restrictAppInvoke");
 
       final response = await AllInOneSdk.startTransaction(
-        mid,
-        paytmSubscriptionModel.data.orderId,
-        _txnService.currentTxnAmount.toString(),
-        paytmSubscriptionModel.data.temptoken,
-        paytmSubscriptionModel.data.callbackUrl,
+        mid!,
+        paytmSubscriptionModel.data!.orderId!,
+        _txnService!.currentTxnAmount.toString(),
+        paytmSubscriptionModel.data!.temptoken!,
+        paytmSubscriptionModel.data!.callbackUrl!,
         isStaging,
         restrictAppInvoke,
       );
 
-      _logger.d("Transaction Response:${response.toString()}");
+      _logger!.d("Transaction Response:${response.toString()}");
       return true;
     } catch (onError) {
       if (onError is PlatformException) {
-        _logger.e(onError.message + " \n  " + onError.details.toString());
+        _logger!.e(onError.message! + " \n  " + onError.details.toString());
       } else {
-        _logger.e(onError.toString());
+        _logger!.e(onError.toString());
       }
       return false;
     }
@@ -203,22 +203,23 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   Future<void> getActiveSubscriptionDetails() async {
     ApiResponse<ActiveSubscriptionModel> response =
-        await _paytmRepo.getActiveSubscription();
+        await _paytmRepo!.getActiveSubscription();
+    _logger!.d(response);
     if (response.code == 200)
       activeSubscription = response.model;
     else
       activeSubscription = null;
 
     if (activeSubscription != null &&
-        (activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE ||
-            (activeSubscription.status == Constants.SUBSCRIPTION_INACTIVE &&
-                activeSubscription.resumeDate.isNotEmpty))) {
+        (activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE ||
+            (activeSubscription!.status == Constants.SUBSCRIPTION_INACTIVE &&
+                activeSubscription!.resumeDate!.isNotEmpty))) {
       autosaveVisible = true;
     }
     if (activeSubscription != null &&
-        activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE) {
+        activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE) {
       final ApiResponse<String> nextDebitResponse =
-          await _paytmRepo.getNextDebitDate();
+          await _paytmRepo!.getNextDebitDate();
       if (nextDebitResponse.code == 200)
         nextDebitString = nextDebitResponse.model;
       else
@@ -230,10 +231,10 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     processText = "Creating your Autosave account";
     final ApiResponse<CreateSubscriptionResponseModel>
         paytmSubscriptionApiResponse =
-        await _paytmRepo.createPaytmSubscription();
+        await _paytmRepo!.createPaytmSubscription();
 
     if (!paytmSubscriptionApiResponse.isSuccess()) {
-      _logger.e(
+      _logger!.e(
           "Subscription Message: ${paytmSubscriptionApiResponse.errorMessage}");
       return PaytmResponse(
           errorCode: ERR_INITIATE_SUBSCRIPTION_FAILED,
@@ -243,15 +244,15 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           status: false);
     }
 
-    final paytmSubscriptionModel = paytmSubscriptionApiResponse.model;
+    final paytmSubscriptionModel = paytmSubscriptionApiResponse.model!;
 
     processText = "Verifying your UPI address";
     final ApiResponse<ValidateVpaResponseModel> isVpaValidResponse =
-        await _paytmRepo.validateVPA(paytmSubscriptionModel, vpa);
+        await _paytmRepo!.validateVPA(paytmSubscriptionModel, vpa);
 
-    _logger.d("Validate vpa response: $isVpaValidResponse");
+    _logger!.d("Validate vpa response: $isVpaValidResponse");
     if (isVpaValidResponse.code == 400) {
-      _logger.e(isVpaValidResponse.errorMessage);
+      _logger!.e(isVpaValidResponse.errorMessage);
       return PaytmResponse(
           errorCode: ERR_VALIDATE_VPA_FAILED,
           title: isVpaValidResponse.errorMessage ??
@@ -260,8 +261,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           status: false);
     }
 
-    if (!isVpaValidResponse.model.data.valid) {
-      _logger.e("Invalid UPI");
+    if (!isVpaValidResponse.model!.data!.valid!) {
+      _logger!.e("Invalid UPI");
       return PaytmResponse(
           errorCode: ERR_INVALID_VPA_DETECTED,
           title: "Entered UPI address is not valid ",
@@ -269,9 +270,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           status: false);
     }
 
-    if (!isVpaValidResponse.model.data.bankSupportedRecurring ||
-        !isVpaValidResponse.model.data.pspSupportedRecurring) {
-      _logger.e("Bank does not support UPI Autosave");
+    if (!isVpaValidResponse.model!.data!.bankSupportedRecurring! ||
+        !isVpaValidResponse.model!.data!.pspSupportedRecurring!) {
+      _logger!.e("Bank does not support UPI Autosave");
       return PaytmResponse(
           errorCode: ERR_UNSUPPORTED_BANK_DETECTED,
           title: "Your bank does not support UPI Autosave",
@@ -279,19 +280,22 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
           status: false);
     }
     try {
-      _logger.d("Paytm order id: ${paytmSubscriptionModel.data.orderId}");
+      _logger!.d("Paytm order id: ${paytmSubscriptionModel.data!.orderId}");
       processText = "Connecting to your bank";
-      bool postResponse = await APIService.instance
-          .paytmSubscriptionPostRequest(
-              mid: mid,
-              orderId: paytmSubscriptionModel.data.orderId,
-              vpa: vpa,
-              postPrefix: postPrefix,
-              txnToken: paytmSubscriptionModel.data.temptoken,
-              subId: paytmSubscriptionModel.data.subscriptionId);
+
+      bool postResponse = await (APIService.instance
+              .paytmSubscriptionPostRequest(
+                  mid: mid,
+                  orderId: paytmSubscriptionModel.data!.orderId,
+                  vpa: vpa,
+                  postPrefix: postPrefix,
+                  txnToken: paytmSubscriptionModel.data!.temptoken,
+                  subId: paytmSubscriptionModel.data!.subscriptionId)
+          as Future<bool>);
+
       if (postResponse) {
         processText = "Sending payment request";
-        bool processResponse = await processSubscription();
+        bool processResponse = await (processSubscription() as Future<bool>);
         if (processResponse) {
           return PaytmResponse(title: "Everything seems good!", status: true);
         } else {
@@ -309,9 +313,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
             status: false);
     } catch (onError) {
       if (onError is PlatformException) {
-        _logger.e(onError.message + " \n  " + onError.details.toString());
+        _logger!.e(onError.message! + " \n  " + onError.details.toString());
       } else {
-        _logger.e(onError.toString());
+        _logger!.e(onError.toString());
       }
       return PaytmResponse(
           title: "Your Autosave account could not be verified",
@@ -321,11 +325,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
   }
 
-  Future<bool> updateDailySubscriptionAmount(
-      {@required double amount, @required String freq}) async {
-    _logger.d("Amount: $amount || Frequency: $freq");
+  Future<bool?> updateDailySubscriptionAmount(
+      {required double amount, required String freq}) async {
+    _logger!.d("Amount: $amount || Frequency: $freq");
     ApiResponse response =
-        await _paytmRepo.updateDailyAmount(amount: amount, freq: freq);
+        await _paytmRepo!.updateDailyAmount(amount: amount, freq: freq);
     await getActiveSubscriptionDetails();
     if (response.code == 200)
       return response.model;
@@ -335,8 +339,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
   }
 
-  Future<bool> pauseSubscription(String daysCode) async {
-    ApiResponse response = await _paytmRepo.pauseSubscription(daysCode);
+  Future<bool?> pauseSubscription(String daysCode) async {
+    ApiResponse response = await _paytmRepo!.pauseSubscription(daysCode);
     await getActiveSubscriptionDetails();
     if (response.code == 200)
       return response.model;
@@ -347,8 +351,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
   }
 
-  Future<bool> resumeSubscription() async {
-    ApiResponse response = await _paytmRepo.resumeSubscription();
+  Future<bool?> resumeSubscription() async {
+    ApiResponse response = await _paytmRepo!.resumeSubscription();
     await getActiveSubscriptionDetails();
     if (response.code == 200)
       return response.model;
@@ -359,15 +363,15 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   }
 
   Future<void> getNextDebitDate() async {
-    ApiResponse<String> response = await _paytmRepo.getNextDebitDate();
+    ApiResponse<String> response = await _paytmRepo!.getNextDebitDate();
     if (response.code == 200) {
       nextDebitString = response.model;
     } else
       nextDebitString = "";
   }
 
-  Future<bool> processSubscription() async {
-    ApiResponse response = await _paytmRepo.processSubscription();
+  Future<bool?> processSubscription() async {
+    ApiResponse response = await _paytmRepo!.processSubscription();
     await getActiveSubscriptionDetails();
     if (response.code == 200)
       return response.model;
@@ -382,9 +386,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     subscriptionFlowPageController.jumpToPage(index);
   }
 
-  Future<List<AmountChipsModel>> getAmountChips({@required String freq}) async {
+  Future<List<AmountChipsModel>?> getAmountChips({required String freq}) async {
     ApiResponse<List<AmountChipsModel>> data =
-        await _getterRepo.getAmountChips(freq: freq);
+        await _getterRepo!.getAmountChips(freq: freq);
     if (data != null && data.code == 200)
       return data.model;
     else
@@ -393,16 +397,16 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   //HELPER METHODS -- END
 
   // UPI METHODS -- START
-  Future<String> generateUpiTransactionDeepUri(
-      String pspApp,
+  Future<String?> generateUpiTransactionDeepUri(
+      String? pspApp,
       CreatePaytmTransactionModel paytmTransactionModel,
       String description) async {
     final ApiResponse<ProcessTransactionModel> processTransactionApiResponse =
-        await _paytmRepo.processPaytmTransaction(
-      tempToken: paytmTransactionModel.data.temptoken,
+        await _paytmRepo!.processPaytmTransaction(
+      tempToken: paytmTransactionModel.data!.temptoken,
       osType: Platform.isAndroid ? 'android' : 'ios',
       pspApp: pspApp,
-      orderId: paytmTransactionModel.data.orderId,
+      orderId: paytmTransactionModel.data!.orderId,
       paymentMode: 'UPI_INTENT',
     );
     if (processTransactionApiResponse.isSuccess()) {
@@ -412,11 +416,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
         BaseUtil.showNegativeAlert("Something went wrong", "Please try again");
         return null;
       }
-      String url =
-          processTransactionApiResponse.model.data.body.deepLinkInfo.deepLink +
-              '&tn=${description}';
+      String url = processTransactionApiResponse
+              .model!.data!.body!.deepLinkInfo!.deepLink! +
+          '&tn=${description}';
 
-      _logger.d("Transaction Url: $url");
+      _logger!.d("Transaction Url: $url");
       return url;
     } else {
       BaseUtil.showNegativeAlert(
@@ -426,11 +430,11 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   }
 
   Future<bool> initiateUpiTransaction({
-    String url,
-    double amount,
-    String orderId,
-    UpiApplication upiApplication,
-    @required InvestmentType investmentType,
+    required String url,
+    double? amount,
+    String? orderId,
+    UpiApplication? upiApplication,
+    required InvestmentType investmentType,
   }) async {
     if (url.isEmpty) {
       BaseUtil.showNegativeAlert("Something went wrong", "Please try again");
@@ -440,10 +444,10 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     //ANDROID Handling
     if (Platform.isAndroid) {
       UpiTransactionResponse response;
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       try {
         response = await UpiPay.initiateTransaction(
-            app: upiApplication, deepLinkUrl: url);
+            app: upiApplication!, deepLinkUrl: url);
         print(response);
       } catch (e) {
         print(e);
@@ -467,7 +471,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     }
     //iOS Handling
     else if (Platform.isIOS) {
-      if (upiApplication.appName == "Google Pay") {
+      if (upiApplication!.appName == "Google Pay") {
         url = "tez:" + url.split(":").last;
       } else if (upiApplication.appName == "PhonePe") {
         url = "phonepe:" + url.split(":").last;
@@ -477,9 +481,9 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
             ? locator<LendboxTransactionService>()
             : locator<AugmontTransactionService>();
 
-        AppState.backButtonDispatcher.didPopRoute();
-        _txnService.isIOSTxnInProgress = true;
-        _txnService.currentTxnAmount = amount;
+        AppState.backButtonDispatcher!.didPopRoute();
+        _txnService!.isIOSTxnInProgress = true;
+        _txnService!.currentTxnAmount = amount;
       });
       return true;
     }
@@ -490,10 +494,10 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 }
 
 class PaytmResponse {
-  String title;
-  String subtitle;
-  bool status;
-  int errorCode;
+  String? title;
+  String? subtitle;
+  bool? status;
+  int? errorCode;
   PaytmResponse({
     this.title,
     this.subtitle,

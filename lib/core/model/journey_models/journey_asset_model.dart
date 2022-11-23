@@ -10,22 +10,22 @@ class JourneyAssetModel {
   final int page;
   final String assetType;
   JourneyAssetModel({
-    @required this.uri,
-    @required this.name,
-    @required this.height,
-    @required this.width,
-    @required this.page,
+    required this.uri,
+    required this.name,
+    required this.height,
+    required this.width,
+    required this.page,
     this.assetType = 'SVG',
   });
 
   JourneyAssetModel copyWith({
-    String uri,
-    String name,
-    double height,
-    double width,
-    int page,
-    int level,
-    String type,
+    String? uri,
+    String? name,
+    double? height,
+    double? width,
+    int? page,
+    int? level,
+    String? type,
   }) {
     return JourneyAssetModel(
       uri: uri ?? this.uri,

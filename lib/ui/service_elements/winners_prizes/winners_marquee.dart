@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class WinnersMarqueeStrip extends StatelessWidget {
-  final String type;
-  final List<dynamic> winners;
+  final String? type;
+  final List<dynamic>? winners;
   WinnersMarqueeStrip({this.type, this.winners});
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class WinnersMarqueeStrip extends StatelessWidget {
             infoList: winners ??
                 _getMarqueeText(
                   getTextArray(wModel),
-                  winners: wModel.winners,
+                  winners: wModel!.winners,
                 ),
             showBullet: true,
             bulletColor: UiConstants.tertiarySolid,
@@ -40,26 +40,26 @@ class WinnersMarqueeStrip extends StatelessWidget {
     );
   }
 
-  List<String> getTextArray(WinnerService wModel) {
+  List<String> getTextArray(WinnerService? wModel) {
     switch (type) {
       case Constants.BUG_BOUNTY:
-        return wModel.bugBountyWinners;
+        return wModel!.bugBountyWinners;
       case Constants.NEW_FELLO_UI:
-        return wModel.newFelloWinners;
+        return wModel!.newFelloWinners;
       default:
-        return wModel.topWinners;
+        return wModel!.topWinners;
     }
   }
 }
 
-List<String> _getMarqueeText(List<String> topWinners, {List<Winners> winners}) {
+List<String> _getMarqueeText(List<String> topWinners, {List<Winners>? winners}) {
   if (topWinners != null && topWinners.isNotEmpty)
     return List.generate(topWinners.length, (i) => topWinners[i]);
   else if (winners != null && winners.isNotEmpty)
     return List.generate(
         winners.length,
         (i) =>
-            "${winners[i].username.replaceAll('@', '.')} won ₹${winners[i].amount}");
+            "${winners[i].username!.replaceAll('@', '.')} won ₹${winners[i].amount}");
   else
     return [
       "shravan25 won ₹ 1000",

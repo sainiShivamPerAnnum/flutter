@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 
 class NewProfileImage extends StatelessWidget {
   const NewProfileImage({
-    Key key,
-    @required this.image,
-    @required this.isNewUser,
+    Key? key,
+    required this.image,
+    required this.isNewUser,
     this.showAction = true,
     this.updateProfilePicture,
     // this.model,
@@ -17,7 +17,7 @@ class NewProfileImage extends StatelessWidget {
   final bool isNewUser;
   final bool showAction;
   final Widget image;
-  final Function updateProfilePicture;
+  final Function? updateProfilePicture;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class NewProfileImage extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Container(
-          width: SizeConfig.screenWidth * 0.4667,
-          height: SizeConfig.screenWidth * 0.4667,
+          width: SizeConfig.screenWidth! * 0.4667,
+          height: SizeConfig.screenWidth! * 0.4667,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -48,8 +48,8 @@ class NewProfileImage extends StatelessWidget {
         //   ),
         // ),
         Container(
-          width: SizeConfig.screenWidth * 0.3944, // 142
-          height: SizeConfig.screenWidth * 0.3944,
+          width: SizeConfig.screenWidth! * 0.3944, // 142
+          height: SizeConfig.screenWidth! * 0.3944,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -73,8 +73,8 @@ class NewProfileImage extends StatelessWidget {
         Align(
           alignment: Alignment.center,
           child: Container(
-            width: SizeConfig.screenWidth * 0.335, // 112
-            height: SizeConfig.screenWidth * 0.335,
+            width: SizeConfig.screenWidth! * 0.335, // 112
+            height: SizeConfig.screenWidth! * 0.335,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
@@ -93,8 +93,8 @@ class NewProfileImage extends StatelessWidget {
               ? Align(
                   alignment: Alignment.center,
                   child: Container(
-                    width: SizeConfig.screenWidth * 0.3111, // 112
-                    height: SizeConfig.screenWidth * 0.3111,
+                    width: SizeConfig.screenWidth! * 0.3111, // 112
+                    height: SizeConfig.screenWidth! * 0.3111,
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.6),
                       shape: BoxShape.circle,
@@ -108,18 +108,18 @@ class NewProfileImage extends StatelessWidget {
                         color: Colors.white.withOpacity(0.9),
                         size: SizeConfig.padding80,
                       ),
-                      onPressed: updateProfilePicture ?? () {},
+                      onPressed: updateProfilePicture as void Function()? ?? () {},
                     ),
                   ),
                 )
               : Align(
                   alignment: Alignment.center,
                   child: Container(
-                    width: SizeConfig.screenWidth * 0.3111, // 112
-                    height: SizeConfig.screenWidth * 0.3111,
+                    width: SizeConfig.screenWidth! * 0.3111, // 112
+                    height: SizeConfig.screenWidth! * 0.3111,
                     alignment: Alignment.bottomRight,
                     child: InkWell(
-                      onTap: updateProfilePicture,
+                      onTap: updateProfilePicture as void Function()?,
                       child: Container(
                         height: SizeConfig.padding40, // 20
                         width: SizeConfig.padding40, // 20

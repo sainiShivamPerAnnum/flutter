@@ -24,24 +24,24 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SupportPage extends StatefulWidget {
-  const SupportPage({Key key}) : super(key: key);
+  const SupportPage({Key? key}) : super(key: key);
 
   @override
   _SupportPageState createState() => _SupportPageState();
 }
 
 class _SupportPageState extends State<SupportPage> {
-  final CustomLogger logger = locator<CustomLogger>();
-  final UserService _userService = locator<UserService>();
-  BaseUtil baseProvider;
-  AppState appState;
-  DBModel dbProvider;
+  final CustomLogger? logger = locator<CustomLogger>();
+  final UserService? _userService = locator<UserService>();
+  BaseUtil? baseProvider;
+  late AppState appState;
+  DBModel? dbProvider;
   TextEditingController _requestCallPhoneController = TextEditingController();
   bool isInit = false;
-  final _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
   void init() {
-    _requestCallPhoneController.text = _userService.baseUser.mobile;
+    _requestCallPhoneController.text = _userService!.baseUser!.mobile!;
     // enableFlashChat();
     isInit = true;
   }
@@ -174,7 +174,7 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   void _launchEmail() {
-    _analyticsService.track(eventName: AnalyticsEvents.emailInitiated);
+    _analyticsService!.track(eventName: AnalyticsEvents.emailInitiated);
     final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'support@fello.in');
     launch(emailLaunchUri.toString());
   }
@@ -194,7 +194,7 @@ class TermsRow extends StatelessWidget {
             child: Text(
               'Terms of Service',
               style: TextStyle(
-                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  fontSize: SizeConfig.smallTextSize! * 1.2,
                   color: Colors.grey,
                   decoration: TextDecoration.underline),
             ),
@@ -217,7 +217,7 @@ class TermsRow extends StatelessWidget {
             child: Text(
               'Privacy Policy',
               style: TextStyle(
-                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  fontSize: SizeConfig.smallTextSize! * 1.2,
                   color: Colors.grey,
                   decoration: TextDecoration.underline),
             ),
@@ -239,14 +239,14 @@ class TermsRow extends StatelessWidget {
             child: Text(
               'Referral Policy',
               style: TextStyle(
-                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  fontSize: SizeConfig.smallTextSize! * 1.2,
                   color: Colors.grey,
                   decoration: TextDecoration.underline),
             ),
             onTap: () {
               Haptic.vibrate();
               // BaseUtil.launchUrl('https://fello.in/policy/privacy');
-              AppState.delegate.appState.currentAction = PageAction(
+              AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),

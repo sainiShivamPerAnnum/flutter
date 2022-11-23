@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Separator extends StatelessWidget {
-  const Separator({Key key, this.height = 2, this.color = Colors.black})
+  const Separator({Key? key, this.height = 2, this.color = Colors.black})
       : super(key: key);
   final double height;
   final Color color;

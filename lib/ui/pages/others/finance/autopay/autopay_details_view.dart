@@ -16,17 +16,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AutosaveDetailsView extends StatefulWidget {
-  const AutosaveDetailsView({Key key}) : super(key: key);
+  const AutosaveDetailsView({Key? key}) : super(key: key);
 
   @override
   State<AutosaveDetailsView> createState() => _AutosaveDetailsViewState();
 }
 
 class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
-  final _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   @override
   void initState() {
-    _analyticsService.track(
+    _analyticsService!.track(
         eventName: AnalyticsEvents.autosaveDetailsScreenView);
     super.initState();
   }
@@ -44,7 +44,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
             Icons.arrow_back_ios,
             color: UiConstants.kTextColor,
           ),
-          onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+          onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
         ),
       ),
       body: SafeArea(
@@ -53,7 +53,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              height: SizeConfig.screenWidth * 0.2747,
+              height: SizeConfig.screenWidth! * 0.2747,
             ),
             Center(
               child: Text(
@@ -62,13 +62,13 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
               ),
             ),
             SizedBox(
-              height: SizeConfig.screenWidth * 0.12,
+              height: SizeConfig.screenWidth! * 0.12,
             ),
             _buildAutosaveStepTile(
               image: SvgPicture.asset(
                 Assets.upiIcon,
-                height: SizeConfig.screenWidth * 0.0667,
-                width: SizeConfig.screenWidth * 0.0667,
+                height: SizeConfig.screenWidth! * 0.0667,
+                width: SizeConfig.screenWidth! * 0.0667,
               ),
               title: "Enter UPI ID",
               subtitle: Column(
@@ -101,7 +101,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
               image: Icon(
                 Icons.verified,
                 color: UiConstants.primaryColor,
-                size: SizeConfig.screenWidth * 0.112,
+                size: SizeConfig.screenWidth! * 0.112,
               ),
               title: "Approve Request on UPI app",
               subtitle: RichText(
@@ -132,8 +132,8 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
             _buildAutosaveStepTile(
               image: SvgPicture.asset(
                 Assets.rupee,
-                height: SizeConfig.screenWidth * 0.064,
-                width: SizeConfig.screenWidth * 0.064,
+                height: SizeConfig.screenWidth! * 0.064,
+                width: SizeConfig.screenWidth! * 0.064,
               ),
               title: "Set an amount you want to invest",
               subtitle: Text(
@@ -148,21 +148,21 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
               btnText: 'Get Started',
               onPressed: () {
                 Haptic.vibrate();
-                _analyticsService.track(
+                _analyticsService!.track(
                   eventName: AnalyticsEvents.autosaveSetupViewed,
                 );
-                _analyticsService.track(
+                _analyticsService!.track(
                     eventName: AnalyticsEvents.getStartTapped,
                     properties: AnalyticsProperties.getDefaultPropertiesMap());
-                AppState.delegate.appState.currentAction = PageAction(
+                AppState.delegate!.appState.currentAction = PageAction(
                   page: AutosaveProcessViewPageConfig,
                   state: PageState.replace,
                 );
               },
-              width: SizeConfig.screenWidth * 0.784,
+              width: SizeConfig.screenWidth! * 0.784,
             ),
             SizedBox(
-              height: SizeConfig.screenWidth * 0.1893,
+              height: SizeConfig.screenWidth! * 0.1893,
             ),
           ],
         ),
@@ -171,21 +171,21 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
   }
 
   Widget _buildAutosaveStepTile({
-    Widget image,
-    String title,
-    Widget subtitle,
+    Widget? image,
+    required String title,
+    Widget? subtitle,
   }) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.screenWidth * 0.08,
-        vertical: SizeConfig.screenWidth * 0.0533,
+        horizontal: SizeConfig.screenWidth! * 0.08,
+        vertical: SizeConfig.screenWidth! * 0.0533,
       ),
       child: Row(
         children: [
           ClipOval(
             child: Container(
-              width: SizeConfig.screenWidth * 0.1307,
-              height: SizeConfig.screenWidth * 0.1307,
+              width: SizeConfig.screenWidth! * 0.1307,
+              height: SizeConfig.screenWidth! * 0.1307,
               color: Colors.black38,
               child: Center(child: image),
             ),
@@ -204,7 +204,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
                 height: SizeConfig.padding4,
               ),
               SizedBox(
-                width: SizeConfig.screenWidth * 0.6,
+                width: SizeConfig.screenWidth! * 0.6,
                 child: subtitle,
               ),
             ],

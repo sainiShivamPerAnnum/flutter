@@ -76,6 +76,8 @@ const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
 const String InfoStoriesViewPath = "/inforStoriesViewPath";
 const String WebViewScreenPath = "/webViewScreenPath";
 const String SettingsScreenPath = '/settingsScreenPath';
+const String TExistingUserViewPath = '/texistingUserPath';
+const String TNewUserViewPath = '/tnewUserViewPath';
 
 enum Pages {
   Splash,
@@ -101,6 +103,8 @@ enum Pages {
   AutosaveWalkthrough,
   YourFunds,
   THome,
+  TNewUser,
+  TExistingUser,
   TGame,
   TWeeklyResult,
   TWalkthrough,
@@ -141,8 +145,8 @@ enum Pages {
   SaveAssetView,
   SellConfirmationView,
   ViewAllBlogsView,
-  AllParticipantsWinnersTopReferersView,
-  RedeemSucessfulScreenView,
+  AllParticipantsWinnersTopReferrersView,
+  RedeemSuccessfulScreenView,
   SharePriceScreenView,
   AllTambolaTicketsView,
   UserUpiDetailsView,
@@ -155,16 +159,16 @@ class PageConfiguration {
   final String key;
   final String path;
   final Pages uiPage;
-  final String name;
+  final String? name;
 
-  PageAction currentPageAction;
+  PageAction? currentPageAction;
   var returnValue;
 
   PageConfiguration({
-    @required this.key,
-    @required this.path,
-    @required this.uiPage,
-    @required this.name,
+    required this.key,
+    required this.path,
+    required this.uiPage,
+    this.name,
     this.currentPageAction,
   });
 
@@ -199,6 +203,7 @@ PageConfiguration RootPageConfig = PageConfiguration(
   key: 'Root',
   path: RootPath,
   uiPage: Pages.Root,
+  name: 'Root',
 );
 
 PageConfiguration OnboardPageConfig = PageConfiguration(
@@ -242,6 +247,18 @@ PageConfiguration ReferralPageConfig = PageConfiguration(
   uiPage: Pages.Referral,
   name: 'Referral Screen',
 );
+
+PageConfiguration TambolaExistingUser = PageConfiguration(
+    key: 'TexistingUser',
+    path: TExistingUserViewPath,
+    uiPage: Pages.TExistingUser,
+    name: 'TexistingUser Screen');
+
+    PageConfiguration TambolaNewUser = PageConfiguration(
+    key: 'TNewUser',
+    path: TNewUserViewPath,
+    uiPage: Pages.TNewUser,
+    name: 'TNewUser Screen');
 
 PageConfiguration FaqPageConfig = PageConfiguration(
   key: 'Faq',
@@ -599,16 +616,16 @@ PageConfiguration ViewAllBlogsViewConfig = PageConfiguration(
   name: "View All Blogs View",
 );
 
-PageConfiguration AllParticipantsWinnersTopReferersConfig = PageConfiguration(
+PageConfiguration AllParticipantsWinnersTopReferrersConfig = PageConfiguration(
   key: 'AllParticipantsWinnersTopReferersView',
   path: AllParticipantsWinnersTopReferersPath,
-  uiPage: Pages.AllParticipantsWinnersTopReferersView,
+  uiPage: Pages.AllParticipantsWinnersTopReferrersView,
 );
 
-PageConfiguration RedeemSucessfulScreenPageConfig = PageConfiguration(
+PageConfiguration RedeemSuccessfulScreenPageConfig = PageConfiguration(
   key: 'RedeemSucessfulScreenView',
   path: RedeemSucessfulScreenPath,
-  uiPage: Pages.RedeemSucessfulScreenView,
+  uiPage: Pages.RedeemSuccessfulScreenView,
   name: "Redeem Sucessfull View",
 );
 

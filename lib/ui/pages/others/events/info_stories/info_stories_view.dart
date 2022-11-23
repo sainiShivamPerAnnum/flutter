@@ -12,7 +12,7 @@ import 'package:story_view/story_view.dart';
 class InfoStories extends StatelessWidget {
   final String topic;
 
-  const InfoStories({Key key, @required this.topic}) : super(key: key);
+  const InfoStories({Key? key, required this.topic}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class InfoStories extends StatelessWidget {
                       repeat: false,
                       onStoryShow: (s) {},
                       onComplete: () {
-                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher!.didPopRoute();
                       },
                       onVerticalSwipeComplete: (direction) {}),
             ),
@@ -53,7 +53,7 @@ class InfoStories extends StatelessWidget {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher!.didPopRoute();
                 },
               ),
             )

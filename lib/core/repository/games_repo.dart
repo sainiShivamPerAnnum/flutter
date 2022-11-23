@@ -12,11 +12,11 @@ class GameRepo extends BaseRepo {
       ? "https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://u9c7w6pnw7.execute-api.ap-south-1.amazonaws.com/prod";
 
-  List<GameModel> _allgames;
+  List<GameModel>? _allgames;
 
-  List<GameModel> get allgames => this._allgames;
+  List<GameModel>? get allgames => this._allgames;
 
-  set allgames(List<GameModel> value) => this._allgames = value;
+  set allgames(List<GameModel>? value) => this._allgames = value;
   Future<ApiResponse<List<GameModel>>> getGames() async {
     try {
       final token = await getBearerToken();
@@ -25,7 +25,7 @@ class GameRepo extends BaseRepo {
         cBaseUrl: _baseUrl,
         token: token,
       );
-      logger.d("Games: ${response["data"]}");
+      logger!.d("Games: ${response["data"]}");
 
       final List<GameModel> games =
           GameModel.helper.fromMapArray(response["data"]["games"]);
@@ -34,7 +34,7 @@ class GameRepo extends BaseRepo {
 
       return ApiResponse<List<GameModel>>(model: games, code: 200);
     } catch (e) {
-      logger.e("Unable to fetch games ${e.toString()}");
+      logger!.e("Unable to fetch games ${e.toString()}");
       allgames = [];
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch games", 400);
@@ -42,7 +42,7 @@ class GameRepo extends BaseRepo {
   }
 
   Future<ApiResponse<GameModel>> getGameByCode(
-      {@required String gameCode}) async {
+      {required String gameCode}) async {
     try {
       final token = await getBearerToken();
       final response = await APIService.instance.getData(
@@ -53,13 +53,13 @@ class GameRepo extends BaseRepo {
       final game = GameModel.fromMap(response["data"]);
       return ApiResponse<GameModel>(model: game, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch game by id", 400);
     }
   }
 
-  ApiResponse<String> getGameToken({@required String gameName}) {
+  ApiResponse<String> getGameToken({required String? gameName}) {
     String res = getGameApiToken(gameName);
     return ApiResponse(model: res, code: 200);
   }

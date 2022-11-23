@@ -11,16 +11,16 @@ import 'package:felloapp/util/locator.dart';
 class SettingsViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   final _baseUtil = locator<BaseUtil>();
-  String username;
-  List<SettingsListItemModel> items;
+  String? username;
+  List<SettingsListItemModel>? items;
   init() {
-    username = _userService.diplayUsername(_userService.baseUser.username);
+    username = _userService.diplayUsername(_userService.baseUser!.username!);
     fetchSettingsItems();
   }
 
   fetchSettingsItems() {
     if (_baseUtil.settingsItemList == null ||
-        _baseUtil.settingsItemList.isEmpty) {
+        _baseUtil.settingsItemList!.isEmpty) {
       items = [
         SettingsListItemModel(
             title: "Profile",

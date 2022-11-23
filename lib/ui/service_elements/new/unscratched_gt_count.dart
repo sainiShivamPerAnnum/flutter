@@ -12,8 +12,8 @@ class UnscratchedGTCountChip extends StatelessWidget {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
       properties: [JourneyServiceProperties.Prizes],
       builder: (context, model, properties) {
-        return model.unscratchedGTList != null &&
-                model.unscratchedGTList.isNotEmpty
+        return model?.unscratchedGTList != null &&
+                model!.unscratchedGTList!.isNotEmpty
             ? Container(
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.white, width: 0.5),
@@ -22,7 +22,7 @@ class UnscratchedGTCountChip extends StatelessWidget {
                   horizontal: SizeConfig.padding8,
                   vertical: SizeConfig.padding6,
                 ),
-                child: Text("${model.unscratchedGTList.length} New"),
+                child: Text("${model.unscratchedGTList!.length} New"),
               )
             : Text(
                 'See All',

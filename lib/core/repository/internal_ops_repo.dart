@@ -14,7 +14,7 @@ class InternalOpsRepository extends BaseRepo {
   final Log log = new Log("DBModel");
 
   Future<ApiResponse<bool>> logFailure(
-    String userId,
+    String? userId,
     String type,
     Map<String, dynamic> dMap,
   ) async {

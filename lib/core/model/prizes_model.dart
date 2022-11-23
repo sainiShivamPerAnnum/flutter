@@ -1,7 +1,7 @@
 class PrizesModel {
-  String freq;
-  String category;
-  List<PrizesA> prizesA;
+  String? freq;
+  String? category;
+  List<PrizesA>? prizesA;
 
   PrizesModel({this.freq, this.category, this.prizesA});
 
@@ -11,7 +11,7 @@ class PrizesModel {
     if (json['prizes_a'] != null) {
       prizesA = <PrizesA>[];
       json['prizes_a'].forEach((v) {
-        prizesA.add(new PrizesA.fromJson(v));
+        prizesA!.add(new PrizesA.fromJson(v));
       });
     }
   }
@@ -21,7 +21,7 @@ class PrizesModel {
     data['freq'] = this.freq;
     data['category'] = this.category;
     if (this.prizesA != null) {
-      data['prizes_a'] = this.prizesA.map((v) => v.toJson()).toList();
+      data['prizes_a'] = this.prizesA!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -49,11 +49,11 @@ class PrizesModel {
 }
 
 class PrizesA {
-  int rank;
-  int amt;
-  int flc;
-  String displayName;
-  String displayAmount;
+  int? rank;
+  int? amt;
+  int? flc;
+  String? displayName;
+  String? displayAmount;
 
   PrizesA(
       {this.rank, this.amt, this.flc, this.displayName, this.displayAmount});

@@ -13,7 +13,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:open_filex/open_filex.dart';
 
 class GenerateInvoiceModalSheet extends StatefulWidget {
-  const GenerateInvoiceModalSheet({Key key}) : super(key: key);
+  const GenerateInvoiceModalSheet({Key? key}) : super(key: key);
 
   @override
   State<GenerateInvoiceModalSheet> createState() =>
@@ -24,9 +24,9 @@ class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
   final TextEditingController _trandIdController = TextEditingController();
 
   final TextEditingController _uidController = TextEditingController();
-  final AugmontService _augmontModel = locator<AugmontService>();
-  final DBModel _dbModel = locator<DBModel>();
-  final UserRepository _userRepo = locator<UserRepository>();
+  final AugmontService? _augmontModel = locator<AugmontService>();
+  final DBModel? _dbModel = locator<DBModel>();
+  final UserRepository? _userRepo = locator<UserRepository>();
   bool _isLoading = false;
 
   get isLoading => this._isLoading;
@@ -39,18 +39,18 @@ class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
 
   generatePdf(String tranId, String uid) async {
     isLoading = true;
-    BaseUser baseuser;
+    BaseUser? baseuser;
     try {
-      final res = await _userRepo.getUserById(id: uid);
+      final res = await _userRepo!.getUserById(id: uid);
       baseuser = res.model;
-      final Map<String, String> userDetails = {
-        "name": (baseuser.kycName != null && baseuser.kycName != null)
+      final Map<String, String?> userDetails = {
+        "name": (baseuser!.kycName != null && baseuser.kycName != null)
             ? baseuser.kycName
             : baseuser.name,
         "email": baseuser.email
       };
       if (res.isSuccess())
-        await _augmontModel
+        await _augmontModel!
             .generatePurchaseInvoicePdf(tranId, userDetails)
             .then((generatedPdfFilePath) {
           isLoading = false;

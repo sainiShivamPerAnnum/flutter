@@ -32,14 +32,14 @@ enum GTSOURCE {
 }
 
 class GTInstantView extends StatefulWidget {
-  final String title;
+  final String? title;
   final GTSOURCE source;
-  final double amount;
+  final double? amount;
 
   final bool showAutosavePrompt;
   GTInstantView(
       {this.title,
-      @required this.source,
+      required this.source,
       this.amount,
       this.showAutosavePrompt = false});
   @override
@@ -48,7 +48,7 @@ class GTInstantView extends StatefulWidget {
 
 class _GTInstantViewState extends State<GTInstantView>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
@@ -131,8 +131,8 @@ class _GTInstantViewState extends State<GTInstantView>
                           children: [
                             SizedBox(height: SizeConfig.padding80),
                             Container(
-                              height: SizeConfig.screenWidth * 0.5,
-                              width: SizeConfig.screenWidth * 0.6,
+                              height: SizeConfig.screenWidth! * 0.5,
+                              width: SizeConfig.screenWidth! * 0.6,
                               alignment: Alignment.center,
                               child: AnimatedRotation(
                                 duration: Duration(milliseconds: 300),
@@ -142,10 +142,10 @@ class _GTInstantViewState extends State<GTInstantView>
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.easeInCubic,
                                   width: model.showMainContent
-                                      ? SizeConfig.screenWidth * 0.6
+                                      ? SizeConfig.screenWidth! * 0.6
                                       : 0,
                                   height: model.showMainContent
-                                      ? SizeConfig.screenWidth * 0.5
+                                      ? SizeConfig.screenWidth! * 0.5
                                       : 0,
                                   child: FittedBox(
                                     fit: BoxFit.fitWidth,
@@ -165,7 +165,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                           model.showScratchGuide = false;
                                         },
                                         onThreshold: () {
-                                          if (model.goldenTicket.isRewarding) {
+                                          if (model.goldenTicket!.isRewarding!) {
                                             model.isShimmerEnabled = true;
 
                                             Future.delayed(
@@ -182,25 +182,25 @@ class _GTInstantViewState extends State<GTInstantView>
                                           model.redeemTicket();
                                         },
                                         image: Image.asset(
-                                          model.goldenTicket.isLevelChange
+                                          model.goldenTicket!.isLevelChange!
                                               ? Assets
                                                   .levelUpUnredeemedGoldenTicketBGPNG
                                               : Assets
                                                   .unredeemedGoldenTicketBG_png,
                                           fit: BoxFit.contain,
-                                          height: SizeConfig.screenWidth * 0.6,
-                                          width: SizeConfig.screenWidth * 0.6,
+                                          height: SizeConfig.screenWidth! * 0.6,
+                                          width: SizeConfig.screenWidth! * 0.6,
                                         ),
                                         child: model.state == ViewState.Busy
                                             ? Container(
-                                                width: SizeConfig.screenWidth *
+                                                width: SizeConfig.screenWidth! *
                                                     0.6,
-                                                height: SizeConfig.screenWidth *
+                                                height: SizeConfig.screenWidth! *
                                                     0.5,
                                               )
                                             : RedeemedGoldenScratchCard(
                                                 ticket: model.goldenTicket,
-                                                width: SizeConfig.screenWidth *
+                                                width: SizeConfig.screenWidth! *
                                                     0.6,
                                               ),
                                       ),
@@ -233,7 +233,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                   horizontal:
                                       SizeConfig.pageHorizontalMargins * 2),
                               child: Text(
-                                  model.goldenTicket.note ??
+                                  model.goldenTicket!.note ??
                                       "You won a golden ticket",
                                   style: TextStyles.sourceSans.body3
                                       .colour(Colors.grey),
@@ -267,12 +267,12 @@ class _GTInstantViewState extends State<GTInstantView>
                                   TextButton(
                                     onPressed: () {
                                       while (AppState.screenStack.length > 1) {
-                                        AppState.backButtonDispatcher
+                                        AppState.backButtonDispatcher!
                                             .didPopRoute();
                                       }
-                                      AppState.delegate.appState
+                                      AppState.delegate!.appState
                                           .setCurrentTabIndex = 2;
-                                      AppState.delegate.appState.currentAction =
+                                      AppState.delegate!.appState.currentAction =
                                           PageAction(
                                               state: PageState.addPage,
                                               page: MyWinningsPageConfig);
@@ -314,7 +314,7 @@ class _GTInstantViewState extends State<GTInstantView>
                       ignoring: true,
                       child: Container(
                         margin: EdgeInsets.only(
-                            bottom: SizeConfig.screenHeight * 0.14),
+                            bottom: SizeConfig.screenHeight! * 0.14),
                         child: Lottie.asset(Assets.gtScratch,
                             fit: BoxFit.contain,
                             height: SizeConfig.screenWidth,
@@ -334,7 +334,7 @@ class _GTInstantViewState extends State<GTInstantView>
     if (widget.source == GTSOURCE.deposit)
       return "Hurray!";
     else {
-      if (widget.title != null && widget.title.isNotEmpty)
+      if (widget.title != null && widget.title!.isNotEmpty)
         return widget.title;
       else
         return "Hurray!";
@@ -351,7 +351,7 @@ class _GTInstantViewState extends State<GTInstantView>
     //     source == GTSOURCE.game) {
     onPressed = () {
       if (!model.isCardScratched) return;
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       // if (widget.showAutosavePrompt && !model.isAutosaveAlreadySetup)
       //   model.showAutosavePrompt();
     };

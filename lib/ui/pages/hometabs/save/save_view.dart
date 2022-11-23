@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 const HtmlEscape htmlEscape = HtmlEscape();
 
 class Save extends StatelessWidget {
-  final CustomLogger logger = locator<CustomLogger>();
+  final CustomLogger? logger = locator<CustomLogger>();
 
   @override
   Widget build(BuildContext context) {

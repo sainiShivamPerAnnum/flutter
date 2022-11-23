@@ -19,8 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class JourneyAppBar extends StatelessWidget {
-  JourneyAppBar({Key key}) : super(key: key);
-  final _baseUtil = locator<BaseUtil>();
+  JourneyAppBar({Key? key}) : super(key: key);
+  final BaseUtil? _baseUtil = locator<BaseUtil>();
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
@@ -31,8 +31,8 @@ class JourneyAppBar extends StatelessWidget {
           left: SizeConfig.padding10,
           child: SafeArea(
               child: Container(
-            width: SizeConfig.screenWidth - SizeConfig.padding20,
-            height: SizeConfig.screenWidth * 0.30,
+            width: SizeConfig.screenWidth! - SizeConfig.padding20,
+            height: SizeConfig.screenWidth! * 0.30,
             child: Stack(
               children: [
                 ClipRRect(
@@ -50,7 +50,7 @@ class JourneyAppBar extends StatelessWidget {
                 Container(
                   child: Column(children: [
                     Container(
-                      height: SizeConfig.screenWidth * 0.14,
+                      height: SizeConfig.screenWidth! * 0.14,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.padding16),
@@ -75,9 +75,9 @@ class JourneyAppBar extends StatelessWidget {
                                 builder: (context, model, properties) {
                                   return GestureDetector(
                                     onTap: () =>
-                                        _baseUtil.openProfileDetailsScreen(),
+                                        _baseUtil!.openProfileDetailsScreen(),
                                     child: Text(
-                                      "Level ${model.userJourneyStats?.level}",
+                                      "Level ${model!.userJourneyStats?.level}",
                                       style: TextStyles.rajdhaniSB.title5
                                           .colour(UiConstants.kTextColor),
                                     ),
@@ -102,7 +102,7 @@ class JourneyAppBar extends StatelessWidget {
                         thickness: 0.5,
                         height: 0.5),
                     Container(
-                      height: SizeConfig.screenWidth * 0.14,
+                      height: SizeConfig.screenWidth! * 0.14,
                       child: Row(
                         children: [
                           JourneyAppBarAssetDetailsTile(
@@ -140,9 +140,9 @@ class JourneyAppBar extends StatelessWidget {
 }
 
 class JourneyAppBarAssetDetailsTile extends StatelessWidget {
-  final String title;
-  final Widget value;
-  final String actionUri;
+  final String? title;
+  final Widget? value;
+  final String? actionUri;
   JourneyAppBarAssetDetailsTile({
     @required this.title,
     @required this.value,
@@ -157,16 +157,16 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
           if (JourneyService.isAvatarAnimationInProgress) return;
 
           Haptic.vibrate();
-          AppState.delegate.parseRoute(Uri.parse(actionUri));
+          AppState.delegate!.parseRoute(Uri.parse(actionUri!));
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: SizeConfig.padding6),
-            value,
+            value!,
             Text(
-              title,
+              title!,
               style:
                   TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
             )

@@ -26,15 +26,15 @@ import 'package:provider/provider.dart';
 /// onPressedAsync: not required
 ///
 class FelloButton extends StatefulWidget {
-  final ValueChanged<dynamic> action;
-  final Function onPressed;
-  final Widget activeButtonUI;
-  final Widget offlineButtonUI;
-  final Widget loadingButtonUI;
-  final Color defaultButtonColor;
-  final String defaultButtonText;
-  final TextStyle textStyle;
-  final Function onPressedAsync;
+  final ValueChanged<dynamic>? action;
+  final Function? onPressed;
+  final Widget? activeButtonUI;
+  final Widget? offlineButtonUI;
+  final Widget? loadingButtonUI;
+  final Color? defaultButtonColor;
+  final String? defaultButtonText;
+  final TextStyle? textStyle;
+  final Function? onPressedAsync;
 
   FelloButton(
       {this.action,
@@ -65,7 +65,7 @@ class _FelloButtonState extends State<FelloButton> {
   Widget build(BuildContext context) {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context);
-    final JourneyService _journeyService = locator<JourneyService>();
+    final JourneyService? _journeyService = locator<JourneyService>();
     if (connectivityStatus == ConnectivityStatus.Offline)
       return widget.offlineButtonUI != null
           ? InkWell(
@@ -95,9 +95,9 @@ class _FelloButtonState extends State<FelloButton> {
     else {
       if (isLoading)
         return widget.loadingButtonUI != null
-            ? widget.loadingButtonUI
+            ? widget.loadingButtonUI!
             : SpinKitThreeBounce(
-                size: SizeConfig.mediumTextSize,
+                size: SizeConfig.mediumTextSize!,
                 color: UiConstants.primaryColor,
               );
       else
@@ -111,24 +111,24 @@ class _FelloButtonState extends State<FelloButton> {
                   if (isAlreadyClicked) return;
                   isAlreadyClicked = true;
                   if (await BaseUtil.showNoInternetAlert()) return;
-                  if (_journeyService.avatarRemoteMlIndex < 2)
-                    return BaseUtil.openDialog(
-                        addToScreenStack: true,
-                        isBarrierDismissible: true,
-                        hapticVibrate: false,
-                        content: CompleteProfileDialog());
+                  // if (_journeyService!.avatarRemoteMlIndex < 2)
+                  //   return BaseUtil.openDialog(
+                  //       addToScreenStack: true,
+                  //       isBarrierDismissible: true,
+                  //       hapticVibrate: false,
+                  //       content: CompleteProfileDialog());
                   if (widget.onPressedAsync != null) {
                     if (widget.action != null)
-                      widget.action(true);
+                      widget.action!(true);
                     else
                       updateButtonState(true);
-                    await widget.onPressedAsync();
+                    await widget.onPressedAsync!();
                     if (widget.action != null)
-                      widget.action(false);
+                      widget.action!(false);
                     else
                       updateButtonState(false);
                   }
-                  if (widget.onPressed != null) widget.onPressed();
+                  if (widget.onPressed != null) widget.onPressed!();
                   isAlreadyClicked = false;
                 },
                 child: widget.activeButtonUI)
@@ -144,16 +144,16 @@ class _FelloButtonState extends State<FelloButton> {
 
                   if (widget.onPressedAsync != null) {
                     if (widget.action != null)
-                      widget.action(true);
+                      widget.action!(true);
                     else
                       updateButtonState(true);
-                    await widget.onPressedAsync();
+                    await widget.onPressedAsync!();
                     if (widget.action != null)
-                      widget.action(false);
+                      widget.action!(false);
                     else
                       updateButtonState(false);
                   }
-                  if (widget.onPressed != null) widget.onPressed();
+                  if (widget.onPressed != null) widget.onPressed!();
                   isAlreadyClicked = false;
                 },
                 child: Text(

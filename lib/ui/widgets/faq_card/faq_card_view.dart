@@ -12,10 +12,10 @@ import 'package:lottie/lottie.dart';
 
 class FAQCardView extends StatelessWidget {
   final String category;
-  final bool catTitle;
-  final Color bgColor;
+  final bool? catTitle;
+  final Color? bgColor;
 
-  FAQCardView({@required this.category, this.catTitle, this.bgColor});
+  FAQCardView({required this.category, this.catTitle, this.bgColor});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class FAQCardView extends StatelessWidget {
                 SizedBox(height: 10),
                 model.state == ViewState.Busy
                     ? Container(
-                        height: SizeConfig.screenHeight * 0.2,
+                        height: SizeConfig.screenHeight! * 0.2,
                         child: Center(child: FullScreenLoader()),
                       )
                     : (model.faqHeaders != null && model.faqHeaders.length > 0
@@ -51,7 +51,7 @@ class FAQCardView extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Lottie.asset(Assets.noData,
-                                    height: SizeConfig.screenHeight * 0.2),
+                                    height: SizeConfig.screenHeight! * 0.2),
                                 Text(
                                   "No FAQs available at the moment",
                                   style: TextStyles.body2.colour(Colors.white),
@@ -86,11 +86,11 @@ class FAQCardView extends StatelessWidget {
                     backgroundColor: bgColor ?? UiConstants.kBackgroundColor,
                     canTapOnHeader: true,
                     headerBuilder: (ctx, isOpen) =>
-                        _prizeFAQHeader(model.faqHeaders[index]),
+                        _prizeFAQHeader(model.faqHeaders[index]!),
                     isExpanded: model.detStatus[index],
                     body: Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(model.faqResponses[index],
+                      child: Text(model.faqResponses[index]!,
                           textAlign: TextAlign.start,
                           style: TextStyles.body3
                               .colour(UiConstants.kFAQsAnswerColor)),

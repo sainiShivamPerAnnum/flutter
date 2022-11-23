@@ -4,28 +4,28 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class UserJourneyStatsModel {
-  final int page;
-  final int level;
-  final int mlIndex;
-  final String mlId;
-  final String prizeSubtype;
-  final int skipCount;
+  final int? page;
+  final int? level;
+  final int? mlIndex;
+  final String? mlId;
+  final String? prizeSubtype;
+  final int? skipCount;
   UserJourneyStatsModel({
-    @required this.page,
-    @required this.level,
-    @required this.mlIndex,
-    @required this.mlId,
-    @required this.prizeSubtype,
-    @required this.skipCount,
+    required this.page,
+    required this.level,
+    required this.mlIndex,
+    required this.mlId,
+    required this.prizeSubtype,
+    required this.skipCount,
   });
 
   UserJourneyStatsModel copyWith(
-      {int page,
-      int level,
-      int mlIndex,
-      String mlId,
-      String nextPrizeSubtype,
-      int skipCount}) {
+      {int? page,
+      int? level,
+      int? mlIndex,
+      String? mlId,
+      String? nextPrizeSubtype,
+      int? skipCount}) {
     return UserJourneyStatsModel(
         page: page ?? this.page,
         level: level ?? this.level,
@@ -48,12 +48,12 @@ class UserJourneyStatsModel {
 
   factory UserJourneyStatsModel.fromMap(Map<String, dynamic> map) {
     return UserJourneyStatsModel(
-      page: map['page'] as int,
-      level: map['level'] as int,
-      mlIndex: map['mlIndex'] as int,
-      mlId: map['mlId'] as String,
-      skipCount: map["skipCount"] as int,
-      prizeSubtype: map['prizeSubtype'] as String,
+      page: map['page'] as int?,
+      level: map['level'] as int?,
+      mlIndex: map['mlIndex'] as int?,
+      mlId: map['mlId'] as String?,
+      skipCount: map["skipCount"] as int?,
+      prizeSubtype: map['prizeSubtype'] as String?,
     );
   }
 

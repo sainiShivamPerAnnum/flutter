@@ -12,15 +12,15 @@ class JourneyBackgroundModel {
   List<double> stops;
   JourneyAssetModel asset;
   JourneyBackgroundModel({
-    @required this.colors,
-    @required this.stops,
-    @required this.asset,
+    required this.colors,
+    required this.stops,
+    required this.asset,
   });
 
   JourneyBackgroundModel copyWith({
-    List<Color> colors,
-    List<double> stops,
-    JourneyAssetModel asset,
+    List<Color>? colors,
+    List<double>? stops,
+    JourneyAssetModel? asset,
   }) {
     return JourneyBackgroundModel(
       colors: colors ?? this.colors,
@@ -41,7 +41,7 @@ class JourneyBackgroundModel {
   factory JourneyBackgroundModel.fromMap(Map<String, dynamic> map, int page) {
     return JourneyBackgroundModel(
       colors: List<Color>.from(
-        (map['colors'] as List<dynamic>).map<Color>(
+        (map['colors'] as List<dynamic>).map<Color?>(
           (x) => x.toString().toColor(),
         ),
       ),

@@ -16,14 +16,14 @@ class CampaignRepo extends BaseRepo {
       ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com/prod";
 
-  Future<ApiResponse<List<EventModel>>> getOngoingEvents() async {
+  Future<ApiResponse<dynamic> >getOngoingEvents() async {
     List<EventModel> events = [];
     try {
-      final String _uid = userService.baseUser.uid;
+      final String? _uid = userService!.baseUser!.uid;
       final _token = await getBearerToken();
       final _queryParams = {"uid": _uid};
 
-      return await _cacheService.cachedApi(
+      return (await (_cacheService.cachedApi(
         CacheKeys.CAMPAIGNS,
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
@@ -43,11 +43,12 @@ class CampaignRepo extends BaseRepo {
           print(responseData["campaigns"]);
           return ApiResponse<List<EventModel>>(model: events, code: 200);
         },
-      );
+      ))) as ApiResponse<List<EventModel>>;
+
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch campaigns", 400);
+          e.toString() ?? "Unable to fetch campaigns", 400);
     }
   }
 
@@ -63,7 +64,7 @@ class CampaignRepo extends BaseRepo {
       );
 
       final responseData = response["data"];
-      logger.d(responseData);
+      logger!.d(responseData);
       if (responseData != null) {
         responseData.forEach((e) {
           facts.add(FelloFactsModel.fromMap(e));
@@ -71,7 +72,7 @@ class CampaignRepo extends BaseRepo {
       }
       return ApiResponse<List<FelloFactsModel>>(model: facts, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch campaigns", 400);
     }

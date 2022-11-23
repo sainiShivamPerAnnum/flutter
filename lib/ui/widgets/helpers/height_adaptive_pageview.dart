@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class HeightAdaptivePageView extends StatefulWidget {
   final List<Widget> children;
-  final PageController controller;
-  final ValueChanged<int> onPageChanged;
+  final PageController? controller;
+  final ValueChanged<int>? onPageChanged;
   const HeightAdaptivePageView({
-    Key key,
-    @required this.children,
+    Key? key,
+    required this.children,
     this.controller,
     this.onPageChanged,
   }) : super(key: key);
@@ -17,8 +17,8 @@ class HeightAdaptivePageView extends StatefulWidget {
 
 class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
     with TickerProviderStateMixin {
-  PageController _pageController;
-  List<double> _heights;
+  PageController? _pageController;
+  late List<double> _heights;
   int _currentPage = 0;
 
   double get _currentHeight => _heights[_currentPage];
@@ -27,11 +27,13 @@ class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
   void initState() {
     _heights = widget.children.map((e) => 0.0).toList();
     super.initState();
-    _pageController = widget.controller ??
+    _pageController = (widget.controller ??
         TabController(
-            initialIndex: 0, vsync: this, length: widget.children.length) //
+            initialIndex: 0,
+            vsync: this,
+            length: widget.children.length) as PageController?)! //
       ..addListener(() {
-        final _newPage = _pageController.page.round();
+        final _newPage = _pageController!.page!.round();
         if (_currentPage != _newPage) {
           setState(() => _currentPage = _newPage);
         }
@@ -40,7 +42,7 @@ class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _pageController!.dispose();
     super.dispose();
   }
 
@@ -83,12 +85,12 @@ class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
 
 class SizeReportingWidget extends StatefulWidget {
   final Widget child;
-  final ValueChanged<Size> onSizeChange;
+  final ValueChanged<Size?> onSizeChange;
 
   const SizeReportingWidget({
-    Key key,
-    @required this.child,
-    @required this.onSizeChange,
+    Key? key,
+    required this.child,
+    required this.onSizeChange,
   }) : super(key: key);
 
   @override
@@ -96,7 +98,7 @@ class SizeReportingWidget extends StatefulWidget {
 }
 
 class _SizeReportingWidgetState extends State<SizeReportingWidget> {
-  Size _oldSize;
+  Size? _oldSize;
 
   @override
   Widget build(BuildContext context) {

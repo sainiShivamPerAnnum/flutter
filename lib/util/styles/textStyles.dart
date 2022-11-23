@@ -127,11 +127,11 @@ extension TextStyleHelpers on TextStyle {
   TextStyle get italic => copyWith(fontStyle: FontStyle.italic);
   TextStyle letterSpace(double value) => copyWith(letterSpacing: value);
   TextStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
-  TextStyle colour(Color color) => copyWith(color: color);
+  TextStyle colour(Color? color) => copyWith(color: color);
   TextStyle size(double size) => copyWith(fontSize: size);
   TextStyle setHeight(double height) => copyWith(height: height);
   TextStyle setOpecity(double opacity) =>
-      copyWith(color: color.withOpacity(opacity));
+      copyWith(color: color!.withOpacity(opacity));
 }
 
 // class SansPro {

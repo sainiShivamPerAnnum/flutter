@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ActiveSubscriptionModel {
-  String amountType;
-  double autoAmount;
-  String autoFrequency;
-  Timestamp createdOn;
-  Timestamp expiryDate;
-  int frequency;
-  String frequencyUnit;
-  double maxAmount;
-  Timestamp startDate;
-  String status;
-  String resumeDate;
-  String resumeEnum;
-  String subscriptionId;
-  String vpa;
-  Timestamp updatedOn;
+  String? amountType;
+  double? autoAmount;
+  String? autoFrequency;
+  Timestamp? createdOn;
+  Timestamp? expiryDate;
+  int? frequency;
+  String? frequencyUnit;
+  double? maxAmount;
+  Timestamp? startDate;
+  String? status;
+  String? resumeDate;
+  String? resumeEnum;
+  String? subscriptionId;
+  String? vpa;
+  Timestamp? updatedOn;
 
   ActiveSubscriptionModel(
       {this.subscriptionId,
@@ -34,14 +34,30 @@ class ActiveSubscriptionModel {
       this.status,
       this.autoFrequency});
 
+
+
+       ActiveSubscriptionModel.base(
+      {subscriptionId = '',
+      amountType = '',
+      frequencyUnit = '',
+      autoAmount = 0.0,
+      vpa = '',
+      resumeDate = '',
+      resumeEnum = '',
+      maxAmount = 0.0,
+      frequency = 0,
+      status = '',
+      autoFrequency = ''
+      });
+
   ActiveSubscriptionModel.fromJson(Map<String, dynamic> json) {
-    subscriptionId = json['subscriptionId'];
-    amountType = json['amountType'];
+    subscriptionId = json['subscriptionId'] ?? '';
+    amountType = json['amountType'] ?? '';
     expiryDate = Timestamp(
         json['expiryDate']["_seconds"], json['expiryDate']["_nanoseconds"]);
-    frequencyUnit = json['frequencyUnit'];
+    frequencyUnit = json['frequencyUnit'] ?? '';
     autoAmount = (json['autoAmount'] ?? 0).toDouble();
-    vpa = json['vpa'];
+    vpa = json['vpa'] ?? '';
     resumeDate = json['resumeDate'] ?? "";
     resumeEnum = json['resumeEnum'] ?? "";
     updatedOn = Timestamp(
@@ -51,9 +67,9 @@ class ActiveSubscriptionModel {
         json['createdOn']["_seconds"], json['createdOn']["_nanoseconds"]);
     startDate = Timestamp(
         json['startDate']["_seconds"], json['startDate']["_nanoseconds"]);
-    frequency = json['frequency'];
-    status = json['status'];
-    autoFrequency = json['autoFrequency'];
+    frequency = json['frequency'] ?? 0;
+    status = json['status'] ?? '';
+    autoFrequency = json['autoFrequency'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

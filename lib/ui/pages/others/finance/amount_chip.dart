@@ -4,14 +4,14 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class AmountChip extends StatelessWidget {
-  const AmountChip({
-    Key key,
-    this.isBest = false,
-    @required this.isActive,
-    @required this.amt,
-    @required this.onClick,
-    @required this.index
-  }) : super(key: key);
+  const AmountChip(
+      {Key? key,
+      this.isBest = false,
+      required this.isActive,
+      required this.amt,
+      required this.onClick,
+      required this.index})
+      : super(key: key);
 
   final bool isActive;
   final int amt;

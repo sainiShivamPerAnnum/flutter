@@ -33,14 +33,14 @@ class TransactionHistoryRepository extends BaseRepo {
   // }
 
   Future<ApiResponse<TransactionResponse>> getUserTransactions({
-    String start,
-    String type,
-    String subtype,
-    String status,
+    String? start,
+    String? type,
+    String? subtype,
+    String? status,
   }) async {
     List<UserTransaction> events = [];
     try {
-      final String _uid = userService.baseUser.uid;
+      final String? _uid = userService!.baseUser!.uid;
       final _token = await getBearerToken();
       final _queryParams = {
         "type": type,
@@ -67,7 +67,7 @@ class TransactionHistoryRepository extends BaseRepo {
 
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch transactions", 400);
     }

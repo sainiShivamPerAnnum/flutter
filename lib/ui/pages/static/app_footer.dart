@@ -5,9 +5,9 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class AppFooter extends StatelessWidget {
-  final double bottomPad;
+  final double? bottomPad;
   const AppFooter({
-    Key key,
+    Key? key,
     this.bottomPad,
   }) : super(key: key);
 

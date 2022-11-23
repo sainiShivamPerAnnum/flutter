@@ -26,31 +26,31 @@ import 'package:flutter/material.dart';
 
 //TODO Pause autosave analytics not showing up
 class UserAutosaveDetailsViewModel extends BaseViewModel {
-  final _userService = locator<UserService>();
-  final _paytmService = locator<PaytmService>();
-  final _logger = locator<CustomLogger>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _subcriptionRepo = locator<SubscriptionRepo>();
+  final UserService? _userService = locator<UserService>();
+  final PaytmService? _paytmService = locator<PaytmService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final SubscriptionRepo? _subcriptionRepo = locator<SubscriptionRepo>();
 
-  ActiveSubscriptionModel _activeSubscription;
-  List<AutosaveTransactionModel> _filteredList;
+  ActiveSubscriptionModel? _activeSubscription;
+  List<AutosaveTransactionModel>? _filteredList;
   int lastTappedChipIndex = 1;
 
-  List<AutosaveTransactionModel> get filteredList => this._filteredList;
+  List<AutosaveTransactionModel>? get filteredList => this._filteredList;
 
   set filteredList(value) {
     this._filteredList = value;
     notifyListeners();
   }
 
-  ActiveSubscriptionModel get activeSubscription => this._activeSubscription;
+  ActiveSubscriptionModel? get activeSubscription => this._activeSubscription;
 
   set activeSubscription(value) {
     this._activeSubscription = value;
     notifyListeners();
   }
 
-  TextEditingController subIdController,
+  TextEditingController? subIdController,
       pUpiController,
       subAmountController,
       subStatusController,
@@ -61,8 +61,8 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   bool _showMinAlert = false;
   int _minValue = 25;
 
-  List<AmountChipsModel> _dailyChips = [];
-  List<AmountChipsModel> _weeklyChips = [];
+  List<AmountChipsModel>? _dailyChips = [];
+  List<AmountChipsModel>? _weeklyChips = [];
   get dailyChips => this._dailyChips;
 
   set dailyChips(dailyChips) {
@@ -125,7 +125,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
 
   init() async {
     setState(ViewState.Busy);
-    _paytmService.isOnSubscriptionFlow = false;
+    _paytmService!.isOnSubscriptionFlow = false;
     subIdController = new TextEditingController();
     pUpiController = new TextEditingController();
     subAmountController = new TextEditingController();
@@ -138,37 +138,37 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   }
 
   findActiveSubscription() async {
-    activeSubscription = _paytmService.activeSubscription;
+    activeSubscription = _paytmService!.activeSubscription;
     if (activeSubscription != null) {
-      subIdController.text = activeSubscription.subscriptionId;
-      pUpiController.text = activeSubscription.vpa;
-      subAmountController.text =
-          "${activeSubscription.autoAmount.toString()}/${activeSubscription.autoFrequency}";
-      subStatusController.text = activeSubscription.status;
-      amountFieldController.text =
-          activeSubscription.autoAmount.toInt().toString();
-      isDaily = activeSubscription.autoFrequency == "DAILY" ? true : false;
+      subIdController!.text = activeSubscription!.subscriptionId!;
+      pUpiController!.text = activeSubscription!.vpa!;
+      subAmountController!.text =
+          "${activeSubscription!.autoAmount.toString()}/${activeSubscription!.autoFrequency}";
+      subStatusController!.text = activeSubscription!.status!;
+      amountFieldController!.text =
+          activeSubscription!.autoAmount!.toInt().toString();
+      isDaily = activeSubscription!.autoFrequency == "DAILY" ? true : false;
       isDaily ? minValue = 25 : minValue = 100;
-      onAmountValueChanged(amountFieldController.text);
+      onAmountValueChanged(amountFieldController!.text);
     }
   }
 
-  pauseSubscription(int pauseValue) async {
-    trackPauseAnalytics(pauseValue);
-    bool response =
-        await _paytmService.pauseSubscription(getResumeDate(pauseValue));
+  pauseSubscription(int? pauseValue) async {
+    bool response = await (_paytmService!
+        .pauseSubscription(getResumeDate(pauseValue)) as Future<bool>);
+
     isPausingInProgress = false;
     if (response) {
       BaseUtil.showPositiveAlert("Autosave paused successfully",
           "For more details check Autosave section");
       if (pauseValue == 4 && !BaseRemoteConfig.AUTOSAVE_ACTIVE)
-        _paytmService.autosaveVisible = false;
-      AppState.backButtonDispatcher.didPopRoute();
-      AppState.backButtonDispatcher.didPopRoute();
+        _paytmService!.autosaveVisible = false;
+      AppState.backButtonDispatcher!.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
     }
   }
 
-  String getResumeDate(int pauseValue) {
+  String getResumeDate(int? pauseValue) {
     switch (pauseValue) {
       case 1:
         return "ONEWEEK";
@@ -188,24 +188,24 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
       return;
     }
     final ApiResponse<List<AutosaveTransactionModel>> result =
-        await _subcriptionRepo.getAutosaveTransactions(
-      uid: _userService.baseUser.uid,
+        await _subcriptionRepo!.getAutosaveTransactions(
+      uid: _userService!.baseUser!.uid,
       lastDocument: null,
       limit: 5,
     );
     if (result.code == 200) {
       filteredList = result.model;
-      if (filteredList.isNotEmpty && filteredList.length > 4) {
+      if (filteredList!.isNotEmpty && filteredList!.length > 4) {
         hasMoreTxns = true;
       }
     }
   }
 
   getChipAmounts() async {
-    dailyChips = await _paytmService.getAmountChips(
+    dailyChips = await _paytmService!.getAmountChips(
       freq: Constants.DOC_IAR_DAILY_CHIPS,
     );
-    weeklyChips = await _paytmService.getAmountChips(
+    weeklyChips = await _paytmService!.getAmountChips(
       freq: Constants.DOC_IAR_WEEKLY_CHIPS,
     );
   }
@@ -223,7 +223,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
 
   set isDaily(value) {
     this._isDaily = value;
-    _logger.d("Isdaily: $isDaily");
+    _logger!.d("Isdaily: $isDaily");
     if (value)
       minValue = 25;
     else
@@ -240,22 +240,22 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   }
 
   onAmountValueChanged(String val) {
-    if (val == "00000") amountFieldController.text = '0';
+    if (val == "00000") amountFieldController!.text = '0';
     if (val != null && val.isNotEmpty) {
-      if (int.tryParse(val) < minValue)
+      if (int.tryParse(val)! < minValue)
         showMinAlert = true;
       else
         showMinAlert = false;
 
-      if (int.tryParse(val) > maxAmount) {
-        amountFieldController.text = maxAmount.toString();
+      if (int.tryParse(val)! > maxAmount) {
+        amountFieldController!.text = maxAmount.toString();
         val = maxAmount.toString();
-        FocusManager.instance.primaryFocus.unfocus();
+        FocusManager.instance.primaryFocus!.unfocus();
       }
     } else {
       val = '0';
     }
-    saveAmount = calculateSaveAmount(int.tryParse(val ?? '0'));
+    saveAmount = calculateSaveAmount(int.tryParse(val ?? '0')!);
     notifyListeners();
   }
 
@@ -271,7 +271,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     if (activeAutosave.status == Constants.SUBSCRIPTION_ACTIVE)
       return "Autosave Active";
     else if (activeAutosave.status == Constants.SUBSCRIPTION_INACTIVE) {
-      if (activeAutosave.resumeDate.isEmpty) {
+      if (activeAutosave.resumeDate!.isEmpty) {
         return "Autosave Inactive";
       } else {
         return "Autosave Paused";
@@ -280,10 +280,10 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   }
 
   getRichText() {
-    if (activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE)
+    if (activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE)
       return "verified and active";
-    else if (activeSubscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-      if (activeSubscription.resumeDate.isEmpty) {
+    else if (activeSubscription!.status == Constants.SUBSCRIPTION_INACTIVE) {
+      if (activeSubscription!.resumeDate!.isEmpty) {
         return "currently inactive";
       } else {
         return "verified and paused";
@@ -292,10 +292,10 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   }
 
   getRichTextColor() {
-    if (activeSubscription.status == Constants.SUBSCRIPTION_ACTIVE)
+    if (activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE)
       return UiConstants.primaryColor;
-    else if (activeSubscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-      if (activeSubscription.resumeDate.isEmpty) {
+    else if (activeSubscription!.status == Constants.SUBSCRIPTION_INACTIVE) {
+      if (activeSubscription!.resumeDate!.isEmpty) {
         return Colors.red;
       } else {
         return UiConstants.tertiarySolid;
@@ -311,31 +311,31 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
       );
     }
 
-    if (amount == _paytmService.activeSubscription.autoAmount) {
+    if (amount == _paytmService!.activeSubscription!.autoAmount) {
       if (isDaily &&
-          _paytmService.activeSubscription.autoFrequency == "DAILY") {
-        return AppState.backButtonDispatcher.didPopRoute();
+          _paytmService!.activeSubscription!.autoFrequency == "DAILY") {
+        return AppState.backButtonDispatcher!.didPopRoute();
       }
       if (!isDaily &&
-          _paytmService.activeSubscription.autoFrequency == "WEEKLY") {
-        return AppState.backButtonDispatcher.didPopRoute();
+          _paytmService!.activeSubscription!.autoFrequency == "WEEKLY") {
+        return AppState.backButtonDispatcher!.didPopRoute();
       }
     }
 
-    if (isDaily && _paytmService.activeSubscription.autoFrequency == "WEEKLY")
-      _analyticsService.track(
-          eventName: AnalyticsEvents.autosaveWeeklyToDailySaver);
-    if (!isDaily && _paytmService.activeSubscription.autoFrequency == "DAILY")
-      _analyticsService.track(
-          eventName: AnalyticsEvents.autosaveDailyToWeeklySaver);
+    if (isDaily && _paytmService!.activeSubscription!.autoFrequency == "WEEKLY")
+      _analyticsService!
+          .track(eventName: AnalyticsEvents.autosaveWeeklyToDailySaver);
+    if (!isDaily && _paytmService!.activeSubscription!.autoFrequency == "DAILY")
+      _analyticsService!
+          .track(eventName: AnalyticsEvents.autosaveDailyToWeeklySaver);
 
     isSubscriptionAmountUpdateInProgress = true;
-    final res = await _paytmService.updateDailySubscriptionAmount(
-        amount: amount, freq: isDaily ? "DAILY" : "WEEKLY");
+    final res = await (_paytmService!.updateDailySubscriptionAmount(
+        amount: amount, freq: isDaily ? "DAILY" : "WEEKLY") as Future<bool>);
     isSubscriptionAmountUpdateInProgress = false;
     if (res) {
-      _paytmService.getActiveSubscriptionDetails();
-      AppState.backButtonDispatcher.didPopRoute();
+      // _paytmService!.getActiveSubscriptionDetails();
+      AppState.backButtonDispatcher!.didPopRoute();
       // init();
       BaseUtil.showPositiveAlert("Autosave amount update successful",
           "Check Autosave section for more details");
@@ -343,24 +343,25 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   }
 
   pauseResume(model) async {
-    if (_paytmService.activeSubscription.status ==
+    if (_paytmService!.activeSubscription!.status ==
         Constants.SUBSCRIPTION_INACTIVE) {
       if (model.isResumingInProgress) return;
       isResumingInProgress = true;
-      _analyticsService
+      _analyticsService!
           .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
-        "frequency": activeSubscription.autoFrequency,
-        "amount": activeSubscription.autoAmount,
-        "SIP deducted Count": filteredList != null ? filteredList.length : 0,
+        "frequency": activeSubscription!.autoFrequency,
+        "amount": activeSubscription!.autoAmount,
+        "SIP deducted Count": filteredList != null ? filteredList!.length : 0,
         "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
-            activeSubscription.createdOn.microsecondsSinceEpoch),
+            activeSubscription!.createdOn!.microsecondsSinceEpoch),
         "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
             AnalyticsProperties.getFelloFloAmount(),
         "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
         "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
       });
 
-      bool response = await _paytmService.resumeSubscription();
+      bool response =
+          await (_paytmService!.resumeSubscription() as Future<bool>);
       if (!response) {
         isResumingInProgress = false;
         BaseUtil.showNegativeAlert(
@@ -368,16 +369,16 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
       } else {
         BaseUtil.showPositiveAlert("Autosave resumed successfully",
             "For more details check Autosave section");
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
       }
     } else {
-      _analyticsService
+      _analyticsService!
           .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
-        "frequency": activeSubscription.autoFrequency,
-        "amount": activeSubscription.autoAmount,
-        "SIP deducted Count": filteredList != null ? filteredList.length : 0,
+        "frequency": activeSubscription!.autoFrequency,
+        "amount": activeSubscription!.autoAmount,
+        "SIP deducted Count": filteredList != null ? filteredList!.length : 0,
         "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
-            activeSubscription.createdOn.microsecondsSinceEpoch),
+            activeSubscription!.createdOn!.microsecondsSinceEpoch),
         "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
             AnalyticsProperties.getFelloFloAmount(),
         "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
@@ -404,11 +405,11 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   trackPauseAnalytics(int value) {
     _analyticsService
         .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
-      "frequency": activeSubscription.autoFrequency,
-      "amount": activeSubscription.autoAmount,
-      "SIP deducted Count": filteredList != null ? filteredList.length : 0,
+      "frequency": activeSubscription?.autoFrequency,
+      "amount": activeSubscription?.autoAmount,
+      "SIP deducted Count": filteredList != null ? filteredList?.length : 0,
       "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
-          activeSubscription.createdOn.microsecondsSinceEpoch),
+          activeSubscription?.createdOn?.microsecondsSinceEpoch ?? 0),
       "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
           AnalyticsProperties.getFelloFloAmount(),
       "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),

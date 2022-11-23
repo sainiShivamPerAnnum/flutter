@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class InfoStoryItem {
-  String type;
-  String data;
-  String caption;
+  String? type;
+  String? data;
+  String? caption;
   InfoStoryItem({
     @required this.type,
     @required this.data,
@@ -13,9 +13,9 @@ class InfoStoryItem {
   });
 
   InfoStoryItem copyWith({
-    String type,
-    String data,
-    String caption,
+    String? type,
+    String? data,
+    String? caption,
   }) {
     return InfoStoryItem(
       type: type ?? this.type,
@@ -34,9 +34,9 @@ class InfoStoryItem {
 
   factory InfoStoryItem.fromMap(Map<String, dynamic> map) {
     return InfoStoryItem(
-      type: map['type'] as String,
-      data: map['data'] as String,
-      caption: map['caption'] as String,
+      type: map['type'] as String? ,
+      data: map['data'] as String?,
+      caption: map['caption'] as String?,
     );
   }
 
@@ -59,3 +59,4 @@ class InfoStoryItem {
   @override
   int get hashCode => type.hashCode ^ data.hashCode ^ caption.hashCode;
 }
+

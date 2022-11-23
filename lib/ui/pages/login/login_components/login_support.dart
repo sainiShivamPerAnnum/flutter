@@ -10,38 +10,43 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class LoginFab extends StatelessWidget {
+class FaqPill extends StatelessWidget {
+  final FaqsType? type;
+  const FaqPill({Key? key, this.type}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: InkWell(
         onTap: () {
           Haptic.vibrate();
-          AppState.delegate.appState.currentAction = PageAction(
+          AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.addWidget,
             page: FaqPageConfig,
             widget: FAQPage(
-              type: FaqsType.journey,
+              type: type ?? FaqsType.journey,
             ),
           );
         },
         child: Container(
             // height: SizeConfig.navBarHeight * 0.5,
-            width: SizeConfig.navBarWidth * 0.28,
-            padding: EdgeInsets.all(SizeConfig.padding12),
-            margin: EdgeInsets.only(
-                top: SizeConfig.pageHorizontalMargins / 2,
-                right: SizeConfig.pageHorizontalMargins),
+            margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding8,
+            ),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding12,
+                vertical: SizeConfig.padding6),
+            height: SizeConfig.avatarRadius * 2,
             decoration: BoxDecoration(
-              color: UiConstants.kDarkBackgroundColor,
-              borderRadius:
-                  BorderRadius.all(Radius.circular(SizeConfig.roundness112)),
+              color: UiConstants.kTextFieldColor.withOpacity(0.4),
+              border: Border.all(color: Colors.white10),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Support",
+                  "Help",
                   style: TextStyles.body4.colour(UiConstants.kTextColor),
                 ),
                 Padding(

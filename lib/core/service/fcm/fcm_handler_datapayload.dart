@@ -10,14 +10,14 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class FcmHandlerDataPayloads extends ChangeNotifier {
-  final _logger = locator<CustomLogger>();
+  final CustomLogger? _logger = locator<CustomLogger>();
 
-  ValueChanged<Map> notifListener;
-  String url;
-  int tab, dailogShowCount = 0;
+  ValueChanged<Map>? notifListener;
+  String? url;
+  int? tab, dailogShowCount = 0;
 
   userPrizeWinPrompt() async {
-    AppState.delegate.appState.setCurrentTabIndex = 3;
+    AppState.delegate!.appState.setCurrentTabIndex = 3;
     notifyListeners();
     Future.delayed(Duration(seconds: 4), () {
       BaseUtil.openDialog(
@@ -43,7 +43,7 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
               "OK",
               style: TextStyles.body2.bold.colour(Colors.white),
             ),
-            onPressed: () => AppState.backButtonDispatcher.didPopRoute(),
+            onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
           ),
         ),
       ),
@@ -51,6 +51,6 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
   }
 
   updateSubscriptionStatus(data) {
-    _logger.d(data);
+    _logger!.d(data);
   }
 }

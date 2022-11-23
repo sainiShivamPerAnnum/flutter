@@ -13,22 +13,22 @@ import 'package:flutter/cupertino.dart';
 import '../../repository/ticket_repo.dart';
 
 class TambolaService extends ChangeNotifier {
-  CustomLogger _logger = locator<CustomLogger>();
-  UserService _userService = locator<UserService>();
-  final _tambolaRepo = locator<TambolaRepo>();
-  final _internalOpsService = locator<InternalOpsService>();
+  CustomLogger? _logger = locator<CustomLogger>();
+  UserService? _userService = locator<UserService>();
+  final TambolaRepo? _tambolaRepo = locator<TambolaRepo>();
+  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
 
-  static int _ticketCount;
-  static int _dailyPicksCount = 3;
-  static List<int> _todaysPicks;
-  static DailyPick _weeklyDigits;
-  static List<TambolaBoard> _userWeeklyBoards;
+  static int? ticketCount;
+  static int? _dailyPicksCount = 3;
+  static List<int>? _todaysPicks;
+  static DailyPick? _weeklyDigits;
+  static List<TambolaBoard?>? _userWeeklyBoards;
   static bool _weeklyDrawFetched = false;
   static bool _weeklyTicksFetched = false;
   static bool _winnerDialogCalled = false;
-  int _atomicTicketGenerationLeftCount;
-  int _atomicTicketDeletionLeftCount;
-  int ticketGenerateCount;
+  int? _atomicTicketGenerationLeftCount;
+  int? _atomicTicketDeletionLeftCount;
+  int? ticketGenerateCount;
 
   signOut() {
     _weeklyDrawFetched = false;
@@ -36,11 +36,11 @@ class TambolaService extends ChangeNotifier {
     _winnerDialogCalled = false;
     _weeklyDigits = null;
     _todaysPicks = null;
-    _ticketCount = null;
+    // _ticketCount = null;
     _userWeeklyBoards = null;
   }
 
-  int get ticketCount => _ticketCount;
+  // int? get ticketCount => _ticketCount;
 
   get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
 
@@ -54,11 +54,11 @@ class TambolaService extends ChangeNotifier {
 
   get dailyPicksCount => _dailyPicksCount;
 
-  set setTicketCount(int val) {
-    _ticketCount = val;
-    _logger.d("Ticket Wallet updated");
-    notifyListeners();
-  }
+  // set setTicketCount(int? val) {
+  //   _ticketCount = val;
+  //   _logger!.d("Ticket Wallet updated");
+  //   notifyListeners();
+  // }
 
   set dailyPicksCount(value) {
     _dailyPicksCount = value;
@@ -79,9 +79,9 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  get userWeeklyBoards => _userWeeklyBoards;
+  List<TambolaBoard?>? get userWeeklyBoards => _userWeeklyBoards;
 
-  set userWeeklyBoards(value) {
+  set userWeeklyBoards(List<TambolaBoard?>? value) {
     _userWeeklyBoards = value;
     notifyListeners();
   }
@@ -115,14 +115,14 @@ class TambolaService extends ChangeNotifier {
     setUpDailyPicksCount();
   }
 
-  Future<void> getTicketCount() async {
-    final count = await _tambolaRepo.getTicketCount();
-    if (count.code == 200) {
-      setTicketCount = count.model;
-    } else {
-      BaseUtil.showNegativeAlert(count.errorMessage, '');
-    }
-  }
+  // Future<void> getTicketCount() async {
+  //   final count = await _tambolaRepo!.getTicketCount();
+  //   if (count.code == 200) {
+  //     setTicketCount = count.model;
+  //   } else {
+  //     BaseUtil.showNegativeAlert(count.errorMessage, '');
+  //   }
+  // }
 
   dump() {
     _dailyPicksCount = null;
@@ -140,48 +140,45 @@ class TambolaService extends ChangeNotifier {
     if (forcedRefresh) weeklyDrawFetched = false;
     if (!weeklyDrawFetched) {
       try {
-        _logger.i('Requesting for weekly picks');
-        final ApiResponse<DailyPick> picksResponse =
-            await _tambolaRepo.getWeeklyPicks();
+        _logger!.i('Requesting for weekly picks');
+        final ApiResponse picksResponse = await _tambolaRepo!.getWeeklyPicks();
         if (picksResponse.isSuccess()) {
-          final DailyPick _picks = picksResponse.model;
+          final DailyPick _picks = picksResponse.model!;
           weeklyDrawFetched = true;
-          _logger.d("Weekly pickst: ${_picks.toList().toString()}");
-          if (_picks != null) {
-            weeklyDigits = _picks;
-            switch (DateTime.now().weekday) {
-              case 1:
-                todaysPicks = weeklyDigits.mon;
-                break;
-              case 2:
-                todaysPicks = weeklyDigits.tue;
-                break;
-              case 3:
-                todaysPicks = weeklyDigits.wed;
-                break;
-              case 4:
-                todaysPicks = weeklyDigits.thu;
-                break;
-              case 5:
-                todaysPicks = weeklyDigits.fri;
-                break;
-              case 6:
-                todaysPicks = weeklyDigits.sat;
-                break;
-              case 7:
-                todaysPicks = weeklyDigits.sun;
-                break;
-            }
+          _logger!.d("Weekly pickst: ${_picks.toList().toString()}");
+          weeklyDigits = _picks;
+          switch (DateTime.now().weekday) {
+            case 1:
+              todaysPicks = weeklyDigits.mon;
+              break;
+            case 2:
+              todaysPicks = weeklyDigits.tue;
+              break;
+            case 3:
+              todaysPicks = weeklyDigits.wed;
+              break;
+            case 4:
+              todaysPicks = weeklyDigits.thu;
+              break;
+            case 5:
+              todaysPicks = weeklyDigits.fri;
+              break;
+            case 6:
+              todaysPicks = weeklyDigits.sat;
+              break;
+            case 7:
+              todaysPicks = weeklyDigits.sun;
+              break;
           }
           if (todaysPicks == null) {
-            _logger.i("Today's picks are not generated yet");
+            _logger!.i("Today's picks are not generated yet");
           }
           notifyListeners();
         } else {
           //BaseUtil.showNegativeAlert(picksResponse.errorMessage, '');
         }
       } catch (e) {
-        _logger.e('$e');
+        _logger!.e('$e');
       }
     }
   }
@@ -194,12 +191,12 @@ class TambolaService extends ChangeNotifier {
     try {
       dailyPicksCount = int.parse(_dpc);
     } catch (e) {
-      _logger.e('key parsing failed: ' + e.toString());
+      _logger!.e('key parsing failed: ' + e.toString());
       Map<String, String> errorDetails = {'error_msg': e.toString()};
-      _internalOpsService.logFailure(_userService.baseUser.uid,
+      _internalOpsService!.logFailure(_userService!.baseUser!.uid,
           FailType.DailyPickParseFailed, errorDetails);
       dailyPicksCount = 3;
     }
-    _logger.d("Daily picks count: $_dailyPicksCount");
+    _logger!.d("Daily picks count: $_dailyPicksCount");
   }
 }

@@ -28,20 +28,20 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class WebGameViewModel extends BaseViewModel {
-  final _gtService = locator<GoldenTicketService>();
-  final _logger = locator<CustomLogger>();
-  final _lbService = locator<LeaderboardService>();
-  final _userRepo = locator<UserRepository>();
-  final _userCoinService = locator<UserCoinService>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _journeyService = locator<JourneyService>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  final UserRepository? _userRepo = locator<UserRepository>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final JourneyService? _journeyService = locator<JourneyService>();
 
-  String _currentGame;
+  String? _currentGame;
 
   get currentGame => this._currentGame;
 
   set currentGame(value) => this._currentGame = value;
-  init(String game, bool inLandscapeMode) async {
+  init(String? game, bool inLandscapeMode) async {
     currentGame = game;
     if (inLandscapeMode) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
@@ -76,7 +76,7 @@ class WebGameViewModel extends BaseViewModel {
 
   handleCricketHeroRoundEnd(Map<String, dynamic> data, String game) async {
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
     handleGameEndRound(data, game);
@@ -84,7 +84,7 @@ class WebGameViewModel extends BaseViewModel {
 
   handlePoolClubRoundEnd(Map<String, dynamic> data, String game) async {
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
     handleGameEndRound(data, game);
@@ -92,7 +92,7 @@ class WebGameViewModel extends BaseViewModel {
 
   handleFootBallRoundEnd(Map<String, dynamic> data, String game) async {
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
     handleGameEndRound(data, game);
@@ -100,7 +100,7 @@ class WebGameViewModel extends BaseViewModel {
 
   handleCandyFiestaRoundEnd(Map<String, dynamic> data, String game) async {
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
     handleGameEndRound(data, game);
@@ -110,7 +110,7 @@ class WebGameViewModel extends BaseViewModel {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) {
       AppState.isWebGameLInProgress = false;
       AppState.isWebGamePInProgress = false;
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       Future.delayed(Duration(milliseconds: 700), () async {
         BaseUtil.openModalBottomSheet(
           addToScreenStack: true,
@@ -129,27 +129,27 @@ class WebGameViewModel extends BaseViewModel {
   }
 
   handleGameEndRound(Map<String, dynamic> data, String game) {
-    _logger.d(
+    _logger!.d(
         "$game round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
     if (data['mlIndex'] != null)
-      _journeyService.avatarRemoteMlIndex = data["mlIndex"];
-    _logger.d("MLIndex found: ${data['mlIndex']}");
+      _journeyService!.avatarRemoteMlIndex = data["mlIndex"];
+    _logger!.d("MLIndex found: ${data['mlIndex']}");
     if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
         data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
-      _logger.d("Game end message: ${data[FcmCommands.GAME_END_MESSAGE_KEY]}");
+      _logger!.d("Game end message: ${data[FcmCommands.GAME_END_MESSAGE_KEY]}");
       GoldenTicketService.gameEndMsgText =
           data[FcmCommands.GAME_END_MESSAGE_KEY].toString();
     }
     updateFlcBalance();
-    _lbService.fetchWebGameLeaderBoard(game: game);
+    _lbService!.fetchWebGameLeaderBoard(game: game);
   }
 
-  handleGameSessionEnd({Duration duration}) {
+  handleGameSessionEnd({Duration? duration}) {
     updateFlcBalance();
-    _logger.d("Checking for golden tickets");
+    _logger!.d("Checking for golden tickets");
     if (GoldenTicketService.gameEndMsgText != null &&
-        GoldenTicketService.gameEndMsgText.isNotEmpty) {
-      _logger.d("Showing game end message");
+        GoldenTicketService.gameEndMsgText!.isNotEmpty) {
+      _logger!.d("Showing game end message");
       Future.delayed(duration ?? Duration(milliseconds: 500), () {
         BaseUtil.openDialog(
           addToScreenStack: true,
@@ -162,16 +162,16 @@ class WebGameViewModel extends BaseViewModel {
       });
       return;
     }
-    _gtService.fetchAndVerifyGoldenTicketByID();
+    _gtService!.fetchAndVerifyGoldenTicketByID();
   }
 
   //helper
   updateFlcBalance() async {
-    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
-    if (_flcResponse.model.flcBalance != null) {
-      _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
+    ApiResponse<FlcModel> _flcResponse = await _userRepo!.getCoinBalance();
+    if (_flcResponse.model!.flcBalance != null) {
+      _userCoinService!.setFlcBalance(_flcResponse.model!.flcBalance);
     } else {
-      _logger.d("Flc balance is null");
+      _logger!.d("Flc balance is null");
     }
   }
 }

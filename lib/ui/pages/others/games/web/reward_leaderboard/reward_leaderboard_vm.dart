@@ -9,20 +9,20 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class RewardLeaderboardViewModel extends BaseViewModel {
-  String _currentGame;
+  String? _currentGame;
   bool _isPrizesLoading = false;
-  PageController _pageController;
+  PageController? _pageController;
   double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
-  PrizesModel _prizes;
+  PrizesModel? _prizes;
   int _tabNo = 0;
 
   //Getters
-  final _prizeService = locator<PrizeService>();
-  final _lbService = locator<LeaderboardService>();
-  String get currentGame => this._currentGame;
+  final PrizeService? _prizeService = locator<PrizeService>();
+  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  String? get currentGame => this._currentGame;
   bool get isPrizesLoading => this._isPrizesLoading;
-  PrizesModel get prizes => _prizes;
-  PageController get pageController => _pageController;
+  PrizesModel? get prizes => _prizes;
+  PageController? get pageController => _pageController;
   double get tabPosWidthFactor => _tabPosWidthFactor;
   int get tabNo => _tabNo;
 
@@ -37,7 +37,7 @@ class RewardLeaderboardViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set prizes(PrizesModel value) {
+  set prizes(PrizesModel? value) {
     this._prizes = value;
     notifyListeners();
   }
@@ -55,9 +55,9 @@ class RewardLeaderboardViewModel extends BaseViewModel {
   //Super Methods
   init(String game) async {
     currentGame = game;
-    print(currentGame);
+    print('Opened game: $currentGame');
     _pageController = PageController(initialPage: 0);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       refreshPrizes();
       refreshLeaderboard();
     });
@@ -71,10 +71,10 @@ class RewardLeaderboardViewModel extends BaseViewModel {
     if (tab == tabNo) return;
 
     tabPosWidthFactor = tabNo == 0
-        ? SizeConfig.screenWidth / 2 + SizeConfig.pageHorizontalMargins
+        ? SizeConfig.screenWidth! / 2 + SizeConfig.pageHorizontalMargins
         : SizeConfig.pageHorizontalMargins;
 
-    _pageController.animateToPage(
+    _pageController!.animateToPage(
       tab,
       duration: Duration(milliseconds: 300),
       curve: Curves.linear,
@@ -82,38 +82,48 @@ class RewardLeaderboardViewModel extends BaseViewModel {
     tabNo = tab;
   }
 
+//OPTIMIZE: pass game type and fetch all the prizes instead of separate fetch functions
   refreshPrizes() async {
     isPrizesLoading = true;
     switch (currentGame) {
       case Constants.GAME_TYPE_POOLCLUB:
-        if (_prizeService.poolClubPrizes == null)
-          await _prizeService.fetchPoolClubPrizes();
-        prizes = _prizeService.poolClubPrizes;
+        if (_prizeService!.poolClubPrizes == null)
+          await _prizeService!.fetchPoolClubPrizes();
+        prizes = _prizeService!.poolClubPrizes;
 
         break;
       case Constants.GAME_TYPE_CRICKET:
-        if (_prizeService.cricketPrizes == null)
-          await _prizeService.fetchCricketPrizes();
-        prizes = _prizeService.cricketPrizes;
+        if (_prizeService!.cricketPrizes == null)
+          await _prizeService!.fetchCricketPrizes();
+        prizes = _prizeService!.cricketPrizes;
 
         break;
       case Constants.GAME_TYPE_TAMBOLA:
-        if (_prizeService.tambolaPrizes == null)
-          await _prizeService.fetchTambolaPrizes();
-        prizes = _prizeService.tambolaPrizes;
+        if (_prizeService!.tambolaPrizes == null)
+          await _prizeService!.fetchTambolaPrizes();
+        prizes = _prizeService!.tambolaPrizes;
 
         break;
       case Constants.GAME_TYPE_FOOTBALL:
-        if (_prizeService.footballPrizes == null)
-          await _prizeService.fetchFootballPrizes();
-        prizes = _prizeService.footballPrizes;
+        if (_prizeService!.footballPrizes == null)
+          await _prizeService!.fetchFootballPrizes();
+        prizes = _prizeService!.footballPrizes;
 
         break;
       case Constants.GAME_TYPE_CANDYFIESTA:
-        if (_prizeService.candyFiestaPrizes == null)
-          await _prizeService.fetchCandyFiestaPrizes();
-        prizes = _prizeService.candyFiestaPrizes;
-
+        if (_prizeService!.candyFiestaPrizes == null)
+          await _prizeService!.fetchCandyFiestaPrizes();
+        prizes = _prizeService!.candyFiestaPrizes;
+        break;
+      case Constants.GAME_TYPE_BOTTLEFLIP:
+        if (_prizeService!.bottleFlipPrizes == null)
+          await _prizeService!.fetchBottleFlipPrizes();
+        prizes = _prizeService!.bottleFlipPrizes;
+        break;
+      case Constants.GAME_TYPE_BOWLING:
+        if (_prizeService!.bowlingPrizes == null)
+          await _prizeService!.fetchBowlingPrizes();
+        prizes = _prizeService!.bowlingPrizes;
         break;
     }
     isPrizesLoading = false;
@@ -125,6 +135,6 @@ class RewardLeaderboardViewModel extends BaseViewModel {
   }
 
   refreshLeaderboard() async {
-    await _lbService.fetchWebGameLeaderBoard(game: currentGame);
+    await _lbService!.fetchWebGameLeaderBoard(game: currentGame);
   }
 }

@@ -8,11 +8,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 class PrizesView extends StatelessWidget {
-  final PrizesModel model;
-  final ScrollController controller;
-  final List<Widget> leading;
-  final String subtitle;
-  final String promo;
+  final PrizesModel? model;
+  final ScrollController? controller;
+  final List<Widget>? leading;
+  final String? subtitle;
+  final String? promo;
 
   PrizesView({
     this.model,
@@ -25,28 +25,28 @@ class PrizesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return NotificationListener<OverscrollNotification>(
       onNotification: (OverscrollNotification value) {
-        if (value.overscroll < 0 && controller.offset + value.overscroll <= 0) {
-          if (controller.offset != 0) controller.jumpTo(0);
+        if (value.overscroll < 0 && controller!.offset + value.overscroll <= 0) {
+          if (controller!.offset != 0) controller!.jumpTo(0);
           return true;
         }
-        if (controller.offset + value.overscroll >=
-            controller.position.maxScrollExtent) {
-          if (controller.offset != controller.position.maxScrollExtent)
-            controller.jumpTo(controller.position.maxScrollExtent);
+        if (controller!.offset + value.overscroll >=
+            controller!.position.maxScrollExtent) {
+          if (controller!.offset != controller!.position.maxScrollExtent)
+            controller!.jumpTo(controller!.position.maxScrollExtent);
           return true;
         }
-        controller.jumpTo(controller.offset + value.overscroll);
+        controller!.jumpTo(controller!.offset + value.overscroll);
         return true;
       },
       child: ListView.builder(
         shrinkWrap: true,
-        itemCount: model.prizesA.length + 1,
+        itemCount: model!.prizesA!.length + 1,
         padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
         itemBuilder: (ctx, i) {
           if (i == 0)
             return Column(
               children: [
-                if (subtitle != null && subtitle.isNotEmpty)
+                if (subtitle != null && subtitle!.isNotEmpty)
                   WebhomeListBanners(
                     subtitle: subtitle,
                   ),
@@ -67,11 +67,11 @@ class PrizesView extends StatelessWidget {
                 CircleAvatar(
                     radius: SizeConfig.padding24,
                     backgroundColor: UiConstants.primaryColor.withOpacity(0.3),
-                    child: leading[i]),
+                    child: leading![i]),
                 SizedBox(width: SizeConfig.padding12),
                 Expanded(
                   child: Text(
-                    model.prizesA[i].displayName ?? "Prize ${i + 1}",
+                    model!.prizesA![i].displayName ?? "Prize ${i + 1}",
                     style: TextStyles.body3.bold,
                   ),
                 ),
@@ -81,13 +81,13 @@ class PrizesView extends StatelessWidget {
                     PrizeChip(
                       color: UiConstants.tertiarySolid,
                       svg: Assets.token,
-                      text: "${model.prizesA[i].flc}",
+                      text: "${model!.prizesA![i].flc}",
                     ),
                     SizedBox(width: SizeConfig.padding16),
                     PrizeChip(
                       color: UiConstants.primaryColor,
                       png: Assets.moneyIcon,
-                      text: "₹ ${model.prizesA[i].amt}",
+                      text: "₹ ${model!.prizesA![i].amt}",
                     )
                   ],
                 ),
@@ -102,7 +102,7 @@ class PrizesView extends StatelessWidget {
 
 class WebhomeListBanners extends StatelessWidget {
   WebhomeListBanners({this.subtitle});
-  final String subtitle;
+  final String? subtitle;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -115,7 +115,7 @@ class WebhomeListBanners extends StatelessWidget {
       width: SizeConfig.screenWidth,
       padding: EdgeInsets.all(SizeConfig.padding16),
       child: Text(
-        subtitle,
+        subtitle!,
         textAlign: TextAlign.center,
         style: TextStyles.body3.light,
       ),
@@ -124,8 +124,8 @@ class WebhomeListBanners extends StatelessWidget {
 }
 
 class PrizeChip extends StatelessWidget {
-  final String svg, png, text;
-  final Color color;
+  final String? svg, png, text;
+  final Color? color;
   final double opacity;
   final bool svgPaint;
 
@@ -143,25 +143,25 @@ class PrizeChip extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: SizeConfig.iconSize3,
-            backgroundColor: color.withOpacity(opacity),
+            backgroundColor: color!.withOpacity(opacity),
             child: svg != null
                 ? (svgPaint
                     ? SvgPicture.asset(
-                        svg,
+                        svg!,
                         height: SizeConfig.iconSize3,
                         color: color,
                       )
                     : SvgPicture.asset(
-                        svg,
+                        svg!,
                         height: SizeConfig.iconSize3,
                       ))
                 : Image.asset(
-                    png,
+                    png!,
                     height: SizeConfig.iconSize3,
                   ),
           ),
           SizedBox(width: SizeConfig.padding8),
-          Text(text, style: TextStyles.body3)
+          Text(text!, style: TextStyles.body3)
         ],
       ),
     );

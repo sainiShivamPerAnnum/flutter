@@ -60,7 +60,7 @@ class PicksDraw extends StatelessWidget {
                         height: 280,
                         width: SizeConfig.screenWidth,
                         margin: EdgeInsets.symmetric(
-                            vertical: SizeConfig.screenHeight * 0.05),
+                            vertical: SizeConfig.screenHeight! * 0.05),
                         child: Stack(
                           children: [
                             Align(
@@ -103,7 +103,7 @@ class PicksDraw extends StatelessWidget {
                             // ),
                             Positioned(
                               bottom: 28,
-                              left: SizeConfig.screenWidth / 2,
+                              left: SizeConfig.screenWidth! / 2,
                               child: Image.asset(
                                 "images/fello-dark.png",
                                 height: 30,
@@ -244,7 +244,7 @@ class PicksDraw extends StatelessWidget {
                               color: Colors.white,
                             ),
                             onPressed: () {
-                              AppState.delegate.appState.currentAction =
+                              AppState.delegate!.appState.currentAction =
                                   PageAction(
                                       state: PageState.replace,
                                       page: TGamePageConfig);

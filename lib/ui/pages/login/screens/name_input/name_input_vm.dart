@@ -8,12 +8,13 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LoginNameInputViewModel extends BaseViewModel {
-  final BaseUtil baseProvider = locator<BaseUtil>();
-  final DBModel dbProvider = locator<DBModel>();
+  final BaseUtil? baseProvider = locator<BaseUtil>();
+  final DBModel? dbProvider = locator<DBModel>();
 
   final _referralCodeController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-
+  int genderValue = 0;
+  List<String> genderOptions = ["Male", "Female", "Other"];
   bool enabled = true;
   // bool isLoading = false;
   // bool isUpdating = false;

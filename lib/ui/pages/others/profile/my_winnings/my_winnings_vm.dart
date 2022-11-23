@@ -33,28 +33,30 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MyWinningsViewModel extends BaseViewModel {
   //LOCATORS
-  final _logger = locator<CustomLogger>();
-  final _userService = locator<UserService>();
-  final _transactionHistoryService = locator<TransactionHistoryService>();
-  final _localDBModel = locator<LocalDBModel>();
-  final _analyticsService = locator<AnalyticsService>();
-  final _internalOpsService = locator<InternalOpsService>();
-  final _prizingRepo = locator<PrizingRepo>();
-  final _appFlyer = locator<AppFlyerAnalytics>();
-  final _gtService = locator<GoldenTicketService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService? _userService = locator<UserService>();
+  final TransactionHistoryService? _transactionHistoryService =
+      locator<TransactionHistoryService>();
+  final LocalDBModel? _localDBModel = locator<LocalDBModel>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
+  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
 
   // LOCAL VARIABLES
-  PrizeClaimChoice _choice;
+  PrizeClaimChoice? _choice;
   get choice => this._choice;
   bool _isWinningHistoryLoading = false;
   final GlobalKey imageKey = GlobalKey();
-  final userRepo = locator<UserRepository>();
-  List<UserTransaction> _winningHistory;
+  final UserRepository? userRepo = locator<UserRepository>();
+  List<UserTransaction>? _winningHistory;
 
   //GETTERS SETTERS
   get isWinningHistoryLoading => this._isWinningHistoryLoading;
@@ -63,13 +65,13 @@ class MyWinningsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<UserTransaction> get winningHistory => this._winningHistory;
-  set winningHistory(List<UserTransaction> value) {
+  List<UserTransaction>? get winningHistory => this._winningHistory;
+  set winningHistory(List<UserTransaction>? value) {
     this._winningHistory = value;
     notifyListeners();
   }
 
-  UserService get userService => _userService;
+  UserService? get userService => _userService;
   // AugmontTransactionService get txnService => _GoldTransactionService;
 
   set choice(value) {
@@ -79,43 +81,39 @@ class MyWinningsViewModel extends BaseViewModel {
 
   getWinningHistory() async {
     _isWinningHistoryLoading = true;
-    _gtService.updateUnscratchedGTCount();
-    trackGoldenTicketsOpen();
-    ApiResponse<List<UserTransaction>> temp =
-        await userRepo.getWinningHistory(_userService.baseUser.uid);
-    temp.model.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    isWinningHistoryLoading = false;
-    if (temp != null)
+    _gtService!.updateUnscratchedGTCount();
+    // trackGoldenTicketsOpen();
+    ApiResponse<List<UserTransaction>>? temp =
+        await userRepo!.getWinningHistory(_userService!.baseUser!.uid);
+    if (temp != null) {
+      temp.model!.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
       winningHistory = temp.model;
-    else
+    } else
       BaseUtil.showNegativeAlert(
           "Winning History fetch failed", "Please try again after sometime");
+    isWinningHistoryLoading = false;
   }
 
   trackGoldenTicketsOpen() {
-    _analyticsService
+    _analyticsService!
         .track(eventName: AnalyticsEvents.goldenTicketSectionOpen, properties: {
-      "Unscratched tickets count": _gtService.unscratchedTicketsCount,
-      "Scratched tickets count": _gtService.activeGoldenTickets == null
-          ? 0
-          : _gtService.activeGoldenTickets.length,
-      "total prize won": _userService.userFundWallet.prizeLifetimeWin,
-      "Referred count (total)": AnalyticsProperties.getTotalReferalCount(),
-      "Referred count sucess": AnalyticsProperties.getSucessReferalCount(),
+      "Unscratched tickets count": _gtService!.unscratchedTicketsCount,
+      "Scratched tickets count": _gtService!.activeGoldenTickets.length,
+      "total prize won": _userService!.userFundWallet!.prizeLifetimeWin,
+      "Referred count (total)": AnalyticsProperties.getTotalReferralCount(),
+      "Referred count success": AnalyticsProperties.getSuccessReferralCount(),
     });
   }
 
   getWinningHistoryTitle(UserTransaction tran) {
-    String redeemtype = tran.redeemType;
-    String subtype = tran.subType;
+    String? redeemtype = tran.redeemType;
+    String? subtype = tran.subType;
     if (redeemtype != null && redeemtype != "") {
       switch (redeemtype) {
         case UserTransaction.TRAN_REDEEMTYPE_AUGMONT_GOLD:
           return "Digital Gold Redemption";
-          break;
         case UserTransaction.TRAN_REDEEMTYPE_AMZ_VOUCHER:
           return "Amazon Voucher Redemption";
-          break;
         default:
           return "Fello Rewards";
       }
@@ -125,19 +123,14 @@ class MyWinningsViewModel extends BaseViewModel {
       switch (subtype) {
         case UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD:
           return "Digital Gold";
-          break;
         case UserTransaction.TRAN_SUBTYPE_GLDN_TCK:
           return "Fello Golden Ticket";
-          break;
         case UserTransaction.TRAN_SUBTYPE_REF_BONUS:
           return "Referral Bonus";
-          break;
         case UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN:
           return "Tambola Win";
-          break;
         case UserTransaction.TRAN_SUBTYPE_CRICKET_WIN:
           return "Cricket Win";
-          break;
         default:
           return "Fello Rewards";
       }
@@ -176,7 +169,7 @@ class MyWinningsViewModel extends BaseViewModel {
       content: FelloConfirmationDialog(
         result: (res) async {
           if (res)
-            await claim(choice, _userService.userFundWallet.unclaimedBalance);
+            await claim(choice, _userService!.userFundWallet!.unclaimedBalance);
         },
         showCrossIcon: true,
         assetpng: choice == PrizeClaimChoice.AMZ_VOUCHER
@@ -184,13 +177,13 @@ class MyWinningsViewModel extends BaseViewModel {
             : Assets.augmontShare,
         title: "Confirmation",
         subtitle: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
-            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet.unclaimedBalance, 2, false)} as Digital Gold?",
+            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
+            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)} as Digital Gold?",
         accept: "Yes",
         reject: "No",
         acceptColor: UiConstants.primaryColor,
         rejectColor: Colors.grey.withOpacity(0.3),
-        onReject: AppState.backButtonDispatcher.didPopRoute,
+        onReject: AppState.backButtonDispatcher!.didPopRoute,
       ),
     );
   }
@@ -201,7 +194,7 @@ class MyWinningsViewModel extends BaseViewModel {
   ) async {
     AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
-        context: AppState.delegate.navigatorKey.currentContext,
+        context: AppState.delegate!.navigatorKey.currentContext!,
         builder: (ctx) {
           return Stack(
             children: [
@@ -209,18 +202,18 @@ class MyWinningsViewModel extends BaseViewModel {
                 result: (res) async {
                   if (res) {
                     try {
-                      String url;
-                      final link = await _appFlyer.inviteLink();
+                      String? url;
+                      final link = await _appFlyer!.inviteLink();
                       if (link['status'] == 'success') {
                         url = link['payload']['userInviteUrl'];
                         if (url == null) url = link['payload']['userInviteURL'];
                       }
 
                       if (url != null)
-                        caputure(
-                            'Hey, I won ₹${_userService.userFundWallet.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+                        capture(
+                            'Hey, I won ₹${_userService!.userFundWallet!.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
                     } catch (e) {
-                      _logger.e(e.toString());
+                      _logger!.e(e.toString());
                       BaseUtil.showNegativeAlert(
                           "An error occurred!", "Please try again");
                     }
@@ -228,24 +221,24 @@ class MyWinningsViewModel extends BaseViewModel {
                 },
                 content: Column(
                   children: [
-                    SizedBox(height: SizeConfig.screenHeight * 0.02),
+                    SizedBox(height: SizeConfig.screenHeight! * 0.02),
                     Container(
-                      height: SizeConfig.screenHeight * 0.38,
+                      height: SizeConfig.screenHeight! * 0.38,
                       width: SizeConfig.screenWidth,
                       child: FittedBox(
                         fit: BoxFit.contain,
                         child: RepaintBoundary(
                           key: imageKey,
                           child: ShareCard(
-                            dpUrl: _userService.myUserDpUrl,
+                            dpUrl: _userService!.myUserDpUrl,
                             claimChoice: choice,
                             prizeAmount:
-                                _userService.userFundWallet.prizeBalance,
+                                _userService!.userFundWallet!.prizeBalance,
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: SizeConfig.screenHeight * 0.02),
+                    SizedBox(height: SizeConfig.screenHeight! * 0.02),
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
@@ -255,7 +248,7 @@ class MyWinningsViewModel extends BaseViewModel {
                     ),
                     SizedBox(height: SizeConfig.padding16),
                     getSubtitleWidget(subtitle),
-                    SizedBox(height: SizeConfig.screenHeight * 0.03),
+                    SizedBox(height: SizeConfig.screenHeight! * 0.03),
                   ],
                 ),
                 showCrossIcon: true,
@@ -263,7 +256,7 @@ class MyWinningsViewModel extends BaseViewModel {
                 reject: "Done",
                 acceptColor: UiConstants.primaryColor,
                 rejectColor: Colors.grey[300],
-                onReject: AppState.backButtonDispatcher.didPopRoute,
+                onReject: AppState.backButtonDispatcher!.didPopRoute,
               ),
             ],
           );
@@ -271,14 +264,13 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
   shareOnWhatsapp() {
-    _logger.i("Whatsapp share triggered");
-    AppState.backButtonDispatcher.didPopRoute();
+    _logger!.i("Whatsapp share triggered");
+    AppState.backButtonDispatcher!.didPopRoute();
   }
 
   claim(PrizeClaimChoice choice, double claimPrize) {
-    double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       if (flag) {
         getWinningHistory();
         showSuccessPrizeWithdrawalDialog(
@@ -286,10 +278,10 @@ class MyWinningsViewModel extends BaseViewModel {
       }
     });
 
-    _analyticsService
+    _analyticsService!
         .track(eventName: AnalyticsEvents.redeemWinningsTapped, properties: {
       "total Winnings amount":
-          _userService.userFundWallet.unclaimedBalance ?? 0,
+          _userService!.userFundWallet!.unclaimedBalance ?? 0,
       "Token Balance": AnalyticsProperties.getTokens(),
       "Total Invested Amount": AnalyticsProperties.getGoldInvestedAmount() +
           AnalyticsProperties.getFelloFloAmount(),
@@ -302,16 +294,16 @@ class MyWinningsViewModel extends BaseViewModel {
 // SET AND GET CLAIM CHOICE
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    final response = await _prizingRepo.claimPrize(
-      _userService.userFundWallet.unclaimedBalance,
+    final response = await _prizingRepo!.claimPrize(
+      _userService!.userFundWallet!.unclaimedBalance,
       choice,
     );
 
     if (response.isSuccess()) {
-      _userService.getUserFundWalletData();
-      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+      _userService!.getUserFundWalletData();
+      _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
-      await _localDBModel.savePrizeClaimChoice(choice);
+      await _localDBModel!.savePrizeClaimChoice(choice);
 
       return true;
     } else {
@@ -348,66 +340,67 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
 // Capture Share card Logic
-  caputure(String shareMessage) {
+  capture(String shareMessage) {
     Future.delayed(Duration(seconds: 1), () {
       captureCard().then((image) {
-        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher!.didPopRoute();
         if (image != null)
           shareCard(image, shareMessage);
         else {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {
-                if (_userService.baseUser.uid != null) {
+                if (_userService!.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService.logFailure(_userService.baseUser.uid,
+                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger.e(onError);
+                _logger!.e(onError);
               });
             } else {
               FlutterShareMe()
                   .shareToSystem(msg: shareMessage)
                   .catchError((onError) {
-                if (_userService.baseUser.uid != null) {
+                if (_userService!.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService.logFailure(_userService.baseUser.uid,
+                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger.e(onError);
+                _logger!.e(onError);
               });
             }
           } catch (e) {
-            _logger.e(e.toString());
+            _logger!.e(e.toString());
           }
         }
       });
     });
   }
 
-  Future<Uint8List> captureCard() async {
+  Future<Uint8List?> captureCard() async {
     try {
       RenderRepaintBoundary imageObject =
-          imageKey.currentContext.findRenderObject();
+          imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
-      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
+      ByteData byteData = await (image.toByteData(format: ImageByteFormat.png)
+          as Future<ByteData>);
       final pngBytes = byteData.buffer.asUint8List();
 
       return pngBytes;
     } catch (e) {
-      if (_userService.baseUser.uid != null) {
+      if (_userService!.baseUser!.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        _internalOpsService.logFailure(_userService.baseUser.uid,
+        _internalOpsService!.logFailure(_userService!.baseUser!.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
           "Task Failed", "Unable to capture the card at the moment");
@@ -415,23 +408,23 @@ class MyWinningsViewModel extends BaseViewModel {
     return null;
   }
 
-  shareCard(Uint8List image, String shareMessage) async {
+  shareCard(Uint8List image, String? shareMessage) async {
     try {
       if (Platform.isAndroid) {
-        final directory = (await getExternalStorageDirectory()).path;
+        final directory = (await getExternalStorageDirectory())!.path;
         String dt = DateTime.now().toString();
-        File imgg = new File('$directory/fello-reward-$dt.png');
-        imgg.writeAsBytesSync(image);
-        Share.shareFiles(
-          [imgg.path],
+        File imageFile = new File('$directory/fello-reward-$dt.png');
+        imageFile.writeAsBytesSync(image);
+        Share.shareXFiles(
+          [XFile(imageFile.path)],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService.baseUser.uid != null) {
+          if (_userService!.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService.logFailure(_userService.baseUser.uid,
+            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -442,22 +435,22 @@ class MyWinningsViewModel extends BaseViewModel {
         final directory = await getTemporaryDirectory();
         if (!await directory.exists()) await directory.create(recursive: true);
 
-        final File imgg =
+        final File imageFile =
             await new File('${directory.path}/fello-reward-$dt.jpg').create();
-        imgg.writeAsBytesSync(image);
+        imageFile.writeAsBytesSync(image);
 
-        _logger.d("Image file created and sharing, ${imgg.path}");
+        _logger!.d("Image file created and sharing, ${imageFile.path}");
 
-        Share.shareFiles(
-          [imgg.path],
+        Share.shareXFiles(
+          [XFile(imageFile.path)],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService.baseUser.uid != null) {
+          if (_userService!.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService.logFailure(_userService.baseUser.uid,
+            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);

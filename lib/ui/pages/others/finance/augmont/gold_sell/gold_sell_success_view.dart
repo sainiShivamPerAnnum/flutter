@@ -17,7 +17,7 @@ class GoldSellSuccessView extends StatelessWidget {
   final AugmontTransactionService augTxnservice;
 
   const GoldSellSuccessView(
-      {Key key, @required this.model, @required this.augTxnservice})
+      {Key? key, required this.model, required this.augTxnservice})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class GoldSellSuccessView extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
                   },
                   icon: Icon(
                     Icons.close,
@@ -83,12 +83,12 @@ class GoldSellSuccessView extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.padding6,
               ),
-              Text((augTxnservice.currentTxnAmount.toInt()).toString(),
+              Text((augTxnservice.currentTxnAmount!.toInt()).toString(),
                   style: TextStyles.rajdhaniB.title3),
             ]),
           ),
           if (model.deductedTokensCount != null &&
-              model.deductedTokensCount > 0)
+              model.deductedTokensCount! > 0)
             Container(
               margin: EdgeInsets.only(
                 bottom: SizeConfig.padding12,
@@ -165,7 +165,7 @@ class GoldSellSuccessView extends StatelessWidget {
                           Text("Received", style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
-                              "₹ ${BaseUtil.digitPrecision(augTxnservice.currentTxnAmount, 2)}",
+                              "₹ ${BaseUtil.digitPrecision(augTxnservice.currentTxnAmount!, 2)}",
                               style: TextStyles.rajdhaniB.title3),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -205,7 +205,7 @@ class GoldSellSuccessView extends StatelessWidget {
           SizedBox(height: SizeConfig.padding24),
           TextButton(
             onPressed: () {
-              AppState.backButtonDispatcher.didPopRoute();
+              AppState.backButtonDispatcher!.didPopRoute();
             },
             child: Text(
               "DONE",

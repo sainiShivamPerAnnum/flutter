@@ -18,12 +18,12 @@ class UiConstants {
   static final Color darkPrimaryColor2 = const Color(0XFF1B262C);
   static final Color secondaryColor = const Color.fromARGB(255, 241, 227, 243);
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
-  static final Color chipColor = Colors.grey[200];
-  static final Color positiveAlertColor = Colors.blueAccent[400];
+  static final Color? chipColor = Colors.grey[200];
+  static final Color? positiveAlertColor = Colors.blueAccent[400];
   static final Color negativeAlertColor = Colors.blueGrey;
 //  static final Color secondaryColor = Colors.greenAccent;
-  static final Color spinnerColor = Colors.grey[400];
-  static final Color spinnerColor2 = Colors.grey[200];
+  static final Color? spinnerColor = Colors.grey[400];
+  static final Color? spinnerColor2 = Colors.grey[200];
 
   static final Color bottomNavBarColor = Colors.white;
   static final Color titleTextColor = Colors.white;
@@ -176,7 +176,7 @@ class UiConstants {
 }
 
 extension ColorExtension on String {
-  Color toColor() {
+  Color? toColor() {
     var hexColor = this.replaceAll("#", "");
     if (hexColor.length == 6) {
       hexColor = "FF" + hexColor;

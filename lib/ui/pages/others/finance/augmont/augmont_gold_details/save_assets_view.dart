@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/others/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
@@ -23,7 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SaveAssetView extends StatelessWidget {
-  const SaveAssetView({Key key}) : super(key: key);
+  const SaveAssetView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,11 @@ class SaveAssetView extends StatelessWidget {
         elevation: 0,
         leading: FelloAppBarBackButton(),
         actions: [
-          FaqButtonRounded(type: FaqsType.savings),
+          Row(
+            children: [
+              FaqPill(type: FaqsType.savings),
+            ],
+          ),
           SizedBox(
             width: SizeConfig.padding24,
           )
@@ -97,7 +102,7 @@ class SaveAssetView extends StatelessWidget {
                               investmentType: InvestmentType.AUGGOLD99,
                             ),
                       SizedBox(
-                        height: SizeConfig.screenWidth * 0.4,
+                        height: SizeConfig.screenWidth! * 0.4,
                       )
                     ],
                   ),
@@ -109,7 +114,7 @@ class SaveAssetView extends StatelessWidget {
                     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     child: AppPositiveBtn(
                       btnText: "SAVE",
-                      width: SizeConfig.screenWidth -
+                      width: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       onPressed: () => BaseUtil().openRechargeModalSheet(
                           investmentType: InvestmentType.AUGGOLD99),
@@ -126,7 +131,7 @@ class SaveAssetView extends StatelessWidget {
 }
 
 class GoldAssetCard extends StatelessWidget {
-  const GoldAssetCard({Key key}) : super(key: key);
+  const GoldAssetCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -150,15 +155,15 @@ class GoldAssetCard extends StatelessWidget {
             transform: Matrix4.rotationY(math.pi),
             child: Image.asset(
               Assets.digitalGoldBar,
-              height: SizeConfig.screenWidth * 0.32,
-              width: SizeConfig.screenWidth * 0.32,
+              height: SizeConfig.screenWidth! * 0.32,
+              width: SizeConfig.screenWidth! * 0.32,
             ),
           ),
           Column(
             children: [
               Row(
                 children: [
-                  SizedBox(width: SizeConfig.screenWidth * 0.35),
+                  SizedBox(width: SizeConfig.screenWidth! * 0.35),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

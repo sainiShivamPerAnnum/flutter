@@ -78,7 +78,7 @@ class PicksCardView extends StatelessWidget {
                   Container(
                     color: UiConstants.kTabBorderColor,
                     height: 5,
-                    width: SizeConfig.screenWidth / 2 -
+                    width: SizeConfig.screenWidth! / 2 -
                         SizeConfig.pageHorizontalMargins * 2,
                   )
                 ],

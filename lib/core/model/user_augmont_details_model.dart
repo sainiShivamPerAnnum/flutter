@@ -4,20 +4,20 @@ import 'package:felloapp/util/logger.dart';
 
 class UserAugmontDetail {
   Log log = new Log('UserAugmontDetail');
-  String _hasIssue;
-  String _userId;
-  String _userName;
-  String _bankAccNo;
-  String _bankHolderName;
-  String _userStateId;
-  String _ifsc;
-  bool _firstInvMade;
-  bool _isDepLocked;
-  bool _isSellLocked;
-  String _sellNotice;
-  String _depNotice;
-  TimestampModel _createdTime;
-  TimestampModel _updatedTime;
+  String? _hasIssue;
+  String? _userId;
+  String? _userName;
+  String? _bankAccNo;
+  String? _bankHolderName;
+  String? _userStateId;
+  String? _ifsc;
+  bool? _firstInvMade;
+  bool? _isDepLocked;
+  bool? _isSellLocked;
+  String? _sellNotice;
+  String? _depNotice;
+  TimestampModel? _createdTime;
+  TimestampModel? _updatedTime;
 
   static final String fldUserId = 'aUid';
   static final String fldUserName = 'aUsrName';
@@ -61,31 +61,46 @@ class UserAugmontDetail {
           ifsc,
           stateId,
           false,
-          null,
+          '',
           TimestampModel.currentTimeStamp(),
           TimestampModel.currentTimeStamp(),
           false,
           false,
-          null,
-          null,
+          '',
+          '',
         );
+
+        UserAugmontDetail.base(){
+ _hasIssue = '' ;
+ _userId = '';
+ _userName = '';
+ _bankAccNo  = '';
+ _bankHolderName  = '';
+ _userStateId  = '';
+ _ifsc  = '';
+  _firstInvMade = false;
+  _isDepLocked = false;
+  _isSellLocked = false;
+_sellNotice  = '';
+_depNotice  = '';
+        }
 
   UserAugmontDetail.fromMap(Map<String, dynamic> data)
       : this(
-          data[fldUserId],
-          data[fldUserName],
-          data[fldBankAccNo],
-          data[fldBankHolderName],
-          data[fldIfsc],
-          data[fldStateId],
+          data[fldUserId] ?? '',
+          data[fldUserName] ?? '',
+          data[fldBankAccNo] ?? '',
+          data[fldBankHolderName] ?? '',
+          data[fldIfsc] ?? '',
+          data[fldStateId] ?? '',
           data[fldFirstInvMade] ?? false,
-          data[fldHasIssue],
+          data[fldHasIssue] ?? '',
           TimestampModel.fromMap(data[fldCreatedTime]),
           TimestampModel.fromMap(data[fldUpdatedTime]),
           data[fldIsSellLocked] ?? false,
           data[fldIsDepLocked] ?? false,
-          data[fldSellNotice],
-          data[fldDepNotice],
+          data[fldSellNotice] ?? '',
+          data[fldDepNotice] ?? '',
         );
 
   toJson() {
@@ -97,70 +112,70 @@ class UserAugmontDetail {
       fldStateId: _userStateId,
       fldFirstInvMade: _firstInvMade,
       fldIfsc: _ifsc,
-      fldCreatedTime: _createdTime.toMap(),
+      fldCreatedTime: _createdTime!.toMap(),
       fldUpdatedTime: TimestampModel.currentTimeStamp().toMap(),
     };
   }
 
-  Timestamp get createdTime => _createdTime;
+  TimestampModel get createdTime => _createdTime!;
 
-  set createdTime(Timestamp value) {
+  set createdTime(TimestampModel value) {
     _createdTime = value;
   }
 
-  bool get firstInvMade => _firstInvMade;
+  bool get firstInvMade => _firstInvMade!;
 
   set firstInvMade(bool value) {
     _firstInvMade = value;
   }
 
-  String get userStateId => _userStateId;
+  String get userStateId => _userStateId!;
 
   set userStateId(String value) {
     _userStateId = value;
   }
 
-  String get bankHolderName => _bankHolderName;
+  String get bankHolderName => _bankHolderName!;
 
   set bankHolderName(String value) {
     _bankHolderName = value;
   }
 
-  String get bankAccNo => _bankAccNo;
+  String get bankAccNo => _bankAccNo!;
 
   set bankAccNo(String value) {
     _bankAccNo = value;
   }
 
-  String get userName => _userName;
+  String get userName => _userName!;
 
   set userName(String value) {
     _userName = value;
   }
 
-  String get userId => _userId;
+  String get userId => _userId!;
 
   set userId(String value) {
     _userId = value;
   }
 
-  String get hasIssue => _hasIssue;
+  String get hasIssue => _hasIssue!;
 
   set hasIssue(String value) {
     _hasIssue = value;
   }
 
-  String get ifsc => _ifsc;
+  String get ifsc => _ifsc!;
 
   set ifsc(String value) {
     _ifsc = value;
   }
 
-  bool get isDepLocked => _isDepLocked;
+  bool get isDepLocked => _isDepLocked!;
 
-  bool get isSellLocked => _isSellLocked;
+  bool get isSellLocked => _isSellLocked!;
 
-  String get sellNotice => _sellNotice;
+  String get sellNotice => _sellNotice!;
 
-  String get depNotice => _depNotice;
+  String get depNotice => _depNotice!;
 }

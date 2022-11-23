@@ -13,7 +13,7 @@ import 'package:flutter_svg/svg.dart';
 import '../static/new_square_background.dart';
 
 class UpdateRequiredScreen extends StatelessWidget {
-  const UpdateRequiredScreen({Key key}) : super(key: key);
+  const UpdateRequiredScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class UpdateRequiredScreen extends StatelessWidget {
           Positioned(
             top: 0,
             child: Container(
-              height: SizeConfig.screenHeight * 0.5,
+              height: SizeConfig.screenHeight! * 0.5,
               width: SizeConfig.screenWidth,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -42,10 +42,10 @@ class UpdateRequiredScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-              top: SizeConfig.screenHeight * 0.35,
+              top: SizeConfig.screenHeight! * 0.35,
               child: SvgPicture.asset(
                 Assets.flatIsland,
-                width: SizeConfig.screenWidth * 0.5,
+                width: SizeConfig.screenWidth! * 0.5,
               )),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -82,7 +82,7 @@ class UpdateRequiredScreen extends StatelessWidget {
                           "Something went wrong", "Please try again");
                     }
                   },
-                  width: SizeConfig.screenWidth * 0.8,
+                  width: SizeConfig.screenWidth! * 0.8,
                 ),
               ),
             ],

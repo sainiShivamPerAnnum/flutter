@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class RewardLeaderboardView extends StatelessWidget {
-  RewardLeaderboardView({Key key, @required this.game}) : super(key: key);
+  RewardLeaderboardView({Key? key, required this.game}) : super(key: key);
   final String game;
 
   final TextStyle selectedTextStyle =
@@ -70,7 +70,7 @@ class RewardLeaderboardView extends StatelessWidget {
                 Container(
                   color: UiConstants.kTabBorderColor,
                   height: 5,
-                  width: SizeConfig.screenWidth * 0.4,
+                  width: SizeConfig.screenWidth! * 0.4,
                 )
               ],
             ),

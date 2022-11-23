@@ -8,34 +8,34 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserCoinService
     extends PropertyChangeNotifier<UserCoinServiceProperties> {
-  final _logger = locator<CustomLogger>();
-  final _userRepo = locator<UserRepository>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserRepository? _userRepo = locator<UserRepository>();
 
-  int _flcBalance = 0;
+  int? _flcBalance = 0;
 
-  int get flcBalance => _flcBalance;
+  int? get flcBalance => _flcBalance;
 
   Future<void> init() async {
     getUserCoinBalance();
   }
 
-  void setFlcBalance(int balance) {
+  void setFlcBalance(int? balance) {
     if (_flcBalance == null) {
       _flcBalance = balance;
       notifyListeners(UserCoinServiceProperties.coinBalance);
 
-      _logger.d("Initial Coin Balance added");
+      _logger!.d("Initial Coin Balance added");
     } else {
       _flcBalance = balance;
       notifyListeners(UserCoinServiceProperties.coinBalance);
-      _logger.d("Coin Balance Updated");
+      _logger!.d("Coin Balance Updated");
     }
   }
 
   Future<void> getUserCoinBalance() async {
-    _logger.d("FLC Balance called");
-    final ApiResponse<FlcModel> response = await _userRepo.getCoinBalance();
-    _logger.d(response.model?.toJson()?.toString());
+    _logger!.d("FLC Balance called");
+    final ApiResponse<FlcModel> response = await _userRepo!.getCoinBalance();
+    _logger!.d(response.model?.toJson()?.toString());
     setFlcBalance(response.model?.flcBalance);
   }
 }

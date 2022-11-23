@@ -15,10 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LendboxBuyView extends StatefulWidget {
-  final int amount;
+  final int? amount;
   final bool skipMl;
 
-  const LendboxBuyView({Key key, this.amount = 250, this.skipMl = false})
+  const LendboxBuyView({Key? key, this.amount = 250, this.skipMl = false})
       : super(key: key);
 
   @override
@@ -27,22 +27,22 @@ class LendboxBuyView extends StatefulWidget {
 
 class _LendboxBuyViewState extends State<LendboxBuyView>
     with WidgetsBindingObserver {
-  final LendboxTransactionService _txnService =
+  final LendboxTransactionService? _txnService =
       locator<LendboxTransactionService>();
-  AppLifecycleState appLifecycleState;
+  AppLifecycleState? appLifecycleState;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _txnService.currentTransactionState = TransactionState.idle;
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _txnService!.currentTransactionState = TransactionState.idle;
     });
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
@@ -50,9 +50,9 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
     if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!_txnService.isIOSTxnInProgress) return;
-      _txnService.isIOSTxnInProgress = false;
-      _txnService.initiatePolling();
+      if (!_txnService!.isIOSTxnInProgress) return;
+      _txnService!.isIOSTxnInProgress = false;
+      _txnService!.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);
   }
@@ -79,7 +79,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
           duration: const Duration(milliseconds: 500),
           child: Stack(
             children: [
-              _getBackground(lboxTxnService),
+              _getBackground(lboxTxnService!),
               PageTransitionSwitcher(
                 duration: const Duration(milliseconds: 500),
                 transitionBuilder: (
@@ -139,12 +139,12 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
     return LendboxLoadingView(transactionType: type);
   }
 
-  double _getHeight(lboxTxnService) {
+  double? _getHeight(lboxTxnService) {
     if (lboxTxnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight * 0.8;
+      return SizeConfig.screenHeight! * 0.8;
     } else if (lboxTxnService.currentTransactionState ==
         TransactionState.ongoing) {
-      return SizeConfig.screenHeight * 0.95;
+      return SizeConfig.screenHeight! * 0.95;
     } else if (lboxTxnService.currentTransactionState ==
         TransactionState.success) {
       return SizeConfig.screenHeight;

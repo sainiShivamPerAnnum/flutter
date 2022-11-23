@@ -10,18 +10,18 @@ class AvatarPathModel {
   final int page;
   final int mlIndex;
   AvatarPathModel({
-    @required this.moveType,
-    @required this.coords,
-    @required this.page,
-    @required this.mlIndex,
+    required this.moveType,
+    required this.coords,
+    required this.page,
+    required this.mlIndex,
   });
 
   AvatarPathModel copyWith({
-    String moveType,
-    int milestoneIndex,
-    List<double> coords,
-    int page,
-    int level,
+    String? moveType,
+    int? milestoneIndex,
+    List<double>? coords,
+    int? page,
+    int? level,
   }) {
     return AvatarPathModel(
       moveType: moveType ?? this.moveType,

@@ -34,28 +34,9 @@ class ReferralDetailsView extends StatelessWidget {
   var _unselectedTextStyle = TextStyles.sourceSans.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
-  List<Shadow> shadowDrawerList = [
-    Shadow(
-      offset: Offset(0.0, 5.0),
-      blurRadius: 3.0,
-      color: Color.fromARGB(255, 0, 0, 0),
-    ),
-    Shadow(
-      offset: Offset(0.0, 5.0),
-      blurRadius: 3.0,
-      color: Color.fromARGB(255, 0, 0, 0),
-    ),
-  ];
-
-  getHeadingCustomTextStyle(Color color) {
-    return TextStyles.rajdhaniEB.title50
-        .colour(color)
-        .copyWith(shadows: shadowDrawerList);
-  }
-
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
     return BaseView<ReferralDetailsViewModel>(
         onModelReady: (model) => model.init(context),
         builder: (ctx, model, child) {
@@ -66,7 +47,7 @@ class ReferralDetailsView extends StatelessWidget {
               backgroundColor: UiConstants.kArowButtonBackgroundColor,
               leading: IconButton(
                   onPressed: () {
-                    AppState.backButtonDispatcher.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
                   },
                   icon: Icon(
                     Icons.arrow_back_ios,
@@ -98,41 +79,8 @@ class ReferralDetailsView extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              Container(
-                                child: Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Container(
-                                      child: SvgPicture.asset(
-                                          Assets.refreAndEarnBackgroundAsset,
-                                          width: SizeConfig.screenWidth * 0.5),
-                                    ),
-                                    Image.asset(Assets.iPadPNG,
-                                        fit: BoxFit.cover,
-                                        width: SizeConfig.screenWidth * 0.3)
-                                  ],
-                                ),
-                              ),
-                              RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text: 'REFER ',
-                                        style: getHeadingCustomTextStyle(
-                                            UiConstants.kTabBorderColor)),
-                                    TextSpan(
-                                        text: '& ',
-                                        style: getHeadingCustomTextStyle(
-                                            Colors.white)),
-                                    TextSpan(
-                                        text: 'EARN',
-                                        style: getHeadingCustomTextStyle(
-                                            UiConstants
-                                                .kWinnerPlayerPrimaryColor)),
-                                  ],
-                                ),
-                              ),
+                              SizedBox(height: SizeConfig.padding6),
+                              ReferAndEarnAsset(),
                               SizedBox(
                                 height: SizeConfig.padding16,
                               ),
@@ -304,13 +252,10 @@ class ReferralDetailsView extends StatelessWidget {
                                 UserServiceProperties.myJourneyStats
                               ],
                               builder: (context, m, properties) {
-                                return FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    "${m?.myUserName?.split(" ")?.first ?? ''}",
-                                    style: TextStyles.sourceSans.body1.colour(
-                                      Colors.white,
-                                    ),
+                                return Text(
+                                  "${(m?.myUserName ?? '').split(" ").first}",
+                                  style: TextStyles.sourceSans.body1.colour(
+                                    Colors.white,
                                   ),
                                 );
                               },
@@ -323,7 +268,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   child: Text(
                                       model.referalList == null
                                           ? '-'
-                                          : "${model.referalList.length} referrals",
+                                          : "${model.referalList!.length} referrals",
                                       style: TextStyles.body3
                                           .colour(UiConstants.kTextColor2)),
                                 ),
@@ -350,7 +295,7 @@ class ReferralDetailsView extends StatelessWidget {
                                 ],
                               ),
                             )
-                          : model.referalList.isEmpty
+                          : model.referalList!.isEmpty
                               ? Center(
                                   child: Column(
                                     children: [
@@ -418,7 +363,7 @@ class ReferralDetailsView extends StatelessWidget {
                                             color: UiConstants.kTabBorderColor,
                                             height: 5,
                                             width:
-                                                SizeConfig.screenWidth * 0.38,
+                                                SizeConfig.screenWidth! * 0.38,
                                           )
                                         ],
                                       ),
@@ -470,7 +415,7 @@ class ReferralDetailsView extends StatelessWidget {
                     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     child: AppPositiveBtn(
                       btnText: "SHARE",
-                      width: SizeConfig.screenWidth -
+                      width: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       onPressed: () {
                         if (!model.isShareAlreadyClicked) model.shareLink();
@@ -487,15 +432,15 @@ class ReferralDetailsView extends StatelessWidget {
 
 class BonusLockedReferals extends StatelessWidget {
   const BonusLockedReferals({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final ReferralDetailsViewModel model;
 
   @override
   Widget build(BuildContext context) {
-    return model.referalList.isEmpty
+    return model.referalList!.isEmpty
         ? Column(
             children: [
               SizedBox(height: SizeConfig.padding16),
@@ -508,7 +453,7 @@ class BonusLockedReferals extends StatelessWidget {
               SizedBox(height: SizeConfig.padding16),
             ],
           )
-        : model.bonusLockedReferalPresent(model.referalList)
+        : model.bonusLockedReferalPresent(model.referalList!)
             ? Padding(
                 padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                 child: Column(
@@ -536,7 +481,7 @@ class BonusLockedReferals extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, i) {
-                          if (!(model.referalList[i].isUserBonusUnlocked ??
+                          if (!(model.referalList![i].isUserBonusUnlocked ??
                               false)) {
                             return Padding(
                               padding:
@@ -545,7 +490,7 @@ class BonusLockedReferals extends StatelessWidget {
                                 children: [
                                   FutureBuilder(
                                     future: model.getProfileDpWithUid(
-                                        model.referalList[i].uid),
+                                        model.referalList![i].uid),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                               ConnectionState.waiting ||
@@ -584,20 +529,21 @@ class BonusLockedReferals extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(model.referalList[i].userName ?? '-',
+                                      Text(
+                                          model.referalList![i].userName ?? '-',
                                           style: TextStyles.sourceSans.body1
                                               .colour(
                                             Colors.white,
                                           )),
                                       Text(
-                                        model.referalList[i].timestamp ==
+                                        model.referalList![i].timestamp ==
                                                     null ||
-                                                model.referalList[i].timestamp
+                                                model.referalList![i].timestamp
                                                     .toDate()
                                                     .isBefore(Constants
                                                         .VERSION_2_RELEASE_DATE)
                                             ? '-'
-                                            : '${model.getUserMembershipDate(model.referalList[i].timestamp)}',
+                                            : '${model.getUserMembershipDate(model.referalList![i].timestamp)}',
                                         style: TextStyles.body4
                                             .colour(UiConstants.kTextColor2),
                                       ),
@@ -634,7 +580,7 @@ class BonusLockedReferals extends StatelessWidget {
                             return SizedBox.shrink();
                           }
                         },
-                        itemCount: model.referalList.length),
+                        itemCount: model.referalList!.length),
                   ],
                 ),
               )
@@ -655,15 +601,15 @@ class BonusLockedReferals extends StatelessWidget {
 
 class BonusUnlockedReferals extends StatelessWidget {
   const BonusUnlockedReferals({
-    Key key,
-    @required this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final ReferralDetailsViewModel model;
 
   @override
   Widget build(BuildContext context) {
-    return model.referalList.isEmpty
+    return model.referalList!.isEmpty
         ? Column(
             children: [
               SizedBox(height: SizeConfig.padding16),
@@ -676,7 +622,7 @@ class BonusUnlockedReferals extends StatelessWidget {
               SizedBox(height: SizeConfig.padding16),
             ],
           )
-        : model.bonusUnlockedReferalPresent(model.referalList)
+        : model.bonusUnlockedReferalPresent(model.referalList!)
             ? Padding(
                 padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                 child: Column(
@@ -704,7 +650,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, i) {
-                          if (model.referalList[i].isUserBonusUnlocked ??
+                          if (model.referalList![i].isUserBonusUnlocked ??
                               false) {
                             return Padding(
                               padding:
@@ -713,7 +659,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                                 children: [
                                   FutureBuilder(
                                     future: model.getProfileDpWithUid(
-                                        model.referalList[i].uid),
+                                        model.referalList![i].uid),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                               ConnectionState.waiting ||
@@ -751,20 +697,20 @@ class BonusUnlockedReferals extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(model.referalList[i].userName,
+                                      Text(model.referalList![i].userName,
                                           style: TextStyles.sourceSans.body1
                                               .colour(
                                             Colors.white,
                                           )),
                                       Text(
-                                        model.referalList[i].timestamp ==
+                                        model.referalList![i].timestamp ==
                                                     null ||
-                                                model.referalList[i].timestamp
+                                                model.referalList![i].timestamp
                                                     .toDate()
                                                     .isBefore(Constants
                                                         .VERSION_2_RELEASE_DATE)
                                             ? '-'
-                                            : '${model.getUserMembershipDate(model.referalList[i].timestamp)}',
+                                            : '${model.getUserMembershipDate(model.referalList![i].timestamp)}',
                                         style: TextStyles.body4
                                             .colour(UiConstants.kTextColor2),
                                       ),
@@ -801,7 +747,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                             return SizedBox.shrink();
                           }
                         },
-                        itemCount: model.referalList.length),
+                        itemCount: model.referalList!.length),
                   ],
                 ),
               )
@@ -822,10 +768,10 @@ class BonusUnlockedReferals extends StatelessWidget {
 
 class HowToEarnComponment extends StatefulWidget {
   HowToEarnComponment({
-    @required this.onStateChanged,
-    @required this.model,
-    @required this.locale,
-    Key key,
+    required this.onStateChanged,
+    required this.model,
+    required this.locale,
+    Key? key,
   }) : super(key: key);
 
   final Function onStateChanged;
@@ -918,7 +864,7 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                     //   ),
                     // ),
                     SizedBox(
-                      height: SizeConfig.screenWidth * 0.3,
+                      height: SizeConfig.screenWidth! * 0.3,
                     ),
                   ],
                 )
@@ -930,10 +876,10 @@ class _InfoComponentState extends State<HowToEarnComponment> {
 }
 
 class InfoTile extends StatelessWidget {
-  final String leadingAsset;
-  final IconData leadingIcon;
-  final String title;
-  final double leadSize;
+  final String? leadingAsset;
+  final IconData? leadingIcon;
+  final String? title;
+  final double? leadSize;
 
   InfoTile({this.leadingIcon, this.leadingAsset, this.title, this.leadSize});
   @override
@@ -969,6 +915,68 @@ class InfoTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ReferAndEarnAsset extends StatelessWidget {
+  ReferAndEarnAsset({Key? key}) : super(key: key);
+  getHeadingCustomTextStyle(Color color) {
+    return TextStyles.rajdhaniEB.title0
+        .colour(color)
+        .copyWith(shadows: shadowDrawerList)
+        .setHeight(1);
+  }
+
+  final List<Shadow> shadowDrawerList = [
+    Shadow(
+      offset: Offset(0.0, 5.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+    Shadow(
+      offset: Offset(0.0, 5.0),
+      blurRadius: 3.0,
+      color: Color.fromARGB(255, 0, 0, 0),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                child: SvgPicture.asset(Assets.refreAndEarnBackgroundAsset,
+                    width: SizeConfig.screenWidth! * 0.5),
+              ),
+              Image.asset(Assets.iPadPNG,
+                  fit: BoxFit.cover, width: SizeConfig.screenWidth! * 0.24)
+            ],
+          ),
+        ),
+        SizedBox(height: SizeConfig.padding6),
+        RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            children: [
+              TextSpan(
+                  text: 'REFER ',
+                  style:
+                      getHeadingCustomTextStyle(UiConstants.kTabBorderColor)),
+              TextSpan(
+                  text: '& ', style: getHeadingCustomTextStyle(Colors.white)),
+              TextSpan(
+                  text: 'EARN',
+                  style: getHeadingCustomTextStyle(
+                      UiConstants.kWinnerPlayerPrimaryColor)),
+            ],
+          ),
+        )
+      ],
     );
   }
 }

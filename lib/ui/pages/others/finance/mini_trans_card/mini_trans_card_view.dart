@@ -21,7 +21,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class MiniTransactionCard extends StatelessWidget {
   final InvestmentType investmentType;
 
-  const MiniTransactionCard({Key key, @required this.investmentType})
+  const MiniTransactionCard({Key? key, required this.investmentType})
       : super(key: key);
 
   @override
@@ -40,8 +40,8 @@ class MiniTransactionCard extends StatelessWidget {
               TransactionHistoryServiceProperties.TransactionHistoryList
             ],
             builder: (ctx, m, child) {
-              final txnList = m.txnList != null && m.txnList.isNotEmpty
-                  ? m.txnList
+              final txnList = m!.txnList != null && m.txnList!.isNotEmpty
+                  ? m.txnList!
                       .where((e) => e.subType == investmentType.name)
                       .toList()
                   : [];
@@ -66,7 +66,7 @@ class MiniTransactionCard extends StatelessWidget {
                             )
                           ]),
                         )
-                      : (m.txnList.length == 0
+                      : (m.txnList!.length == 0
                           ? SizedBox(height: SizeConfig.padding12)
                           : Padding(
                               padding: EdgeInsets.symmetric(
@@ -81,8 +81,8 @@ class MiniTransactionCard extends StatelessWidget {
                                       Spacer(),
                                       model.state == ViewState.Idle &&
                                               m.txnList != null &&
-                                              m.txnList.isNotEmpty &&
-                                              m.txnList.length > 3
+                                              m.txnList!.isNotEmpty &&
+                                              m.txnList!.length > 3
                                           ? InkWell(
                                               child: Padding(
                                                 padding: EdgeInsets.only(

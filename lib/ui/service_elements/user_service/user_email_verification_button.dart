@@ -17,13 +17,13 @@ class UserEmailVerificationButton extends StatelessWidget {
         UserServiceProperties.myEmailVerification,
         UserServiceProperties.myEmail
       ],
-      builder: (context, model, property) => model.isEmailVerified
+      builder: (context, model, property) => model!.isEmailVerified
           ? Icon(
               Icons.verified,
               color: UiConstants.primaryColor,
               size: SizeConfig.iconSize1,
             )
-          : model.email == null || model.email.isEmpty
+          : model.email == null || model.email!.isEmpty
               ? SizedBox()
               : InkWell(
                   child: // SizedBox(),
@@ -35,7 +35,7 @@ class UserEmailVerificationButton extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    AppState.delegate.appState.currentAction = PageAction(
+                    AppState.delegate!.appState.currentAction = PageAction(
                       state: PageState.addPage,
                       page: VerifyEmailPageConfig,
                     );
@@ -50,7 +50,7 @@ class UserEmailVerificationMark extends StatelessWidget {
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: [UserServiceProperties.myEmailVerification],
-      builder: (context, model, property) => model.isEmailVerified ?? false
+      builder: (context, model, property) => model!.isEmailVerified ?? false
           ? Icon(
               Icons.verified,
               color: UiConstants.primaryColor,

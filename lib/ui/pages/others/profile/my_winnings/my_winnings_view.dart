@@ -18,7 +18,7 @@ class MyWinningsView extends StatelessWidget {
   MyWinningsView({this.openFirst = false});
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S? locale = S.of(context);
     return BaseView<MyWinningsViewModel>(
       onModelReady: (model) {
         model.getWinningHistory();
@@ -47,7 +47,7 @@ class MyWinningsView extends StatelessWidget {
                       backgroundColor: UiConstants.kBackgroundColor,
                       leading: IconButton(
                         onPressed: () {
-                          AppState.backButtonDispatcher.didPopRoute();
+                          AppState.backButtonDispatcher!.didPopRoute();
                         },
                         icon: Icon(
                           Icons.arrow_back_ios,

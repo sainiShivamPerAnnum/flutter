@@ -7,26 +7,25 @@ import 'package:felloapp/util/styles/size_config.dart';
 // import 'package:rive/rive.dart';
 
 class DailyPicksDrawViewModel extends BaseViewModel {
-  TambolaService _tambolaService = locator<TambolaService>();
+  TambolaService? _tambolaService = locator<TambolaService>();
   final Log log = new Log("DailyPicksDraw-ViewModel");
   bool isInitCompleted = false;
   // RiveAnimationController boxController = SimpleAnimation('idle');
   double radius = 0;
-  double rowWidth = 0;
+  double? rowWidth = 0;
   double opacity = 0;
   bool showTxt = false;
   bool showNext = false;
   double ringWidth = 0;
-  List<int> get todaysPicks => _tambolaService.todaysPicks;
+  List<int>? get todaysPicks => _tambolaService!.todaysPicks;
 
   init() async {
     setState(ViewState.Busy);
-    await _tambolaService.fetchWeeklyPicks(forcedRefresh: true);
+    await _tambolaService!.fetchWeeklyPicks(forcedRefresh: true);
     setState(ViewState.Idle);
     startAnimation();
   }
-
-  startAnimation() {
+startAnimation() {
     Future.delayed(Duration(seconds: 1), () {
       showPicksDraw();
     }).then((_) {
@@ -46,10 +45,12 @@ class DailyPicksDrawViewModel extends BaseViewModel {
     });
   }
 
+
+
   showPicksDraw() {
-    radius = SizeConfig.screenWidth * 0.14;
+    radius = SizeConfig.screenWidth! * 0.14;
     rowWidth = SizeConfig.screenWidth;
-    ringWidth = SizeConfig.screenWidth * 0.1;
+    ringWidth = SizeConfig.screenWidth! * 0.1;
     opacity = 1;
     notifyListeners();
   }

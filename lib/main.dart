@@ -47,6 +47,7 @@ import 'package:provider/provider.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
 
+
 // void main() async {
 //   FlavorConfig(
 //       flavor: Flavor.PROD,
@@ -88,8 +89,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final appState = AppState();
   final parser = FelloParser();
-  FelloRouterDelegate delegate;
-  FelloBackButtonDispatcher backButtonDispatcher;
+  FelloRouterDelegate? delegate;
+  FelloBackButtonDispatcher? backButtonDispatcher;
 
   @override
   void initState() {
@@ -98,7 +99,7 @@ class _MyAppState extends State<MyApp> {
 
   _MyAppState() {
     delegate = FelloRouterDelegate(appState);
-    delegate.setNewRoutePath(SplashPageConfig);
+    delegate!.setNewRoutePath(SplashPageConfig);
     backButtonDispatcher = FelloBackButtonDispatcher(delegate);
     AppState.backButtonDispatcher = backButtonDispatcher;
     AppState.delegate = delegate;
@@ -174,7 +175,7 @@ class _MyAppState extends State<MyApp> {
                               useInheritedMediaQuery: true,
                               debugShowCheckedModeBanner: false,
                               backButtonDispatcher: backButtonDispatcher,
-                              routerDelegate: delegate,
+                              routerDelegate: delegate!,
                               routeInformationParser: parser,
                               localizationsDelegates: [
                                 S.delegate,

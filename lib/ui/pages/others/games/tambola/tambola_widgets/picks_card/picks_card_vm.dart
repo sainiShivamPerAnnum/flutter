@@ -6,19 +6,19 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class PicksCardViewModel extends BaseViewModel {
-  final TambolaService _tambolaService = locator<TambolaService>();
-  int get dailyPicksCount => _tambolaService.dailyPicksCount ?? 3;
-  PageController _pageController;
+  final TambolaService? _tambolaService = locator<TambolaService>();
+  int get dailyPicksCount => _tambolaService!.dailyPicksCount ?? 3;
+  PageController? _pageController;
 
-  bool _isShowingAllPicks;
-  double _topCardHeight;
-  double _expandedTopCardHeight;
-  double _normalTopCardHeight;
-  double _titleOpacity;
-  List<int> _todaysPicks;
-  DailyPick _weeklyDigits;
-  List<int> get todaysPicks => _todaysPicks;
-  DailyPick get weeklyDigits => _weeklyDigits;
+  bool? _isShowingAllPicks;
+  double? _topCardHeight;
+  double? _expandedTopCardHeight;
+  double? _normalTopCardHeight;
+  double? _titleOpacity;
+  List<int>? _todaysPicks;
+  DailyPick? _weeklyDigits;
+  List<int>? get todaysPicks => _todaysPicks;
+  DailyPick? get weeklyDigits => _weeklyDigits;
   int _tabNo = 0;
   get tabNo => this._tabNo;
   double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
@@ -65,7 +65,7 @@ class PicksCardViewModel extends BaseViewModel {
     this._normalTopCardHeight = value;
   }
 
-  PageController get pageController => _pageController;
+  PageController? get pageController => _pageController;
 
   init() async {
     _pageController = PageController(initialPage: 0);
@@ -73,14 +73,14 @@ class PicksCardViewModel extends BaseViewModel {
     isShowingAllPicks = false;
     titleOpacity = 1.0;
     topCardHeight = normalTopCardHeight;
-    await _tambolaService.fetchWeeklyPicks();
+    await _tambolaService!.fetchWeeklyPicks();
 
     fetchTodaysPicks();
   }
 
   fetchTodaysPicks() {
-    _todaysPicks = _tambolaService.todaysPicks;
-    _weeklyDigits = _tambolaService.weeklyDigits;
+    _todaysPicks = _tambolaService!.todaysPicks;
+    _weeklyDigits = _tambolaService!.weeklyDigits;
 
     notifyListeners();
   }
@@ -105,10 +105,10 @@ class PicksCardViewModel extends BaseViewModel {
     if (tab == tabNo) return;
 
     tabPosWidthFactor = tabNo == 0
-        ? SizeConfig.screenWidth / 2 - SizeConfig.pageHorizontalMargins
+        ? SizeConfig.screenWidth! / 2 - SizeConfig.pageHorizontalMargins
         : SizeConfig.pageHorizontalMargins;
 
-    _pageController.animateToPage(
+    _pageController!.animateToPage(
       tab,
       duration: Duration(milliseconds: 300),
       curve: Curves.linear,

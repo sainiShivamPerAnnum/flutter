@@ -9,15 +9,15 @@ import 'package:flutter/material.dart';
 
 class LendboxAppBar extends StatelessWidget {
   final bool isEnabled;
-  final Function trackClosingEvent;
-  const LendboxAppBar({@required this.isEnabled, this.trackClosingEvent});
+  final Function? trackClosingEvent;
+  const LendboxAppBar({required this.isEnabled, this.trackClosingEvent});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Container(
-        width: SizeConfig.screenWidth * 0.168,
-        height: SizeConfig.screenWidth * 0.168,
+        width: SizeConfig.screenWidth! * 0.168,
+        height: SizeConfig.screenWidth! * 0.168,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: RadialGradient(
@@ -35,8 +35,8 @@ class LendboxAppBar extends StatelessWidget {
           transform: Matrix4.rotationY(math.pi),
           child: Image.asset(
             Assets.felloFlo,
-            width: SizeConfig.screenWidth * 0.27,
-            height: SizeConfig.screenWidth * 0.27,
+            width: SizeConfig.screenWidth! * 0.27,
+            height: SizeConfig.screenWidth! * 0.27,
           ),
         ),
       ),
@@ -50,8 +50,8 @@ class LendboxAppBar extends StatelessWidget {
           : IconButton(
               icon: Icon(Icons.close, color: Colors.white),
               onPressed: () {
-                if (trackClosingEvent != null) trackClosingEvent();
-                AppState.backButtonDispatcher.didPopRoute();
+                if (trackClosingEvent != null) trackClosingEvent!();
+                AppState.backButtonDispatcher!.didPopRoute();
               },
             ),
     );

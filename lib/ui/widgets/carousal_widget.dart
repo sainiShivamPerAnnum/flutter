@@ -4,11 +4,11 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class CarousalWidget extends StatefulWidget {
-  final List<Widget> widgets;
-  final double height;
-  final double width;
+  final List<Widget>? widgets;
+  final double? height;
+  final double? width;
 
-  const CarousalWidget({Key key, this.widgets, this.height, this.width})
+  const CarousalWidget({Key? key, this.widgets, this.height, this.width})
       : super(key: key);
 
   @override
@@ -22,7 +22,7 @@ class _CarousalWidgetState extends State<CarousalWidget> {
 
   void nextPage() {
     Timer(Duration(seconds: 10), () {
-      if (_currentPos == widget.widgets.length - 1) {
+      if (_currentPos == widget.widgets!.length - 1) {
         controller.animateToPage(0,
             duration: Duration(milliseconds: 500), curve: Curves.easeIn);
       } else {
@@ -57,8 +57,8 @@ class _CarousalWidgetState extends State<CarousalWidget> {
           width: widget.width,
           child: PageView.builder(
             controller: controller,
-            itemBuilder: ((context, index) => widget.widgets[index]),
-            itemCount: widget.widgets.length,
+            itemBuilder: ((context, index) => widget.widgets![index]),
+            itemCount: widget.widgets!.length,
             onPageChanged: (val) {
               setState(() {
                 _currentPos = val;
@@ -72,7 +72,7 @@ class _CarousalWidgetState extends State<CarousalWidget> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: List.generate(
-            widget.widgets.length,
+            widget.widgets!.length,
             (index) => Container(
               width: SizeConfig.padding8,
               height: SizeConfig.padding8,

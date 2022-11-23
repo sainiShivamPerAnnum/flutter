@@ -29,23 +29,25 @@ import 'package:flutter/cupertino.dart';
 import 'base_repo.dart';
 
 class UserRepository extends BaseRepo {
-  final _appsFlyerService = locator<AppFlyerAnalytics>();
+  final AppFlyerAnalytics? _appsFlyerService = locator<AppFlyerAnalytics>();
   final _cacheService = new CacheService();
 
-  final _api = locator<Api>();
-  final _apiPaths = locator<ApiPath>();
-  final _internalOpsService = locator<InternalOpsService>();
+  final Api? _api = locator<Api>();
+  final ApiPath? _apiPaths = locator<ApiPath>();
+  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com/prod";
 
-  Future<ApiResponse<String>> getCustomUserToken(String mobileNo) async {
+  Future<ApiResponse<String>> getCustomUserToken(String? mobileNo) async {
     try {
       final _body = {
         "mobileNumber": mobileNo,
       };
-      final res = await APIService.instance.postData(_apiPaths.kCustomAuthToken,
-          body: _body, isAuthTokenAvailable: false);
+      final res = await APIService.instance.postData(
+          _apiPaths!.kCustomAuthToken,
+          body: _body,
+          isAuthTokenAvailable: false);
       return ApiResponse(model: res['token'], code: 200);
     } catch (e) {
       return ApiResponse.withError("Unable to signup using truecaller", 400);
@@ -53,7 +55,7 @@ class UserRepository extends BaseRepo {
   }
 
   Future<ApiResponse<Map<String, dynamic>>> setNewUser(
-      BaseUser baseUser, token, String state) async {
+      BaseUser baseUser, token) async {
     try {
       final String _bearer = token;
 
@@ -67,14 +69,14 @@ class UserRepository extends BaseRepo {
           BaseUser.fldDob: baseUser.dob,
           BaseUser.fldGender: baseUser.gender,
           BaseUser.fldUsername: baseUser.username,
+          BaseUser.fldAvatarId: baseUser.avatarId,
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
-          BaseUser.fldStateId: state,
-          BaseUser.fldAppFlyerId: await _appsFlyerService.appFlyerId,
+          BaseUser.fldAppFlyerId: await _appsFlyerService!.appFlyerId,
           'referralCode': BaseUtil.manualReferralCode ?? ''
         }
       };
 
-      final res = await APIService.instance.postData(_apiPaths.kAddNewUser,
+      final res = await APIService.instance.postData(_apiPaths!.kAddNewUser,
           cBaseUrl: _baseUrl, body: _body, token: _bearer);
       logger.d(res);
       final responseData = res['data'];
@@ -89,11 +91,13 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<BaseUser>> getUserById({@required String id}) async {
+  Future<ApiResponse<dynamic>> getUserById({
+    required String? id
+  }) async {
     try {
       final token = await getBearerToken();
 
-      return await _cacheService.cachedApi(
+      return await (_cacheService.cachedApi(
           CacheKeys.USER,
           TTL.ONE_DAY,
           () => APIService.instance.getData(
@@ -103,30 +107,30 @@ class UserRepository extends BaseRepo {
               ), (dynamic res) {
         try {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
-            final _user = BaseUser.fromMap(res["data"], id);
-            logger.d('asdasdasdsa $_user');
+            final _user = BaseUser.fromMap(res["data"], id!);
+            logger!.d('asdasdasdsa $_user');
             return ApiResponse<BaseUser>(model: _user, code: 200);
           } else
             return ApiResponse<BaseUser>(model: null, code: 200);
         } catch (e) {
-          _internalOpsService.logFailure(
+          _internalOpsService!.logFailure(
             id,
             FailType.UserDataCorrupted,
             {'message': "User data corrupted"},
           );
           return ApiResponse.withError("User data corrupted", 400);
         }
-      });
+      }));
     } catch (e) {
-      logger.d(e.toString());
+      logger!.d(e.toString());
       return ApiResponse.withError("Unable to get user", 400);
     }
   }
 
   Future<ApiResponse> updateUserAppFlyer(BaseUser user, String token) async {
     try {
-      logger.i("CALLING: updateUserAppFlyer");
-      final id = await _appsFlyerService.appFlyerId;
+      logger!.i("CALLING: updateUserAppFlyer");
+      final id = await _appsFlyerService!.appFlyerId;
 
       if (user.appFlyerId == id) {
         return ApiResponse(code: 200);
@@ -138,7 +142,7 @@ class UserRepository extends BaseRepo {
       };
 
       await APIService.instance.putData(
-        _apiPaths.kUpdateUserAppflyer,
+        _apiPaths!.kUpdateUserAppflyer,
         body: body,
         token: token,
       );
@@ -148,12 +152,12 @@ class UserRepository extends BaseRepo {
 
       return ApiResponse(code: 200);
     } catch (e) {
-      logger.d(e);
+      logger!.d(e);
       return ApiResponse.withError("User not added to firestore", 400);
     }
   }
 
-  Future<ApiResponse> sendOtp(String mobile, String hash) async {
+  Future<ApiResponse> sendOtp(String? mobile, String hash) async {
     try {
       final body = {
         'mobile': mobile,
@@ -163,14 +167,15 @@ class UserRepository extends BaseRepo {
       await APIService.instance
           .postData(ApiPath.sendOtp, body: body, cBaseUrl: _baseUrl);
 
+      logger!.d("reached");
       return ApiResponse(code: 200);
     } catch (e) {
-      logger.d(e);
+      logger!.d(e);
       return ApiResponse.withError("send OTP failed", 400);
     }
   }
 
-  Future<ApiResponse<String>> verifyOtp(String mobile, String otp) async {
+  Future<ApiResponse<String>> verifyOtp(String? mobile, String otp) async {
     try {
       final query = {
         'mobile': mobile,
@@ -185,14 +190,14 @@ class UserRepository extends BaseRepo {
 
       return ApiResponse(code: 200, model: res['data']['token']);
     } catch (e) {
-      logger.d(e);
+      logger!.d(e);
       return ApiResponse.withError(e.toString() ?? "send OTP failed", 400);
     }
   }
 
   Future<ApiResponse<UserFundWallet>> getFundBalance() async {
     try {
-      final uid = userService.baseUser.uid;
+      final uid = userService!.baseUser!.uid;
       final token = await getBearerToken();
 
       final res = await APIService.instance.getData(
@@ -200,14 +205,14 @@ class UserRepository extends BaseRepo {
         token: token,
         cBaseUrl: _baseUrl,
       );
-      logger.d('fund balance $res');
+      logger!.d('fund balance $res');
 
       return ApiResponse(
         model: UserFundWallet.fromMap(res['data']),
         code: 200,
       );
     } catch (e) {
-      logger.e('fund balance $e');
+      logger!.e('fund balance $e');
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -228,22 +233,23 @@ class UserRepository extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger.e('coin balance $e');
+      logger!.e('coin balance $e');
       return ApiResponse.withError(e.toString(), 400);
     }
   }
 
-  Future<ApiResponse<List<UserTransaction>>> getWinningHistory(
-      String userUid) async {
+  Future<ApiResponse<List<UserTransaction>>>? getWinningHistory(
+      String? userUid) async {
     List<UserTransaction> _userPrizeTransactions = [];
     try {
       final QuerySnapshot _querySnapshot =
-          await _api.getUserPrizeTransactionDocuments(userUid);
+          await _api!.getUserPrizeTransactionDocuments(userUid);
 
       if (_querySnapshot.docs.length != 0) {
         _querySnapshot.docs.forEach((element) {
           _userPrizeTransactions.add(
-            UserTransaction.fromMap(element.data(), element.id),
+            UserTransaction.fromMap(
+                element.data() as Map<String, dynamic>, element.id),
           );
         });
         logger.d(
@@ -259,24 +265,24 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<void> removeUserFCM(String userUid) async {
+  Future<void> removeUserFCM(String? userUid) async {
     try {
-      await _api.deleteUserClientToken(userUid);
-      logger.d("Token successfully removed from firestore, on user signout.");
+      await _api!.deleteUserClientToken(userUid);
+      logger!.d("Token successfully removed from firestore, on user signout.");
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       throw e;
     }
   }
 
   Future<void> setNewDeviceId({
-    @required String uid,
-    @required String deviceId,
-    @required String platform,
-    @required String model,
-    @required String brand,
-    @required String version,
-    @required bool isPhysicalDevice,
+    required String? uid,
+    required String? deviceId,
+    required String? platform,
+    required String? model,
+    required String? brand,
+    required String? version,
+    required bool? isPhysicalDevice,
   }) async {
     try {
       final token = await getBearerToken();
@@ -297,19 +303,19 @@ class UserRepository extends BaseRepo {
         token: token,
       );
 
-      logger.d("Device added");
+      logger!.d("Device added");
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
     }
   }
 
   Future<ApiResponse<UserAugmontDetail>> getUserAugmontDetails() async {
     try {
-      logger.i("CALLING: getUserAugmontDetails");
+      logger!.i("CALLING: getUserAugmontDetails");
       final token = await getBearerToken();
       final augmontRespone = await APIService.instance.getData(
         ApiPath.getAugmontDetail(
-          this.userService.baseUser.uid,
+          this.userService!.baseUser!.uid,
         ),
         cBaseUrl: _baseUrl,
         token: token,
@@ -318,7 +324,7 @@ class UserRepository extends BaseRepo {
       final augmont = UserAugmontDetail.fromMap(augmontRespone['data']);
       return ApiResponse<UserAugmontDetail>(model: augmont, code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch augmont", 400);
     }
   }
@@ -327,7 +333,7 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       final latestNotificationsResponse = await APIService.instance.getData(
-        ApiPath.getLatestNotification(this.userService.baseUser.uid),
+        ApiPath.getLatestNotification(this.userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         token: token,
       );
@@ -336,15 +342,15 @@ class UserRepository extends BaseRepo {
         latestNotificationsResponse["data"],
       );
 
-      String latestNotifTime = await CacheManager.readCache(
-          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
+      String? latestNotifTime = await (CacheManager.readCache(
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME));
       if (latestNotifTime != null) {
-        int latestTimeInSeconds = int.tryParse(latestNotifTime);
-        AlertModel latestAlert = notifications[0].createdTime.seconds >
-                notifications[1].createdTime.seconds
+        int latestTimeInSeconds = int.tryParse(latestNotifTime)!;
+        AlertModel latestAlert = notifications[0].createdTime!.seconds >
+                notifications[1].createdTime!.seconds
             ? notifications[0]
             : notifications[1];
-        if (latestAlert.createdTime.seconds > latestTimeInSeconds)
+        if (latestAlert.createdTime!.seconds > latestTimeInSeconds)
           return ApiResponse<bool>(model: true, code: 200);
         else
           return ApiResponse<bool>(model: false, code: 200);
@@ -362,12 +368,12 @@ class UserRepository extends BaseRepo {
   }
 
   Future<ApiResponse<List<AlertModel>>> getUserNotifications(
-    String lastDocId,
+    String? lastDocId,
   ) async {
     try {
       final token = await getBearerToken();
       final userNotifications = await APIService.instance.getData(
-        ApiPath.getNotifications(this.userService.baseUser.uid),
+        ApiPath.getNotifications(this.userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           "lastDocId": lastDocId,
@@ -382,7 +388,7 @@ class UserRepository extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return ApiResponse.withError(
         "Unable to fetch user notifications",
         400,
@@ -391,18 +397,18 @@ class UserRepository extends BaseRepo {
   }
 
   Future<ApiResponse<bool>> updateUser({
-    String uid,
-    @required Map<String, dynamic> dMap,
+    String? uid,
+    required Map<String, dynamic> dMap,
   }) async {
     final token = await getBearerToken();
     try {
       final res = await APIService.instance.putData(
-        ApiPath.kGetUserById(userService.baseUser.uid),
+        ApiPath.kGetUserById(userService!.baseUser!.uid),
         body: dMap,
         token: token,
         cBaseUrl: _baseUrl,
       );
-      logger.d("Update user data: ${res['data']}");
+      logger!.d("Update user data: ${res['data']}");
       final resData = res['data'];
       if (resData != null && resData['gtId'] != null) {
         GoldenTicketService.goldenTicketId = resData['gtId'];
@@ -412,7 +418,7 @@ class UserRepository extends BaseRepo {
 
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return ApiResponse.withError(
         e.toString() ?? "Unable to update user",
         400,
@@ -421,14 +427,14 @@ class UserRepository extends BaseRepo {
   }
 
   Future<ApiResponse<bool>> updateFcmToken({
-    @required String fcmToken,
+    required String? fcmToken,
   }) async {
     try {
       final token = await getBearerToken();
       await APIService.instance.putData(
         ApiPath.updateFcm,
         body: {
-          "userId": userService.baseUser.uid,
+          "userId": userService!.baseUser!.uid,
           "token": fcmToken,
         },
         cBaseUrl: _baseUrl,
@@ -437,7 +443,7 @@ class UserRepository extends BaseRepo {
 
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return ApiResponse.withError(
         "Unable to update fcm",
         400,
@@ -450,14 +456,14 @@ class UserRepository extends BaseRepo {
       log("completeOnboarding");
       final token = await getBearerToken();
       await APIService.instance.postData(
-        ApiPath.getCompleteOnboarding(userService.baseUser.uid),
+        ApiPath.getCompleteOnboarding(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         token: token,
       );
 
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return ApiResponse.withError(
         "Unable to update fcm",
         400,
@@ -469,21 +475,21 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       Map<String, dynamic> response =
-          await _internalOpsService.initDeviceInfo();
+          await _internalOpsService!.initDeviceInfo();
       if (response != null) {
-        final String deviceId = response["deviceId"];
-        final String platform = response["platform"];
-        final String model = response["model"];
-        final String brand = response["brand"];
-        final bool isPhysicalDevice = response["isPhysicalDevice"];
-        final String version = response["version"];
-        logger.d("Device Details: $response");
+        final String? deviceId = response["deviceId"];
+        final String? platform = response["platform"];
+        final String? model = response["model"];
+        final String? brand = response["brand"];
+        final bool? isPhysicalDevice = response["isPhysicalDevice"];
+        final String? version = response["version"];
+        logger!.d("Device Details: $response");
         final res = await APIService.instance.putData(
-            ApiPath.logOut(userService.baseUser.uid),
+            ApiPath.logOut(userService!.baseUser!.uid),
             cBaseUrl: _baseUrl,
             token: token,
             body: {
-              "uid": userService.baseUser.uid ?? "",
+              "uid": userService!.baseUser!.uid ?? "",
               "deviceId": deviceId ?? "",
               "platform": platform ?? "",
               "model": model ?? "",
@@ -491,11 +497,11 @@ class UserRepository extends BaseRepo {
               "version": version ?? "",
               "isPhysicalDevice": isPhysicalDevice ?? true
             });
-        logger.d("LogOut response: ${res.toString()}");
+        logger!.d("LogOut response: ${res.toString()}");
       }
       return true;
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return false;
     }
   }
@@ -503,12 +509,12 @@ class UserRepository extends BaseRepo {
   //Method to fetch the user-boot-up-ee
 
   Future<ApiResponse<UserBootUpDetailsModel>> fetchUserBootUpRssponse(
-      {@required String userId,
-      @required String deviceId,
-      @required String platform,
-      @required String appVersion,
-      @required String lastOpened,
-      @required int dayOpenCount}) async {
+      {required String? userId,
+      required String? deviceId,
+      required String? platform,
+      required String appVersion,
+      required String lastOpened,
+      required int dayOpenCount}) async {
     UserBootUpDetailsModel userBootUp;
 
     try {
@@ -524,7 +530,7 @@ class UserRepository extends BaseRepo {
 
       final respone = await APIService.instance.getData(
         ApiPath.userBootUp(
-          userService.baseUser.uid,
+          userService!.baseUser!.uid,
         ),
         token: token,
         queryParams: queryParameters,
@@ -535,7 +541,7 @@ class UserRepository extends BaseRepo {
 
       return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);
     } catch (e) {
-      logger.d("Unable to fetch user boot up ee ${e.toString()}");
+      logger!.d("Unable to fetch user boot up ee ${e.toString()}");
       return ApiResponse.withError(
           e.toString() ?? "Unable to get user bootup details", 400);
     }
@@ -545,14 +551,14 @@ class UserRepository extends BaseRepo {
     try {
       final String token = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.kGetPan(userService.baseUser.uid),
+        ApiPath.kGetPan(userService.baseUser!.uid!),
         token: token,
         cBaseUrl: _baseUrl,
       );
-      final String pan = response["data"]["pan"];
+      final String? pan = response["data"]["pan"];
       return ApiResponse(model: pan ?? '', code: 200);
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
       return ApiResponse.withError(e.toString() ?? 'Unable to fetch pan', 400);
     }
   }
@@ -572,7 +578,7 @@ class UserRepository extends BaseRepo {
 
       return ApiResponse(code: 200, model: res['data']['isEmailRegistered']);
     } catch (e) {
-      logger.d(e);
+      logger!.d(e);
       return ApiResponse.withError("send OTP failed", 400);
     }
   }
