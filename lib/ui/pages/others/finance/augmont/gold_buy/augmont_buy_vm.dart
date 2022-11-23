@@ -435,7 +435,7 @@ class GoldBuyViewModel extends BaseViewModel {
       goldAmountInGrams = 0.0;
     } else {
       double? netTax =
-          (goldRates?.cgstPercent ?? 0) + (goldRates?.goldSellPrice ?? 0);
+          (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
       double enteredAmount = double.tryParse(goldAmountController!.text)!;
       double postTaxAmount = BaseUtil.digitPrecision(
           enteredAmount - getTaxOnAmount(enteredAmount, netTax));

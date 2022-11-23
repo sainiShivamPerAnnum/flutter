@@ -8,9 +8,18 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class LifeTimeWin extends StatelessWidget {
   final TextStyle? style;
 
-  LifeTimeWin({
-    this.style,
-  });
+  LifeTimeWin({this.style});
+
+  getWinString(double? amt) {
+    if (amt == null)
+      return 0;
+    else if (amt == amt.toInt())
+      return amt.toInt();
+    else if (amt > amt.toInt())
+      return BaseUtil.digitPrecision(amt, 2, false);
+    else
+      return '-';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +29,7 @@ class LifeTimeWin extends StatelessWidget {
         UserServiceProperties.myUserWallet
       ],
       builder: (context, model, property) => Text(
-        "₹ ${BaseUtil.getIntOrDouble(model?.userFundWallet?.prizeLifetimeWin ?? 0) ?? '-'}",
+        "₹ ${getWinString(model?.userFundWallet?.prizeBalance)}",
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );
