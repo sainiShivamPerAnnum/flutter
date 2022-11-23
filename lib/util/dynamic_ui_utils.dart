@@ -6,6 +6,9 @@ class DynamicUiUtils {
     ['AS', 'CH', 'BL']
   ];
   static List<String> playViewOrder = ['TA', 'AG', 'HTP', 'GOW', 'ST'];
-  static SingleInfo helpFab =
-      SingleInfo(iconUri: '', actionUri: '/story', title: 'Help');
+  static SingleInfo helpFab = SingleInfo(
+      iconUri: '',
+      actionUri: '/story-onboarding',
+      title: 'Help',
+      isCollapse: true);
 }

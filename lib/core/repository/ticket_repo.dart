@@ -117,24 +117,24 @@ class TambolaRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<int>> getTicketCount() async {
-    try {
-      final uid = userService!.baseUser!.uid;
-      final String bearer = await getBearerToken();
+  // Future<ApiResponse<int>> getTicketCount() async {
+  //   try {
+  //     final uid = userService!.baseUser!.uid;
+  //     final String bearer = await getBearerToken();
 
-      final response = await APIService.instance.getData(
-        ApiPath.ticketCount(uid),
-        token: bearer,
-        cBaseUrl: _baseUrl,
-      );
+  //     final response = await APIService.instance.getData(
+  //       ApiPath.ticketCount(uid),
+  //       token: bearer,
+  //       cBaseUrl: _baseUrl,
+  //     );
 
-      final data = response['data'];
-      logger!.d('tambola repo $data');
+  //     final data = response['data'];
+  //     logger!.d('tambola repo $data');
 
-      return ApiResponse(model: data['count'], code: 200);
-    } catch (e) {
-      logger!.e(e);
-      return ApiResponse.withError(e.toString(), 400);
-    }
-  }
+  //     return ApiResponse(model: data['count'], code: 200);
+  //   } catch (e) {
+  //     logger!.e(e);
+  //     return ApiResponse.withError(e.toString(), 400);
+  //   }
+  // }
 }

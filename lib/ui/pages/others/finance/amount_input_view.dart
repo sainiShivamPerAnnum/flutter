@@ -141,7 +141,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                         focusedBorder: InputBorder.none,
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
-                        // isCollapsed: true,
+                        // isCollapse: true,
                         disabledBorder: InputBorder.none,
                         isDense: true,
                         counter: Offstage(),

@@ -669,7 +669,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
                           asset: SvgPicture.asset(Assets.securityCheck,
                               width: SizeConfig.screenWidth! * 0.3),
                           description:
-                              "Fello protects your data to avoid unauthorized access. Please unlock Fello to continue.",
+                              "You have enabled added security for accessing Fello. Kindly unlock to continue.",
                           buttonText: "Unlock",
                           confirmAction: () {
                             Navigator.of(AppState

@@ -188,7 +188,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     return int.tryParse(_tambolaCost);
   }
 
-  int? get totalActiveTickets => tambolaService!.ticketCount;
+  // int? get totalActiveTickets => tambolaService!.ticketCount;
 
   viewpage(int? index) {
     currentPage = index;
@@ -219,7 +219,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     updateTicketSavedAmount(buyTicketCount);
 
     // Ticket wallet check
-    await tambolaService!.getTicketCount();
+    // await tambolaService!.getTicketCount();
 
     ///Weekly Picks check
     if (weeklyDigits == null) {
@@ -239,6 +239,7 @@ class TambolaHomeViewModel extends BaseViewModel {
         tambolaService!.weeklyTicksFetched = true;
         tambolaService!.userWeeklyBoards = boards;
         _logger!.d(boards.length);
+        TambolaService.ticketCount = boards.length;
         _currentBoard = null;
         _currentBoardView = null;
       } else {

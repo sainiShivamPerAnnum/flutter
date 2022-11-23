@@ -55,11 +55,20 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
             SizedBox(height: SizeConfig.padding8),
             Align(
               alignment: Alignment.center,
-              child: Text(
-                'Share your details',
-                style: TextStyles.rajdhaniB.title2,
+              child: Column(
+                children: [
+                  Text(
+                    'Enter Details',
+                    style: TextStyles.rajdhaniB.title2,
+                  ),
+                  Text(
+                    "You're one step away from 10% returns",
+                    style: TextStyles.body3.colour(UiConstants.kTextColor2),
+                  )
+                ],
               ),
             ),
+
             SizedBox(height: SizeConfig.padding20),
 
             //input
@@ -76,7 +85,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       textEditingController: model.nameController,
                       isEnabled: model.enabled,
 
-                      hintText: "Enter your name as per your PAN",
+                      hintText: "Enter Full Name",
                       focusNode: model.nameFocusNode,
                       textCapitalization: TextCapitalization.words,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -235,7 +244,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                 "By proceeding, you agree that you are 18 years and older.",
                 textAlign: TextAlign.center,
                 style: TextStyles.body3.colour(
-                  UiConstants.kTextColor,
+                  UiConstants.kTextColor2,
                 ),
               ),
             ),

@@ -128,7 +128,7 @@ class GameModel {
         icon: map['icon'] ?? '',
         isTrending: map['isTrending'] ?? false,
         highLight: map['highlight'] ?? '',
-        walkThroughUri: map['walkthrough_uri'] ?? '',
+        walkThroughUri: map['walkthroughUri'] ?? '',
         event: map['event'] ?? '',
         description: map['description'] ?? '');
   }

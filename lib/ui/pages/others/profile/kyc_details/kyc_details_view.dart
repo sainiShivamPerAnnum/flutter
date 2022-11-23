@@ -139,7 +139,7 @@ class KYCDetailsView extends StatelessWidget {
                                       onPressed: () async {
                                         await model.onSubmit(context);
                                       },
-                                      btnText: locale.btnSubmit,
+                                      btnText: locale.btnSumbit,
                                       width: SizeConfig.screenWidth,
                                     ),
                             ],

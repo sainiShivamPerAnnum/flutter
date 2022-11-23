@@ -119,11 +119,7 @@ class SaveCustomCard extends StatelessWidget {
                                         SizedBox(width: SizeConfig.padding4),
                                         if (key!.value ==
                                             Constants.ASSET_TYPE_LENDBOX)
-                                          Icon(
-                                            Icons.arrow_upward,
-                                            size: SizeConfig.padding14,
-                                            color: UiConstants.primaryColor,
-                                          )
+                                          LboxGrowthArrow()
                                       ],
                                     ),
                                     UserFundQuantitySE(

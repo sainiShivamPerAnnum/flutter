@@ -182,8 +182,11 @@ class JourneyRepository extends BaseRepo {
         List<dynamic>? items = responseData["items"];
 
         List<JourneyPage> journeyPages = [];
+        if (items!.isEmpty)
+          return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+
         for (int i = start; i <= end; i++) {
-          journeyPages.add(JourneyPage.fromMap(items![i - start as int], i));
+          journeyPages.add(JourneyPage.fromMap(items[i - start as int], i));
         }
 
         return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);

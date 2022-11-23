@@ -18,7 +18,7 @@ class TambolaService extends ChangeNotifier {
   final TambolaRepo? _tambolaRepo = locator<TambolaRepo>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
 
-  static int? _ticketCount;
+  static int? ticketCount;
   static int? _dailyPicksCount = 3;
   static List<int>? _todaysPicks;
   static DailyPick? _weeklyDigits;
@@ -36,11 +36,11 @@ class TambolaService extends ChangeNotifier {
     _winnerDialogCalled = false;
     _weeklyDigits = null;
     _todaysPicks = null;
-    _ticketCount = null;
+    // _ticketCount = null;
     _userWeeklyBoards = null;
   }
 
-  int? get ticketCount => _ticketCount;
+  // int? get ticketCount => _ticketCount;
 
   get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
 
@@ -54,11 +54,11 @@ class TambolaService extends ChangeNotifier {
 
   get dailyPicksCount => _dailyPicksCount;
 
-  set setTicketCount(int? val) {
-    _ticketCount = val;
-    _logger!.d("Ticket Wallet updated");
-    notifyListeners();
-  }
+  // set setTicketCount(int? val) {
+  //   _ticketCount = val;
+  //   _logger!.d("Ticket Wallet updated");
+  //   notifyListeners();
+  // }
 
   set dailyPicksCount(value) {
     _dailyPicksCount = value;
@@ -115,14 +115,14 @@ class TambolaService extends ChangeNotifier {
     setUpDailyPicksCount();
   }
 
-  Future<void> getTicketCount() async {
-    final count = await _tambolaRepo!.getTicketCount();
-    if (count.code == 200) {
-      setTicketCount = count.model;
-    } else {
-      BaseUtil.showNegativeAlert(count.errorMessage, '');
-    }
-  }
+  // Future<void> getTicketCount() async {
+  //   final count = await _tambolaRepo!.getTicketCount();
+  //   if (count.code == 200) {
+  //     setTicketCount = count.model;
+  //   } else {
+  //     BaseUtil.showNegativeAlert(count.errorMessage, '');
+  //   }
+  // }
 
   dump() {
     _dailyPicksCount = null;

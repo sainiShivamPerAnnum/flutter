@@ -109,10 +109,12 @@ class CacheService {
       _logger!.d('cache: invalidating key $key');
 
       await _isar!.writeTxn((i) async {
-        final List<CacheModel> data = await i.cacheModels.filter().keyEqualTo(key).findAll();
+        final List<CacheModel> data =
+            await i.cacheModels.filter().keyEqualTo(key).findAll();
         _logger!.d('cache: $data');
 
-        final c = await i.cacheModels.deleteAll(data.map((e) => e.id).toList() as List<int>);
+        final c = await i.cacheModels
+            .deleteAll(data.map((e) => e.id).toList() as List<int>);
         _logger!.d('cache: invalidated $c');
       });
 
@@ -213,8 +215,12 @@ class CacheService {
     final response = await apiReq();
     final responseData = response['data'];
     final res = parseData(responseData);
+    List<dynamic>? items = responseData["items"];
 
-    if (responseData != null && responseData.isNotEmpty && ttl != 0) {
+    if (responseData != null &&
+        responseData.isNotEmpty &&
+        ttl != 0 &&
+        items!.isNotEmpty) {
       final start = responseData["start"];
       final end = responseData["end"];
       List<dynamic>? items = responseData["items"];

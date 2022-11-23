@@ -35,7 +35,11 @@ class SaveAssetView extends StatelessWidget {
         elevation: 0,
         leading: FelloAppBarBackButton(),
         actions: [
-          FaqPill(type: FaqsType.savings),
+          Row(
+            children: [
+              FaqPill(type: FaqsType.savings),
+            ],
+          ),
           SizedBox(
             width: SizeConfig.padding24,
           )

@@ -237,10 +237,8 @@ class LoginControllerViewModel extends BaseViewModel {
             try {
               final token = await _getBearerToken();
               userService.baseUser!.mobile = userMobile;
-              final ApiResponse response = await _userRepo!.setNewUser(
-                userService.baseUser!,
-                token,
-              );
+              final ApiResponse response =
+                  await _userRepo!.setNewUser(userService.baseUser!, token);
               logger!.i(response.toString());
               if (response.code == 400) {
                 message = response.errorMessage ??

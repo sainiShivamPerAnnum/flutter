@@ -32,23 +32,22 @@ class UsernameInputView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Create your username',
-                              style: TextStyles.rajdhaniB.title3,
-                            ),
-                            SizedBox(height: SizeConfig.padding6),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Create your username',
+                                style: TextStyles.rajdhaniB.title3,
+                              ),
+                              SizedBox(height: SizeConfig.padding6),
+                              Text(
                                 "This will be your unique name across our games and challenges leaderboard",
                                 style: TextStyles.sourceSans.body3
                                     .colour(UiConstants.kTextColor2),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                         GestureDetector(
                           onTap: () {

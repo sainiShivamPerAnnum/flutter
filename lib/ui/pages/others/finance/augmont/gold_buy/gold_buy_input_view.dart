@@ -270,7 +270,7 @@ class EnterAmountView extends StatelessWidget {
                                   focusedBorder: InputBorder.none,
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
-                                  // isCollapsed: true,
+                                  // isCollapse: true,
                                   disabledBorder: InputBorder.none,
                                   isDense: true,
                                 ),

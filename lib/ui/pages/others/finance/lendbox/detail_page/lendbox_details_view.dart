@@ -35,7 +35,11 @@ class LendboxDetailsView extends StatelessWidget {
         elevation: 0,
         leading: FelloAppBarBackButton(),
         actions: [
-          FaqPill(type: FaqsType.savings),
+          Row(
+            children: [
+              FaqPill(type: FaqsType.savings),
+            ],
+          ),
           SizedBox(
             width: SizeConfig.padding24,
           )
@@ -219,11 +223,7 @@ class LBoxAssetCard extends StatelessWidget {
                                     UiConstants.kTextColor.withOpacity(0.8)),
                               ),
                               SizedBox(width: SizeConfig.padding4),
-                              Icon(
-                                Icons.arrow_upward,
-                                size: SizeConfig.padding14,
-                                color: UiConstants.primaryColor,
-                              )
+                              LboxGrowthArrow()
                             ],
                           ),
                         ],

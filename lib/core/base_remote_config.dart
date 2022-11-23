@@ -8,20 +8,22 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 class BaseRemoteConfig {
   static late RemoteConfig remoteConfig;
   static UserService? _userService = locator<UserService>();
-  static final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  static final InternalOpsService? _internalOpsService =
+      locator<InternalOpsService>();
 
   ///Each config is set as a map = {name, default value}
 
-  static const Map<String, String> _LOGIN_ASSET_URL = {'login_asset_url': 'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/games%2Fthumbnails%2Fcricketthumb.svg?alt=media&token=e3a8fcc4-4217-42a1-99b4-ada4bac35fad'};
+  static const Map<String, String> _LOGIN_ASSET_URL = {
+    'login_asset_url':
+        'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/temp%2Fmain.svg?alt=media&token=2d4ceda1-2d0b-44c4-8433-1de255da8664'
+  };
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
 
   static const Map<String, String> _TAMBOLA_HEADER_FIRST = {
     'tambola_header_1': 'Today\'s picks'
   };
 
-  static const Map<String, String> _TAMBOLA_COST = {
-    'tambola_cost': '500'
-  };
+  static const Map<String, String> _TAMBOLA_COST = {'tambola_cost': '500'};
   static const Map<String, String> _TAMBOLA_HEADER_SECOND = {
     'tambola_header_2': 'Pull to see the other picks'
   };
@@ -373,8 +375,8 @@ class BaseRemoteConfig {
   static String get PLAY_SCREEN_FIRST => _PLAY_SCREEN_FIRST.keys.first;
 
   static String get DEPOSIT_UPI_ADDRESS => _DEPOSIT_UPI_ADDRESS.keys.first;
-  
-static String get TAMBOLACOST => _TAMBOLA_COST.keys.first;
+
+  static String get TAMBOLACOST => _TAMBOLA_COST.keys.first;
   static String get TAMBOLA_HEADER_SECOND => _TAMBOLA_HEADER_SECOND.keys.first;
 
   static String get TAMBOLA_HEADER_FIRST => _TAMBOLA_HEADER_FIRST.keys.first;

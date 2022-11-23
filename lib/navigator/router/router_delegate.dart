@@ -734,6 +734,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void openStoryView(String topic) {
+    AppState.screenStack.add(ScreenItem.dialog);
     Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, anotherAnimation) {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -217,7 +219,7 @@ class TambolaHeader extends StatelessWidget {
       margin:
           EdgeInsets.symmetric(horizontal: SizeConfig.padding24, vertical: 12),
       decoration: BoxDecoration(
-          color: UiConstants.kSnackBarPositiveContentColor,
+          color: UiConstants.kBackgroundColor,
           borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
       child: Builder(
         builder: (_) {
@@ -320,11 +322,11 @@ class _TambolaVideoPlayerState extends State<TambolaVideoPlayer> {
 
   @override
   void initState() {
-    _controller = VideoPlayerController.network(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4')
+    _controller = VideoPlayerController.network(widget.link)
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
+        _controller?.setLooping(true);
         _controller?.play();
       });
 
@@ -332,11 +334,21 @@ class _TambolaVideoPlayerState extends State<TambolaVideoPlayer> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return _controller?.value.isInitialized ?? false
-        ? AspectRatio(
-            aspectRatio: _controller!.value.aspectRatio,
-            child: VideoPlayer(_controller!),
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            child: AspectRatio(
+              aspectRatio: _controller!.value.aspectRatio,
+              child: VideoPlayer(_controller!),
+            ),
           )
         : Container();
   }

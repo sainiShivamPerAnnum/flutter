@@ -29,15 +29,20 @@ class FaqPill extends StatelessWidget {
         },
         child: Container(
             // height: SizeConfig.navBarHeight * 0.5,
-            padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding12,
-                horizontal: SizeConfig.padding16),
-            decoration: BoxDecoration(
-              color: UiConstants.kDarkBackgroundColor,
-              borderRadius:
-                  BorderRadius.all(Radius.circular(SizeConfig.roundness112)),
+            margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding8,
             ),
-            child: Wrap(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding12,
+                vertical: SizeConfig.padding6),
+            height: SizeConfig.avatarRadius * 2,
+            decoration: BoxDecoration(
+              color: UiConstants.kTextFieldColor.withOpacity(0.4),
+              border: Border.all(color: Colors.white10),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(

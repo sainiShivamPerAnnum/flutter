@@ -20,15 +20,16 @@ class CouponWidget extends StatelessWidget {
     return coupon == null
         ? SizedBox()
         : SizedBox(
-            height: SizeConfig.screenHeight! * 0.22,
+            height: SizeConfig.screenHeight! * 0.18,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 24),
+                  padding:
+                      EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
                   child: Text(
                     'Apply Coupon',
-                    style: TextStyles.sourceSansSB.title5,
+                    style: TextStyles.sourceSansSB.body1,
                   ),
                 ),
                 SizedBox(
@@ -41,10 +42,15 @@ class CouponWidget extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: index == 0
-                                  ? const EdgeInsets.only(left: 24)
+                                  ? EdgeInsets.only(
+                                      left: SizeConfig.pageHorizontalMargins)
                                   : index == coupon!.length - 1
-                                      ? EdgeInsets.only(right: 14, left: 14)
-                                      : EdgeInsets.only(left: 14),
+                                      ? EdgeInsets.only(
+                                          right:
+                                              SizeConfig.pageHorizontalMargins,
+                                          left: SizeConfig.padding14)
+                                      : EdgeInsets.only(
+                                          left: SizeConfig.padding14),
                               child: _CouponView(
                                 model: coupon![index],
                                 goldBuyViewModel: model,
@@ -60,7 +66,8 @@ class CouponWidget extends StatelessWidget {
                   height: 12,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 24),
+                  padding:
+                      EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
                   child: RichText(
                     text: TextSpan(
                       text: 'Have a different coupon code? ',
@@ -152,7 +159,7 @@ class _CouponView extends StatelessWidget {
                               color: UiConstants.primaryColor,
                             )
                           : Text(
-                              "Apply",
+                              "APPLY",
                               style: TextStyles.sourceSansSB.body3
                                   .colour(Color(0xff1ADAB7)),
                             )
