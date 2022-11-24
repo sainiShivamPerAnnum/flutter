@@ -1,11 +1,12 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -17,49 +18,49 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class FelloAppBar extends StatelessWidget {
-  final Widget leading;
-  final List<Widget> actions;
-  final String title;
+  final Widget? leading;
+  final List<Widget>? actions;
+  final String? title;
+  final bool showAppBar;
 
-  FelloAppBar({this.leading, this.actions, this.title, Key key})
+  FelloAppBar(
+      {this.leading,
+      this.actions,
+      this.title,
+      this.showAppBar = true,
+      Key? key,
+      int? elevation,
+      Color? backgroundColor})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth,
-      // height: SizeConfig.padding40,
-      margin: EdgeInsets.only(
-        top: SizeConfig.viewInsets.top + SizeConfig.padding12,
-        bottom: SizeConfig.padding12,
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
-      ),
-      child: Row(
-        children: [
-          if (leading != null) leading,
-          SizedBox(width: 16),
-          if (title != null)
-            FittedBox(
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.clip,
-                style: TextStyles.title4.bold.colour(Colors.white),
-              ),
-            ),
-          Spacer(),
-          if (actions != null)
-            Row(
-              children: actions,
-            )
-        ],
-      ),
-    );
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenHeight! / 8,
+        color: showAppBar ? UiConstants.kBackgroundColor : Colors.transparent,
+        child: AppBar(
+          elevation: 0,
+          leading: leading != null ? leading : Container(),
+          centerTitle: true,
+          title: title != null
+              ? FittedBox(
+                  child: Text(
+                  title!,
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  style: TextStyles.rajdhaniSB.title4,
+                ))
+              : Text(''),
+          backgroundColor: showAppBar
+              ? UiConstants.kSecondaryBackgroundColor
+              : Colors.transparent,
+          actions: actions != null ? actions : [Container()],
+        ));
   }
 }
 
 class NotificationButton extends StatelessWidget {
-  final _analytics = locator<AnalyticsService>();
+  final AnalyticsService? _analytics = locator<AnalyticsService>();
 
   @override
   Widget build(BuildContext context) {
@@ -67,17 +68,25 @@ class NotificationButton extends StatelessWidget {
         properties: [UserServiceProperties.myNotificationStatus],
         builder: (context, model, property) => InkWell(
               onTap: () {
+                if (JourneyService.isAvatarAnimationInProgress) return;
+
                 Haptic.vibrate();
-                _analytics.track(eventName: AnalyticsEvents.notifications);
-                model.hasNewNotifications = false;
-                AppState.delegate.appState.currentAction = PageAction(
-                    state: PageState.addPage, page: NotificationsConfig);
+                _analytics!.track(
+                    eventName: AnalyticsEvents.notificationsClicked,
+                    properties: AnalyticsProperties.getDefaultPropertiesMap());
+                model!.hasNewNotifications = false;
+
+                AppState.delegate!.appState.currentAction = PageAction(
+                  state: PageState.addPage,
+                  page: NotificationsConfig,
+                );
               },
               child: Stack(
                 children: [
                   CircleAvatar(
-                    backgroundColor: Colors.black,
-                    radius: SizeConfig.avatarRadius,
+                    backgroundColor:
+                        UiConstants.kTextFieldColor.withOpacity(0.4),
+                    radius: SizeConfig.avatarRadius * 1.1,
                     child: Padding(
                       padding: EdgeInsets.all(SizeConfig.padding12),
                       child: SvgPicture.asset(
@@ -85,24 +94,14 @@ class NotificationButton extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (model.hasNewNotifications)
+                  if (model!.hasNewNotifications)
                     Positioned(
                       right: 2,
                       top: 2,
                       child: Container(
-                        decoration:
-                            BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                          BoxShadow(
-                              blurRadius: 8,
-                              color: UiConstants.tertiarySolid,
-                              offset: Offset(3, -1),
-                              spreadRadius: 0),
-                          BoxShadow(
-                              blurRadius: 8,
-                              color: Colors.grey[700],
-                              offset: Offset(-3, 1),
-                              spreadRadius: 0)
-                        ]),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
                         child: CircleAvatar(
                           radius: SizeConfig.iconSize4 / 1.4,
                           backgroundColor: Colors.red,
@@ -112,31 +111,6 @@ class NotificationButton extends StatelessWidget {
                 ],
               ),
             ));
-  }
-}
-
-class FelloAppBarBackButton extends StatelessWidget {
-  final Function onBackPress;
-  final Color color;
-  FelloAppBarBackButton({this.onBackPress, this.color = Colors.white});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onBackPress ?? () => AppState.backButtonDispatcher.didPopRoute(),
-      child: CircleAvatar(
-        radius: SizeConfig.avatarRadius,
-        backgroundColor: color.withOpacity(0.4),
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.padding4),
-          child: Icon(
-            Icons.arrow_back_rounded,
-            color: UiConstants.primaryColor,
-            size: SizeConfig.iconSize1,
-          ),
-        ),
-      ),
-    );
   }
 }
 

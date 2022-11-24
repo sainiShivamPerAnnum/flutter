@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: non_constant_identifier_names
 
+import 'package:flutter/cupertino.dart';
 import 'package:felloapp/navigator/app_state.dart';
 
 const String SplashPath = '/splash';
@@ -37,6 +38,7 @@ const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
 const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
+const String LendboxDetailsPath = '/lendboxDetails';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
@@ -47,7 +49,6 @@ const String GoldenTicketsViewPath = '/goldenTicketsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
 const String TopSaverViewPath = '/topSaverView';
 const String AllParticipantsViewPath = '/allParticipantsView';
-const String GoldBalanceDetailsViewPath = '/goldBalanceDetailsView';
 const String PoolViewPath = "/poolView";
 const String WebHomeViewPath = "/webHomeView";
 const String WebGameViewPath = "/webGameView";
@@ -55,6 +56,28 @@ const String AutosaveDetailsViewPath = '/autosaveDetailsView';
 const String AutosaveProcessViewPath = '/autosaveProcessView';
 const String UserAutosaveDetailsViewPath = '/userAutosaveDetailsView';
 const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
+const String NewGameHomeViewPath = '/newGameHome';
+const String NewWebHomeViewPath = '/newWebHomeView';
+const String TopPlayerLeaderboard = '/topPlayerLeaderboard';
+const String JourneyViewPath = '/journeyViewPath';
+const String OnBoardingPath = '/onBoardingPath';
+const String CompleteProfilePath = '/CompleteProfileView';
+const String BlogPostWebViewPath = '/blogPostWebView';
+const String CampaignViewPath = '/campaignViewPath';
+const String SaveAssetViewPath = '/saveAssetViewPath';
+const String SellConfirmationViewPath = '/sellConfirmationViewPath';
+const String ViewAllBlogsViewPath = '/viewAllBlogsViewPath';
+const String AllParticipantsWinnersTopReferersPath =
+    "/allParticipantsWinnersTopReferersPath";
+const String RedeemSucessfulScreenPath = "/RedeemSucessfulScreenPath";
+const String SharePriceScreenPath = "/SharePriceScreenPath";
+const String AllTambolaTicketsPath = "/AllTambolaTicketsPath";
+const String UserUPIDetailsViewPath = "/userUpiDetailsViewPath";
+const String InfoStoriesViewPath = "/inforStoriesViewPath";
+const String WebViewScreenPath = "/webViewScreenPath";
+const String SettingsScreenPath = '/settingsScreenPath';
+const String TExistingUserViewPath = '/texistingUserPath';
+const String TNewUserViewPath = '/tnewUserViewPath';
 
 enum Pages {
   Splash,
@@ -80,6 +103,8 @@ enum Pages {
   AutosaveWalkthrough,
   YourFunds,
   THome,
+  TNewUser,
+  TExistingUser,
   TGame,
   TWeeklyResult,
   TWalkthrough,
@@ -87,12 +112,12 @@ enum Pages {
   TShowAllTickets,
   TSummaryDetails,
   Notifications,
-
   TxnHistory,
   KycDetails,
   BankDetails,
   AugGoldSell,
   AugGoldDetails,
+  LendboxDetails,
   ReferralDetails,
   ReferralHistory,
   MyWinnings,
@@ -103,7 +128,6 @@ enum Pages {
   GoldenMilestonesView,
   TopSaverView,
   AllParticipantsView,
-  GoldBalanceDetailsView,
   PoolView,
   WebHomeView,
   WebGameView,
@@ -111,22 +135,40 @@ enum Pages {
   AutosaveProcessView,
   UserAutosaveDetailsView,
   AutosaveTransactionsView,
+  NewWebHomeView,
+  TopPlayerLeaderboard,
+  JourneyView,
+  OnBoardingView,
+  CompleteProfileView,
+  BlogPostWebView,
+  CampaignView,
+  SaveAssetView,
+  SellConfirmationView,
+  ViewAllBlogsView,
+  AllParticipantsWinnersTopReferrersView,
+  RedeemSuccessfulScreenView,
+  SharePriceScreenView,
+  AllTambolaTicketsView,
+  UserUpiDetailsView,
+  InfoStoriesView,
+  WebView,
+  SettingsView,
 }
 
 class PageConfiguration {
   final String key;
   final String path;
   final Pages uiPage;
-  final String name;
+  final String? name;
 
-  PageAction currentPageAction;
+  PageAction? currentPageAction;
   var returnValue;
 
   PageConfiguration({
-    @required this.key,
-    @required this.path,
-    @required this.uiPage,
-    @required this.name,
+    required this.key,
+    required this.path,
+    required this.uiPage,
+    this.name,
     this.currentPageAction,
   });
 
@@ -161,7 +203,7 @@ PageConfiguration RootPageConfig = PageConfiguration(
   key: 'Root',
   path: RootPath,
   uiPage: Pages.Root,
-  name: 'Root Screen',
+  name: 'Root',
 );
 
 PageConfiguration OnboardPageConfig = PageConfiguration(
@@ -205,6 +247,18 @@ PageConfiguration ReferralPageConfig = PageConfiguration(
   uiPage: Pages.Referral,
   name: 'Referral Screen',
 );
+
+PageConfiguration TambolaExistingUser = PageConfiguration(
+    key: 'TexistingUser',
+    path: TExistingUserViewPath,
+    uiPage: Pages.TExistingUser,
+    name: 'TexistingUser Screen');
+
+    PageConfiguration TambolaNewUser = PageConfiguration(
+    key: 'TNewUser',
+    path: TNewUserViewPath,
+    uiPage: Pages.TNewUser,
+    name: 'TNewUser Screen');
 
 PageConfiguration FaqPageConfig = PageConfiguration(
   key: 'Faq',
@@ -301,7 +355,6 @@ PageConfiguration THomePageConfig = PageConfiguration(
   key: 'THome',
   path: THome,
   uiPage: Pages.THome,
-  name: 'Tambolla Home Screen',
 );
 
 PageConfiguration TGamePageConfig = PageConfiguration(
@@ -388,6 +441,12 @@ PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
   name: 'About Digital Gold Screen',
 );
 
+PageConfiguration LendboxDetailsPageConfig = PageConfiguration(
+  key: 'lendboxDetails',
+  path: LendboxDetailsPath,
+  uiPage: Pages.LendboxDetails,
+);
+
 PageConfiguration ReferralDetailsPageConfig = PageConfiguration(
   key: 'referDetails',
   path: ReferralDetailsPath,
@@ -402,11 +461,10 @@ PageConfiguration ReferralHistoryPageConfig = PageConfiguration(
   name: 'Refer History Screen',
 );
 
-PageConfiguration MyWinnigsPageConfig = PageConfiguration(
+PageConfiguration MyWinningsPageConfig = PageConfiguration(
   key: 'myWinnings',
   path: MyWinningsPath,
   uiPage: Pages.MyWinnings,
-  name: 'My Winnings Screen',
 );
 
 PageConfiguration BlockedUserPageConfig = PageConfiguration(
@@ -453,23 +511,16 @@ PageConfiguration AllParticipantsViewPageConfig = PageConfiguration(
   uiPage: Pages.AllParticipantsView,
   name: 'AllParticipantsView screen',
 );
-PageConfiguration GoldBalanceDetailsViewPageConfig = PageConfiguration(
-  key: 'GoldBalanceDetailsView',
-  path: GoldBalanceDetailsViewPath,
-  uiPage: Pages.GoldBalanceDetailsView,
-  name: 'Gold Balance Details Screen',
-);
+
 PageConfiguration WebHomeViewPageConfig = PageConfiguration(
   key: 'WebHomeView',
   path: WebHomeViewPath,
   uiPage: Pages.WebHomeView,
-  name: 'Web Games Home Screen',
 );
 PageConfiguration WebGameViewPageConfig = PageConfiguration(
   key: 'WebGameView',
   path: WebGameViewPath,
   uiPage: Pages.WebGameView,
-  name: 'Web games Screen',
 );
 PageConfiguration PoolViewPageConfig = PageConfiguration(
   key: 'PoolView',
@@ -486,19 +537,130 @@ PageConfiguration AutosaveDetailsViewPageConfig = PageConfiguration(
 );
 
 PageConfiguration AutosaveProcessViewPageConfig = PageConfiguration(
-    key: 'AutosaveProcessView',
-    path: AutosaveProcessViewPath,
-    uiPage: Pages.AutosaveProcessView,
-    name: "Autosave Process Screen");
+  key: 'AutosaveProcessView',
+  path: AutosaveProcessViewPath,
+  uiPage: Pages.AutosaveProcessView,
+);
 
 PageConfiguration UserAutosaveDetailsViewPageConfig = PageConfiguration(
-    key: 'UserAutosaveDetailsView',
-    path: UserAutosaveDetailsViewPath,
-    uiPage: Pages.UserAutosaveDetailsView,
-    name: "User Autosave DetailsScreen");
+  key: 'UserAutosaveDetailsView',
+  path: UserAutosaveDetailsViewPath,
+  uiPage: Pages.UserAutosaveDetailsView,
+);
 
 PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
     key: 'AutosaveTransactionsView',
     path: AutosaveTransactionsViewPath,
     uiPage: Pages.AutosaveTransactionsView,
     name: "Autosave transaction Screen");
+
+PageConfiguration NewWebHomeViewPageConfig = PageConfiguration(
+  key: 'NewWebHomeView',
+  path: NewWebHomeViewPath,
+  uiPage: Pages.NewWebHomeView,
+  name: "New Web Home Screen",
+);
+
+PageConfiguration TopPlayerLeaderboardPageConfig = PageConfiguration(
+  key: 'TopPlayerLeaderboard',
+  path: TopPlayerLeaderboard,
+  uiPage: Pages.TopPlayerLeaderboard,
+);
+PageConfiguration JourneyViewPageConfig = PageConfiguration(
+    key: 'JourneyView',
+    path: JourneyViewPath,
+    uiPage: Pages.JourneyView,
+    name: "Journey Screen");
+
+PageConfiguration OnBoardingViewPageConfig = PageConfiguration(
+  key: 'OnBoardingView',
+  path: OnBoardingPath,
+  uiPage: Pages.OnBoardingView,
+);
+PageConfiguration CompleteProfileViewPageConfig = PageConfiguration(
+    key: 'CompleteProfileView',
+    path: CompleteProfilePath,
+    uiPage: Pages.CompleteProfileView,
+    name: "Level2 Screen");
+
+PageConfiguration BlogPostWebViewConfig = PageConfiguration(
+    key: 'BlogPostWeb',
+    path: BlogPostWebViewPath,
+    uiPage: Pages.BlogPostWebView,
+    name: "Journey Screen");
+
+PageConfiguration CampaignViewPageConfig = PageConfiguration(
+  key: 'CampaignView',
+  path: CampaignViewPath,
+  uiPage: Pages.CampaignView,
+  name: "Campaign View Screen",
+);
+
+PageConfiguration SaveAssetsViewConfig = PageConfiguration(
+  key: 'SaveAssetsView',
+  path: SaveAssetViewPath,
+  uiPage: Pages.SaveAssetView,
+);
+
+PageConfiguration SellConfirmationViewConfig = PageConfiguration(
+  key: 'SellConfirmationView',
+  path: SellConfirmationViewPath,
+  uiPage: Pages.SellConfirmationView,
+  name: "Sell Confirmation View",
+);
+
+PageConfiguration ViewAllBlogsViewConfig = PageConfiguration(
+  key: 'SellConfirmationView',
+  path: ViewAllBlogsViewPath,
+  uiPage: Pages.ViewAllBlogsView,
+  name: "View All Blogs View",
+);
+
+PageConfiguration AllParticipantsWinnersTopReferrersConfig = PageConfiguration(
+  key: 'AllParticipantsWinnersTopReferersView',
+  path: AllParticipantsWinnersTopReferersPath,
+  uiPage: Pages.AllParticipantsWinnersTopReferrersView,
+);
+
+PageConfiguration RedeemSuccessfulScreenPageConfig = PageConfiguration(
+  key: 'RedeemSucessfulScreenView',
+  path: RedeemSucessfulScreenPath,
+  uiPage: Pages.RedeemSuccessfulScreenView,
+  name: "Redeem Sucessfull View",
+);
+
+PageConfiguration SharePriceScreenPageConfig = PageConfiguration(
+  key: 'SharePriceScreenView',
+  path: SharePriceScreenPath,
+  uiPage: Pages.SharePriceScreenView,
+  name: "Reward sharing screen",
+);
+
+PageConfiguration AllTambolaTicketsPageConfig = PageConfiguration(
+  key: 'AllTambolaTickets',
+  path: AllTambolaTicketsPath,
+  uiPage: Pages.AllTambolaTicketsView,
+);
+PageConfiguration UserUpiDetailsViewPageConfig = PageConfiguration(
+    key: 'UserUpiDetailsView',
+    path: UserUPIDetailsViewPath,
+    uiPage: Pages.UserUpiDetailsView,
+    name: "User Upi details Screen");
+
+PageConfiguration InfoStoriesViewPageConfig = PageConfiguration(
+    key: 'InfoStoresView',
+    path: InfoStoriesViewPath,
+    uiPage: Pages.InfoStoriesView,
+    name: "Info Stories details Screen");
+
+PageConfiguration WebViewPageConfig = PageConfiguration(
+    key: 'WebView',
+    path: WebViewScreenPath,
+    uiPage: Pages.WebView,
+    name: "Web browser Screen");
+
+PageConfiguration SettingsViewPageConfig = PageConfiguration(
+    key: 'SettingsView',
+    path: SettingsScreenPath,
+    uiPage: Pages.SettingsView,
+    name: "Settings Screen");

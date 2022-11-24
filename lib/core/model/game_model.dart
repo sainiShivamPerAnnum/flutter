@@ -1,82 +1,89 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/helper_model.dart';
-import 'package:felloapp/util/color_util.dart';
-import 'package:flutter/material.dart';
-
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:flutter/material.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 
 class GameModel {
-  final String id;
-  final String route;
-  final String gameUri;
-  final int playCost;
-  final Color shadowColor;
-  final String event;
-  final String gameName;
-  final bool isGOW;
-  final int prizeAmount;
-  final int order;
-  final bool isTrending;
-  final String code;
-  final String gameCode;
-  final String thumbnailUri;
-  final String analyticEvent;
+  final String? id;
+  final String? route;
+  final String? gameUri;
+  final int? playCost;
+  final Color? shadowColor;
+  final String? event;
+  final String? gameName;
+  final bool? isGOW;
+  final int? prizeAmount;
+  final int? order;
+  final bool? isTrending;
+  final String? code;
+  final String? gameCode;
+  final String? thumbnailUri;
+  final String? analyticEvent;
+  final String? icon;
+  final String? description;
+  final String? walkThroughUri;
+  final String? highLight;
 
   static final helper = HelperModel<GameModel>(
     (map) => GameModel.fromMap(map),
   );
-  GameModel({
-    this.id,
-    this.gameName,
-    this.gameUri,
-    this.thumbnailUri,
-    this.playCost,
-    this.prizeAmount,
-    this.shadowColor,
-    this.route,
-    this.event,
-    this.isGOW,
-    this.order,
-    this.isTrending,
-    this.gameCode,
-    this.code,
-    this.analyticEvent,
-  });
+  GameModel(
+      {this.id,
+      this.gameName,
+      this.gameUri,
+      this.thumbnailUri,
+      this.playCost,
+      this.prizeAmount,
+      this.shadowColor,
+      this.route,
+      this.event,
+      this.isGOW,
+      this.order,
+      this.isTrending,
+      this.highLight,
+      this.walkThroughUri,
+      this.gameCode,
+      this.code,
+      this.analyticEvent,
+      this.icon,
+      this.description});
 
-  GameModel copyWith({
-    String gameName,
-    String tag,
-    String gameUri,
-    String thumbnailUri,
-    PageConfiguration pageConfig,
-    String playCost,
-    String prizeAmount,
-    String analyticEvent,
-    Color shadowColor,
-    String route,
-    String gameCode,
-    String code,
-  }) {
+  GameModel copyWith(
+      {String? gameName,
+      String? tag,
+      String? gameUri,
+      String? thumbnailUri,
+      PageConfiguration? pageConfig,
+      String? playCost,
+      String? prizeAmount,
+      String? analyticEvent,
+      Color? shadowColor,
+      String? route,
+      String? gameCode,
+      String? code,
+      String? icon,
+      String? description}) {
     return GameModel(
-      id: id ?? this.id,
-      gameUri: gameUri ?? this.gameUri,
-      gameName: gameName ?? this.gameName,
-      thumbnailUri: thumbnailUri ?? this.thumbnailUri,
-      playCost: playCost ?? this.playCost,
-      prizeAmount: prizeAmount ?? this.prizeAmount,
-      analyticEvent: analyticEvent ?? this.analyticEvent,
-      shadowColor: shadowColor ?? this.shadowColor,
-      route: route ?? this.route,
-      gameCode: gameCode ?? this.gameCode,
-      code: code ?? this.code,
-      isGOW: isGOW ?? this.isGOW,
-      order: order ?? this.order,
-      isTrending: isTrending ?? this.isTrending,
-      event: event ?? this.event,
-    );
+        id: id ?? this.id,
+        gameUri: gameUri ?? this.gameUri,
+        gameName: gameName ?? this.gameName,
+        thumbnailUri: thumbnailUri ?? this.thumbnailUri,
+        playCost: playCost as int? ?? this.playCost,
+        prizeAmount: prizeAmount as int? ?? this.prizeAmount,
+        analyticEvent: analyticEvent ?? this.analyticEvent,
+        shadowColor: shadowColor ?? this.shadowColor,
+        route: route ?? this.route,
+        gameCode: gameCode ?? this.gameCode,
+        code: code ?? this.code,
+        isGOW: isGOW ?? this.isGOW,
+        order: order ?? this.order,
+        isTrending: isTrending ?? this.isTrending,
+        event: event ?? this.event,
+        icon: icon ?? this.icon,
+        description: description ?? this.description);
   }
 
   Map<String, dynamic> toMap() {
@@ -87,7 +94,7 @@ class GameModel {
       'thumbnailUri': thumbnailUri,
       'playCost': playCost,
       'prizeAmount': prizeAmount,
-      'shadowColor': shadowColor.value,
+      'shadowColor': shadowColor!.value,
       'route': route,
       'event': event,
       'isGOW': isGOW,
@@ -96,6 +103,8 @@ class GameModel {
       'gameCode': gameCode,
       'code': code,
       'analyticEvent': analyticEvent,
+      'icon': icon,
+      'description': description
     };
   }
 
@@ -103,22 +112,25 @@ class GameModel {
     Map<String, dynamic> map,
   ) {
     return GameModel(
-      id: map['id'],
-      gameName: map['gameName'],
-      gameUri: map['gameUri'],
-      thumbnailUri: map['thumbnailUri'],
-      playCost: map['playCost'],
-      prizeAmount: map['prizeAmount'],
-      analyticEvent: map['analyticEvent'],
-      shadowColor: ColorUtil.fromColorString(map['shadowColor']),
-      route: map['route'],
-      gameCode: map['gameCode'],
-      code: map['code'],
-      isGOW: map['isGOW'],
-      order: map['order'],
-      isTrending: map['isTrending'],
-      event: map['event'],
-    );
+        id: map['id'] ?? '',
+        gameName: map['gameName'] ?? '',
+        gameUri: map['gameUri'] ?? '',
+        thumbnailUri: map['thumbnailUri'] ?? '',
+        playCost: map['playCost'] ?? 0,
+        prizeAmount: map['prizeAmount'] ?? 0,
+        analyticEvent: map['analyticEvent'] ?? '',
+        shadowColor: (map['shadowColor'] ?? '#000000').toString().toColor(),
+        route: map['route'] ?? '',
+        gameCode: map['gameCode'] ?? '',
+        code: map['code'] ?? '',
+        isGOW: map['isGOW'] ?? false,
+        order: map['order'] ?? 0,
+        icon: map['icon'] ?? '',
+        isTrending: map['isTrending'] ?? false,
+        highLight: map['highlight'] ?? '',
+        walkThroughUri: map['walkthroughUri'] ?? '',
+        event: map['event'] ?? '',
+        description: map['description'] ?? '');
   }
 
   String toJson() => json.encode(toMap());
@@ -129,7 +141,7 @@ class GameModel {
 
   @override
   String toString() {
-    return 'GameModel(id: $id, gameUri: $gameUri gameName: $gameName, thumbnailUri: $thumbnailUri, playCost: $playCost, prizeAmount: $prizeAmount, shadowColor: $shadowColor, route: $route, event: $event, isGOW: $isGOW, order: $order, isTrending: $isTrending, gameCode: $gameCode, code: $code, analyticEvent: $analyticEvent)';
+    return 'GameModel(id: $id, gameUri: $gameUri gameName: $gameName, thumbnailUri: $thumbnailUri, playCost: $playCost, prizeAmount: $prizeAmount, shadowColor: $shadowColor, route: $route, event: $event, isGOW: $isGOW, order: $order, isTrending: $isTrending, gameCode: $gameCode, code: $code, analyticEvent: $analyticEvent, icon: $icon, description: $description)';
   }
 
   @override
@@ -149,7 +161,9 @@ class GameModel {
         other.isTrending == isTrending &&
         other.gameCode == gameCode &&
         other.code == code &&
-        other.analyticEvent == analyticEvent;
+        other.icon == icon &&
+        other.analyticEvent == analyticEvent &&
+        other.description == description;
   }
 
   @override
@@ -164,8 +178,10 @@ class GameModel {
         isGOW.hashCode ^
         order.hashCode ^
         isTrending.hashCode ^
+        icon.hashCode ^
         gameCode.hashCode ^
         code.hashCode ^
-        analyticEvent.hashCode;
+        analyticEvent.hashCode ^
+        description.hashCode;
   }
 }

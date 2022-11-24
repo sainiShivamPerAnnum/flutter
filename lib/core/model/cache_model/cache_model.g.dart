@@ -1,12 +1,10 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
-part of 'cache_model.dart';
-
 // **************************************************************************
 // IsarCollectionGenerator
 // **************************************************************************
 
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, unused_local_variable
+
+part of 'cache_model.dart';
 
 extension GetCacheModelCollection on Isar {
   IsarCollection<CacheModel> get cacheModels => getCollection();
@@ -42,7 +40,7 @@ const CacheModelSchema = CollectionSchema(
   version: 3,
 );
 
-int _cacheModelGetId(CacheModel object) {
+int? _cacheModelGetId(CacheModel object) {
   if (object.id == Isar.autoIncrement) {
     return null;
   } else {
@@ -67,7 +65,7 @@ void _cacheModelSerializeNative(
     AdapterAlloc alloc) {
   var dynamicSize = 0;
   final value0 = object.data;
-  IsarUint8List _data;
+  IsarUint8List? _data;
   if (value0 != null) {
     _data = IsarBinaryWriter.utf8Encoder.convert(value0);
   }
@@ -77,7 +75,7 @@ void _cacheModelSerializeNative(
   final value2 = object.hashCode;
   final _hashCode = value2;
   final value3 = object.key;
-  IsarUint8List _key;
+  IsarUint8List? _key;
   if (value3 != null) {
     _key = IsarBinaryWriter.utf8Encoder.convert(value3);
   }
@@ -119,7 +117,7 @@ P _cacheModelDeserializePropNative<P>(
     case 1:
       return (reader.readLongOrNull(offset)) as P;
     case 2:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
@@ -161,7 +159,8 @@ P _cacheModelDeserializePropWeb<P>(Object jsObj, String propertyName) {
     case 'expireAfterTimestamp':
       return (IsarNative.jsObjectGet(jsObj, 'expireAfterTimestamp')) as P;
     case 'hashCode':
-      return (IsarNative.jsObjectGet(jsObj, 'hashCode')) as P;
+      return (IsarNative.jsObjectGet(jsObj, 'hashCode') ??
+          double.negativeInfinity) as P;
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
     case 'key':
@@ -249,7 +248,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -261,7 +260,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataGreaterThan(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
     bool include = false,
   }) {
@@ -275,7 +274,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataLessThan(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
     bool include = false,
   }) {
@@ -289,8 +288,8 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
@@ -361,7 +360,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
-      expireAfterTimestampEqualTo(int value) {
+      expireAfterTimestampEqualTo(int? value) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.eq,
       property: 'expireAfterTimestamp',
@@ -371,7 +370,7 @@ extension CacheModelQueryFilter
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
       expireAfterTimestampGreaterThan(
-    int value, {
+    int? value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -384,7 +383,7 @@ extension CacheModelQueryFilter
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
       expireAfterTimestampLessThan(
-    int value, {
+    int? value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -397,8 +396,8 @@ extension CacheModelQueryFilter
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
       expireAfterTimestampBetween(
-    int lower,
-    int upper, {
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -408,14 +407,6 @@ extension CacheModelQueryFilter
       includeLower: includeLower,
       upper: upper,
       includeUpper: includeUpper,
-    ));
-  }
-
-  QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> hashCodeIsNull() {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.isNull,
-      property: 'hashCode',
-      value: null,
     ));
   }
 
@@ -477,7 +468,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> idEqualTo(
-      int value) {
+      int? value) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.eq,
       property: 'id',
@@ -486,7 +477,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> idGreaterThan(
-    int value, {
+    int? value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -498,7 +489,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> idLessThan(
-    int value, {
+    int? value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -510,8 +501,8 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> idBetween(
-    int lower,
-    int upper, {
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -533,7 +524,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -545,7 +536,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyGreaterThan(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
     bool include = false,
   }) {
@@ -559,7 +550,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyLessThan(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
     bool include = false,
   }) {
@@ -573,8 +564,8 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
@@ -644,7 +635,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> ttlEqualTo(
-      int value) {
+      int? value) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.eq,
       property: 'ttl',
@@ -653,7 +644,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> ttlGreaterThan(
-    int value, {
+    int? value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -665,7 +656,7 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> ttlLessThan(
-    int value, {
+    int? value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -677,8 +668,8 @@ extension CacheModelQueryFilter
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> ttlBetween(
-    int lower,
-    int upper, {
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -833,11 +824,11 @@ extension CacheModelQueryWhereDistinct
 
 extension CacheModelQueryProperty
     on QueryBuilder<CacheModel, CacheModel, QQueryProperty> {
-  QueryBuilder<CacheModel, String, QQueryOperations> dataProperty() {
+  QueryBuilder<CacheModel, String?, QQueryOperations> dataProperty() {
     return addPropertyNameInternal('data');
   }
 
-  QueryBuilder<CacheModel, int, QQueryOperations>
+  QueryBuilder<CacheModel, int?, QQueryOperations>
       expireAfterTimestampProperty() {
     return addPropertyNameInternal('expireAfterTimestamp');
   }
@@ -846,15 +837,15 @@ extension CacheModelQueryProperty
     return addPropertyNameInternal('hashCode');
   }
 
-  QueryBuilder<CacheModel, int, QQueryOperations> idProperty() {
+  QueryBuilder<CacheModel, int?, QQueryOperations> idProperty() {
     return addPropertyNameInternal('id');
   }
 
-  QueryBuilder<CacheModel, String, QQueryOperations> keyProperty() {
+  QueryBuilder<CacheModel, String?, QQueryOperations> keyProperty() {
     return addPropertyNameInternal('key');
   }
 
-  QueryBuilder<CacheModel, int, QQueryOperations> ttlProperty() {
+  QueryBuilder<CacheModel, int?, QQueryOperations> ttlProperty() {
     return addPropertyNameInternal('ttl');
   }
 }

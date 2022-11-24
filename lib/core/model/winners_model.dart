@@ -5,12 +5,12 @@ import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class WinnersModel {
-  final String id;
-  final String freq;
-  final List<Winners> winners;
-  final String code;
-  final TimestampModel timestamp;
-  final String gametype;
+  String? id;
+  String? freq;
+  List<Winners>? winners;
+  String? code;
+  TimestampModel? timestamp;
+  String? gametype;
   static final helper = HelperModel<WinnersModel>(
     (map) => WinnersModel.fromMap(map),
   );
@@ -25,12 +25,12 @@ class WinnersModel {
   });
 
   WinnersModel copyWith({
-    String id,
-    String freq,
-    List<Winners> winners,
-    String code,
-    TimestampModel timestamp,
-    String gametype,
+    String? id,
+    String? freq,
+    List<Winners>? winners,
+    String? code,
+    TimestampModel? timestamp,
+    String? gametype,
   }) {
     return WinnersModel(
       id: id ?? this.id,
@@ -42,29 +42,36 @@ class WinnersModel {
     );
   }
 
+  WinnersModel.base() {
+    id = '';
+    freq = '';
+    winners = [];
+    code = '';
+    gametype = '';
+  }
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id ?? '',
       'freq': freq ?? '',
-      'winners': winners.map((x) => x.toMap()).toList(),
+      'winners': winners!.map((x) => x.toMap()).toList(),
       'code': code ?? '',
-      'timestamp': timestamp.toMap(),
+      'timestamp': timestamp!.toMap(),
       'gametype': gametype ?? '',
     };
   }
 
   factory WinnersModel.fromMap(Map<String, dynamic> map) {
     return WinnersModel(
-      id: map['id'] as String,
-      freq: map['freq'] as String,
+      id: map['id'] as String?,
+      freq: map['freq'] as String?,
       winners: List<Winners>.from(
         (map["winners"] ?? []).map(
           (x) => Winners.fromMap(x, map['gametype']),
         ),
       ),
-      code: map['code'] as String,
+      code: map['code'] as String?,
       timestamp: TimestampModel.fromMap(map['timestamp']),
-      gametype: map['gametype'] as String,
+      gametype: map['gametype'] as String?,
     );
   }
 
@@ -80,41 +87,43 @@ class WinnersModel {
 }
 
 class Winners {
-  final int amount;
-  final bool isMockUser;
-  final String username;
-  final int flc;
-  final String userid;
-  final String gameType;
-  final double score;
+  final int? amount;
+  final bool? isMockUser;
+  final String? username;
+  final int? flc;
+  final String? userid;
+  final String? gameType;
+  final double? score;
+  final String? displayScore;
 
-  Winners({
-    this.amount,
-    this.isMockUser,
-    this.username,
-    this.flc,
-    this.userid,
-    this.score,
-    this.gameType,
-  });
+  Winners(
+      {this.amount,
+      this.isMockUser,
+      this.username,
+      this.flc,
+      this.userid,
+      this.score,
+      this.gameType,
+      this.displayScore});
 
   Winners copyWith(
-      {int amount,
-      bool isMockUser,
-      String username,
-      int flc,
-      String userid,
-      double score,
-      String gameType}) {
+      {int? amount,
+      bool? isMockUser,
+      String? username,
+      int? flc,
+      String? userid,
+      double? score,
+      String? gameType,
+      String? displayScore}) {
     return Winners(
-      amount: amount ?? this.amount,
-      isMockUser: isMockUser ?? this.isMockUser,
-      username: username ?? this.username,
-      flc: flc ?? this.flc,
-      userid: userid ?? this.userid,
-      score: score ?? this.score,
-      gameType: gameType ?? this.gameType,
-    );
+        amount: amount ?? this.amount,
+        isMockUser: isMockUser ?? this.isMockUser,
+        username: username ?? this.username,
+        flc: flc ?? this.flc,
+        userid: userid ?? this.userid,
+        score: score ?? this.score,
+        gameType: gameType ?? this.gameType,
+        displayScore: displayScore ?? this.displayScore);
   }
 
   Map<String, dynamic> toMap() {
@@ -126,19 +135,20 @@ class Winners {
       'userid': userid,
       'score': score,
       'gameType': gameType,
+      'displayScore': displayScore
     };
   }
 
-  factory Winners.fromMap(Map<String, dynamic> map, String gameType) {
+  factory Winners.fromMap(Map<String, dynamic> map, String? gameType) {
     return Winners(
-      amount: map['amount'] ?? 0,
-      isMockUser: map['isMockUser'] ?? false,
-      username: map['username'] ?? '',
-      flc: map['flc'] ?? 0,
-      userid: map['userid'] ?? '',
-      score: (map['score'] ?? 0).toDouble(),
-      gameType: gameType ?? '',
-    );
+        amount: map['amount'] ?? 0,
+        isMockUser: map['isMockUser'] ?? false,
+        username: map['username'] ?? '',
+        flc: map['flc'] ?? 0,
+        userid: map['userid'] ?? '',
+        score: (map['score'] ?? 0).toDouble(),
+        gameType: gameType ?? '',
+        displayScore: map['displayScore'] ?? '');
   }
 
   String toJson() => json.encode(toMap());

@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
@@ -7,12 +6,12 @@ import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class LeaderboardModel {
-  String id;
-  String freq;
-  String gametype;
-  TimestampModel lastupdated;
-  List<ScoreBoard> scoreboard;
-  String code;
+  String? id;
+  String? freq;
+  String? gametype;
+  TimestampModel? lastupdated;
+  List<ScoreBoard>? scoreboard;
+  String? code;
   LeaderboardModel({
     this.id,
     this.freq,
@@ -23,12 +22,12 @@ class LeaderboardModel {
   });
 
   LeaderboardModel copyWith({
-    String id,
-    String freq,
-    String gametype,
-    TimestampModel lastupdated,
-    List<ScoreBoard> scoreboard,
-    String code,
+    String? id,
+    String? freq,
+    String? gametype,
+    TimestampModel? lastupdated,
+    List<ScoreBoard>? scoreboard,
+    String? code,
   }) {
     return LeaderboardModel(
       id: id ?? this.id,
@@ -45,7 +44,7 @@ class LeaderboardModel {
       'id': id,
       'freq': freq,
       'gametype': gametype,
-      'lastupdated': lastupdated.toMap(),
+      'lastupdated': lastupdated!.toMap(),
       'scoreboard': scoreboard,
       'code': code,
     };
@@ -57,9 +56,11 @@ class LeaderboardModel {
       freq: map['freq'] ?? '',
       gametype: map['gametype'] ?? '',
       lastupdated: TimestampModel.fromMap(map['lastupdated']),
-      scoreboard: List<ScoreBoard>.from(
-        map["scoreboard"].map((x) => ScoreBoard.fromMap(x)),
-      ),
+      scoreboard: map["scoreboard"] != null
+          ? List<ScoreBoard>.from(
+              map["scoreboard"].map((x) => ScoreBoard.fromMap(x)),
+            )
+          : [],
       code: map['code'] ?? '',
     );
   }

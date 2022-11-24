@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -20,24 +21,27 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class WebGameViewModel extends BaseModel {
-  final _gtService = locator<GoldenTicketService>();
-  final _logger = locator<CustomLogger>();
-  final _lbService = locator<LeaderboardService>();
-  final _userRepo = locator<UserRepository>();
-  final _userCoinService = locator<UserCoinService>();
-  final _analyticsService = locator<AnalyticsService>();
+class WebGameViewModel extends BaseViewModel {
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  final UserRepository? _userRepo = locator<UserRepository>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final JourneyService? _journeyService = locator<JourneyService>();
 
-  String _currentGame;
+  String? _currentGame;
 
   get currentGame => this._currentGame;
 
   set currentGame(value) => this._currentGame = value;
-  init(String game, bool inLandscapeMode) async {
+  init(String? game, bool inLandscapeMode) async {
     currentGame = game;
     if (inLandscapeMode) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
@@ -71,36 +75,32 @@ class WebGameViewModel extends BaseModel {
   }
 
   handleCricketHeroRoundEnd(Map<String, dynamic> data, String game) async {
-    _analyticsService.track(eventName: AnalyticsEvents.cricketHeroGameEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
     handleGameEndRound(data, game);
   }
 
   handlePoolClubRoundEnd(Map<String, dynamic> data, String game) async {
-    _analyticsService.track(eventName: AnalyticsEvents.poolClubEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
     handleGameEndRound(data, game);
   }
 
   handleFootBallRoundEnd(Map<String, dynamic> data, String game) async {
-    _analyticsService.track(eventName: AnalyticsEvents.footBallEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
     handleGameEndRound(data, game);
   }
 
   handleCandyFiestaRoundEnd(Map<String, dynamic> data, String game) async {
-    _analyticsService.track(eventName: AnalyticsEvents.candyFiestaEnds);
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
       GoldenTicketService.goldenTicketId = data['gt_id'];
     }
     handleGameEndRound(data, game);
@@ -110,15 +110,18 @@ class WebGameViewModel extends BaseModel {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) {
       AppState.isWebGameLInProgress = false;
       AppState.isWebGamePInProgress = false;
-      AppState.backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher!.didPopRoute();
       Future.delayed(Duration(milliseconds: 700), () async {
         BaseUtil.openModalBottomSheet(
           addToScreenStack: true,
-          content: WantMoreTicketsModalSheet(
-            isInsufficientBalance: true,
+          backgroundColor: UiConstants.gameCardColor,
+          content: WantMoreTicketsModalSheet(isInsufficientBalance: true),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness24),
+            topRight: Radius.circular(SizeConfig.roundness24),
           ),
           hapticVibrate: true,
-          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
           isBarrierDismissable: true,
         );
       });
@@ -126,29 +129,31 @@ class WebGameViewModel extends BaseModel {
   }
 
   handleGameEndRound(Map<String, dynamic> data, String game) {
-    _logger.d(
+    _logger!.d(
         "$game round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
-
+    if (data['mlIndex'] != null)
+      _journeyService!.avatarRemoteMlIndex = data["mlIndex"];
+    _logger!.d("MLIndex found: ${data['mlIndex']}");
     if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
         data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
-      _logger.d("Game end message: ${data[FcmCommands.GAME_END_MESSAGE_KEY]}");
+      _logger!.d("Game end message: ${data[FcmCommands.GAME_END_MESSAGE_KEY]}");
       GoldenTicketService.gameEndMsgText =
           data[FcmCommands.GAME_END_MESSAGE_KEY].toString();
     }
     updateFlcBalance();
-    _lbService.fetchWebGameLeaderBoard(game: game);
+    _lbService!.fetchWebGameLeaderBoard(game: game);
   }
 
-  handleGameSessionEnd({Duration duration}) {
+  handleGameSessionEnd({Duration? duration}) {
     updateFlcBalance();
-    _logger.d("Checking for golden tickets");
+    _logger!.d("Checking for golden tickets");
     if (GoldenTicketService.gameEndMsgText != null &&
-        GoldenTicketService.gameEndMsgText.isNotEmpty) {
-      _logger.d("Showing game end message");
+        GoldenTicketService.gameEndMsgText!.isNotEmpty) {
+      _logger!.d("Showing game end message");
       Future.delayed(duration ?? Duration(milliseconds: 500), () {
         BaseUtil.openDialog(
           addToScreenStack: true,
-          isBarrierDismissable: false,
+          isBarrierDismissible: false,
           hapticVibrate: true,
           content: ScoreRejectedDialog(
               contentText: GoldenTicketService.gameEndMsgText),
@@ -157,22 +162,16 @@ class WebGameViewModel extends BaseModel {
       });
       return;
     }
-    _gtService.fetchAndVerifyGoldenTicketByID().then((bool res) {
-      if (res)
-        Future.delayed(duration ?? Duration(seconds: 1), () {
-          _gtService.showInstantGoldenTicketView(
-              title: 'Game Milestone reached', source: GTSOURCE.game);
-        });
-    });
+    _gtService!.fetchAndVerifyGoldenTicketByID();
   }
 
   //helper
   updateFlcBalance() async {
-    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
-    if (_flcResponse.model.flcBalance != null) {
-      _userCoinService.setFlcBalance(_flcResponse.model.flcBalance);
+    ApiResponse<FlcModel> _flcResponse = await _userRepo!.getCoinBalance();
+    if (_flcResponse.model!.flcBalance != null) {
+      _userCoinService!.setFlcBalance(_flcResponse.model!.flcBalance);
     } else {
-      _logger.d("Flc balance is null");
+      _logger!.d("Flc balance is null");
     }
   }
 }

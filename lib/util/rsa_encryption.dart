@@ -31,17 +31,17 @@ import 'package:pointycastle/asymmetric/api.dart';
 ///
 
 class RSAEncryption {
-  final _userService = locator<UserService>();
-  final _internalOpsService = locator<InternalOpsService>();
-  final _logger = locator<CustomLogger>();
-  Encrypter rsaEncrypter, aesEncrypter;
+  final UserService? _userService = locator<UserService>();
+  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  Encrypter? rsaEncrypter, aesEncrypter;
   static const String _chars = 'abcdef1234567890';
   static const String ENCRYPT_VERSION = 'v1';
   static const String PUBLIC_KEY_FILE_PATH = 'resources/public.key';
   Random _rnd = Random();
-  String randomIv, randomAesKey;
-  IV iv;
-  Key aesKey;
+  String? randomIv, randomAesKey;
+  IV? iv;
+  late Key aesKey;
 
   ///initialises a fresh AES key and IV on init
   Future<bool> init() async {
@@ -63,7 +63,7 @@ class RSAEncryption {
         "data": encrypted
       };
     } catch (e) {
-      _logger.e('Encryption Failed: $e');
+      _logger!.e('Encryption Failed: $e');
       return data;
     }
   }
@@ -77,10 +77,10 @@ class RSAEncryption {
       ));
       return true;
     } catch (e) {
-      _logger.e(e.toString());
-      if (_userService.isUserOnborded)
-        _internalOpsService.logFailure(
-            _userService.baseUser.uid, FailType.RSAEncryterInitFailed, {
+      _logger!.e(e.toString());
+      if (_userService!.isUserOnboarded)
+        _internalOpsService!.logFailure(
+            _userService!.baseUser!.uid, FailType.RSAEncryterInitFailed, {
           "err_message":
               "RSA Encrypter generation Failed while parsing local file",
         });
@@ -91,19 +91,19 @@ class RSAEncryption {
   bool _initializeAESEncryptor() {
     try {
       randomAesKey = _getRandomString(32);
-      aesKey = Key.fromUtf8(randomAesKey);
+      aesKey = Key.fromUtf8(randomAesKey!);
 
       randomIv = _getRandomString(16);
-      iv = IV.fromUtf8(randomIv);
+      iv = IV.fromUtf8(randomIv!);
 
       aesEncrypter =
           Encrypter(AES(aesKey, mode: AESMode.cbc, padding: "PKCS7"));
       return true;
     } catch (e) {
-      _logger.e(e.toString());
-      if (_userService.isUserOnborded)
-        _internalOpsService.logFailure(
-            _userService.baseUser.uid, FailType.AESEncryptionInitFailed, {
+      _logger!.e(e.toString());
+      if (_userService!.isUserOnboarded)
+        _internalOpsService!.logFailure(
+            _userService!.baseUser!.uid, FailType.AESEncryptionInitFailed, {
           "message": "AES Encrypter generation Failed",
         });
       return false;
@@ -111,31 +111,31 @@ class RSAEncryption {
   }
 
   String _rsaEncrypt() {
-    _logger.d("KEY: $randomAesKey");
-    final encryptedKey = rsaEncrypter.encrypt(aesKey.base64);
-    return encryptedKey.base64;
+    _logger!.d("KEY: $randomAesKey");
+    final encryptedKey = rsaEncrypter?.encrypt(aesKey.base64);
+    return encryptedKey!.base64;
   }
 
   String _aesEncypt(Map<String, dynamic> data) {
     final plainText = json.encode(data).toString();
-    final encryptedData = aesEncrypter.encrypt(plainText, iv: iv);
-    return encryptedData.base16;
+    final encryptedData = aesEncrypter?.encrypt(plainText, iv: iv);
+    return encryptedData!.base16;
   }
 
   String aesEncyptStr(String plainText) {
-    final encryptedData = aesEncrypter.encrypt(plainText, iv: iv);
-    return encryptedData.base16;
+    final encryptedData = aesEncrypter?.encrypt(plainText, iv: iv);
+    return encryptedData!.base16;
   }
 
   // Helper Methods
-  Future<T> _parseWithRootBundle<T extends RSAAsymmetricKey>(
+  Future _parseWithRootBundle<T extends RSAAsymmetricKey>(
       String filename) async {
     try {
       final key = await rootBundle.loadString(filename);
       final parser = RSAKeyParser();
       return parser.parse(key) as T;
     } catch (e) {
-      _logger.e(e.toString());
+      _logger!.e(e.toString());
     }
   }
 
@@ -148,7 +148,7 @@ class RSAEncryption {
         ),
       );
 
-  String _getIv() {
+  String? _getIv() {
     return randomIv;
   }
 }

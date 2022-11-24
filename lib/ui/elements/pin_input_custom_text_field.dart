@@ -6,20 +6,20 @@ enum PinEntryType { underline, boxTight, boxLoose }
 
 abstract class PinDecoration {
   /// The style of painting text.
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   /// The style of obscure text.
-  final ObscureStyle obscureStyle;
+  final ObscureStyle? obscureStyle;
 
   /// The error text that will be displayed if any
-  final String errorText;
+  final String? errorText;
 
   /// The style of error text.
-  final TextStyle errorTextStyle;
+  final TextStyle? errorTextStyle;
 
-  final String hintText;
+  final String? hintText;
 
-  final TextStyle hintTextStyle;
+  final TextStyle? hintTextStyle;
 
   PinEntryType get pinEntryType;
 
@@ -35,12 +35,12 @@ abstract class PinDecoration {
   /// Creates a copy of this pin decoration with the given fields replaced
   /// by the new values.
   PinDecoration copyWith({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
   });
 }
 
@@ -72,7 +72,7 @@ class UnderlineDecoration extends PinDecoration {
   final double gapSpace;
 
   /// The gaps between every two adjacent box, higher priority than [gapSpace].
-  final List<double> gapSpaces;
+  final List<double>? gapSpaces;
 
   /// The color of the underline.
   final Color color;
@@ -81,15 +81,15 @@ class UnderlineDecoration extends PinDecoration {
   final double lineHeight;
 
   /// The underline changed color when user enter pin.
-  final Color enteredColor;
+  final Color? enteredColor;
 
   const UnderlineDecoration({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
     this.enteredColor,
     this.gapSpace: 16.0,
     this.gapSpaces,
@@ -109,12 +109,12 @@ class UnderlineDecoration extends PinDecoration {
 
   @override
   PinDecoration copyWith({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
   }) {
     return UnderlineDecoration(
       textStyle: textStyle ?? this.textStyle,
@@ -144,15 +144,15 @@ class BoxTightDecoration extends PinDecoration {
   final Color strokeColor;
 
   /// The box inside solid color, sometimes it equals to the box background.
-  final Color solidColor;
+  final Color? solidColor;
 
   const BoxTightDecoration({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
     this.solidColor,
     this.strokeWidth: 1.0,
     this.radius: const Radius.circular(8.0),
@@ -171,12 +171,12 @@ class BoxTightDecoration extends PinDecoration {
 
   @override
   PinDecoration copyWith({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
   }) {
     return BoxTightDecoration(
       textStyle: textStyle ?? this.textStyle,
@@ -205,24 +205,24 @@ class BoxLooseDecoration extends PinDecoration {
   final double gapSpace;
 
   /// The gaps between every two adjacent box, higher priority than [gapSpace].
-  final List<double> gapSpaces;
+  final List<double>? gapSpaces;
 
   /// The box border color.
   final Color strokeColor;
 
   /// The box inside solid color, sometimes it equals to the box background.
-  final Color solidColor;
+  final Color? solidColor;
 
   /// The border changed color when user enter pin.
-  final Color enteredColor;
+  final Color? enteredColor;
 
   const BoxLooseDecoration({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
     this.enteredColor,
     this.solidColor,
     this.radius: const Radius.circular(8.0),
@@ -244,12 +244,12 @@ class BoxLooseDecoration extends PinDecoration {
 
   @override
   PinDecoration copyWith({
-    TextStyle textStyle,
-    ObscureStyle obscureStyle,
-    String errorText,
-    TextStyle errorTextStyle,
-    String hintText,
-    TextStyle hintTextStyle,
+    TextStyle? textStyle,
+    ObscureStyle? obscureStyle,
+    String? errorText,
+    TextStyle? errorTextStyle,
+    String? hintText,
+    TextStyle? hintTextStyle,
   }) {
     return BoxLooseDecoration(
       textStyle: textStyle ?? this.textStyle,
@@ -274,7 +274,7 @@ class PinInputTextField extends StatefulWidget {
   final int pinLength;
 
   /// The callback will execute when user click done.
-  final ValueChanged<String> onSubmit;
+  final ValueChanged<String>? onSubmit;
 
   /// Decorate the pin.
   final PinDecoration decoration;
@@ -286,13 +286,13 @@ class PinInputTextField extends StatefulWidget {
   final TextInputType keyboardType;
 
   /// Controls the pin being edited.
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   /// Same as [TextField]'s autoFocus.
   final bool autoFocus;
 
   /// Same as [TextField]'s focusNode.
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   /// Same as [TextField]'s textInputAction.
   final TextInputAction textInputAction;
@@ -301,14 +301,14 @@ class PinInputTextField extends StatefulWidget {
   final bool enabled;
 
   /// Same as [TextField]'s onChanged.
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onChanged;
 
   PinInputTextField({
-    Key key,
+    Key? key,
     this.pinLength: 6,
     this.onSubmit,
     this.decoration: const BoxLooseDecoration(),
-    List<TextInputFormatter> inputFormatter,
+    List<TextInputFormatter>? inputFormatter,
     this.keyboardType: TextInputType.phone,
     this.controller,
     this.focusNode,
@@ -325,7 +325,7 @@ class PinInputTextField extends StatefulWidget {
 
         /// Hint length must equal to the [pinLength].
         assert(decoration.hintText == null ||
-            decoration.hintText.length == pinLength),
+            decoration.hintText!.length == pinLength),
         assert(decoration is BoxTightDecoration ||
             (decoration is UnderlineDecoration &&
                 pinLength - 1 ==
@@ -350,11 +350,11 @@ class PinInputTextField extends StatefulWidget {
 
 class _PinInputTextFieldState extends State<PinInputTextField> {
   /// The display text to the user.
-  String _text;
+  String? _text;
 
-  TextEditingController _controller;
+  TextEditingController? _controller;
 
-  TextEditingController get _effectiveController =>
+  TextEditingController? get _effectiveController =>
       widget.controller ?? _controller;
 
   void _pinChanged() {
@@ -369,11 +369,11 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
   }
 
   void _updateText() {
-    if (_effectiveController.text.runes.length > widget.pinLength) {
+    if (_effectiveController!.text.runes.length > widget.pinLength) {
       _text = String.fromCharCodes(
-          _effectiveController.text.runes.take(widget.pinLength));
+          _effectiveController!.text.runes.take(widget.pinLength));
     } else {
-      _text = _effectiveController.text;
+      _text = _effectiveController!.text;
     }
   }
 
@@ -383,7 +383,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
     if (widget.controller == null) {
       _controller = TextEditingController();
     }
-    _effectiveController.addListener(_pinChanged);
+    _effectiveController!.addListener(_pinChanged);
 
     //Ensure the initial value will be displayed when the field didn't get the focus.
     _updateText();
@@ -392,7 +392,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
   @override
   void dispose() {
     // Ensure no listener will execute after dispose.
-    _effectiveController.removeListener(_pinChanged);
+    _effectiveController!.removeListener(_pinChanged);
     super.dispose();
   }
 
@@ -401,32 +401,32 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
     super.didUpdateWidget(oldWidget);
 
     if (widget.controller == null && oldWidget.controller != null) {
-      oldWidget.controller.removeListener(_pinChanged);
-      _controller = TextEditingController.fromValue(oldWidget.controller.value);
-      _controller.addListener(_pinChanged);
+      oldWidget.controller!.removeListener(_pinChanged);
+      _controller = TextEditingController.fromValue(oldWidget.controller!.value);
+      _controller!.addListener(_pinChanged);
     } else if (widget.controller != null && oldWidget.controller == null) {
-      _controller.removeListener(_pinChanged);
+      _controller!.removeListener(_pinChanged);
       _controller = null;
-      widget.controller.addListener(_pinChanged);
+      widget.controller!.addListener(_pinChanged);
       // Invalidate the text when controller hold different old text.
-      if (_text != widget.controller.text) {
+      if (_text != widget.controller!.text) {
         _pinChanged();
       }
     } else if (widget.controller != oldWidget.controller) {
       // The old controller and current controller is not null and not the same.
-      oldWidget.controller.removeListener(_pinChanged);
-      widget.controller.addListener(_pinChanged);
+      oldWidget.controller!.removeListener(_pinChanged);
+      widget.controller!.addListener(_pinChanged);
     }
 
     /// If the newLength is shorter than now and the current text length longer
     /// than [pinLength], So we should cut the superfluous subString.
     if (oldWidget.pinLength > widget.pinLength &&
-        _text.runes.length > widget.pinLength) {
+        _text!.runes.length > widget.pinLength) {
       setState(() {
-        _text = _text.substring(0, widget.pinLength);
-        _effectiveController.text = _text;
-        _effectiveController.selection =
-            TextSelection.collapsed(offset: _text.runes.length);
+        _text = _text!.substring(0, widget.pinLength);
+        _effectiveController!.text = _text!;
+        _effectiveController!.selection =
+            TextSelection.collapsed(offset: _text!.runes.length);
       });
     }
   }
@@ -436,7 +436,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
     return CustomPaint(
       /// The foreground paint to display pin.
       foregroundPainter: _PinPaint(
-          text: _text ?? _text.trim(),
+          text: _text ?? _text!.trim(),
           pinLength: widget.pinLength,
           decoration: widget.decoration,
           themeData: Theme.of(context)),
@@ -527,20 +527,20 @@ class _PinPaint extends CustomPainter {
   final int pinLength;
   final PinEntryType type;
   final PinDecoration decoration;
-  final ThemeData themeData;
+  final ThemeData? themeData;
 
   _PinPaint({
-    @required this.text,
-    @required this.pinLength,
-    PinDecoration decoration,
+    required this.text,
+    required this.pinLength,
+    required PinDecoration decoration,
     this.type: PinEntryType.boxTight,
     this.themeData,
   }) : this.decoration = decoration.copyWith(
-          textStyle: decoration.textStyle ?? themeData.textTheme.headline5,
+          textStyle: decoration.textStyle ?? themeData!.textTheme.headline5,
           errorTextStyle: decoration.errorTextStyle ??
-              themeData.textTheme.caption.copyWith(color: themeData.errorColor),
+              themeData!.textTheme.caption!.copyWith(color: themeData.errorColor),
           hintTextStyle: decoration.hintTextStyle ??
-              themeData.textTheme.headline5
+              themeData!.textTheme.headline5!
                   .copyWith(color: themeData.hintColor),
         );
 
@@ -555,8 +555,8 @@ class _PinPaint extends CustomPainter {
     /// but, since we can access the drawn textfield behind from here,
     /// we use a simple logic to calculate it.
     double mainHeight;
-    if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
-      mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
+    if (decoration.errorText != null && decoration.errorText!.isNotEmpty) {
+      mainHeight = size.height - (decoration.errorTextStyle!.fontSize! + 8.0);
     } else {
       mainHeight = size.height;
     }
@@ -570,10 +570,10 @@ class _PinPaint extends CustomPainter {
       ..isAntiAlias = true;
 
     /// Assign paint if [solidColor] is not null
-    Paint insidePaint;
+    Paint? insidePaint;
     if (dr.solidColor != null) {
       insidePaint = Paint()
-        ..color = dr.solidColor
+        ..color = dr.solidColor!
         ..strokeWidth = dr.strokeWidth
         ..style = PaintingStyle.fill
         ..isAntiAlias = true;
@@ -613,12 +613,12 @@ class _PinPaint extends CustomPainter {
 
     /// Determine whether display obscureText.
     bool obscureOn = decoration.obscureStyle != null &&
-        decoration.obscureStyle.isTextObscure;
+        decoration.obscureStyle!.isTextObscure;
 
     text.runes.forEach((rune) {
       String code;
       if (obscureOn) {
-        code = decoration.obscureStyle.obscureText;
+        code = decoration.obscureStyle!.obscureText;
       } else {
         code = String.fromCharCode(rune);
       }
@@ -647,7 +647,7 @@ class _PinPaint extends CustomPainter {
     });
 
     if (decoration.hintText != null) {
-      decoration.hintText.substring(index).runes.forEach((rune) {
+      decoration.hintText!.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
         TextPainter textPainter = TextPainter(
           text: TextSpan(
@@ -679,8 +679,8 @@ class _PinPaint extends CustomPainter {
     /// but, since we can access the drawn textfield behind from here,
     /// we use a simple logic to calculate it.
     double mainHeight;
-    if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
-      mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
+    if (decoration.errorText != null && decoration.errorText!.isNotEmpty) {
+      mainHeight = size.height - (decoration.errorTextStyle!.fontSize! + 8.0);
     } else {
       mainHeight = size.height;
     }
@@ -694,10 +694,10 @@ class _PinPaint extends CustomPainter {
       ..isAntiAlias = true;
 
     /// Assign paint if [solidColor] is not null
-    Paint insidePaint;
+    Paint? insidePaint;
     if (dr.solidColor != null) {
       insidePaint = Paint()
-        ..color = dr.solidColor
+        ..color = dr.solidColor!
         ..style = PaintingStyle.fill
         ..isAntiAlias = true;
     }
@@ -719,16 +719,16 @@ class _PinPaint extends CustomPainter {
     /// Draw the each rect of pin.
     for (int i = 0; i < pinLength; i++) {
       if (i < text.length && dr.enteredColor != null) {
-        borderPaint.color = dr.enteredColor;
+        borderPaint.color = dr.enteredColor!;
       } else if (decoration.errorText != null &&
-          decoration.errorText.isNotEmpty) {
+          decoration.errorText!.isNotEmpty) {
         /// only draw error-color as border-color or solid-color
         /// if errorText is not null
         if (dr.solidColor == null) {
-          borderPaint.color = decoration.errorTextStyle.color;
+          borderPaint.color = decoration.errorTextStyle!.color!;
         } else {
           insidePaint = Paint()
-            ..color = decoration.errorTextStyle.color
+            ..color = decoration.errorTextStyle!.color!
             ..style = PaintingStyle.fill
             ..isAntiAlias = true;
         }
@@ -758,12 +758,12 @@ class _PinPaint extends CustomPainter {
 
     /// Determine whether display obscureText.
     bool obscureOn = decoration.obscureStyle != null &&
-        decoration.obscureStyle.isTextObscure;
+        decoration.obscureStyle!.isTextObscure;
 
     text.runes.forEach((rune) {
       String code;
       if (obscureOn) {
-        code = decoration.obscureStyle.obscureText;
+        code = decoration.obscureStyle!.obscureText;
       } else {
         code = String.fromCharCode(rune);
       }
@@ -794,7 +794,7 @@ class _PinPaint extends CustomPainter {
     });
 
     if (decoration.hintText != null) {
-      decoration.hintText.substring(index).runes.forEach((rune) {
+      decoration.hintText!.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
         TextPainter textPainter = TextPainter(
           text: TextSpan(
@@ -828,8 +828,8 @@ class _PinPaint extends CustomPainter {
     /// but, since we can access the drawn textfield behind from here,
     /// we use a simple logic to calculate it.
     double mainHeight;
-    if (decoration.errorText != null && decoration.errorText.isNotEmpty) {
-      mainHeight = size.height - (decoration.errorTextStyle.fontSize + 8.0);
+    if (decoration.errorText != null && decoration.errorText!.isNotEmpty) {
+      mainHeight = size.height - (decoration.errorTextStyle!.fontSize! + 8.0);
     } else {
       mainHeight = size.height;
     }
@@ -856,11 +856,11 @@ class _PinPaint extends CustomPainter {
 
     for (int i = 0; i < pinLength; i++) {
       if (i < text.length && dr.enteredColor != null) {
-        underlinePaint.color = dr.enteredColor;
+        underlinePaint.color = dr.enteredColor!;
       } else if (decoration.errorText != null &&
-          decoration.errorText.isNotEmpty) {
+          decoration.errorText!.isNotEmpty) {
         /// only draw error-color as underline-color if errorText is not null
-        underlinePaint.color = decoration.errorTextStyle.color;
+        underlinePaint.color = decoration.errorTextStyle!.color!;
       } else {
         underlinePaint.color = dr.color;
       }
@@ -876,12 +876,12 @@ class _PinPaint extends CustomPainter {
 
     /// Determine whether display obscureText.
     bool obscureOn = decoration.obscureStyle != null &&
-        decoration.obscureStyle.isTextObscure;
+        decoration.obscureStyle!.isTextObscure;
 
     text.runes.forEach((rune) {
       String code;
       if (obscureOn) {
-        code = decoration.obscureStyle.obscureText;
+        code = decoration.obscureStyle!.obscureText;
       } else {
         code = String.fromCharCode(rune);
       }
@@ -910,7 +910,7 @@ class _PinPaint extends CustomPainter {
     });
 
     if (decoration.hintText != null) {
-      decoration.hintText.substring(index).runes.forEach((rune) {
+      decoration.hintText!.substring(index).runes.forEach((rune) {
         String code = String.fromCharCode(rune);
         TextPainter textPainter = TextPainter(
           text: TextSpan(
@@ -938,7 +938,7 @@ class _PinPaint extends CustomPainter {
   /// Return the sum of the [list] even the [list] is empty.
   T _sumList<T extends num>(Iterable<T> list) {
     T sum = 0 as T;
-    list.forEach((n) => sum += n);
+    list.forEach((n) => sum = sum + n as T);
     return sum;
   }
 
@@ -966,28 +966,28 @@ class _PinPaint extends CustomPainter {
 
 class PinInputTextFormField extends FormField<String> {
   /// Controls the pin being edited.
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   /// The max length of pin.
   final int pinLength;
 
   PinInputTextFormField({
-    Key key,
+    Key? key,
     this.controller,
-    String initialValue,
+    String? initialValue,
     this.pinLength = 6,
-    ValueChanged<String> onSubmit,
+    ValueChanged<String>? onSubmit,
     PinDecoration decoration = const BoxLooseDecoration(),
-    List<TextInputFormatter> inputFormatter,
+    List<TextInputFormatter>? inputFormatter,
     TextInputType keyboardType = TextInputType.phone,
-    FocusNode focusNode,
+    FocusNode? focusNode,
     bool autoFocus = false,
     TextInputAction textInputAction = TextInputAction.done,
     bool enabled = true,
-    FormFieldSetter<String> onSaved,
-    FormFieldValidator<String> validator,
+    FormFieldSetter<String>? onSaved,
+    FormFieldValidator<String>? validator,
     bool autovalidate = false,
-    ValueChanged<String> onChanged,
+    ValueChanged<String>? onChanged,
   })  : assert(initialValue == null || controller == null),
         assert(autovalidate != null),
         assert(pinLength != null && pinLength > 0),
@@ -997,9 +997,9 @@ class PinInputTextFormField extends FormField<String> {
                 controller != null ? controller.text : (initialValue ?? ''),
             onSaved: onSaved,
             validator: (value) {
-              var result = validator(value);
+              var result = validator!(value);
               if (result == null) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return 'Input field is empty.';
                 }
                 if (value.length < pinLength) {
@@ -1015,7 +1015,7 @@ class PinInputTextFormField extends FormField<String> {
             autovalidateMode: autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
             enabled: enabled,
             builder: (FormFieldState<String> field) {
-              final _PinInputTextFormFieldState state = field;
+              final _PinInputTextFormFieldState state = field as _PinInputTextFormFieldState;
               return PinInputTextField(
                 pinLength: pinLength,
                 onSubmit: onSubmit,
@@ -1036,13 +1036,13 @@ class PinInputTextFormField extends FormField<String> {
 }
 
 class _PinInputTextFormFieldState extends FormFieldState<String> {
-  TextEditingController _controller;
+  TextEditingController? _controller;
 
-  TextEditingController get _effectiveController =>
+  TextEditingController? get _effectiveController =>
       widget.controller ?? _controller;
 
   @override
-  PinInputTextFormField get widget => super.widget;
+  PinInputTextFormField get widget => super.widget as PinInputTextFormField;
 
   @override
   void initState() {
@@ -1050,7 +1050,7 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     if (widget.controller == null) {
       _controller = TextEditingController(text: widget.initialValue);
     }
-    _effectiveController.addListener(_handleControllerChanged);
+    _effectiveController!.addListener(_handleControllerChanged);
   }
 
   @override
@@ -1058,32 +1058,32 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     super.didUpdateWidget(oldWidget);
 
     if (widget.controller == null && oldWidget.controller != null) {
-      oldWidget.controller.removeListener(_handleControllerChanged);
-      _controller = TextEditingController.fromValue(oldWidget.controller.value);
-      _controller.addListener(_handleControllerChanged);
+      oldWidget.controller!.removeListener(_handleControllerChanged);
+      _controller = TextEditingController.fromValue(oldWidget.controller!.value);
+      _controller!.addListener(_handleControllerChanged);
     } else if (widget.controller != null && oldWidget.controller == null) {
-      _controller.removeListener(_handleControllerChanged);
+      _controller!.removeListener(_handleControllerChanged);
       _controller = null;
-      widget.controller.addListener(_handleControllerChanged);
+      widget.controller!.addListener(_handleControllerChanged);
       // Invalidate the text when controller hold different old text.
-      if (value != widget.controller.text) {
+      if (value != widget.controller!.text) {
         _handleControllerChanged();
       }
     } else if (widget.controller != oldWidget.controller) {
       // The old controller and current controller is not null and not the same.
-      oldWidget.controller.removeListener(_handleControllerChanged);
-      widget.controller.addListener(_handleControllerChanged);
+      oldWidget.controller!.removeListener(_handleControllerChanged);
+      widget.controller!.addListener(_handleControllerChanged);
     }
 
     /// If the newLength is shorter than now and the current text length longer
     /// than [pinLength], So we should cut the superfluous subString.
     if (oldWidget.pinLength > widget.pinLength &&
-        value.runes.length > widget.pinLength) {
+        value!.runes.length > widget.pinLength) {
       setState(() {
-        setValue(value.substring(0, widget.pinLength));
-        _effectiveController.text = value;
-        _effectiveController.selection = TextSelection.collapsed(
-          offset: value.runes.length,
+        setValue(value!.substring(0, widget.pinLength));
+        _effectiveController!.text = value!;
+        _effectiveController!.selection = TextSelection.collapsed(
+          offset: value!.runes.length,
         );
       });
     }
@@ -1091,7 +1091,7 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
 
   @override
   void dispose() {
-    _effectiveController.removeListener(_handleControllerChanged);
+    _effectiveController!.removeListener(_handleControllerChanged);
     super.dispose();
   }
 
@@ -1099,13 +1099,13 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
   void reset() {
     super.reset();
     setState(() {
-      _effectiveController.text = widget.initialValue;
+      _effectiveController!.text = widget.initialValue!;
     });
   }
 
   @override
-  void didChange(String value) {
-    if (value.runes.length > widget.pinLength) {
+  void didChange(String? value) {
+    if (value!.runes.length > widget.pinLength) {
       super.didChange(String.fromCharCodes(
         value.runes.take(widget.pinLength),
       ));
@@ -1122,7 +1122,7 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     // notifications for changes originating from within this class -- for
     // example, the reset() method. In such cases, the FormField value will
     // already have been set.
-    if (_effectiveController.text != value)
-      didChange(_effectiveController.text);
+    if (_effectiveController!.text != value)
+      didChange(_effectiveController!.text);
   }
 }

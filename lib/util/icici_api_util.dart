@@ -20,7 +20,7 @@ class GetTaxStatus {
 
     NN – Don’t show Fatca Popup
 
-    YN –Show Fatca Popup with message as “FATCA Status as per our records is
+    YN –Show Fatca Popup with message as “FATCA Status as per our recoords is
     'Unable to confirm'.Do you wish to update the FATCA Confirmation?”
 
     UC – Show Fatca Popup with message as “US/Canada Person(s) are not

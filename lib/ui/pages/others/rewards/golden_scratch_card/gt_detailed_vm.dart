@@ -4,7 +4,9 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -17,20 +19,23 @@ import 'package:felloapp/util/styles/size_config.dart';
 
 import '../../../../../util/locator.dart';
 
-class GTDetailedViewModel extends BaseModel {
+class GTDetailedViewModel extends BaseViewModel {
   bool _viewScratcher = false;
   double _detailsModalHeight = 0;
   bool _bottompadding = true;
   bool _viewScratchedCard = false;
   bool isCardScratched = false;
   bool _isShareLoading = false;
-  GoldenTicketService _gtService = new GoldenTicketService();
-  final _userService = locator<UserService>();
-  final _userCoinService = locator<UserCoinService>();
-  final _logger = locator<CustomLogger>();
-  final _apiPaths = locator<ApiPath>();
+  final UserService? _userService = locator<UserService>();
+  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final ApiPath? _apiPaths = locator<ApiPath>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   final _rsaEncryption = new RSAEncryption();
+  final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
+
   // bool _isTicketRedeemedSuccessfully = true;
 
   // get isTicketRedeemedSuccessfully => this._isTicketRedeemedSuccessfully;
@@ -73,7 +78,7 @@ class GTDetailedViewModel extends BaseModel {
 
   changeToUnlockedUI() {
     _bottompadding = false;
-    _detailsModalHeight = SizeConfig.screenHeight * 0.5;
+    _detailsModalHeight = SizeConfig.screenHeight! * 0.5;
     isCardScratched = true;
     //isTicketRedeemedSuccessfully = true;
     _viewScratchedCard = true;
@@ -81,7 +86,7 @@ class GTDetailedViewModel extends BaseModel {
   }
 
   redeemCard(GoldenTicket ticket) async {
-    scratchKey.currentState.reveal();
+    scratchKey.currentState!.reveal();
     // showDetailsModal(ticket.isRewarding);
     isCardScratched = true;
     setState(ViewState.Busy);
@@ -91,27 +96,17 @@ class GTDetailedViewModel extends BaseModel {
   }
 
   Future<bool> redeemTicket(GoldenTicket ticket) async {
-    Map<String, dynamic> _body = {
-      "uid": _userService.baseUser.uid,
-      "gtId": ticket.gtId
-    };
-    _logger.d("initiateUserDeposit:: Pre encryption: $_body");
-    if (await _rsaEncryption.init()) {
-      _body = _rsaEncryption.encryptRequestBody(_body);
-      _logger.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
-    } else {
-      _logger.e("Encrypter initialization failed!! exiting method");
-    }
     try {
-      final String _bearer = await _getBearerToken();
-      final _apiResponse = await APIService.instance
-          .postData(_apiPaths.kRedeemGtReward, token: _bearer, body: _body);
-      _logger.d(_apiResponse.toString());
-      _userService.getUserFundWalletData();
-      _userCoinService.getUserCoinBalance();
+      await _gtRepo!.redeemReward(ticket.gtId);
+
+      _gtService!.updateUnscratchedGTCount();
+      _userService!.getUserFundWalletData();
+      _userCoinService!.getUserCoinBalance();
+      _journeyService.updateRewardStatus(ticket.prizeSubtype!);
+
       return true;
     } catch (e) {
-      _logger.e(e);
+      _logger!.e(e);
       return false;
     }
   }
@@ -123,7 +118,7 @@ class GTDetailedViewModel extends BaseModel {
       //Redeemed ticket
       changeToUnlockedUI();
     } else {
-      if (ticket.isRewarding) {
+      if (ticket.isRewarding!) {
         //ticket has some reward
       } else {
         //Pity ticket
@@ -136,8 +131,8 @@ class GTDetailedViewModel extends BaseModel {
   }
 
   Future<String> _getBearerToken() async {
-    String token = await _userService.firebaseUser.getIdToken();
-    _logger.d(token);
+    String token = await _userService!.firebaseUser!.getIdToken();
+    _logger!.d(token);
 
     return token;
   }

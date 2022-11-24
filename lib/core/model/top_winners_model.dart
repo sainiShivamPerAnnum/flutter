@@ -1,5 +1,5 @@
 class TopWinnersModel {
-  List<String> currentTopWinners;
+  List<String>? currentTopWinners;
 
   TopWinnersModel({this.currentTopWinners});
 
@@ -9,7 +9,7 @@ class TopWinnersModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['currentTopWinners'] = this.currentTopWinners;
+    data['currentTopWinners'] = this.currentTopWinners ?? [];
     return data;
   }
 
@@ -21,7 +21,7 @@ class TopWinnersModel {
 
   factory TopWinnersModel.fromMap(Map<String, dynamic> map) {
     return TopWinnersModel(
-      currentTopWinners: List<String>.from(map['currentTopWinners']),
+      currentTopWinners: List<String>.from(map['currentTopWinners'])  ,
     );
   }
 

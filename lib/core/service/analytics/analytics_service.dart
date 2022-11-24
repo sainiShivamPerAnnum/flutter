@@ -1,4 +1,5 @@
 import 'package:app_install_date/app_install_date_imp.dart';
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -12,20 +13,21 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AnalyticsService extends BaseAnalyticsService {
   static const appFlierKey = 'fyD5pxiiDw5DrwynP52oT9';
 
-  final _mixpanel = locator<MixpanelAnalytics>();
-  final _webengage = locator<WebEngageAnalytics>();
-  final _appFlyer = locator<AppFlyerAnalytics>();
+  final MixpanelAnalytics? _mixpanel = locator<MixpanelAnalytics>();
+  final WebEngageAnalytics? _webengage = locator<WebEngageAnalytics>();
+  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
 
-  final _logger = locator<CustomLogger>();
+  final CustomLogger? _logger = locator<CustomLogger>();
 
-  Future<void> login({bool isOnBoarded, BaseUser baseUser}) async {
-    await _mixpanel.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _appFlyer.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+  Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
+    await _mixpanel!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    _webengage!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    _appFlyer!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
 
     // for daily session event
     DateTime now = DateTime.now();
@@ -39,34 +41,44 @@ class AnalyticsService extends BaseAnalyticsService {
   }
 
   void signOut() {
-    _mixpanel.signOut();
-    _webengage.signOut();
-    _appFlyer.signOut();
+    _mixpanel!.signOut();
+    _webengage!.signOut();
+    _appFlyer!.signOut();
   }
 
-  void track({String eventName, Map<String, dynamic> properties}) {
+  void track({String? eventName, Map<String, dynamic>? properties}) {
     try {
-      _logger.d(eventName);
-      _mixpanel.track(eventName: eventName, properties: properties);
-      _webengage.track(eventName: eventName, properties: properties);
-      _appFlyer.track(eventName: eventName, properties: properties);
+      if (FirebaseAuth.instance.currentUser != null) {
+        String uid = FirebaseAuth.instance.currentUser!.uid;
+        String? phone = FirebaseAuth.instance.currentUser!.phoneNumber;
+        if (uid != '' && uid.isNotEmpty) properties!['uid'] = uid;
+        if (phone != null && phone.isNotEmpty) properties!['mobile'] = phone;
+      }
+    } catch (e) {}
+    try {
+      _logger!.d(eventName);
+      _mixpanel!.track(eventName: eventName, properties: properties);
+      _webengage!.track(eventName: eventName, properties: properties);
+      _appFlyer!.track(eventName: eventName, properties: properties);
+      ApxorFlutter.logAppEvent(eventName!, attributes: properties);
+
     } catch (e) {
-      String error = e ?? "Unable to track event: $eventName";
-      _logger.e(error);
+      String error = e as String ?? "Unable to track event: $eventName";
+      _logger!.e(error);
     }
   }
 
-  void trackScreen({String screen, Map<String, dynamic> properties}) {
-    _mixpanel.track(eventName: screen, properties: properties);
-    _webengage.track(eventName: screen, properties: properties);
+  void trackScreen({String? screen, Map<String, dynamic>? properties}) {
+    _mixpanel!.track(eventName: screen, properties: properties);
+    _webengage!.track(eventName: screen, properties: properties);
   }
 
-  void trackSignup(String userId) async {
+  void trackSignup(String? userId) async {
     try {
       final campaignId =
           PreferenceHelper.getString(PreferenceHelper.CAMPAIGN_ID);
 
-      if (campaignId == null) return;
+      if (campaignId.isEmpty) return;
 
       Map<String, dynamic> body = {
         "type": Constants.SIGNUP_TRACKING,
@@ -79,15 +91,14 @@ class AnalyticsService extends BaseAnalyticsService {
         body: body,
       );
     } catch (e) {
-      _logger.e(e.toString());
+      _logger!.e(e.toString());
     }
   }
 
   void trackInstall(String campaignId) async {
-    if (campaignId == null) return;
+    if (campaignId == '') return;
     try {
-      if (campaignId != null)
-        PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
+      PreferenceHelper.setString(PreferenceHelper.CAMPAIGN_ID, campaignId);
 
       // for installation event
       DateTime now = DateTime.now();
@@ -109,7 +120,7 @@ class AnalyticsService extends BaseAnalyticsService {
         );
       }
     } catch (e) {
-      _logger.e(e.toString());
+      _logger!.e(e.toString());
     }
   }
 }

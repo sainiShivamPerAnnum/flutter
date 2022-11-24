@@ -1,21 +1,18 @@
+import 'dart:developer' as dev;
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
-import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
-import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
-import 'package:felloapp/ui/pages/login/screens/username_input/username_input_view.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
-import 'package:felloapp/ui/pages/static/home_background.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
+import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -24,11 +21,11 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LoginControllerView extends StatefulWidget {
-  final int initPage;
-  static String mobileno;
+  final int? initPage;
+  static String? mobileno;
 
   LoginControllerView({this.initPage});
 
@@ -39,261 +36,245 @@ class LoginControllerView extends StatefulWidget {
 
 class _LoginControllerViewState extends State<LoginControllerView> {
   final Log log = new Log("LoginController View");
-  final int initPage;
+  final int? initPage;
 
   _LoginControllerViewState(this.initPage);
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
-
+    S? locale = S.of(context);
+    bool keyboardIsOpen =
+        MediaQuery.of(context).viewInsets.bottom > SizeConfig.viewInsets.bottom;
     return BaseView<LoginControllerViewModel>(
       onModelReady: (model) {
-        model.init(initPage);
+        model.init(initPage, model);
         if (Platform.isAndroid) {
-          model.initTruecaller();
+          Future.delayed(Duration(seconds: 1), () {
+            model.initTruecaller();
+          });
         }
       },
       onModelDispose: (model) => model.exit(),
-      builder: (ctx, model, child) => Scaffold(
-        backgroundColor: UiConstants.primaryColor,
-        floatingActionButton: keyboardIsOpen &&
-                Platform.isIOS &&
-                (model.currentPage == MobileInputScreenView.index ||
-                    model.currentPage == OtpInputScreen.index)
-            ? FloatingActionButton(
-                child: Icon(
-                  Icons.done,
-                  color: Colors.white,
-                ),
-                backgroundColor: UiConstants.tertiarySolid,
-                onPressed: () => FocusScope.of(context).unfocus(),
-              )
-            : SizedBox(),
-        body: HomeBackground(
-          child: Stack(
+      builder: (ctx, model, child) {
+        dev.log(model.currentPage.toString());
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Stack(
             children: <Widget>[
-              Positioned(
-                bottom: 0,
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  height: SizeConfig.screenHeight / 3,
-                  color: Colors.white,
-                ),
-              ),
-              Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight,
+              NewSquareBackground(
+                  backgroundColor: UiConstants
+                      .kRechargeModalSheetAmountSectionBackgroundColor),
+              SingleChildScrollView(
+                reverse: true,
                 child: Column(
                   children: [
-                    ValueListenableBuilder(
-                        valueListenable: model.pageNotifier,
-                        builder: (ctx, value, child) {
-                          return value < 2.0
-                              ? SizedBox(
-                                  height: kToolbarHeight,
-                                )
-                              : FelloAppBar(
-                                  leading:
-                                      FelloAppBarBackButton(onBackPress: () {
-                                    if (value == 3)
-                                      model.controller.previousPage(
-                                          duration: Duration(milliseconds: 600),
-                                          curve: Curves.easeInOut);
-                                    else
-                                      AppState.delegate.appState.currentAction =
-                                          PageAction(
-                                              state: PageState.replaceAll,
-                                              page: SplashPageConfig);
-                                  }),
-                                  title: value < 3
-                                      ? locale.abCompleteYourProfile
-                                      : locale.abGamingName,
-                                );
-                        }),
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.padding40),
-                          topRight: Radius.circular(SizeConfig.padding40),
-                        ),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.screenHeight,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: PageView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              controller: model.controller,
+                              itemCount: model.pages.length,
+                              itemBuilder: (BuildContext context, int index) =>
+                                  model.pages[index],
+                              onPageChanged: (int index) =>
+                                  model.currentPage = index,
+                            ),
                           ),
-                          child: PageView.builder(
-                            physics: new NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            controller: model.controller,
-                            itemCount: model.pages.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              //print(index - _controller.page);
-                              return ValueListenableBuilder(
-                                  valueListenable: model.pageNotifier,
-                                  builder: (ctx, value, _) {
-                                    final factorChange = value - index;
-                                    return Opacity(
-                                        opacity: (1 - factorChange.abs())
-                                            .clamp(0.0, 1.0),
-                                        child: model
-                                            .pages[index % model.pages.length]);
-                                  });
-                            },
-                            onPageChanged: (int index) {
-                              setState(() {
-                                model.formProgress = 0.2 * (index + 1);
-                                model.currentPage = index;
-                              });
-                            },
-                          ),
-                        ),
+                        ],
                       ),
                     ),
+                    // AnimatedContainer(
+                    //   height: keyboardIsOpen && model.currentPage == 2
+                    //       ? SizeConfig.screenHeight * 0.1
+                    //       : 0,
+                    //   duration: Duration(
+                    //     milliseconds: 200,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
-              if (!keyboardIsOpen)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SafeArea(
-                    top: false,
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                    margin: EdgeInsets.only(
+                        top: SizeConfig.pageHorizontalMargins / 2,
+                        right: SizeConfig.pageHorizontalMargins),
+                    child: FaqPill(type: FaqsType.onboarding)),
+              ),
+              if (keyboardIsOpen)
+                Positioned(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (BaseUtil.showNoInternetAlert()) ;
+                      if (model.state == ViewState.Idle)
+                        model.processScreenInput(
+                          model.currentPage,
+                        );
+                    },
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.padding54,
+                      color: UiConstants.kArowButtonBackgroundColor,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                      ),
+                      alignment: Alignment.centerRight,
+                      child: model.state == ViewState.Busy
+                          ? SizedBox(
+                              width: SizeConfig.padding32,
+                              child: SpinKitThreeBounce(
+                                color: UiConstants.primaryColor,
+                                size: SizeConfig.padding20,
+                              ))
+                          : Text(
+                              model.currentPage == LoginNameInputView.index
+                                  ? 'FINISH'
+                                  : 'NEXT',
+                              style: TextStyles.rajdhaniB.body1
+                                  .colour(UiConstants.primaryColor),
+                            ),
+                    ),
+                  ),
+                ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: SizeConfig.padding40),
+                  child: model.state == ViewState.Busy
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            FullScreenLoader(
+                                size: SizeConfig.screenWidth! * 0.3),
+                            SizedBox(height: SizeConfig.padding12),
+                            Text(
+                              "Loading...",
+                              style: TextStyles.rajdhani.body0
+                                  .colour(UiConstants.primaryColor),
+                            )
+                          ],
+                        )
+                      : SizedBox(),
+                ),
+              ),
+              if (model.currentPage == 0 &&
+                  !keyboardIsOpen &&
+                  model.state == ViewState.Idle &&
+                  !model.loginUsingTrueCaller)
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    width: SizeConfig.screenWidth,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        (model.currentPage == MobileInputScreenView.index)
-                            ? Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                child: RichText(
-                                  text: new TextSpan(
-                                    children: [
-                                      new TextSpan(
-                                        text:
-                                            'By continuing, you agree to our ',
-                                        style: TextStyles.body3
-                                            .colour(Colors.black45),
-                                      ),
-                                      new TextSpan(
-                                        text: 'Terms of Service',
-                                        style: TextStyles.body3
-                                            .colour(Colors.black45)
-                                            .underline,
-                                        recognizer: new TapGestureRecognizer()
-                                          ..onTap = () {
-                                            model.onTermsAndConditionsClicked();
-                                          },
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding16,
+                              horizontal: SizeConfig.padding20),
+                          decoration: BoxDecoration(
+                            color: UiConstants.kBackgroundColor3,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(SizeConfig.roundness12)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                "assets/svg/dual_star.svg",
+                                width: SizeConfig.padding20,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding14,
+                              ),
+                              Text(
+                                'Join over 5 Lakh users who save and win with us!',
+                                style: TextStyles.sourceSans.body4,
                               )
-                            : Container(),
-                        model.loginUsingTrueCaller
-                            ? Container(
-                                width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.fromLTRB(
-                                    0, 10, 0, Platform.isIOS ? 0 : 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    new Container(
-                                      width: SizeConfig.screenWidth -
-                                          SizeConfig.pageHorizontalMargins * 2,
-                                      child: FelloButtonLg(
-                                          color: Colors.white,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "Logging in with",
-                                                style: TextStyles.body3.bold
-                                                    .colour(Color(0xff1180FF)),
-                                              ),
-                                              Image.asset(
-                                                Assets.truecaller,
-                                                height: SizeConfig.body1,
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.padding4,
-                                              ),
-                                              SpinKitThreeBounce(
-                                                color: Color(0xff1180FF),
-                                                size: SizeConfig.body1,
-                                              )
-                                            ],
-                                          )),
-                                    ),
-                                  ],
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
+                              SizeConfig.padding16, SizeConfig.padding10, 0),
+                          child: RichText(
+                            text: new TextSpan(
+                              children: [
+                                new TextSpan(
+                                  text: 'By continuing, you agree to our ',
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTextColor2),
                                 ),
-                              )
-                            : Container(
-                                width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.fromLTRB(
-                                    0,
-                                    10,
-                                    0,
-                                    MediaQuery.of(context).viewInsets.bottom !=
-                                            0
-                                        ? 0
-                                        : SizeConfig.pageHorizontalMargins),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    new Container(
-                                      width: SizeConfig.screenWidth -
-                                          SizeConfig.pageHorizontalMargins * 2,
-                                      child: FelloButtonLg(
-                                        child: model.state == ViewState.Idle
-                                            ? Text(
-                                                model.currentPage ==
-                                                        Username.index
-                                                    ? 'FINISH'
-                                                    : 'NEXT',
-                                                style: TextStyles.body2
-                                                    .colour(Colors.white),
-                                              )
-                                            : SpinKitThreeBounce(
-                                                color:
-                                                    UiConstants.spinnerColor2,
-                                                size: 18.0,
-                                              ),
-                                        onPressed: () {
-                                          if (model.state == ViewState.Idle)
-                                            model.processScreenInput(
-                                                model.currentPage);
-                                        },
-                                      ),
-                                    ),
-                                  ],
+                                new TextSpan(
+                                  text: 'Terms of Service',
+                                  style: TextStyles.sourceSans.body3.underline
+                                      .colour(UiConstants.kTextColor),
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () {
+                                      model.onTermsAndConditionsClicked();
+                                    },
                                 ),
-                              )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.screenWidth! * 0.1 +
+                              MediaQuery.of(context).viewInsets.bottom,
+                        ),
                       ],
                     ),
                   ),
                 ),
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.screenWidth! * 0.2,
+                    margin: EdgeInsets.only(
+                      bottom: SizeConfig.viewInsets.bottom +
+                          SizeConfig.pageHorizontalMargins,
+                    ),
+                    alignment: Alignment.center,
+                    child: model.loginUsingTrueCaller
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Logging in with",
+                                style: TextStyles.body3.bold
+                                    .colour(Color(0xff1180FF)),
+                              ),
+                              Image.asset(
+                                Assets.truecaller,
+                                height: SizeConfig.body1,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding4,
+                              ),
+                              SpinKitThreeBounce(
+                                color: Color(0xff1180FF),
+                                size: SizeConfig.body1,
+                              )
+                            ],
+                          )
+                        : SizedBox()),
+              ),
               if (FlavorConfig.isDevelopment())
                 Container(
                   width: SizeConfig.screenWidth,
                   child: Banner(
                     message: FlavorConfig.getStage(),
                     location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
+                    color: FlavorConfig.instance!.color,
                   ),
                 ),
               if (FlavorConfig.isQA())
@@ -302,13 +283,15 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   child: Banner(
                     message: FlavorConfig.getStage(),
                     location: BannerLocation.topEnd,
-                    color: FlavorConfig.instance.color,
+                    color: FlavorConfig.instance!.color,
                   ),
                 ),
+              BaseAnimation(),
+              // CircularAnim()
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

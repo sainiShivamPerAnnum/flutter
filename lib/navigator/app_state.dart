@@ -19,78 +19,64 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PageAction {
   PageState state;
-  PageConfiguration page;
-  List<PageConfiguration> pages;
-  Widget widget;
+  PageConfiguration? page;
+  List<PageConfiguration>? pages;
+  Widget? widget;
 
   PageAction({this.state = PageState.none, this.page, this.pages, this.widget});
 }
 
 class AppState extends ChangeNotifier {
-  final _winnerService = locator<WinnerService>();
-  final _lbService = locator<LeaderboardService>();
-  int _rootIndex = 1;
-  bool _isTxnLoaderInView = false;
-  Future _txnFunction;
-  Timer _txnTimer;
-  static Timer pollingPeriodicTimer;
-  static bool isIOSTxnInProgress = false;
-  static double currentTxnAmount = 0.0;
-  static String currentTxnOrderId;
-  static Map<String, dynamic> startupNotifMessage;
+  final WinnerService? _winnerService = locator<WinnerService>();
+  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  int _rootIndex = 0;
+  static PageController homeTabPageController = PageController(initialPage: 0);
+  // Future _txnFunction;
+  Timer? _txnTimer;
+  Future? _txnFunction;
+
+  static Map<String, dynamic>? startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
-  static String _fcmData;
+  static String? _fcmData;
   static bool isFirstTime = true;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
-  static bool unsavedPrefs = false;
   static bool isWebGameLInProgress = false;
   static bool isWebGamePInProgress = false;
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
   static bool isDrawerOpened = false;
-
+  static bool isUserSignedIn = false;
   static bool isSaveOpened = false;
   static bool isWinOpened = false;
 
   static List<ScreenItem> screenStack = [];
-  static FelloRouterDelegate delegate;
-  static FelloBackButtonDispatcher backButtonDispatcher;
+  static FelloRouterDelegate? delegate;
+  static FelloBackButtonDispatcher? backButtonDispatcher;
 
   PageAction _currentAction = PageAction();
   // BackButtonDispatcher backButtonDispatcher;
 
   get rootIndex => this._rootIndex;
 
-  get isTxnLoaderInView => this._isTxnLoaderInView;
+  Timer? get txnTimer => this._txnTimer;
 
-  Timer get txnTimer => this._txnTimer;
+  set txnTimer(Timer? timer) {
+    this._txnTimer = timer;
+  }
 
   set rootIndex(value) {
     this._rootIndex = value;
     notifyListeners();
   }
 
-  set isTxnLoaderInView(bool val) {
-    this._isTxnLoaderInView = val;
-    notifyListeners();
-  }
-
-  // Future get txnFunction => this._txnFunction;
-
-  // set txnFunction(Future function) {
-  //   this._txnFunction = function;
-  //   notifyListeners();
-  // }
-
-  set txnTimer(Timer timer) {
-    if (txnTimer != null) this.txnTimer.cancel();
-    this._txnTimer = timer;
+  set txnFunction(Future function) {
+    this._txnFunction = function;
     notifyListeners();
   }
 
   scrollHome(int cardNo) {
-    double scrollDepth = SizeConfig.screenHeight * 0.2 * cardNo;
+    double scrollDepth = SizeConfig.screenHeight! * 0.2 * cardNo;
     homeCardListController.animateTo(scrollDepth,
         duration: Duration(milliseconds: 600), curve: Curves.easeInOutSine);
     notifyListeners();
@@ -108,30 +94,39 @@ class AppState extends ChangeNotifier {
 
   routeDeepLink() {
     if (isRootLoaded && _fcmData != null) {
-      delegate.parseRoute(Uri.parse(_fcmData));
+      delegate!.parseRoute(Uri.parse(_fcmData!));
     }
+  }
+
+  static blockNavigation() {
+    if (screenStack.last == ScreenItem.loader) return;
+    screenStack.add(ScreenItem.loader);
+  }
+
+  static unblockNavigation() {
+    if (screenStack.last == ScreenItem.loader) screenStack.removeLast();
   }
 
 // GETTERS AND SETTERS
 
-  int get getCurrentTabIndex => _rootIndex ?? 1;
+  int get getCurrentTabIndex => _rootIndex ?? 0;
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
+    // homeTabPageController.jumpToPage(_rootIndex);
     if (index == 2 && isWinOpened == false) {
-      _winnerService.fetchTopWinner();
-      _lbService.fetchReferralLeaderBoard();
+      _lbService!.fetchReferralLeaderBoard();
       isWinOpened = true;
     }
     if (index == 2) {
-      _winnerService.fetchWinners();
+      _winnerService!.fetchWinners();
     }
     print(_rootIndex);
     notifyListeners();
   }
 
   returnHome() {
-    _rootIndex = 1;
+    _rootIndex = 0;
     print(_rootIndex);
 
     notifyListeners();

@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 //Pub Imports
 import 'package:provider/provider.dart';
 
-class BaseView<T extends BaseModel> extends StatefulWidget {
-  final Widget Function(BuildContext context, T model, Widget child) builder;
-  final Function(T) onModelReady;
-  final Function(T) onModelDispose;
-  final Widget child;
+class BaseView<T extends BaseViewModel> extends StatefulWidget {
+  final Widget Function(BuildContext context, T model, Widget? child)? builder;
+  final Function(T)? onModelReady;
+  final Function(T)? onModelDispose;
+  final Widget? child;
 
   BaseView({this.builder, this.onModelReady, this.onModelDispose, this.child});
 
@@ -20,13 +20,13 @@ class BaseView<T extends BaseModel> extends StatefulWidget {
   _BaseViewState<T> createState() => _BaseViewState<T>();
 }
 
-class _BaseViewState<T extends BaseModel> extends State<BaseView<T>> {
-  T model = locator<T>();
+class _BaseViewState<T extends BaseViewModel> extends State<BaseView<T>> {
+  T? model = locator<T>();
 
   @override
   void initState() {
     if (widget.onModelReady != null) {
-      widget.onModelReady(model);
+      widget.onModelReady!(model!);
     }
 
     super.initState();
@@ -34,7 +34,7 @@ class _BaseViewState<T extends BaseModel> extends State<BaseView<T>> {
 
   @override
   void dispose() {
-    if (widget.onModelDispose != null) widget.onModelDispose(model);
+    if (widget.onModelDispose != null) widget.onModelDispose!(model!);
     super.dispose();
   }
 
@@ -43,7 +43,7 @@ class _BaseViewState<T extends BaseModel> extends State<BaseView<T>> {
     return ChangeNotifierProvider(
       create: (context) => model,
       child: Consumer<T>(
-        builder: widget.builder,
+        builder: widget.builder!,
         child: widget.child,
       ),
     );

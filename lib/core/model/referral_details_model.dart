@@ -5,21 +5,22 @@ import 'package:felloapp/util/logger.dart';
 
 class ReferralDetail {
   static Log log = new Log('ReferralDetail');
-  final String _userName;
-  final TimestampModel _timestamp;
-  bool _isUserBonusUnlocked;
-  bool _isRefereeBonusUnlocked;
-  int _refCount;
+  String? _userName;
+  String? _uid;
+  TimestampModel? _timestamp;
+  bool? _isUserBonusUnlocked;
+  bool? _isRefereeBonusUnlocked;
+  int? _refCount;
   static final helper =
       HelperModel<ReferralDetail>((map) => ReferralDetail.fromMap(map));
-  final Map<String, dynamic> _bonusMap;
+   Map<String, dynamic> ?  _bonusMap;
 
   static const String fldUsrBonusFlag = 'usr_bonus_unlocked';
   static const String fldRefereeBonusFlag = 'referee_bonus_unlocked';
   static const String fldUserReferralCount = 'ref_count';
 
   ReferralDetail(this._userName, this._timestamp, this._isUserBonusUnlocked,
-      this._isRefereeBonusUnlocked, this._refCount, this._bonusMap);
+      this._isRefereeBonusUnlocked, this._refCount, this._bonusMap, this._uid);
 
   // ReferralDetail.fromMap(Map<String, dynamic> rMap)
   //     : this(
@@ -30,14 +31,25 @@ class ReferralDetail {
   //           rMap[fldUserReferralCount],
   //           rMap['bonus_values']);
 
+  ReferralDetail.base() {
+    _userName = '';
+    _uid = '';
+    _timestamp = TimestampModel(seconds: 0, nanoseconds: 0);
+    _isRefereeBonusUnlocked = false;
+    _isUserBonusUnlocked = false;
+    _refCount = 0;
+    _bonusMap = {};
+  }
   factory ReferralDetail.fromMap(Map<String, dynamic> rMap) {
     return ReferralDetail(
-        rMap['usr_name'],
-        TimestampModel.fromMap(rMap['timestamp']),
-        rMap[fldUsrBonusFlag],
-        rMap[fldRefereeBonusFlag],
-        rMap[fldUserReferralCount],
-        rMap['bonus_values']);
+      rMap['usr_name'] ?? '',
+      TimestampModel.fromMap(rMap['timestamp']),
+      rMap[fldUsrBonusFlag] ?? false,
+      rMap[fldRefereeBonusFlag] ?? false,
+      rMap[fldUserReferralCount] ?? 0,
+      rMap['bonus_values'] ?? {},
+      rMap['id'] ?? '',
+    );
   }
 
   toJson() => {
@@ -46,21 +58,23 @@ class ReferralDetail {
         fldUserReferralCount: _refCount
       };
 
-  bool get isRefereeBonusUnlocked => _isRefereeBonusUnlocked;
+  bool get isRefereeBonusUnlocked => _isRefereeBonusUnlocked!;
 
-  bool get isUserBonusUnlocked => _isUserBonusUnlocked;
+  bool get isUserBonusUnlocked => _isUserBonusUnlocked!;
 
-  Timestamp get timestamp => _timestamp;
+  Timestamp get timestamp => _timestamp!;
 
-  String get userName => _userName;
+  String get userName => _userName!;
 
-  int get refCount => _refCount;
+  String get uid => _uid!;
+
+  int get refCount => _refCount!;
 
   set refCount(int value) {
     _refCount = value;
   }
 
-  Map<String, dynamic> get bonusMap => _bonusMap;
+  Map<String, dynamic> get bonusMap => _bonusMap!;
 
   set isRefereeBonusUnlocked(bool value) {
     _isRefereeBonusUnlocked = value;

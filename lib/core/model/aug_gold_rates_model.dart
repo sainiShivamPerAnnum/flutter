@@ -2,14 +2,14 @@ import 'package:felloapp/util/logger.dart';
 
 class AugmontRates {
   static Log log = new Log('AugmontRates');
-  String _blockId;
-  double _goldBuyPrice;
-  double _goldSellPrice;
-  double _silverBuyPrice;
-  double _silverSellPrice;
-  double _cgstPercent;
-  double _sgstPercent;
-
+  String? _blockId;
+  double? _goldBuyPrice;
+  double? _goldSellPrice;
+  double? _silverBuyPrice;
+  double? _silverSellPrice;
+  double? _cgstPercent;
+  double? _sgstPercent;
+  
   AugmontRates(
       this._blockId,
       this._goldBuyPrice,
@@ -21,32 +21,42 @@ class AugmontRates {
 
   AugmontRates.fromMap(Map<String, dynamic> data)
       : this(
-            data['blockId'],
+            data['blockId'] ?? '',
             getDouble(data['rates']['gBuy']),
             getDouble(data['rates']['gSell']),
             getDouble(data['rates']['sBuy']),
             getDouble(data['rates']['sSell']),
             getDouble(data['taxes'][0]['taxPerc']),
             getDouble(data['taxes'][1]['taxPerc']));
-
-  static double getDouble(String s) {
+  AugmontRates.base()
+      : this(
+          '',
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+        );
+  static double getDouble(dynamic s) {
     if (s == null) {
-      return null;
+      return 0.0;
     }
-    return double.tryParse(s);
+    if (s.runtimeType == double) return s;
+    return double.tryParse(s) ?? 0.0;
   }
 
-  double get sgstPercent => _sgstPercent;
+  double? get sgstPercent => _sgstPercent;
 
-  double get cgstPercent => _cgstPercent;
+  double? get cgstPercent => _cgstPercent;
 
-  double get silverSellPrice => _silverSellPrice;
+  double? get silverSellPrice => _silverSellPrice;
 
-  double get silverBuyPrice => _silverBuyPrice;
+  double? get silverBuyPrice => _silverBuyPrice;
 
-  double get goldSellPrice => _goldSellPrice;
+  double? get goldSellPrice => _goldSellPrice;
 
-  double get goldBuyPrice => _goldBuyPrice;
+  double? get goldBuyPrice => _goldBuyPrice;
 
-  String get blockId => _blockId;
+  String? get blockId => _blockId;
 }

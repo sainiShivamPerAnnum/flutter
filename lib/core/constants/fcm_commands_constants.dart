@@ -12,4 +12,6 @@ class FcmCommands {
   static const DEPOSIT_TRANSACTION_RESPONSE = 'depositTransactionResponse';
   static const COMMAND_SUBSCRIPTION_RESPONSE = 'subscriptionStatusResponse';
   static const GAME_END_MESSAGE_KEY = "gameEndMessage";
+  static const COMMAND_JOURNEY_UPDATE = "userJourneyStats";
+  static const COMMAND_WITHDRAWAL_RESPONSE = "withdrawalResponse";
 }

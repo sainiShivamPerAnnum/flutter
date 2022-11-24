@@ -5,16 +5,35 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
-class PicksCardViewModel extends BaseModel {
-  final TambolaService _tambolaService = locator<TambolaService>();
-  int get dailyPicksCount => _tambolaService.dailyPicksCount;
-  List<int> get todaysPicks => _tambolaService.todaysPicks;
-  DailyPick get weeklyDigits => _tambolaService.weeklyDigits;
-  bool _isShowingAllPicks;
-  double _topCardHeight;
-  double _expandedTopCardHeight;
-  double _normalTopCardHeight;
-  double _titleOpacity;
+class PicksCardViewModel extends BaseViewModel {
+  final TambolaService? _tambolaService = locator<TambolaService>();
+  int get dailyPicksCount => _tambolaService!.dailyPicksCount ?? 3;
+  PageController? _pageController;
+
+  bool? _isShowingAllPicks;
+  double? _topCardHeight;
+  double? _expandedTopCardHeight;
+  double? _normalTopCardHeight;
+  double? _titleOpacity;
+  List<int>? _todaysPicks;
+  DailyPick? _weeklyDigits;
+  List<int>? get todaysPicks => _todaysPicks;
+  DailyPick? get weeklyDigits => _weeklyDigits;
+  int _tabNo = 0;
+  get tabNo => this._tabNo;
+  double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
+
+  get tabPosWidthFactor => this._tabPosWidthFactor;
+
+  set tabNo(value) {
+    this._tabNo = value;
+    notifyListeners();
+  }
+
+  set tabPosWidthFactor(value) {
+    this._tabPosWidthFactor = value;
+    notifyListeners();
+  }
 
   get normalTopCardHeight => this._normalTopCardHeight;
 
@@ -46,26 +65,32 @@ class PicksCardViewModel extends BaseModel {
     this._normalTopCardHeight = value;
   }
 
-  init() {
-    _normalTopCardHeight = SizeConfig.screenWidth * 0.5;
-    _expandedTopCardHeight =
-        (SizeConfig.smallTextSize + SizeConfig.screenWidth * 0.1) * 8 +
-            SizeConfig.cardTitleTextSize * 2.4 +
-            kToolbarHeight * 1.5;
+  PageController? get pageController => _pageController;
+
+  init() async {
+    _pageController = PageController(initialPage: 0);
+
     isShowingAllPicks = false;
     titleOpacity = 1.0;
     topCardHeight = normalTopCardHeight;
-    _tambolaService.fetchWeeklyPicks();
+    await _tambolaService!.fetchWeeklyPicks();
+
+    fetchTodaysPicks();
   }
 
-  void onTap(ValueChanged<bool> showBuyTicketModal) {
+  fetchTodaysPicks() {
+    _todaysPicks = _tambolaService!.todaysPicks;
+    _weeklyDigits = _tambolaService!.weeklyDigits;
+
+    notifyListeners();
+  }
+
+  void onTap() {
     if (!isShowingAllPicks) {
-      showBuyTicketModal(false);
       topCardHeight = expandedTopCardHeight;
       titleOpacity = 0.0;
       isShowingAllPicks = true;
     } else {
-      showBuyTicketModal(true);
       topCardHeight = normalTopCardHeight;
       isShowingAllPicks = false;
       Future.delayed(Duration(milliseconds: 500), () {
@@ -74,5 +99,20 @@ class PicksCardViewModel extends BaseModel {
       });
     }
     notifyListeners();
+  }
+
+  switchTab(int tab) {
+    if (tab == tabNo) return;
+
+    tabPosWidthFactor = tabNo == 0
+        ? SizeConfig.screenWidth! / 2 - SizeConfig.pageHorizontalMargins
+        : SizeConfig.pageHorizontalMargins;
+
+    _pageController!.animateToPage(
+      tab,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.linear,
+    );
+    tabNo = tab;
   }
 }

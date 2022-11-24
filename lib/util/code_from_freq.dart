@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class CodeFromFreq {
   static String getCodeFromFreq(
-    String freq,
+    String? freq,
   ) {
     final DateTime _currentTime =
         (freq == 'weekly') ? getCorrectedMondayDate() : DateTime.now();
@@ -93,17 +93,17 @@ class CodeFromFreq {
 
   static getDayFromCode(String code) {
     List<String> _de = code.split('-');
-    int year = int.tryParse(_de[0]);
-    int month = int.tryParse(_de[1]);
-    int day = int.tryParse(_de[3]);
+    int year = int.tryParse(_de[0])!;
+    int month = int.tryParse(_de[1])!;
+    int day = int.tryParse(_de[3])!;
     final dateTime = DateTime(year, month, day);
     return DateFormat.yMMMd().format(dateTime);
   }
 
   static getWeekFromCode(String code) {
     List<String> _de = code.split('-');
-    int year = int.tryParse(_de[0]);
-    int weeknumber = int.tryParse(_de[2]);
+    int year = int.tryParse(_de[0])!;
+    int weeknumber = int.tryParse(_de[2])!;
 
     final startDateTime =
         getDateByWeekNumber(start: true, year: year, weeknumber: weeknumber);
@@ -114,14 +114,14 @@ class CodeFromFreq {
 
   static getMonthFromCode(String code) {
     List<String> _de = code.split('-');
-    int year = int.tryParse(_de[0]);
-    int month = int.tryParse(_de[1]);
+    int year = int.tryParse(_de[0])!;
+    int month = int.tryParse(_de[1])!;
 
     final dateTime = DateTime(year, month);
     return DateFormat.yMMM().format(dateTime);
   }
 
-  static DateTime getDateByWeekNumber({int weeknumber, int year, bool start}) {
+  static DateTime getDateByWeekNumber({required int weeknumber, required int year, required bool start}) {
     //check if start == true retrun start date of week
     //else return end date
     var days = weeknumber * 7;

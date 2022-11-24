@@ -4,13 +4,13 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:intl/intl.dart';
 
 abstract class BaseAnalyticsService {
-  Future<void> login({bool isOnBoarded, BaseUser baseUser});
+  Future<void> login({bool? isOnBoarded, BaseUser? baseUser});
 
   void signOut();
 
-  void track({String eventName, Map<String, dynamic> properties});
+  void track({String? eventName, Map<String, dynamic>? properties});
 
-  void trackScreen({String screen, Map<String, dynamic> properties});
+  void trackScreen({String? screen, Map<String, dynamic>? properties});
 
   String getSignupDate(Timestamp signupDate) {
     if (signupDate == null) signupDate = Timestamp.now();
@@ -21,7 +21,7 @@ abstract class BaseAnalyticsService {
     }
   }
 
-  int getAge(String dob, CustomLogger logger) {
+  int getAge(String? dob, CustomLogger? logger) {
     if (dob == null || dob.isEmpty) return 0;
     try {
       DateTime birthDate = DateFormat("yyyy-MM-dd").parse(dob);
@@ -40,7 +40,7 @@ abstract class BaseAnalyticsService {
       }
       return age;
     } catch (e) {
-      logger.e('$e');
+      logger!.e('$e');
       return 0;
     }
   }

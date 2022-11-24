@@ -3,29 +3,29 @@ import 'package:felloapp/util/logger.dart';
 
 class UserIciciDetail {
   static Log log = new Log('UserIciciDetail');
-  String _appId;
-  String _panNumber;
-  String _kycStatus;
-  String _appMode;
-  String _panName;
-  String _hasIssue;
-  Timestamp _createdTime;
-  Timestamp _updatedTime;
-  String _verifiedOtpId;
-  String _unverifiedOtpId;
-  String _email;
-  String _folioNo;
-  String _expDate;
-  String _amcRefNo;
-  String _payoutId;
-  String _chkDigit;
-  String _bankAccNo;
-  String _bankCode;
-  String _bankName;
-  String _bankCity;
-  String _vpa;
-  String _fatcaFlag;
-  bool _firstInvMade;
+  String? _appId;
+  String? _panNumber;
+  String? _kycStatus;
+  String? _appMode;
+  String? _panName;
+  String? _hasIssue;
+  Timestamp? _createdTime;
+  Timestamp? _updatedTime;
+  String? _verifiedOtpId;
+  String? _unverifiedOtpId;
+  String? _email;
+  String? _folioNo;
+  String? _expDate;
+  String? _amcRefNo;
+  String? _payoutId;
+  String? _chkDigit;
+  String? _bankAccNo;
+  String? _bankCode;
+  String? _bankName;
+  String? _bankCity;
+  String? _vpa;
+  String? _fatcaFlag;
+  bool? _firstInvMade;
 
   static final String fldAppId = 'iAppId';
   static final String fldPanNumber = 'iPanNumber';
@@ -83,17 +83,17 @@ class UserIciciDetail {
             appMode,
             '',
             NO_ISSUES,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
             fatcaFlag,
             false,
             Timestamp.now(),
@@ -149,129 +149,129 @@ class UserIciciDetail {
     };
   }
 
-  String get hasIssue => _hasIssue;
+  String? get hasIssue => _hasIssue!;
 
-  set hasIssue(String value) {
+  set hasIssue(String? value) {
     _hasIssue = value;
   }
 
-  String get kycStatus => _kycStatus;
+  String? get kycStatus => _kycStatus;
 
-  set kycStatus(String value) {
+  set kycStatus(String? value) {
     _kycStatus = value;
   }
 
-  String get appMode => _appMode;
+  String? get appMode => _appMode;
 
-  set appMode(String value) {
+  set appMode(String? value) {
     _appMode = value;
   }
 
-  String get panNumber => _panNumber;
+  String? get panNumber => _panNumber;
 
-  set panNumber(String value) {
+  set panNumber(String? value) {
     _panNumber = value;
   }
 
-  String get appId => _appId;
+  String? get appId => _appId;
 
-  set appId(String value) {
+  set appId(String? value) {
     _appId = value;
   }
 
-  String get panName => _panName;
+  String? get panName => _panName;
 
-  set panName(String value) {
+  set panName(String? value) {
     _panName = value;
   }
 
-  String get unverifiedOtpId => _unverifiedOtpId;
+  String? get unverifiedOtpId => _unverifiedOtpId;
 
-  set unverifiedOtpId(String value) {
+  set unverifiedOtpId(String? value) {
     _unverifiedOtpId = value;
   }
 
-  String get verifiedOtpId => _verifiedOtpId;
+  String? get verifiedOtpId => _verifiedOtpId;
 
-  set verifiedOtpId(String value) {
+  set verifiedOtpId(String? value) {
     _verifiedOtpId = value;
   }
 
-  String get email => _email;
+  String? get email => _email;
 
-  set email(String value) {
+  set email(String? value) {
     _email = value;
   }
 
-  String get expDate => _expDate;
+  String? get expDate => _expDate;
 
-  set expDate(String value) {
+  set expDate(String? value) {
     _expDate = value;
   }
 
-  String get folioNo => _folioNo;
+  String? get folioNo => _folioNo;
 
-  set folioNo(String value) {
+  set folioNo(String? value) {
     _folioNo = value;
   }
 
-  String get chkDigit => _chkDigit;
+  String? get chkDigit => _chkDigit;
 
-  set chkDigit(String value) {
+  set chkDigit(String? value) {
     _chkDigit = value;
   }
 
-  String get payoutId => _payoutId;
+  String? get payoutId => _payoutId;
 
-  set payoutId(String value) {
+  set payoutId(String? value) {
     _payoutId = value;
   }
 
-  String get amcRefNo => _amcRefNo;
+  String? get amcRefNo => _amcRefNo;
 
-  set amcRefNo(String value) {
+  set amcRefNo(String? value) {
     _amcRefNo = value;
   }
 
-  String get bankAccNo => _bankAccNo;
+  String? get bankAccNo => _bankAccNo;
 
-  set bankAccNo(String value) {
+  set bankAccNo(String? value) {
     _bankAccNo = value;
   }
 
-  String get bankCity => _bankCity;
+  String? get bankCity => _bankCity;
 
-  set bankCity(String value) {
+  set bankCity(String? value) {
     _bankCity = value;
   }
 
-  String get bankName => _bankName;
+  String? get bankName => _bankName;
 
-  set bankName(String value) {
+  set bankName(String? value) {
     _bankName = value;
   }
 
-  String get bankCode => _bankCode;
+  String? get bankCode => _bankCode;
 
-  set bankCode(String value) {
+  set bankCode(String? value) {
     _bankCode = value;
   }
 
-  String get fatcaFlag => _fatcaFlag;
+  String? get fatcaFlag => _fatcaFlag;
 
-  set fatcaFlag(String value) {
+  set fatcaFlag(String? value) {
     _fatcaFlag = value;
   }
 
-  bool get firstInvMade => _firstInvMade;
+  bool? get firstInvMade => _firstInvMade;
 
-  set firstInvMade(bool value) {
+  set firstInvMade(bool? value) {
     _firstInvMade = value;
   }
 
-  String get vpa => _vpa;
+  String? get vpa => _vpa;
 
-  set vpa(String value) {
+  set vpa(String? value) {
     _vpa = value;
   }
 }

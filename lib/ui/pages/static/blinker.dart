@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class Blinker extends StatefulWidget {
   final Widget child;
 
-  Blinker({@required this.child});
+  Blinker({required this.child});
   @override
   _BlinkerState createState() => _BlinkerState();
 }
 
 class _BlinkerState extends State<Blinker> with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   @override
   void initState() {

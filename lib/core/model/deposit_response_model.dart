@@ -2,10 +2,10 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 
 class DepositResponseModel {
-  Response response;
-  AugResponse augResponse;
-  Note note;
-  String gtId;
+  Response? response;
+  AugResponse? augResponse;
+  Note? note;
+  String? gtId;
 
   DepositResponseModel({this.response, this.augResponse, this.note, this.gtId});
 
@@ -16,20 +16,20 @@ class DepositResponseModel {
     augResponse = json['augResponse'] != null
         ? new AugResponse.fromJson(json['augResponse'])
         : null;
-    note = json['note'] != null ? new Note.fromJson(json['note']) : null;
-    gtId = json['gtId'] != null ? json['gtId'] : false;
+    note = json['note'] != null ? new Note.fromJson(json['note']) : Note.base();
+    gtId = json['gtId'] != null ? json['gtId'] : '';
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     if (this.augResponse != null) {
-      data['augResponse'] = this.augResponse.toJson();
+      data['augResponse'] = this.augResponse!.toJson();
     }
     if (this.note != null) {
-      data['note'] = this.note.toJson();
+      data['note'] = this.note!.toJson();
     }
     if (this.gtId != null) {
       data['gtId'] = this.gtId;
@@ -39,7 +39,7 @@ class DepositResponseModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'response': response.toMap(),
+      'response': response!.toMap(),
       'augResponse': augResponse?.toMap(),
       'note': note?.toMap(),
       'gtId': gtId
@@ -60,13 +60,13 @@ class DepositResponseModel {
 }
 
 class Response {
-  bool status;
-  bool didWalletUpdate;
-  TransactionDoc transactionDoc;
-  bool didFLCUpdate;
-  double augmontPrinciple;
-  double augmontGoldQty;
-  int flcBalance;
+  bool? status;
+  bool? didWalletUpdate;
+  TransactionDoc? transactionDoc;
+  bool? didFLCUpdate;
+  double? augmontPrinciple;
+  double? augmontGoldQty;
+  int? flcBalance;
 
   Response({
     this.status,
@@ -79,8 +79,8 @@ class Response {
   });
 
   Response.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    didWalletUpdate = json['didWalletUpdate'];
+    status = json['status'] ?? false;
+    didWalletUpdate = json['didWalletUpdate'] ?? false;
     transactionDoc = json['transactionDoc'] != null
         ? new TransactionDoc.fromJson(json['transactionDoc'])
         : null;
@@ -95,7 +95,7 @@ class Response {
     data['status'] = this.status;
     data['didWalletUpdate'] = this.didWalletUpdate;
     if (this.transactionDoc != null) {
-      data['transactionDoc'] = this.transactionDoc.toJson();
+      data['transactionDoc'] = this.transactionDoc!.toJson();
     }
     data['didFLCUpdate'] = this.didFLCUpdate;
     data['didFLCUpdate'] = this.didFLCUpdate;
@@ -109,7 +109,7 @@ class Response {
     return {
       'status': status,
       'didWalletUpdate': didWalletUpdate,
-      'transactionDoc': transactionDoc.toMap(),
+      'transactionDoc': transactionDoc!.toMap(),
       'didFLCUpdate': didFLCUpdate,
       'augmontPrinciple': augmontPrinciple,
       'augmontGoldQty': augmontGoldQty,
@@ -136,10 +136,10 @@ class Response {
 }
 
 class TransactionDoc {
-  bool status;
-  String transactionId;
-  UserTransaction transactionDetail;
-  EnqueuedTaskDetails enqueuedTaskDetails;
+  bool? status;
+  String? transactionId;
+  UserTransaction? transactionDetail;
+  EnqueuedTaskDetails? enqueuedTaskDetails;
 
   TransactionDoc({
     this.status,
@@ -148,11 +148,16 @@ class TransactionDoc {
     this.enqueuedTaskDetails,
   });
 
+  TransactionDoc.base() {
+    status = false;
+    transactionId = '';
+  }
+
   TransactionDoc.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    transactionId = json['transactionId'];
+    status = json['status'] ?? false;
+    transactionId = json['transactionId'] ?? '';
     transactionDetail =
-        UserTransaction.fromMap(json['transactionDetails'], transactionId);
+        UserTransaction.fromMap(json['transactionDetails'], transactionId!);
     enqueuedTaskDetails =
         EnqueuedTaskDetails.fromMap(json['enqueuedTaskDetails']);
   }
@@ -189,12 +194,17 @@ class TransactionDoc {
 
   @override
   String toString() =>
-      'TransactionDoc(status: $status, transactionId: $transactionId, transactionDetail: ${transactionDetail.toJson().toString()}, enqueuedTaskDetails: ${enqueuedTaskDetails.toJson().toString()})';
+      'TransactionDoc(status: $status, transactionId: $transactionId, transactionDetail: ${transactionDetail!.toJson().toString()}, enqueuedTaskDetails: ${enqueuedTaskDetails!.toJson().toString()})';
 }
 
 class EnqueuedTaskDetails {
-  String name;
-  String queuePath;
+  String? name;
+  String? queuePath;
+
+  EnqueuedTaskDetails.base() {
+    name = '';
+    queuePath = '';
+  }
 
   EnqueuedTaskDetails({this.name, this.queuePath});
 
@@ -230,9 +240,13 @@ class EnqueuedTaskDetails {
 }
 
 class Note {
-  String title;
-  String body;
+  String? title;
+  String? body;
 
+  Note.base() {
+    title = '';
+    body = '';
+  }
   Note({this.title, this.body});
 
   Note.fromJson(Map<String, dynamic> json) {
@@ -263,7 +277,7 @@ class Note {
 }
 
 class AugResponse {
-  Data data;
+  Data? data;
 
   AugResponse({this.data});
 
@@ -274,7 +288,7 @@ class AugResponse {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
@@ -285,7 +299,7 @@ class AugResponse {
     };
   }
 
-  factory AugResponse.fromMap(Map<String, dynamic> map) {
+  factory AugResponse.fromMap(Map<String, dynamic>? map) {
     return AugResponse(
       data: map != null ? Data.fromMap(map['data']) : null,
     );
@@ -293,9 +307,9 @@ class AugResponse {
 }
 
 class Data {
-  String transactionId;
-  String merchantTransactionId;
-  String goldBalance;
+  String? transactionId;
+  String? merchantTransactionId;
+  String? goldBalance;
 
   Data({this.transactionId, this.merchantTransactionId, this.goldBalance});
 

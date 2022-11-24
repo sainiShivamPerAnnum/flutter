@@ -5,5 +5,5 @@ class BestTambolaTicketsSumm {
   final List<Ticket> boards;
   final String title;
 
-  BestTambolaTicketsSumm({@required this.boards, @required this.title});
+  BestTambolaTicketsSumm({required this.boards, required this.title});
 }

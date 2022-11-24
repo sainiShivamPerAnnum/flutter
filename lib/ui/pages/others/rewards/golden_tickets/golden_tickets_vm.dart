@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -17,44 +18,46 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
-class GoldenTicketsViewModel extends BaseModel {
+class GoldenTicketsViewModel extends BaseViewModel {
   //Dependencies
-  final _userService = locator<UserService>();
-  final _logger = locator<CustomLogger>();
-  final _gtService = locator<GoldenTicketService>();
+  final UserService? _userService = locator<UserService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
 
   //Local Variables
-  List<GoldenTicket> _goldenTicketList;
-  List<GoldenTicket> _arrangedGoldenTicketList;
+  List<GoldenTicket>? _goldenTicketList;
+  List<GoldenTicket>? _arrangedGoldenTicketList;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   StreamController<List<DocumentSnapshot>> streamController =
       StreamController<List<DocumentSnapshot>>();
   List<DocumentSnapshot> _goldenTicketDocs = [];
-  Query _query;
+  late Query _query;
   bool _isRequesting = false;
   bool _isFinish = false;
   bool showFirst = true;
 
   //Getters and Setters
-  List<GoldenTicket> get arrangedGoldenTicketList =>
+  List<GoldenTicket>? get arrangedGoldenTicketList =>
       this._arrangedGoldenTicketList;
 
-  List<GoldenTicket> get goldenTicketList => this._goldenTicketList;
+  List<GoldenTicket>? get goldenTicketList => this._goldenTicketList;
 
-  set goldenTicketList(List<GoldenTicket> value) =>
+  set goldenTicketList(List<GoldenTicket>? value) =>
       this._goldenTicketList = value;
 
-  set arrangedGoldenTicketList(List<GoldenTicket> value) =>
+  set arrangedGoldenTicketList(List<GoldenTicket>? value) =>
       this._arrangedGoldenTicketList = value;
 
 // Core Methods
   Future<void> init(bool openFirst) async {
-    _query = _db
-        .collection(Constants.COLN_USERS)
-        .doc(_userService.baseUser.uid)
-        .collection(Constants.SUBCOLN_USER_REWARDS)
-        .orderBy('timestamp', descending: true);
-    await getGoldenTickets();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      _query = _db
+          .collection(Constants.COLN_USERS)
+          .doc(_userService!.baseUser!.uid)
+          .collection(Constants.SUBCOLN_USER_REWARDS)
+          .orderBy('timestamp', descending: true);
+      await getGoldenTickets();
+    });
   }
 
   void finish() {
@@ -75,13 +78,13 @@ class GoldenTicketsViewModel extends BaseModel {
   }
 
   void onError(Object error, StackTrace stacktrace) {
-    _logger.e(error, stacktrace);
+    _logger!.e(error, stacktrace);
   }
 
 //Stream Methods
   void onChangeData(List<DocumentChange> documentChanges) {
     if (_goldenTicketDocs.isEmpty) return;
-    _logger.d("Data Updated");
+    _logger!.d("Data Updated");
     var isChange = false;
     documentChanges.forEach((productChange) {
       if (productChange.type == DocumentChangeType.removed) {
@@ -90,11 +93,10 @@ class GoldenTicketsViewModel extends BaseModel {
         });
         isChange = true;
       } else if (productChange.type == DocumentChangeType.added) {
-        DocumentSnapshot newDoc = _goldenTicketDocs.firstWhere(
-            (e) => e.id == productChange.doc.id,
-            orElse: () => null);
+        DocumentSnapshot? newDoc = _goldenTicketDocs.firstWhereOrNull(
+            (e) => e.id == productChange.doc.id);
         if (newDoc == null) {
-          _logger.d("New document detected, adding to list");
+          _logger!.d("New document detected, adding to list");
           _goldenTicketDocs.add(productChange.doc);
           isChange = true;
         }
@@ -129,7 +131,7 @@ class GoldenTicketsViewModel extends BaseModel {
             .limit(20)
             .get();
       }
-      if (querySnapshot != null) {
+      if (querySnapshot.size != 0) {
         int oldSize = _goldenTicketDocs.length;
         _goldenTicketDocs.addAll(querySnapshot.docs);
         int newSize = _goldenTicketDocs.length;
@@ -138,8 +140,8 @@ class GoldenTicketsViewModel extends BaseModel {
           //first fetch
           //cache the latest Golden Ticket
           int timestamp = GoldenTicket.fromJson(
-                      _goldenTicketDocs[0].data(), _goldenTicketDocs[0].id)
-                  .timestamp
+                      _goldenTicketDocs[0].data() as Map<String, dynamic>, _goldenTicketDocs[0].id)
+                  .timestamp!
                   .seconds *
               1000;
           CacheManager.writeCache(
@@ -148,7 +150,7 @@ class GoldenTicketsViewModel extends BaseModel {
               type: CacheType.int);
         }
         if (oldSize != newSize) {
-          _logger.d("New data loaded");
+          _logger!.d("New data loaded");
         } else {
           _isFinish = true;
         }
@@ -162,34 +164,34 @@ class GoldenTicketsViewModel extends BaseModel {
 
   arrangeGoldenTickets(List<DocumentSnapshot> data, openFirst) {
     goldenTicketList =
-        data.map((e) => GoldenTicket.fromJson(e.data(), e.id)).toList();
+        data.map((e) => GoldenTicket.fromJson(e.data() as Map<String, dynamic>, e.id)).toList();
     arrangedGoldenTicketList = [];
-    goldenTicketList
-        .sort((a, b) => b.timestamp.seconds.compareTo(a.timestamp.seconds));
-    goldenTicketList.forEach((e) {
+    goldenTicketList!
+        .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
+    goldenTicketList!.forEach((e) {
       if (e.redeemedTimestamp == null ||
           e.redeemedTimestamp == TimestampModel(nanoseconds: 0, seconds: 0)) {
-        arrangedGoldenTicketList.add(e);
+        arrangedGoldenTicketList!.add(e);
       }
     });
-    goldenTicketList.forEach((e) {
+    goldenTicketList!.forEach((e) {
       if ((e.redeemedTimestamp != null &&
               e.redeemedTimestamp !=
                   TimestampModel(nanoseconds: 0, seconds: 0)) &&
-          e.isRewarding) {
-        arrangedGoldenTicketList.add(e);
+          e.isRewarding!) {
+        arrangedGoldenTicketList!.add(e);
       }
     });
-    _gtService.activeGoldenTickets = goldenTicketList;
+    _gtService!.activeGoldenTickets = goldenTicketList;
     if (openFirst && showFirst) {
       showFirst = false;
       WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
         AppState.screenStack.add(ScreenItem.dialog);
-        Navigator.of(AppState.delegate.navigatorKey.currentContext).push(
+        Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
           HeroDialogRoute(
             builder: (context) {
               return GTDetailedView(
-                ticket: arrangedGoldenTicketList[0],
+                ticket: arrangedGoldenTicketList![0],
               );
             },
           ),

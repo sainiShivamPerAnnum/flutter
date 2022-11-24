@@ -4,83 +4,142 @@ import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 
 class PrizeService extends ChangeNotifier {
-  final _gtRepo = locator<GoldenTicketRepository>();
-  PrizesModel _tambolaPrizes;
-  PrizesModel _cricketPrizes;
-  PrizesModel _poolClubPrizes;
-  PrizesModel _footballPrizes;
-  PrizesModel _candyFiestaPrizes;
+  final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
+  PrizesModel? _tambolaPrizes;
+  PrizesModel? _cricketPrizes;
+  PrizesModel? _poolClubPrizes;
+  PrizesModel? _footballPrizes;
+  PrizesModel? _candyFiestaPrizes;
+  PrizesModel? _bowlingPrizes;
+  PrizesModel? _bottleFlipPrizes;
 
-  get footballPrizes => this._footballPrizes;
+  PrizesModel? get footballPrizes => this._footballPrizes;
 
-  set footballPrizes(ApiResponse<PrizesModel> value) {
-    this._footballPrizes = value.model;
+  set footballPrizes(PrizesModel? value) {
+    this._footballPrizes = value;
     notifyListeners();
   }
 
-  get candyFiestaPrizes => this._candyFiestaPrizes;
+  PrizesModel? get candyFiestaPrizes => this._candyFiestaPrizes;
 
-  set candyFiestaPrizes(ApiResponse<PrizesModel> value) {
-    this._candyFiestaPrizes = value.model;
+  set candyFiestaPrizes(PrizesModel? value) {
+    this._candyFiestaPrizes = value;
     notifyListeners();
   }
 
-  get poolClubPrizes => this._poolClubPrizes;
+  PrizesModel? get poolClubPrizes => this._poolClubPrizes;
 
-  set poolClubPrizes(ApiResponse<PrizesModel> value) {
-    this._poolClubPrizes = value.model;
+  set poolClubPrizes(PrizesModel? value) {
+    this._poolClubPrizes = value;
     notifyListeners();
   }
 
-  get tambolaPrizes => this._tambolaPrizes;
+  PrizesModel? get tambolaPrizes => this._tambolaPrizes;
 
-  set tambolaPrizes(ApiResponse<PrizesModel> value) {
-    this._tambolaPrizes = value.model;
+  set tambolaPrizes(PrizesModel? value) {
+    this._tambolaPrizes = value;
     notifyListeners();
   }
 
-  get cricketPrizes => this._cricketPrizes;
+  PrizesModel? get cricketPrizes => this._cricketPrizes;
 
-  set cricketPrizes(ApiResponse<PrizesModel> value) {
-    this._cricketPrizes = value.model;
+  set cricketPrizes(PrizesModel? value) {
+    this._cricketPrizes = value;
+    notifyListeners();
+  }
+
+  get bowlingPrizes => this._bowlingPrizes;
+
+  set bowlingPrizes(value) {
+    this._bowlingPrizes = value;
+    notifyListeners();
+  }
+
+  get bottleFlipPrizes => this._bottleFlipPrizes;
+
+  set bottleFlipPrizes(value) {
+    this._bottleFlipPrizes = value;
     notifyListeners();
   }
 
   fetchFootballPrizes() async {
-    footballPrizes = await _gtRepo.getPrizesPerGamePerFreq(
+    await _gtRepo!
+        .getPrizesPerGamePerFreq(
       Constants.GAME_TYPE_FOOTBALL,
       "weekly",
-    );
+    )
+        .then((value) {
+      footballPrizes = value.model;
+    });
   }
 
   fetchCandyFiestaPrizes() async {
-    candyFiestaPrizes = await _gtRepo.getPrizesPerGamePerFreq(
+    await _gtRepo!
+        .getPrizesPerGamePerFreq(
       Constants.GAME_TYPE_CANDYFIESTA,
       "weekly",
-    );
+    )
+        .then((value) {
+      candyFiestaPrizes = value.model;
+    });
   }
 
   fetchTambolaPrizes() async {
-    tambolaPrizes = await _gtRepo.getPrizesPerGamePerFreq(
+    await _gtRepo!
+        .getPrizesPerGamePerFreq(
       Constants.GAME_TYPE_TAMBOLA,
       "weekly",
-    );
+    )
+        .then((value) {
+      tambolaPrizes = value.model;
+    });
   }
 
   fetchCricketPrizes() async {
-    cricketPrizes = await _gtRepo.getPrizesPerGamePerFreq(
+    await _gtRepo!
+        .getPrizesPerGamePerFreq(
       Constants.GAME_TYPE_CRICKET,
       "weekly",
-    );
+    )
+        .then((value) {
+      cricketPrizes = value.model;
+    });
   }
 
   fetchPoolClubPrizes() async {
-    poolClubPrizes = await _gtRepo.getPrizesPerGamePerFreq(
+    await _gtRepo!
+        .getPrizesPerGamePerFreq(
       Constants.GAME_TYPE_POOLCLUB,
       "weekly",
-    );
+    )
+        .then((value) {
+      poolClubPrizes = value.model;
+    });
+  }
+
+  fetchBottleFlipPrizes() async {
+    await _gtRepo!
+        .getPrizesPerGamePerFreq(
+      Constants.GAME_TYPE_BOTTLEFLIP,
+      "weekly",
+    )
+        .then((value) {
+      bottleFlipPrizes = value.model;
+    });
+  }
+
+  fetchBowlingPrizes() async {
+    await _gtRepo!
+        .getPrizesPerGamePerFreq(
+      Constants.GAME_TYPE_BOWLING,
+      "weekly",
+    )
+        .then((value) {
+      bowlingPrizes = value.model;
+    });
   }
 }

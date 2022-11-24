@@ -5,29 +5,31 @@ import 'package:felloapp/util/logger.dart';
 
 class BaseUser {
   static Log log = new Log("User");
-  String uid;
-  String mobile;
-  String name;
-  String email;
-  String dob;
-  String gender; // 0: Male | 1: Female | -1: Rather Not to say
-  String username;
-  String verifiedName;
-  String client_token; //fetched from a subcollection
-  bool isInvested;
-  bool isIciciOnboarded;
-  bool isAugmontOnboarded;
-  bool isSimpleKycVerified;
-  bool isBlocked;
+  String?  uid;
+  String?  mobile;
+  String?  name;
+  String?  email;
+  String?  dob;
+  String?  gender; // 0: Male | 1: Female | -1: Rather Not to say
+  String?  username;
+  String?  verifiedName;
+  String?  client_token; //fetched from a subcollection
+  bool?  isInvested;
+  bool?  isIciciOnboarded;
+  bool?  isAugmontOnboarded;
+  bool?  isSimpleKycVerified;
+  bool?  isBlocked;
   int isKycVerified;
-  String kycName;
-  String pendingTxnId;
-  bool isIciciEnabled;
-  bool isAugmontEnabled;
-  bool isEmailVerified;
+  String ? kycName;
+  String ? pendingTxnId;
+  bool ? isIciciEnabled;
+  bool ? isAugmontEnabled;
+  bool ? isEmailVerified;
   UserPreferences userPreferences;
   TimestampModel createdOn;
-  String appFlyerId;
+  String ? appFlyerId;
+  String ? avatarId;
+  bool?  isOldUser;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -51,84 +53,122 @@ class BaseUser {
   static final String fldIsIciciEnabled = "mIsIciciEnabled";
   static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
   static final String fldUserPrefs = "mUserPrefs";
+  static final String fldUserPrefsAl = "mUserPrefsAl";
+  static final String fldUserPrefsTn = "mUserPrefsTn";
   static final String fldCreatedOn = "mCreatedOn";
   static final String fldKycName = "mKycName";
   static final String fldStateId = "stateId";
   static final String fldAppFlyerId = "mAppFlyerId";
+  static final String fldAvatarId = "mAvatarId";
+  static final String fldIsOldUser = "isOldUser";
 
   BaseUser(
-      this.uid,
-      this.mobile,
-      this.email,
-      this.name,
-      this.dob,
-      this.gender,
-      this.client_token,
-      this.isInvested,
-      this.isIciciOnboarded,
-      this.isAugmontOnboarded,
-      this.isSimpleKycVerified,
-      this.isKycVerified,
-      this.kycName,
-      this.pendingTxnId,
-      this.isIciciEnabled,
-      this.isAugmontEnabled,
-      this.username,
-      this.isEmailVerified,
-      this.isBlocked,
-      this.userPreferences,
-      this.createdOn,
-      this.appFlyerId);
+    this.uid,
+    this.mobile,
+    this.email,
+    this.name,
+    this.dob,
+    this.gender,
+    this.client_token,
+    this.isInvested,
+    this.isIciciOnboarded,
+    this.isAugmontOnboarded,
+    this.isSimpleKycVerified,
+    this.isKycVerified,
+    this.kycName,
+    this.pendingTxnId,
+    this.isIciciEnabled,
+    this.isAugmontEnabled,
+    this.username,
+    this.isEmailVerified,
+    this.isBlocked,
+    this.userPreferences,
+    this.createdOn,
+    this.appFlyerId,
+    this.avatarId,
+    this.isOldUser,
+  );
 
   BaseUser.newUser(String id, String mobile)
       : this(
-            id,
-            mobile,
-            null,
-            null,
-            null,
-            null,
-            null,
-            false,
-            null,
-            false,
-            false,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "",
-            false,
-            false,
-            UserPreferences(null),
-            TimestampModel.currentTimeStamp(),
-            null);
-
-  BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
+          id,
+          mobile,
+          '',
+          '',
+          '',
+          '', 
+          '' , 
+          false,
+          false, 
+          false, 
+          false,
+          0,
+          '',
+          '',
+          false,
+          false,
+          '',
+          false,
+          false,
+          UserPreferences({}),
+          TimestampModel.currentTimeStamp(),
+          '',
+          '',
+          false,
+        );
+BaseUser.base()
+      : this(
+          '',
+          '',
+          '',
+          '',
+          '',
+          '', 
+          '' , 
+          false,
+          false, 
+          false, 
+          false,
+          0,
+          '',
+          '',
+          false,
+          false,
+          '',
+          false,
+          false,
+          UserPreferences({}),
+          TimestampModel(seconds: 0,nanoseconds: 0),
+          '',
+          '',
+          false,
+        );
+  BaseUser.fromMap(Map<String, dynamic> data, String id, [String ? client_token])
       : this(
             id,
-            data[fldMobile]?.toString(),
-            data[fldEmail]?.toString(),
-            data[fldName]?.toString(),
-            data[fldDob]?.toString(),
-            data[fldGender]?.toString()?.toUpperCase(),
-            client_token?.toString(),
+            data[fldMobile]?.toString()?? '',
+            data[fldEmail]?.toString() ?? '',
+            data[fldName]?.toString() ?? '',
+            data[fldDob]?.toString() ?? '',
+            data[fldGender]?.toString()?.toUpperCase() ?? '',
+            client_token?.toString() ?? '',
             data[fldIsInvested] ?? false,
             data[fldIsIciciOnboarded],
             data[fldIsAugmontOnboarded] ?? false,
-            data[fldIsSimpleKycVerified],
-            data[fldIsKycVerified],
-            data[fldKycName],
-            data[fldPendingTxnId],
-            data[fldIsIciciEnabled],
-            data[fldIsAugmontEnabled],
-            data[fldUsername]?.toString(),
+            data[fldIsSimpleKycVerified] ?? false,
+            data[fldIsKycVerified] ?? 0,
+            data[fldKycName] ?? '',
+            data[fldPendingTxnId] ?? '',
+            data[fldIsIciciEnabled] ?? false,
+            data[fldIsAugmontEnabled] ?? false,
+            data[fldUsername]?.toString() ?? '',
             data[fldIsEmailVerified] ?? false,
             data[fldIsBlocked] ?? false,
             UserPreferences(data[fldUserPrefs]),
             TimestampModel.fromMap(data[fldCreatedOn]),
-            data[fldAppFlyerId]);
+            data[fldAppFlyerId] ?? '',
+            data[fldAvatarId] ?? '',
+            data[fldIsOldUser] ?? false);
 
   //to send user object to server
   toJson() {
@@ -145,29 +185,29 @@ class BaseUser {
       fldIsEmailVerified: isEmailVerified,
       fldCreatedOn: createdOn
     };
-    if (isKycVerified != null) userObj[fldIsKycVerified] = isKycVerified;
+    if (isKycVerified != 0) userObj[fldIsKycVerified] = isKycVerified;
     if (kycName != null) userObj[fldKycName] = kycName;
     if (isIciciOnboarded != null)
       userObj[fldIsIciciOnboarded] = isIciciOnboarded;
     if (isIciciEnabled != null) userObj[fldIsIciciEnabled] = isIciciEnabled;
     if (isAugmontEnabled != null)
       userObj[fldIsAugmontEnabled] = isAugmontEnabled;
-    if (userPreferences != null)
+    if (userPreferences != UserPreferences({}))
       userObj[fldUserPrefs] = userPreferences.toJson();
     if (isBlocked != null) userObj[fldIsBlocked] = isBlocked;
     if (appFlyerId != null) userObj[fldAppFlyerId] = appFlyerId;
+    if (avatarId != null) userObj[fldAvatarId] = avatarId;
     return userObj;
   }
 
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return (((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true)) ||
-        (username?.isEmpty ?? true));
+    return ((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true));
   }
 
   @override
   String toString() {
-    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: $userPreferences, createdOn: $createdOn)';
+    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: $userPreferences, createdOn: $createdOn, appFlyerId: $appFlyerId, avatarId: $avatarId)';
   }
 }
 
@@ -187,21 +227,21 @@ class UserPreferences {
   };
 
   //current values
-  Map<String, int> _activePrefs = {};
+  Map<String?, int?> _activePrefs = {};
 
-  UserPreferences(Map<dynamic, dynamic> remValues) {
+  UserPreferences(Map<dynamic, dynamic>? remValues) {
     for (Preferences p in Preferences.values) {
-      String _fKey = _index[p];
-      int _defValue = _defValues[p];
-      _activePrefs[_fKey] = (remValues != null &&
-              remValues[_fKey] != null &&
+      String?  _fKey = _index[p];
+      int ? _defValue = _defValues[p];
+      _activePrefs[_fKey] = (remValues != {} &&
+              remValues![_fKey] != null &&
               remValues[_fKey] is int)
           ? remValues[_fKey]
           : _defValue;
     }
   }
 
-  int getPreference(Preferences p) => _activePrefs[_index[p]];
+  int? getPreference(Preferences p) => _activePrefs[_index[p]];
 
   setPreference(Preferences p, int val) => _activePrefs[_index[p]] = val;
 

@@ -1,1 +1,1 @@
-enum ScreenItem { page, dialog, loader }
+enum ScreenItem { page, dialog, loader, modalsheet }

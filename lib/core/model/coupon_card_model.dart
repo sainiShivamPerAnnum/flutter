@@ -3,15 +3,15 @@ import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 
 class CouponModel {
-  final String id;
-  final String code;
-  final String description;
-  final TimestampModel expiresOn;
-  final TimestampModel createdOn;
-  final int maxUse;
-  final int priority;
-  final int minPurchase;
-  final String highlight;
+  final String?  id;
+  final String?  code;
+  final String?  description;
+  final TimestampModel?  expiresOn;
+  final TimestampModel?  createdOn;
+  final int?  maxUse;
+  final int?  priority;
+  final int?  minPurchase;
+  final String?  highlight;
   static final helper =
       HelperModel<CouponModel>((map) => CouponModel.fromMap(map));
   CouponModel({
@@ -27,15 +27,15 @@ class CouponModel {
   });
 
   CouponModel copyWith({
-    String id,
-    String code,
-    String description,
-    TimestampModel expireOn,
-    TimestampModel createdOn,
-    int maxUse,
-    int priority,
-    int minPurchase,
-    String highlight,
+    String?  id,
+    String?  code,
+    String?  description,
+    TimestampModel?  expireOn,
+    TimestampModel?  createdOn,
+    int?  maxUse,
+    int?  priority,
+    int?  minPurchase,
+    String?  highlight,
   }) {
     return CouponModel(
       id: id ?? this.id,
@@ -55,8 +55,8 @@ class CouponModel {
       'id': id,
       'code': code,
       'description': description,
-      'expiresOn': expiresOn.toMap(),
-      'createdOn': createdOn.toMap(),
+      'expiresOn': expiresOn!.toMap(),
+      'createdOn': createdOn!.toMap(),
       'maxUse': maxUse,
       'priority': priority,
       'minPurchase': minPurchase,
@@ -66,15 +66,15 @@ class CouponModel {
 
   factory CouponModel.fromMap(Map<String, dynamic> map) {
     return CouponModel(
-      id: map['id'] as String,
-      code: map['code'] as String,
-      description: map['description'] as String,
+      id: map['id'] ?? '',
+      code: map['code'] ??  '',
+      description: map['description']?? '',
       expiresOn: TimestampModel.fromMap(map['expiresOn']),
       createdOn: TimestampModel.fromMap(map['createdOn']),
-      maxUse: map['maxUse'] as int,
-      priority: map['priority'] as int,
-      minPurchase: map['minPurchase'] as int,
-      highlight: map['highlight'] as String,
+      maxUse: map['maxUse'] ?? 0,
+      priority: map['priority'] ?? 0,
+      minPurchase: map['minPurchase'] ?? 0,
+      highlight: map['highlight']?? '',
     );
   }
 

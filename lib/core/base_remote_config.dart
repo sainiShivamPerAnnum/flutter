@@ -6,15 +6,24 @@ import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class BaseRemoteConfig {
-  static RemoteConfig remoteConfig;
-  static UserService _userService = locator<UserService>();
-  static final _internalOpsService = locator<InternalOpsService>();
+  static late RemoteConfig remoteConfig;
+  static UserService? _userService = locator<UserService>();
+  static final InternalOpsService? _internalOpsService =
+      locator<InternalOpsService>();
 
   ///Each config is set as a map = {name, default value}
+
+  static const Map<String, String> _LOGIN_ASSET_URL = {
+    'login_asset_url':
+        'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/temp%2Fmain.svg?alt=media&token=2d4ceda1-2d0b-44c4-8433-1de255da8664'
+  };
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
+
   static const Map<String, String> _TAMBOLA_HEADER_FIRST = {
     'tambola_header_1': 'Today\'s picks'
   };
+
+  static const Map<String, String> _TAMBOLA_COST = {'tambola_cost': '500'};
   static const Map<String, String> _TAMBOLA_HEADER_SECOND = {
     'tambola_header_2': 'Pull to see the other picks'
   };
@@ -198,10 +207,21 @@ class BaseRemoteConfig {
     'enabled_psp_apps': 'EGP'
   };
 
+  static const Map<String, String> _PAYTM_PROD_MID = {'paytm_prod_mid': 'ppm'};
+
+  static const Map<String, String> _PAYTM_DEV_MID = {'paytm_dev_mid': 'pdm'};
+
+  static const Map<String, String> _RZP_PROD_MID = {'rzp_prod_mid': 'rpm'};
+
+  static const Map<String, String> _RZP_DEV_MID = {'rzp_dev_mid': 'rdm'};
+
+  static const Map<String, bool> _AUTOSAVE_ACTIVE = {'autosave_active': true};
   static const Map<String, dynamic> DEFAULTS = {
+    ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
+    ..._TAMBOLA_COST,
     ..._TAMBOLA_DAILY_PICK_COUNT,
     ..._FORCE_MIN_BUILD_NUMBER_IOS,
     ..._FORCE_MIN_BUILD_NUMBER_ANDROID,
@@ -256,7 +276,12 @@ class BaseRemoteConfig {
     ..._CACHE_INVALIDATION,
     ..._ENABLED_PSP_APPS,
     ..._ACTIVE_PG_ANDROID,
-    ..._ACTIVE_PG_IOS
+    ..._ACTIVE_PG_IOS,
+    ..._PAYTM_PROD_MID,
+    ..._PAYTM_DEV_MID,
+    ..._RZP_PROD_MID,
+    ..._RZP_DEV_MID,
+    ..._AUTOSAVE_ACTIVE
   };
 
   static Future<bool> init() async {
@@ -278,13 +303,13 @@ class BaseRemoteConfig {
     } catch (exception) {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
-      if (_userService.baseUser.uid != null) {
+      if (_userService?.baseUser?.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_type': 'Remote config details fetch failed',
           'error_msg': 'Remote config fetch failed, using default values.'
         };
-        _internalOpsService.logFailure(
-          _userService.baseUser.uid,
+        _internalOpsService!.logFailure(
+          _userService!.baseUser!.uid,
           FailType.RemoteConfigFailed,
           errorDetails,
         );
@@ -293,6 +318,7 @@ class BaseRemoteConfig {
     }
   }
 
+  static String get LOGIN_ASSET_URL => _LOGIN_ASSET_URL.keys.first;
   static String get FORCE_MIN_BUILD_NUMBER_IOS =>
       _FORCE_MIN_BUILD_NUMBER_IOS.keys.first;
 
@@ -350,6 +376,7 @@ class BaseRemoteConfig {
 
   static String get DEPOSIT_UPI_ADDRESS => _DEPOSIT_UPI_ADDRESS.keys.first;
 
+  static String get TAMBOLACOST => _TAMBOLA_COST.keys.first;
   static String get TAMBOLA_HEADER_SECOND => _TAMBOLA_HEADER_SECOND.keys.first;
 
   static String get TAMBOLA_HEADER_FIRST => _TAMBOLA_HEADER_FIRST.keys.first;
@@ -425,6 +452,17 @@ class BaseRemoteConfig {
   static String get ACTIVE_PG_IOS => _ACTIVE_PG_IOS.keys.first;
 
   static String get ENABLED_PSP_APPS => _ENABLED_PSP_APPS.keys.first;
+
+  static String get PATYM_PROD_MID => _PAYTM_PROD_MID.keys.first;
+
+  static String get PATYM_DEV_MID => _PAYTM_DEV_MID.keys.first;
+
+  static String get RZP_PROD_MID => _RZP_PROD_MID.keys.first;
+
+  static String get RZP_DEV_MID => _RZP_DEV_MID.keys.first;
+
+  static bool get AUTOSAVE_ACTIVE =>
+      remoteConfig.getBool(_AUTOSAVE_ACTIVE.keys.first);
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

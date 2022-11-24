@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class TimestampModel extends Timestamp {
-  TimestampModel({@required int seconds, @required int nanoseconds})
+  TimestampModel({required int seconds, required int nanoseconds})
       : super(seconds, nanoseconds);
 
   factory TimestampModel.fromMap(dynamic map) {
     if (map == null) return new TimestampModel(seconds: 0, nanoseconds: 0);
+
+    if (map.runtimeType == String) return TimestampModel.fromIsoString(map);
 
     return map.runtimeType == Timestamp
         ? TimestampModel.fromTimestamp(map as Timestamp)
@@ -20,6 +22,12 @@ class TimestampModel extends Timestamp {
     return TimestampModel(
       seconds: time.seconds,
       nanoseconds: time.nanoseconds,
+    );
+  }
+
+  factory TimestampModel.fromIsoString(String date) {
+    return TimestampModel.fromTimestamp(
+      Timestamp.fromDate(DateTime.parse(date)),
     );
   }
 

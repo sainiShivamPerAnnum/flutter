@@ -10,28 +10,43 @@ import 'intl/messages_all.dart';
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
 // ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
-// ignore_for_file: avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values, avoid_escaping_inner_quotes
 
 class S {
   S();
-  
-  static S current;
-  
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+
+  static S? _current;
+
+  static S get current {
+    assert(_current != null,
+        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    return _current!;
+  }
+
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name); 
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      S.current = S();
-      
-      return S.current;
+      final instance = S();
+      S._current = instance;
+
+      return instance;
     });
-  } 
+  }
 
   static S of(BuildContext context) {
+    final instance = S.maybeOf(context);
+    assert(instance != null,
+        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    return instance!;
+  }
+
+  static S? maybeOf(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
 
@@ -369,11 +384,11 @@ class S {
 
   // skipped getter for the '-----------------------------------' key
 
-  /// `Save`
-  String get navBarFinance {
+  /// `Journey`
+  String get navBarJourney {
     return Intl.message(
-      'Save',
-      name: 'navBarFinance',
+      'Journey',
+      name: 'navBarJourney',
       desc: '',
       args: [],
     );
@@ -553,7 +568,99 @@ class S {
     );
   }
 
+  /// `Balance`
+  String get balanceText {
+    return Intl.message(
+      'Balance',
+      name: 'balanceText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invest safely in Gold\nwith our Auto SIP to win tokens`
+  String get investSafelyInGoldText {
+    return Intl.message(
+      'Invest safely in Gold\nwith our Auto SIP to win tokens',
+      name: 'investSafelyInGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get started with a weekly/ daily SIP`
+  String get getStartedWithSIP {
+    return Intl.message(
+      'Get started with a weekly/ daily SIP',
+      name: 'getStartedWithSIP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello Flo`
+  String get felloFloText {
+    return Intl.message(
+      'Fello Flo',
+      name: 'felloFloText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Digital Gold`
+  String get digitalGoldText {
+    return Intl.message(
+      'Digital Gold',
+      name: 'digitalGoldText',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '--------------------------------' key
+
+  /// `Add Bank information`
+  String get addBankInformationText {
+    return Intl.message(
+      'Add Bank information',
+      name: 'addBankInformationText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `With every transaction, some\ntokens will be deducted.`
+  String get tokenDeductionOnTransaction {
+    return Intl.message(
+      'With every transaction, some\ntokens will be deducted.',
+      name: 'tokenDeductionOnTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To enable selling gold, complete the following:`
+  String get enableSellGold {
+    return Intl.message(
+      'To enable selling gold, complete the following:',
+      name: 'enableSellGold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Complete KYC`
+  String get completeKYCText {
+    return Intl.message(
+      'Complete KYC',
+      name: 'completeKYCText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '---------------------------------' key
 
   /// `My Winnings`
   String get winMyWinnings {
@@ -1170,11 +1277,9 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   bool shouldReload(AppLocalizationDelegate old) => false;
 
   bool _isSupported(Locale locale) {
-    if (locale != null) {
-      for (var supportedLocale in supportedLocales) {
-        if (supportedLocale.languageCode == locale.languageCode) {
-          return true;
-        }
+    for (var supportedLocale in supportedLocales) {
+      if (supportedLocale.languageCode == locale.languageCode) {
+        return true;
       }
     }
     return false;

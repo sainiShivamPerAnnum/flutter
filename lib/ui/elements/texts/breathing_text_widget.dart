@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class CustomAnimText extends AnimatedWidget {
   static final _opacityTween = Tween<double>(begin: 0.1, end: 1);
-  final String animText;
-  final TextStyle textStyle;
+  final String? animText;
+  final TextStyle? textStyle;
 
   //final opacityAnimation = Tween<double>(begin: 0.1, end: 1).animate(controller);
 
   CustomAnimText(
-      {Key key, Animation<double> animation, this.animText, this.textStyle})
+      {Key? key, required Animation<double> animation, this.animText, this.textStyle,})
       : super(key: key, listenable: animation);
 
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class CustomAnimText extends AnimatedWidget {
       opacity: _opacityTween.evaluate(animation),
       child: Text(
         animText ?? 'Loading',
-        style: textStyle ?? TextStyle(color: Colors.grey[800], fontSize: 20),
+        style: textStyle ?? TextStyle(color: Colors.white, fontSize: 20),
       ),
     );
     //);
@@ -28,8 +28,8 @@ class CustomAnimText extends AnimatedWidget {
 }
 
 class BreathingText extends StatefulWidget {
-  final String alertText;
-  final TextStyle textStyle;
+  final String? alertText;
+  final TextStyle? textStyle;
 
   BreathingText({this.alertText, this.textStyle});
 
@@ -39,8 +39,8 @@ class BreathingText extends StatefulWidget {
 // #docregion print-state
 class _BreathingTextState extends State<BreathingText>
     with SingleTickerProviderStateMixin {
-  Animation<double> animation;
-  AnimationController controller;
+  late Animation<double> animation;
+  late AnimationController controller;
 
   @override
   void initState() {

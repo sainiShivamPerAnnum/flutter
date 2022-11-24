@@ -1,28 +1,30 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Ticket extends StatelessWidget {
   Ticket({
-    @required this.board,
-    @required this.calledDigits,
+    required this.board,
+    required this.calledDigits,
     this.bestBoards,
     this.dailyPicks,
     this.showBestOdds = true,
   });
 
-  final TambolaBoard board;
-  final DailyPick dailyPicks;
-  final List<TambolaBoard> bestBoards;
+  final TambolaBoard? board;
+  final DailyPick? dailyPicks;
+  final List<TambolaBoard?>? bestBoards;
   final List<int> calledDigits;
   final bool showBestOdds;
 
   //List<int> markedIndices = [];
-  List<int> ticketNumbers = [];
+  List<int?> ticketNumbers = [];
 
   // markItem(int index) {
   //   print("marked index : $index");
@@ -34,21 +36,17 @@ class Ticket extends StatelessWidget {
   // }
 
   getColor(int index) {
-    if (calledDigits.contains(ticketNumbers[index])) return Color(0xffFDA77F);
-    if (index % 2 == 0) {
-      return UiConstants.primaryLight;
-    } else {
-      return UiConstants.primaryColor;
-    }
+    if (calledDigits.contains(ticketNumbers[index]))
+      return UiConstants.kTicketPeachColor;
+    else
+      return Colors.transparent;
   }
 
   getTextColor(int index) {
-    if (calledDigits.contains(ticketNumbers[index])) return Colors.white;
-    if (index % 2 != 0) {
-      return UiConstants.primaryLight;
-    } else {
-      return UiConstants.primaryColor;
-    }
+    if (calledDigits.contains(ticketNumbers[index]))
+      return Colors.black;
+    else
+      return Colors.white;
   }
 
   markStatus(int index) {
@@ -62,7 +60,7 @@ class Ticket extends StatelessWidget {
             margin: EdgeInsets.all(2),
             width: 2,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.black,
               borderRadius: BorderRadius.circular(100),
             ),
           ),
@@ -76,7 +74,7 @@ class Ticket extends StatelessWidget {
   generateNumberList() {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 9; j++) {
-        ticketNumbers.add(board.tambolaBoard[i][j]);
+        ticketNumbers.add(board!.tambolaBoard![i][j]);
       }
     }
   }
@@ -86,16 +84,11 @@ class Ticket extends StatelessWidget {
     if (ticketNumbers.isEmpty) generateNumberList();
     print(calledDigits);
     return Container(
-      height: SizeConfig.screenWidth * 1.3,
-      width: SizeConfig.screenWidth - SizeConfig.pageHorizontalMargins * 2,
+      width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
-        color: UiConstants.scaffoldColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          width: 0,
-          color: Theme.of(context).scaffoldBackgroundColor,
-        ),
-      ),
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          border: Border.all(color: Colors.white.withOpacity(0.7), width: 0.3)),
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.pageHorizontalMargins,
       ),
@@ -103,13 +96,49 @@ class Ticket extends StatelessWidget {
         children: [
           Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(SizeConfig.padding16),
+            padding: EdgeInsets.all(SizeConfig.padding8),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Ticket #${board.getTicketNumber()}',
-                  style: TextStyles.body3.colour(UiConstants.primaryColor),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    (board!.assigned_time.toDate().day == DateTime.now().day)
+                        ? Shimmer(
+                            gradient: LinearGradient(
+                              colors: [
+                                UiConstants.primaryLight,
+                                UiConstants.primaryColor,
+                                UiConstants.primaryLight
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            child: Text(
+                              "NEW",
+                              style: TextStyles.rajdhaniB.body3,
+                            ),
+                          )
+                        : SizedBox(),
+                    Row(
+                      children: [
+                        Text(
+                          '#${board!.getTicketNumber()}',
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white.withOpacity(0.7)),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding4,
+                        ),
+                        Icon(
+                          Icons.info_outline,
+                          size: SizeConfig.padding16,
+                          color: Colors.white.withOpacity(0.7),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
                 SizedBox(height: SizeConfig.padding16),
                 GridView.builder(
@@ -119,14 +148,29 @@ class Ticket extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 9,
+                    mainAxisSpacing: 2,
+                    crossAxisSpacing: 1,
                   ),
                   itemBuilder: (ctx, i) {
                     return Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: getColor(i),
-                        borderRadius: BorderRadius.circular(
-                            SizeConfig.blockSizeHorizontal * 3),
+                        borderRadius: calledDigits.contains(ticketNumbers[i])
+                            ? null
+                            : BorderRadius.circular(
+                                SizeConfig.blockSizeHorizontal * 1),
+                        border: Border.all(
+                            color: Colors.white
+                                .withOpacity(ticketNumbers[i] == 0 ? 0.4 : 0.7),
+                            width: calledDigits.contains(ticketNumbers[i])
+                                ? 0.0
+                                : ticketNumbers[i] == 0
+                                    ? 0.5
+                                    : 0.7),
+                        shape: calledDigits.contains(ticketNumbers[i])
+                            ? BoxShape.circle
+                            : BoxShape.rectangle,
                       ),
                       child: Stack(
                         children: [
@@ -136,11 +180,8 @@ class Ticket extends StatelessWidget {
                               ticketNumbers[i] == 0
                                   ? ""
                                   : ticketNumbers[i].toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: SizeConfig.mediumTextSize,
-                                color: getTextColor(i),
-                              ),
+                              style: TextStyles.rajdhaniB.body3
+                                  .colour(getTextColor(i)),
                             ),
                           ),
                           markStatus(i)
@@ -152,26 +193,21 @@ class Ticket extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding16,
-              ),
-              child: Odds(dailyPicks, board, bestBoards, showBestOdds),
-            ),
-          ),
+          // Expanded(
+          //   child: Container(
+          //     padding: EdgeInsets.symmetric(
+          //       horizontal: SizeConfig.padding16,
+          //     ),
+          // child: Odds(dailyPicks, board, bestBoards, showBestOdds),
+          //   ),
+          // ),
           Padding(
-            padding: EdgeInsets.all(SizeConfig.padding12),
-            child: InkWell(
-              onTap: () {
-                print(board.getTicketNumber());
-              },
-              child: Text(
-                "Generated on: ${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).year}",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: SizeConfig.smallTextSize,
-                ),
+            padding: EdgeInsets.all(SizeConfig.padding6),
+            child: Text(
+              "Generated on: ${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).year}",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: SizeConfig.smallTextSize,
               ),
             ),
           ),
@@ -181,6 +217,8 @@ class Ticket extends StatelessWidget {
   }
 }
 
+/** 
+ * 
 class Odds extends StatelessWidget {
   final DailyPick _digitsObj;
   final TambolaBoard _board;
@@ -353,3 +391,4 @@ class Odds extends StatelessWidget {
     );
   }
 }
+**/

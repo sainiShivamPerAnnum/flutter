@@ -1,33 +1,37 @@
 class RazorpayOrderIdModel {
-  String message;
-  Data data;
+  String? message;
+  Data? data;
 
   RazorpayOrderIdModel({this.message, this.data});
 
   RazorpayOrderIdModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new Data.fromJson(json['data']) : Data.base();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  bool status;
-  String orderId;
+  bool? status;
+  String? orderId;
 
   Data({this.status, this.orderId});
+  Data.base() {
+    status = false;
+    orderId = '';
+  }
 
   Data.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    orderId = json['orderId'];
+    status = json['status'] ?? false;
+    orderId = json['orderId'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

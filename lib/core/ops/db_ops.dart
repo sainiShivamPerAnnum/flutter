@@ -2,12 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -18,111 +15,18 @@ import 'package:felloapp/util/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:synchronized/synchronized.dart';
+// import 'package:synchronized/synchronized.dart';
 
 class DBModel extends ChangeNotifier {
-  Api _api = locator<Api>();
-  Lock _lock = new Lock();
+  Api? _api = locator<Api>();
+  // Lock _lock = new Lock();
   final Log log = new Log("DBModel");
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
-  final logger = locator<CustomLogger>();
-
-  //////////////////BASE USER//////////////////////////
-
-  Future<bool> checkIfUserHasUnscratchedGT(String userId) async {
-    try {
-      QuerySnapshot gtSnapshot = await _api.checkForLatestGTStatus(userId);
-      List<GoldenTicket> latestGTs = [];
-      gtSnapshot.docs.forEach((element) {
-        latestGTs.add(GoldenTicket.fromJson(element.data(), element.id));
-      });
-      logger.d("Latest Golden Ticket: ${gtSnapshot.docs.first.data()}");
-      for (int i = 0; i < latestGTs.length; i++) {
-        if (latestGTs[i].redeemedTimestamp == null ||
-            latestGTs[i].redeemedTimestamp ==
-                TimestampModel(seconds: 0, nanoseconds: 0)) {
-          return true;
-        }
-      }
-      return false;
-    } catch (e) {
-      logger.e(e.toString());
-      return false;
-    }
-  }
-
-  /// return obj:
-  /// {value: GHexqwio123==, enid:2}
-  Future<Map<String, dynamic>> getEncodedUserPan(String uid) async {
-    try {
-      logger.i("CALLING: getUserPrtdDocPan");
-      var doc = await _api.getUserPrtdDocPan(uid);
-      if (doc.exists && doc.data() != null) {
-        Map<String, dynamic> _snapshotData = doc.data();
-        String val = _snapshotData['value'];
-        int enid = _snapshotData['enid'];
-        if (val == null || val.isEmpty || enid == 0)
-          return null;
-        else
-          return {'value': val, 'enid': enid};
-      }
-      return null;
-    } catch (e) {
-      log.error(e.toString());
-      return null;
-    }
-  }
-
-  ///////////////////////AUGMONT/////////////////////////////
-
-  Future<bool> updateAugmontBankDetails(
-      String userId, String accNo, String ifsc, String bankHolderName) async {
-    try {
-      Map<String, dynamic> updatePayload = {};
-      updatePayload[UserAugmontDetail.fldBankAccNo] = accNo;
-      updatePayload[UserAugmontDetail.fldBankHolderName] = bankHolderName;
-      updatePayload[UserAugmontDetail.fldIfsc] = ifsc;
-      updatePayload[UserAugmontDetail.fldUpdatedTime] = Timestamp.now();
-      logger.i("CALLING: updateUserAugmontDetailDocument");
-      await _api.updateUserAugmontDetailDocument(userId, updatePayload);
-      return true;
-    } catch (e) {
-      log.error("Failed to update user augmont detail object: " + e.toString());
-      return false;
-    }
-  }
+  final CustomLogger? logger = locator<CustomLogger>();
 
   ///////////////////////////CREDENTIALS//////////////////////////////
 
-  Future<Map<String, String>> getActiveAwsAugmontApiKey() async {
-    String _awsKeyIndex = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
-    if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
-    int keyIndex = 1;
-    try {
-      keyIndex = int.parse(_awsKeyIndex);
-    } catch (e) {
-      log.error('Aws Index key parsing failed: ' + e.toString());
-      keyIndex = 1;
-    }
-    logger.i("CALLING: getCredentialsByTypeAndStage");
-    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-augmont',
-        FlavorConfig.instance.values.awsAugmontStage.value(),
-        keyIndex);
-    if (querySnapshot != null && querySnapshot.docs.length == 1) {
-      DocumentSnapshot snapshot = querySnapshot.docs[0];
-      Map<String, dynamic> _doc = snapshot.data();
-      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
-        log.debug('Found apiKey: ' + _doc['apiKey']);
-        return {'baseuri': _doc['base_url'], 'key': _doc['apiKey']};
-      }
-    }
-
-    return null;
-  }
-
-  Future<String> showAugmontBuyNotice() async {
+  Future<String?> showAugmontBuyNotice() async {
     try {
       String _awsKeyIndex = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
@@ -134,14 +38,14 @@ class DBModel extends ChangeNotifier {
         log.error('Aws Index key parsing failed: ' + e.toString());
         keyIndex = 1;
       }
-      logger.i("CALLING: getCredentialsByTypeAndStage");
-      QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+      logger!.i("CALLING: getCredentialsByTypeAndStage");
+      QuerySnapshot querySnapshot = await _api!.getCredentialsByTypeAndStage(
           'aws-augmont',
-          FlavorConfig.instance.values.awsAugmontStage.value(),
+          FlavorConfig.instance!.values.awsAugmontStage.value(),
           keyIndex);
       if (querySnapshot != null && querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
-        Map<String, dynamic> _doc = snapshot.data();
+        Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
         if (snapshot.exists &&
             _doc != null &&
             _doc['depNotice'] != null &&
@@ -150,7 +54,7 @@ class DBModel extends ChangeNotifier {
         }
       }
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
     }
 
     return null;
@@ -160,7 +64,7 @@ class DBModel extends ChangeNotifier {
     try {
       String _awsKeyIndex = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
-      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
         keyIndex = int.parse(_awsKeyIndex);
@@ -168,14 +72,14 @@ class DBModel extends ChangeNotifier {
         log.error('Aws Index key parsing failed: ' + e.toString());
         keyIndex = 1;
       }
-      logger.i("CALLING: getCredentialsByTypeAndStage");
-      QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+      logger!.i("CALLING: getCredentialsByTypeAndStage");
+      QuerySnapshot querySnapshot = await _api!.getCredentialsByTypeAndStage(
           'aws-augmont',
-          FlavorConfig.instance.values.awsAugmontStage.value(),
+          FlavorConfig.instance!.values.awsAugmontStage.value(),
           keyIndex);
-      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      if (querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
-        Map<String, dynamic> _doc = snapshot.data();
+        Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
         if (snapshot.exists &&
             _doc != null &&
             _doc['isDepLocked'] != null &&
@@ -184,16 +88,16 @@ class DBModel extends ChangeNotifier {
         }
       }
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
     }
     return false;
   }
 
-  Future<String> showAugmontSellNotice() async {
+  Future<String?> showAugmontSellNotice() async {
     try {
       String _awsKeyIndex = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
-      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
         keyIndex = int.parse(_awsKeyIndex);
@@ -201,14 +105,14 @@ class DBModel extends ChangeNotifier {
         log.error('Aws Index key parsing failed: ' + e.toString());
         keyIndex = 1;
       }
-      logger.i("CALLING: getCredentialsByTypeAndStage");
-      QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+      logger!.i("CALLING: getCredentialsByTypeAndStage");
+      QuerySnapshot querySnapshot = await _api!.getCredentialsByTypeAndStage(
           'aws-augmont',
-          FlavorConfig.instance.values.awsAugmontStage.value(),
+          FlavorConfig.instance!.values.awsAugmontStage.value(),
           keyIndex);
-      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      if (querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
-        Map<String, dynamic> _doc = snapshot.data();
+        Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
         if (snapshot.exists &&
             _doc != null &&
             _doc['sellNotice'] != null &&
@@ -217,7 +121,7 @@ class DBModel extends ChangeNotifier {
         }
       }
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
     }
 
     return null;
@@ -227,7 +131,7 @@ class DBModel extends ChangeNotifier {
     try {
       String _awsKeyIndex = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
-      if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+      if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
         keyIndex = int.parse(_awsKeyIndex);
@@ -235,14 +139,14 @@ class DBModel extends ChangeNotifier {
         log.error('Aws Index key parsing failed: ' + e.toString());
         keyIndex = 1;
       }
-      logger.i("CALLING: getCredentialsByTypeAndStage");
-      QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+      logger!.i("CALLING: getCredentialsByTypeAndStage");
+      QuerySnapshot querySnapshot = await _api!.getCredentialsByTypeAndStage(
           'aws-augmont',
-          FlavorConfig.instance.values.awsAugmontStage.value(),
+          FlavorConfig.instance!.values.awsAugmontStage.value(),
           keyIndex);
-      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      if (querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
-        Map<String, dynamic> _doc = snapshot.data();
+        Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
         if (snapshot.exists &&
             _doc != null &&
             _doc['isSellLocked'] != null &&
@@ -251,58 +155,45 @@ class DBModel extends ChangeNotifier {
         }
       }
     } catch (e) {
-      logger.e(e.toString());
+      logger!.e(e.toString());
     }
 
     return false;
   }
 
-  Future<String> getUserDP(String uid) async {
+  Future<String?> getUserDP(String? uid) async {
     try {
-      logger.i("CALLING: getFileFromDPBucketURL");
-      return await _api.getFileFromDPBucketURL(uid, 'image');
+      logger!.i("CALLING: getFileFromDPBucketURL");
+      return await _api!.getFileFromDPBucketURL(uid, 'image');
     } catch (e) {
       log.error('Failed to fetch dp url');
       return null;
     }
   }
 
-  Future<bool> submitFeedback(String userId, String fdbk) async {
-    try {
-      Map<String, dynamic> fdbkMap = {
-        'user_id': userId,
-        'timestamp': Timestamp.now(),
-        'fdbk': fdbk
-      };
-      logger.i("CALLING: addFeedbackDocument");
-      await _api.addFeedbackDocument(fdbkMap);
-      return true;
-    } catch (e) {
-      log.error(e.toString());
-      return false;
-    }
-  }
-
 //------------------------------------------------REALTIME----------------------------
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {
-    logger.i("CALLING: checkUserNameAvailability");
-    return await _api.checkUserNameAvailability(username);
+    logger!.i("CALLING: checkUserNameAvailability");
+    return await _api!.checkUserNameAvailability(username);
   }
 
   Future<bool> sendEmailToVerifyEmail(String email, String otp) async {
-    logger.i("CALLING: createEmailVerificationDocument");
-    return await _api.createEmailVerificationDocument(email, otp);
+    logger!.i("CALLING: createEmailVerificationDocument");
+    return await _api!.createEmailVerificationDocument(email, otp);
   }
 
   Future fetchCategorySpecificFAQ(String category) async {
     try {
-      logger.i("CALLING: fetchFaqs");
-      final DocumentSnapshot response = await _api.fetchFaqs(category);
-      logger.d(response.data().toString());
-      return ApiResponse(model: FAQModel.fromMap(response.data()), code: 200);
+      logger!.i("CALLING: fetchFaqs");
+      final DocumentSnapshot response =
+          (await _api!.fetchFaqs(category)) as DocumentSnapshot<Object?>;
+      logger!.d(response.data().toString());
+      return ApiResponse(
+          model: FAQModel.fromMap(response.data() as Map<String, dynamic>),
+          code: 200);
     } catch (e) {
-      logger.e(e);
+      logger!.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }

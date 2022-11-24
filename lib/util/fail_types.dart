@@ -55,7 +55,8 @@ enum FailType {
   FcmListenerSetupFailed,
   MixpanelServiceInitFailed,
   HttpModelInitFailed,
-  Splash
+  Splash,
+  Journey
 }
 
 extension ParseToString on FailType {

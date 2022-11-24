@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -27,7 +25,7 @@ class ReferralRepo extends BaseRepo {
 
       final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.getReferralCode(this.userService.baseUser.uid),
+        ApiPath.getReferralCode(this.userService!.baseUser!.uid),
         token: bearer,
         cBaseUrl: _baseUrl,
       );
@@ -39,7 +37,7 @@ class ReferralRepo extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger.e('getReferralCode $e ${this.userService.baseUser.uid}');
+      logger!.e('getReferralCode $e ${this.userService!.baseUser!.uid}');
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -59,8 +57,8 @@ class ReferralRepo extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger.e('getUserIdByRefCode $e');
-      return ApiResponse.withError(e.toString(), 400);
+      logger!.e('getUserIdByRefCode $e');
+      return ApiResponse.withError(e.toString() ?? 'Failed to get user', 400);
     }
   }
 
@@ -69,20 +67,45 @@ class ReferralRepo extends BaseRepo {
     try {
       final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.getReferralHistory(userService.baseUser.uid),
+        ApiPath.getReferralHistory(userService!.baseUser!.uid),
         token: bearer,
         cBaseUrl: _baseUrl,
       );
 
       final data = response['data'];
-      logger.d(data);
+      logger!.d(data);
 
       return ApiResponse<List<ReferralDetail>>(
         model: ReferralDetail.helper.fromMapArray(data),
         code: 200,
       );
     } catch (e) {
-      logger.e('Referral History fetch error $e');
+      logger!.e('Referral History fetch error $e');
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> createReferral(
+    String? userId,
+    String? referee,
+  ) async {
+    try {
+      final String bearer = await getBearerToken();
+
+      final response = await APIService.instance.postData(
+        ApiPath.createReferral,
+        body: {
+          'uid': userId,
+          'rid': referee,
+        },
+        token: bearer,
+        cBaseUrl: _baseUrl,
+      );
+
+      this.logger!.d(response);
+      return ApiResponse(model: true, code: 200);
+    } catch (e) {
+      logger!.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }
