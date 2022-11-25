@@ -16,7 +16,7 @@ class CacheService {
     if (_isar == null) {
       final dir = await getApplicationSupportDirectory();
       _isar = await Isar.open(
-        schemas: [CacheModelSchema],
+         [CacheModelSchema],
         directory: dir.path,
       );
     }
@@ -25,8 +25,8 @@ class CacheService {
   Future<void> invalidateAll() async {
     try {
       _logger!.d('cache: invalidate all');
-      await _isar!.writeTxn((i) async {
-        await i.clear();
+      await _isar?.writeTxn(() async {
+        await _isar?.clear();
       });
     } catch (e) {
       _logger!.e('cache: invalidation failed $e');
@@ -92,8 +92,8 @@ class CacheService {
         data: data,
       );
       _logger!.d('cache: write $cache');
-      await _isar!.writeTxn((i) async {
-        final id = await i.cacheModels.put(cache);
+      await _isar!.writeTxn(() async {
+        final id = await _isar!.cacheModels.put(cache);
         _logger!.d('cache: write id $id');
       });
 
@@ -108,11 +108,11 @@ class CacheService {
     try {
       _logger!.d('cache: invalidating key $key');
 
-      await _isar!.writeTxn((i) async {
-        final List<CacheModel> data = await i.cacheModels.filter().keyEqualTo(key).findAll();
+      await _isar!.writeTxn(() async {
+        final List<CacheModel> data = await _isar!.cacheModels.filter().keyEqualTo(key).findAll();
         _logger!.d('cache: $data');
 
-        final c = await i.cacheModels.deleteAll(data.map((e) => e.id).toList() as List<int>);
+        final c = await _isar?.cacheModels.deleteAll(data.map((e) => e.id).toList());
         _logger!.d('cache: invalidated $c');
       });
 
@@ -127,8 +127,8 @@ class CacheService {
     try {
       _logger!.d('cache: invalidating id $id');
 
-      await _isar!.writeTxn((i) async {
-        return await i.cacheModels.delete(id);
+      await _isar!.writeTxn(() async {
+        return await _isar!.cacheModels.delete(id);
       });
 
       return true;

@@ -87,7 +87,7 @@ class LauncherViewModel extends BaseViewModel {
   }
 
   fetchUserBootUpDetails() async {
-    await _userService!.userBootUpEE();
+    await _userService.userBootUpEE();
   }
 
   exit() {
@@ -113,7 +113,7 @@ class LauncherViewModel extends BaseViewModel {
 
       // check if cache invalidation required
       final now = DateTime.now().millisecondsSinceEpoch;
-      _logger!.d(
+      _logger.d(
         'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}',
       );
       if (now <= BaseRemoteConfig.invalidationBefore) {
@@ -130,7 +130,7 @@ class LauncherViewModel extends BaseViewModel {
       if (userService.isUserOnboarded)
         userService.firebaseUser?.getIdToken().then(
               (token) =>
-                  _userRepo.updateUserAppFlyer(userService!.baseUser!, token),
+                  _userRepo.updateUserAppFlyer(userService.baseUser!, token),
             );
       if (userService.baseUser != null) {
         if (userService.isUserOnboarded)

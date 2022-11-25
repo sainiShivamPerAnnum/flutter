@@ -10,8 +10,8 @@ part 'cache_model.g.dart';
 
 @Collection()
 class CacheModel {
-  @Id()
-  int id = Isar.autoIncrement;
+  
+  Id id = Isar.autoIncrement;
 
 
   final String? key;

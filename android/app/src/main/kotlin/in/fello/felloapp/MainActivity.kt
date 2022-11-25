@@ -4,46 +4,85 @@ import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
-import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks.await
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.Result
 
 
 class MainActivity : FlutterFragmentActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
-
-    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+    private val getUpiApps="getUpiApps"
+    private val intiateTransaction="intiateTransaction"
+    private lateinit var result: MethodChannel.Result
+    private val successRequestCode = 101
+    override fun configureFlutterEngine( flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
                 // Note: this method is invoked on the main thread.
                 call, result ->
+            this.result=result;
+            when (call.method){
+                "createNotificationChannel" ->{
+                    val argData = call.arguments as HashMap<String,String>
+                    val completed = createNotificationChannel(argData)
 
-            if (call.method == "createNotificationChannel") {
-                val argData = call.arguments as java.util.HashMap<String, String>
-                val completed = createNotificationChannel(argData)
-                if (completed != null) {
                     result.success(completed)
-                } else {
-                    result.error("Error Code", "Error Message", null)
                 }
-            } else {
-                result.notImplemented()
+
+                getUpiApps->startUpiChannel(UPIMethod.getApps,"")
+                    intiateTransaction ->startUpiChannel(UPIMethod.startTransaction,call.argument<String>("deepLink").toString(),call.argument<String>("app").toString())
             }
+
+
+
         }
     }
+
+
+    private fun  startUpiChannel(type:UPIMethod,deepLink:String="",app:String=""){
+        var intent= Intent(this,UpiChannel::class.java)
+        if(type==UPIMethod.startTransaction){
+            intent.putExtra("deepLink",deepLink)
+            intent.putExtra("app",app)
+            intent.putExtra("type",type)
+        }
+        startActivityForResult(intent,successRequestCode)
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if(requestCode==Activity.RESULT_OK && requestCode==requestCode){
+            val e=data?.getIntExtra("error",400)
+            val message=data?.getStringExtra("message")
+            val list=data?.getLongArrayExtra("apps")
+
+            if(e!=200){
+                result.error(e.toString(),message,"")
+            }else{
+                if (list != null) {
+                    if(list.isEmpty()){
+                        result.success(message)
+                            return
+                    }
+                }
+                result.success(list)
+
+            }
+
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+
+
+
+
 
     override fun onStart() {
         super.onStart()

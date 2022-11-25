@@ -385,17 +385,15 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<dynamic> _initDynamicLinks(BuildContext? context) async {
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData? dynamicLink) async {
-      final Uri? deepLink = dynamicLink?.link;
+    FirebaseDynamicLinks.instance.onLink.distinct().listen((event) {
+      final Uri? deepLink = event.link;
       if (deepLink == null) return null;
       _logger!.d('Received deep link. Process the referral');
       return _processDynamicLink(
           _userService!.baseUser!.uid, deepLink, context);
-    }, onError: (OnLinkErrorException e) async {
-      _logger!.e('Error in fetching deeplink');
-      _logger!.e(e);
-      return null;
+    }).onError((e) {
+      _logger!.d('Error');
+      _logger!.d(e.toString());
     });
 
     final PendingDynamicLinkData? data =

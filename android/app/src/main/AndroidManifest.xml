@@ -1,123 +1,211 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="in.fello.felloapp">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
-    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
-
-    <!-- REQUIRED FOR KYC -->
-    <!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
-    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-
-    <!-- io.flutter.app.FlutterApplication is an android.app.Application that
-         calls FlutterMain.startInitialization(this); in its onCreate method.
-         In most cases you can leave this as-is, but you if you want to provide
-         additional functionality it is fine to subclass or reimplement
-         FlutterApplication and put your custom class here. -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="upi" />
+        </intent>
+    </queries>
+    <queries>
+        <package android:name="com.SIBMobile" />
+        <package android:name="com.YesBank" />
+        <package android:name="com.atomyes" />
+        <package android:name="com.aubank.aupay.bhimupi" />
+        <package android:name="com.bankofbaroda.upi" />
+        <package android:name="com.canarabank.mobility" />
+        <package android:name="com.citrus.citruspay" />
+        <package android:name="com.csam.icici.bank.imobile" />
+        <package android:name="com.cub.plus.gui" />
+        <package android:name="com.cub.wallet.gui" />
+        <package android:name="com.dbs.in.digitalbank" />
+        <package android:name="com.dreamplug.androidapp" />
+        <package android:name="com.enstage.wibmo.hdfc" />
+        <package android:name="com.equitasbank.upi" />
+        <package android:name="com.euronet.iobupi" />
+        <package android:name="com.fampay.in" />
+        <package android:name="com.finacus.jetpay" />
+        <package android:name="com.finacus.tranzapp" />
+        <package android:name="com.finopaytech.bpayfino" />
+        <package android:name="com.fisglobal.bandhanupi.app" />
+        <package android:name="com.fisglobal.syndicateupi.app" />
+        <package android:name="com.freecharge.android" />
+        <package android:name="com.fss.idfcpsp" />
+        <package android:name="com.fss.ippbpsp" />
+        <package android:name="com.fss.jnkpsp" />
+        <package android:name="com.fss.pnbpsp" />
+        <package android:name="com.fss.unbipsp" />
+        <package android:name="com.fss.vijayapsp" />
+        <package android:name="com.google.android.apps.nbu.paisa.user" />
+        <package android:name="com.idbibank.paywiz" />
+        <package android:name="com.infra.boiupi" />
+        <package android:name="com.infrasoft.uboi" />
+        <package android:name="com.infrasofttech.centralbankupi" />
+        <package android:name="com.infrasofttech.indianbankupi" />
+        <package android:name="com.infrasofttech.mahaupi" />
+        <package android:name="com.jio.myjio" />
+        <package android:name="com.khaalijeb.inkdrops" />
+        <package android:name="com.lcode.allahabadupi" />
+        <package android:name="com.lcode.corpupi" />
+        <package android:name="com.lcode.csbupi" />
+        <package android:name="com.lcode.dlbupi" />
+        <package android:name="com.lcode.smartz" />
+        <package android:name="com.lcode.ucoupi" />
+        <package android:name="com.lvbank.upaay" />
+        <package android:name="com.mgs.hsbcupi" />
+        <package android:name="com.mgs.induspsp" />
+        <package android:name="com.mgs.obcbank" />
+        <package android:name="com.microlucid.mudrapay.android" />
+        <package android:name="com.mipay.in.wallet" />
+        <package android:name="com.mobikwik_new" />
+        <package android:name="com.mobileware.upipsb" />
+        <package android:name="com.myairtelapp" />
+        <package android:name="com.mycompany.kvb" />
+        <package android:name="com.olive.andhra.upi" />
+        <package android:name="com.olive.dcb.upi" />
+        <package android:name="com.omegaon_internet_pvt_ltd" />
+        <package android:name="com.phonepe.app" />
+        <package android:name="com.rblbank.mobank" />
+        <package android:name="com.rblbank.upi" />
+        <package android:name="com.realmepay.payments" />
+        <package android:name="com.sbi.upi" />
+        <package android:name="com.snapwork.hdfc" />
+        <package android:name="com.truecaller" />
+        <package android:name="com.udma.yuvapay.app" />
+        <package android:name="com.ultracash.payment.customer" />
+        <package android:name="com.upi.axispay" />
+        <package android:name="com.upi.federalbank.org.lotza" />
+        <package android:name="com.whatsapp" />
+        <package android:name="in.amazon.mShop.android.shopping" />
+        <package android:name="in.cointab.app" />
+        <package android:name="in.org.npci.upiapp" />
+        <package android:name="money.bullet" />
+        <package android:name="net.one97.paytm" />
+    </queries>
     <application
         android:name="in.fello.felloapp.Application"
-        android:label="@string/app_name"
         android:allowBackup="false"
-        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round">
+        <service
+            android:name=".UpiChannel.kt"
+            android:exported="false"></service>
 
-        <meta-data android:name="APXOR_APP_ID" android:value="@string/APXOR_APP_ID" />
-
-        <meta-data android:name="com.truecaller.android.sdk.PartnerKey" android:value="@string/partnerKey"/>
-
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="APXOR_APP_ID"
+            android:value="@string/APXOR_APP_ID" />
+        <meta-data
+            android:name="com.truecaller.android.sdk.PartnerKey"
+            android:value="@string/partnerKey" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
+            
         </service>
 
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:exported="true"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:exported="true">
-            <!-- Specifies an Android theme to apply to this Activity as soon as
+            android:theme="@style/LaunchTheme"
+            android:windowSoftInputMode="adjustResize">
+
+            <!--
+                 Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
-                 to determine the Window background behind the Flutter UI. -->
+                 to determine the Window background behind the Flutter UI.
+            -->
             <meta-data
-              android:name="io.flutter.embedding.android.NormalTheme"
-              android:resource="@style/NormalTheme"
-              />
-            <!-- Displays an Android View that continues showing the launch screen
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+            <!--
+                 Displays an Android View that continues showing the launch screen
                  Drawable until Flutter paints its first frame, then this splash
                  screen fades out. A splash screen is useful to avoid any visual
                  gap between the end of Android's launch screen and the painting of
-                 Flutter's first frame. -->
+                 Flutter's first frame.
+            -->
             <meta-data
-              android:name="io.flutter.embedding.android.SplashScreenDrawable"
-              android:resource="@drawable/launch_background"
-              />
-            
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+                android:resource="@drawable/launch_background" />
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
-            <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="true" />
 
-            <intent-filter  android:autoVerify="true">
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                
-                <data android:scheme="https"
+
+                <data
                     android:host="fello.onelink.me"
-                    android:pathPrefix="/uxu0" />
-
-                <data android:scheme="https"
+                    android:pathPrefix="/uxu0"
+                    android:scheme="https" />
+                <data
                     android:host="app.fello.in"
-                    android:pathPrefix="/uxu0" />
-            
+                    android:pathPrefix="/uxu0"
+                    android:scheme="https" />
             </intent-filter>
-            
         </activity>
-
-        <!-- Don't delete the meta-data below.
-             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <!--
+ Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+        -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_fello_notif" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
+        <meta-data
+            android:name="com.webengage.sdk.android.environment"
+            android:value="in" />
 
-        <meta-data android:name="com.webengage.sdk.android.environment" android:value="in" />
-
-        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
+        <receiver
+            android:name="com.appsflyer.SingleInstallBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
     </application>
+
 </manifest>

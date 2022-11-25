@@ -20,7 +20,10 @@
             "args": [
                 "--flavor",
                 "dev",
-                "--debug"
+                "--debug",
+                
+                
+
             ]
         },
         {

@@ -534,10 +534,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         packageName: 'in.fello.felloapp',
         minimumVersion: 0,
       ),
-      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
-        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-      ),
-      iosParameters: IosParameters(
+      // dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+      //   shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+      // ),
+      iosParameters: IOSParameters(
         bundleId: 'in.fello.felloappiOS',
         minimumVersion: '0',
         appStoreId: '1558445254',
@@ -546,10 +546,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
     Uri url;
     if (short) {
-      final ShortDynamicLink shortLink = await parameters.buildShortLink();
+      final ShortDynamicLink shortLink = await FirebaseDynamicLinksPlatform
+          .instance
+          .buildShortLink(parameters);
       url = shortLink.shortUrl;
     } else {
-      url = await parameters.buildUrl();
+      url = parameters.link;
     }
 
     return url.toString();
