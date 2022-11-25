@@ -41,7 +41,7 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     ConnectivityStatus connectivityStatus =
-//         Provider.of<ConnectivityStatus>(context);
+//         Provider.of<ConnectivityService>(context, listen: true).connectivityStatus;
 //     return BaseView<TambolaGameViewModel>(
 //       onModelReady: (model) {
 //         model.init();

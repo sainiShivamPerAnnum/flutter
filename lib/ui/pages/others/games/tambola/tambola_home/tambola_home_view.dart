@@ -11,6 +11,7 @@ import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -41,7 +42,7 @@ class TambolaHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context);
+        Provider.of<ConnectivityService>(context, listen: true).connectivityStatus;
 
     return BaseView<TambolaHomeViewModel>(
       onModelReady: (model) {

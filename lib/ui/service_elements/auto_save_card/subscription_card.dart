@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
@@ -31,7 +32,8 @@ class _AutosaveCardState extends State<AutosaveCard> {
   @override
   Widget build(BuildContext context) {
     ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context);
+        Provider.of<ConnectivityService>(context, listen: true)
+            .connectivityStatus;
     return BaseView<SubscriptionCardViewModel>(
       onModelReady: (model) async => await model.init(),
       builder: (context, subscriptionModel, child) =>
