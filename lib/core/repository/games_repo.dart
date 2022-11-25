@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -25,7 +27,7 @@ class GameRepo extends BaseRepo {
         cBaseUrl: _baseUrl,
         token: token,
       );
-      logger!.d("Games: ${response["data"]}");
+      log("Games: ${response["data"]}");
 
       final List<GameModel> games =
           GameModel.helper.fromMapArray(response["data"]["games"]);

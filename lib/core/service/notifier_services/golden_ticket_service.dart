@@ -235,9 +235,8 @@ class GoldenTicketService extends ChangeNotifier {
       RenderRepaintBoundary imageObject = ticketImageKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
-      ByteData byteData = await (image.toByteData(format: ImageByteFormat.png)
-          as Future<ByteData>);
-      final pngBytes = byteData.buffer.asUint8List();
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      final pngBytes = byteData?.buffer.asUint8List();
 
       return pngBytes;
     } catch (e) {
