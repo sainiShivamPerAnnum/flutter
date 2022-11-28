@@ -58,7 +58,7 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
               AppState.backButtonDispatcher!.didPopRoute();
             },
             child: Text(
-              "Done",
+              "DONE",
               style:
                   TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),

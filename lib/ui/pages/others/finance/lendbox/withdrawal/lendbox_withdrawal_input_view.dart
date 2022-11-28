@@ -27,12 +27,10 @@ class LendboxWithdrawalInputView extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             SizedBox(height: SizeConfig.padding16),
-            LendboxAppBar(
-              isEnabled: !model!.inProgress,
-            ),
+            LendboxAppBar(isEnabled: !model.inProgress),
             SizedBox(height: SizeConfig.padding32),
-            if (model!.state == ViewState.Idle &&
-                model!.withdrawableQuantity!.lockedAmount > 0)
+            if (model.state == ViewState.Idle &&
+                model.withdrawableQuantity!.lockedAmount > 0)
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
                 child: SellCardInfoStrips(

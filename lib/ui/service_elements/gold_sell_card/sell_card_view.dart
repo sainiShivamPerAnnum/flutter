@@ -158,9 +158,14 @@ class SellCardView extends StatelessWidget {
     );
   }
 
-  navigateToBankDetailsScreen() =>
-      AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.addPage,
-        page: BankDetailsPageConfig,
-      );
+  navigateToBankDetailsScreen() {
+    final _analyticsService = locator<AnalyticsService>();
+
+    _analyticsService.track(eventName: AnalyticsEvents.bankDetailsTapped);
+
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: BankDetailsPageConfig,
+    );
+  }
 }

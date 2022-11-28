@@ -54,7 +54,11 @@ class _AmountInputViewState extends State<AmountInputView> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.chipAmounts.firstWhere((e) => e.best).order;
+    if (widget.chipAmounts.isNotEmpty) {
+      _selectedIndex = widget.chipAmounts.firstWhere((e) => e.best).order;
+    } else {
+      widget.amountController!.text = '1';
+    }
     updateFieldWidth();
   }
 

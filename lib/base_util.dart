@@ -357,12 +357,6 @@ class BaseUtil extends ChangeNotifier {
 
   void openSellModalSheet({required InvestmentType investmentType}) {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      // if (_userService!.userJourneyStats!.mlIndex == 1)
-      //   return BaseUtil.openDialog(
-      //       addToScreenStack: true,
-      //       isBarrierDismissible: true,
-      //       hapticVibrate: false,
-      //       content: CompleteProfileDialog());
       final bool? isAugSellLocked = _userService?.userBootUp?.data!.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
       final String? augSellBanNotice = _userService
