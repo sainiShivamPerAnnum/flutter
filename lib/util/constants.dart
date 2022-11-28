@@ -127,4 +127,11 @@ class Constants {
       "https://play.google.com/store/apps/details?id=in.fello.felloapp";
   static const APPLE_STORE_APP_LINK =
       "https://apps.apple.com/in/app/fello-save-play-win/id1558445254";
+
+  // View keys for Apxor Nudges
+  static const TOTAL_SAVINGS_JAPPBAR = "savingsJourneyAppBar";
+  static const TOTAL_WINNINGS_JAPPBAR = "winningsJourneyAppBar";
+  static const PROFILE_JAPPBAR= "profileJourneyAppBar";
+  static const PROFILE = "profile";
+  static const HELP_FAB = "helpFab";
 }

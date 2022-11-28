@@ -71,6 +71,7 @@ class AnalyticsService extends BaseAnalyticsService {
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     _mixpanel!.track(eventName: screen, properties: properties);
     _webengage!.track(eventName: screen, properties: properties);
+    ApxorFlutter.trackScreen(screen!);
   }
 
   void trackSignup(String? userId) async {
