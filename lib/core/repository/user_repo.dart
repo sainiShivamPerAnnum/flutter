@@ -91,9 +91,7 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<dynamic>> getUserById({
-    required String? id
-  }) async {
+  Future<ApiResponse<dynamic>> getUserById({required String? id}) async {
     try {
       final token = await getBearerToken();
 
@@ -108,7 +106,7 @@ class UserRepository extends BaseRepo {
         try {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
             final _user = BaseUser.fromMap(res["data"], id!);
-            logger!.d('asdasdasdsa $_user');
+            logger.d('asdasdasdsa $_user');
             return ApiResponse<BaseUser>(model: _user, code: 200);
           } else
             return ApiResponse<BaseUser>(model: null, code: 200);

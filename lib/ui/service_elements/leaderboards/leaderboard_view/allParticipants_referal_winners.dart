@@ -1,7 +1,9 @@
 import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -16,26 +18,17 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
       this.appBarTitle,
       Key? key})
       : super(key: key);
-
+  final GameRepo _gamesRepo = locator<GameRepo>();
   final bool isForTopReferers;
   final List<Winners>? winners;
   final List<ScoreBoard>? referralLeaderBoard;
   final bool showPoints;
   final String? appBarTitle;
 
-  getGameName(String? gamename) {
-    switch (gamename) {
-      case Constants.GAME_TYPE_TAMBOLA:
-        return "Tambola";
-      case Constants.GAME_TYPE_CRICKET:
-        return "Cricket";
-      case Constants.GAME_TYPE_POOLCLUB:
-        return "Pool Club";
-      case Constants.GAME_TYPE_FOOTBALL:
-        return "Foot Ball";
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        return "Candy Fiesta";
-    }
+  getGameName(String? gameCode) {
+    return _gamesRepo.allgames!
+        .firstWhere((game) => game.gameCode == gameCode)
+        .gameName;
   }
 
   dynamic getPoints(double points) {
@@ -108,7 +101,8 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                                         ),
                                         Text(
                                           showPoints
-                                              ? getPoints(referralLeaderBoard![i]
+                                              ? getPoints(referralLeaderBoard![
+                                                              i]
                                                           .score!)
                                                       .toString() ??
                                                   "00"

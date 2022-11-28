@@ -135,7 +135,8 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   LeaderboardModel? get tlboard => _tLeaderBoard;
-  PrizesModel? get tPrizes => _prizeService!.tambolaPrizes;
+  PrizesModel? get tPrizes =>
+      _prizeService!.gamePrizeMap[Constants.GAME_TYPE_TAMBOLA];
   List<Winners> get winners => _winners;
 
   int get ticketSavedAmount => _ticketSavedAmount;
@@ -262,9 +263,9 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   fetchWinners() async {
-    _winnerService!.fetchtambolaWinners();
-    _winners = _winnerService!.winners;
-
+    final winnersModel = await _winnerService!
+        .fetchWinnersByGameCode(Constants.GAME_TYPE_TAMBOLA);
+    _winners = winnersModel!.winners!;
     notifyListeners();
   }
 
@@ -293,7 +294,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   Future<void> getPrizes() async {
     isPrizesLoading = true;
     notifyListeners();
-    await _prizeService!.fetchTambolaPrizes();
+    await _prizeService!.fetchPrizeByGameType(Constants.GAME_TYPE_TAMBOLA);
     if (tPrizes == null)
       BaseUtil.showNegativeAlert("This week's prizes could not be fetched",
           "Please try again in sometime");

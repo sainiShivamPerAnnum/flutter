@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/processing
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -36,7 +37,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
     print(widget.isEligible);
     print(widget.winningsmap);
     _pageController = PageController();
-    tPrizes = _prizeService!.tambolaPrizes;
+    tPrizes = _prizeService!.gamePrizeMap[Constants.GAME_TYPE_TAMBOLA];
     super.initState();
   }
 

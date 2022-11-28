@@ -119,7 +119,7 @@ class AppState extends ChangeNotifier {
       isWinOpened = true;
     }
     if (index == 2) {
-      _winnerService!.fetchWinners();
+      _winnerService!.fetchWinnersForAllGames();
     }
     print(_rootIndex);
     notifyListeners();

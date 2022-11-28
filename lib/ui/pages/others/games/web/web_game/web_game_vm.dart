@@ -74,38 +74,6 @@ class WebGameViewModel extends BaseViewModel {
     // setUpWebGameView(game);
   }
 
-  handleCricketHeroRoundEnd(Map<String, dynamic> data, String game) async {
-    if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
-      GoldenTicketService.goldenTicketId = data['gt_id'];
-    }
-    handleGameEndRound(data, game);
-  }
-
-  handlePoolClubRoundEnd(Map<String, dynamic> data, String game) async {
-    if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
-      GoldenTicketService.goldenTicketId = data['gt_id'];
-    }
-    handleGameEndRound(data, game);
-  }
-
-  handleFootBallRoundEnd(Map<String, dynamic> data, String game) async {
-    if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
-      GoldenTicketService.goldenTicketId = data['gt_id'];
-    }
-    handleGameEndRound(data, game);
-  }
-
-  handleCandyFiestaRoundEnd(Map<String, dynamic> data, String game) async {
-    if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
-      GoldenTicketService.goldenTicketId = data['gt_id'];
-    }
-    handleGameEndRound(data, game);
-  }
-
   handleLowBalanceAlert() {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) {
       AppState.isWebGameLInProgress = false;
@@ -128,9 +96,13 @@ class WebGameViewModel extends BaseViewModel {
     }
   }
 
-  handleGameEndRound(Map<String, dynamic> data, String game) {
+  handleGameRoundEnd(Map<String, dynamic> data) {
     _logger!.d(
-        "$game round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
+        "round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
+    if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
+      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      GoldenTicketService.goldenTicketId = data['gt_id'];
+    }
     if (data['mlIndex'] != null)
       _journeyService!.avatarRemoteMlIndex = data["mlIndex"];
     _logger!.d("MLIndex found: ${data['mlIndex']}");
@@ -141,7 +113,7 @@ class WebGameViewModel extends BaseViewModel {
           data[FcmCommands.GAME_END_MESSAGE_KEY].toString();
     }
     updateFlcBalance();
-    _lbService!.fetchWebGameLeaderBoard(game: game);
+    // _lbService!.fetchWebGameLeaderBoard(game: game);
   }
 
   handleGameSessionEnd({Duration? duration}) {

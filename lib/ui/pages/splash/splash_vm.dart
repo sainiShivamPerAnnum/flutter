@@ -116,9 +116,9 @@ class LauncherViewModel extends BaseViewModel {
       _logger!.d(
         'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}',
       );
-      if (now <= BaseRemoteConfig.invalidationBefore) {
-        await new CacheService().invalidateAll();
-      }
+      // if (now <= BaseRemoteConfig.invalidationBefore) {
+      await new CacheService().invalidateAll();
+      // }
       // test
       // await new CacheService().invalidateAll();
       if (userService.isUserOnboarded) _userCoinService.init();

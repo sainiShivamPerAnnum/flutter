@@ -224,7 +224,7 @@ class WinViewModel extends BaseViewModel {
     getFelloFacts();
     _lbService!.fetchReferralLeaderBoard();
 
-    _winnerService!.fetchWinners();
+    _winnerService!.fetchWinnersForAllGames();
   }
 
   Future<void> shareLink() async {

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -23,7 +25,7 @@ import 'dart:math' as math;
 class WinnerboardView extends StatelessWidget {
   final int? count;
   WinnerboardView({this.count});
-
+  final GameRepo _gamesRepo = locator<GameRepo>();
   getLength(int listLength) {
     if (count != null) {
       if (listLength < count!)
@@ -34,19 +36,10 @@ class WinnerboardView extends StatelessWidget {
       return listLength;
   }
 
-  getGameName(String? gamename) {
-    switch (gamename) {
-      case Constants.GAME_TYPE_TAMBOLA:
-        return "Tambola";
-      case Constants.GAME_TYPE_CRICKET:
-        return "Cricket";
-      case Constants.GAME_TYPE_POOLCLUB:
-        return "Pool Club";
-      case Constants.GAME_TYPE_FOOTBALL:
-        return "Foot Ball";
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        return "Candy Fiesta";
-    }
+  getGameName(String? gameCode) {
+    return _gamesRepo.allgames!
+        .firstWhere((game) => game.gameCode == gameCode)
+        .gameName;
   }
 
   @override
