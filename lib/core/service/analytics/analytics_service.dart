@@ -1,4 +1,4 @@
-import 'dart:io' show Platform;
+import 'dart:io' ;
 import 'package:app_install_date/app_install_date_imp.dart';
 import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
@@ -61,7 +61,7 @@ class AnalyticsService extends BaseAnalyticsService {
       _mixpanel!.track(eventName: eventName, properties: properties);
       _webengage!.track(eventName: eventName, properties: properties);
       _appFlyer!.track(eventName: eventName, properties: properties);
-      
+
       if (Platform.isAndroid) {
         ApxorFlutter.logAppEvent(eventName!, attributes: properties);
       }
