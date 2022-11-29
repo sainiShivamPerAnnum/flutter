@@ -33,8 +33,9 @@ class Play extends StatelessWidget {
             controller: _controller,
             physics: BouncingScrollPhysics(),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: model.getOrderedPlayViewItems(model)),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: model.getOrderedPlayViewItems(model),
+            ),
           ),
         );
       },

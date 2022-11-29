@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -35,7 +34,6 @@ List<Color> randomColors = [
 ];
 
 class Win extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
     S? locale = S.of(context);
@@ -279,7 +277,7 @@ class Win extends StatelessWidget {
                                               )),
                                               TextSpan(
                                                   text:
-                                                      '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)}',
+                                                      '${AppConfig.getValue(AppConfigKey.referralFlcBonus)}',
                                                   style: TextStyles
                                                       .sourceSansB.body3
                                                       .colour(UiConstants

@@ -481,7 +481,7 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ConnectivityStatus>(
+    return Consumer<ConnectivityService>(
         builder: (ctx, model, child) => Container(
               height: SizeConfig.screenWidth! * 0.1556,
               width: widget.width ??
@@ -492,7 +492,7 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
                   SizeConfig.buttonBorderRadius,
                 ),
                 gradient: LinearGradient(
-                  colors: model == ConnectivityStatus.Offline
+                  colors: model.connectivityStatus == ConnectivityStatus.Offline
                       ? [
                           UiConstants.kTextColor,
                           Colors.grey,
@@ -510,7 +510,7 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
               ),
               child: MaterialButton(
                 // padding: EdgeInsets.zero,
-                onPressed: model == ConnectivityStatus.Offline
+                onPressed: model.connectivityStatus == ConnectivityStatus.Offline
                     ? BaseUtil.showNoInternetAlert
                     : () async {
                         if (isLoading) return;

@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -19,10 +21,10 @@ class PrizeClaimCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String minWithdrawPrize = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
-    String refUnlock = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+    String minWithdrawPrize =
+        AppConfig.getValue<String>(AppConfigKey.min_withdrawable_prize);
+    String refUnlock =
+        AppConfig.getValue<String>(AppConfigKey.unlock_referral_amt);
     int refUnlockAmt = BaseUtil.toInt(refUnlock);
     int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
@@ -159,13 +161,13 @@ class PrizeClaimCard extends StatelessWidget {
             ));
   }
 
-  bool _isAmazonVoucherRedemptionAvailable() {
-    String option = BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.AMZ_VOUCHER_REDEMPTION) ??
-        '1';
-    int? op = int.tryParse(option);
-    return (op == null || op == 1);
-  }
+//   bool _isAmazonVoucherRedemptionAvailable() {
+//     String option = BaseRemoteConfig.remoteConfig
+//             .getString(BaseRemoteConfig.AMZ_VOUCHER_REDEMPTION) ??
+//         '1';
+//     int? op = int.tryParse(option);
+//     return (op == null || op == 1);
+//   }
 }
 
 class ClaimButton extends StatelessWidget {

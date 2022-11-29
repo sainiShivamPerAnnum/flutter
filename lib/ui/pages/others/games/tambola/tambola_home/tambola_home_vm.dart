@@ -178,15 +178,15 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   TambolaBoard? get currentBoard => _currentBoard;
 
-  int? get ticketPurchaseCost {
-    String _tambolaCost = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST);
-    if (_tambolaCost == null ||
-        _tambolaCost.isEmpty ||
-        int.tryParse(_tambolaCost) == null) _tambolaCost = '10';
+  // int? get ticketPurchaseCost {
+  //   String _tambolaCost = BaseRemoteConfig.remoteConfig
+  //       .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST);
+  //   if (_tambolaCost == null ||
+  //       _tambolaCost.isEmpty ||
+  //       int.tryParse(_tambolaCost) == null) _tambolaCost = '10';
 
-    return int.tryParse(_tambolaCost);
-  }
+  //   return int.tryParse(_tambolaCost);
+  // }
 
   // int? get totalActiveTickets => tambolaService!.ticketCount;
 

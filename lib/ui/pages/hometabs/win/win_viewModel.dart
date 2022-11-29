@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
+// import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -121,8 +121,7 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String appShareMessage =
-      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
+  String appShareMessage = AppConfig.getValue(AppConfigKey.appShareMessage);
   final FcmListener? _fcmListener = locator<FcmListener>();
   PageController? _pageController;
 
@@ -291,10 +290,8 @@ class WinViewModel extends BaseViewModel {
   }
 
   fetchBasicConstantValues() {
-    _minWithdrawPrize = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
-    _refUnlock = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+    _minWithdrawPrize = AppConfig.getValue(AppConfigKey.min_withdrawable_prize);
+    _refUnlock = AppConfig.getValue(AppConfigKey.unlock_referral_amt);
     _refUnlockAmt = BaseUtil.toInt(_refUnlock);
     _minWithdrawPrizeAmt = BaseUtil.toInt(_minWithdrawPrize);
   }

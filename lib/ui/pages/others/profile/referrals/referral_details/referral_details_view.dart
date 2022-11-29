@@ -110,9 +110,7 @@ class ReferralDetailsView extends StatelessWidget {
                                       ),
                                     )),
                                     TextSpan(
-                                        text: BaseRemoteConfig.remoteConfig
-                                                .getString(BaseRemoteConfig
-                                                    .REFERRAL_FLC_BONUS) +
+                                        text: AppConfig.getValue<String>(AppConfigKey.referralFlcBonus) +
                                             ' from every Golden Ticket. Highest referrer wins iPad every month!',
                                         style: TextStyles.sourceSans.body3
                                             .colour(UiConstants.kTextColor3)),

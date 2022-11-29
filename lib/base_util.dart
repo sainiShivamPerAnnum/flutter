@@ -31,6 +31,7 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -563,9 +564,9 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static showNoInternetAlert() {
-    ConnectivityStatus connectivityStatus = Provider.of<ConnectivityStatus>(
+    ConnectivityStatus connectivityStatus = Provider.of<ConnectivityService>(
         AppState.delegate!.navigatorKey.currentContext!,
-        listen: false);
+        listen: false).connectivityStatus;
 
     if (connectivityStatus == ConnectivityStatus.Offline) {
       Flushbar(

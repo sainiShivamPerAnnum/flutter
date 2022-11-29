@@ -70,6 +70,7 @@ class FcmListener {
           _handler!.handleNotification(notification.title, notification.body);
         }
       });
+      
 
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         print('A new onMessageOpenedApp event was published!');
