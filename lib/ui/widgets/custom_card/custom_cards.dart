@@ -20,6 +20,7 @@ class SaveCustomCard extends StatelessWidget {
   final InvestmentType investmentType;
   final ValueKey? key;
 
+
   const SaveCustomCard({
     this.key,
     this.title,
@@ -93,6 +94,7 @@ class SaveCustomCard extends StatelessWidget {
                                     Text(
                                       title!,
                                       style: TextStyles.rajdhaniSB.title5,
+                                      key: ValueKey(title),
                                     ),
                                   ],
                                 ),

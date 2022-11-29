@@ -131,7 +131,14 @@ class Constants {
   // View keys for Apxor Nudges
   static const TOTAL_SAVINGS_JAPPBAR = "savingsJourneyAppBar";
   static const TOTAL_WINNINGS_JAPPBAR = "winningsJourneyAppBar";
-  static const PROFILE_JAPPBAR= "profileJourneyAppBar";
+  static const PROFILE_JAPPBAR = "profileJourneyAppBar";
   static const PROFILE = "profile";
   static const HELP_FAB = "helpFab";
+  static const FELLO_COIN_BAR = "felloCoinBar";
+  static const TOTAL_SAVINGS = "totalSavings";
+  static const FELLO_FLO = "felloFLO";
+  static const DIGITIAL_GOLD = "digitalGold";
+  static const CURRENT_WINNINGS = "currentWinnings";
+  static const TAMBOLA = "tambola";
+  static const ALL_GAMES = "allGames";
 }

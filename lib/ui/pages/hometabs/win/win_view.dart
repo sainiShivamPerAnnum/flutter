@@ -16,6 +16,7 @@ import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.da
 import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -89,6 +90,7 @@ class Win extends StatelessWidget {
                                         'Current Winnings',
                                         style: TextStyles.rajdhaniSB.copyWith(
                                             fontSize: SizeConfig.body0),
+                                            key: ValueKey(Constants.CURRENT_WINNINGS),
                                       ),
                                       Text(
                                         '₹ ${currentWinning.truncate() ?? '-'}',
