@@ -113,7 +113,8 @@ class WebGameViewModel extends BaseViewModel {
           data[FcmCommands.GAME_END_MESSAGE_KEY].toString();
     }
     updateFlcBalance();
-    // _lbService!.fetchWebGameLeaderBoard(game: game);
+    if (data["game_type"] != null)
+      _lbService!.fetchWebGameLeaderBoard(game: data["game_type"]);
   }
 
   handleGameSessionEnd({Duration? duration}) {

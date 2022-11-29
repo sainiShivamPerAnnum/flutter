@@ -82,7 +82,7 @@ class FcmHandler extends ChangeNotifier {
     if (data['command'] != null) {
       showSnackbar = false;
 
-      if (command!.contains('end'))
+      if (command!.toLowerCase().contains('end'))
         return _webGameViewModel!
             .handleGameRoundEnd(data as Map<String, dynamic>);
       switch (command) {

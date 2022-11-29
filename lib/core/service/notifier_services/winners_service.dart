@@ -117,7 +117,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
 
   Future<void> fetchWinnersForAllGames() async {
     _winners.clear();
-    await Future.forEach(_gamesRepo.allgames!, (GameModel game) async {
+    await Future.forEach(_gamesRepo.games!, (GameModel game) async {
       final gameWinners = await getWinners(game.gameCode!, "weekly");
       if (gameWinners.winners != null && gameWinners.winners!.isNotEmpty) {
         gameWinnersMap[game.gameCode!] = gameWinners.winners!;

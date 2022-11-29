@@ -1,7 +1,6 @@
-import 'dart:developer';
 import 'dart:math' as math;
+
 import 'package:felloapp/core/enums/journey_service_enum.dart';
-import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -10,7 +9,6 @@ import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class JourneyAssetPath extends StatefulWidget {
@@ -29,8 +27,8 @@ class _JourneyAssetPathState extends State<JourneyAssetPath> {
       child: Stack(
         children: List.generate(widget.model!.journeyPathItemsList.length, (i) {
           return Positioned(
-            left:
-                widget.model!.pageWidth! * widget.model!.journeyPathItemsList[i].x,
+            left: widget.model!.pageWidth! *
+                widget.model!.journeyPathItemsList[i].x,
             bottom: widget.model!.pageHeight! *
                     (widget.model!.journeyPathItemsList[i].page - 1) +
                 widget.model!.pageHeight! *

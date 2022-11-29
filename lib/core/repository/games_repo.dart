@@ -15,10 +15,10 @@ class GameRepo extends BaseRepo {
       : "https://u9c7w6pnw7.execute-api.ap-south-1.amazonaws.com/prod";
 
   List<GameModel>? _allgames;
-
+  List<GameModel>? games;
   List<GameModel>? get allgames => this._allgames;
-
   set allgames(List<GameModel>? value) => this._allgames = value;
+
   Future<ApiResponse<List<GameModel>>> getGames() async {
     try {
       final token = await getBearerToken();
@@ -29,12 +29,11 @@ class GameRepo extends BaseRepo {
       );
       log("Games: ${response["data"]}");
 
-      final List<GameModel> games =
-          GameModel.helper.fromMapArray(response["data"]["games"]);
-      games.removeWhere((game) => game.code == 'TA');
-      allgames = games;
+      games = GameModel.helper.fromMapArray(response["data"]["games"]);
+      allgames = GameModel.helper.fromMapArray(response["data"]["games"]);
+      allgames?.removeWhere((game) => game.code == 'TA');
 
-      return ApiResponse<List<GameModel>>(model: games, code: 200);
+      return ApiResponse<List<GameModel>>(model: allgames, code: 200);
     } catch (e) {
       logger!.e("Unable to fetch games ${e.toString()}");
       allgames = [];

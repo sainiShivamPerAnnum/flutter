@@ -223,8 +223,6 @@ class WinViewModel extends BaseViewModel {
     // _baseUtil.fetchUserAugmontDetail();
     getFelloFacts();
     _lbService!.fetchReferralLeaderBoard();
-
-    _winnerService!.fetchWinnersForAllGames();
   }
 
   Future<void> shareLink() async {

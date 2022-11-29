@@ -37,7 +37,7 @@ class WinnerboardView extends StatelessWidget {
   }
 
   getGameName(String? gameCode) {
-    return _gamesRepo.allgames!
+    return _gamesRepo.games!
         .firstWhere((game) => game.gameCode == gameCode)
         .gameName;
   }
@@ -47,335 +47,362 @@ class WinnerboardView extends StatelessWidget {
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
         properties: [WinnerServiceProperties.winLeaderboard],
         builder: (context, model, properties) {
-          return Container(
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                //1
-                Container(
-                  margin: EdgeInsets.only(top: SizeConfig.padding32),
-                  width: SizeConfig.screenWidth! * 0.5,
-                  height: SizeConfig.screenWidth! * 0.5,
-                  decoration: BoxDecoration(
-                    color: UiConstants.kSecondaryBackgroundColor,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                //2
-                Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-                  margin: EdgeInsets.fromLTRB(
-                      0.0,
-                      SizeConfig.screenWidth! * 0.15 + SizeConfig.padding32,
-                      0.0,
-                      0.0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: UiConstants.kSecondaryBackgroundColor,
-                  ),
-                  child: Column(
+          return model!.winners.isNotEmpty
+              ? Container(
+                  child: Stack(
+                    alignment: Alignment.topCenter,
                     children: [
-                      SizedBox(
-                        height: SizeConfig.padding64,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Game Winners",
-                                style: TextStyles.rajdhaniSB.body0.colour(
-                                    UiConstants.kSecondaryLeaderBoardTextColor),
-                              ),
-                              Text(
-                                model!.getDateRange(),
-                                style: TextStyles.sourceSans.body4
-                                    .colour(UiConstants.kTextFieldTextColor),
-                              )
-                            ],
-                          ),
-                          if (model.winners.length >
-                              getLength(model.winners.length))
-                            GestureDetector(
-                              onTap: () {
-                                Haptic.vibrate();
-                                AppState.delegate!.appState.currentAction =
-                                    PageAction(
-                                  state: PageState.addWidget,
-                                  widget: AllParticipantsWinnersTopReferers(
-                                    isForTopReferers: false,
-                                    winners: model.winners,
-                                  ),
-                                  page:
-                                      AllParticipantsWinnersTopReferrersConfig,
-                                );
-                              },
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      top: SizeConfig.padding2,
-                                    ),
-                                    child: Text('See All',
-                                        style: TextStyles.rajdhaniSB.body2),
-                                  ),
-                                  SvgPicture.asset(Assets.chevRonRightArrow,
-                                      height: SizeConfig.padding24,
-                                      width: SizeConfig.padding24,
-                                      color: UiConstants.primaryColor)
-                                ],
-                              ),
-                            ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding32,
-                      ),
-                      //Old code to refactor starts here
+                      //1
                       Container(
-                        color: Colors.transparent,
-                        padding: EdgeInsets.only(top: SizeConfig.padding8),
-                        child: model.winners == null
-                            ? Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding24),
-                                color: Colors.transparent,
-                                alignment: Alignment.center,
-                                width: SizeConfig.screenWidth,
-                                child: FullScreenLoader(
-                                  size: SizeConfig.padding80,
-                                ))
-                            : (model.winners.isEmpty
-                                ? Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: SizeConfig.padding24),
-                                    color: Colors.transparent,
-                                    alignment: Alignment.center,
-                                    width: SizeConfig.screenWidth,
-                                    child: NoRecordDisplayWidget(
-                                      topPadding: false,
-                                      assetSvg: Assets.noWinnersAsset,
-                                      text: "Leaderboard will be updated soon",
+                        margin: EdgeInsets.only(top: SizeConfig.padding32),
+                        width: SizeConfig.screenWidth! * 0.5,
+                        height: SizeConfig.screenWidth! * 0.5,
+                        decoration: BoxDecoration(
+                          color: UiConstants.kSecondaryBackgroundColor,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      //2
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding24),
+                        margin: EdgeInsets.fromLTRB(
+                            0.0,
+                            SizeConfig.screenWidth! * 0.15 +
+                                SizeConfig.padding32,
+                            0.0,
+                            0.0),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: UiConstants.kSecondaryBackgroundColor,
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: SizeConfig.padding64,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Game Winners",
+                                      style: TextStyles.rajdhaniSB.body0.colour(
+                                          UiConstants
+                                              .kSecondaryLeaderBoardTextColor),
                                     ),
-                                  )
-                                : Column(
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "#",
-                                            style: TextStyles.sourceSans.body3
-                                                .colour(
-                                                    UiConstants.kTextColor2),
+                                    Text(
+                                      model!.getDateRange(),
+                                      style: TextStyles.sourceSans.body4.colour(
+                                          UiConstants.kTextFieldTextColor),
+                                    )
+                                  ],
+                                ),
+                                if (model.winners.length >
+                                    getLength(model.winners.length))
+                                  GestureDetector(
+                                    onTap: () {
+                                      Haptic.vibrate();
+                                      AppState.delegate!.appState
+                                          .currentAction = PageAction(
+                                        state: PageState.addWidget,
+                                        widget:
+                                            AllParticipantsWinnersTopReferers(
+                                          isForTopReferers: false,
+                                          winners: model.winners,
+                                        ),
+                                        page:
+                                            AllParticipantsWinnersTopReferrersConfig,
+                                      );
+                                    },
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            top: SizeConfig.padding2,
                                           ),
-                                          SizedBox(width: SizeConfig.padding12),
-                                          SizedBox(width: SizeConfig.padding12),
-                                          Expanded(
-                                            child: Column(
+                                          child: Text('See All',
+                                              style:
+                                                  TextStyles.rajdhaniSB.body2),
+                                        ),
+                                        SvgPicture.asset(
+                                            Assets.chevRonRightArrow,
+                                            height: SizeConfig.padding24,
+                                            width: SizeConfig.padding24,
+                                            color: UiConstants.primaryColor)
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding32,
+                            ),
+                            //Old code to refactor starts here
+                            Container(
+                              color: Colors.transparent,
+                              padding:
+                                  EdgeInsets.only(top: SizeConfig.padding8),
+                              child: model.winners == null
+                                  ? Container(
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: SizeConfig.padding24),
+                                      color: Colors.transparent,
+                                      alignment: Alignment.center,
+                                      width: SizeConfig.screenWidth,
+                                      child: FullScreenLoader(
+                                        size: SizeConfig.padding80,
+                                      ))
+                                  : (model.winners.isEmpty
+                                      ? Container(
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: SizeConfig.padding24),
+                                          color: Colors.transparent,
+                                          alignment: Alignment.center,
+                                          width: SizeConfig.screenWidth,
+                                          child: NoRecordDisplayWidget(
+                                            topPadding: false,
+                                            assetSvg: Assets.noWinnersAsset,
+                                            text:
+                                                "Leaderboard will be updated soon",
+                                          ),
+                                        )
+                                      : Column(
+                                          children: [
+                                            Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
                                               children: [
-                                                Text("Names",
-                                                    style: TextStyles
-                                                        .sourceSans.body3
-                                                        .colour(UiConstants
-                                                            .kTextColor2)),
+                                                Text(
+                                                  "#",
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor2),
+                                                ),
                                                 SizedBox(
-                                                    height:
-                                                        SizeConfig.padding4),
-                                              ],
-                                            ),
-                                          ),
-                                          Text(
-                                            "Cashprize",
-                                            style: TextStyles.sourceSans.body3
-                                                .colour(
-                                                    UiConstants.kTextColor2),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        children: List.generate(
-                                          getLength(model.winners.length),
-                                          (i) {
-                                            return Column(
-                                              children: [
-                                                Container(
-                                                  width: SizeConfig.screenWidth,
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical:
-                                                          SizeConfig.padding12),
-                                                  margin: EdgeInsets.symmetric(
-                                                    vertical:
-                                                        SizeConfig.padding4,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.transparent,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            SizeConfig
-                                                                .roundness16),
-                                                  ),
-                                                  child: Row(
+                                                    width:
+                                                        SizeConfig.padding12),
+                                                SizedBox(
+                                                    width:
+                                                        SizeConfig.padding12),
+                                                Expanded(
+                                                  child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
-                                                      Text(
-                                                        "${i + 1}",
-                                                        style: TextStyles
-                                                            .sourceSans.body2
-                                                            .colour(
-                                                                Colors.white),
-                                                      ),
+                                                      Text("Names",
+                                                          style: TextStyles
+                                                              .sourceSans.body3
+                                                              .colour(UiConstants
+                                                                  .kTextColor2)),
                                                       SizedBox(
-                                                          width: SizeConfig
-                                                              .padding12),
-                                                      FutureBuilder(
-                                                        future: model
-                                                            .getProfileDpWithUid(
-                                                                model.winners[i]
-                                                                    .userid),
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          if (!snapshot
-                                                                  .hasData ||
-                                                              snapshot.connectionState ==
-                                                                  ConnectionState
-                                                                      .waiting) {
-                                                            return DefaultAvatar();
-                                                          }
-
-                                                          String imageUrl =
-                                                              snapshot.data
-                                                                  as String;
-
-                                                          return ClipOval(
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              imageUrl:
-                                                                  imageUrl,
-                                                              fit: BoxFit.cover,
-                                                              width: SizeConfig
-                                                                  .iconSize5,
-                                                              height: SizeConfig
-                                                                  .iconSize5,
-                                                              placeholder:
-                                                                  (context,
-                                                                          url) =>
-                                                                      Container(
-                                                                width: SizeConfig
-                                                                    .iconSize5,
-                                                                height: SizeConfig
-                                                                    .iconSize5,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  shape: BoxShape
-                                                                      .circle,
-                                                                ),
-                                                              ),
-                                                              errorWidget:
-                                                                  (a, b, c) {
-                                                                return DefaultAvatar();
-                                                              },
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                      SizedBox(
-                                                          width: SizeConfig
-                                                              .padding12),
-                                                      Expanded(
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Text(
-                                                                //"avc",
-                                                                model.winners[i]
-                                                                        .username!
-                                                                        .replaceAll(
-                                                                            '@',
-                                                                            '.') ??
-                                                                    "username",
-                                                                style: TextStyles
-                                                                    .sourceSans
-                                                                    .body2
-                                                                    .colour(Colors
-                                                                        .white)),
-                                                            Text(
-                                                              getGameName(model
-                                                                  .winners[i]
-                                                                  .gameType),
-                                                              style: TextStyles
-                                                                  .body4
-                                                                  .colour(UiConstants
-                                                                      .kTextColor2),
-                                                            ),
-                                                            SizedBox(
-                                                                height: SizeConfig
-                                                                    .padding4),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        "₹ ${model.winners[i].amount!.toInt() ?? "00"}",
-                                                        style: TextStyles
-                                                            .sourceSans.body2
-                                                            .colour(
-                                                                Colors.white),
-                                                      )
+                                                          height: SizeConfig
+                                                              .padding4),
                                                     ],
                                                   ),
                                                 ),
-                                                if (i + 1 <
-                                                    getLength(
-                                                        model.winners.length))
-                                                  Divider(
-                                                    color: Colors.white,
-                                                    thickness: 0.2,
-                                                  )
+                                                Text(
+                                                  "Cashprize",
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor2),
+                                                )
                                               ],
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: SizeConfig.padding16,
-                                      ),
-                                    ],
-                                  )),
-                      )
+                                            ),
+                                            Column(
+                                              children: List.generate(
+                                                getLength(model.winners.length),
+                                                (i) {
+                                                  return Column(
+                                                    children: [
+                                                      Container(
+                                                        width: SizeConfig
+                                                            .screenWidth,
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: SizeConfig
+                                                                    .padding12),
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                          vertical: SizeConfig
+                                                              .padding4,
+                                                        ),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors
+                                                              .transparent,
+                                                          borderRadius: BorderRadius
+                                                              .circular(SizeConfig
+                                                                  .roundness16),
+                                                        ),
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              "${i + 1}",
+                                                              style: TextStyles
+                                                                  .sourceSans
+                                                                  .body2
+                                                                  .colour(Colors
+                                                                      .white),
+                                                            ),
+                                                            SizedBox(
+                                                                width: SizeConfig
+                                                                    .padding12),
+                                                            FutureBuilder(
+                                                              future: model
+                                                                  .getProfileDpWithUid(model
+                                                                      .winners[
+                                                                          i]
+                                                                      .userid),
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                if (!snapshot
+                                                                        .hasData ||
+                                                                    snapshot.connectionState ==
+                                                                        ConnectionState
+                                                                            .waiting) {
+                                                                  return DefaultAvatar();
+                                                                }
+
+                                                                String
+                                                                    imageUrl =
+                                                                    snapshot.data
+                                                                        as String;
+
+                                                                return ClipOval(
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    imageUrl:
+                                                                        imageUrl,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    width: SizeConfig
+                                                                        .iconSize5,
+                                                                    height: SizeConfig
+                                                                        .iconSize5,
+                                                                    placeholder:
+                                                                        (context,
+                                                                                url) =>
+                                                                            Container(
+                                                                      width: SizeConfig
+                                                                          .iconSize5,
+                                                                      height: SizeConfig
+                                                                          .iconSize5,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        shape: BoxShape
+                                                                            .circle,
+                                                                      ),
+                                                                    ),
+                                                                    errorWidget:
+                                                                        (a, b,
+                                                                            c) {
+                                                                      return DefaultAvatar();
+                                                                    },
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                            SizedBox(
+                                                                width: SizeConfig
+                                                                    .padding12),
+                                                            Expanded(
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                      //"avc",
+                                                                      model.winners[i].username!.replaceAll(
+                                                                              '@',
+                                                                              '.') ??
+                                                                          "username",
+                                                                      style: TextStyles
+                                                                          .sourceSans
+                                                                          .body2
+                                                                          .colour(
+                                                                              Colors.white)),
+                                                                  Text(
+                                                                    getGameName(model
+                                                                        .winners[
+                                                                            i]
+                                                                        .gameType),
+                                                                    style: TextStyles
+                                                                        .body4
+                                                                        .colour(
+                                                                            UiConstants.kTextColor2),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height: SizeConfig
+                                                                          .padding4),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              "₹ ${model.winners[i].amount!.toInt() ?? "00"}",
+                                                              style: TextStyles
+                                                                  .sourceSans
+                                                                  .body2
+                                                                  .colour(Colors
+                                                                      .white),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      if (i + 1 <
+                                                          getLength(model
+                                                              .winners.length))
+                                                        Divider(
+                                                          color: Colors.white,
+                                                          thickness: 0.2,
+                                                        )
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: SizeConfig.padding16,
+                                            ),
+                                          ],
+                                        )),
+                            )
+                          ],
+                        ),
+                      ),
+                      //3
+                      Container(
+                        margin: EdgeInsets.only(right: SizeConfig.padding14),
+                        child: SvgPicture.asset(
+                          Assets.winScreenHighestScorers,
+                          width: SizeConfig.screenWidth! * 0.3,
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                //3
-                Container(
-                  margin: EdgeInsets.only(right: SizeConfig.padding14),
-                  child: SvgPicture.asset(
-                    Assets.winScreenHighestScorers,
-                    width: SizeConfig.screenWidth! * 0.3,
-                  ),
-                ),
-              ],
-            ),
-          );
+                )
+              : SizedBox();
         });
   }
 }

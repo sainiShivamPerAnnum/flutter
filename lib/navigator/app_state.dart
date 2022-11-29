@@ -118,9 +118,6 @@ class AppState extends ChangeNotifier {
       _lbService!.fetchReferralLeaderBoard();
       isWinOpened = true;
     }
-    if (index == 2) {
-      _winnerService!.fetchWinnersForAllGames();
-    }
     print(_rootIndex);
     notifyListeners();
   }
