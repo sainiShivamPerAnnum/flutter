@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -110,7 +111,9 @@ class JourneyPageViewModel extends BaseViewModel {
 
   init(TickerProvider ticker) async {
     log("Journey VM init Called");
-    ApxorFlutter.trackScreen("Journey");
+    if (Platform.isAndroid) {
+      ApxorFlutter.trackScreen("Journey");
+    }
     isLoading = true;
     _journeyService!.vsync = ticker;
     logger!.d("Pages length: ${_journeyService!.pages!.length ?? 0}");
