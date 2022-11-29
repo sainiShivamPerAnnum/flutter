@@ -21,7 +21,7 @@ class LendboxWithdrawalView extends StatefulWidget {
 
 class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
     with WidgetsBindingObserver {
-  final LendboxTransactionService? _txnService =
+  final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
   AppLifecycleState? appLifecycleState;
 
@@ -29,7 +29,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      _txnService!.currentTransactionState = TransactionState.idle;
+      _txnService.currentTransactionState = TransactionState.idle;
     });
     WidgetsBinding.instance!.addObserver(this);
   }
@@ -44,9 +44,9 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
     if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!_txnService!.isIOSTxnInProgress) return;
-      _txnService!.isIOSTxnInProgress = false;
-      _txnService!.initiatePolling();
+      if (!_txnService.isIOSTxnInProgress) return;
+      _txnService.isIOSTxnInProgress = false;
+      _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);
   }

@@ -104,11 +104,11 @@ class BankAndPanService
   }
 
   dump() {
-    _isBankDetailsAdded = false;
-    _isKYCVerified = false;
-    _isLockInReached = false;
+    isBankDetailsAdded = false;
+    isKYCVerified = false;
+    isLockInReached = false;
     _isSellButtonVisible = false;
-    _isSellLocked = false;
+    isSellLocked = false;
     userPan = null;
     activeBankAccountDetails = null;
   }
@@ -167,7 +167,7 @@ class BankAndPanService
     if (isKYCVerified &&
         isBankDetailsAdded &&
         !isSellLocked &&
-        userPan != null &&
+        userKycData != null &&
         activeBankAccountDetails != null) return true;
     return false;
   }

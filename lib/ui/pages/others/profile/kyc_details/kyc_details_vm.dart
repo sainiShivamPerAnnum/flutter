@@ -149,6 +149,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     }
     if (userKycData != null) {
       if (userKycData!.ocrVerified) {
+        _bankAndPanService.isKYCVerified = true;
         kycVerificationStatus = KycVerificationStatus.VERIFIED;
         panController!.text = userKycData!.pan;
         nameController!.text = userKycData!.name;
