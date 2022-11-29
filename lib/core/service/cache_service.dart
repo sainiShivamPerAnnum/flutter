@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -44,6 +45,7 @@ class CacheService {
     if (cachedData != null && ttl != 0) {
       try {
         _logger!.d('cache: data read successfully');
+        log(cachedData.data! + "Sanket Response");
         return parseData(json.decode(cachedData.data!));
       } catch (e) {
         _logger!.e(
@@ -68,6 +70,7 @@ class CacheService {
     ApiResponse<T> Function(dynamic) parseData,
   ) async {
     final response = await apiReq();
+    
     final res = parseData(response);
 
     if (response != null &&

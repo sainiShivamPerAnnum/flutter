@@ -870,7 +870,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         AppState.backButtonDispatcher!.didPopRoute();
         break;
       case 'autosaveDetails':
-        if (!(locator<AppConfig>().data[AppConfigKey.autosaveActive] as bool))
+        if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool))
           break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;

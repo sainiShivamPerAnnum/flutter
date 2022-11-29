@@ -140,10 +140,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
 
   //INIT
   Future init() async {
-    mid = BaseRemoteConfig.remoteConfig.getString(FlavorConfig.isDevelopment()
-        ? BaseRemoteConfig.PATYM_DEV_MID
-        : BaseRemoteConfig.PATYM_PROD_MID);
-    autosaveVisible = locator<AppConfig>().data[AppConfigKey.autosaveActive] as bool;
+    mid = AppConfig.getValue(AppConfigKey.paytmMid);
+    autosaveVisible = AppConfig.getValue(AppConfigKey.autosaveActive) as bool;
     // await getActiveSubscriptionDetails();
 
     if (await CacheManager.exits(

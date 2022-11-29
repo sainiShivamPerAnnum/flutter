@@ -107,7 +107,7 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<AppConfig>> getAppConfig() async {
     try {
-      final token = await getBearerToken();
+      // final token = await getBearerToken();
 
       return await _cacheService.cachedApi<AppConfig>(
         'appConfig',
@@ -115,13 +115,14 @@ class GetterRepository extends BaseRepo {
             .add(Duration(minutes: TTL.ONE_DAY * 7))
             .millisecondsSinceEpoch,
         () => APIService.instance
-            .getData(ApiPath.getAppConfig, cBaseUrl: _baseUrl, token: token),
+            .getData(ApiPath.getAppConfig, cBaseUrl: _baseUrl),
         (p0) => ApiResponse(
           code: 200,
-          model: AppConfig.fromJson(p0),
+          model: AppConfig.instance(p0),
         ),
       );
     } catch (e) {
+      log(e.toString() + "Sanket Error");
       return ApiResponse.withError('Something went wrong', 400);
     }
   }

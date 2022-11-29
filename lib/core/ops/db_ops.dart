@@ -27,15 +27,15 @@ class DBModel extends ChangeNotifier {
   final CustomLogger? logger = locator<CustomLogger>();
 
   ///////////////////////////CREDENTIALS//////////////////////////////
-  final AppConfig _appConfig;
+  // final AppConfig _appConfig;
 
-  DBModel({AppConfig? appConfig})
-      : _appConfig = appConfig ?? locator(),
+  DBModel()
+      : 
         super();
   Future<String?> showAugmontBuyNotice() async {
     try {
       String _awsKeyIndex =
-          _appConfig.data[AppConfigKey.aws_augmont_key_index].toString();
+          AppConfig.getValue(AppConfigKey.aws_augmont_key_index).toString();
       if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
@@ -69,7 +69,7 @@ class DBModel extends ChangeNotifier {
   Future<bool> isAugmontBuyDisabled() async {
     try {
       String _awsKeyIndex = 
-          _appConfig.data[AppConfigKey.aws_augmont_key_index].toString();;
+          AppConfig.getValue(AppConfigKey.aws_augmont_key_index).toString();
       if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
@@ -102,7 +102,7 @@ class DBModel extends ChangeNotifier {
   Future<String?> showAugmontSellNotice() async {
     try {
       String _awsKeyIndex = 
-          _appConfig.data[AppConfigKey.aws_augmont_key_index].toString();
+          AppConfig.getValue(AppConfigKey.aws_augmont_key_index).toString();
       if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
@@ -136,7 +136,7 @@ class DBModel extends ChangeNotifier {
   Future<bool> isAugmontSellDisabled() async {
     try {
       String _awsKeyIndex =
-          _appConfig.data[AppConfigKey.aws_augmont_key_index].toString();
+          AppConfig.getValue(AppConfigKey.aws_augmont_key_index).toString();
       if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {

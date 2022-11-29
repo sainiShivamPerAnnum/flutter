@@ -7,11 +7,13 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/payment_mode_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
@@ -303,10 +305,8 @@ class AugmontTransactionService extends BaseTransactionService {
       return null;
 
     double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
-    final mid = BaseRemoteConfig.remoteConfig.getString(
-        FlavorConfig.isDevelopment()
-            ? BaseRemoteConfig.PATYM_DEV_MID
-            : BaseRemoteConfig.PATYM_PROD_MID);
+    final mid = 
+        AppConfig.getValue(AppConfigKey.paytmMid);
     final Map<String, dynamic> augMap = {
       "aBlockId": augmontRates.blockId.toString(),
       "aLockPrice": augmontRates.goldBuyPrice,

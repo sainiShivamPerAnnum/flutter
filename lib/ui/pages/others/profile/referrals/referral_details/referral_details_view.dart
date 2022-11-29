@@ -93,9 +93,8 @@ class ReferralDetailsView extends StatelessWidget {
                                   children: [
                                     TextSpan(
                                         text: 'Earn upto ₹' +
-                                            locator<AppConfig>()
-                                                .data[
-                                                    AppConfigKey.referralBonus]
+                                            AppConfig.getValue(
+                                                    AppConfigKey.referralBonus)
                                                 .toString() +
                                             ' and ',
                                         style: TextStyles.sourceSans.body3
@@ -850,7 +849,7 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                     // ),
                     InfoTile(
                       title:
-                          "Once your friend makes their first investment of ₹${widget.model.unlockReferralBonus}, you and your friend both receive ₹${locator<AppConfig>().data[AppConfigKey.referralBonus]} and ${locator<AppConfig>().data[AppConfigKey.referralFlcBonus]} Fello tokens.",
+                          "Once your friend makes their first investment of ₹${widget.model.unlockReferralBonus}, you and your friend both receive ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralFlcBonus)} Fello tokens.",
                       leadingAsset: Assets.tickets,
                     ),
                     SizedBox(height: SizeConfig.padding8),

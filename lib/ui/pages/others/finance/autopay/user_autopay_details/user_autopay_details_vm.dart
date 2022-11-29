@@ -163,7 +163,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     if (response) {
       BaseUtil.showPositiveAlert("Autosave paused successfully",
           "For more details check Autosave section");
-      if (pauseValue == 4 && !(locator<AppConfig>().data[AppConfigKey.autosaveActive] as bool))
+      if (pauseValue == 4 && !(AppConfig.getValue(AppConfigKey.autosaveActive) as bool))
         _paytmService!.autosaveVisible = false;
       AppState.backButtonDispatcher!.didPopRoute();
       AppState.backButtonDispatcher!.didPopRoute();

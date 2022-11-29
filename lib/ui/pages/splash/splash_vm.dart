@@ -110,7 +110,9 @@ class LauncherViewModel extends BaseViewModel {
 
       // await BaseRemoteConfig.init();
 
-      final _appConfig = await locator<GetterRepository>().getAppConfig();
+      await locator<GetterRepository>().getAppConfig();
+
+      
 
       if (userService.isUserOnboarded) {
         await _journeyRepo.init();
@@ -122,9 +124,9 @@ class LauncherViewModel extends BaseViewModel {
       _logger!.d(
         'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}',
       );
-      locator.registerSingleton(_appConfig.model!);
+      
       final _invalidate =
-          _appConfig.model!.data[AppConfigKey.invalidateBefore] as int;
+          AppConfig.getValue(AppConfigKey.invalidateBefore) as int;
       if (now <= _invalidate) {
         await new CacheService().invalidateAll();
       }

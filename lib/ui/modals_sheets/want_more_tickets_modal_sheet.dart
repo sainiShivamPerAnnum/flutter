@@ -126,7 +126,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 },
               ),
               SizedBox(height: SizeConfig.padding16),
-              if (locator<AppConfig>().data[AppConfigKey.autosaveActive] as bool)
+              if (AppConfig.getValue(AppConfigKey.autosaveActive) as bool)
                 FelloTile(
                   leadingAsset: Assets.repeat,
                   title: "Set up Autosave",

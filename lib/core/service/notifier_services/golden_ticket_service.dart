@@ -316,7 +316,7 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   showAutosavePrompt() {
-    if (!(locator<AppConfig>().data[AppConfigKey.autosaveActive] as bool)) return;
+    if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
     BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissible: false,
@@ -338,7 +338,7 @@ class GoldenTicketService extends ChangeNotifier {
   }
 
   openAutosave() {
-    if (!(locator<AppConfig>().data[AppConfigKey.autosaveActive] as bool)) return;
+    if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
 
     if (_paytmService!.activeSubscription != null) {
       AppState.delegate!.appState.currentAction = PageAction(

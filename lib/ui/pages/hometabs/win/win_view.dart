@@ -35,7 +35,7 @@ List<Color> randomColors = [
 ];
 
 class Win extends StatelessWidget {
-  final _appConfig = locator<AppConfig>();
+  
   @override
   Widget build(BuildContext context) {
     S? locale = S.of(context);
@@ -261,7 +261,7 @@ class Win extends StatelessWidget {
                                                           .kTextColor3)),
                                               TextSpan(
                                                   text:
-                                                      '₹${_appConfig.data[AppConfigKey.referralBonus]} and',
+                                                      '₹${AppConfig.getValue(AppConfigKey.referralBonus)} and',
                                                   style: TextStyles
                                                       .sourceSansB.body3
                                                       .colour(UiConstants

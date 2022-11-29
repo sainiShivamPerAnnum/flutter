@@ -383,7 +383,7 @@ class WinViewModel extends BaseViewModel {
     }
     _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
         ? appShareMessage
-        : 'Hey I am gifting you ₹${locator<AppConfig>().data[AppConfigKey.referralBonus]} and ${locator<AppConfig>().data[AppConfigKey.referralBonus]} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
+        : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
 
     loadingRefCode = false;
     refresh();
