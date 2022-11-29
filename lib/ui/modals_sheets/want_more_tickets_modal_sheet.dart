@@ -1,4 +1,5 @@
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -14,17 +15,19 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../core/model/app_config_model.dart';
+
 class WantMoreTicketsModalSheet extends StatelessWidget {
   WantMoreTicketsModalSheet({this.isInsufficientBalance = false});
   final isInsufficientBalance;
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
-  final referralBonus =
-      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
-  final referralTicketBonus = BaseRemoteConfig.remoteConfig
-      .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
-  final referralFlcBonus = BaseRemoteConfig.remoteConfig
-      .getString(BaseRemoteConfig.REFERRAL_FLC_BONUS);
+  // final referralBonus =
+  //     BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
+  // final referralTicketBonus = BaseRemoteConfig.remoteConfig
+  //     .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
+  // final referralFlcBonus = BaseRemoteConfig.remoteConfig
+  //     .getString(BaseRemoteConfig.REFERRAL_FLC_BONUS);
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +126,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 },
               ),
               SizedBox(height: SizeConfig.padding16),
-              if (BaseRemoteConfig.AUTOSAVE_ACTIVE)
+              if (locator<AppConfig>().data[AppConfigKey.autosaveActive] as bool)
                 FelloTile(
                   leadingAsset: Assets.repeat,
                   title: "Set up Autosave",

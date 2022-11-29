@@ -4,6 +4,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -17,12 +18,15 @@ import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+
+import '../../../../core/enums/app_config_keys.dart';
 
 List<Color> randomColors = [
   Color(0xffF79780),
@@ -31,6 +35,7 @@ List<Color> randomColors = [
 ];
 
 class Win extends StatelessWidget {
+  final _appConfig = locator<AppConfig>();
   @override
   Widget build(BuildContext context) {
     S? locale = S.of(context);
@@ -256,7 +261,7 @@ class Win extends StatelessWidget {
                                                           .kTextColor3)),
                                               TextSpan(
                                                   text:
-                                                      '₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and',
+                                                      '₹${_appConfig.data[AppConfigKey.referralBonus]} and',
                                                   style: TextStyles
                                                       .sourceSansB.body3
                                                       .colour(UiConstants

@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -116,7 +118,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
       _refCode = res.model;
       _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
           ? appShareMessage
-          : 'Hey I am gifting you ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
+          : 'Hey I am gifting you ₹${locator<AppConfig>().data[AppConfigKey.referralBonus]} and ${locator<AppConfig>().data[AppConfigKey.referralFlcBonus]} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
     } else {
       _refCode = '';
       _shareMsg = '';

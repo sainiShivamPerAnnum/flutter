@@ -2,8 +2,10 @@ import 'dart:developer';
 import "dart:math" as math;
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/amount_chip.dart';
@@ -23,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class GoldBuyInputView extends StatelessWidget {
   // final int? amount;
@@ -41,7 +44,7 @@ class GoldBuyInputView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-
+    
     return Stack(
       children: [
         Column(

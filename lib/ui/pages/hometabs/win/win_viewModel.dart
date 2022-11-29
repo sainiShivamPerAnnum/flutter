@@ -6,9 +6,11 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
@@ -381,7 +383,7 @@ class WinViewModel extends BaseViewModel {
     }
     _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
         ? appShareMessage
-        : 'Hey I am gifting you ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
+        : 'Hey I am gifting you ₹${locator<AppConfig>().data[AppConfigKey.referralBonus]} and ${locator<AppConfig>().data[AppConfigKey.referralBonus]} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
 
     loadingRefCode = false;
     refresh();

@@ -2,7 +2,9 @@ import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -17,6 +19,7 @@ import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -90,9 +93,10 @@ class ReferralDetailsView extends StatelessWidget {
                                   children: [
                                     TextSpan(
                                         text: 'Earn upto ₹' +
-                                            BaseRemoteConfig.remoteConfig
-                                                .getString(BaseRemoteConfig
-                                                    .REFERRAL_BONUS) +
+                                            locator<AppConfig>()
+                                                .data[
+                                                    AppConfigKey.referralBonus]
+                                                .toString() +
                                             ' and ',
                                         style: TextStyles.sourceSans.body3
                                             .colour(UiConstants.kTextColor3)),
@@ -846,7 +850,7 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                     // ),
                     InfoTile(
                       title:
-                          "Once your friend makes their first investment of ₹${widget.model.unlockReferralBonus}, you and your friend both receive ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} Fello tokens.",
+                          "Once your friend makes their first investment of ₹${widget.model.unlockReferralBonus}, you and your friend both receive ₹${locator<AppConfig>().data[AppConfigKey.referralBonus]} and ${locator<AppConfig>().data[AppConfigKey.referralFlcBonus]} Fello tokens.",
                       leadingAsset: Assets.tickets,
                     ),
                     SizedBox(height: SizeConfig.padding8),

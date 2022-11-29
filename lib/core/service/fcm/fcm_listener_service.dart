@@ -63,6 +63,7 @@ class FcmListener {
         RemoteNotification? notification = message.notification;
         if (message.data != null && message.data.isNotEmpty) {
           _handler!.handleMessage(message.data, MsgSource.Foreground);
+          
         } else if (notification != null) {
           logger!.d(
               "Handle Notification: ${notification.title} ${notification.body}");

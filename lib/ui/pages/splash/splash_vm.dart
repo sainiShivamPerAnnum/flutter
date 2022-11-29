@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -104,7 +107,10 @@ class LauncherViewModel extends BaseViewModel {
       await CacheService.initialize();
       await userService.init();
       fetchUserBootUpDetails();
-      await BaseRemoteConfig.init();
+
+      // await BaseRemoteConfig.init();
+
+      final _appConfig = await locator<GetterRepository>().getAppConfig();
 
       if (userService.isUserOnboarded) {
         await _journeyRepo.init();
@@ -116,7 +122,10 @@ class LauncherViewModel extends BaseViewModel {
       _logger!.d(
         'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}',
       );
-      if (now <= BaseRemoteConfig.invalidationBefore) {
+      locator.registerSingleton(_appConfig.model!);
+      final _invalidate =
+          _appConfig.model!.data[AppConfigKey.invalidateBefore] as int;
+      if (now <= _invalidate) {
         await new CacheService().invalidateAll();
       }
       // test
@@ -138,6 +147,7 @@ class LauncherViewModel extends BaseViewModel {
             isOnBoarded: userService.isUserOnboarded,
             baseUser: userService.baseUser,
           );
+        locator.allReadySync();
 
         //To fetch the properties required to pass for the analytics
         await AnalyticsProperties().init();

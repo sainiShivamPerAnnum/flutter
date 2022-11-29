@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -25,11 +27,15 @@ class DBModel extends ChangeNotifier {
   final CustomLogger? logger = locator<CustomLogger>();
 
   ///////////////////////////CREDENTIALS//////////////////////////////
+  final AppConfig _appConfig;
 
+  DBModel({AppConfig? appConfig})
+      : _appConfig = appConfig ?? locator(),
+        super();
   Future<String?> showAugmontBuyNotice() async {
     try {
-      String _awsKeyIndex = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
+      String _awsKeyIndex =
+          _appConfig.data[AppConfigKey.aws_augmont_key_index].toString();
       if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
@@ -62,8 +68,8 @@ class DBModel extends ChangeNotifier {
 
   Future<bool> isAugmontBuyDisabled() async {
     try {
-      String _awsKeyIndex = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
+      String _awsKeyIndex = 
+          _appConfig.data[AppConfigKey.aws_augmont_key_index].toString();;
       if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
@@ -95,8 +101,8 @@ class DBModel extends ChangeNotifier {
 
   Future<String?> showAugmontSellNotice() async {
     try {
-      String _awsKeyIndex = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
+      String _awsKeyIndex = 
+          _appConfig.data[AppConfigKey.aws_augmont_key_index].toString();
       if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {
@@ -129,8 +135,8 @@ class DBModel extends ChangeNotifier {
 
   Future<bool> isAugmontSellDisabled() async {
     try {
-      String _awsKeyIndex = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
+      String _awsKeyIndex =
+          _appConfig.data[AppConfigKey.aws_augmont_key_index].toString();
       if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
       int keyIndex = 1;
       try {

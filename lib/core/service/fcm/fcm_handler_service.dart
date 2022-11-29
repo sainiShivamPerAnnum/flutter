@@ -55,7 +55,7 @@ class FcmHandler extends ChangeNotifier {
     String? title = data!['dialog_title'];
     String? body = data['dialog_body'];
     String? command = data['command'];
-    String? url = data['deep_uri'];
+    String? url = data['deep_uri'] ;
 
     // if (data["test_txn"] == "paytm") {
     // _augTxnService.isOngoingTxn = false;

@@ -34,6 +34,9 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:upi_pay/upi_pay.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../enums/app_config_keys.dart';
+import '../../model/app_config_model.dart';
+
 //SUBSCRIPTION ERROR CODE
 const int ERR_CREATE_SUBSCRIPTION_FAILED = 0;
 const int ERR_INITIATE_SUBSCRIPTION_FAILED = 1;
@@ -140,7 +143,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     mid = BaseRemoteConfig.remoteConfig.getString(FlavorConfig.isDevelopment()
         ? BaseRemoteConfig.PATYM_DEV_MID
         : BaseRemoteConfig.PATYM_PROD_MID);
-    autosaveVisible = BaseRemoteConfig.AUTOSAVE_ACTIVE;
+    autosaveVisible = locator<AppConfig>().data[AppConfigKey.autosaveActive] as bool;
     // await getActiveSubscriptionDetails();
 
     if (await CacheManager.exits(

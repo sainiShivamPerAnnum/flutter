@@ -67,6 +67,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/enums/app_config_keys.dart';
+import '../../core/model/app_config_model.dart';
+
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final AnalyticsService? _analytics = locator<AnalyticsService>();
@@ -867,7 +870,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         AppState.backButtonDispatcher!.didPopRoute();
         break;
       case 'autosaveDetails':
-        if (!BaseRemoteConfig.AUTOSAVE_ACTIVE) break;
+        if (!(locator<AppConfig>().data[AppConfigKey.autosaveActive] as bool))
+          break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
       case 'userAutosaveDetails':

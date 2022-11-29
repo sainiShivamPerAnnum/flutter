@@ -33,11 +33,11 @@ class CacheService {
     }
   }
 
-  Future<ApiResponse> cachedApi(
+  Future<ApiResponse<T>> cachedApi<T>(
     String key,
     int ttl,
     Future<dynamic> Function() apiReq,
-    ApiResponse Function(dynamic) parseData,
+    ApiResponse<T> Function(dynamic) parseData,
   ) async {
     final cachedData = await getData(key);
 
@@ -61,11 +61,11 @@ class CacheService {
     return await _processApiAndSaveToCache(key, ttl, apiReq, parseData);
   }
 
-  Future<ApiResponse> _processApiAndSaveToCache(
+  Future<ApiResponse<T>> _processApiAndSaveToCache<T>(
     String key,
     int ttl,
     Future<dynamic> Function() apiReq,
-    ApiResponse Function(dynamic) parseData,
+    ApiResponse<T> Function(dynamic) parseData,
   ) async {
     final response = await apiReq();
     final res = parseData(response);
