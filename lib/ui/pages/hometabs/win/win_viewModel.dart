@@ -98,16 +98,7 @@ class WinViewModel extends BaseViewModel {
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
   bool loadingRefCode = true;
-  bool _isWinningHistoryLoading = false;
   bool _isShareLoading = false;
-
-  List<UserTransaction>? _winningHistory;
-
-  List<UserTransaction>? get winningHistory => this._winningHistory;
-  set winningHistory(List<UserTransaction>? value) {
-    this._winningHistory = value;
-    notifyListeners();
-  }
 
   List<FelloFactsModel>? fellofacts = [];
 
@@ -135,12 +126,6 @@ class WinViewModel extends BaseViewModel {
 
   //GETTERS SETTERS
   bool get isShareLoading => _isShareLoading;
-
-  get isWinningHistoryLoading => this._isWinningHistoryLoading;
-  set isWinningHistoryLoading(value) {
-    this._isWinningHistoryLoading = value;
-    notifyListeners();
-  }
 
   String? get minWithdrawPrize => _minWithdrawPrize;
   String? get refUnlock => _refUnlock;
@@ -535,14 +520,6 @@ class WinViewModel extends BaseViewModel {
       getGramsWon(claimPrize).then((value) {
         AppState.backButtonDispatcher!.didPopRoute();
         if (flag) {
-          isWinningHistoryLoading = true;
-          _userRepo
-              .getWinningHistory(_userService!.baseUser!.uid)!
-              .then((temp) {
-            temp.model!.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
-            winningHistory = temp.model;
-            isWinningHistoryLoading = true;
-          });
           showSuccessPrizeWithdrawalDialog(
               choice,
               choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold",

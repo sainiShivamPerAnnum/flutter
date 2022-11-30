@@ -21,8 +21,7 @@ class MyWinningsView extends StatelessWidget {
     S? locale = S.of(context);
     return BaseView<MyWinningsViewModel>(
       onModelReady: (model) {
-        model.getWinningHistory();
-        // model.getGoldenTickets();
+        model.init();
       },
       builder: (ctx, model, child) {
         return Scaffold(

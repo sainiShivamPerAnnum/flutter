@@ -223,7 +223,7 @@ class UserProfileForm extends StatelessWidget {
               locale!.obDobLabel,
             ),
 
-            model.inEditMode && model.isNameEnabled
+            model.inEditMode && model.isDateEnabled
                 ? Container(
                     width: double.infinity,
                     // height: SizeConfig.screenWidth * 0.1377,
@@ -337,7 +337,7 @@ class UserProfileForm extends StatelessWidget {
                     validator: (val) {
                       return null;
                     },
-                    suffixIcon: !model.isNameEnabled
+                    suffixIcon: !model.isDateEnabled
                         ? Icon(
                             Icons.verified,
                             color: UiConstants.primaryColor,

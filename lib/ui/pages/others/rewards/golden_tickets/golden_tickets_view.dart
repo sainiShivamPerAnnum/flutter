@@ -1,22 +1,16 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/hero_router.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
-import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class GoldenTicketsView extends StatelessWidget {
   final bool openFirst;
@@ -25,90 +19,66 @@ class GoldenTicketsView extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return BaseView<GoldenTicketsViewModel>(
-      onModelReady: (model) => model.init(openFirst),
-      onModelDispose: (model) => model.finish(),
-      builder: (ctx, model, child) {
+    return PropertyChangeConsumer<GoldenTicketService,
+        GoldenTicketServiceProperties>(
+      properties: [GoldenTicketServiceProperties.AllGoldenTickets],
+      builder: (context, model, properties) {
         return NotificationListener<ScrollNotification>(
           onNotification: (ScrollNotification scrollInfo) {
             if (scrollInfo.metrics.maxScrollExtent ==
                 scrollInfo.metrics.pixels) {
-              model.requestMoreData();
+              model!.fetchAllGoldenTickets();
             }
             return true;
           },
-          child: StreamBuilder<List<DocumentSnapshot>>(
-            stream: model.streamController.stream,
-            builder: (BuildContext context,
-                AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
-              if (snapshot.hasError)
-                return new NoRecordDisplayWidget(
-                  assetSvg: Assets.noTransactionAsset,
-                  text: "Unable to load your tickets at the moment",
-                );
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return Center(
-                    child: FullScreenLoader(),
-                  );
-                default:
-                  log("Items: " + snapshot.data!.length.toString());
-                  model.arrangeGoldenTickets(snapshot.data!, openFirst);
-
-                  return model.arrangedGoldenTicketList == null ||
-                          model.arrangedGoldenTicketList!.length == 0
-                      ? ListView(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          children: [
-                            NoRecordDisplayWidget(
-                              assetSvg: Assets.noTickets,
-                              text: "No Golden Tickets won",
-                            )
-                          ],
-                        )
-                      : GridView.builder(
-                          physics: BouncingScrollPhysics(),
-                          itemCount: model.arrangedGoldenTicketList!.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisSpacing: SizeConfig.padding8,
-                                  childAspectRatio: 1 / 1,
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: SizeConfig.padding8),
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding16,
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          itemBuilder: (ctx, i) {
-                            return InkWell(
-                              onTap: () {
-                                AppState.screenStack.add(ScreenItem.dialog);
-                                Navigator.of(AppState
-                                        .delegate!.navigatorKey.currentContext!)
-                                    .push(
-                                  HeroDialogRoute(
-                                    builder: (context) {
-                                      return GTDetailedView(
-                                        ticket:
-                                            model.arrangedGoldenTicketList![i],
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              child: GoldenTicketGridItemCard(
-                                ticket: model.arrangedGoldenTicketList![i],
-                                titleStyle: TextStyles.body2,
-                                titleStyle2: TextStyles.body3,
-                                width: SizeConfig.screenWidth! * 0.36,
-                                subtitleStyle: TextStyles.body4,
-                              ),
-                            );
-                          },
+          child: model!.allGoldenTickets.isEmpty
+              ? ListView(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  children: [
+                    NoRecordDisplayWidget(
+                      assetSvg: Assets.noTickets,
+                      text: "No Golden Tickets won",
+                    )
+                  ],
+                )
+              : GridView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: model.allGoldenTickets.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisSpacing: SizeConfig.padding8,
+                      childAspectRatio: 1 / 1,
+                      crossAxisCount: 2,
+                      mainAxisSpacing: SizeConfig.padding8),
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding16,
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  itemBuilder: (ctx, i) {
+                    return InkWell(
+                      onTap: () {
+                        AppState.screenStack.add(ScreenItem.dialog);
+                        Navigator.of(
+                                AppState.delegate!.navigatorKey.currentContext!)
+                            .push(
+                          HeroDialogRoute(
+                            builder: (context) {
+                              return GTDetailedView(
+                                ticket: model.allGoldenTickets[i],
+                              );
+                            },
+                          ),
                         );
-              }
-            },
-          ),
+                      },
+                      child: GoldenTicketGridItemCard(
+                        ticket: model.allGoldenTickets[i],
+                        titleStyle: TextStyles.body2,
+                        titleStyle2: TextStyles.body3,
+                        width: SizeConfig.screenWidth! * 0.36,
+                        subtitleStyle: TextStyles.body4,
+                      ),
+                    );
+                  },
+                ),
         );
       },
     );

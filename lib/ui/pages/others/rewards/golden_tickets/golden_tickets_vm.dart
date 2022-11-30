@@ -27,9 +27,6 @@ class GoldenTicketsViewModel extends BaseViewModel {
   //Local Variables
   List<GoldenTicket>? _goldenTicketList;
   List<GoldenTicket>? _arrangedGoldenTicketList;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-  StreamController<List<DocumentSnapshot>> streamController =
-      StreamController<List<DocumentSnapshot>>();
   List<DocumentSnapshot> _goldenTicketDocs = [];
   late Query _query;
   bool _isRequesting = false;
@@ -49,158 +46,9 @@ class GoldenTicketsViewModel extends BaseViewModel {
       this._arrangedGoldenTicketList = value;
 
 // Core Methods
-  Future<void> init(bool openFirst) async {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      _query = _db
-          .collection(Constants.COLN_USERS)
-          .doc(_userService!.baseUser!.uid)
-          .collection(Constants.SUBCOLN_USER_REWARDS)
-          .orderBy('timestamp', descending: true);
-      await getGoldenTickets();
-    });
-  }
-
-  void finish() {
-    streamController.close();
-  }
-
-  Future refresh() async {
-    _isFinish = false;
-    _goldenTicketDocs = [];
-    requestMoreData();
-  }
 
   //Local Methods
-  Future<void> getGoldenTickets() async {
-    _query.snapshots().listen((data) => onChangeData(data.docChanges),
-        onError: (error, stacktrace) => onError(error, stacktrace));
-    await requestMoreData();
-  }
-
-  void onError(Object error, StackTrace stacktrace) {
-    _logger!.e(error, stacktrace);
-  }
-
-//Stream Methods
-  void onChangeData(List<DocumentChange> documentChanges) {
-    if (_goldenTicketDocs.isEmpty) return;
-    _logger!.d("Data Updated");
-    var isChange = false;
-    documentChanges.forEach((productChange) {
-      if (productChange.type == DocumentChangeType.removed) {
-        _goldenTicketDocs.removeWhere((product) {
-          return productChange.doc.id == product.id;
-        });
-        isChange = true;
-      } else if (productChange.type == DocumentChangeType.added) {
-        DocumentSnapshot? newDoc = _goldenTicketDocs.firstWhereOrNull(
-            (e) => e.id == productChange.doc.id);
-        if (newDoc == null) {
-          _logger!.d("New document detected, adding to list");
-          _goldenTicketDocs.add(productChange.doc);
-          isChange = true;
-        }
-      } else {
-        if (productChange.type == DocumentChangeType.modified) {
-          int indexWhere = _goldenTicketDocs.indexWhere((product) {
-            return productChange.doc.id == product.id;
-          });
-
-          if (indexWhere >= 0) {
-            _goldenTicketDocs[indexWhere] = productChange.doc;
-          }
-          isChange = true;
-        }
-      }
-    });
-
-    if (isChange && !streamController.isClosed) {
-      streamController.add(_goldenTicketDocs);
-    }
-  }
-
-  Future<void> requestMoreData() async {
-    if (!_isRequesting && !_isFinish) {
-      QuerySnapshot querySnapshot;
-      _isRequesting = true;
-      if (_goldenTicketDocs.isEmpty) {
-        querySnapshot = await _query.limit(20).get();
-      } else {
-        querySnapshot = await _query
-            .startAfterDocument(_goldenTicketDocs[_goldenTicketDocs.length - 1])
-            .limit(20)
-            .get();
-      }
-      if (querySnapshot.size != 0) {
-        int oldSize = _goldenTicketDocs.length;
-        _goldenTicketDocs.addAll(querySnapshot.docs);
-        int newSize = _goldenTicketDocs.length;
-        streamController.add(_goldenTicketDocs);
-        if (oldSize == 0 && newSize > 0) {
-          //first fetch
-          //cache the latest Golden Ticket
-          int timestamp = GoldenTicket.fromJson(
-                      _goldenTicketDocs[0].data() as Map<String, dynamic>, _goldenTicketDocs[0].id)
-                  .timestamp!
-                  .seconds *
-              1000;
-          CacheManager.writeCache(
-              key: CacheManager.CACHE_LATEST_GOLDEN_TICKET_TIME,
-              value: timestamp,
-              type: CacheType.int);
-        }
-        if (oldSize != newSize) {
-          _logger!.d("New data loaded");
-        } else {
-          _isFinish = true;
-        }
-      }
-
-      _isRequesting = false;
-    }
-  }
 
 //Helper methods
 
-  arrangeGoldenTickets(List<DocumentSnapshot> data, openFirst) {
-    goldenTicketList =
-        data.map((e) => GoldenTicket.fromJson(e.data() as Map<String, dynamic>, e.id)).toList();
-    arrangedGoldenTicketList = [];
-    goldenTicketList!
-        .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
-    goldenTicketList!.forEach((e) {
-      if (e.redeemedTimestamp == null ||
-          e.redeemedTimestamp == TimestampModel(nanoseconds: 0, seconds: 0)) {
-        arrangedGoldenTicketList!.add(e);
-      }
-    });
-    goldenTicketList!.forEach((e) {
-      if ((e.redeemedTimestamp != null &&
-              e.redeemedTimestamp !=
-                  TimestampModel(nanoseconds: 0, seconds: 0)) &&
-          e.isRewarding!) {
-        arrangedGoldenTicketList!.add(e);
-      }
-    });
-    _gtService!.activeGoldenTickets = goldenTicketList;
-    if (openFirst && showFirst) {
-      showFirst = false;
-      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-        AppState.screenStack.add(ScreenItem.dialog);
-        Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
-          HeroDialogRoute(
-            builder: (context) {
-              return GTDetailedView(
-                ticket: arrangedGoldenTicketList![0],
-              );
-            },
-          ),
-        );
-      });
-    }
-    // CODE FOR TICKET DISTINCTION - USE IF REQUIRED
-    // final ids = Set();
-    // arrangedGoldenTicketList.retainWhere((x) => ids.add(x.gtId));
-    // arrangedGoldenTicketList = ids.toList();
-  }
 }

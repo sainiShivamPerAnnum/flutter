@@ -236,33 +236,6 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<UserTransaction>>>? getWinningHistory(
-      String? userUid) async {
-    List<UserTransaction> _userPrizeTransactions = [];
-    try {
-      final QuerySnapshot _querySnapshot =
-          await _api!.getUserPrizeTransactionDocuments(userUid);
-
-      if (_querySnapshot.docs.length != 0) {
-        _querySnapshot.docs.forEach((element) {
-          _userPrizeTransactions.add(
-            UserTransaction.fromMap(
-                element.data() as Map<String, dynamic>, element.id),
-          );
-        });
-        logger.d(
-            "User prize transaction successfully fetched: ${_userPrizeTransactions.first.toJson().toString()}");
-      } else {
-        logger.d("user prize transaction empty");
-      }
-
-      return ApiResponse(model: _userPrizeTransactions, code: 200);
-    } catch (e) {
-      logger.e(e);
-      throw e;
-    }
-  }
-
   Future<void> removeUserFCM(String? userUid) async {
     try {
       await _api!.deleteUserClientToken(userUid);
