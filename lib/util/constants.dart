@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class Constants {
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
@@ -24,6 +26,13 @@ class Constants {
   static const String HS_MONTHLY_SAVER = "SAVER_MONTHLY";
   static const String BUG_BOUNTY = "BUG_BOUNTY";
   static const String NEW_FELLO_UI = "NEW_FELLO";
+
+  //GOLDEN TICKETS REWARD TYPES
+  static const String GT_REWARD_GOLD = "gold";
+  static const String GT_REWARD_FLC = "flc";
+  static const String GT_REWARD_RUPEE = "rupee";
+  static const String GT_REWARD_TAMBOLA_TICKET = "tambolaticket";
+  static const String GT_REWARD_AMT = "amt";
 
   //Collections
   static final String COLN_USERS = "users";
