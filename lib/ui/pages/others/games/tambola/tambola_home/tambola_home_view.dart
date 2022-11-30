@@ -1220,7 +1220,7 @@ class TambolaPrize extends StatelessWidget {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding54),
                 child: Text(
-                  AppConfig.getValue(AppConfigKey.)??
+                  AppConfig.getValue<String?>(AppConfigKey.game_tambola_announcement)??
                       "Winners are announced every Sunday at midnight, Complete a Full House and win 1Crore!",
                   textAlign: TextAlign.center,
                   style: TextStyles.sourceSans.body4.colour(

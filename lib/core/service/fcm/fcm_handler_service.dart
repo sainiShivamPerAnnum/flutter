@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
@@ -24,11 +25,14 @@ class FcmHandler extends ChangeNotifier {
   final UserService? _userservice = locator<UserService>();
 
   // final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
-  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
+  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads =
+      locator<FcmHandlerDataPayloads>();
   final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
-  final AutosaveProcessViewModel? _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
+  final AutosaveProcessViewModel? _autosaveProcessViewModel =
+      locator<AutosaveProcessViewModel>();
   final PaytmService? _paytmService = locator<PaytmService>();
-  final AugmontTransactionService? _augTxnService = locator<AugmontTransactionService>();
+  final AugmontTransactionService? _augTxnService =
+      locator<AugmontTransactionService>();
 
   final JourneyService? _journeyService = locator<JourneyService>();
   final GoldSellViewModel? _augOps = locator<GoldSellViewModel>();
@@ -55,8 +59,19 @@ class FcmHandler extends ChangeNotifier {
     String? title = data!['dialog_title'];
     String? body = data['dialog_body'];
     String? command = data['command'];
-    String? url = data['deep_uri'] ?? data['route'];
-     
+    String? url;
+    if (data["source"] != null && data["source"] == "webengage") {
+      final _data = jsonDecode(data['message_data']);
+      final _listOfData = _data["custom"] as List;
+      try {
+        url = _listOfData.firstWhere(
+          (element) => element['key'] == 'route',
+        )['value'];
+      } catch (e) {
+        log(e.toString());
+      }
+    } else
+      url = data['deep_uri'] ?? data['route'];
 
     // if (data["test_txn"] == "paytm") {
     // _augTxnService.isOngoingTxn = false;
@@ -87,11 +102,13 @@ class FcmHandler extends ChangeNotifier {
         //   break;
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
           log("User journey stats update fcm response");
-          _journeyService!.fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
+          _journeyService!
+              .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
         case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
           log("Golden Ticket win update fcm response");
-          _journeyService!.fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
+          _journeyService!
+              .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
         case FcmCommands.COMMAND_WITHDRAWAL_RESPONSE:
           _augOps!.handleWithdrawalFcmResponse(data['payload']);
@@ -124,7 +141,8 @@ class FcmHandler extends ChangeNotifier {
           break;
         case FcmCommands.COMMAND_SUBSCRIPTION_RESPONSE:
           if (_paytmService!.isOnSubscriptionFlow)
-            await _autosaveProcessViewModel!.handleSubscriptionPayload(data as Map<String, dynamic>);
+            await _autosaveProcessViewModel!
+                .handleSubscriptionPayload(data as Map<String, dynamic>);
           // else
           //   await _paytmService.handleFCMStatusUpdate(data);
           break;

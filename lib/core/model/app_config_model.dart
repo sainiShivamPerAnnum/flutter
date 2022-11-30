@@ -6,7 +6,7 @@ import 'package:felloapp/util/logger.dart';
 
 class AppConfig {
   String message;
-  Map<AppConfigKey, Object> data = {};
+  Map<AppConfigKey, Object?> data = {};
   static Map<String, AppConfig> _instances = {};
   factory AppConfig.instance(Map<String, dynamic> json) =>
       _instances.putIfAbsent('instance', () => AppConfig._fromJson(json));
@@ -21,7 +21,7 @@ class AppConfig {
 
     _data.forEach(
       (key, value) {
-        mapOFData[key.toString().appConfigKeyFromName] = value;
+        mapOFData[key.toString().appConfigKeyFromName] = value ?? null;
       },
     );
     log('Get Json Data');
@@ -30,5 +30,5 @@ class AppConfig {
   }
 
   static T getValue<T>(AppConfigKey key) =>
-      _instances.values.first.data[key] as T;
+      _instances.values.first.data[key]  as T;
 }
