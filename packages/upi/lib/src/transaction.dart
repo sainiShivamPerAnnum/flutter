@@ -1,7 +1,7 @@
-import 'package:universal_io/io.dart' as io;
-import 'package:upi/src/method_channel.dart';
-import 'package:upi/src/response.dart';
-import 'package:upi/src/transaction_details.dart';
+import 'dart:io' as io;
+import 'package:upi_pay/src/method_channel.dart';
+import 'package:upi_pay/src/response.dart';
+import 'package:upi_pay/src/transaction_details.dart';
 
 class UpiTransactionHelper implements _PlatformTransactionHelperBase {
   final helper = io.Platform.isAndroid

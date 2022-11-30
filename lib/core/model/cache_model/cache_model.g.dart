@@ -15,7 +15,7 @@ extension GetCacheModelCollection on Isar {
 
 const CacheModelSchema = CollectionSchema(
   name: r'CacheModel',
-  id: -4435749714086930208,
+  id:4435749714086930432,
   properties: {
     r'data': PropertySchema(
       id: 0,

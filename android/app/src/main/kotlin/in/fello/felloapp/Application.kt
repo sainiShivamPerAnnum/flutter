@@ -14,7 +14,7 @@ class Application : FlutterApplication() {
 
 
         val webEngageConfig = WebEngageConfig.Builder()
-                .setWebEngageKey()
+                .setWebEngageKey(getString(R.string.webengage_code))
                 .setAutoGCMRegistrationFlag(false)
                 .setLocationTrackingStrategy(LocationTrackingStrategy.ACCURACY_BEST)
                 .setDebugMode(true) // only in development mode

@@ -1,4 +1,4 @@
-import 'package:universal_io/io.dart' as io;
+import 'dart:io' as io;
 
 /// Represents status of executing a UPI transaction by launching a UPI app.
 enum UpiTransactionStatus {

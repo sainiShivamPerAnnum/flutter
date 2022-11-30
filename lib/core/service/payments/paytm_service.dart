@@ -31,7 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:upi/upi_pay.dart';
+import 'package:upi_pay/upi_pay.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //SUBSCRIPTION ERROR CODE

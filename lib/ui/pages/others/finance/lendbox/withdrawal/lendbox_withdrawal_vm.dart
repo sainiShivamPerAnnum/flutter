@@ -17,7 +17,7 @@ import 'package:felloapp/ui/service_elements/bank_details_card.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:upi/upi_pay.dart';
+import 'package:upi_pay/upi_pay.dart';
 
 
 class LendboxWithdrawalViewModel extends BaseViewModel {

@@ -1,4 +1,4 @@
-import 'package:universal_io/io.dart' as io;
+import 'dart:io';
 
 /// Represents a UPI payment application.
 ///
@@ -30,7 +30,7 @@ class UpiApplication {
     required this.appName,
     this.discoveryCustomScheme,
   }) {
-    if (io.Platform.isAndroid) {
+    if (Platform.isAndroid) {
       lookUpMap[this.androidPackageName] = this;
     } else if (this.iosBundleId != null) {
       lookUpMap[this.iosBundleId!] = this;
@@ -562,7 +562,7 @@ class UpiApplication {
 
   /// Returns the platform-specific package name.
   String toString() {
-    return io.Platform.isAndroid ? androidPackageName : iosBundleId!;
+    return Platform.isAndroid ? androidPackageName : iosBundleId!;
   }
 
   /// Returns app's name.

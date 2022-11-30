@@ -1,5 +1,4 @@
-import 'package:decimal/decimal.dart';
-import 'package:upi/src/applications.dart';
+import 'package:upi_pay/src/applications.dart';
 
 class TransactionDetails {
   static const String _currency = 'INR';

@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import android.os.Bundle
 import android.view.View
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
@@ -20,6 +21,8 @@ class MainActivity : FlutterFragmentActivity() {
     private val intiateTransaction="intiateTransaction"
     private lateinit var result: MethodChannel.Result
     private val successRequestCode = 101
+
+
     override fun configureFlutterEngine( flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
