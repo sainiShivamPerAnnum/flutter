@@ -110,7 +110,14 @@ class LauncherViewModel extends BaseViewModel {
 
       // await BaseRemoteConfig.init();
 
-      await locator<GetterRepository>().getAppConfig();
+      final _appConfig = await locator<GetterRepository>().getAppConfig();
+
+      if (_appConfig.code != 200) {
+        AppConfig.instance({
+          "message": "Default Values",
+          "data": BaseRemoteConfig.DEFAULTS,
+        });
+      }
 
       if (userService.isUserOnboarded) {
         await _journeyRepo.init();

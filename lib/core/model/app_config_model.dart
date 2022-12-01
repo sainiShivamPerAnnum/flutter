@@ -17,18 +17,16 @@ class AppConfig {
     final mapOFData = <AppConfigKey, Object>{};
     final _message = json['message'] ?? '';
     final _data = json['data'] as Map;
-    log(_data.toString());
 
     _data.forEach(
       (key, value) {
         mapOFData[key.toString().appConfigKeyFromName] = value ?? null;
       },
     );
-    log('Get Json Data');
-    log(mapOFData.toString() + "Sanket Data");
+
     return AppConfig(message: _message, data: mapOFData);
   }
 
   static T getValue<T>(AppConfigKey key) =>
-      _instances.values.first.data[key]  as T;
+      _instances.values.first.data[key] as T;
 }

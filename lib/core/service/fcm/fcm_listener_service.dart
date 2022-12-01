@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:apxor_flutter/apxor_flutter.dart';
@@ -63,14 +64,12 @@ class FcmListener {
         RemoteNotification? notification = message.notification;
         if (message.data != null && message.data.isNotEmpty) {
           _handler!.handleMessage(message.data, MsgSource.Foreground);
-          
         } else if (notification != null) {
           logger!.d(
               "Handle Notification: ${notification.title} ${notification.body}");
           _handler!.handleNotification(notification.title, notification.body);
         }
       });
-      
 
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         print('A new onMessageOpenedApp event was published!');
@@ -96,8 +95,6 @@ class FcmListener {
         logger!.d("rerouting to Apxor" + url!);
         AppState.delegate!.parseRoute(Uri.parse(url));
       });
-
-      
     } catch (e) {
       logger!.e(e.toString());
       _internalOpsService!.logFailure(

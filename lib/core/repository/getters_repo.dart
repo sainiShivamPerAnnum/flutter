@@ -112,7 +112,7 @@ class GetterRepository extends BaseRepo {
       return await _cacheService.cachedApi<AppConfig>(
         'appConfig',
         DateTime.now()
-            .add(Duration(minutes: TTL.ONE_DAY * 7))
+            .add(Duration(minutes: TTL.ONE_DAY))
             .millisecondsSinceEpoch,
         () => APIService.instance
             .getData(ApiPath.getAppConfig, cBaseUrl: _baseUrl),
@@ -122,7 +122,6 @@ class GetterRepository extends BaseRepo {
         ),
       );
     } catch (e) {
-      log(e.toString() + "Sanket Error");
       return ApiResponse.withError('Something went wrong', 400);
     }
   }
