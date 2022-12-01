@@ -79,7 +79,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   showEmailOptions() {
     baseProvider.isGoogleSignInProgress = false;
     BaseUtil.openModalBottomSheet(
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         addToScreenStack: false,
         hapticVibrate: true,
         backgroundColor:
@@ -222,7 +222,8 @@ class VerifyEmailState extends State<VerifyEmail> {
           uid: _userService!.baseUser!.uid,
           dMap: {
             BaseUser.fldEmail: _userService!.baseUser!.email,
-            BaseUser.fldIsEmailVerified: _userService!.baseUser!.isEmailVerified,
+            BaseUser.fldIsEmailVerified:
+                _userService!.baseUser!.isEmailVerified,
           },
         );
 

@@ -136,6 +136,34 @@ class GoldenTicketRepository extends BaseRepo {
     }
   }
 
+  Future<ApiResponse<Map<String, dynamic>>> getGoldenTickets(
+      {String? start}) async {
+    final List<GoldenTicket> goldenTicketsList = [];
+    try {
+      final token = await getBearerToken();
+      final prizeResponse = await APIService.instance.getData(
+        ApiPath.getGoldenTicket(userService.baseUser!.uid),
+        cBaseUrl: _baseUrl,
+        queryParams: {if (start != null) 'start': start},
+        token: token,
+      );
+      final Map<String, dynamic>? responseData = prizeResponse["data"];
+      if (responseData != null && responseData.isNotEmpty) {
+        responseData["gts"].forEach((gt) {
+          goldenTicketsList.add(GoldenTicket.fromJson(gt, ""));
+        });
+      }
+
+      return ApiResponse(model: {
+        "tickets": goldenTicketsList,
+        "isLastPage": responseData!["isLastPage"]
+      }, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   Future<ApiResponse<List<GoldenTicket>>> getGTByPrizeType(String type) async {
     List<GoldenTicket> tickets = [];
     try {

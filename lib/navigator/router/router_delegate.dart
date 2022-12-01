@@ -689,6 +689,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         final segment = uri.pathSegments[i];
         if (segment.startsWith('d-', 0)) {
           dialogCheck(segment.split('-').last);
+        } else if (segment.startsWith('GM_')) {
+          openWebGame(segment);
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else if (segment.startsWith('story-')) {
@@ -845,6 +847,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'FPL':
         openTopSaverScreen('FPL');
         break;
+      // BACKWARD COMPATIBILITY --START
       case 'footballHome':
         openWebGame(Constants.GAME_TYPE_FOOTBALL);
         break;
@@ -863,6 +866,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'bottleFlipHome':
         openWebGame(Constants.GAME_TYPE_BOTTLEFLIP);
         break;
+      // BACKWARD COMPATIBILITY --END
       case 'pop':
         AppState.backButtonDispatcher!.didPopRoute();
         break;

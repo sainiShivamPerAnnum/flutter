@@ -24,11 +24,14 @@ class FcmHandler extends ChangeNotifier {
   final UserService? _userservice = locator<UserService>();
 
   // final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
-  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
+  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads =
+      locator<FcmHandlerDataPayloads>();
   final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
-  final AutosaveProcessViewModel? _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
+  final AutosaveProcessViewModel? _autosaveProcessViewModel =
+      locator<AutosaveProcessViewModel>();
   final PaytmService? _paytmService = locator<PaytmService>();
-  final AugmontTransactionService? _augTxnService = locator<AugmontTransactionService>();
+  final AugmontTransactionService? _augTxnService =
+      locator<AugmontTransactionService>();
 
   final JourneyService? _journeyService = locator<JourneyService>();
   final GoldSellViewModel? _augOps = locator<GoldSellViewModel>();
@@ -78,39 +81,23 @@ class FcmHandler extends ChangeNotifier {
     // If message has a command payload
     if (data['command'] != null) {
       showSnackbar = false;
+
+      if (command!.toLowerCase().contains('end'))
+        return _webGameViewModel!
+            .handleGameRoundEnd(data as Map<String, dynamic>);
       switch (command) {
-        // case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
-        //   if (_augTxnService.currentTransactionState == TransactionState.idle)
-        //     showSnackbar = true;
-        //   _augTxnService.fcmTransactionResponseUpdate(data['payload']);
-        //   break;
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
           log("User journey stats update fcm response");
-          _journeyService!.fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
+          _journeyService!
+              .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
         case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
           log("Golden Ticket win update fcm response");
-          _journeyService!.fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
+          _journeyService!
+              .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
         case FcmCommands.COMMAND_WITHDRAWAL_RESPONSE:
           _augOps!.handleWithdrawalFcmResponse(data['payload']);
-          break;
-
-        case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:
-          _webGameViewModel!.handleCricketHeroRoundEnd(
-              data as Map<String, dynamic>, Constants.GAME_TYPE_CRICKET);
-          break;
-        case FcmCommands.COMMAND_POOL_CLUB_GAME_END:
-          _webGameViewModel!.handlePoolClubRoundEnd(
-              data as Map<String, dynamic>, Constants.GAME_TYPE_POOLCLUB);
-          break;
-        case FcmCommands.COMMAND_FOOT_BALL_GAME_END:
-          _webGameViewModel!.handleFootBallRoundEnd(
-              data as Map<String, dynamic>, Constants.GAME_TYPE_FOOTBALL);
-          break;
-        case FcmCommands.COMMAND_CANDY_FIESTA_GAME_END:
-          _webGameViewModel!.handleCandyFiestaRoundEnd(
-              data as Map<String, dynamic>, Constants.GAME_TYPE_CANDYFIESTA);
           break;
         case FcmCommands.COMMAND_LOW_BALANCE_ALERT:
           _webGameViewModel!.handleLowBalanceAlert();
@@ -123,9 +110,8 @@ class FcmHandler extends ChangeNotifier {
           break;
         case FcmCommands.COMMAND_SUBSCRIPTION_RESPONSE:
           if (_paytmService!.isOnSubscriptionFlow)
-            await _autosaveProcessViewModel!.handleSubscriptionPayload(data as Map<String, dynamic>);
-          // else
-          //   await _paytmService.handleFCMStatusUpdate(data);
+            await _autosaveProcessViewModel!
+                .handleSubscriptionPayload(data as Map<String, dynamic>);
           break;
         default:
       }

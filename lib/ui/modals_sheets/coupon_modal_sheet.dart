@@ -102,7 +102,8 @@ class CouponModalSheet extends StatelessWidget {
                   ),
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
-                      model!.applyCoupon(couponCodeController.text.trim(), true);
+                      model!
+                          .applyCoupon(couponCodeController.text.trim(), true);
                       AppState.backButtonDispatcher!.didPopRoute();
                     }
                   },
@@ -111,7 +112,7 @@ class CouponModalSheet extends StatelessWidget {
                   minWidth: 40,
                 ),
                 validator: (val) {
-                  if (val!.trim().length == 0 )
+                  if (val!.trim().length == 0)
                     return "Please enter a code to continue";
                   if (val.trim().length < 3 || val.trim().length > 10)
                     return "Invalid Coupon code";
@@ -142,7 +143,8 @@ class CouponModalSheet extends StatelessWidget {
                           couponCode: model!.couponList![i].code!,
                           desc: model!.couponList![i].description!,
                           onTap: () {
-                            model!.applyCoupon(model!.couponList![i].code, false);
+                            model!
+                                .applyCoupon(model!.couponList![i].code, false);
                             AppState.backButtonDispatcher!.didPopRoute();
                           },
                         ),
