@@ -69,6 +69,7 @@ class MyWinningsViewModel extends BaseViewModel {
   init() {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       _gtService.isLastPageForGoldenTickets = false;
+      _gtService.goldenTicketsListLastTicketId = null;
       _gtService.fetchAllGoldenTickets();
     });
   }

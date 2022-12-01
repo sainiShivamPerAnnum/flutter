@@ -29,6 +29,7 @@ class GoldenTicketsView extends StatelessWidget {
                 scrollInfo.metrics.pixels) {
               model!.fetchAllGoldenTickets();
             }
+
             return true;
           },
           child: model!.allGoldenTickets.isEmpty
@@ -45,11 +46,12 @@ class GoldenTicketsView extends StatelessWidget {
               : GridView.builder(
                   physics: BouncingScrollPhysics(),
                   itemCount: model.allGoldenTickets.length,
+                  shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisSpacing: SizeConfig.padding8,
-                      childAspectRatio: 1 / 1,
+                      childAspectRatio: 1 / 0.84,
                       crossAxisCount: 2,
-                      mainAxisSpacing: SizeConfig.padding8),
+                      mainAxisSpacing: 0),
                   padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.padding16,
                       horizontal: SizeConfig.pageHorizontalMargins),

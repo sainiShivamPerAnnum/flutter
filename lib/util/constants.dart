@@ -127,10 +127,10 @@ class Constants {
   static const DATE_TODAY = "date_today";
   static const DAY_OPENED_COUNT = "day_open_count";
   //Notices
-  static const IS_MSG_NOTICE_AVILABLE = "isNoticeMessageAvilable";
+  static const IS_MSG_NOTICE_AVAILABLE = "isNoticeMessageAvilable";
   static const MSG_NOTICE = "url_message";
   //Normal app update dialog show
-  static const IS_APP_UPDATE_AVILABLE = "isAppUpdateAvilable";
+  static const IS_APP_UPDATE_AVAILABLE = "isAppUpdateAvilable";
 
   static const PLAY_STORE_APP_LINK =
       "https://play.google.com/store/apps/details?id=in.fello.felloapp";

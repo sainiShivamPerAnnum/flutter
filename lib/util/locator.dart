@@ -36,6 +36,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -47,6 +48,7 @@ import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart'
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
@@ -90,8 +92,6 @@ import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_v
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
-import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
-import 'package:felloapp/ui/service_elements/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
@@ -124,6 +124,7 @@ void setupLocator() {
 
   locator.registerLazySingleton(() => InternalOpsService());
   locator.registerLazySingleton(() => BankAndPanService());
+  locator.registerLazySingleton(() => ReferralService());
 
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());
@@ -142,6 +143,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => JourneyService());
   locator.registerLazySingleton(() => GoogleSignInService());
   locator.registerLazySingleton(() => RazorpayService());
+  locator.registerLazySingleton(() => MarketingEventHandlerService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());
@@ -219,5 +221,4 @@ void setupLocator() {
   locator.registerFactory(() => SourceAdaptiveAssetViewModel());
   locator.registerFactory(() => SubscriptionCardViewModel());
   locator.registerFactory(() => TambolaCardModel());
-  locator.registerFactory(() => UsernameInputViewModel());
 }

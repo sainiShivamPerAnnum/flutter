@@ -337,6 +337,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   ) {
     return ListView.separated(
         shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
         itemBuilder: (ctx, i) {
           switch (rewards[i].type) {

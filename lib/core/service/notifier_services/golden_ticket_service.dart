@@ -380,6 +380,7 @@ class GoldenTicketService
 
   Future<void> fetchAllGoldenTickets() async {
     if (isLastPageForGoldenTickets) return;
+    if (isFetchingGoldenTickets) return;
     isFetchingGoldenTickets = true;
     final res =
         await _gtRepo.getGoldenTickets(start: goldenTicketsListLastTicketId);
@@ -427,7 +428,7 @@ class GoldenTicketService
     allGoldenTickets
         .firstWhere((ticket) => ticket.prizeSubtype == prizeSubtype)
         .redeemedTimestamp = TimestampModel.currentTimeStamp();
-    arrangeGoldenTickets();
+    allGoldenTickets = arrangeGoldenTickets();
     notifyListeners(GoldenTicketServiceProperties.AllGoldenTickets);
   }
 }

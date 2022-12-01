@@ -60,7 +60,7 @@ class FelloCoinBar extends StatelessWidget {
                   ),
                   hapticVibrate: true,
                   isScrollControlled: true,
-                  isBarrierDismissable: true,
+                  isBarrierDismissible: true,
                 );
               },
               child: Container(

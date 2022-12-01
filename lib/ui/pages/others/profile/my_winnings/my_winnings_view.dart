@@ -24,76 +24,78 @@ class MyWinningsView extends StatelessWidget {
         model.init();
       },
       builder: (ctx, model, child) {
-        return Scaffold(
-          //floatingActionButton: AddTodoButton(),
-          backgroundColor: UiConstants.kBackgroundColor,
-          body: Stack(
-            children: [
-              NewSquareBackground(),
-              Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight,
-                child: Column(
-                  children: [
-                    AppBar(
-                      title: Text(
-                        'My Rewards',
-                        maxLines: 1,
-                        overflow: TextOverflow.clip,
-                        style: TextStyles.title4.bold.colour(Colors.white),
-                      ),
-                      elevation: 0.0,
-                      backgroundColor: UiConstants.kBackgroundColor,
-                      leading: IconButton(
-                        onPressed: () {
-                          AppState.backButtonDispatcher!.didPopRoute();
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                          ),
-                          child: NestedScrollView(
-                            // allows you to build a list of elements that would be scrolled away till the body reached the top
-                            headerSliverBuilder: (context, _) {
-                              return [
-                                SliverList(
-                                  delegate: SliverChildListDelegate(
-                                    [
-                                      PrizeClaimCard(
-                                          // model: winModel,
-                                          ),
-                                    ],
-                                  ),
-                                ),
-                              ];
-                            },
-                            body: Container(
-                              margin:
-                                  EdgeInsets.only(top: SizeConfig.padding20),
-                              child: GoldenTicketsView(
-                                openFirst: openFirst,
-                              ),
-                            ),
-                          )
-                          //  ListView(
-                          //   padding: EdgeInsets.zero,
-                          //   // crossAxisAlignment: CrossAxisAlignment.start,
-                          //   children: [
-
-                          // ),
-                          ),
-                    )
-                  ],
+        return RefreshIndicator(
+          backgroundColor: Colors.black,
+          onRefresh: () async {
+            await model.init();
+            return Future.value();
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'My Rewards',
+                maxLines: 1,
+                overflow: TextOverflow.clip,
+                style: TextStyles.title4.bold.colour(Colors.white),
+              ),
+              elevation: 0.0,
+              backgroundColor: UiConstants.kBackgroundColor,
+              leading: IconButton(
+                onPressed: () {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
                 ),
               ),
-            ],
+            ),
+            backgroundColor: UiConstants.kBackgroundColor,
+            body: Stack(
+              children: [
+                NewSquareBackground(),
+                ListView(
+                  shrinkWrap: true,
+                  children: [
+                    PrizeClaimCard(),
+                    GoldenTicketsView(),
+                  ],
+                )
+                // Container(
+                //   width: SizeConfig.screenWidth,
+                //   height: SizeConfig.screenHeight,
+                //   child: Column(
+                //     children: [
+                //       Expanded(
+                //         child: Container(
+                //           decoration: BoxDecoration(
+                //             color: Colors.transparent,
+                //           ),
+                //           child: RefreshIndicator(
+                //             onRefresh: () {
+                //               model.init();
+                //               return Future.value();
+                //             },
+                //             child: NestedScrollView(
+                //               headerSliverBuilder: (context, _) {
+                //                 return [
+                //                   SliverList(
+                //                     delegate: SliverChildListDelegate(
+                //                       [],
+                //                     ),
+                //                   ),
+                //                 ];
+                //               },
+                //               body:
+                //             ),
+                //           ),
+                //         ),
+                //       )
+                // ],
+                // ),
+                // ),
+              ],
+            ),
           ),
         );
       },

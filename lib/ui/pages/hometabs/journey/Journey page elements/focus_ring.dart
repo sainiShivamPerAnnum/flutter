@@ -154,7 +154,7 @@ class _FocusRingState extends State<FocusRing>
                                         AnalyticsEvents.journeyMileStarted);
                                 return BaseUtil.openModalBottomSheet(
                                   backgroundColor: Colors.transparent,
-                                  isBarrierDismissable: true,
+                                  isBarrierDismissible: true,
                                   addToScreenStack: true,
                                   hapticVibrate: true,
                                   isScrollControlled: true,

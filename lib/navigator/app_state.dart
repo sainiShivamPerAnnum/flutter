@@ -49,6 +49,7 @@ class AppState extends ChangeNotifier {
   static bool isUserSignedIn = false;
   static bool isSaveOpened = false;
   static bool isWinOpened = false;
+  static bool isRootAvailableForIncomingTaskExecution = true;
 
   static List<ScreenItem> screenStack = [];
   static FelloRouterDelegate? delegate;

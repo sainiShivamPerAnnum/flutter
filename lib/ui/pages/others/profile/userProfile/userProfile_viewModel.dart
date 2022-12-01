@@ -802,7 +802,7 @@ class UserProfileVM extends BaseViewModel {
     baseProvider!.isGoogleSignInProgress = false;
     emailOptionsFocusNode.unfocus();
     BaseUtil.openModalBottomSheet(
-        isBarrierDismissable: true,
+        isBarrierDismissible: true,
         backgroundColor:
             UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
         borderRadius: BorderRadius.circular(15),
