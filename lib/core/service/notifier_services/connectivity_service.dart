@@ -12,6 +12,7 @@ class ConnectivityService extends ChangeNotifier {
       final result = _getStatusFromResult(event);
       if (result != connectivityStatus) {
         _connectivityStatus = result;
+        
         notifyListeners();
       }
     });

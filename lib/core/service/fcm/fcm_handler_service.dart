@@ -15,6 +15,8 @@ import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -45,6 +47,7 @@ class FcmHandler extends ChangeNotifier {
     _logger!.d(
       "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data",
     );
+
     if (lastFcmData != null) {
       if (lastFcmData == data) {
         _logger!.d(
@@ -86,6 +89,7 @@ class FcmHandler extends ChangeNotifier {
       } else if (source == MsgSource.Background ||
           source == MsgSource.Terminated) {
         showSnackbar = false;
+
         AppState.delegate!.parseRoute(Uri.parse(url));
         return true;
       }

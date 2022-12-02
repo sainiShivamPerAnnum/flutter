@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -38,6 +40,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_android/shared_preferences_android.dart';
 
 //TODO : analytics for promos, challenges and blogs
 class RootViewModel extends BaseViewModel {
@@ -290,9 +294,13 @@ class RootViewModel extends BaseViewModel {
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
       await handleStartUpNotificationData();
+    
+
       // await checkIfAppLockModalSheetIsRequired();
     });
   }
+
+  
 
   handleStartUpNotificationData() {
     if (canExecuteStartupNotification && AppState.startupNotifMessage != null) {

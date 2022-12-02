@@ -115,8 +115,9 @@ void setupLocator() {
   locator.registerLazySingleton(() => ApiCacheManager());
   locator.registerLazySingleton(() => LocalApi());
   locator.registerLazySingleton(() => FcmHandlerDataPayloads());
-  locator.registerLazySingleton(() => FcmListener());
   locator.registerLazySingleton(() => FcmHandler());
+  locator.registerLazySingleton(() => FcmListener(locator()));
+
   locator.registerLazySingleton(() => PaytmService());
 
   locator.registerLazySingleton(() => AnalyticsService());

@@ -114,8 +114,14 @@ class GetterRepository extends BaseRepo {
         DateTime.now()
             .add(Duration(minutes: TTL.ONE_DAY))
             .millisecondsSinceEpoch,
-        () => APIService.instance
-            .getData(ApiPath.getAppConfig, cBaseUrl: _baseUrl),
+        () => APIService.instance.getData(
+          ApiPath.getAppConfig,
+          cBaseUrl: _baseUrl,
+          headers: {
+            'authKey':
+                '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
+          },
+        ),
         (p0) => ApiResponse(
           code: 200,
           model: AppConfig.instance(p0),

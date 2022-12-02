@@ -30,6 +30,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
+import 'package:webengage_flutter/webengage_flutter.dart';
 
 import '../../../core/repository/user_repo.dart';
 
@@ -138,20 +139,20 @@ class LauncherViewModel extends BaseViewModel {
 
       _baseUtil.init();
 
-      _fcmListener.setupFcm();
+       _fcmListener.setupFcm();
 
       if (userService.isUserOnboarded)
         userService.firebaseUser?.getIdToken().then(
               (token) =>
                   _userRepo.updateUserAppFlyer(userService!.baseUser!, token),
             );
+      
       if (userService.baseUser != null) {
         if (userService.isUserOnboarded)
           await _analyticsService.login(
             isOnBoarded: userService.isUserOnboarded,
             baseUser: userService.baseUser,
           );
-        locator.allReadySync();
 
         //To fetch the properties required to pass for the analytics
         await AnalyticsProperties().init();

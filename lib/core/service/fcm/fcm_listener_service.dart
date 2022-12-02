@@ -23,7 +23,7 @@ class FcmListener {
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final DBModel? _dbModel = locator<DBModel>();
   final CustomLogger? logger = locator<CustomLogger>();
-  final FcmHandler? _handler = locator<FcmHandler>();
+  final FcmHandler _handler;
   final UserService? _userService = locator<UserService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
 
@@ -33,6 +33,8 @@ class FcmListener {
   static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
     return Future<void>.value();
   }
+
+  FcmListener(this._handler);
 
   Future<FirebaseMessaging?> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
@@ -52,7 +54,8 @@ class FcmListener {
       });
 
       _fcm!.getInitialMessage().then((RemoteMessage? message) {
-        if (message != null && message.data != null) {
+
+        if (message != null) {
           logger!
               .d("terminated onMessage received: " + message.data.toString());
           // _handler.handleMessage(message.data, MsgSource.Terminated);
@@ -67,15 +70,14 @@ class FcmListener {
         } else if (notification != null) {
           logger!.d(
               "Handle Notification: ${notification.title} ${notification.body}");
-          _handler!.handleNotification(notification.title, notification.body);
+          _handler.handleNotification(notification.title, notification.body);
         }
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         print('A new onMessageOpenedApp event was published!');
-        if (message.data != null) {
-          _handler!.handleMessage(message.data, MsgSource.Background);
-        }
+
+        _handler.handleMessage(message.data, MsgSource.Terminated);
       });
 
       _fcm!.setForegroundNotificationPresentationOptions(
