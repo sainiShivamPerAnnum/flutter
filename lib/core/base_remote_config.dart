@@ -98,7 +98,7 @@ class BaseRemoteConfig {
     'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
   };
   static const Map<String, String> _UNLOCK_REFERRAL_AMT = {
-    'min_principle_for_prize': '100'
+    'unlock_referral_amt': '100'
   };
 
   static const Map<String, String> _WEEK_NUMBER = {'week_number': '12'};
