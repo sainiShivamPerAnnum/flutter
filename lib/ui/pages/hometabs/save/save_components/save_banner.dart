@@ -8,7 +8,7 @@ class SaveBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: SizeConfig.screenHeight! * 0.04,
+      height: SizeConfig.screenHeight! * 0.05,
       width: SizeConfig.screenWidth,
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -19,13 +19,14 @@ class SaveBanner extends StatelessWidget {
               height: double.infinity,
               alignment: Alignment.centerLeft,
               color: Color(0xff289379),
+              padding: EdgeInsets.only(left: 14),
               child: RichText(
                 text: TextSpan(
                   text: "Happy Hour ending in",
                   style: TextStyles.sourceSans.body3.colour(Colors.white),
                   children: [
                     TextSpan(
-                        text: "09 : 04 mins",
+                        text: " 09 : 04 mins",
                         style:
                             TextStyles.sourceSansB.body3.colour(Colors.white))
                   ],
@@ -49,4 +50,3 @@ class SaveBanner extends StatelessWidget {
     );
   }
 }
-

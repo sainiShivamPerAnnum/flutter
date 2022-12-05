@@ -771,7 +771,7 @@ class ButTicketsComponent extends StatelessWidget {
                       // onPressed: model.decreaseTicketCount,
                     ),
                     SizedBox(
-                      width: SizeConfig.screenHeight! * 0.02,
+                      width: SizeConfig.screenHeight! * 0.03,
                       height: SizeConfig.padding35,
                       child: Center(
                         child: TextField(
