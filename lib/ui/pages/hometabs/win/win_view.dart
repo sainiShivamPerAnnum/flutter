@@ -17,12 +17,15 @@ import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+
+import '../../../../base_util.dart';
 
 List<Color> randomColors = [
   Color(0xffF79780),
@@ -60,8 +63,7 @@ class Win extends StatelessWidget {
                     children: [
                       //Current Winnings section
                       GestureDetector(
-                        onTap: () => AppState.delegate!
-                            .parseRoute(Uri.parse('/myWinnings')),
+                        onTap: () => locator<BaseUtil>().showHappyHourDialog(),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.transparent,
