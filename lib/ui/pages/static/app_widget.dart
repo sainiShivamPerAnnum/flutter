@@ -722,7 +722,7 @@ class CustomKeyboardSubmitButton extends StatelessWidget {
           ? Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.padding54,
-              color: UiConstants.kArowButtonBackgroundColor,
+              color: UiConstants.kArrowButtonBackgroundColor,
               padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.pageHorizontalMargins,
               ),

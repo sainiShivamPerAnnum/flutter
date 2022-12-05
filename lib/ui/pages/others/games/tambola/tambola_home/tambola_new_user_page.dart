@@ -40,7 +40,7 @@ class TambolaWrapper extends StatelessWidget {
               showCoinBar: false,
               showHelpButton: false,
               title: "Tambola",
-              backgroundColor: UiConstants.kArowButtonBackgroundColor,
+              backgroundColor: UiConstants.kArrowButtonBackgroundColor,
             ),
             backgroundColor: UiConstants.kBackgroundColor,
           );
@@ -103,7 +103,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
         showHelpButton: false,
         title: "Tambola",
         type: FaqsType.play,
-        backgroundColor: UiConstants.kArowButtonBackgroundColor,
+        backgroundColor: UiConstants.kArrowButtonBackgroundColor,
       ),
       backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(

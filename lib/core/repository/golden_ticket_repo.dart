@@ -1,12 +1,17 @@
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/daily_bonus_event_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
+import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/preference_helper.dart';
 
 class GoldenTicketRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
@@ -210,6 +215,60 @@ class GoldenTicketRepository extends BaseRepo {
       return ApiResponse(model: true, code: 200);
     } catch (e) {
       logger!.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<DailyAppCheckInEventModel>>
+      getDailyBonusEventDetails() async {
+    try {
+      //CHECK IF EVENT IS AVAILABLE FOR THS USER
+      if (PreferenceHelper.getBool(
+              PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE,
+              def: true) ==
+          false) return ApiResponse.withError("Event over for this user", 400);
+      //CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
+      if (PreferenceHelper.getString(PreferenceHelper
+                  .CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP)
+              .isNotEmpty &&
+          TimestampModel.fromIsoString(PreferenceHelper.getString(
+                      PreferenceHelper
+                          .CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP))
+                  .toDate()
+                  .day ==
+              DateTime.now().day)
+        return ApiResponse.withError("Reward Claimed for today", 400);
+      //FETCH EVENT DETAILS
+      final String bearer = await getBearerToken();
+      final response = await APIService.instance.getData(
+          ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
+          token: bearer,
+          cBaseUrl: _baseUrl);
+      final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);
+      if (responseData.currentDay == 7) {
+        //SET EVENT OVER FOR THIS USER
+        PreferenceHelper.setBool(
+            PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE, false);
+        return ApiResponse.withError("Event over for this user", 400);
+      }
+      return ApiResponse(model: responseData, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> claimDailyBonusEventDetails() async {
+    try {
+      final String bearer = await getBearerToken();
+      final response = APIService.instance.postData(
+          ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
+          token: bearer,
+          cBaseUrl: _baseUrl);
+      // final responseData =
+      return ApiResponse(model: true, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
     }
   }

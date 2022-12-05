@@ -81,7 +81,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
           },
         ),
         title: "Tambola",
-        backgroundColor: UiConstants.kArowButtonBackgroundColor,
+        backgroundColor: UiConstants.kArrowButtonBackgroundColor,
       ),
       backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(

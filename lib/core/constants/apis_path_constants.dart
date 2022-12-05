@@ -130,4 +130,7 @@ class ApiPath {
 
   static const kOnboardingStory = '/story/onboarding';
   static const kTambolaStory = '/story/tambola';
+
+  //marketing events
+  static String kDailyAppBonusEvent(String uid) => "/user/$uid/daily-bonus";
 }

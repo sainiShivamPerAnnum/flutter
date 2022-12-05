@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -8,7 +6,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
@@ -21,17 +18,16 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ReferralDetailsView extends StatelessWidget {
-  ScrollController _controller = ScrollController();
+  final ScrollController _controller = ScrollController();
 
-  var _selectedTextStyle =
+  final _selectedTextStyle =
       TextStyles.sourceSansSB.body1.colour(UiConstants.titleTextColor);
 
-  var _unselectedTextStyle = TextStyles.sourceSans.body1
+  final _unselectedTextStyle = TextStyles.sourceSans.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
   @override
@@ -44,7 +40,7 @@ class ReferralDetailsView extends StatelessWidget {
             appBar: AppBar(
               elevation: 0.0,
               automaticallyImplyLeading: false,
-              backgroundColor: UiConstants.kArowButtonBackgroundColor,
+              backgroundColor: UiConstants.kArrowButtonBackgroundColor,
               leading: IconButton(
                   onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
@@ -66,7 +62,7 @@ class ReferralDetailsView extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: UiConstants.kArowButtonBackgroundColor,
+                          color: UiConstants.kArrowButtonBackgroundColor,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(SizeConfig.roundness12),
                             bottomRight:
@@ -300,7 +296,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       SizedBox(height: SizeConfig.padding34),
-                                      SvgPicture.asset(Assets.noReferalAsset),
+                                      SvgPicture.asset(Assets.noReferralAsset),
                                       SizedBox(height: SizeConfig.padding34),
                                       Text(
                                         "No referrals yet",
@@ -444,7 +440,7 @@ class BonusLockedReferals extends StatelessWidget {
         ? Column(
             children: [
               SizedBox(height: SizeConfig.padding16),
-              SvgPicture.asset(Assets.noReferalAsset),
+              SvgPicture.asset(Assets.noReferralAsset),
               SizedBox(height: SizeConfig.padding16),
               Text(
                 "No referrals yet",
@@ -587,7 +583,7 @@ class BonusLockedReferals extends StatelessWidget {
             : Column(
                 children: [
                   SizedBox(height: SizeConfig.padding16),
-                  SvgPicture.asset(Assets.noReferalAsset),
+                  SvgPicture.asset(Assets.noReferralAsset),
                   SizedBox(height: SizeConfig.padding16),
                   Text(
                     "No referrals yet",
@@ -613,7 +609,7 @@ class BonusUnlockedReferals extends StatelessWidget {
         ? Column(
             children: [
               SizedBox(height: SizeConfig.padding16),
-              SvgPicture.asset(Assets.noReferalAsset),
+              SvgPicture.asset(Assets.noReferralAsset),
               SizedBox(height: SizeConfig.padding16),
               Text(
                 "No referrals yet",
@@ -754,7 +750,7 @@ class BonusUnlockedReferals extends StatelessWidget {
             : Column(
                 children: [
                   SizedBox(height: SizeConfig.padding16),
-                  SvgPicture.asset(Assets.noReferalAsset),
+                  SvgPicture.asset(Assets.noReferralAsset),
                   SizedBox(height: SizeConfig.padding16),
                   Text(
                     "No referrals yet",

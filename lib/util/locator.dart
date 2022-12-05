@@ -199,7 +199,7 @@ void setupLocator() {
   locator.registerFactory(() => ReferralDetailsViewModel());
   locator.registerFactory(() => MyWinningsViewModel());
   locator.registerFactory(() => NotificationsViewModel());
-  locator.registerFactory(() => GoldenTicketsViewModel());
+  // locator.registerFactory(() => GoldenTicketsViewModel());
   locator.registerFactory(() => GTDetailedViewModel());
   locator.registerFactory(() => GTInstantViewModel());
   locator.registerFactory(() => TopSaverViewModel());
