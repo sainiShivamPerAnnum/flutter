@@ -21,7 +21,7 @@ class AppConfig {
 
     _data.forEach(
       (key, value) {
-        mapOFData[key.toString().appConfigKeyFromName] = value;
+        mapOFData[key.toString().appConfigKeyFromName] = value??BaseRemoteConfig.DEFAULTS[key];
       },
     );
 

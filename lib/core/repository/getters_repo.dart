@@ -110,7 +110,7 @@ class GetterRepository extends BaseRepo {
       // final token = await getBearerToken();
 
       return await _cacheService.cachedApi<AppConfig>(
-        'appConfig',
+        CacheKeys.APPCONFIG,
         DateTime.now()
             .add(Duration(minutes: TTL.ONE_DAY))
             .millisecondsSinceEpoch,
