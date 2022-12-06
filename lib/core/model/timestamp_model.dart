@@ -45,4 +45,19 @@ class TimestampModel extends Timestamp {
       nanoseconds: timeStamp.nanoseconds,
     );
   }
+
+  factory TimestampModel.none() {
+    return TimestampModel(seconds: 0, nanoseconds: 0);
+  }
+
+  int operator -(TimestampModel other) {
+    return this.toDate().difference(other.toDate()).inDays;
+  }
+
+  static int dayInYear(TimestampModel time) {
+    return time
+        .toDate()
+        .difference(new DateTime(time.toDate().year, 1, 1, 0, 0))
+        .inDays;
+  }
 }

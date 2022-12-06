@@ -198,7 +198,7 @@ class GoldenTicketRepository extends BaseRepo {
     String? gtId,
   ) async {
     try {
-      final uid = userService!.baseUser!.uid;
+      final uid = userService.baseUser!.uid;
       final String bearer = await getBearerToken();
 
       Map<String, dynamic> body = {"uid": uid, "gtId": gtId};
@@ -211,10 +211,10 @@ class GoldenTicketRepository extends BaseRepo {
       );
 
       final data = response['data'];
-      this.logger!.d(data.toString());
+      this.logger.d(data.toString());
       return ApiResponse(model: true, code: 200);
     } catch (e) {
-      logger!.e(e);
+      logger.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -222,12 +222,15 @@ class GoldenTicketRepository extends BaseRepo {
   Future<ApiResponse<DailyAppCheckInEventModel>>
       getDailyBonusEventDetails() async {
     try {
-      //CHECK IF EVENT IS AVAILABLE FOR THS USER
+      //LOCAL CHECK IF EVENT IS AVAILABLE FOR THS USER
+
       if (PreferenceHelper.getBool(
               PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE,
               def: true) ==
           false) return ApiResponse.withError("Event over for this user", 400);
-      //CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
+
+      //LOCAL CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
+
       if (PreferenceHelper.getString(PreferenceHelper
                   .CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP)
               .isNotEmpty &&
@@ -238,19 +241,42 @@ class GoldenTicketRepository extends BaseRepo {
                   .day ==
               DateTime.now().day)
         return ApiResponse.withError("Reward Claimed for today", 400);
+
       //FETCH EVENT DETAILS
+
       final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
           ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
           token: bearer,
           cBaseUrl: _baseUrl);
       final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);
+
+      //NETWORK CHECK IF EVENT OVER FOR THIS USER
+
       if (responseData.currentDay == 7) {
-        //SET EVENT OVER FOR THIS USER
         PreferenceHelper.setBool(
             PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE, false);
         return ApiResponse.withError("Event over for this user", 400);
       }
+
+      //NETWORK CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
+
+      if (responseData.currentDay ==
+          (TimestampModel.dayInYear(responseData.streakEnd) -
+              TimestampModel.dayInYear(responseData.streakEnd))) {
+        PreferenceHelper.setString(
+            PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP,
+            DateTime.now().toIso8601String());
+        return ApiResponse.withError("Reward claimed for today", 400);
+      }
+
+      //CHECK IF STREAK IS RESET
+      if (TimestampModel.dayInYear(TimestampModel.currentTimeStamp()) -
+              TimestampModel.dayInYear(responseData.streakEnd) >
+          1) responseData.showStreakBreakMessage = true;
+
+      //ALL GOOD, USER ELIGIBLE FOR DAILY APP REWARDS
+
       return ApiResponse(model: responseData, code: 200);
     } catch (e) {
       logger.e(e.toString());
@@ -258,15 +284,17 @@ class GoldenTicketRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<bool>> claimDailyBonusEventDetails() async {
+  Future<ApiResponse<Map<String, dynamic>>>
+      claimDailyBonusEventDetails() async {
     try {
       final String bearer = await getBearerToken();
       final response = APIService.instance.postData(
           ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
           token: bearer,
-          cBaseUrl: _baseUrl);
-      // final responseData =
-      return ApiResponse(model: true, code: 200);
+          cBaseUrl: _baseUrl) as Map<String, dynamic>;
+      // final responseData = response['data'];
+      logger.d(response.toString());
+      return ApiResponse(model: {"gtId": 'true'}, code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);

@@ -75,6 +75,16 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                     // model.dailyAppCheckInEventData!.subtitle
                   ),
                   SizedBox(height: SizeConfig.padding20),
+                  if (model!.dailyAppCheckInEventData!.showStreakBreakMessage)
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding10),
+                      child: Text(
+                        model.dailyAppCheckInEventData!.streakBreakMessage,
+                        textAlign: TextAlign.center,
+                        style: TextStyles.body3.colour(Colors.red),
+                      ),
+                    ),
                   Row(
                     children: List.generate(
                       7,
