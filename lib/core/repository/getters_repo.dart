@@ -124,6 +124,7 @@ class GetterRepository extends BaseRepo {
         ),
       );
     } catch (e) {
+      log(e.toString());
       return ApiResponse.withError('Something went wrong', 400);
     }
   }

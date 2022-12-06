@@ -139,14 +139,14 @@ class LauncherViewModel extends BaseViewModel {
 
       _baseUtil.init();
 
-       _fcmListener.setupFcm();
+      _fcmListener.setupFcm();
 
       if (userService.isUserOnboarded)
         userService.firebaseUser?.getIdToken().then(
               (token) =>
                   _userRepo.updateUserAppFlyer(userService!.baseUser!, token),
             );
-      
+
       if (userService.baseUser != null) {
         if (userService.isUserOnboarded)
           await _analyticsService.login(
