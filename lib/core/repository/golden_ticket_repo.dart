@@ -271,9 +271,11 @@ class GoldenTicketRepository extends BaseRepo {
       }
 
       //CHECK IF STREAK IS RESET
-      if (TimestampModel.dayInYear(TimestampModel.currentTimeStamp()) -
-              TimestampModel.dayInYear(responseData.streakEnd) >
-          1) responseData.showStreakBreakMessage = true;
+      int streakBreakDaysCount =
+          TimestampModel.dayInYear(TimestampModel.currentTimeStamp()) -
+              TimestampModel.dayInYear(responseData.streakEnd);
+      if (streakBreakDaysCount > 1 && streakBreakDaysCount < 360)
+        responseData.showStreakBreakMessage = true;
 
       //ALL GOOD, USER ELIGIBLE FOR DAILY APP REWARDS
 
