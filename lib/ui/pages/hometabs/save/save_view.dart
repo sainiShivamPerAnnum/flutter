@@ -30,17 +30,8 @@ class Save extends StatelessWidget {
             type: FaqsType.savings,
             backgroundColor: UiConstants.kSecondaryBackgroundColor,
           ),
-          body: Stack(
-            children: [
-              SizedBox(
-                height: SizeConfig.screenHeight,
-                width: SizeConfig.screenWidth,
-                child: ListView(
-                  children: model.getSaveViewItems(model),
-                ),
-              ),
-              Positioned(bottom: SizeConfig.navBarHeight, child: SaveBanner())
-            ],
+          body: ListView(
+            children: model.getSaveViewItems(model),
           ),
         );
       },

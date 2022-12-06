@@ -1,18 +1,30 @@
 import 'package:felloapp/core/model/asset_options_model.dart' as I;
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/draw_time_util.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class BannerWidget extends StatelessWidget {
-  const BannerWidget({Key? key, required this.model}) : super(key: key);
+class BannerWidget extends StatefulWidget {
+  const BannerWidget({Key? key, required this.model, this.showHappyHour = true})
+      : super(key: key);
   final I.Banner model;
+  final bool showHappyHour;
+
+  @override
+  State<BannerWidget> createState() => _BannerWidgetState();
+}
+
+class _BannerWidgetState extends State<BannerWidget> with DrawTimeUtil {
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.1),
+        color: widget.showHappyHour
+            ? Colors.black.withOpacity(0.5)
+            : UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(5),
       ),
       margin:
@@ -29,20 +41,43 @@ class BannerWidget extends StatelessWidget {
             Container(
               height: SizeConfig.padding32,
               width: SizeConfig.padding32,
-              child: SvgPicture.network(
-                model.image,
-                fit: BoxFit.contain,
-              ),
+              child: widget.showHappyHour
+                  ? SvgPicture.asset(Assets.sandTimer)
+                  : SvgPicture.network(
+                      widget.model.image,
+                      fit: BoxFit.contain,
+                    ),
             ),
             SizedBox(width: SizeConfig.padding4),
             Flexible(
-              child: Text(
-                model.title,
-                maxLines: 2,
-                style:
-                    TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
-              ),
-            )
+              child: widget.showHappyHour
+                  ? RichText(
+                      text: TextSpan(
+                          style: TextStyles.rajdhaniSB.body3
+                              .colour(Color(0XFFB5CDCB)),
+                          text: "Happy Hour ends in ",
+                          children: [
+                            TextSpan(
+                                text: inHours + ":" + inMinutes,
+                                style: TextStyles.rajdhaniB
+                                    .colour(Color(0xff51EADD)))
+                          ]),
+                    )
+                  : Text(
+                      widget.model.title,
+                      maxLines: 2,
+                      style: TextStyles.sourceSans.body4
+                          .colour(UiConstants.kTextColor3),
+                    ),
+            ),
+            SizedBox(
+              width: 8,
+            ),
+            Icon(
+              Icons.info_outline,
+              size: 20,
+              color: Color(0xffB5CDCB),
+            ),
           ]),
     );
   }

@@ -52,7 +52,7 @@ class RootViewModel extends BaseViewModel {
   final TambolaService? _tambolaService = locator<TambolaService>();
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
-  int _bottomNavBarIndex = 1;
+  int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
 
   final WinnerService? winnerService = locator<WinnerService>();
