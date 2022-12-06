@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/draw_time_util.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -15,43 +16,15 @@ class HappyHourModal extends StatefulWidget {
   State<HappyHourModal> createState() => _HappyHourModalState();
 }
 
-class _HappyHourModalState extends State<HappyHourModal> {
-  late ValueNotifier<Duration> _countDown;
-  late Timer _timer;
-  @override
-  void initState() {
-    _countDown = ValueNotifier(getDifferance());
-    _timer = Timer.periodic(Duration(seconds: 1), (_) {
-      _countDown.value = getDifferance();
-    });
-    super.initState();
-  }
-
-  Duration getDifferance() {
-    DateTime currentTime = DateTime.now();
-    DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 18, 0, 10);
-    Duration timeDiff = drawTime.difference(currentTime);
-
-    return timeDiff;
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  String twoDigits(int n) => n.toString().padLeft(2, '0');
-
-  getTime(int index, Duration duration) {
+class _HappyHourModalState extends State<HappyHourModal> with DrawTimeUtil {
+  getTime(int index) {
     switch (index) {
       case 0:
-        return twoDigits(duration.inHours);
+        return inHours;
       case 1:
-        return twoDigits(duration.inMinutes.remainder(60));
+        return inMinutes;
       case 2:
-        return twoDigits(duration.inSeconds.remainder(60));
+        return inSeconds;
       default:
         return "";
     }
@@ -85,48 +58,43 @@ class _HappyHourModalState extends State<HappyHourModal> {
               SizedBox(
                 height: SizeConfig.screenHeight! * .07,
               ),
-              ValueListenableBuilder<Duration>(
-                  valueListenable: _countDown,
-                  builder: (context, value, _) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: List.generate(
-                        5,
-                        (index) => index % 2 == 0
-                            ? Container(
-                                height: SizeConfig.screenHeight! * 0.08,
-                                width: SizeConfig.screenHeight! * 0.08,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xff1F2C65).withOpacity(0.6),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurStyle: BlurStyle.outer,
-                                      color: Color(0xff93B5FE).withOpacity(0.4),
-                                      // spreadRadius: 2,
-                                      offset: Offset(0, -1),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  getTime((index / 2).round(), value),
-                                  style: TextStyles.rajdhaniSB.title3,
-                                ),
-                              )
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                child: Text(
-                                  ":",
-                                  style: TextStyles.sourceSans.body1
-                                      .colour(Color(0XFFBDBDBE)),
-                                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: List.generate(
+                  5,
+                  (index) => index % 2 == 0
+                      ? Container(
+                          height: SizeConfig.screenHeight! * 0.08,
+                          width: SizeConfig.screenHeight! * 0.08,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xff1F2C65).withOpacity(0.6),
+                            boxShadow: [
+                              BoxShadow(
+                                blurStyle: BlurStyle.outer,
+                                color: Color(0xff93B5FE).withOpacity(0.4),
+                                // spreadRadius: 2,
+                                offset: Offset(0, -1),
                               ),
-                      ),
-                    );
-                  }),
+                            ],
+                          ),
+                          child: Text(
+                            getTime((index / 2).round()),
+                            style: TextStyles.rajdhaniSB.title3,
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Text(
+                            ":",
+                            style: TextStyles.sourceSans.body1
+                                .colour(Color(0XFFBDBDBE)),
+                          ),
+                        ),
+                ),
+              ),
               SizedBox(height: SizeConfig.screenHeight! * 0.05),
               Text(
                 '100% cashback for any transaction for the next 10 mins',
