@@ -290,7 +290,7 @@ class WinViewModel extends BaseViewModel {
   }
 
   fetchBasicConstantValues() {
-    _minWithdrawPrize = AppConfig.getValue(AppConfigKey.min_withdrawable_prize);
+    _minWithdrawPrize = AppConfig.getValue(AppConfigKey.min_withdrawable_prize).toString();
     _refUnlock = AppConfig.getValue(AppConfigKey.unlock_referral_amt);
     _refUnlockAmt = BaseUtil.toInt(_refUnlock);
     _minWithdrawPrizeAmt = BaseUtil.toInt(_minWithdrawPrize);

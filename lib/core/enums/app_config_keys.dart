@@ -63,6 +63,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.min_principle_for_prize;
       case 'tambolaCost':
         return AppConfigKey.tambola_cost;
+      case "augmont_deposit_permission":
+        return AppConfigKey.augmont_deposit_permission;
 
       case 'game_tambola_announcement':
         return AppConfigKey.game_tambola_announcement;

@@ -337,7 +337,6 @@ class _TambolaVideoPlayerState extends State<TambolaVideoPlayer> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _controller?.dispose();
     super.dispose();
   }
