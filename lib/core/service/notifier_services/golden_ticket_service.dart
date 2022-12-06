@@ -5,9 +5,11 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -28,17 +30,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:share_plus/share_plus.dart';
 
 final GlobalKey ticketImageKey = GlobalKey();
 
-class GoldenTicketService extends ChangeNotifier {
+class GoldenTicketService
+    extends PropertyChangeNotifier<GoldenTicketServiceProperties> {
   final CustomLogger? _logger = locator<CustomLogger>();
-  final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
+  final GoldenTicketRepository _gtRepo = locator<GoldenTicketRepository>();
   final UserService? _userService = locator<UserService>();
   final PaytmService? _paytmService = locator<PaytmService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
+
+  //ALL GOLDEN TICKETS VIEW FIELDS -- START
+  bool isLastPageForGoldenTickets = false;
+  bool _isFetchingGoldenTickets = false;
+  String? goldenTicketsListLastTicketId;
+  bool get isFetchingGoldenTickets => this._isFetchingGoldenTickets;
+  set isFetchingGoldenTickets(bool val) {
+    this._isFetchingGoldenTickets = val;
+    notifyListeners(GoldenTicketServiceProperties.AllGoldenTickets);
+  }
+
+  List<GoldenTicket> _allGoldenTickets = [];
+  List<GoldenTicket> get allGoldenTickets => this._allGoldenTickets;
+  set allGoldenTickets(List<GoldenTicket> value) {
+    this._allGoldenTickets = value;
+    // notifyListeners(GoldenTicketServiceProperties.AllGoldenTickets);
+  }
+
+  void addGoldenTickets(List<GoldenTicket>? value) {
+    if (value != null) this._allGoldenTickets.addAll(value);
+    // notifyListeners(GoldenTicketServiceProperties.AllGoldenTickets);
+  }
+
+  //ALL GOLDEN TICKETS VIEW FIELDS -- START
 
   // static bool hasGoldenTicket = false;
   int _unscratchedTicketsCount = 0;
@@ -235,9 +263,8 @@ class GoldenTicketService extends ChangeNotifier {
       RenderRepaintBoundary imageObject = ticketImageKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
-      ByteData byteData = await (image.toByteData(format: ImageByteFormat.png)
-          as Future<ByteData>);
-      final pngBytes = byteData.buffer.asUint8List();
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      final pngBytes = byteData?.buffer.asUint8List();
 
       return pngBytes;
     } catch (e) {
@@ -349,5 +376,59 @@ class GoldenTicketService extends ChangeNotifier {
         state: PageState.addPage,
       );
     }
+  }
+
+  Future<void> fetchAllGoldenTickets() async {
+    if (isLastPageForGoldenTickets) return;
+    if (isFetchingGoldenTickets) return;
+    isFetchingGoldenTickets = true;
+    final res =
+        await _gtRepo.getGoldenTickets(start: goldenTicketsListLastTicketId);
+    if (res.isSuccess()) {
+      allGoldenTickets.clear();
+      if (allGoldenTickets.isEmpty) {
+        allGoldenTickets = res.model?["tickets"];
+        isLastPageForGoldenTickets = res.model?["isLastPage"];
+      } else {
+        addGoldenTickets(res.model?["tickets"]);
+        isLastPageForGoldenTickets = res.model?["isLastPage"];
+      }
+    }
+    allGoldenTickets = arrangeGoldenTickets();
+    isFetchingGoldenTickets = false;
+  }
+
+  List<GoldenTicket> arrangeGoldenTickets() {
+    List<GoldenTicket> arrangedGoldenTicketList = [];
+    List<GoldenTicket> temptickets = allGoldenTickets;
+    temptickets
+        .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
+    temptickets.forEach((e) {
+      if (e.redeemedTimestamp == null ||
+          e.redeemedTimestamp == TimestampModel(nanoseconds: 0, seconds: 0)) {
+        arrangedGoldenTicketList.add(e);
+      }
+    });
+    temptickets.forEach((e) {
+      if ((e.redeemedTimestamp != null &&
+              e.redeemedTimestamp !=
+                  TimestampModel(nanoseconds: 0, seconds: 0)) &&
+          e.isRewarding!) {
+        arrangedGoldenTicketList.add(e);
+      }
+    });
+    return arrangedGoldenTicketList;
+    // CODE FOR TICKET DISTINCTION - USE IF REQUIRED
+    // final ids = Set();
+    // arrangedGoldenTicketList.retainWhere((x) => ids.add(x.gtId));
+    // arrangedGoldenTicketList = ids.toList();
+  }
+
+  refreshTickets({required String prizeSubtype}) {
+    allGoldenTickets
+        .firstWhere((ticket) => ticket.prizeSubtype == prizeSubtype)
+        .redeemedTimestamp = TimestampModel.currentTimeStamp();
+    allGoldenTickets = arrangeGoldenTickets();
+    notifyListeners(GoldenTicketServiceProperties.AllGoldenTickets);
   }
 }

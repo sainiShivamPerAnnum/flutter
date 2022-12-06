@@ -59,6 +59,7 @@ class UserProfileVM extends BaseViewModel {
   bool _isContinuedWithGoogle = false;
   bool _isSigningInWithGoogle = false;
   bool _isNameEnabled = true;
+  bool _isDateEnabled = true;
 
   bool isUsernameLoading = false;
   bool? isValid = false;
@@ -145,6 +146,7 @@ class UserProfileVM extends BaseViewModel {
   get isgmailFieldEnabled => this._isgmailFieldEnabled;
   get errorPadding => this._errorPadding;
   get isNameEnabled => this._isNameEnabled;
+  get isDateEnabled => this._isDateEnabled;
 
   // Setters
   set isTambolaNotificationLoading(bool val) {
@@ -213,9 +215,9 @@ class UserProfileVM extends BaseViewModel {
     notifyListeners();
   }
 
-  set isNameEnabled(value) {
-    this._isNameEnabled = value;
-  }
+  set isNameEnabled(value) => this._isNameEnabled = value;
+
+  set isDateEnabled(value) => this._isDateEnabled = value;
 
   init(bool inu) {
     isNewUser = inu;
@@ -332,6 +334,7 @@ class UserProfileVM extends BaseViewModel {
         // nameController!.text =
         //     _userService!.baseUser!.kycName ?? _userService!.baseUser!.name!;
         isNameEnabled = false;
+        if (myDob.isNotEmpty) isDateEnabled = false;
       }
       setState(ViewState.Idle);
     });
@@ -346,7 +349,7 @@ class UserProfileVM extends BaseViewModel {
           isUpdaingUserDetails = true;
           if (isNameEnabled)
             _userService!.baseUser!.name = nameController!.text.trim();
-          if (isNameEnabled)
+          if (isDateEnabled)
             _userService!.baseUser!.dob =
                 "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
           _userService!.baseUser!.gender = getGender();
@@ -407,7 +410,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   bool checkIfAdult() {
-    if (selectedDate == null && !isNameEnabled)
+    if (selectedDate == null && !isDateEnabled)
       return true;
     else
       return DateHelper.isAdult(selectedDate);
@@ -544,7 +547,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   bool isValidDate() {
-    if (!isNameEnabled) {
+    if (!isDateEnabled) {
       selectedDate = null;
       return true;
     }
@@ -799,7 +802,7 @@ class UserProfileVM extends BaseViewModel {
     baseProvider!.isGoogleSignInProgress = false;
     emailOptionsFocusNode.unfocus();
     BaseUtil.openModalBottomSheet(
-        isBarrierDismissable: true,
+        isBarrierDismissible: true,
         backgroundColor:
             UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
         borderRadius: BorderRadius.circular(15),
@@ -970,6 +973,7 @@ class UserProfileVM extends BaseViewModel {
 
   navigateToKycScreen() {
     Haptic.vibrate();
+    _analyticsService!.track(eventName: AnalyticsEvents.kycDetailsTapped);
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: KycDetailsPageConfig,
@@ -977,6 +981,8 @@ class UserProfileVM extends BaseViewModel {
   }
 
   navigateToBankDetailsScreen() {
+    _analyticsService!.track(eventName: AnalyticsEvents.bankDetailsTapped);
+
     Haptic.vibrate();
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,

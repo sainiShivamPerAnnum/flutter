@@ -91,9 +91,7 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<dynamic>> getUserById({
-    required String? id
-  }) async {
+  Future<ApiResponse<dynamic>> getUserById({required String? id}) async {
     try {
       final token = await getBearerToken();
 
@@ -108,7 +106,7 @@ class UserRepository extends BaseRepo {
         try {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
             final _user = BaseUser.fromMap(res["data"], id!);
-            logger!.d('asdasdasdsa $_user');
+            logger.d('asdasdasdsa $_user');
             return ApiResponse<BaseUser>(model: _user, code: 200);
           } else
             return ApiResponse<BaseUser>(model: null, code: 200);
@@ -235,33 +233,6 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger!.e('coin balance $e');
       return ApiResponse.withError(e.toString(), 400);
-    }
-  }
-
-  Future<ApiResponse<List<UserTransaction>>>? getWinningHistory(
-      String? userUid) async {
-    List<UserTransaction> _userPrizeTransactions = [];
-    try {
-      final QuerySnapshot _querySnapshot =
-          await _api!.getUserPrizeTransactionDocuments(userUid);
-
-      if (_querySnapshot.docs.length != 0) {
-        _querySnapshot.docs.forEach((element) {
-          _userPrizeTransactions.add(
-            UserTransaction.fromMap(
-                element.data() as Map<String, dynamic>, element.id),
-          );
-        });
-        logger.d(
-            "User prize transaction successfully fetched: ${_userPrizeTransactions.first.toJson().toString()}");
-      } else {
-        logger.d("user prize transaction empty");
-      }
-
-      return ApiResponse(model: _userPrizeTransactions, code: 200);
-    } catch (e) {
-      logger.e(e);
-      throw e;
     }
   }
 

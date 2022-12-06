@@ -100,7 +100,9 @@ class KYCDetailsViewModel extends BaseViewModel {
   init() {
     nameController = new TextEditingController();
     panController = new TextEditingController();
-    checkForKycExistence();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      checkForKycExistence();
+    });
   }
 
   void verifyImage() {
@@ -149,6 +151,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     }
     if (userKycData != null) {
       if (userKycData!.ocrVerified) {
+        _bankAndPanService.isKYCVerified = true;
         kycVerificationStatus = KycVerificationStatus.VERIFIED;
         panController!.text = userKycData!.pan;
         nameController!.text = userKycData!.name;

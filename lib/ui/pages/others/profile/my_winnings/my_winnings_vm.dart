@@ -40,7 +40,7 @@ import 'package:share_plus/share_plus.dart';
 class MyWinningsViewModel extends BaseViewModel {
   //LOCATORS
   final CustomLogger? _logger = locator<CustomLogger>();
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   final TransactionHistoryService? _transactionHistoryService =
       locator<TransactionHistoryService>();
   final LocalDBModel? _localDBModel = locator<LocalDBModel>();
@@ -48,30 +48,17 @@ class MyWinningsViewModel extends BaseViewModel {
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
   final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final GoldenTicketService _gtService = locator<GoldenTicketService>();
 
   // LOCAL VARIABLES
   PrizeClaimChoice? _choice;
   get choice => this._choice;
-  bool _isWinningHistoryLoading = false;
   final GlobalKey imageKey = GlobalKey();
   final UserRepository? userRepo = locator<UserRepository>();
-  List<UserTransaction>? _winningHistory;
 
   //GETTERS SETTERS
-  get isWinningHistoryLoading => this._isWinningHistoryLoading;
-  set isWinningHistoryLoading(value) {
-    this._isWinningHistoryLoading = value;
-    notifyListeners();
-  }
 
-  List<UserTransaction>? get winningHistory => this._winningHistory;
-  set winningHistory(List<UserTransaction>? value) {
-    this._winningHistory = value;
-    notifyListeners();
-  }
-
-  UserService? get userService => _userService;
+  UserService get userService => _userService;
   // AugmontTransactionService get txnService => _GoldTransactionService;
 
   set choice(value) {
@@ -79,19 +66,12 @@ class MyWinningsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  getWinningHistory() async {
-    _isWinningHistoryLoading = true;
-    _gtService!.updateUnscratchedGTCount();
-    // trackGoldenTicketsOpen();
-    ApiResponse<List<UserTransaction>>? temp =
-        await userRepo!.getWinningHistory(_userService!.baseUser!.uid);
-    if (temp != null) {
-      temp.model!.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
-      winningHistory = temp.model;
-    } else
-      BaseUtil.showNegativeAlert(
-          "Winning History fetch failed", "Please try again after sometime");
-    isWinningHistoryLoading = false;
+  init() {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _gtService.isLastPageForGoldenTickets = false;
+      _gtService.goldenTicketsListLastTicketId = null;
+      _gtService.fetchAllGoldenTickets();
+    });
   }
 
   trackGoldenTicketsOpen() {
@@ -272,7 +252,6 @@ class MyWinningsViewModel extends BaseViewModel {
     _registerClaimChoice(choice).then((flag) {
       AppState.backButtonDispatcher!.didPopRoute();
       if (flag) {
-        getWinningHistory();
         showSuccessPrizeWithdrawalDialog(
             choice, choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold");
       }
@@ -386,9 +365,8 @@ class MyWinningsViewModel extends BaseViewModel {
       RenderRepaintBoundary imageObject =
           imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
-      ByteData byteData = await (image.toByteData(format: ImageByteFormat.png)
-          as Future<ByteData>);
-      final pngBytes = byteData.buffer.asUint8List();
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      final pngBytes = byteData?.buffer.asUint8List();
 
       return pngBytes;
     } catch (e) {

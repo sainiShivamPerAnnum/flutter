@@ -253,7 +253,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                     BaseUtil.openModalBottomSheet(
                                       addToScreenStack: true,
                                       backgroundColor: Colors.transparent,
-                                      isBarrierDismissable: true,
+                                      isBarrierDismissible: true,
                                       enableDrag: false,
                                       content: SkipMilestoneModalSheet(
                                           milestone: widget.milestone),

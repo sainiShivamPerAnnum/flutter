@@ -13,6 +13,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flushbars.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -58,8 +59,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
-    log("Back Request called: current Stack : ${AppState.screenStack}");
-
+    AppToasts.flushbar?.dismiss();
     // _journeyService!.checkForMilestoneLevelChange();
     if (_journeyService!.isJourneyOnboardingInView) {
       _journeyService!.isJourneyOnboardingInView = false;

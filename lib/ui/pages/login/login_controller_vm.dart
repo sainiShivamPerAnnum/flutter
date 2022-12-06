@@ -215,8 +215,6 @@ class LoginControllerViewModel extends BaseViewModel {
                 _nameKey.currentState!.model.nameController.text.trim();
             String gender =
                 _formatGender(_nameKey.currentState!.model.genderValue);
-
-//TEST DATA ---STARTS---//
             if (userService.baseUser == null) {
               //firebase user should never be null at this point
               userService.baseUser = BaseUser.newUser(

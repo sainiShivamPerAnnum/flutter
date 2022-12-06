@@ -393,7 +393,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
           topLeft: Radius.circular(SizeConfig.roundness16),
           topRight: Radius.circular(SizeConfig.roundness16),
         ),
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         isScrollControlled: true,
         content: PauseAutosaveModal(
           model: model,

@@ -18,19 +18,18 @@ class SaveCustomCard extends StatelessWidget {
   final String? cardAssetName;
   final Function()? onTap;
   final InvestmentType investmentType;
-  final ValueKey? key;
 
-
-  const SaveCustomCard({
-    this.key,
-    this.title,
-    this.subtitle,
-    this.cardBgColor,
-    this.cardAssetName,
-    this.onTap,
-    this.onCardTap,
-    required this.investmentType,
-  });
+  const SaveCustomCard(
+      {Key? key,
+      this.title,
+      this.onCardTap,
+      this.cardBgColor,
+      this.subtitle,
+      this.cardAssetName,
+      this.onTap,
+      required this.investmentType})
+      : super(key: key);
+  // final ValueKey? key;
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +87,8 @@ class SaveCustomCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    if (key!.value ==
-                                        Constants.ASSET_TYPE_AUGMONT)
+                                    if (key ==
+                                        ValueKey(Constants.ASSET_TYPE_AUGMONT))
                                       AutosaveStatusText(),
                                     Text(
                                       title!,
@@ -119,8 +118,9 @@ class SaveCustomCard extends StatelessWidget {
                                           style: TextStyles.sourceSansM.body4,
                                         ),
                                         SizedBox(width: SizeConfig.padding4),
-                                        if (key!.value ==
-                                            Constants.ASSET_TYPE_LENDBOX)
+                                        if (key ==
+                                            ValueKey(
+                                                Constants.ASSET_TYPE_LENDBOX))
                                           LboxGrowthArrow()
                                       ],
                                     ),

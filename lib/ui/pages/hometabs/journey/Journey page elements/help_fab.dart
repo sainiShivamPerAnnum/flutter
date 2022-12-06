@@ -36,7 +36,7 @@ class _HelpFabState extends State<HelpFab> {
 
   trackHelpTappedEvent() {
     _analyticsService!.track(
-        eventName: AnalyticsEvents.journeyHelpTapped,
+        eventName: AnalyticsEvents.journeyFloatingIconTapped,
         properties: AnalyticsProperties.getDefaultPropertiesMap());
   }
 

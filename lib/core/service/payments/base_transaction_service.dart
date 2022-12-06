@@ -66,7 +66,7 @@ abstract class BaseTransactionService
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
       backgroundColor: Colors.transparent,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(SizeConfig.roundness12),
         topRight: Radius.circular(SizeConfig.roundness12),

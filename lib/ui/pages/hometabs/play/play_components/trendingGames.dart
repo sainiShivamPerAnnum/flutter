@@ -102,7 +102,7 @@ class TrendingGames extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SvgPicture.network(
-              game!.thumbnailUri!,
+              game!.icon!,
               fit: BoxFit.cover,
               width: SizeConfig.screenWidth! * 0.24,
               height: SizeConfig.screenWidth! * 0.24,

@@ -2,8 +2,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
+import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
@@ -17,7 +19,9 @@ import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -46,7 +50,6 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
-
 
 // void main() async {
 //   FlavorConfig(
@@ -164,26 +167,32 @@ class _MyAppState extends State<MyApp> {
                               LendboxTransactionService,
                               TransactionServiceProperties>(
                             value: locator<LendboxTransactionService>(),
-                            // child: PropertyChangeProvider<GoldenTicketService,
-                            //     GoldenTicketServiceProperties>(
-                            //   value: locator<GoldenTicketService>(),
-                            child: MaterialApp.router(
-                              // locale: DevicePreview.locale(context),
-                              // builder: DevicePreview.appBuilder,
-                              title: Constants.APP_NAME,
-                              theme: FelloTheme.darkMode(),
-                              useInheritedMediaQuery: true,
-                              debugShowCheckedModeBanner: false,
-                              backButtonDispatcher: backButtonDispatcher,
-                              routerDelegate: delegate!,
-                              routeInformationParser: parser,
-                              localizationsDelegates: [
-                                S.delegate,
-                                GlobalMaterialLocalizations.delegate,
-                                GlobalWidgetsLocalizations.delegate,
-                                GlobalCupertinoLocalizations.delegate,
-                              ],
-                              supportedLocales: S.delegate.supportedLocales,
+                            child: PropertyChangeProvider<GoldenTicketService,
+                                GoldenTicketServiceProperties>(
+                              value: locator<GoldenTicketService>(),
+                              child: PropertyChangeProvider<
+                                  MarketingEventHandlerService,
+                                  MarketingEventsHandlerProperties>(
+                                value: locator<MarketingEventHandlerService>(),
+                                child: MaterialApp.router(
+                                  // locale: DevicePreview.locale(context),
+                                  // builder: DevicePreview.appBuilder,
+                                  title: Constants.APP_NAME,
+                                  theme: FelloTheme.darkMode(),
+                                  useInheritedMediaQuery: true,
+                                  debugShowCheckedModeBanner: false,
+                                  backButtonDispatcher: backButtonDispatcher,
+                                  routerDelegate: delegate!,
+                                  routeInformationParser: parser,
+                                  localizationsDelegates: [
+                                    S.delegate,
+                                    GlobalMaterialLocalizations.delegate,
+                                    GlobalWidgetsLocalizations.delegate,
+                                    GlobalCupertinoLocalizations.delegate
+                                  ],
+                                  supportedLocales: S.delegate.supportedLocales,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -195,7 +204,6 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
-        // ),
       ),
     );
   }

@@ -319,7 +319,7 @@ class TransactionTile extends StatelessWidget {
             Haptic.vibrate();
             BaseUtil.openModalBottomSheet(
               addToScreenStack: true,
-              isBarrierDismissable: true,
+              isBarrierDismissible: true,
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               content: TransactionDetailsBottomSheet(
