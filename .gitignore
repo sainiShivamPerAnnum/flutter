@@ -12,6 +12,7 @@
 out/
 fello.plantuml
 
+
 # IntelliJ related
 *.iml
 *.ipr
@@ -29,6 +30,7 @@ ios/Runner.xcworkspace/*
 
 # These are optional
 android/fastlane/report.xml
+android/key.propertise
 ios/fastlane/report.xml
 ios/fastlane/Preview.html
 ios/fastlane/metadata/review_information
@@ -52,6 +54,7 @@ ios/fastlane/metadata/trade_representative_contact_information
 /build/
 
 .gradle/
+
 
 # Web related
 lib/generated_plugin_registrant.dart
