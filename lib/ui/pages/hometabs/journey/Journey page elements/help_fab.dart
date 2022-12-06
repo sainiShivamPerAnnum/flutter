@@ -67,13 +67,10 @@ class _HelpFabState extends State<HelpFab> {
       right: SizeConfig.padding16,
       child: InkWell(
         onTap: () {
-          //DEBUG: REMOVE THIS FUNCTION BEFORE DEPLOYMENT
-          clearCache();
-          //DEBUG: ACTUAL CODE START
-          // trackHelpTappedEvent();
-          // AppState.delegate!
-          //     .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
-          //DEBUG: ACTUAL CODE END
+          // clearCache();
+          trackHelpTappedEvent();
+          AppState.delegate!
+              .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
         child: AnimatedContainer(
             duration: Duration(seconds: 1),
