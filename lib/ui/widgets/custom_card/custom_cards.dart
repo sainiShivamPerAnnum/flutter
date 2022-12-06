@@ -93,6 +93,7 @@ class SaveCustomCard extends StatelessWidget {
                                     Text(
                                       title!,
                                       style: TextStyles.rajdhaniSB.title5,
+                                      key: ValueKey(title),
                                     ),
                                   ],
                                 ),

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -109,6 +111,9 @@ class JourneyPageViewModel extends BaseViewModel {
 
   init(TickerProvider ticker) async {
     log("Journey VM init Called");
+    if (Platform.isAndroid) {
+      ApxorFlutter.trackScreen("Journey");
+    }
     isLoading = true;
     _journeyService!.vsync = ticker;
     logger!.d("Pages length: ${_journeyService!.pages!.length ?? 0}");
