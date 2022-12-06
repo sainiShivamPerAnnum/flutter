@@ -42,30 +42,28 @@ extension AppConfigKeys on String {
         return AppConfigKey.paytmMid;
       case 'rzpMid':
         return AppConfigKey.rzpMid;
-      case 'aws_augmont_key_index':
-        return AppConfigKey.aws_augmont_key_index;
-      case 'tambola_daily_pick_count':
+
+      case 'tambolaDailyPickCount':
         return AppConfigKey.tambola_daily_pick_count;
       case 'appShareMessage':
         return AppConfigKey.appShareMessage;
-      case 'min_withdrawable_prize':
+      case 'minWithdrawablePrice':
         return AppConfigKey.min_withdrawable_prize;
       case 'unlock_referral_amt':
         return AppConfigKey.unlock_referral_amt;
-      case 'active_pg_ios':
+      case 'activePgIos':
         return AppConfigKey.active_pg_ios;
-      case 'active_pg_android':
+      case 'activePgAndroid':
         return AppConfigKey.active_pg_android;
-      case 'enabled_psp_apps':
+      case 'enabledPspApps':
         return AppConfigKey.enabled_psp_apps;
-      case 'app_share_message':
+      case 'appShareMessage':
         return AppConfigKey.appShareMessage;
-      case 'min_principle_for_prize':
+      case 'minPrincipleForPrice':
         return AppConfigKey.min_principle_for_prize;
-      case 'tambola_cost':
+      case 'tambolaCost':
         return AppConfigKey.tambola_cost;
-      case 'augmont_deposit_permission':
-        return AppConfigKey.augmont_deposit_permission;
+
       case 'game_tambola_announcement':
         return AppConfigKey.game_tambola_announcement;
       default:
