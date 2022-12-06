@@ -136,3 +136,22 @@ class DailyAppCheckInEventModel {
         streakEnd.hashCode;
   }
 }
+
+class DailyAppBonusClaimRewardModel {
+  bool flag;
+  String message;
+  String gtId;
+  DailyAppBonusClaimRewardModel({
+    required this.flag,
+    required this.message,
+    required this.gtId,
+  });
+
+  factory DailyAppBonusClaimRewardModel.fromMap(Map<String, dynamic> map) {
+    return DailyAppBonusClaimRewardModel(
+      flag: map['flag'] as bool,
+      message: map['message'] as String,
+      gtId: map['gtId'] as String,
+    );
+  }
+}

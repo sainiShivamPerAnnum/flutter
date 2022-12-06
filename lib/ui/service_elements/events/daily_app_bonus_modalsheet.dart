@@ -20,7 +20,9 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
       properties: [MarketingEventsHandlerProperties.DailyAppCheckIn],
       builder: ((context, model, child) {
         getBgColor(int i) {
-          if (i == model!.currentDay)
+          if (i == model!.currentDay) if (model.isDailyAppBonusClaimed)
+            return kCompletedDayBgColor;
+          else
             return kCurrentDayBgColor;
           else if (i > model.currentDay)
             return kIncompleteDayBgColor;
@@ -29,7 +31,9 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
         }
 
         getBorder(int i) {
-          if (i == model!.currentDay)
+          if (i == model!.currentDay) if (model.isDailyAppBonusClaimed)
+            return kIncompleteDayBorderStyle;
+          else
             return kCurrentDayBorderStyle;
           else if (i > model.currentDay)
             return kIncompleteDayBorderStyle;
@@ -38,7 +42,9 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
         }
 
         getTextColor(int i) {
-          if (i == model!.currentDay)
+          if (i == model!.currentDay) if (model.isDailyAppBonusClaimed)
+            return kCompletedDayTextColor;
+          else
             return kCurrentDayTextColor;
           else if (i > model.currentDay)
             return kIncompleteDayTextColor;
@@ -77,8 +83,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                   SizedBox(height: SizeConfig.padding20),
                   if (model!.dailyAppCheckInEventData!.showStreakBreakMessage)
                     Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding10),
+                      margin: EdgeInsets.only(bottom: SizeConfig.padding16),
                       child: Text(
                         model.dailyAppCheckInEventData!.streakBreakMessage,
                         textAlign: TextAlign.center,
@@ -139,7 +144,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                       },
                     ),
                   ),
-                  if (!model!.isDailyAppBonusClaimed)
+                  if (!model.isDailyAppBonusClaimed)
                     SvgPicture.asset(Assets.wohoo,
                         width: SizeConfig.screenWidth! * 0.6),
                   model.isDailyAppBonusClaimed
@@ -181,7 +186,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                           onTap: model.isDailyAppBonusClaimed
                               ? () =>
                                   AppState.backButtonDispatcher!.didPopRoute()
-                              : () => model.claimDailyAppBonusReward(),
+                              : () => model.sudoClaimDailyReward(),
                         ),
                 ],
               ),

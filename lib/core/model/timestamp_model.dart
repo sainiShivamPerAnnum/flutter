@@ -54,10 +54,9 @@ class TimestampModel extends Timestamp {
     return this.toDate().difference(other.toDate()).inDays;
   }
 
-  static int dayInYear(TimestampModel time) {
-    return time
-        .toDate()
-        .difference(new DateTime(time.toDate().year, 1, 1, 0, 0))
-        .inDays;
+  static int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return to.difference(from).inDays;
   }
 }

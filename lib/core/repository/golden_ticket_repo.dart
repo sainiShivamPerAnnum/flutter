@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
@@ -261,19 +263,16 @@ class GoldenTicketRepository extends BaseRepo {
 
       //NETWORK CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
 
-      if (responseData.currentDay ==
-          (TimestampModel.dayInYear(responseData.streakEnd) -
-              TimestampModel.dayInYear(responseData.streakEnd))) {
+      if (responseData.streakEnd.toDate().day == DateTime.now().day) {
         PreferenceHelper.setString(
             PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP,
             DateTime.now().toIso8601String());
         return ApiResponse.withError("Reward claimed for today", 400);
       }
-
       //CHECK IF STREAK IS RESET
-      int streakBreakDaysCount =
-          TimestampModel.dayInYear(TimestampModel.currentTimeStamp()) -
-              TimestampModel.dayInYear(responseData.streakEnd);
+      int streakBreakDaysCount = TimestampModel.daysBetween(
+          responseData.streakEnd.toDate(),
+          TimestampModel.currentTimeStamp().toDate());
       if (streakBreakDaysCount > 1 && streakBreakDaysCount < 360)
         responseData.showStreakBreakMessage = true;
 
@@ -286,20 +285,26 @@ class GoldenTicketRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<Map<String, dynamic>>>
+  Future<ApiResponse<DailyAppBonusClaimRewardModel>>
       claimDailyBonusEventDetails() async {
     try {
       final String bearer = await getBearerToken();
-      final response = APIService.instance.postData(
+      final response = await APIService.instance.postData(
           ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
           token: bearer,
-          cBaseUrl: _baseUrl) as Map<String, dynamic>;
-      // final responseData = response['data'];
+          cBaseUrl: _baseUrl);
+      final responseData =
+          DailyAppBonusClaimRewardModel.fromMap(response['data']);
       logger.d(response.toString());
-      return ApiResponse(model: {"gtId": 'true'}, code: 200);
+      return ApiResponse(model: responseData, code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
     }
   }
 }
+
+//TEST CASES
+//NEW USER -> Signup -> first claim
+//EXISTING USER -> Signin -> first claim
+

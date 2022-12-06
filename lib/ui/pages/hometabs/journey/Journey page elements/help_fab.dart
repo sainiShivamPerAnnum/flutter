@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -54,6 +55,7 @@ class _HelpFabState extends State<HelpFab> {
         PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE);
     PreferenceHelper.remove(
         PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP);
+    BaseUtil.showNegativeAlert("Cache Cleared", "Restart to see changes");
   }
 
   @override

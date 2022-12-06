@@ -5,7 +5,9 @@ import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/service_elements/events/daily_app_bonus_modalsheet.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -18,8 +20,10 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class MarketingEventHandlerService
     extends PropertyChangeNotifier<MarketingEventsHandlerProperties> {
   final GoldenTicketRepository _gtRepo = locator<GoldenTicketRepository>();
+  final GoldenTicketService _gtService = locator<GoldenTicketService>();
   final CustomLogger _logger = locator<CustomLogger>();
   int currentDay = -1;
+  DailyAppBonusClaimRewardModel? _dailyAppBonusClaimRewardData;
   DailyAppCheckInEventModel? _dailyAppCheckInEventData;
   bool _isDailyAppBonusClaimInProgress = false;
   bool _isDailyAppBonusClaimed = false;
@@ -51,7 +55,7 @@ class MarketingEventHandlerService
     await checkUserDailyAppCheckInStatus();
   }
 
-  //Daily App Bounus Methods
+  //Daily App Bonus Methods
 
   Future<void> checkUserDailyAppCheckInStatus() async {
     if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
@@ -60,40 +64,62 @@ class MarketingEventHandlerService
     if (dailyAppBonusEventResponse.isSuccess()) {
       dailyAppCheckInEventData = dailyAppBonusEventResponse.model;
       AppState.isRootAvailableForIncomingTaskExecution = false;
-      currentDay = dailyAppCheckInEventData!.currentDay + 1;
-      BaseUtil.openModalBottomSheet(
-        isBarrierDismissible: true,
-        addToScreenStack: true,
-        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-        backgroundColor: UiConstants.kSaveDigitalGoldCardBg,
-        hapticVibrate: true,
-        isScrollControlled: true,
-        content: DailyAppCheckInEventModalSheet(),
-      );
+      getCurrentDay(dailyAppCheckInEventData!);
+      // currentDay = dailyAppCheckInEventData!.currentDay;
+      if (await _claimDailyAppBonusReward()) {
+        BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+          backgroundColor: UiConstants.kSaveDigitalGoldCardBg,
+          hapticVibrate: true,
+          isScrollControlled: true,
+          content: DailyAppCheckInEventModalSheet(),
+        );
+      }
     } else {
       _logger.d(
-          "DAILY APP BONUS: ERROR :: ${dailyAppBonusEventResponse.errorMessage}");
+          "DAILY APP BONUS GET: ERROR :: ${dailyAppBonusEventResponse.errorMessage}");
     }
   }
 
-  Future<bool> claimDailyAppBonusReward() async {
-    isDailyAppBonusClaimInProgress = true;
+  Future<bool> _claimDailyAppBonusReward() async {
     final res = await _gtRepo.claimDailyBonusEventDetails();
     if (res.isSuccess()) {
+      _dailyAppBonusClaimRewardData = res.model;
       PreferenceHelper.setString(
           PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP,
           DateTime.now().toIso8601String());
-      _isDailyAppBonusClaimed = true;
-      currentDay++;
-      isDailyAppBonusClaimInProgress = false;
-      log(res.model.toString());
       return true;
     } else {
-      BaseUtil.showNegativeAlert(res.errorMessage, "");
       return false;
     }
   }
+
+  Future<void> sudoClaimDailyReward() async {
+    isDailyAppBonusClaimInProgress = true;
+    notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
+    GoldenTicketService.goldenTicketId = _dailyAppBonusClaimRewardData!.gtId;
+    await _gtService.fetchAndVerifyGoldenTicketByID();
+    _isDailyAppBonusClaimed = true;
+    isDailyAppBonusClaimInProgress = false;
+    _gtService.showInstantGoldenTicketView(
+        source: GTSOURCE.game, onJourney: true);
+  }
+
+  getCurrentDay(DailyAppCheckInEventModel data) {
+    if (data.streakEnd == TimestampModel.none())
+      currentDay = 0;
+    else if (data.showStreakBreakMessage)
+      currentDay = 0;
+    else
+      currentDay = TimestampModel.daysBetween(
+          dailyAppCheckInEventData!.streakStart.toDate(), DateTime.now());
+    log("Current Day: $currentDay");
+  }
 }
+
+
 
 
 //NOTES

@@ -29,6 +29,7 @@ enum GTSOURCE {
   autosave,
   game,
   prize,
+  event,
 }
 
 class GTInstantView extends StatefulWidget {
