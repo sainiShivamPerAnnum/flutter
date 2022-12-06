@@ -158,14 +158,15 @@ class _GTInstantViewState extends State<GTInstantView>
                                         enabled: model.state == ViewState.Idle
                                             ? true
                                             : false,
-                                        threshold: 40,
+                                        threshold: 20,
                                         key: scratchKey,
                                         onScratchStart: () {
                                           model.isCardScratchStarted = true;
                                           model.showScratchGuide = false;
                                         },
                                         onThreshold: () {
-                                          if (model.goldenTicket!.isRewarding!) {
+                                          if (model
+                                              .goldenTicket!.isRewarding!) {
                                             model.isShimmerEnabled = true;
 
                                             Future.delayed(
@@ -195,8 +196,9 @@ class _GTInstantViewState extends State<GTInstantView>
                                             ? Container(
                                                 width: SizeConfig.screenWidth! *
                                                     0.6,
-                                                height: SizeConfig.screenWidth! *
-                                                    0.5,
+                                                height:
+                                                    SizeConfig.screenWidth! *
+                                                        0.5,
                                               )
                                             : RedeemedGoldenScratchCard(
                                                 ticket: model.goldenTicket,
@@ -270,9 +272,9 @@ class _GTInstantViewState extends State<GTInstantView>
                                         AppState.backButtonDispatcher!
                                             .didPopRoute();
                                       }
+
                                       AppState.delegate!.appState
-                                          .setCurrentTabIndex = 2;
-                                      AppState.delegate!.appState.currentAction =
+                                              .currentAction =
                                           PageAction(
                                               state: PageState.addPage,
                                               page: MyWinningsPageConfig);
