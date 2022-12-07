@@ -385,6 +385,8 @@ class GoldBuyViewModel extends BaseViewModel {
     goldBuyAmount = assetOptionsModel?.data.userOptions[index].value.toDouble();
     goldAmountController!.text = goldBuyAmount!.toInt().toString();
     updateGoldAmount();
+    goldAmountController!.selection = TextSelection.fromPosition(
+        TextPosition(offset: goldAmountController!.text.length));
     //checkIfCouponIsStillApplicable();
     appliedCoupon = null;
     _analyticsService
@@ -508,7 +510,8 @@ class GoldBuyViewModel extends BaseViewModel {
 
   int checkAugmontStatus() {
     //check who is allowed to deposit
-    String _perm = AppConfig.getValue<String>(AppConfigKey.augmont_deposit_permission);
+    String _perm =
+        AppConfig.getValue<String>(AppConfigKey.augmont_deposit_permission);
 
     int _isGeneralUserAllowed = 1;
     bool _isAllowed = false;

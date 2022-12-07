@@ -66,6 +66,8 @@ class _AmountInputViewState extends State<AmountInputView> {
     int n = widget.amountController!.text.length;
     if (n == 0) n++;
     _fieldWidth = (SizeConfig.padding40 * n.toDouble());
+    widget.amountController!.selection = TextSelection.fromPosition(
+        TextPosition(offset: widget.amountController!.text.length));
   }
 
   @override

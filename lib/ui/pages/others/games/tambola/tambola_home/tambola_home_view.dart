@@ -689,7 +689,7 @@ class ButTicketsComponent extends StatelessWidget {
                       style: TextStyles.rajdhaniSB.body1,
                     ),
                     Text(
-                      "Get 1 Ticket for every ₹${(AppConfig.getValue<String?>(AppConfigKey.tambola_cost)?.isEmpty ?? true ? '500' : AppConfig.getValue<String>(AppConfigKey.tambola_cost))} saved",
+                      "Get 1 Ticket for every ₹${(AppConfig.getValue(AppConfigKey.tambola_cost).toString().isEmpty ? '500' : AppConfig.getValue(AppConfigKey.tambola_cost))} saved",
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kTextColor2),
                     ),
@@ -1220,7 +1220,8 @@ class TambolaPrize extends StatelessWidget {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding54),
                 child: Text(
-                  AppConfig.getValue<String?>(AppConfigKey.game_tambola_announcement)??
+                  AppConfig.getValue<String?>(
+                          AppConfigKey.game_tambola_announcement) ??
                       "Winners are announced every Sunday at midnight, Complete a Full House and win 1Crore!",
                   textAlign: TextAlign.center,
                   style: TextStyles.sourceSans.body4.colour(
