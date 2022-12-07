@@ -273,12 +273,12 @@ class TambolaTicketInfo extends StatelessWidget {
               children: [
                 Text(
                   "₹ " +
-                      (AppConfig.getValue<String?>(AppConfigKey.tambola_cost)
-                                  ?.isEmpty ??
-                              true
+                      (AppConfig.getValue(AppConfigKey.tambola_cost)
+                              .toString()
+                              .isEmpty
                           ? '500'
-                          : AppConfig.getValue<String>(
-                              AppConfigKey.tambola_cost)),
+                          : AppConfig.getValue<int>(AppConfigKey.tambola_cost)
+                              .toString()),
                   style: TextStyles.sourceSansB.title3,
                 ),
                 Text(

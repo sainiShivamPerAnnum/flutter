@@ -39,6 +39,7 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_android/shared_preferences_android.dart';
@@ -294,13 +295,10 @@ class RootViewModel extends BaseViewModel {
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
       await handleStartUpNotificationData();
-    
 
       // await checkIfAppLockModalSheetIsRequired();
     });
   }
-
-  
 
   handleStartUpNotificationData() {
     if (canExecuteStartupNotification && AppState.startupNotifMessage != null) {
@@ -409,6 +407,23 @@ class RootViewModel extends BaseViewModel {
 
     final PendingDynamicLinkData? data =
         await FirebaseDynamicLinks.instance.getInitialLink();
+
+    FirebaseMessaging.instance.getInitialMessage().then((value) {
+      if (value != null) {
+        log("Handling Initial Push notification" + value.data.toString());
+        locator<FcmHandler>().handleMessage(value.data, MsgSource.Terminated);
+      }
+    });
+
+  
+    SharedPreferences.getInstance().then((value) {
+      log("Checking FCM data");
+      final data = value.getString('fcmData');
+      if (data != null)
+        locator<FcmHandler>()
+            .handleMessage(jsonDecode(data), MsgSource.Terminated);
+    });
+
     final Uri? deepLink = data?.link;
     if (deepLink != null) {
       _logger!.d('Received deep link. Process the referral');
