@@ -975,7 +975,7 @@ class UserProfileVM extends BaseViewModel {
     Haptic.vibrate();
     _analyticsService!.track(eventName: AnalyticsEvents.kycDetailsTapped);
     AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addPage,
+      state: PageState.replace,
       page: KycDetailsPageConfig,
     );
   }
@@ -985,7 +985,7 @@ class UserProfileVM extends BaseViewModel {
 
     Haptic.vibrate();
     AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addPage,
+      state: PageState.replace,
       page: BankDetailsPageConfig,
     );
   }

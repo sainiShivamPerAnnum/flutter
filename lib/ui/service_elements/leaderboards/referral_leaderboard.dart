@@ -64,7 +64,7 @@ class ReferralLeaderboard extends StatelessWidget {
                               UiConstants.kSecondaryLeaderBoardTextColor),
                         ),
                         Text(
-                          model!.getDateRange(),
+                          model!.getDateRange(monthly: true),
                           style: TextStyles.sourceSans.body4
                               .colour(UiConstants.kTextFieldTextColor),
                         )

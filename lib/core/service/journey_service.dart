@@ -253,6 +253,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     ApiResponse<List<JourneyPage>> response = await _journeyRepo
         .fetchJourneyPages(pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
     if (!response.isSuccess()) {
+      if (response.code == 500) return;
       _internalOpsService.logFailure(
         _userService.baseUser?.uid ?? '',
         FailType.Journey,

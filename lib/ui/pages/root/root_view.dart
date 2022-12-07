@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
@@ -11,7 +13,10 @@ import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -67,6 +72,7 @@ class Root extends StatelessWidget {
                     color: FlavorConfig.instance!.color,
                   ),
                 ),
+   
               if (FlavorConfig.isQA())
                 Container(
                   width: SizeConfig.screenWidth,

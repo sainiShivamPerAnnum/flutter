@@ -69,19 +69,20 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                       height: SizeConfig.screenWidth! * 0.35),
                   SizedBox(height: SizeConfig.padding10),
                   Text(
-                    "Daily Bonus",
+                    model!.dailyAppCheckInEventData?.title ?? "Daily Bonus",
                     //model!.dailyAppCheckInEventData!.title
                     style: TextStyles.sourceSansB.title3.colour(Colors.white),
                   ),
                   SizedBox(height: SizeConfig.padding12),
                   Text(
-                    "Open the app everyday for a week and win assured rewards",
+                    model.dailyAppCheckInEventData?.subtitle ??
+                        "Open the app everyday for a week and win assured rewards",
                     textAlign: TextAlign.center,
                     style: TextStyles.body2.colour(Colors.white),
                     // model.dailyAppCheckInEventData!.subtitle
                   ),
                   SizedBox(height: SizeConfig.padding20),
-                  if (model!.dailyAppCheckInEventData!.showStreakBreakMessage)
+                  if (model.dailyAppCheckInEventData!.showStreakBreakMessage)
                     Container(
                       margin: EdgeInsets.only(bottom: SizeConfig.padding16),
                       child: Text(
@@ -125,7 +126,9 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                                       ]),
                                 ),
                               ),
-                              if (i == 3 || i == 6)
+                              if (model
+                                  .dailyAppCheckInEventData!.specialRewardPos
+                                  .contains(i))
                                 Align(
                                   alignment: Alignment.topRight,
                                   child: CircleAvatar(
@@ -151,7 +154,8 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                       ? Padding(
                           padding: EdgeInsets.only(top: SizeConfig.padding24),
                           child: Text(
-                            "Reward claimed for today, come back tomorrow for more.",
+                            model.dailyAppCheckInEventData?.postClaimMessage ??
+                                "Reward claimed for today, come back tomorrow for more.",
                             textAlign: TextAlign.center,
                             style: TextStyles.sourceSansB.body2
                                 .colour(Colors.white),

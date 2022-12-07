@@ -10,7 +10,7 @@ class ApiResponse<T> {
   });
 
   ApiResponse.withError(String error, int code)
-      : model = null ,
+      : model = null,
         errorMessage = error,
         code = code;
 
