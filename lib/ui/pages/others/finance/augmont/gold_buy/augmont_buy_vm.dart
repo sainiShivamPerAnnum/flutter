@@ -391,8 +391,10 @@ class GoldBuyViewModel extends BaseViewModel {
         .track(eventName: AnalyticsEvents.suggestedAmountTapped, properties: {
       'order': index,
       'Amount': assetOptionsModel?.data.userOptions[index].value,
-      'Best flag': assetOptionsModel?.data.userOptions
-          .firstWhere((element) => element.best)
+      'Best flag': assetOptionsModel?.data.userOptions.firstWhere(
+        (element) => element.best,
+        orElse: () => UserOption(order: 0, value: 0, best: false),
+      )
     });
     notifyListeners();
   }

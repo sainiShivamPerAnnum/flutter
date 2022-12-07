@@ -970,6 +970,7 @@ class UserProfileVM extends BaseViewModel {
 
   navigateToKycScreen() {
     Haptic.vibrate();
+    _analyticsService!.track(eventName: AnalyticsEvents.kycDetailsTapped);
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: KycDetailsPageConfig,
@@ -977,6 +978,8 @@ class UserProfileVM extends BaseViewModel {
   }
 
   navigateToBankDetailsScreen() {
+    _analyticsService!.track(eventName: AnalyticsEvents.bankDetailsTapped);
+
     Haptic.vibrate();
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
