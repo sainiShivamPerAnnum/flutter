@@ -408,7 +408,7 @@ class PlayButtonOverlapper extends StatelessWidget {
                 ),
                 hapticVibrate: true,
                 isScrollControlled: true,
-                isBarrierDismissable: true,
+                isBarrierDismissible: true,
               );
             },
             child: Container(
@@ -493,7 +493,7 @@ class StreamView extends StatelessWidget {
           String? fieldToFetch = fetchedData['field'] as String?;
 
           Map<Object, Object> requiredTimeData =
-           Map<Object,Object>.from(fetchedData[fieldToFetch!]);
+              Map<Object, Object>.from(fetchedData[fieldToFetch!]);
 // >>>>>>> feat/nullSafe
 
           return AnimatedSwitcher(

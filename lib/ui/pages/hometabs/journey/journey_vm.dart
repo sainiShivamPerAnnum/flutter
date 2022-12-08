@@ -305,7 +305,7 @@ class JourneyPageViewModel extends BaseViewModel {
 
     return BaseUtil.openModalBottomSheet(
       backgroundColor: Colors.transparent,
-      isBarrierDismissable: true,
+      isBarrierDismissible: true,
       addToScreenStack: true,
       hapticVibrate: true,
       isScrollControlled: true,

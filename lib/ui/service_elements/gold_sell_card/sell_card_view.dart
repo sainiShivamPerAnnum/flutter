@@ -74,7 +74,7 @@ class SellCardView extends StatelessWidget {
                         BaseUtil.openModalBottomSheet(
                           backgroundColor:
                               UiConstants.kModalSheetBackgroundColor,
-                          isBarrierDismissable: true,
+                          isBarrierDismissible: true,
                           addToScreenStack: true,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(SizeConfig.roundness32),

@@ -119,7 +119,7 @@ class FAQPage extends StatelessWidget {
       ),
       addToScreenStack: true,
       hapticVibrate: true,
-      isBarrierDismissable: true,
+      isBarrierDismissible: true,
       content: WillPopScope(
         child: Padding(
           padding: const EdgeInsets.all(8.0),

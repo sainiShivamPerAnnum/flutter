@@ -208,7 +208,7 @@ class RootViewModel extends BaseViewModel {
   void _showSecurityBottomSheet() {
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0),
           topRight: Radius.circular(SizeConfig.roundness12)),

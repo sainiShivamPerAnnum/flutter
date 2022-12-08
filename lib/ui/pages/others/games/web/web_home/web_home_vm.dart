@@ -415,7 +415,7 @@ class WebHomeViewModel extends BaseViewModel {
       ),
       hapticVibrate: true,
       isScrollControlled: true,
-      isBarrierDismissable: true,
+      isBarrierDismissible: true,
     );
   }
 
