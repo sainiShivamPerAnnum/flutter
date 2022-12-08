@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -113,7 +114,10 @@ class LendboxSuccessView extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding12),
           Text(
-            "Your investment was successfully processed",
+            locator<HappyHourCampign>().data?.showHappyHour ?? false
+                ? "You’ve made a transaction during\n Happy Hours!"
+                : "Your investment was successfully processed",
+                textAlign: TextAlign.center,
             style: TextStyles.sourceSans.body2.setOpecity(0.7),
           ),
           SizedBox(

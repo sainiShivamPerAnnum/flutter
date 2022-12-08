@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
@@ -15,7 +16,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
 class GoldBuySuccessView extends StatelessWidget {
-  final AugmontTransactionService? _augTxnService = locator<AugmontTransactionService>();
+  final AugmontTransactionService? _augTxnService =
+      locator<AugmontTransactionService>();
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
   GoldBuySuccessView({Key? key}) : super(key: key);
 
@@ -110,7 +112,10 @@ class GoldBuySuccessView extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding12),
           Text(
-            "Your investment was successfully processed",
+            locator<HappyHourCampign>().data?.showHappyHour ?? false
+                ? "You’ve made a transaction during\n Happy Hours!"
+                : "Your investment was successfully processed",
+                textAlign: TextAlign.center,
             style: TextStyles.sourceSans.body2.setOpecity(0.7),
           ),
           Container(

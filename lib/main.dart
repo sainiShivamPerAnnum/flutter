@@ -47,7 +47,6 @@ import 'package:provider/provider.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
 
-
 // void main() async {
 //   FlavorConfig(
 //       flavor: Flavor.PROD,
@@ -68,8 +67,9 @@ import 'core/service/notifier_services/user_coin_service.dart';
 // }
 
 Future mainInit() async {
-  setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
+  await setupLocator();
+
   try {
     await PreferenceHelper.initiate();
 

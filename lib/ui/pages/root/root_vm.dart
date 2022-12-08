@@ -40,6 +40,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_android/shared_preferences_android.dart';
 
 //TODO : analytics for promos, challenges and blogs
 class RootViewModel extends BaseViewModel {
@@ -303,18 +305,53 @@ class RootViewModel extends BaseViewModel {
     final campaign = await locator<CampaignRepo>().getHappyHourCampaign();
     if (campaign.code == 200 && campaign.model != null) {
       locator.registerSingleton<HappyHourCampign>(campaign.model!);
+      final _isDuringHappyHourVisited =
+          locator<SharedPreferences>().getBool("duringHappyHourVisited") ??
+              false;
+      if (_isDuringHappyHourVisited) {
+        final date =
+            locator<SharedPreferences>().getString("timStampOfHappyHour") ??
+                DateTime.now().toString();
 
+        final shouldClearCache = DateTime.now().day != DateTime.parse(date).day;
+
+        if (shouldClearCache) {
+          locator<SharedPreferences>().remove('timStampOfHappyHour');
+          locator<SharedPreferences>().remove('duringHappyHourVisited');
+          locator<SharedPreferences>().remove('showedAfterHappyHourDialog');
+        }
+      }
       if (campaign.model!.data!.showHappyHour) {
-        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        if (!_isDuringHappyHourVisited) {
+          locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+          locator<SharedPreferences>().setBool("duringHappyHourVisited", true);
+          locator<SharedPreferences>()
+              .setString('timStampOfHappyHour', DateTime.now().toString());
+        }
+
         happyHourCampaign = campaign.model!;
         showHappyHourBanner = true;
 
         notifyListeners();
+        return;
       }
 
-      // if(endTime.isAfter(date) && endTime.difference(date).inMinutes<10){
-      //   locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-      // }
+      final endTime = DateTime.parse(campaign.model!.data!.endTime!);
+      final isVistedDuringHappyHour =
+          locator<SharedPreferences>().getBool('duringHappyHourVisited') ??
+              false;
+      final isalreadyShowed =
+          locator<SharedPreferences>().getBool("showedAfterHappyHourDialog") ??
+              true;
+      if (DateTime.now().isAfter(endTime) &&
+          !isVistedDuringHappyHour &&
+          !isalreadyShowed) {
+        locator<BaseUtil>()
+            .showHappyHourDialog(campaign.model!, afterHappyHour: true);
+        locator<SharedPreferences>()
+            .setBool("showedAfterHappyHourDialog", true);
+      }
+      ;
     }
   }
 

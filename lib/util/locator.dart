@@ -99,12 +99,13 @@ import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/service/analytics/appflyer_analytics.dart';
 
 GetIt locator = GetIt.instance;
 
-void setupLocator() {
+Future<void> setupLocator() async {
   //Utils
   locator.registerLazySingleton(() => CustomLogger());
   locator.registerLazySingleton(() => ApiPath());
@@ -144,7 +145,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => JourneyService());
   locator.registerLazySingleton(() => GoogleSignInService());
   locator.registerLazySingleton(() => RazorpayService());
-
+  locator.registerSingletonAsync(() => SharedPreferences.getInstance());
   //Repository
   locator.registerLazySingleton(() => DBModel());
   locator.registerLazySingleton(() => LocalDBModel());
@@ -222,4 +223,5 @@ void setupLocator() {
   locator.registerFactory(() => SubscriptionCardViewModel());
   locator.registerFactory(() => TambolaCardModel());
   locator.registerFactory(() => UsernameInputViewModel());
+  await locator.allReady();
 }
