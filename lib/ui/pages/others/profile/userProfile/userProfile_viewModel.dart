@@ -15,12 +15,11 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -373,12 +372,15 @@ class UserProfileVM extends BaseViewModel {
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
               await _userRepo!.getUserById(id: _userService!.baseUser!.uid);
-              _userService!.setMyUserName(_userService?.baseUser?.kycName ??
-                  _userService!.baseUser!.name);
-              _userService!.setEmail(_userService!.baseUser!.email);
-              _userService!.setDateOfBirth(_userService!.baseUser!.dob);
-              _userService!.setGender(_userService!.baseUser!.gender);
+              await _userService!.setBaseUser();
+              // _userService!.setMyUserName(_userService?.baseUser?.kycName ??
+              //     _userService!.baseUser!.name);
+              // _userService!.setEmail(_userService!.baseUser!.email);
+              // _userService!.setDateOfBirth(_userService!.baseUser!.dob);
+              // _userService!.setGender(_userService!.baseUser!.gender);
               setGender();
+              setDate();
+              nameController!.text = _userService!.name!;
               dobController!.text = _userService!.baseUser!.dob!;
               isUpdaingUserDetails = false;
               inEditMode = false;
