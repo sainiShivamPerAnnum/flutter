@@ -63,7 +63,7 @@ class Win extends StatelessWidget {
                     children: [
                       //Current Winnings section
                       GestureDetector(
-                        onTap: () => locator<BaseUtil>().showHappyHourDialog(),
+                        // onTap: () => locator<BaseUtil>().showHappyHourDialog(),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.transparent,

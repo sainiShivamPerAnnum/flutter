@@ -69,6 +69,7 @@ class GoldBuyInputView extends StatelessWidget {
             if (model.assetOptionsModel != null)
               BannerWidget(
                 model: model.assetOptionsModel!.data.banner,
+                happyHourCampign: locator(),
               ),
             if (model.animationController != null)
               EnterAmountView(

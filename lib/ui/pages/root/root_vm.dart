@@ -5,6 +5,8 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -54,7 +56,7 @@ class RootViewModel extends BaseViewModel {
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
-
+  bool showHappyHourBanner = false;
   final WinnerService? winnerService = locator<WinnerService>();
 
   final TransactionHistoryService? _txnHistoryService =
@@ -287,11 +289,33 @@ class RootViewModel extends BaseViewModel {
       _userService!.getProfilePicture();
 
       _initAdhocNotifications();
+      getHappyHourCampaign();
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
       await handleStartUpNotificationData();
       // await checkIfAppLockModalSheetIsRequired();
     });
+  }
+
+  late HappyHourCampign happyHourCampaign;
+
+  Future getHappyHourCampaign() async {
+    final campaign = await locator<CampaignRepo>().getHappyHourCampaign();
+    if (campaign.code == 200 && campaign.model != null) {
+      locator.registerSingleton<HappyHourCampign>(campaign.model!);
+
+      if (campaign.model!.data!.showHappyHour) {
+        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        happyHourCampaign = campaign.model!;
+        showHappyHourBanner = true;
+
+        notifyListeners();
+      }
+
+      // if(endTime.isAfter(date) && endTime.difference(date).inMinutes<10){
+      //   locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+      // }
+    }
   }
 
   handleStartUpNotificationData() {

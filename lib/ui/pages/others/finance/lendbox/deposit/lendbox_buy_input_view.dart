@@ -53,7 +53,10 @@ class LendboxBuyInputView extends StatelessWidget {
               },
             ),
             SizedBox(height: SizeConfig.padding32),
-            BannerWidget(model: model.assetOptionsModel!.data.banner),
+            BannerWidget(
+              model: model.assetOptionsModel!.data.banner,
+              happyHourCampign: locator(),
+            ),
             AmountInputView(
               amountController: model.amountController,
               focusNode: model.buyFieldNode,

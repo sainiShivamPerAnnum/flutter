@@ -1,25 +1,32 @@
 import 'package:felloapp/core/model/asset_options_model.dart' as I;
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/draw_time_util.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BannerWidget extends StatefulWidget {
-  const BannerWidget({Key? key, required this.model, this.showHappyHour = true})
-      : super(key: key);
+  BannerWidget({Key? key, required this.model, required this.happyHourCampign})
+      : showHappyHour = happyHourCampign?.data?.showHappyHour ?? false,
+        super(key: key);
   final I.Banner model;
   final bool showHappyHour;
-
+  final HappyHourCampign? happyHourCampign;
   @override
-  State<BannerWidget> createState() => _BannerWidgetState();
+  State<BannerWidget> createState() => _BannerWidgetState(
+      endTime: DateTime.tryParse(happyHourCampign?.data?.endTime ?? ''));
 }
 
-class _BannerWidgetState extends State<BannerWidget> with DrawTimeUtil {
+class _BannerWidgetState extends TimerUtil<BannerWidget> {
+  _BannerWidgetState({required DateTime? endTime})
+      : super(endTime: endTime ?? DateTime.now());
+
   @override
-  Widget build(BuildContext context) {
+  Widget buildBody(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: widget.showHappyHour

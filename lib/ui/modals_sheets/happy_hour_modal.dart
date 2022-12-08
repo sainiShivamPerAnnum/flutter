@@ -1,22 +1,28 @@
 import 'dart:async';
 
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/draw_time_util.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class HappyHourModal extends StatefulWidget {
-  const HappyHourModal({Key? key}) : super(key: key);
+class HappyHourModel extends StatefulWidget {
+  final HappyHourCampign model;
 
+  const HappyHourModel({Key? key, required this.model}) : super(key: key);
   @override
-  State<HappyHourModal> createState() => _HappyHourModalState();
+  State<HappyHourModel> createState() =>
+      _HappyHourModalState(DateTime.parse(model.data!.endTime!));
 }
 
-class _HappyHourModalState extends State<HappyHourModal> with DrawTimeUtil {
+class _HappyHourModalState extends TimerUtil<HappyHourModel> {
+  _HappyHourModalState(final DateTime endTime) : super(endTime: endTime);
+
   getTime(int index) {
     switch (index) {
       case 0:
@@ -31,7 +37,8 @@ class _HappyHourModalState extends State<HappyHourModal> with DrawTimeUtil {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildBody(BuildContext context) {
+    final data = widget.model.data!;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -52,7 +59,7 @@ class _HappyHourModalState extends State<HappyHourModal> with DrawTimeUtil {
                 height: SizeConfig.screenHeight! * .1,
               ),
               Text(
-                'It\'s Happy Hour ',
+                data.title ?? '',
                 style: TextStyles.sourceSansSB.body1,
               ),
               SizedBox(
@@ -97,7 +104,7 @@ class _HappyHourModalState extends State<HappyHourModal> with DrawTimeUtil {
               ),
               SizedBox(height: SizeConfig.screenHeight! * 0.05),
               Text(
-                '100% cashback for any transaction for the next 10 mins',
+                data.bottomSheetHeading ?? '',
                 style: TextStyles.sourceSans.body3
                     .colour(Colors.white.withOpacity(.6)),
               ),
@@ -105,7 +112,7 @@ class _HappyHourModalState extends State<HappyHourModal> with DrawTimeUtil {
                 height: 4,
               ),
               Text(
-                "10 lucky winners get the 100% cashback",
+                data.bottomSheetSubHeading ?? '',
                 style: TextStyles.sourceSans.body4
                     .colour(Colors.white.withOpacity(0.6)),
               ),
@@ -114,7 +121,7 @@ class _HappyHourModalState extends State<HappyHourModal> with DrawTimeUtil {
               ),
               CustomSaveButton(
                 onTap: () {},
-                title: 'SAVE NOW',
+                title: data.ctaText ?? '',
                 color: Colors.black.withOpacity(0.5),
                 showBorder: false,
                 width: SizeConfig.screenWidth! * 0.3,

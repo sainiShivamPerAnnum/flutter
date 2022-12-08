@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
+abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
+  TimerUtil({Key? key, required this.endTime});
+  final DateTime endTime;
 
-  
-
-mixin DrawTimeUtil<T extends StatefulWidget> on State<T> {
   late Duration _timeRemaining;
 
   @override
@@ -18,11 +17,11 @@ mixin DrawTimeUtil<T extends StatefulWidget> on State<T> {
   Timer? _timer;
 
   void init() {
-    _timeRemaining = _timeRemainingForDraw();
+    _timeRemaining = _timeRemainingFor();
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       _timer = Timer.periodic(Duration(seconds: 1), (_) {
-        _timeRemaining = _timeRemainingForDraw();
+        _timeRemaining = _timeRemainingFor();
         setState(() {});
       });
     });
@@ -30,11 +29,10 @@ mixin DrawTimeUtil<T extends StatefulWidget> on State<T> {
 
   Duration get timeRemaining => _timeRemaining;
 
-  Duration _timeRemainingForDraw() {
+  Duration _timeRemainingFor() {
     DateTime currentTime = DateTime.now();
-    DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 18, 0, 10);
-    Duration timeDiff = drawTime.difference(currentTime);
+
+    Duration timeDiff = endTime.difference(currentTime);
 
     return timeDiff;
   }
@@ -53,5 +51,27 @@ mixin DrawTimeUtil<T extends StatefulWidget> on State<T> {
   void dispose() {
     _timer?.cancel();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final _widget = buildBody(context);
+    return _widget;
+  }
+
+  Widget buildBody(BuildContext context);
+}
+
+class Sanket extends StatefulWidget {
+  const Sanket({Key? key}) : super(key: key);
+
+  @override
+  State<Sanket> createState() => _SanketState();
+}
+
+class _SanketState extends State<Sanket> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

@@ -60,12 +60,14 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
-              AnimatedPositioned(
-                bottom:
-                    model.bottomNavBarIndex != 0 ? SizeConfig.navBarHeight : 0,
-                duration: Duration(milliseconds: 400),
-                child: HappyHourBanner(),
-              ),
+              if (model.showHappyHourBanner)
+                AnimatedPositioned(
+                  bottom: model.bottomNavBarIndex != 0
+                      ? SizeConfig.navBarHeight
+                      : 0,
+                  duration: Duration(milliseconds: 400),
+                  child: HappyHourBanner(model: model.happyHourCampaign),
+                ),
               BottomNavBar(
                 parentModel: model,
               ),

@@ -15,6 +15,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
@@ -1044,7 +1045,7 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future showHappyHourDialog() async {
+  Future showHappyHourDialog(HappyHourCampign model) async {
     AppState.screenStack.add(ScreenItem.modalsheet);
     HapticFeedback.vibrate();
 
@@ -1052,7 +1053,9 @@ class BaseUtil extends ChangeNotifier {
       backgroundColor: Colors.transparent,
       useRootNavigator: true,
       context: rootContext,
-      builder: (context) => HappyHourModal(),
+      builder: (context) => HappyHourModel(
+        model: model,
+      ),
     );
   }
 }

@@ -1,21 +1,29 @@
+import 'dart:async';
+
+import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/draw_time_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HappyHourBanner extends StatefulWidget {
-  HappyHourBanner({Key? key}) : super(key: key);
-
+  HappyHourBanner({Key? key, required this.model}) : super(key: key);
+  final HappyHourCampign model;
   @override
-  State<HappyHourBanner> createState() => _HappyHourBannerState();
+  State<HappyHourBanner> createState() =>
+      _HappyHourBannerState(endTime: DateTime.parse(model.data!.endTime!));
 }
 
-class _HappyHourBannerState extends State<HappyHourBanner> with DrawTimeUtil {
+class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
+  _HappyHourBannerState({required DateTime endTime}) : super(endTime: endTime);
+
   @override
-  Widget build(BuildContext context) {
+  Widget buildBody(BuildContext context) {
     return SizedBox(
       height: SizeConfig.screenHeight! * 0.07,
       width: SizeConfig.screenWidth,
