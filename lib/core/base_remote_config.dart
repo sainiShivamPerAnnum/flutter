@@ -23,7 +23,7 @@ class BaseRemoteConfig {
     'tambola_header_1': 'Today\'s picks'
   };
 
-  static const Map<String, String> _TAMBOLA_COST = {'tambolaCost': '500'};
+  static const Map<String, int> _TAMBOLA_COST = {'tambolaCost': 500};
   static const Map<String, String> _TAMBOLA_HEADER_SECOND = {
     'tambola_header_2': 'Pull to see the other picks'
   };
