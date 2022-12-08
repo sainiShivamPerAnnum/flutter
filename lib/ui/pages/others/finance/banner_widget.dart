@@ -1,7 +1,9 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/asset_options_model.dart' as I;
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/draw_time_util.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -25,11 +27,18 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
   _BannerWidgetState({required DateTime? endTime})
       : super(endTime: endTime ?? DateTime.now());
 
+  late bool showHappyHour;
+  @override
+  void initState() {
+    showHappyHour = widget.showHappyHour;
+    super.initState();
+  }
+
   @override
   Widget buildBody(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: widget.showHappyHour
+        color: showHappyHour
             ? Colors.black.withOpacity(0.5)
             : UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(5),
@@ -48,7 +57,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
             Container(
               height: SizeConfig.padding32,
               width: SizeConfig.padding32,
-              child: widget.showHappyHour
+              child: showHappyHour
                   ? SvgPicture.asset(Assets.sandTimer)
                   : SvgPicture.network(
                       widget.model.image,
@@ -57,7 +66,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
             ),
             SizedBox(width: SizeConfig.padding4),
             Flexible(
-              child: widget.showHappyHour
+              child: showHappyHour
                   ? RichText(
                       text: TextSpan(
                           style: TextStyles.rajdhaniSB.body3
@@ -81,11 +90,16 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
             SizedBox(
               width: 8,
             ),
-            Icon(
-              Icons.info_outline,
-              size: 20,
-              color: Color(0xffB5CDCB),
-            ),
+            if (showHappyHour)
+              GestureDetector(
+                onTap: () => locator<BaseUtil>()
+                    .showHappyHourDialog(locator<HappyHourCampign>()),
+                child: Icon(
+                  Icons.info_outline,
+                  size: 20,
+                  color: Color(0xffB5CDCB),
+                ),
+              ),
           ]),
     );
   }

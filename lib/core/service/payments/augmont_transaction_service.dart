@@ -266,6 +266,7 @@ class AugmontTransactionService extends BaseTransactionService {
           if (!txnStatus.data!.isUpdating!) {
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
+          
             if (res.model!.data != null &&
                 res.model!.data!.goldInTxnBought != null &&
                 res.model!.data!.goldInTxnBought! > 0)

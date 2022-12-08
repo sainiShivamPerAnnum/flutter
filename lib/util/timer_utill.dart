@@ -14,6 +14,10 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
     super.initState();
   }
 
+
+
+ 
+
   Timer? _timer;
 
   void init() {
@@ -23,7 +27,7 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
       _timer = Timer.periodic(Duration(seconds: 1), (_) {
         if (_timeRemainingFor().isNegative ||
             _timeRemainingFor().inSeconds == 0) {
-          _timer?.cancel();
+          closeTimer();
         } else
           _timeRemaining = _timeRemainingFor();
         setState(() {});
@@ -64,6 +68,14 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
   }
 
   Widget buildBody(BuildContext context);
+
+  @mustCallSuper
+  void closeTimer() {
+    _timer?.cancel();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      setState(() {});
+    });
+  }
 }
 
 class Sanket extends StatefulWidget {

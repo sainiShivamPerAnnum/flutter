@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/draw_time_util.dart';
@@ -14,6 +16,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class HappyHourModel extends StatefulWidget {
   final HappyHourCampign model;
@@ -28,18 +31,31 @@ class HappyHourModel extends StatefulWidget {
 
 class _HappyHourModalState extends TimerUtil<HappyHourModel> {
   _HappyHourModalState(final DateTime endTime) : super(endTime: endTime);
+  late bool isHappyHourEnded;
+
+  @override
+  void initState() {
+    isHappyHourEnded = widget.isAfterHappyHour;
+    super.initState();
+  }
 
   String getTime(int index) {
     switch (index) {
       case 0:
-        return widget.isAfterHappyHour ? "00" : inHours;
+        return isHappyHourEnded ? "00" : inHours;
       case 1:
-        return widget.isAfterHappyHour ? "00" : inMinutes;
+        return isHappyHourEnded ? "00" : inMinutes;
       case 2:
-        return widget.isAfterHappyHour ? "00" : inSeconds;
+        return isHappyHourEnded ? "00" : inSeconds;
       default:
         return "";
     }
+  }
+
+  @override
+  void closeTimer() {
+    isHappyHourEnded = true;
+    super.closeTimer();
   }
 
   @override
@@ -65,9 +81,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                 height: SizeConfig.screenHeight! * .1,
               ),
               Text(
-                widget.isAfterHappyHour
-                    ? "Happy Hour is over"
-                    : data.title ?? '',
+                isHappyHourEnded ? "Happy Hour is over" : data.title ?? '',
                 style: TextStyles.sourceSansSB.body1,
               ),
               SizedBox(
@@ -98,7 +112,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                           child: Text(
                             getTime((index / 2).round()),
                             style: TextStyles.rajdhaniSB.title3.colour(
-                                widget.isAfterHappyHour
+                                isHappyHourEnded
                                     ? Color(0xffF79780)
                                     : Colors.white),
                           ),
@@ -115,7 +129,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
               ),
               SizedBox(height: SizeConfig.screenHeight! * 0.03),
               Text(
-                widget.isAfterHappyHour
+                isHappyHourEnded
                     ? "Missed out on the happy hour offer?"
                     : data.bottomSheetHeading ?? '',
                 style: TextStyles.sourceSans.body3
@@ -125,7 +139,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                 height: 4,
               ),
               Text(
-                widget.isAfterHappyHour
+                isHappyHourEnded
                     ? "Get notified when the next happy hour is live"
                     : data.bottomSheetSubHeading ?? '',
                 style: TextStyles.sourceSans.body4
@@ -136,17 +150,18 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
               ),
               CustomSaveButton(
                 onTap: () {
-                  if (!widget.isAfterHappyHour)
+                  if (!isHappyHourEnded) {
+                    AppState.backButtonDispatcher!.didPopRoute();
                     locator<BaseUtil>().openDepositOptionsModalSheet();
-                  else {
+                  } else {
                     BaseUtil.showPositiveAlert("We will notify",
                         "We will notify you before the next happy hour starts");
                     locator<MixpanelAnalytics>()
                         .track(eventName: "HappyHourNotify");
+                    AppState.backButtonDispatcher!.didPopRoute();
                   }
                 },
-                title:
-                    widget.isAfterHappyHour ? "NOTIFY ME" : data.ctaText ?? '',
+                title: isHappyHourEnded ? "NOTIFY ME" : data.ctaText ?? '',
                 color: Colors.black.withOpacity(0.5),
                 showBorder: false,
                 width: SizeConfig.screenWidth! * 0.3,

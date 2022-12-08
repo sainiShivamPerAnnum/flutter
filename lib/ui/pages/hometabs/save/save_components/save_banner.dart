@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/draw_time_util.dart';
 import 'package:felloapp/util/locator.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class HappyHourBanner extends StatefulWidget {
   HappyHourBanner({Key? key, required this.model}) : super(key: key);
@@ -22,6 +24,12 @@ class HappyHourBanner extends StatefulWidget {
 
 class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
   _HappyHourBannerState({required DateTime endTime}) : super(endTime: endTime);
+
+  @override
+  void closeTimer() {
+    Provider.of<RootViewModel>(context, listen: false).setShowHappyHour(false);
+    super.closeTimer();
+  }
 
   @override
   Widget buildBody(BuildContext context) {

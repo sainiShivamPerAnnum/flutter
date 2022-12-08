@@ -304,6 +304,9 @@ class RootViewModel extends BaseViewModel {
   Future getHappyHourCampaign() async {
     final campaign = await locator<CampaignRepo>().getHappyHourCampaign();
     if (campaign.code == 200 && campaign.model != null) {
+      if (locator.isRegistered<HappyHourCampign>()) {
+        locator.unregister<HappyHourCampign>();
+      }
       locator.registerSingleton<HappyHourCampign>(campaign.model!);
       final _isDuringHappyHourVisited =
           locator<SharedPreferences>().getBool("duringHappyHourVisited") ??
@@ -342,7 +345,7 @@ class RootViewModel extends BaseViewModel {
               false;
       final isalreadyShowed =
           locator<SharedPreferences>().getBool("showedAfterHappyHourDialog") ??
-              true;
+              false;
       if (DateTime.now().isAfter(endTime) &&
           !isVistedDuringHappyHour &&
           !isalreadyShowed) {
@@ -468,6 +471,11 @@ class RootViewModel extends BaseViewModel {
       return _processDynamicLink(
           _userService!.baseUser!.uid, deepLink, context);
     }
+  }
+
+  void setShowHappyHour(bool showHappyHour) {
+    showHappyHourBanner = showHappyHour;
+    notifyListeners();
   }
 
   _processDynamicLink(

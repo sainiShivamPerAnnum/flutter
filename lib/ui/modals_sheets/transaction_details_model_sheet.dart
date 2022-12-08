@@ -242,6 +242,21 @@ class _TransactionDetailsBottomSheetState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (widget.transaction?.misMap
+                                .containsKey("happyHourGtId") ??
+                            false) ...[
+                          SizedBox(height: SizeConfig.padding12),
+                          Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 4, bottom: 8),
+                              child: Text(
+                                  "You have Made a transaction during \nHappy Hours!",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyles.sourceSans.body2
+                                      .colour(Color(0xffB5CDCB))),
+                            ),
+                          ),
+                        ],
                         SizedBox(height: SizeConfig.padding12),
                         Padding(
                           padding: EdgeInsets.only(

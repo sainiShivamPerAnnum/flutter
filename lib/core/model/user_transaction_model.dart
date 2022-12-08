@@ -60,6 +60,7 @@ class UserTransaction {
   Map<String, dynamic>? _rzp;
   Map<String, dynamic>? _augmnt;
   Map<String, dynamic>? _paytmMap;
+  Map<String, dynamic> misMap;
   Timestamp? _timestamp;
   Timestamp? _updatedTime;
   List<TransactionStatusMapItemModel>? transactionUpdatesMap;
@@ -166,6 +167,7 @@ class UserTransaction {
     this._paytmMap,
     this._updatedTime,
     this.transactionUpdatesMap,
+    this.misMap,
   );
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
@@ -188,28 +190,31 @@ class UserTransaction {
           data[fldPaytmMap] ?? {},
           parseTimeStamp(data[fldUpdatedTime]) ?? Timestamp(0, 0),
           parseTransactionStatusSummary(data[fldtransactionUpdatesMap]) ?? '',
+          data['miscMap'],
         );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
       : this(
-            documentID,
-            BaseUtil.toDouble(data[fldAmount]),
-            BaseUtil.toDouble(data[fldClosingBalance]),
-            data[fldNote],
-            data[fldSubType],
-            data[fldType],
-            data[fldRedeemType],
-            data[fldTicketUpCount],
-            data[fldUserId],
-            data[fldTranStatus],
-            data[fldCouponCode],
-            data[fldIciciMap],
-            data[fldRzpMap],
-            data[fldAugmontMap],
-            Timestamp(0, 0),
-            data[fldPaytmMap],
-            Timestamp(0, 0),
-            data[fldtransactionUpdatesMap]);
+          documentID,
+          BaseUtil.toDouble(data[fldAmount]),
+          BaseUtil.toDouble(data[fldClosingBalance]),
+          data[fldNote],
+          data[fldSubType],
+          data[fldType],
+          data[fldRedeemType],
+          data[fldTicketUpCount],
+          data[fldUserId],
+          data[fldTranStatus],
+          data[fldCouponCode],
+          data[fldIciciMap],
+          data[fldRzpMap],
+          data[fldAugmontMap],
+          Timestamp(0, 0),
+          data[fldPaytmMap],
+          Timestamp(0, 0),
+          data[fldtransactionUpdatesMap],
+          data['miscMap'],
+        );
 
   //Augmont gold investment initiated by investor
   // UserTransaction.newGoldDeposit(double amount, double postTax, String blockId,
