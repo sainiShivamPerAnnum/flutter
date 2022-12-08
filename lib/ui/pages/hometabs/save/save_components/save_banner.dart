@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
 import 'package:felloapp/util/assets.dart';
@@ -48,15 +49,18 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
                 style: TextStyles.sourceSans.body3.colour(Colors.white),
                 children: [
                   TextSpan(
-                      text: " $inHours: $inMinutes mins",
+                      text: " $inHours: $inMinutes:$inSeconds mins",
                       style: TextStyles.sourceSansB.body3.colour(Colors.white)),
                 ],
               ),
             ),
             Spacer(),
-            Icon(
-              Icons.keyboard_arrow_right_outlined,
-              color: Colors.white,
+            GestureDetector(
+              onTap: () => locator<BaseUtil>().openDepositOptionsModalSheet(),
+              child: Icon(
+                Icons.keyboard_arrow_right_outlined,
+                color: Colors.white,
+              ),
             )
           ],
         ),

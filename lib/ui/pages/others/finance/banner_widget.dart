@@ -65,7 +65,8 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
                           text: "Happy Hour ends in ",
                           children: [
                             TextSpan(
-                                text: inHours + ":" + inMinutes,
+                                text:
+                                    inHours + ":" + inMinutes + ":" + inSeconds,
                                 style: TextStyles.rajdhaniB
                                     .colour(Color(0xff51EADD)))
                           ]),
