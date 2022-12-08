@@ -21,8 +21,9 @@ import 'package:provider/provider.dart';
 class HappyHourModel extends StatefulWidget {
   final HappyHourCampign model;
   final bool isAfterHappyHour;
+  final bool isComingFromSave;
   const HappyHourModel(
-      {Key? key, required this.model, required this.isAfterHappyHour})
+      {Key? key, required this.model, required this.isAfterHappyHour,this.isComingFromSave=false})
       : super(key: key);
   @override
   State<HappyHourModel> createState() =>
@@ -148,6 +149,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
               SizedBox(
                 height: SizeConfig.screenHeight! * .03,
               ),
+              if(!widget.isComingFromSave)
               CustomSaveButton(
                 onTap: () {
                   if (!isHappyHourEnded) {

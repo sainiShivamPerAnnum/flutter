@@ -93,7 +93,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
             if (showHappyHour)
               GestureDetector(
                 onTap: () => locator<BaseUtil>()
-                    .showHappyHourDialog(locator<HappyHourCampign>()),
+                    .showHappyHourDialog(locator<HappyHourCampign>(),isComingFromSave: true),
                 child: Icon(
                   Icons.info_outline,
                   size: 20,
