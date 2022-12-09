@@ -58,6 +58,14 @@ class MarketingEventHandlerService
     await checkUserDailyAppCheckInStatus();
   }
 
+  dump() {
+    currentDay = -1;
+    _dailyAppBonusClaimRewardData = null;
+    _dailyAppCheckInEventData = null;
+    _isDailyAppBonusClaimInProgress = false;
+    _isDailyAppBonusClaimed = false;
+  }
+
   //Daily App Bonus Methods
 
   Future<void> checkUserDailyAppCheckInStatus() async {

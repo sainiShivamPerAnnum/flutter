@@ -15,6 +15,7 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -81,6 +82,8 @@ class UserProfileVM extends BaseViewModel {
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
   final DBModel? dbProvider = locator<DBModel>();
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final MarketingEventHandlerService _marketingService =
+      locator<MarketingEventHandlerService>();
 
   double? picSize;
   XFile? selectedProfilePicture;
@@ -520,6 +523,7 @@ class UserProfileVM extends BaseViewModel {
                 //log.debug('Sign out process complete');
                 await _baseUtil!.signOut();
                 _journeyService!.dump();
+                _marketingService.dump();
                 _txnHistoryService!.signOut();
                 _tambolaService!.signOut();
                 _analyticsService!.signOut();
