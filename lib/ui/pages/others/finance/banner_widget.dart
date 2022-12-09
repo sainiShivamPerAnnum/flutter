@@ -30,7 +30,9 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
   late bool showHappyHour;
   @override
   void initState() {
-    showHappyHour = widget.showHappyHour;
+    showHappyHour = timeRemaining.isNegative || timeRemaining.inSeconds == 0
+        ? false
+        : widget.showHappyHour;
     super.initState();
   }
 

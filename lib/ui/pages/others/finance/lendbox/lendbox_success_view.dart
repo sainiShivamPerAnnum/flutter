@@ -120,15 +120,13 @@ class LendboxSuccessView extends StatelessWidget {
             SizedBox(height: SizeConfig.padding12),
             if (transactionType == TransactionType.DEPOSIT)
               Text(
-                Provider.of<RootViewModel>(context, listen: false)
-                        .showHappyHourBanner
+                locator<RootViewModel>().showHappyHourBanner
                     ? "You’ve made a transaction during"
                     : "Your investment was successfully processed",
                 textAlign: TextAlign.center,
                 style: TextStyles.sourceSans.body2.setOpecity(0.7),
               ),
-            if (Provider.of<RootViewModel>(context, listen: false)
-                .showHappyHourBanner)
+            if (locator<RootViewModel>().showHappyHourBanner)
               Text(
                 "Happy Hours!",
                 style: TextStyles.sourceSansB.body2.colour(Colors.white),
