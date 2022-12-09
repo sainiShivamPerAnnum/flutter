@@ -511,7 +511,7 @@ class GoldBuyViewModel extends BaseViewModel {
   int checkAugmontStatus() {
     //check who is allowed to deposit
     String _perm =
-        AppConfig.getValue<String>(AppConfigKey.augmont_deposit_permission);
+        AppConfig.getValue(AppConfigKey.augmont_deposit_permission).toString();
 
     int _isGeneralUserAllowed = 1;
     bool _isAllowed = false;

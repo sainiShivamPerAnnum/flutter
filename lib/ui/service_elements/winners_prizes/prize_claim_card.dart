@@ -22,9 +22,9 @@ class PrizeClaimCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String minWithdrawPrize =
-        AppConfig.getValue<String>(AppConfigKey.min_withdrawable_prize).toString();
+        AppConfig.getValue(AppConfigKey.min_withdrawable_prize).toString();
     String refUnlock =
-        AppConfig.getValue<String>(AppConfigKey.unlock_referral_amt);
+        AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
     int refUnlockAmt = BaseUtil.toInt(refUnlock);
     int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
     return PropertyChangeConsumer<UserService, UserServiceProperties>(

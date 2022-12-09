@@ -72,7 +72,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   String appShareMessage =
       AppConfig.getValue<String>(AppConfigKey.appShareMessage);
-  String unlockReferralBonus = AppConfig.getValue<String>(AppConfigKey.unlock_referral_amt);
+  String unlockReferralBonus = AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
 
   String? _refUrl = "";
   String? _refCode = "";
