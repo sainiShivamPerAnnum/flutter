@@ -192,7 +192,6 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                                 }
                               });
                         } else {
-                          ;
                           locator<MixpanelAnalytics>()
                               .track(eventName: "Happy Hour Notify");
                           AppState.backButtonDispatcher!.didPopRoute().then(
