@@ -40,13 +40,19 @@ class LendboxTransactionService extends BaseTransactionService {
   final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
   final TambolaService? _tambolaService = locator<TambolaService>();
-
+  TransactionResponseModel? _model;
   bool skipMl = false;
 
   Future<void> initiateWithdrawal(double txnAmount, String? txnId) async {
     this.currentTransactionState = TransactionState.success;
     await _txnHistoryService!.updateTransactions(InvestmentType.LENDBOXP2P);
   }
+
+  set transactionReponseModel(TransactionResponseModel? model) {
+    _model = model;
+  }
+
+ TransactionResponseModel? get transactionReponseModel => _model;
 
   Future<void> initiateTransaction(double txnAmount, bool skipMl) async {
     this.currentTxnAmount = txnAmount;
@@ -146,12 +152,13 @@ class LendboxTransactionService extends BaseTransactionService {
     final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
       TransactionResponseModel txnStatus = res.model!;
+
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             _tambolaService!.weeklyTicksFetched = false;
-
+            transactionReponseModel = res.model!;
             timer!.cancel();
             return transactionResponseUpdate(
               amount: this.currentTxnAmount,
