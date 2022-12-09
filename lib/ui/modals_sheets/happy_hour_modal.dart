@@ -71,7 +71,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
       alignment: Alignment.bottomCenter,
       children: [
         Container(
-          height: SizeConfig.screenHeight! * 0.45,
+          height: SizeConfig.screenHeight! * 0.4,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
               color: UiConstants.kSaveDigitalGoldCardBg,
@@ -84,14 +84,14 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
           child: Column(
             children: [
               SizedBox(
-                height: SizeConfig.screenHeight! * .1,
+                height: SizeConfig.screenHeight! * .06,
               ),
               Text(
                 isHappyHourEnded ? "Happy Hour is over" : data.title ?? '',
-                style: TextStyles.sourceSansSB.body1,
+                style: TextStyles.sourceSansSB.body0,
               ),
               SizedBox(
-                height: SizeConfig.screenHeight! * .05,
+                height: SizeConfig.screenHeight! * .02,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -134,12 +134,13 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                 ),
               ),
               SizedBox(height: SizeConfig.screenHeight! * 0.03),
-              Text(
-                isHappyHourEnded
-                    ? "Missed out on the happy hour offer?"
-                    : data.bottomSheetHeading ?? '',
-                style: TextStyles.sourceSans.body3
-                    .colour(Colors.white.withOpacity(.6)),
+              Flexible(
+                child: Text(
+                    isHappyHourEnded
+                        ? "Missed out on the happy hour offer?"
+                        : (data.bottomSheetHeading ?? ""),
+                    textAlign: TextAlign.center,
+                    style: TextStyles.sourceSans.body3.colour(Colors.white)),
               ),
               SizedBox(
                 height: 4,
