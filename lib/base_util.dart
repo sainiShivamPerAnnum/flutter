@@ -339,7 +339,7 @@ class BaseUtil extends ChangeNotifier {
         );
       }
 
-       BaseUtil.openModalBottomSheet(
+      BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
@@ -388,7 +388,7 @@ class BaseUtil extends ChangeNotifier {
               ? AnalyticsEvents.goldSellModalSheet
               : AnalyticsEvents.lBoxSellModalSheet);
 
-       BaseUtil.openModalBottomSheet(
+      BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
@@ -477,7 +477,7 @@ class BaseUtil extends ChangeNotifier {
     bool isScrollControlled = false,
     BoxConstraints? boxContraints,
     bool enableDrag = false,
-  })async {
+  }) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
@@ -894,18 +894,16 @@ class BaseUtil extends ChangeNotifier {
 
   Future showHappyHourDialog(HappyHourCampign model,
       {bool afterHappyHour = false, bool isComingFromSave = false}) async {
-    AppState.screenStack.add(ScreenItem.modalsheet);
-    HapticFeedback.vibrate();
-
-    return showModalBottomSheet(
+    return openModalBottomSheet(
       backgroundColor: Colors.transparent,
-      useRootNavigator: true,
-      context: rootContext,
-      builder: (context) => HappyHourModel(
+      addToScreenStack: true,
+      hapticVibrate: true,
+      content: HappyHourModel(
         model: model,
         isAfterHappyHour: afterHappyHour,
         isComingFromSave: isComingFromSave,
       ),
+      isBarrierDismissible: true,
     );
   }
 }

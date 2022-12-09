@@ -52,7 +52,7 @@ class LendboxTransactionService extends BaseTransactionService {
     _model = model;
   }
 
- TransactionResponseModel? get transactionReponseModel => _model;
+  TransactionResponseModel? get transactionReponseModel => _model;
 
   Future<void> initiateTransaction(double txnAmount, bool skipMl) async {
     this.currentTxnAmount = txnAmount;

@@ -119,8 +119,14 @@ class LendboxSuccessView extends StatelessWidget {
             if (_txnService?.transactionReponseModel?.data?.txnDisplayMsg
                     ?.isNotEmpty ??
                 false)
-              Text(_txnService?.transactionReponseModel?.data?.txnDisplayMsg ??
-                  "")
+              SizedBox(
+                width: SizeConfig.screenWidth! * 0.8,
+                child: Text(
+                    _txnService?.transactionReponseModel?.data?.txnDisplayMsg ??
+                        "",
+                    textAlign: TextAlign.center,
+                    style: TextStyles.sourceSans.body2.setOpecity(0.7)),
+              )
             else ...[
               Text(
                 "Your investment was successfully processed",

@@ -116,9 +116,15 @@ class GoldBuySuccessView extends StatelessWidget {
           if (_augTxnService
                   ?.transactionResponseModel?.data?.txnDisplayMsg?.isNotEmpty ??
               false)
-            Text(
-                _augTxnService?.transactionResponseModel?.data?.txnDisplayMsg ??
-                    "")
+            SizedBox(
+              width: SizeConfig.screenWidth! * 0.8,
+              child: Text(
+                  _augTxnService
+                          ?.transactionResponseModel?.data?.txnDisplayMsg ??
+                      "",
+                  textAlign: TextAlign.center,
+                  style: TextStyles.sourceSans.body2.setOpecity(0.7)),
+            )
           else ...[
             Text(
               "Your investment was successfully processed",
