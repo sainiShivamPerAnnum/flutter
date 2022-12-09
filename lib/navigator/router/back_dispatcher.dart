@@ -64,7 +64,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       _journeyService!.isUserJourneyOnboarded = true;
     }
 
-    if (JourneyService.isAvatarAnimationInProgress) return Future.value(false);
     if (AppState.screenStack.last == ScreenItem.loader)
       return Future.value(true);
 

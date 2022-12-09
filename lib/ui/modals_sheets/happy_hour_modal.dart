@@ -192,12 +192,15 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                                 }
                               });
                         } else {
-                          locator<MixpanelAnalytics>()
-                              .track(eventName: "Happy Hour Notify");
-                          AppState.backButtonDispatcher!.didPopRoute().then(
-                              (value) => BaseUtil.showPositiveAlert(
-                                  "We will notify",
-                                  "We will notify you before the next happy hour starts"));
+                          AppState.backButtonDispatcher!
+                              .didPopRoute()
+                              .then((value) {
+                            if (value)
+                              BaseUtil.showPositiveAlert("We will notify",
+                                  "We will notify you before the next happy hour starts");
+                          });
+                          // locator<MixpanelAnalytics>()
+                          // .track(eventName: "Happy Hour Notify");
                         }
                       },
                       title:
