@@ -296,7 +296,7 @@ class BaseUtil extends ChangeNotifier {
   static showUsernameInputModalSheet() {
     return openModalBottomSheet(
       isScrollControlled: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       addToScreenStack: true,
       content: UsernameInputView(),
       hapticVibrate: true,
@@ -345,7 +345,7 @@ class BaseUtil extends ChangeNotifier {
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
@@ -394,7 +394,7 @@ class BaseUtil extends ChangeNotifier {
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
@@ -418,7 +418,7 @@ class BaseUtil extends ChangeNotifier {
         hapticVibrate: true,
         backgroundColor:
             UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-        isBarrierDismissable: true,
+        isBarrierDismissible: true,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(
             SizeConfig.roundness12,
@@ -627,7 +627,7 @@ class BaseUtil extends ChangeNotifier {
     bool? addToScreenStack,
     bool? hapticVibrate,
     Color? backgroundColor,
-    required bool isBarrierDismissable,
+    required bool isBarrierDismissible,
     BorderRadius? borderRadius,
     bool isScrollControlled = false,
     BoxConstraints? boxContraints,
@@ -649,7 +649,7 @@ class BaseUtil extends ChangeNotifier {
       isScrollControlled: isScrollControlled,
       backgroundColor: backgroundColor ??
           UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-      isDismissible: isBarrierDismissable,
+      isDismissible: isBarrierDismissible,
       context: AppState.delegate!.navigatorKey.currentContext!,
       builder: (ctx) => content!,
     );

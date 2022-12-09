@@ -534,8 +534,8 @@ class WinViewModel extends BaseViewModel {
   claim(PrizeClaimChoice choice, double claimPrize) {
     // double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
+      AppState.backButtonDispatcher!.didPopRoute();
       getGramsWon(claimPrize).then((value) {
-        AppState.backButtonDispatcher!.didPopRoute();
         if (flag) {
           isWinningHistoryLoading = true;
           _userRepo

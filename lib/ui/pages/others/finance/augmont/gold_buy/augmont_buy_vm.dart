@@ -549,7 +549,7 @@ class GoldBuyViewModel extends BaseViewModel {
         maxHeight: SizeConfig.screenHeight! * 0.75,
         minHeight: SizeConfig.screenHeight! * 0.75,
       ),
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       isScrollControlled: true,
     );
   }

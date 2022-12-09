@@ -122,7 +122,7 @@ class WebGameViewModel extends BaseViewModel {
           ),
           hapticVibrate: true,
           isScrollControlled: true,
-          isBarrierDismissable: true,
+          isBarrierDismissible: true,
         );
       });
     }
