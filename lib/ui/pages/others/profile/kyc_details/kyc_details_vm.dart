@@ -186,7 +186,7 @@ class KYCDetailsViewModel extends BaseViewModel {
           _bankAndPanService.activeBankAccountDetails = null;
           _bankAndPanService.isBankDetailsAdded = false;
           await checkForKycExistence();
-          _cacheService.invalidateByKey(CacheKeys.USER);
+          await _cacheService.invalidateByKey(CacheKeys.USER);
           await _userService.setBaseUser();
 
           _bankAndPanService.checkForUserBankAccountDetails();
