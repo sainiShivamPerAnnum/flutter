@@ -235,7 +235,7 @@ class LendboxSuccessView extends StatelessWidget {
                         title: 'Golden Ticket',
                         tooltip: "Scratch and win rewards!",
                         asset: Assets.unredemmedGoldenTicketBG,
-                        qty: 1),
+                        qty: Provider.of<RootViewModel>(context,listen: false).showHappyHourBanner?2:1),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
                     SizedBox(width: SizeConfig.padding12),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
