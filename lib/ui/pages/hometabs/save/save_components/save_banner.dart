@@ -45,6 +45,25 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
     return GestureDetector(
       onTap: () {
         locator<BaseUtil>().openDepositOptionsModalSheet();
+        locator<MixpanelAnalytics>().track(
+                            eventName: "Happy Hour CTA Tapped ",
+                            properties: {
+                              "Reward": {
+                                "asset": locator<HappyHourCampign>()
+                                        .data
+                                        ?.rewards
+                                        ?.first
+                                        .type ??
+                                    "",
+                                "amount": locator<HappyHourCampign>()
+                                        .data
+                                        ?.rewards
+                                        ?.first
+                                        .value ??
+                                    "",
+                                "timer": "$inHours:$inMinutes:$inSeconds"
+                              }
+                            });
       },
       child: SizedBox(
         height: SizeConfig.screenHeight! * 0.07,

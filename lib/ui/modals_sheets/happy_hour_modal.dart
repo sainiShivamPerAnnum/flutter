@@ -163,6 +163,25 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                       if (!isHappyHourEnded) {
                         AppState.backButtonDispatcher!.didPopRoute();
                         locator<BaseUtil>().openDepositOptionsModalSheet();
+                        locator<MixpanelAnalytics>().track(
+                            eventName: "Happy Hour CTA Tapped ",
+                            properties: {
+                              "Reward": {
+                                "asset": locator<HappyHourCampign>()
+                                        .data
+                                        ?.rewards
+                                        ?.first
+                                        .type ??
+                                    "",
+                                "amount": locator<HappyHourCampign>()
+                                        .data
+                                        ?.rewards
+                                        ?.first
+                                        .value ??
+                                    "",
+                                "timer": "$inHours:$inMinutes:$inSeconds"
+                              }
+                            });
                       } else {
                         BaseUtil.showPositiveAlert("We will notify",
                             "We will notify you before the next happy hour starts");

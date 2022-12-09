@@ -113,18 +113,19 @@ class GoldBuySuccessView extends StatelessWidget {
             style: TextStyles.rajdhaniB.title2,
           ),
           SizedBox(height: SizeConfig.padding12),
-          Text(
-            locator<RootViewModel>().showHappyHourBanner
-                ? "You’ve made a transaction during"
-                : "Your investment was successfully processed",
-            textAlign: TextAlign.center,
-            style: TextStyles.sourceSans.body2.setOpecity(0.7),
-          ),
-          if (locator<RootViewModel>().showHappyHourBanner)
+          if (_augTxnService
+                  ?.transactionResponseModel?.data?.txnDisplayMsg?.isNotEmpty ??
+              false)
             Text(
-              "Happy Hours!",
-              style: TextStyles.sourceSansB.body2.colour(Colors.white),
+                _augTxnService?.transactionResponseModel?.data?.txnDisplayMsg ??
+                    "")
+          else ...[
+            Text(
+              "Your investment was successfully processed",
+              textAlign: TextAlign.center,
+              style: TextStyles.sourceSans.body2.setOpecity(0.7),
             ),
+          ],
           Container(
             margin: EdgeInsets.only(
                 left: SizeConfig.pageHorizontalMargins,

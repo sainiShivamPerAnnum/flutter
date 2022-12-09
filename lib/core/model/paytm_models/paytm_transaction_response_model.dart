@@ -97,7 +97,7 @@ class Data {
         isUpdating: map['isUpdating'] as bool? ?? true,
         tickets: map['tickets'] as int? ?? 0,
         goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble(),
-        txnDisplayMsg: map['txnDisplayMsg']);
+        txnDisplayMsg: map['displayMessage']);
   }
 
   Data.base() {

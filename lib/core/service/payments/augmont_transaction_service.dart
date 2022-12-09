@@ -63,6 +63,14 @@ class AugmontTransactionService extends BaseTransactionService {
     notifyListeners(TransactionServiceProperties.transactionStatus);
   }
 
+  TransactionResponseModel? _model;
+
+  TransactionResponseModel? get transactionResponseModel => _model;
+
+  set transactionResponseModel(TransactionResponseModel? model) {
+    _model = model;
+  }
+
   bool get isGoldSellInProgress => this._isGoldSellInProgress;
 
   set isGoldSellInProgress(bool value) {
@@ -262,9 +270,10 @@ class AugmontTransactionService extends BaseTransactionService {
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
+            _model = res.model;
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
-          
+
             if (res.model!.data != null &&
                 res.model!.data!.goldInTxnBought != null &&
                 res.model!.data!.goldInTxnBought! > 0)
@@ -302,8 +311,7 @@ class AugmontTransactionService extends BaseTransactionService {
       return null;
 
     double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
-    final mid = 
-        AppConfig.getValue(AppConfigKey.paytmMid);
+    final mid = AppConfig.getValue(AppConfigKey.paytmMid);
     final Map<String, dynamic> augMap = {
       "aBlockId": augmontRates.blockId.toString(),
       "aLockPrice": augmontRates.goldBuyPrice,

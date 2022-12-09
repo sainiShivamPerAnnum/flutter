@@ -297,8 +297,8 @@ class RootViewModel extends BaseViewModel {
         }
 
         happyHourCampaign = campaign.model!;
-        setShowHappyHour(true);
-
+        showHappyHourBanner = true;
+        notifyListeners();
         return;
       }
 

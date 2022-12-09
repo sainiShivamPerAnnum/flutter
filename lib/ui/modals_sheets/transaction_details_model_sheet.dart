@@ -250,7 +250,7 @@ class _TransactionDetailsBottomSheetState
                             child: Padding(
                               padding: EdgeInsets.only(top: 4, bottom: 8),
                               child: Text(
-                                  "You have Made a transaction during \nHappy Hours!",
+                                  "You have made a transaction during \nHappy Hours!",
                                   textAlign: TextAlign.center,
                                   style: TextStyles.sourceSans.body2
                                       .colour(Color(0xffB5CDCB))),
