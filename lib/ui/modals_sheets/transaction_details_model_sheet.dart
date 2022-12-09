@@ -243,7 +243,7 @@ class _TransactionDetailsBottomSheetState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (widget.transaction?.misMap
-                                .containsKey("happyHourGtId") ??
+                                ?.containsKey("happyHourGtId") ??
                             false) ...[
                           SizedBox(height: SizeConfig.padding12),
                           Center(

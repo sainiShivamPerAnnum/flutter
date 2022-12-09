@@ -60,7 +60,7 @@ class UserTransaction {
   Map<String, dynamic>? _rzp;
   Map<String, dynamic>? _augmnt;
   Map<String, dynamic>? _paytmMap;
-  Map<String, dynamic> misMap;
+  Map<String, dynamic>? misMap;
   Timestamp? _timestamp;
   Timestamp? _updatedTime;
   List<TransactionStatusMapItemModel>? transactionUpdatesMap;
@@ -190,7 +190,7 @@ class UserTransaction {
           data[fldPaytmMap] ?? {},
           parseTimeStamp(data[fldUpdatedTime]) ?? Timestamp(0, 0),
           parseTransactionStatusSummary(data[fldtransactionUpdatesMap]) ?? '',
-          data['miscMap'],
+          data['miscMap'] ?? {},
         );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
