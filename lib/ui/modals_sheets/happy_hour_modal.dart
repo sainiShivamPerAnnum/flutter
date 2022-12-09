@@ -69,7 +69,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
     final data = widget.model.data!;
     return WillPopScope(
       onWillPop: () async {
-        AppState.screenStack.removeLast();
+        AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: SizedBox(
