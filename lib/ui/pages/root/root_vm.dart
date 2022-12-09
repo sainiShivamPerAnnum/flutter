@@ -85,6 +85,7 @@ class RootViewModel extends BaseViewModel {
     AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
     _referralService.verifyReferral();
+    _referralService.initDynamicLinks();
     initialize();
   }
 
@@ -92,14 +93,16 @@ class RootViewModel extends BaseViewModel {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
-      await _referralService.initDynamicLinks();
+
       await handleStartUpNotificationData();
       _userService.getUserFundWalletData();
       _userService.checkForNewNotifications();
       _userService.getProfilePicture();
       _initAdhocNotifications();
-      getHappyHourCampaign();
-      _marketingService.checkUserDailyAppCheckInStatus();
+
+      _marketingService.checkUserDailyAppCheckInStatus().then((value) {
+        getHappyHourCampaign();
+      });
     });
   }
 
@@ -294,9 +297,8 @@ class RootViewModel extends BaseViewModel {
         }
 
         happyHourCampaign = campaign.model!;
-        showHappyHourBanner = true;
+        setShowHappyHour(true);
 
-        notifyListeners();
         return;
       }
 

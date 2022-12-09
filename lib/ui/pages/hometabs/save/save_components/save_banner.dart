@@ -42,44 +42,50 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
 
   @override
   Widget buildBody(BuildContext context) {
-    return SizedBox(
-      height: SizeConfig.screenHeight! * 0.07,
-      width: SizeConfig.screenWidth,
-      child: Container(
-        height: double.infinity,
-        alignment: Alignment.centerLeft,
-        color: Color(0xff495DB2),
-        padding: EdgeInsets.symmetric(horizontal: 14),
-        child: Row(
-          children: [
-            SvgPicture.asset(
-              Assets.sandTimer,
-              height: 42,
-              width: 42,
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            RichText(
-              text: TextSpan(
-                text: "Happy Hour ending in ",
-                style: TextStyles.sourceSans.body3.colour(Colors.white),
-                children: [
-                  TextSpan(
-                      text: getDateTime(),
-                      style: TextStyles.sourceSansB.body3.colour(Colors.white)),
-                ],
+    return GestureDetector(
+      onTap: () {
+        locator<BaseUtil>().openDepositOptionsModalSheet();
+      },
+      child: SizedBox(
+        height: SizeConfig.screenHeight! * 0.07,
+        width: SizeConfig.screenWidth,
+        child: Container(
+          height: double.infinity,
+          alignment: Alignment.centerLeft,
+          color: Color(0xff495DB2),
+          padding: EdgeInsets.symmetric(horizontal: 14),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                Assets.sandTimer,
+                height: 42,
+                width: 42,
               ),
-            ),
-            Spacer(),
-            GestureDetector(
-              onTap: () => locator<BaseUtil>().openDepositOptionsModalSheet(),
-              child: Icon(
-                Icons.keyboard_arrow_right_outlined,
-                color: Colors.white,
+              SizedBox(
+                width: 12,
               ),
-            )
-          ],
+              RichText(
+                text: TextSpan(
+                  text: "Happy Hour ending in ",
+                  style: TextStyles.sourceSans.body3.colour(Colors.white),
+                  children: [
+                    TextSpan(
+                        text: getDateTime(),
+                        style:
+                            TextStyles.sourceSansB.body3.colour(Colors.white)),
+                  ],
+                ),
+              ),
+              Spacer(),
+              GestureDetector(
+                onTap: () => locator<BaseUtil>().openDepositOptionsModalSheet(),
+                child: Icon(
+                  Icons.keyboard_arrow_right_outlined,
+                  color: Colors.white,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -67,7 +67,7 @@ class MarketingEventHandlerService
       getCurrentDay(dailyAppCheckInEventData!);
       // currentDay = dailyAppCheckInEventData!.currentDay;
       if (await _claimDailyAppBonusReward()) {
-        BaseUtil.openModalBottomSheet(
+        await BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,
           borderRadius: BorderRadius.circular(SizeConfig.roundness16),

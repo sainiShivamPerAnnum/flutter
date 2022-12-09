@@ -339,7 +339,7 @@ class BaseUtil extends ChangeNotifier {
         );
       }
 
-      return BaseUtil.openModalBottomSheet(
+       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
@@ -388,7 +388,7 @@ class BaseUtil extends ChangeNotifier {
               ? AnalyticsEvents.goldSellModalSheet
               : AnalyticsEvents.lBoxSellModalSheet);
 
-      return BaseUtil.openModalBottomSheet(
+       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
@@ -467,7 +467,7 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static void openModalBottomSheet({
+  static Future<void> openModalBottomSheet({
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
@@ -477,12 +477,12 @@ class BaseUtil extends ChangeNotifier {
     bool isScrollControlled = false,
     BoxConstraints? boxContraints,
     bool enableDrag = false,
-  }) {
+  })async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     print("Current Stack: ${AppState.screenStack}");
-    showModalBottomSheet(
+    await showModalBottomSheet(
       enableDrag: enableDrag,
       constraints: boxContraints,
       shape: RoundedRectangleBorder(

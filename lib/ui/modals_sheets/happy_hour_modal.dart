@@ -172,8 +172,6 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                       }
                     },
                     title: isHappyHourEnded ? "NOTIFY ME" : data.ctaText ?? '',
-                    color: Colors.black.withOpacity(0.5),
-                    showBorder: false,
                     width: SizeConfig.screenWidth! * 0.3,
                     height: SizeConfig.screenWidth! * 0.11,
                   )

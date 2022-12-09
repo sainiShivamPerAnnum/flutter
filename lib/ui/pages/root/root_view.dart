@@ -59,7 +59,7 @@ class Root extends StatelessWidget {
               ),
               if (model.showHappyHourBanner)
                 AnimatedPositioned(
-                  bottom: model.bottomNavBarIndex != 0
+                  bottom: AppState.delegate!.appState.getCurrentTabIndex != 0
                       ? SizeConfig.navBarHeight
                       : 0,
                   duration: Duration(milliseconds: 400),
