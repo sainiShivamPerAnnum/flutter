@@ -7,4 +7,5 @@ class CacheKeys {
   static const JOURNEY_PAGE = 'journey/page';
   static const FAQS = 'faqs';
   static const PAGE_CONFIGS = 'pageConfigs';
+  static const APPCONFIG = "appConfig";
 }

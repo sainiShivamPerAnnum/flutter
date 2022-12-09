@@ -49,6 +49,7 @@ class AppState extends ChangeNotifier {
   static bool isUserSignedIn = false;
   static bool isSaveOpened = false;
   static bool isWinOpened = false;
+  static bool isRootAvailableForIncomingTaskExecution = true;
 
   static List<ScreenItem> screenStack = [];
   static FelloRouterDelegate? delegate;
@@ -117,9 +118,6 @@ class AppState extends ChangeNotifier {
     if (index == 2 && isWinOpened == false) {
       _lbService!.fetchReferralLeaderBoard();
       isWinOpened = true;
-    }
-    if (index == 2) {
-      _winnerService!.fetchWinners();
     }
     print(_rootIndex);
     notifyListeners();

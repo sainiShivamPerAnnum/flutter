@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -6,6 +7,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +50,14 @@ class _HelpFabState extends State<HelpFab> {
     super.initState();
   }
 
+  clearCache() {
+    PreferenceHelper.remove(
+        PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE);
+    PreferenceHelper.remove(
+        PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP);
+    BaseUtil.showNegativeAlert("Cache Cleared", "Restart to see changes");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -57,7 +67,7 @@ class _HelpFabState extends State<HelpFab> {
       right: SizeConfig.padding16,
       child: InkWell(
         onTap: () {
-          // isOpen ? collapseFab() : expandFab();
+          // clearCache();
           trackHelpTappedEvent();
           AppState.delegate!
               .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));

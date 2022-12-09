@@ -32,8 +32,7 @@ class BottomNavBar extends StatelessWidget {
         properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
         builder: (context, model, properties) {
           return Positioned(
-            bottom:
-                0, // model.avatarRemoteMlIndex > 2 ? 0 : -SizeConfig.navBarHeight,
+           bottom: 0, // model.avatarRemoteMlIndex > 2 ? 0 : -SizeConfig.navBarHeight,
             child: Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.navBarHeight,
@@ -49,6 +48,7 @@ class BottomNavBar extends StatelessWidget {
                     (index) => Expanded(
                       child: superModel.getCurrentTabIndex == index
                           ? NavBarIcon(
+                              key : ValueKey(navbarItems[index].title),
                               animate: true,
                               item: navbarItems[index],
                               style: TextStyles.rajdhaniSB
@@ -59,6 +59,7 @@ class BottomNavBar extends StatelessWidget {
                                 parentModel.onItemTapped(index);
                               },
                               child: NavBarIcon(
+                                key: ValueKey(navbarItems[index].title),
                                 animate: false,
                                 item: navbarItems[index],
                                 style: TextStyles.rajdhaniSB
@@ -79,9 +80,10 @@ class BottomNavBar extends StatelessWidget {
 
 class NavBarIcon extends StatelessWidget {
   final bool animate;
+  final Key? key;
   final NavBarItemModel item;
   final TextStyle style;
-  NavBarIcon({required this.animate, required this.item, required this.style});
+  NavBarIcon({required this.animate, required this.item, required this.style,this.key});
   @override
   Widget build(BuildContext context) {
     return Container(

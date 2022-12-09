@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -63,7 +64,8 @@ class _SupportPageState extends State<SupportPage> {
     appState = Provider.of<AppState>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context);
+        Provider.of<ConnectivityService>(context, listen: true)
+            .connectivityStatus;
 
     if (!isInit) {
       init();

@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -26,7 +30,6 @@ import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:package_info/package_info.dart';
 
 import '../../../core/repository/user_repo.dart';
 
@@ -100,11 +103,22 @@ class LauncherViewModel extends BaseViewModel {
     // await trace.start();
     // trace.putAttribute('Splash', 'userService init started');
     // trace.putAttribute('Splash', 'userService init ended');
+
     try {
       await CacheService.initialize();
       await userService.init();
       fetchUserBootUpDetails();
-      await BaseRemoteConfig.init();
+
+      // await BaseRemoteConfig.init();
+
+      final _appConfig = await locator<GetterRepository>().getAppConfig();
+
+      if (_appConfig.code != 200) {
+        AppConfig.instance({
+          "message": "Default Values",
+          "data": BaseRemoteConfig.DEFAULTS,
+        });
+      }
 
       if (userService.isUserOnboarded) {
         await _journeyRepo.init();
@@ -113,10 +127,10 @@ class LauncherViewModel extends BaseViewModel {
 
       // check if cache invalidation required
       final now = DateTime.now().millisecondsSinceEpoch;
-      _logger!.d(
-        'cache: invalidation time $now ${BaseRemoteConfig.invalidationBefore}',
-      );
-      if (now <= BaseRemoteConfig.invalidationBefore) {
+
+      final _invalidate =
+          AppConfig.getValue(AppConfigKey.invalidateBefore) as int;
+      if (now <= _invalidate) {
         await new CacheService().invalidateAll();
       }
       // test
@@ -132,6 +146,7 @@ class LauncherViewModel extends BaseViewModel {
               (token) =>
                   _userRepo.updateUserAppFlyer(userService!.baseUser!, token),
             );
+
       if (userService.baseUser != null) {
         if (userService.isUserOnboarded)
           await _analyticsService.login(

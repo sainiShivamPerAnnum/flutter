@@ -63,7 +63,6 @@ class WebHomeView extends StatelessWidget {
                   slivers: [
                     SliverLayoutBuilder(
                       builder: (context, constraints) {
-                        final scrolled = constraints.scrollOffset > 0;
                         print(constraints.scrollOffset);
                         return SliverAppBar(
                           title: AnimatedOpacity(
@@ -912,8 +911,8 @@ class PastWeekWinners extends StatelessWidget {
                                               .currentAction = PageAction(
                                             state: PageState.addWidget,
                                             widget:
-                                                AllParticipantsWinnersTopReferers(
-                                              isForTopReferers: true,
+                                                AllParticipantsWinnersTopReferrers(
+                                              isForTopReferrers: true,
                                               showPoints: true,
                                               appBarTitle: "Past Week Winners",
                                               referralLeaderBoard:

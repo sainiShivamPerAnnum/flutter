@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -33,17 +34,18 @@ class CacheService {
     }
   }
 
-  Future<ApiResponse> cachedApi(
+  Future<ApiResponse<T>> cachedApi<T>(
     String key,
     int ttl,
     Future<dynamic> Function() apiReq,
-    ApiResponse Function(dynamic) parseData,
+    ApiResponse<T> Function(dynamic) parseData,
   ) async {
     final cachedData = await getData(key);
 
     if (cachedData != null && ttl != 0) {
       try {
         _logger!.d('cache: data read successfully');
+
         return parseData(json.decode(cachedData.data!));
       } catch (e) {
         _logger!.e(
@@ -61,13 +63,14 @@ class CacheService {
     return await _processApiAndSaveToCache(key, ttl, apiReq, parseData);
   }
 
-  Future<ApiResponse> _processApiAndSaveToCache(
+  Future<ApiResponse<T>> _processApiAndSaveToCache<T>(
     String key,
     int ttl,
     Future<dynamic> Function() apiReq,
-    ApiResponse Function(dynamic) parseData,
+    ApiResponse<T> Function(dynamic) parseData,
   ) async {
     final response = await apiReq();
+
     final res = parseData(response);
 
     if (response != null &&

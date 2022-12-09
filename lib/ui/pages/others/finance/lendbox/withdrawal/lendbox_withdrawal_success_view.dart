@@ -15,22 +15,6 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SafeArea(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  },
-                  icon: Icon(
-                    Icons.close,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: Lottie.asset(
               Assets.floSellCompleteLottie,

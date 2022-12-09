@@ -47,6 +47,7 @@ class WinnersModel {
     freq = '';
     winners = [];
     code = '';
+    timestamp = TimestampModel.currentTimeStamp();
     gametype = '';
   }
   Map<String, dynamic> toMap() {

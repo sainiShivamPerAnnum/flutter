@@ -29,7 +29,7 @@ class SellText extends StatelessWidget {
           SizedBox(height: SizeConfig.padding6),
           Text(
             subTitle,
-            maxLines: 2,
+            // maxLines: 2,
             style:
                 TextStyles.sourceSans.body4.colour(UiConstants.kBlogTitleColor),
           ),

@@ -23,15 +23,15 @@ class SaveNetWorthSection extends StatelessWidget {
       : super(key: key);
 
   getAssetsOrder() {
-    List<Widget> orderedAssests = [];
+    List<Widget> orderedAssets = [];
     DynamicUiUtils.saveViewOrder[0].forEach((key) {
       switch (key) {
         case 'LB':
-          orderedAssests.add(
+          orderedAssets.add(
             SaveCustomCard(
               title: 'Fello Flo (10%)',
               subtitle: "Current Value",
-              key: ValueKey(Constants.ASSET_TYPE_LENDBOX),
+              key: Key(Constants.ASSET_TYPE_LENDBOX),
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,
               investmentType: InvestmentType.LENDBOXP2P,
@@ -50,11 +50,11 @@ class SaveNetWorthSection extends StatelessWidget {
           );
           break;
         case 'AG':
-          orderedAssests.add(
+          orderedAssets.add(
             SaveCustomCard(
               title: 'Digital Gold',
               subtitle: "You Own",
-              key: ValueKey(Constants.ASSET_TYPE_AUGMONT),
+              key: Key(Constants.ASSET_TYPE_AUGMONT),
               cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
               cardAssetName: Assets.digitalGoldBar,
               investmentType: InvestmentType.AUGGOLD99,
@@ -75,7 +75,7 @@ class SaveNetWorthSection extends StatelessWidget {
       }
     });
     return Column(
-      children: orderedAssests,
+      children: orderedAssets,
     );
   }
 
@@ -113,6 +113,7 @@ class SaveNetWorthSection extends StatelessWidget {
                           'Total Savings',
                           style: TextStyles.rajdhani.body2
                               .colour(UiConstants.kTextColor),
+                              key: ValueKey(Constants.TOTAL_SAVINGS),
                         ),
                         NetWorthValue(
                           style: TextStyles.sourceSans.title0.bold,

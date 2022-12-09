@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -24,7 +25,9 @@ import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -100,6 +103,7 @@ class _JourneyViewState extends State<JourneyView>
                     if (model.isRefreshing) JRefreshIndicator(model: model),
                     JPageLoader(model: model),
                     LevelUpAnimation(),
+                    if (FlavorConfig.isDevelopment()) CacheClearWidget(),
                   ],
                 ),
         );
@@ -483,6 +487,53 @@ class BlurFilter extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class CacheClearWidget extends StatelessWidget {
+  const CacheClearWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: SizeConfig.pageHorizontalMargins / 2,
+      bottom: SizeConfig.navBarHeight + kBottomNavigationBarHeight,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: () async {
+              CacheService().invalidateAll();
+              BaseUtil.showPositiveAlert(
+                  "Isar cleared successfully", "get back to work");
+            },
+            child: Chip(
+              backgroundColor: Colors.purple,
+              label: Text(
+                "clear Isar cache",
+                style: TextStyles.body3.colour(Colors.white),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              PreferenceHelper.clear();
+              BaseUtil.showPositiveAlert(
+                  "Preferences cleared successfully", "get back to work");
+            },
+            child: Chip(
+              backgroundColor: Colors.indigo,
+              label: Text(
+                "clear Shared Prefs",
+                style: TextStyles.body3.colour(Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -13,14 +13,14 @@ class AllTambolaTickets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: UiConstants.kArowButtonBackgroundColor,
+      backgroundColor: UiConstants.kArrowButtonBackgroundColor,
       appBar: FAppBar(
         type: FaqsType.play,
         showAvatar: false,
         showCoinBar: false,
         showHelpButton: false,
         title: "Tickets",
-        backgroundColor: UiConstants.kArowButtonBackgroundColor,
+        backgroundColor: UiConstants.kArrowButtonBackgroundColor,
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),

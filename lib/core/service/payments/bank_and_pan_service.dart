@@ -40,7 +40,9 @@ class BankAndPanService
 
   set activeBankAccountDetails(value) {
     this._activeBankAccountDetails = value;
+
     notifyListeners(BankAndPanServiceProperties.bankDetailsVerified);
+    _logger!.d("Bank Details Property Notified");
   }
 
   bool _isKYCVerified = false;

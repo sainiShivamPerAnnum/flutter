@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/current_p
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -104,6 +105,7 @@ class _BannerWidget extends StatelessWidget {
                 height: 12,
               ),
               CustomSaveButton(
+                 key: ValueKey(Constants.TAMBOLA),
                 onTap: onTap,
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
@@ -170,6 +172,7 @@ class _TambolaTimer extends StatelessWidget {
                 height: 12,
               ),
               CustomSaveButton(
+                key: ValueKey(Constants.TAMBOLA),
                 onTap: onTap,
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
@@ -224,6 +227,7 @@ class _TicketWidget extends StatelessWidget {
                 height: 12,
               ),
               CustomSaveButton(
+                 key: ValueKey(Constants.TAMBOLA),
                 onTap: onTap,
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),

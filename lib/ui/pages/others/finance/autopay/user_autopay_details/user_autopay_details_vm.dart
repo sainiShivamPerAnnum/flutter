@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -161,7 +163,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     if (response) {
       BaseUtil.showPositiveAlert("Autosave paused successfully",
           "For more details check Autosave section");
-      if (pauseValue == 4 && !BaseRemoteConfig.AUTOSAVE_ACTIVE)
+      if (pauseValue == 4 && !(AppConfig.getValue(AppConfigKey.autosaveActive) as bool))
         _paytmService!.autosaveVisible = false;
       AppState.backButtonDispatcher!.didPopRoute();
       AppState.backButtonDispatcher!.didPopRoute();

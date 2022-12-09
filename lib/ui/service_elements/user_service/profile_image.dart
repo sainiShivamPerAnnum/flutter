@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class ProfileImageSE extends StatelessWidget {
               onTap:
                   reactive ? () => _baseUtil!.openProfileDetailsScreen() : () {},
               child: CircleAvatar(
+                key: ValueKey(Constants.PROFILE),
                 radius: radius ?? SizeConfig.avatarRadius,
                 backgroundColor: Colors.black,
                 child: model!.avatarId != null && model.avatarId != 'CUSTOM'

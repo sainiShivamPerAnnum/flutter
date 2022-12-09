@@ -1,4 +1,3 @@
-import 'dart:developer';
 import "dart:math" as math;
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -14,7 +13,6 @@ import 'package:felloapp/ui/pages/others/finance/coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -22,8 +20,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class GoldBuyInputView extends StatelessWidget {
   // final int? amount;

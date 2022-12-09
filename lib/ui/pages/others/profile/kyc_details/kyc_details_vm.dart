@@ -100,7 +100,9 @@ class KYCDetailsViewModel extends BaseViewModel {
   init() {
     nameController = new TextEditingController();
     panController = new TextEditingController();
-    checkForKycExistence();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      checkForKycExistence();
+    });
   }
 
   void verifyImage() {

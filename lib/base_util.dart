@@ -1,14 +1,12 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
-import 'dart:math' as math;
 import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -49,6 +47,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -59,11 +58,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BaseUtil extends ChangeNotifier {
-  final CustomLogger? logger = locator<CustomLogger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final DBModel? _dbModel = locator<DBModel>();
   final LocalDBModel? _lModel = locator<LocalDBModel>();
   final AppState? _appState = locator<AppState>();
@@ -71,7 +69,7 @@ class BaseUtil extends ChangeNotifier {
   final UserRepository? _userRepo = locator<UserRepository>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-
+  static Flushbar? flushbar;
   BaseUser? _myUser;
   UserFundWallet? _userFundWallet;
   int? _ticketCount;
@@ -193,7 +191,7 @@ class BaseUtil extends ChangeNotifier {
 
   void init() {
     try {
-      logger!.i('inside init base util');
+      logger.i('inside init base util');
       _setRuntimeDefaults();
 
       //Analytics logs app open state.
@@ -218,7 +216,7 @@ class BaseUtil extends ChangeNotifier {
         zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
       }
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       _internalOpsService!.logFailure(
         _userService!.baseUser?.uid ?? '',
         FailType.Splash,
@@ -428,171 +426,18 @@ class BaseUtil extends ChangeNotifier {
         content: DepositOptionModalSheet(amount: amount, isSkipMl: isSkipMl));
   }
 
-  static showGtWinFlushBar(String title, String message, {int seconds = 2}) {
-    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    if ((title != null && title.length > 200) ||
-        (message != null && message.length > 200)) return;
-    bool isKeyboardOpen =
-        MediaQuery.of(AppState.delegate!.navigatorKey.currentContext!)
-                .viewInsets
-                .bottom !=
-            0;
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Flushbar(
-        flushbarPosition:
-            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        icon: SvgPicture.asset(
-          Assets.flatIsland,
-          height: SizeConfig.padding24,
-        ),
-        margin: EdgeInsets.only(
-            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
-                ? SizeConfig.navBarHeight +
-                    math.max(SizeConfig.viewInsets.bottom,
-                        SizeConfig.pageHorizontalMargins)
-                : SizeConfig.pageHorizontalMargins,
-            left: SizeConfig.pageHorizontalMargins,
-            right: SizeConfig.pageHorizontalMargins),
-        borderRadius: BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
-        title: title,
-        message: message,
-        duration: Duration(seconds: seconds),
-        backgroundColor: Colors.black,
-        // onTap: (_) {
-        //   _.dismiss();
-        //   AppState.delegate!.parseRoute(Uri.parse("/myWinnings"));
-        // },
-        boxShadows: [
-          BoxShadow(
-            color: UiConstants.positiveAlertColor!,
-            offset: Offset(0.0, 2.0),
-            blurRadius: 3.0,
-          )
-        ],
-      )..show(AppState.delegate!.navigatorKey.currentContext!);
-    });
-  }
-
   static showPositiveAlert(String? title, String? message, {int seconds = 2}) {
-    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    if ((title != null && title.length > 200) ||
-        (message != null && message.length > 200)) return;
-    bool isKeyboardOpen =
-        MediaQuery.of(AppState.delegate!.navigatorKey.currentContext!)
-                .viewInsets
-                .bottom !=
-            0;
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Flushbar(
-        flushbarPosition:
-            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        icon: Icon(
-          Icons.flag,
-          size: 28.0,
-          color: UiConstants.primaryColor,
-        ),
-        margin: EdgeInsets.only(
-            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
-                ? SizeConfig.navBarHeight +
-                    math.max(SizeConfig.viewInsets.bottom,
-                        SizeConfig.pageHorizontalMargins)
-                : SizeConfig.pageHorizontalMargins,
-            left: SizeConfig.pageHorizontalMargins,
-            right: SizeConfig.pageHorizontalMargins),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        title: title,
-        message: message,
-        duration: Duration(seconds: seconds),
-        backgroundColor: Colors.black,
-        boxShadows: [
-          BoxShadow(
-            color: UiConstants.positiveAlertColor!,
-            offset: Offset(0.0, 2.0),
-            blurRadius: 3.0,
-          )
-        ],
-      )..show(AppState.delegate!.navigatorKey.currentContext!);
-    });
+    AppToasts.showPositiveToast(
+        title: title, subtitle: message, seconds: seconds);
   }
 
   static showNegativeAlert(String? title, String? message, {int? seconds}) {
-    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    if ((title != null && title.length > 200) ||
-        (message != null && message.length > 200 ||
-            message!.toUpperCase().contains('EXCEPTION') ||
-            message.toUpperCase().contains('SOCKET'))) return;
-    bool isKeyboardOpen =
-        MediaQuery.of(AppState.delegate!.navigatorKey.currentContext!)
-                .viewInsets
-                .bottom !=
-            0;
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Flushbar(
-        flushbarPosition:
-            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        icon: Icon(
-          Icons.assignment_late,
-          size: 28.0,
-          color: UiConstants.tertiarySolid,
-        ),
-        margin: EdgeInsets.only(
-            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
-                ? SizeConfig.navBarHeight + SizeConfig.pageHorizontalMargins
-                : SizeConfig.pageHorizontalMargins,
-            left: SizeConfig.pageHorizontalMargins,
-            right: SizeConfig.pageHorizontalMargins),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        title:
-            (title == null || title.isEmpty) ? "Something went wrong" : title,
-        message:
-            (message.isEmpty) ? "Please try again after sometime" : message,
-        duration: Duration(seconds: seconds ?? 2),
-        backgroundColor: Colors.black,
-        boxShadows: [
-          BoxShadow(
-            color: UiConstants.negativeAlertColor,
-            offset: Offset(0.0, 2.0),
-            blurRadius: 3.0,
-          )
-        ],
-      )..show(AppState.delegate!.navigatorKey.currentContext!);
-    });
+    AppToasts.showNegativeToast(
+        title: title, subtitle: message, seconds: seconds);
   }
 
   static showNoInternetAlert() {
-    ConnectivityStatus connectivityStatus = Provider.of<ConnectivityStatus>(
-        AppState.delegate!.navigatorKey.currentContext!,
-        listen: false);
-
-    if (connectivityStatus == ConnectivityStatus.Offline) {
-      Flushbar(
-        flushbarPosition: FlushbarPosition.TOP,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        icon: Icon(
-          Icons.error,
-          size: 28.0,
-          color: Colors.white,
-        ),
-        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        title: "No Internet",
-        message: "Please check your network connection and try again",
-        duration: Duration(seconds: 2),
-        backgroundColor: Colors.red,
-        boxShadows: [
-          BoxShadow(
-            color: Colors.red[800]!,
-            offset: Offset(0.0, 2.0),
-            blurRadius: 3.0,
-          )
-        ],
-      )..show(AppState.delegate!.navigatorKey.currentContext!);
-      return true;
-    }
-    return false;
+    return AppToasts.showNoInternetToast();
   }
 
   Future<bool> getDrawStatus() async {
@@ -612,7 +457,7 @@ class BaseUtil extends ChangeNotifier {
   }) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
-    CustomLogger().d("Added a dialog");
+    print("Current Stack: ${AppState.screenStack}");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     showDialog(
       context: AppState.delegate!.navigatorKey.currentContext!,
@@ -636,6 +481,7 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+    print("Current Stack: ${AppState.screenStack}");
     showModalBottomSheet(
       enableDrag: enableDrag,
       constraints: boxContraints,
@@ -656,14 +502,14 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {
-    logger!.d("Verification credetials: " + credential.toString());
+    logger.d("Verification credetials: " + credential.toString());
     // FirebaseAuth.instance.signInWithCustomToken(token)
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
-      logger!.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
+      logger.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
       return true;
     }).catchError((e) {
-      logger!.e(
+      logger.e(
           "User Authentication failed with credential: Error: " + e.toString());
       return false;
     });
@@ -672,7 +518,7 @@ class BaseUtil extends ChangeNotifier {
   Future<bool> signOut() async {
     try {
       await _lModel!.deleteLocalAppData();
-      logger!.d('Cleared local cache');
+      logger.d('Cleared local cache');
       _appState!.setCurrentTabIndex = 0;
 
       //remove  token from remote
@@ -722,16 +568,17 @@ class BaseUtil extends ChangeNotifier {
 
       return true;
     } catch (e) {
-      logger!.e('Failed to clear data/sign out user: ' + e.toString());
+      logger.e('Failed to clear data/sign out user: ' + e.toString());
       return false;
     }
   }
 
   static void launchUrl(String url) async {
     if (await canLaunch(url)) {
-      await launch(url);
+      launch(url);
     } else {
-      throw 'Could not launch $url';
+      BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
+          "Please try again after sometime");
     }
   }
 

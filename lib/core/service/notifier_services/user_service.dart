@@ -52,7 +52,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final DBModel? _dbModel = locator<DBModel>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final ApiCacheManager? _apiCacheManager = locator<ApiCacheManager>();
+  // final ApiCacheManager? _apiCacheManager = locator<ApiCacheManager>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
@@ -355,7 +355,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       new CacheService().invalidateAll();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
-      await _apiCacheManager!.clearCacheMemory();
+      // await _apiCacheManager!.clearCacheMemory();
       _logger!.d("UserService signout called");
       _userFundWallet = null;
       _firebaseUser = null;

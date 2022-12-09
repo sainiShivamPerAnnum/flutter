@@ -43,7 +43,7 @@ class APIService implements API {
     String url, {
     String? token,
     Map<String, dynamic>? queryParams,
-    // Map<String, dynamic> headers,
+    Map<String, dynamic>? headers,
     String? cBaseUrl,
   }) async {
     // final HttpMetric metric =
@@ -69,6 +69,7 @@ class APIService implements API {
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.firebaseUser?.uid ?? '',
+        if(headers!=null)...headers
       });
       log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       logger!.d("response from $finalPath");

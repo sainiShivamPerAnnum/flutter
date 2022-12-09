@@ -1,5 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -11,7 +10,6 @@ import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
-import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -49,7 +47,6 @@ class WebHomeViewModel extends BaseViewModel {
   final UserService _userService = locator<UserService>();
   final LeaderboardService? _lbService = locator<LeaderboardService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final PrizeService? _prizeService = locator<PrizeService>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final UserCoinService? _coinService = locator<UserCoinService>();
@@ -59,20 +56,10 @@ class WebHomeViewModel extends BaseViewModel {
   final InternalOpsService? _internalOps = locator<InternalOpsService>();
 
   //Local Variables
-
-  int currentPage = 0;
-  int gameIndex = 0;
-  double cardOpacity = 1;
-  bool _isPrizesLoading = false;
   bool _isGameLoading = false;
   String? _currentGame;
-  PageController? pageController;
-  late ScrollController scrollController;
-  PrizesModel? _prizes;
-  String? _message;
   String? _sessionId;
   String? _gameEndpoint;
-  String token = "";
   bool? _isLoading;
   String? gameCode;
   GameModel? _currentGameModel;
@@ -102,28 +89,15 @@ class WebHomeViewModel extends BaseViewModel {
   //Getters
   List<ScoreBoard>? get pastWeekParticipants => _pastWeekParticipants;
   String? get currentGame => this._currentGame;
-  PrizesModel? get prizes => _prizes;
-  bool get isPrizesLoading => this._isPrizesLoading;
-  int get getGameIndex => this.gameIndex;
-  String? get message => _message;
+
   String? get sessionID => _sessionId;
   get isLoading => this._isLoading;
   GameModel? get currentGameModel => _currentGameModel;
   int? get currentCoinValue => _currentCoinValue;
 
-  set isLoading(value) {
-    this._isLoading = value;
-    notifyListeners();
-  }
-
   //Setters
   set currentGame(value) {
     this._currentGame = value;
-    notifyListeners();
-  }
-
-  set prizes(PrizesModel? value) {
-    this._prizes = value;
     notifyListeners();
   }
 
@@ -132,13 +106,18 @@ class WebHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set isPrizesLoading(value) {
-    this._isPrizesLoading = value;
+  set isGameLoading(value) {
+    this._isGameLoading = value;
     notifyListeners();
   }
 
-  set isGameLoading(value) {
-    this._isGameLoading = value;
+  set isLoading(value) {
+    this._isLoading = value;
+    notifyListeners();
+  }
+
+  set currentCoinValue(int? val) {
+    _currentCoinValue = val;
     notifyListeners();
   }
 
@@ -146,19 +125,10 @@ class WebHomeViewModel extends BaseViewModel {
   init(String game) async {
     currentGame = game;
     isLoading = true;
-    fetchUsersCurrentCoins();
-    // await loadGameLists();
-    await fetchGame(game);
-    // scrollController = _lbService.parentController;
-    // pageController = new PageController(initialPage: 0);
-    // refreshPrizes();
-
+    currentCoinValue = _coinService!.flcBalance;
+    await setGameDetails(game);
     fetchTopSaversPastWeek(game);
     isLoading = false;
-  }
-
-  newInit(String game) async {
-    currentGame = game;
   }
 
   trackGameStart() {
@@ -178,48 +148,6 @@ class WebHomeViewModel extends BaseViewModel {
 
   clear() {}
 
-  // refreshPrizes() async {
-  //   isPrizesLoading = true;
-  //   switch (currentGame) {
-  //     case Constants.GAME_TYPE_POOLCLUB:
-  //       if (_prizeService.poolClubPrizes == null)
-  //         await _prizeService.fetchPoolClubPrizes();
-  //       prizes = _prizeService.poolClubPrizes;
-  //       gameCode = "PO";
-
-  //       break;
-  //     case Constants.GAME_TYPE_CRICKET:
-  //       if (_prizeService.cricketPrizes == null)
-  //         await _prizeService.fetchCricketPrizes();
-  //       prizes = _prizeService.cricketPrizes;
-  //       gameCode = "CR";
-
-  //       break;
-  //     case Constants.GAME_TYPE_TAMBOLA:
-  //       if (_prizeService.tambolaPrizes == null)
-  //         await _prizeService.fetchTambolaPrizes();
-  //       prizes = _prizeService.tambolaPrizes;
-  //       gameCode = "TA";
-  //       break;
-  //     case Constants.GAME_TYPE_FOOTBALL:
-  //       if (_prizeService.footballPrizes == null)
-  //         await _prizeService.fetchFootballPrizes();
-  //       prizes = _prizeService.footballPrizes;
-  //       gameCode = "FO";
-  //       break;
-  //     case Constants.GAME_TYPE_CANDYFIESTA:
-  //       if (_prizeService.candyFiestaPrizes == null)
-  //         await _prizeService.fetchCandyFiestaPrizes();
-  //       prizes = _prizeService.candyFiestaPrizes;
-  //       gameCode = "CA";
-  //       break;
-  //   }
-  //   isPrizesLoading = false;
-  //   if (prizes == null)
-  //     BaseUtil.showNegativeAlert("Unable to fetch prizes at the moment",
-  //         "Please try again after sometime");
-  // }
-
   Future<bool> setupGame() async {
     if (_userService.baseUser!.username!.isEmpty) {
       BaseUtil.showUsernameInputModalSheet();
@@ -227,16 +155,14 @@ class WebHomeViewModel extends BaseViewModel {
     }
     if (checkIfUserIsBannedFromThisGame() &&
         await checkIfDeviceIsNotAnEmulator()) {
-      await getBearerToken();
-      return _setupCurrentGame();
+      return _checkIfUserHasEnoughTokens();
     }
     return false;
   }
 
   Future<bool> checkIfDeviceIsNotAnEmulator() async {
-    //TODO
     final bool isReal = await _internalOps!.checkIfDeviceIsReal();
-    if (isReal != null && !isReal) {
+    if (!isReal) {
       BaseUtil.showNegativeAlert(
           "Simulators not allowed", "Please use the app on a real device");
       return false;
@@ -248,11 +174,7 @@ class WebHomeViewModel extends BaseViewModel {
     return Api().fetchRealTimePlayingStats(game);
   }
 
-  fetchUsersCurrentCoins() {
-    _currentCoinValue = _coinService!.flcBalance;
-    notifyListeners();
-  }
-
+//MOVE THIS TO AN ISOLATED WIDGET --START
   Future getProfileDpWithUid(String? uid) async {
     return await _dbModel!.getUserDP(uid);
   }
@@ -272,6 +194,7 @@ class WebHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+//MOVE THIS TO AN ISOLATED WIDGET --END
   bool checkIfUserIsBannedFromThisGame() {
     bool isUserBannedForThisGame = false;
     String userBannedNotice = '';
@@ -319,24 +242,21 @@ class WebHomeViewModel extends BaseViewModel {
   }
 
   launchGame() {
-    String initialUrl;
-    viewpage(1);
     trackGameStart();
-    initialUrl = generateGameUrl();
+    String initialUrl = generateGameUrl();
     _logger!.d("Game Url: $initialUrl");
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: WebGameViewPageConfig,
       widget: WebGameView(
-        initialUrl: initialUrl,
-        game: currentGame,
-        inLandscapeMode:
-            currentGame == Constants.GAME_TYPE_POOLCLUB ? true : false,
-      ),
+          initialUrl: initialUrl,
+          game: currentGame,
+          inLandscapeMode:
+              currentGame == Constants.GAME_TYPE_POOLCLUB ? true : false),
     );
   }
 
-  Future<bool> _setupCurrentGame() async {
+  Future<bool> _checkIfUserHasEnoughTokens() async {
     setState(ViewState.Busy);
     int? _playCost = _currentGameModel!.playCost;
     ApiResponse<FlcModel> _flcResponse = await _userRepo!.getCoinBalance();
@@ -353,58 +273,16 @@ class WebHomeViewModel extends BaseViewModel {
     }
   }
 
-  generateGameUrl() {
+  String generateGameUrl() {
     String? _uri = currentGameModel!.gameUri;
     String _loadUri =
-        "$_uri?user=${_userService!.baseUser!.uid}&name=${_userService!.baseUser!.username}&token=$gameToken";
+        "$_uri?user=${_userService.baseUser!.uid}&name=${_userService.baseUser!.username}&token=$gameToken";
     if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
     return _loadUri;
   }
 
-  getPromo() {
-    switch (currentGame) {
-      case Constants.GAME_TYPE_POOLCLUB:
-        return null;
-      case Constants.GAME_TYPE_CRICKET:
-        return BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.GAME_CRICKET_FPL_ANNOUNCEMENT);
-      case Constants.GAME_TYPE_FOOTBALL:
-        return null;
-      default:
-        return null;
-    }
-  }
-
-  getSubtitle() {
-    switch (currentGame) {
-      case Constants.GAME_TYPE_POOLCLUB:
-        return 'The highest scorers of the week win prizes every Sunday at midnight';
-      case Constants.GAME_TYPE_CRICKET:
-        return 'The highest scorers of the week win prizes every Sunday at midnight';
-      case Constants.GAME_TYPE_FOOTBALL:
-        return 'The highest scorers of the week win prizes every Sunday at midnight';
-      default:
-        return null;
-    }
-  }
-
-  //Main Methods
-  udpateCardOpacity() {
-    cardOpacity = (1 -
-            (scrollController.offset /
-                scrollController.position.maxScrollExtent))
-        .clamp(0, 1)
-        .toDouble();
-    notifyListeners();
-  }
-
-  Future<void> getBearerToken() async {
-    token = await _userService!.firebaseUser!.getIdToken();
-    _logger!.d(token);
-  }
-
   void earnMoreTokens() {
-    _analyticsService!.track(eventName: AnalyticsEvents.earnMoreTokens);
+    _analyticsService.track(eventName: AnalyticsEvents.earnMoreTokens);
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
       backgroundColor: UiConstants.gameCardColor,
@@ -419,21 +297,13 @@ class WebHomeViewModel extends BaseViewModel {
     );
   }
 
-  void viewpage(int index) {
-    currentPage = index;
-    print(currentPage);
-    // pageController.animateToPage(currentPage,
-    //     duration: Duration(milliseconds: 200), curve: Curves.decelerate);
-    refresh();
-  }
-
   refreshLeaderboard() async {
     await _lbService!.fetchWebGameLeaderBoard(game: currentGame);
   }
 
-  fetchGame(String game) async {
+  setGameDetails(String game) async {
     isGameLoading = true;
-    final GameModel gameData = _gamesRepo!.allgames!
+    final GameModel? gameData = _gamesRepo!.allgames!
         .firstWhere((g) => g.gameCode == game, orElse: null);
     if (gameData != null) {
       currentGameModel = gameData;

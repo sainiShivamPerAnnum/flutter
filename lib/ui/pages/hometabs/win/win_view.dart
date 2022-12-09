@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -16,6 +16,7 @@ import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.da
 import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -26,6 +27,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 import '../../../../base_util.dart';
+import '../../../../core/enums/app_config_keys.dart';
 
 List<Color> randomColors = [
   Color(0xffF79780),
@@ -92,6 +94,7 @@ class Win extends StatelessWidget {
                                         'Current Winnings',
                                         style: TextStyles.rajdhaniSB.copyWith(
                                             fontSize: SizeConfig.body0),
+                                            key: ValueKey(Constants.CURRENT_WINNINGS),
                                       ),
                                       Text(
                                         '₹ ${currentWinning.truncate() ?? '-'}',
@@ -259,7 +262,7 @@ class Win extends StatelessWidget {
                                                           .kTextColor3)),
                                               TextSpan(
                                                   text:
-                                                      '₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and',
+                                                      '₹${AppConfig.getValue(AppConfigKey.referralBonus)} and',
                                                   style: TextStyles
                                                       .sourceSansB.body3
                                                       .colour(UiConstants
@@ -277,7 +280,7 @@ class Win extends StatelessWidget {
                                               )),
                                               TextSpan(
                                                   text:
-                                                      '${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)}',
+                                                      '${AppConfig.getValue(AppConfigKey.referralFlcBonus)}',
                                                   style: TextStyles
                                                       .sourceSansB.body3
                                                       .colour(UiConstants
@@ -307,7 +310,7 @@ class Win extends StatelessWidget {
                                                       SizeConfig.padding6),
                                               decoration: BoxDecoration(
                                                 color: UiConstants
-                                                    .kArowButtonBackgroundColor,
+                                                    .kArrowButtonBackgroundColor,
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(
                                                         SizeConfig.roundness8)),
@@ -370,7 +373,7 @@ class Win extends StatelessWidget {
                                                       SizeConfig.padding12),
                                               decoration: BoxDecoration(
                                                 color: UiConstants
-                                                    .kArowButtonBackgroundColor,
+                                                    .kArrowButtonBackgroundColor,
                                                 shape: BoxShape.circle,
                                               ),
                                               child: GestureDetector(
@@ -638,7 +641,7 @@ class ReferAndEarnComponent extends StatelessWidget {
                             horizontal: SizeConfig.padding32,
                             vertical: SizeConfig.padding6),
                         decoration: BoxDecoration(
-                            color: UiConstants.kArowButtonBackgroundColor,
+                            color: UiConstants.kArrowButtonBackgroundColor,
                             borderRadius: BorderRadius.all(
                               Radius.circular(SizeConfig.roundness8),
                             ),
@@ -699,7 +702,7 @@ class ReferAndEarnComponent extends StatelessWidget {
                 padding: EdgeInsets.all(SizeConfig.padding8),
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  color: UiConstants.kArowButtonBackgroundColor,
+                  color: UiConstants.kArrowButtonBackgroundColor,
                   shape: BoxShape.circle,
                 ),
                 child: SvgPicture.asset(

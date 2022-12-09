@@ -15,12 +15,11 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -59,6 +58,7 @@ class UserProfileVM extends BaseViewModel {
   bool _isContinuedWithGoogle = false;
   bool _isSigningInWithGoogle = false;
   bool _isNameEnabled = true;
+  bool _isDateEnabled = true;
 
   bool isUsernameLoading = false;
   bool? isValid = false;
@@ -145,6 +145,7 @@ class UserProfileVM extends BaseViewModel {
   get isgmailFieldEnabled => this._isgmailFieldEnabled;
   get errorPadding => this._errorPadding;
   get isNameEnabled => this._isNameEnabled;
+  get isDateEnabled => this._isDateEnabled;
 
   // Setters
   set isTambolaNotificationLoading(bool val) {
@@ -213,9 +214,9 @@ class UserProfileVM extends BaseViewModel {
     notifyListeners();
   }
 
-  set isNameEnabled(value) {
-    this._isNameEnabled = value;
-  }
+  set isNameEnabled(value) => this._isNameEnabled = value;
+
+  set isDateEnabled(value) => this._isDateEnabled = value;
 
   init(bool inu) {
     isNewUser = inu;
@@ -332,6 +333,7 @@ class UserProfileVM extends BaseViewModel {
         // nameController!.text =
         //     _userService!.baseUser!.kycName ?? _userService!.baseUser!.name!;
         isNameEnabled = false;
+        if (myDob.isNotEmpty) isDateEnabled = false;
       }
       setState(ViewState.Idle);
     });
@@ -346,7 +348,7 @@ class UserProfileVM extends BaseViewModel {
           isUpdaingUserDetails = true;
           if (isNameEnabled)
             _userService!.baseUser!.name = nameController!.text.trim();
-          if (isNameEnabled)
+          if (isDateEnabled)
             _userService!.baseUser!.dob =
                 "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
           _userService!.baseUser!.gender = getGender();
@@ -370,12 +372,15 @@ class UserProfileVM extends BaseViewModel {
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
               await _userRepo!.getUserById(id: _userService!.baseUser!.uid);
-              _userService!.setMyUserName(_userService?.baseUser?.kycName ??
-                  _userService!.baseUser!.name);
-              _userService!.setEmail(_userService!.baseUser!.email);
-              _userService!.setDateOfBirth(_userService!.baseUser!.dob);
-              _userService!.setGender(_userService!.baseUser!.gender);
+              await _userService!.setBaseUser();
+              // _userService!.setMyUserName(_userService?.baseUser?.kycName ??
+              //     _userService!.baseUser!.name);
+              // _userService!.setEmail(_userService!.baseUser!.email);
+              // _userService!.setDateOfBirth(_userService!.baseUser!.dob);
+              // _userService!.setGender(_userService!.baseUser!.gender);
               setGender();
+              setDate();
+              nameController!.text = _userService!.name!;
               dobController!.text = _userService!.baseUser!.dob!;
               isUpdaingUserDetails = false;
               inEditMode = false;
@@ -407,7 +412,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   bool checkIfAdult() {
-    if (selectedDate == null && !isNameEnabled)
+    if (selectedDate == null && !isDateEnabled)
       return true;
     else
       return DateHelper.isAdult(selectedDate);
@@ -544,7 +549,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   bool isValidDate() {
-    if (!isNameEnabled) {
+    if (!isDateEnabled) {
       selectedDate = null;
       return true;
     }
@@ -972,7 +977,7 @@ class UserProfileVM extends BaseViewModel {
     Haptic.vibrate();
     _analyticsService!.track(eventName: AnalyticsEvents.kycDetailsTapped);
     AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addPage,
+      state: PageState.replace,
       page: KycDetailsPageConfig,
     );
   }
@@ -982,7 +987,7 @@ class UserProfileVM extends BaseViewModel {
 
     Haptic.vibrate();
     AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addPage,
+      state: PageState.replace,
       page: BankDetailsPageConfig,
     );
   }
