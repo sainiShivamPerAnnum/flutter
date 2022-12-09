@@ -1046,7 +1046,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future showHappyHourDialog(HappyHourCampign model,
-      {bool afterHappyHour=false,bool isComingFromSave=false}) async {
+      {bool afterHappyHour = false, bool isComingFromSave = false}) async {
     AppState.screenStack.add(ScreenItem.modalsheet);
     HapticFeedback.vibrate();
 
@@ -1057,7 +1057,7 @@ class BaseUtil extends ChangeNotifier {
       builder: (context) => HappyHourModel(
         model: model,
         isAfterHappyHour: afterHappyHour,
-        isComingFromSave: false,
+        isComingFromSave: isComingFromSave,
       ),
     );
   }

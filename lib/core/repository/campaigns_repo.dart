@@ -92,9 +92,8 @@ class CampaignRepo extends BaseRepo {
       return ApiResponse<HappyHourCampign>(
           model: HappyHourCampign.fromJson(response), code: 200);
     } catch (e) {
-      logger!.e(e.toString());
-      return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch campaigns", 400);
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

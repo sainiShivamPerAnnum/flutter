@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_success_view.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class LendboxSuccessView extends StatelessWidget {
   final TransactionType transactionType;
@@ -118,18 +120,15 @@ class LendboxSuccessView extends StatelessWidget {
             SizedBox(height: SizeConfig.padding12),
             if (transactionType == TransactionType.DEPOSIT)
               Text(
-                (locator.isRegistered<HappyHourCampign>()
-                        ? (locator<HappyHourCampign>().data?.showHappyHour ??
-                            false)
-                        : false)
+                Provider.of<RootViewModel>(context, listen: false)
+                        .showHappyHourBanner
                     ? "You’ve made a transaction during"
                     : "Your investment was successfully processed",
                 textAlign: TextAlign.center,
                 style: TextStyles.sourceSans.body2.setOpecity(0.7),
               ),
-            if (locator.isRegistered<HappyHourCampign>()
-                ? (locator<HappyHourCampign>().data?.showHappyHour ?? false)
-                : false)
+            if (Provider.of<RootViewModel>(context, listen: false)
+                .showHappyHourBanner)
               Text(
                 "Happy Hours!",
                 style: TextStyles.sourceSansB.body2.colour(Colors.white),

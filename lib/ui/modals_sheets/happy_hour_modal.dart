@@ -23,7 +23,10 @@ class HappyHourModel extends StatefulWidget {
   final bool isAfterHappyHour;
   final bool isComingFromSave;
   const HappyHourModel(
-      {Key? key, required this.model, required this.isAfterHappyHour,this.isComingFromSave=false})
+      {Key? key,
+      required this.model,
+      required this.isAfterHappyHour,
+      this.isComingFromSave = false})
       : super(key: key);
   @override
   State<HappyHourModel> createState() =>
@@ -36,7 +39,9 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
 
   @override
   void initState() {
-    isHappyHourEnded = widget.isAfterHappyHour;
+    isHappyHourEnded = timeRemaining.isNegative || timeRemaining.inSeconds == 0
+        ? true
+        : widget.isAfterHappyHour;
     super.initState();
   }
 
@@ -149,26 +154,26 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
               SizedBox(
                 height: SizeConfig.screenHeight! * .03,
               ),
-              if(!widget.isComingFromSave)
-              CustomSaveButton(
-                onTap: () {
-                  if (!isHappyHourEnded) {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    locator<BaseUtil>().openDepositOptionsModalSheet();
-                  } else {
-                    BaseUtil.showPositiveAlert("We will notify",
-                        "We will notify you before the next happy hour starts");
-                    locator<MixpanelAnalytics>()
-                        .track(eventName: "HappyHourNotify");
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  }
-                },
-                title: isHappyHourEnded ? "NOTIFY ME" : data.ctaText ?? '',
-                color: Colors.black.withOpacity(0.5),
-                showBorder: false,
-                width: SizeConfig.screenWidth! * 0.3,
-                height: SizeConfig.screenWidth! * 0.11,
-              )
+              if (!widget.isComingFromSave)
+                CustomSaveButton(
+                  onTap: () {
+                    if (!isHappyHourEnded) {
+                      AppState.backButtonDispatcher!.didPopRoute();
+                      locator<BaseUtil>().openDepositOptionsModalSheet();
+                    } else {
+                      BaseUtil.showPositiveAlert("We will notify",
+                          "We will notify you before the next happy hour starts");
+                      locator<MixpanelAnalytics>()
+                          .track(eventName: "Happy Hour Notify");
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    }
+                  },
+                  title: isHappyHourEnded ? "NOTIFY ME" : data.ctaText ?? '',
+                  color: Colors.black.withOpacity(0.5),
+                  showBorder: false,
+                  width: SizeConfig.screenWidth! * 0.3,
+                  height: SizeConfig.screenWidth! * 0.11,
+                )
             ],
           ),
         ),

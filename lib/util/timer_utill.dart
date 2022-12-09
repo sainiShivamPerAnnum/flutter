@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
-  TimerUtil({Key? key, required this.endTime});
+  TimerUtil({Key? key, required this.endTime}) : super() {
+    _timeRemaining = _timeRemainingFor();
+  }
   final DateTime endTime;
 
   late Duration _timeRemaining;
@@ -14,15 +16,9 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
     super.initState();
   }
 
-
-
- 
-
   Timer? _timer;
 
   void init() {
-    _timeRemaining = _timeRemainingFor();
-
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       _timer = Timer.periodic(Duration(seconds: 1), (_) {
         if (_timeRemainingFor().isNegative ||

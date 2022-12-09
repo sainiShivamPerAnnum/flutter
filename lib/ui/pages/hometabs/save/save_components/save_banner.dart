@@ -31,6 +31,15 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
     super.closeTimer();
   }
 
+  String getDateTime() {
+    String time = "";
+    if (inHours != "00") {
+      time = time + inHours + ":";
+    }
+
+    return time + inMinutes + ":" + inSeconds;
+  }
+
   @override
   Widget buildBody(BuildContext context) {
     return SizedBox(
@@ -53,11 +62,11 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
             ),
             RichText(
               text: TextSpan(
-                text: "Happy Hour ending in",
+                text: "Happy Hour ending in ",
                 style: TextStyles.sourceSans.body3.colour(Colors.white),
                 children: [
                   TextSpan(
-                      text: " $inHours: $inMinutes:$inSeconds mins",
+                      text: getDateTime(),
                       style: TextStyles.sourceSansB.body3.colour(Colors.white)),
                 ],
               ),

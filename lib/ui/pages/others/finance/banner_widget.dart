@@ -35,6 +35,20 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
   }
 
   @override
+  void closeTimer() {
+    showHappyHour = false;
+    super.closeTimer();
+  }
+
+  String getString() {
+    String text = "";
+    if (inHours != "00") {
+      text = text + inHours + ":";
+    }
+    return text + inMinutes + ":" + inSeconds;
+  }
+
+  @override
   Widget buildBody(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -74,8 +88,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
                           text: "Happy Hour ends in ",
                           children: [
                             TextSpan(
-                                text:
-                                    inHours + ":" + inMinutes + ":" + inSeconds,
+                                text: getString(),
                                 style: TextStyles.rajdhaniB
                                     .colour(Color(0xff51EADD)))
                           ]),
@@ -92,8 +105,9 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
             ),
             if (showHappyHour)
               GestureDetector(
-                onTap: () => locator<BaseUtil>()
-                    .showHappyHourDialog(locator<HappyHourCampign>(),isComingFromSave: true),
+                onTap: () => locator<BaseUtil>().showHappyHourDialog(
+                    locator<HappyHourCampign>(),
+                    isComingFromSave: true),
                 child: Icon(
                   Icons.info_outline,
                   size: 20,
