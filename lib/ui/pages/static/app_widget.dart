@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -509,14 +510,15 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
               ),
               child: MaterialButton(
                 // padding: EdgeInsets.zero,
-                onPressed: model.connectivityStatus == ConnectivityStatus.Offline
-                    ? BaseUtil.showNoInternetAlert
-                    : () async {
-                        if (isLoading) return;
-                        isLoading = true;
-                        await widget.onPressed();
-                        isLoading = false;
-                      },
+                onPressed:
+                    model.connectivityStatus == ConnectivityStatus.Offline
+                        ? BaseUtil.showNoInternetAlert
+                        : () async {
+                            if (isLoading) return;
+                            isLoading = true;
+                            await widget.onPressed();
+                            isLoading = false;
+                          },
                 child: isLoading
                     ? SpinKitThreeBounce(
                         size: SizeConfig.title5,

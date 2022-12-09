@@ -65,8 +65,8 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SvgPicture.asset(Assets.giftGameAsset,
-                      height: SizeConfig.screenWidth! * 0.35),
+                  SvgPicture.asset(Assets.dailyAppBonusHero,
+                      height: SizeConfig.screenWidth! * 0.3),
                   SizedBox(height: SizeConfig.padding10),
                   Text(
                     model!.dailyAppCheckInEventData?.title ?? "Daily Bonus",
@@ -148,8 +148,21 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                     ),
                   ),
                   if (!model.isDailyAppBonusClaimed)
-                    SvgPicture.asset(Assets.wohoo,
-                        width: SizeConfig.screenWidth! * 0.6),
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: SizeConfig.padding14,
+                          bottom: SizeConfig.padding6),
+                      child: SvgPicture.asset(Assets.wohoo,
+                          width: SizeConfig.screenWidth! * 0.6),
+                    ),
+                  if (model.isDailyAppBonusClaimed && model.currentDay == 6)
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: SizeConfig.padding14,
+                          bottom: SizeConfig.padding6),
+                      child: SvgPicture.asset(Assets.dailyBonusCong,
+                          width: SizeConfig.screenWidth! * 0.6),
+                    ),
                   model.isDailyAppBonusClaimed
                       ? Padding(
                           padding: EdgeInsets.only(top: SizeConfig.padding24),
@@ -173,7 +186,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                             ],
                           ),
                         ),
-                  SizedBox(height: SizeConfig.padding54),
+                  SizedBox(height: SizeConfig.padding32),
                   model.isDailyAppBonusClaimInProgress
                       ? Container(
                           height: SizeConfig.screenWidth! * 0.13,
@@ -186,7 +199,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                       : CustomSaveButton(
                           title: model.isDailyAppBonusClaimed
                               ? "Got it"
-                              : "Claim Reward",
+                              : "Claim day ${model.currentDay + 1} Reward",
                           onTap: model.isDailyAppBonusClaimed
                               ? () =>
                                   AppState.backButtonDispatcher!.didPopRoute()
@@ -215,4 +228,4 @@ Color kIncompleteDayBgColor = Color(0xff2F3E81);
 
 Color kCurrentDayTextColor = UiConstants.kTextColor;
 Color kCompletedDayTextColor = UiConstants.kTextColor;
-Color kIncompleteDayTextColor = UiConstants.kTextColor2.withOpacity(0.5);
+Color kIncompleteDayTextColor = UiConstants.kTextColor.withOpacity(0.7);

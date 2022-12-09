@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
@@ -22,6 +24,7 @@ class MarketingEventHandlerService
   final GoldenTicketRepository _gtRepo = locator<GoldenTicketRepository>();
   final GoldenTicketService _gtService = locator<GoldenTicketService>();
   final CustomLogger _logger = locator<CustomLogger>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   int currentDay = -1;
   DailyAppBonusClaimRewardModel? _dailyAppBonusClaimRewardData;
   DailyAppCheckInEventModel? _dailyAppCheckInEventData;
@@ -58,6 +61,7 @@ class MarketingEventHandlerService
   //Daily App Bonus Methods
 
   Future<void> checkUserDailyAppCheckInStatus() async {
+    _logger.d("DAILY APP BONUS: checking begin");
     if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
     final dailyAppBonusEventResponse =
         await _gtRepo.getDailyBonusEventDetails();
@@ -98,6 +102,11 @@ class MarketingEventHandlerService
 
   Future<void> sudoClaimDailyReward() async {
     isDailyAppBonusClaimInProgress = true;
+    _analyticsService.track(
+        eventName: AnalyticsEvents.dailyAppBonusClaimed,
+        properties: {
+          "claim day": (dailyAppCheckInEventData?.currentDay ?? 0) + 1
+        });
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
     GoldenTicketService.goldenTicketId = _dailyAppBonusClaimRewardData!.gtId;
     await _gtService.fetchAndVerifyGoldenTicketByID();
