@@ -300,7 +300,7 @@ class CustomSaveButton extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                title ?? '',
+                (title ?? '').toUpperCase(),
                 style: TextStyles.rajdhaniB.body1,
               ),
             ),

@@ -175,6 +175,10 @@ class Assets {
   static final String winScreenHighestScorers =
       "assets/svg/highest_scorers.svg";
 
+  static final String dailyAppBonusHero =
+      "assets/vectors/dailyAppBonusHero.svg";
+
+  static final String dailyBonusCong = "assets/vectors/dailyBonusCong.svg";
   static final String winScreenTopReferer =
       "assets/svg/winnerScreen_topRefrer.svg";
 

@@ -153,4 +153,9 @@ class AnalyticsEvents {
   static const goldenTicketSectionOpen = 'Golden Ticket section open';
   static const signupEnterMobile = "Entered Mobile number";
   static const mobileOtpDone = "Entered OTP";
+
+  //Marketing Events
+
+  static const dailyAppBonusClaimed = "Tapped on Daily App Bonus";
+  static const dailyAppBonusGotItTapped = "Daily App Open Got It Tapped";
 }
