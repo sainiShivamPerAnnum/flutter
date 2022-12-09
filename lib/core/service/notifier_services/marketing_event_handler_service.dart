@@ -102,11 +102,11 @@ class MarketingEventHandlerService
 
   Future<void> sudoClaimDailyReward() async {
     isDailyAppBonusClaimInProgress = true;
-    _analyticsService.track(
-        eventName: AnalyticsEvents.dailyAppBonusClaimed,
-        properties: {
-          "claim day": (dailyAppCheckInEventData?.currentDay ?? 0) + 1
-        });
+    _analyticsService
+        .track(eventName: AnalyticsEvents.dailyAppBonusClaimed, properties: {
+      "claim day": (dailyAppCheckInEventData?.currentDay ?? 0) + 1,
+      "Retries left": dailyAppCheckInEventData?.streakReset ?? 0
+    });
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
     GoldenTicketService.goldenTicketId = _dailyAppBonusClaimRewardData!.gtId;
     await _gtService.fetchAndVerifyGoldenTicketByID();
@@ -114,6 +114,12 @@ class MarketingEventHandlerService
     isDailyAppBonusClaimInProgress = false;
     _gtService.showInstantGoldenTicketView(
         source: GTSOURCE.game, onJourney: true);
+  }
+
+  gotItTapped() {
+    _analyticsService.track(
+        eventName: AnalyticsEvents.dailyAppBonusGotItTapped);
+    AppState.backButtonDispatcher!.didPopRoute();
   }
 
   getCurrentDay(DailyAppCheckInEventModel data) {

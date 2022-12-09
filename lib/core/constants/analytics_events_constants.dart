@@ -157,4 +157,5 @@ class AnalyticsEvents {
   //Marketing Events
 
   static const dailyAppBonusClaimed = "Tapped on Daily App Bonus";
+  static const dailyAppBonusGotItTapped = "Daily App Open Got It Tapped";
 }

@@ -201,8 +201,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                               ? "Got it"
                               : "Claim day ${model.currentDay + 1} Reward",
                           onTap: model.isDailyAppBonusClaimed
-                              ? () =>
-                                  AppState.backButtonDispatcher!.didPopRoute()
+                              ? () => model.gotItTapped()
                               : () => model.sudoClaimDailyReward(),
                         ),
                 ],
