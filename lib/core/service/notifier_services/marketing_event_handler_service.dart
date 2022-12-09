@@ -53,10 +53,10 @@ class MarketingEventHandlerService
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
-  Future<void> checkRunningEvents() async {
-    if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
-    await checkUserDailyAppCheckInStatus();
-  }
+  // Future<void> checkRunningEvents() async {
+  //   if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
+  //   await checkUserDailyAppCheckInStatus();
+  // }
 
   dump() {
     currentDay = -1;

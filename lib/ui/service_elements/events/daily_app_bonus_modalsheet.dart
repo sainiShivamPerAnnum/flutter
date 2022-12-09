@@ -54,7 +54,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
 
         return WillPopScope(
           onWillPop: () async {
-            AppState.screenStack.removeLast();
+            AppState.backButtonDispatcher!.didPopRoute();
             return Future.value(true);
           },
           child: Transform.translate(
