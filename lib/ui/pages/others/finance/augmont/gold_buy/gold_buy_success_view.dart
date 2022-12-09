@@ -112,10 +112,12 @@ class GoldBuySuccessView extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding12),
           Text(
-            locator<HappyHourCampign>().data?.showHappyHour ?? false
+            (locator.isRegistered<HappyHourCampign>()
+                    ? (locator<HappyHourCampign>().data?.showHappyHour ?? false)
+                    : false)
                 ? "You’ve made a transaction during\n Happy Hours!"
                 : "Your investment was successfully processed",
-                textAlign: TextAlign.center,
+            textAlign: TextAlign.center,
             style: TextStyles.sourceSans.body2.setOpecity(0.7),
           ),
           Container(

@@ -18,7 +18,8 @@ import 'package:lottie/lottie.dart';
 
 class LendboxSuccessView extends StatelessWidget {
   final TransactionType transactionType;
-  final LendboxTransactionService? _txnService = locator<LendboxTransactionService>();
+  final LendboxTransactionService? _txnService =
+      locator<LendboxTransactionService>();
 
   LendboxSuccessView({Key? key, required this.transactionType})
       : super(key: key);
@@ -114,10 +115,12 @@ class LendboxSuccessView extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding12),
           Text(
-            locator<HappyHourCampign>().data?.showHappyHour ?? false
-                ? "You’ve made a transaction during\n Happy Hours!"
-                : "Your investment was successfully processed",
-                textAlign: TextAlign.center,
+           ( locator.isRegistered<HappyHourCampign>()
+                ? (locator<HappyHourCampign>().data?.showHappyHour ?? false)
+                : false)
+                    ? "You’ve made a transaction during\n Happy Hours!"
+                    : "Your investment was successfully processed",
+            textAlign: TextAlign.center,
             style: TextStyles.sourceSans.body2.setOpecity(0.7),
           ),
           SizedBox(
