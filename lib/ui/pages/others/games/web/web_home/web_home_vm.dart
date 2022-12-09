@@ -5,7 +5,6 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/leaderboard_model.dart';
-import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
@@ -16,7 +15,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
-import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -229,6 +227,22 @@ class WebHomeViewModel extends BaseViewModel {
             false;
         userBannedNotice = _userService!
                 .userBootUp?.data?.banMap?.games?.poolClubMap?.reason ??
+            '';
+        break;
+      case Constants.GAME_TYPE_BOWLING:
+        isUserBannedForThisGame = _userService!
+                .userBootUp?.data?.banMap?.games?.bowlingMap?.isBanned ??
+            false;
+        userBannedNotice =
+            _userService!.userBootUp?.data?.banMap?.games?.bowlingMap?.reason ??
+                '';
+        break;
+      case Constants.GAME_TYPE_BOTTLEFLIP:
+        isUserBannedForThisGame = _userService!
+                .userBootUp?.data?.banMap?.games?.bottleFlipMap?.isBanned ??
+            false;
+        userBannedNotice = _userService!
+                .userBootUp?.data?.banMap?.games?.bottleFlipMap?.reason ??
             '';
         break;
     }
