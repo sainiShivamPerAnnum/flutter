@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -5,6 +6,7 @@ import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
@@ -84,11 +86,9 @@ class GetterRepository extends BaseRepo {
       String freq, String type) async {
     try {
       final token = await getBearerToken();
-      return (await _cacheService.cachedApi(
+      return await _cacheService.cachedApi(
         'AssetsOptions-$freq-$type',
-        DateTime.now()
-            .add(Duration(minutes: TTL.ONE_DAY * 7))
-            .millisecondsSinceEpoch,
+        TTL.ONE_DAY * 7,
         () => APIService.instance.getData(ApiPath.getAssetOptions(freq, type),
             cBaseUrl: _baseUrl, token: token),
         (p0) => ApiResponse<AssetOptionsModel>(
@@ -97,9 +97,35 @@ class GetterRepository extends BaseRepo {
             p0,
           ),
         ),
-      )) as ApiResponse<AssetOptionsModel>;
+      );
     } catch (e) {
-      return ApiResponse.withError('Something went wrongpla', 400);
+      return ApiResponse.withError('Something went wrong', 400);
+    }
+  }
+
+  Future<ApiResponse<AppConfig>> getAppConfig() async {
+    try {
+      // final token = await getBearerToken();
+
+      return await _cacheService.cachedApi<AppConfig>(
+        CacheKeys.APPCONFIG,
+        TTL.ONE_DAY,
+        () => APIService.instance.getData(
+          ApiPath.getAppConfig,
+          cBaseUrl: _baseUrl,
+          headers: {
+            'authKey':
+                '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
+          },
+        ),
+        (p0) => ApiResponse(
+          code: 200,
+          model: AppConfig.instance(p0),
+        ),
+      );
+    } catch (e) {
+      log(e.toString());
+      return ApiResponse.withError('Something went wrong', 400);
     }
   }
 
@@ -196,7 +222,6 @@ class GetterRepository extends BaseRepo {
           return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
         },
       ))) as ApiResponse<List<FAQDataModel>>;
-
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(

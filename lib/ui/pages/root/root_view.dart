@@ -11,6 +11,7 @@ import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,8 @@ class Root extends StatelessWidget {
     return BaseView<RootViewModel>(
       onModelReady: (model) {
         model.onInit();
+
+        
       },
       onModelDispose: (model) {
         model.onDispose();

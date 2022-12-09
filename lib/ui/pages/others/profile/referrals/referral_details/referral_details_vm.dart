@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -69,9 +71,8 @@ class ReferralDetailsViewModel extends BaseViewModel {
   List<ReferralDetail>? get referalList => _referalList;
 
   String appShareMessage =
-      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
-  String unlockReferralBonus = BaseRemoteConfig.remoteConfig
-      .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+      AppConfig.getValue<String>(AppConfigKey.appShareMessage);
+  String unlockReferralBonus = AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
 
   String? _refUrl = "";
   String? _refCode = "";
@@ -116,7 +117,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
       _refCode = res.model;
       _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
           ? appShareMessage
-          : 'Hey I am gifting you ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
+          : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralFlcBonus)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
     } else {
       _refCode = '';
       _shareMsg = '';

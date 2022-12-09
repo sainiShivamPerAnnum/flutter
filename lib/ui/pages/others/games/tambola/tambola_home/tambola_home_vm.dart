@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
@@ -179,15 +181,15 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   TambolaBoard? get currentBoard => _currentBoard;
 
-  int? get ticketPurchaseCost {
-    String _tambolaCost = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST);
-    if (_tambolaCost == null ||
-        _tambolaCost.isEmpty ||
-        int.tryParse(_tambolaCost) == null) _tambolaCost = '10';
+  // int? get ticketPurchaseCost {
+  //   String _tambolaCost = BaseRemoteConfig.remoteConfig
+  //       .getString(BaseRemoteConfig.TAMBOLA_PLAY_COST);
+  //   if (_tambolaCost == null ||
+  //       _tambolaCost.isEmpty ||
+  //       int.tryParse(_tambolaCost) == null) _tambolaCost = '10';
 
-    return int.tryParse(_tambolaCost);
-  }
+  //   return int.tryParse(_tambolaCost);
+  // }
 
   // int? get totalActiveTickets => tambolaService!.ticketCount;
 
@@ -200,7 +202,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   updateTicketSavedAmount(int count) {
-    _ticketSavedAmount = 500 * count;
+    _ticketSavedAmount = AppConfig.getValue(AppConfigKey.tambola_cost) * count;
     notifyListeners();
   }
 

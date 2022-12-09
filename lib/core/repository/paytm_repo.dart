@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
@@ -54,10 +56,8 @@ class PaytmRepository extends BaseRepo {
       logger!.d("This is body: $_body");
 
       final paymentMode = Platform.isAndroid
-          ? BaseRemoteConfig.remoteConfig
-              .getString(BaseRemoteConfig.ACTIVE_PG_ANDROID)
-          : BaseRemoteConfig.remoteConfig
-              .getString(BaseRemoteConfig.ACTIVE_PG_IOS);
+          ? AppConfig.getValue(AppConfigKey.active_pg_android)
+          : AppConfig.getValue(AppConfigKey.active_pg_ios);
 
       final response = await APIService.instance.postData(
         ApiPath.kCreatePaytmTransaction,

@@ -1,8 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -271,12 +273,12 @@ class TambolaTicketInfo extends StatelessWidget {
               children: [
                 Text(
                   "₹ " +
-                      (BaseRemoteConfig.remoteConfig
-                              .getString(BaseRemoteConfig.TAMBOLACOST)
+                      (AppConfig.getValue(AppConfigKey.tambola_cost)
+                              .toString()
                               .isEmpty
                           ? '500'
-                          : BaseRemoteConfig.remoteConfig
-                              .getString(BaseRemoteConfig.TAMBOLACOST)),
+                          : AppConfig.getValue<int>(AppConfigKey.tambola_cost)
+                              .toString()),
                   style: TextStyles.sourceSansB.title3,
                 ),
                 Text(
@@ -331,7 +333,6 @@ class _TambolaVideoPlayerState extends State<TambolaVideoPlayer> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _controller?.dispose();
     super.dispose();
   }

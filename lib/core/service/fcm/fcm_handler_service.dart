@@ -1,7 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
-import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -11,7 +11,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +43,7 @@ class FcmHandler extends ChangeNotifier {
     _logger!.d(
       "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data",
     );
+
     if (lastFcmData != null) {
       if (lastFcmData == data) {
         _logger!.d(
@@ -58,7 +58,19 @@ class FcmHandler extends ChangeNotifier {
     String? title = data!['dialog_title'];
     String? body = data['dialog_body'];
     String? command = data['command'];
-    String? url = data['deep_uri'];
+    String? url;
+    if (data["source"] != null && data["source"] == "webengage") {
+      final _data = jsonDecode(data['message_data']);
+      final _listOfData = _data["custom"] as List;
+      try {
+        url = _listOfData.firstWhere(
+          (element) => element['key'] == 'route',
+        )['value'];
+      } catch (e) {
+        log(e.toString());
+      }
+    } else
+      url = data['deep_uri'] ?? data['route'];
 
     // if (data["test_txn"] == "paytm") {
     // _augTxnService.isOngoingTxn = false;
@@ -73,6 +85,7 @@ class FcmHandler extends ChangeNotifier {
       } else if (source == MsgSource.Background ||
           source == MsgSource.Terminated) {
         showSnackbar = false;
+
         AppState.delegate!.parseRoute(Uri.parse(url));
         return true;
       }

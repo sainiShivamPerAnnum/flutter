@@ -4,10 +4,11 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
@@ -341,7 +342,7 @@ class GoldenTicketService
   }
 
   showAutosavePrompt() {
-    if (!BaseRemoteConfig.AUTOSAVE_ACTIVE) return;
+    if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
     BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissible: false,
@@ -363,7 +364,7 @@ class GoldenTicketService
   }
 
   openAutosave() {
-    if (!BaseRemoteConfig.AUTOSAVE_ACTIVE) return;
+    if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
 
     if (_paytmService!.activeSubscription != null) {
       AppState.delegate!.appState.currentAction = PageAction(

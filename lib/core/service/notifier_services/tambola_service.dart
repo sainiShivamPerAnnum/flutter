@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -184,9 +186,10 @@ class TambolaService extends ChangeNotifier {
   }
 
   setUpDailyPicksCount() {
-    String _dpc = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
-    if (_dpc == null || _dpc.isEmpty) _dpc = '3';
+    String _dpc = (AppConfig.getValue(AppConfigKey.tambola_daily_pick_count)
+            .toString()) ??
+        '';
+    if (_dpc.isEmpty) _dpc = '3';
     dailyPicksCount = 3;
     try {
       dailyPicksCount = int.parse(_dpc);

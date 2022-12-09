@@ -71,8 +71,9 @@ import 'core/service/notifier_services/user_coin_service.dart';
 // }
 
 Future mainInit() async {
-  setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
+  
   try {
     await PreferenceHelper.initiate();
 
@@ -126,15 +127,8 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(
               create: (_) => locator<AugmontTransactionService>()),
           ChangeNotifierProvider(create: (_) => locator<RazorpayService>()),
-          StreamProvider<ConnectivityStatus>(
-            create: (_) {
-              ConnectivityService connectivityService =
-                  locator<ConnectivityService>();
-              connectivityService.initialLoad();
-              return connectivityService.connectionStatusController.stream;
-            },
-            initialData: ConnectivityStatus.Offline,
-          ),
+          ChangeNotifierProvider<ConnectivityService>(
+              create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => appState),
         ],
         child: PropertyChangeProvider<JourneyService, JourneyServiceProperties>(

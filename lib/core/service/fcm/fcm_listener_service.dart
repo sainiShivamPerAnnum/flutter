@@ -2,27 +2,25 @@ import 'dart:io';
 
 import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class FcmListener {
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final DBModel? _dbModel = locator<DBModel>();
   final CustomLogger? logger = locator<CustomLogger>();
-  final FcmHandler? _handler = locator<FcmHandler>();
+  final FcmHandler _handler;
   final UserService? _userService = locator<UserService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
 
@@ -32,6 +30,8 @@ class FcmListener {
   static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
     return Future<void>.value();
   }
+
+  FcmListener(this._handler);
 
   Future<FirebaseMessaging?> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
@@ -51,7 +51,7 @@ class FcmListener {
       });
 
       _fcm!.getInitialMessage().then((RemoteMessage? message) {
-        if (message != null && message.data != null) {
+        if (message != null) {
           logger!
               .d("terminated onMessage received: " + message.data.toString());
           // _handler.handleMessage(message.data, MsgSource.Terminated);
@@ -66,15 +66,14 @@ class FcmListener {
         } else if (notification != null) {
           logger!.d(
               "Handle Notification: ${notification.title} ${notification.body}");
-          _handler!.handleNotification(notification.title, notification.body);
+          _handler.handleNotification(notification.title, notification.body);
         }
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         print('A new onMessageOpenedApp event was published!');
-        if (message.data != null) {
-          _handler!.handleMessage(message.data, MsgSource.Background);
-        }
+
+        _handler.handleMessage(message.data, MsgSource.Terminated);
       });
 
       _fcm!.setForegroundNotificationPresentationOptions(
@@ -87,14 +86,12 @@ class FcmListener {
       ///setup android notification channels
       if (Platform.isAndroid) {
         _androidNativeSetup();
-
         ApxorFlutter.setDeeplinkListener((url) {
           // interpret the URL and handle redirection within the application
           logger!.d("rerouting to Apxor" + url!);
           AppState.delegate!.parseRoute(Uri.parse(url));
         });
       }
-      
     } catch (e) {
       logger!.e(e.toString());
       _internalOpsService!.logFailure(

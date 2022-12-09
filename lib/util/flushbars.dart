@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -79,9 +80,10 @@ class AppToasts {
   }
 
   static showNoInternetToast() {
-    ConnectivityStatus connectivityStatus = Provider.of<ConnectivityStatus>(
-        AppState.delegate!.navigatorKey.currentContext!,
-        listen: false);
+    ConnectivityStatus connectivityStatus = Provider.of<ConnectivityService>(
+            AppState.delegate!.navigatorKey.currentContext!,
+            listen: false)
+        .connectivityStatus;
     if (connectivityStatus == ConnectivityStatus.Offline) {
       flushbar = Flushbar(
         flushbarPosition: FlushbarPosition.TOP,
