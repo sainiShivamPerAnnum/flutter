@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/assets.dart';
