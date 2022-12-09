@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:flutter/cupertino.dart';
 import 'package:felloapp/navigator/app_state.dart';
 
 const String SplashPath = '/splash';
@@ -254,7 +253,7 @@ PageConfiguration TambolaExistingUser = PageConfiguration(
     uiPage: Pages.TExistingUser,
     name: 'TexistingUser Screen');
 
-    PageConfiguration TambolaNewUser = PageConfiguration(
+PageConfiguration TambolaNewUser = PageConfiguration(
     key: 'TNewUser',
     path: TNewUserViewPath,
     uiPage: Pages.TNewUser,

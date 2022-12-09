@@ -315,7 +315,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.SettingsView:
           _addPageData(SettingsView(), SettingsViewPageConfig);
           break;
-
         default:
           break;
       }
@@ -603,6 +602,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.SettingsView:
         SettingsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.SellConfirmationView:
+        SellConfirmationViewConfig.currentPageAction = action;
         break;
       default:
         break;

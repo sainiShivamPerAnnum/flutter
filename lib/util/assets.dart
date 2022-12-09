@@ -1,5 +1,3 @@
-import 'constants.dart';
-
 class Assets {
   static final String logoMaxSize = 'images/fello_logo.png';
   static final String logoShortform = 'assets/svg/fello-short-logo.svg';
@@ -289,6 +287,7 @@ class Assets {
       "assets/lotties/floating_tambola_ticket.json";
   static const String floatingGoldenTicketIslandLottie =
       "assets/lotties/floating_golden_ticket.json";
+  static const String jarLottie = "assets/lotties/jarLottie.json";
 
   static const String levelUpLottie = "assets/lotties/levelup.json";
   static const String wohooLottie = "assets/lotties/woohoo.json";
