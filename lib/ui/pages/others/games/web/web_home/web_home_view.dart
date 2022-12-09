@@ -911,8 +911,8 @@ class PastWeekWinners extends StatelessWidget {
                                               .currentAction = PageAction(
                                             state: PageState.addWidget,
                                             widget:
-                                                AllParticipantsWinnersTopReferers(
-                                              isForTopReferers: true,
+                                                AllParticipantsWinnersTopReferrers(
+                                              isForTopReferrers: true,
                                               showPoints: true,
                                               appBarTitle: "Past Week Winners",
                                               referralLeaderBoard:

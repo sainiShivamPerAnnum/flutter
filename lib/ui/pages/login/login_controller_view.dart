@@ -121,7 +121,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                     child: Container(
                       width: SizeConfig.screenWidth,
                       height: SizeConfig.padding54,
-                      color: UiConstants.kArowButtonBackgroundColor,
+                      color: UiConstants.kArrowButtonBackgroundColor,
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.pageHorizontalMargins,
                       ),

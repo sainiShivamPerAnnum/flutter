@@ -253,6 +253,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     ApiResponse<List<JourneyPage>> response = await _journeyRepo
         .fetchJourneyPages(pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
     if (!response.isSuccess()) {
+      if (response.code == 500) return;
       _internalOpsService.logFailure(
         _userService.baseUser?.uid ?? '',
         FailType.Journey,
@@ -457,13 +458,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         .firstWhere((milestone) => milestone.index == cMLIndex);
     double offset = cMl.y! * pageHeight! + (cMl.page - 1) * pageHeight!;
     await Future.delayed(Duration(seconds: 1), () {
-      mainController!.animateTo(offset - SizeConfig.screenHeight! * 0.5,
-          duration: const Duration(seconds: 2), curve: Curves.easeOutCubic);
+      if (mainController!.hasClients)
+        mainController!.animateTo(offset - SizeConfig.screenHeight! * 0.5,
+            duration: const Duration(seconds: 2), curve: Curves.easeOutCubic);
     });
   }
 
   Future<void> updateRewardSTooltips() async {
-    completedMilestonesPrizeList?.clear();
+    completedMilestonesPrizeList.clear();
     setCompletedMilestonesList();
     await getUnscratchedGT();
     if (unscratchedGTList == null || unscratchedGTList!.isEmpty) return;

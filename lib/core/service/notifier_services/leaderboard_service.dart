@@ -104,9 +104,9 @@ class LeaderboardService
     return await _dbModel!.getUserDP(uid);
   }
 
-  String getDateRange() {
+  String getDateRange({bool monthly = false}) {
     var today = DateTime.now();
-    var beforeSevenDays = today.subtract(Duration(days: 7));
+    var beforeSevenDays = today.subtract(Duration(days: monthly ? 30 : 7));
     DateFormat formatter = DateFormat('MMM');
 
     int dayToday = today.day;

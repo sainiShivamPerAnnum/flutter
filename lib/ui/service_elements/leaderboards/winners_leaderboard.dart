@@ -111,8 +111,8 @@ class WinnerboardView extends StatelessWidget {
                                           .currentAction = PageAction(
                                         state: PageState.addWidget,
                                         widget:
-                                            AllParticipantsWinnersTopReferers(
-                                          isForTopReferers: false,
+                                            AllParticipantsWinnersTopReferrers(
+                                          isForTopReferrers: false,
                                           winners: model.winners,
                                         ),
                                         page:

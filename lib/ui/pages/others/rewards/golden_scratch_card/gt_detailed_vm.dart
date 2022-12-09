@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -63,7 +64,9 @@ class GTDetailedViewModel extends BaseViewModel {
     // showDetailsModal(ticket.isRewarding);
     isCardScratched = true;
     setState(ViewState.Busy);
+    AppState.blockNavigation();
     await redeemTicket(ticket);
+    AppState.unblockNavigation();
     log(ticket.redeemedTimestamp.toString());
     setState(ViewState.Idle);
   }
@@ -71,7 +74,7 @@ class GTDetailedViewModel extends BaseViewModel {
   Future<bool> redeemTicket(GoldenTicket ticket) async {
     try {
       await _gtRepo!.redeemReward(ticket.gtId);
-      _gtService!.updateUnscratchedGTCount();
+      _gtService.updateUnscratchedGTCount();
       _userService!.getUserFundWalletData();
       _userCoinService!.getUserCoinBalance();
       _journeyService.updateRewardStatus(ticket.prizeSubtype!);

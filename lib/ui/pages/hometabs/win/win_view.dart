@@ -309,7 +309,7 @@ class Win extends StatelessWidget {
                                                       SizeConfig.padding6),
                                               decoration: BoxDecoration(
                                                 color: UiConstants
-                                                    .kArowButtonBackgroundColor,
+                                                    .kArrowButtonBackgroundColor,
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(
                                                         SizeConfig.roundness8)),
@@ -372,7 +372,7 @@ class Win extends StatelessWidget {
                                                       SizeConfig.padding12),
                                               decoration: BoxDecoration(
                                                 color: UiConstants
-                                                    .kArowButtonBackgroundColor,
+                                                    .kArrowButtonBackgroundColor,
                                                 shape: BoxShape.circle,
                                               ),
                                               child: GestureDetector(
@@ -640,7 +640,7 @@ class ReferAndEarnComponent extends StatelessWidget {
                             horizontal: SizeConfig.padding32,
                             vertical: SizeConfig.padding6),
                         decoration: BoxDecoration(
-                            color: UiConstants.kArowButtonBackgroundColor,
+                            color: UiConstants.kArrowButtonBackgroundColor,
                             borderRadius: BorderRadius.all(
                               Radius.circular(SizeConfig.roundness8),
                             ),
@@ -701,7 +701,7 @@ class ReferAndEarnComponent extends StatelessWidget {
                 padding: EdgeInsets.all(SizeConfig.padding8),
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  color: UiConstants.kArowButtonBackgroundColor,
+                  color: UiConstants.kArrowButtonBackgroundColor,
                   shape: BoxShape.circle,
                 ),
                 child: SvgPicture.asset(

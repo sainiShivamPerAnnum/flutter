@@ -67,7 +67,7 @@ class TambolaHomeView extends StatelessWidget {
               showCoinBar: false,
               showHelpButton: false,
               title: "Tambola",
-              backgroundColor: UiConstants.kArowButtonBackgroundColor,
+              backgroundColor: UiConstants.kArrowButtonBackgroundColor,
             ),
             backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(
@@ -977,7 +977,7 @@ class TodayWeeklyPicksCard extends StatelessWidget {
         bottom: SizeConfig.pageHorizontalMargins + SizeConfig.padding16,
       ),
       decoration: BoxDecoration(
-        color: UiConstants.kArowButtonBackgroundColor,
+        color: UiConstants.kArrowButtonBackgroundColor,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(
             SizeConfig.roundness32,

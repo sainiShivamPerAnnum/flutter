@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/lendbox_withdrawable_quantity.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
@@ -11,9 +13,9 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/service_elements/bank_details_card.dart';
+import 'package:felloapp/ui/pages/others/finance/sell_confirmation_screen.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -77,25 +79,37 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   Future<void> initiateWithdraw() async {
     final amount = await initChecks();
     if (amount == 0) return;
-
-    BaseUtil.openDialog(
-      addToScreenStack: true,
-      hapticVibrate: true,
-      isBarrierDismissible: false,
-      content: ConfirmationDialog(
-        title: 'Are you sure you want\nto sell?',
-        asset: BankDetailsCard(),
-        description: '₹$amount will be credited to your linked bank account',
-        buttonText: 'SELL',
-        confirmAction: () async {
+    AppState.delegate!.appState.currentAction = PageAction(
+      widget: SellConfirmationView(
+        amount: amount.toDouble(),
+        grams: 0.0,
+        onSuccess: () {
           AppState.backButtonDispatcher!.didPopRoute();
-          await this.processWithdraw(amount);
+          this.processWithdraw(amount);
         },
-        cancelAction: () {
-          AppState.backButtonDispatcher!.didPopRoute();
-        },
+        investmentType: InvestmentType.LENDBOXP2P,
       ),
+      page: SellConfirmationViewConfig,
+      state: PageState.addWidget,
     );
+    // BaseUtil.openDialog(
+    //   addToScreenStack: true,
+    //   hapticVibrate: true,
+    //   isBarrierDismissible: false,
+    //   content: ConfirmationDialog(
+    //     title: 'Are you sure you want\nto sell?',
+    //     asset: BankDetailsCard(),
+    //     description: '₹$amount will be credited to your linked bank account',
+    //     buttonText: 'SELL',
+    //     confirmAction: () async {
+    //       AppState.backButtonDispatcher!.didPopRoute();
+    //       await this.processWithdraw(amount);
+    //     },
+    //     cancelAction: () {
+    //       AppState.backButtonDispatcher!.didPopRoute();
+    //     },
+    //   ),
+    // );
   }
 
   Future<void> processWithdraw(int amount) async {

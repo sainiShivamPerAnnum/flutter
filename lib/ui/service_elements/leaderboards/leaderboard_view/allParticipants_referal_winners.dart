@@ -9,9 +9,9 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class AllParticipantsWinnersTopReferers extends StatelessWidget {
-  AllParticipantsWinnersTopReferers(
-      {required this.isForTopReferers,
+class AllParticipantsWinnersTopReferrers extends StatelessWidget {
+  AllParticipantsWinnersTopReferrers(
+      {required this.isForTopReferrers,
       this.winners,
       this.referralLeaderBoard,
       this.showPoints = false,
@@ -19,7 +19,7 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
       Key? key})
       : super(key: key);
   final GameRepo _gamesRepo = locator<GameRepo>();
-  final bool isForTopReferers;
+  final bool isForTopReferrers;
   final List<Winners>? winners;
   final List<ScoreBoard>? referralLeaderBoard;
   final bool showPoints;
@@ -45,7 +45,7 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor,
         elevation: 0.0,
         title: Text(
-          appBarTitle ?? (isForTopReferers ? 'Top Referers' : 'Top Winners'),
+          appBarTitle ?? (isForTopReferrers ? 'Top Referers' : 'Top Winners'),
           maxLines: 1,
           overflow: TextOverflow.clip,
           style: TextStyles.rajdhaniSB.title4,
@@ -60,7 +60,7 @@ class AllParticipantsWinnersTopReferers extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                   child: Column(
-                    children: isForTopReferers
+                    children: isForTopReferrers
                         ? List.generate(
                             referralLeaderBoard!.length,
                             (i) {

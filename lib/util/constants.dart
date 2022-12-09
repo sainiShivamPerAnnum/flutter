@@ -31,7 +31,7 @@ class Constants {
   static const String GT_REWARD_GOLD = "gold";
   static const String GT_REWARD_FLC = "flc";
   static const String GT_REWARD_RUPEE = "rupee";
-  static const String GT_REWARD_TAMBOLA_TICKET = "tambolaticket";
+  static const String GT_REWARD_TAMBOLA_TICKET = "tt";
   static const String GT_REWARD_AMT = "amt";
 
   //Collections

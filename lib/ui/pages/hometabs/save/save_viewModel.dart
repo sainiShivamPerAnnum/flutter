@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -23,11 +21,9 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/others/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
-import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
@@ -156,7 +152,6 @@ class SaveViewModel extends BaseViewModel {
       // fetchLockedGoldQnt();
       _sellService!.init();
       getCampaignEvents();
-
       getSaveViewBlogs();
       // _sellService.updateSellButtonDetails();
     });

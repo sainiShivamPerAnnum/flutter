@@ -1,5 +1,5 @@
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -19,55 +19,51 @@ class BankDetailsCard extends StatelessWidget {
     return PropertyChangeConsumer<BankAndPanService,
             BankAndPanServiceProperties>(
         properties: [BankAndPanServiceProperties.bankDetailsVerified],
-        builder: (context, model, property) =>
-            model!.isBankDetailsAdded && model.activeBankAccountDetails != null
-                ? Column(
-                    children: [
-                      SvgPicture.asset(Assets.magicalSpiritBall),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: UiConstants.kTextColor2),
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness8),
-                        ),
-                        child: ListTile(
-                          leading: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  color: UiConstants.primaryColor, width: 0.5),
-                            ),
-                            padding: EdgeInsets.all(SizeConfig.padding8),
-                            child: SvgPicture.asset(
-                              Assets.bank,
-                              color: UiConstants.primaryColor,
-                              width: SizeConfig.padding24,
-                              height: SizeConfig.padding24,
-                            ),
-                          ),
-                          title: Text(model.activeBankAccountDetails!.account!,
-                              style: TextStyles.sourceSansB.body2),
-                          subtitle: Text(
-                            model.activeBankAccountDetails!.name!,
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTextColor2),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              color: UiConstants.kTextColor,
-                            ),
-                            onPressed: () {
-                              AppState.delegate!.appState.currentAction =
-                                  PageAction(
-                                      page: BankDetailsPageConfig,
-                                      state: PageState.addPage);
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : SizedBox());
+        builder: (context, model, property) => model!.isBankDetailsAdded &&
+                model.activeBankAccountDetails != null
+            ? Container(
+                margin: EdgeInsets.only(
+                    top: SizeConfig.pageHorizontalMargins * 2,
+                    bottom: SizeConfig.pageHorizontalMargins / 2),
+                decoration: BoxDecoration(
+                  border: Border.all(color: UiConstants.kTextColor2),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                ),
+                child: ListTile(
+                  leading: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          color: UiConstants.primaryColor, width: 0.5),
+                    ),
+                    padding: EdgeInsets.all(SizeConfig.padding8),
+                    child: SvgPicture.asset(
+                      Assets.bank,
+                      color: UiConstants.primaryColor,
+                      width: SizeConfig.padding24,
+                      height: SizeConfig.padding24,
+                    ),
+                  ),
+                  title: Text(model.activeBankAccountDetails!.account!,
+                      style: TextStyles.sourceSansB.body2),
+                  subtitle: Text(
+                    model.activeBankAccountDetails!.name!,
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTextColor2),
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: UiConstants.kTextColor,
+                    ),
+                    onPressed: () {
+                      AppState.delegate!.appState.currentAction = PageAction(
+                          page: BankDetailsPageConfig,
+                          state: PageState.addPage);
+                    },
+                  ),
+                ),
+              )
+            : SizedBox());
   }
 }

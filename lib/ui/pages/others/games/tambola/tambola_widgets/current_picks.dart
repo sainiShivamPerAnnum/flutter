@@ -188,7 +188,7 @@ class AnimatedPicksDisplay extends StatelessWidget {
       width: SizeConfig.screenWidth! * 0.14,
       height: SizeConfig.screenWidth! * 0.14,
       decoration: BoxDecoration(
-        color: UiConstants.kArowButtonBackgroundColor,
+        color: UiConstants.kArrowButtonBackgroundColor,
         shape: BoxShape.circle,
       ),
       child: ClipOval(

@@ -382,6 +382,7 @@ class GoldenTicketService
   Future<void> fetchAllGoldenTickets() async {
     if (isLastPageForGoldenTickets) return;
     if (isFetchingGoldenTickets) return;
+    allGoldenTickets.clear();
     isFetchingGoldenTickets = true;
     final res =
         await _gtRepo.getGoldenTickets(start: goldenTicketsListLastTicketId);

@@ -18,6 +18,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_as
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -275,7 +276,8 @@ class _JourneyMilestoneDetailsModalSheetState
 
   Widget goldenTicketWidget(bool isLevelChange) {
     return Container(
-      margin: EdgeInsets.only(right: SizeConfig.padding12),
+      margin: EdgeInsets.only(
+          right: SizeConfig.padding12, top: SizeConfig.padding16),
       child: Row(
         children: [
           GestureDetector(
@@ -351,40 +353,48 @@ class _JourneyMilestoneDetailsModalSheetState
 
   getLeadingAsset(String? type) {
     switch (type) {
-      case 'flc':
+      case Constants.GT_REWARD_FLC:
         return Assets.token;
-      case 'amt':
+      case Constants.GT_REWARD_AMT:
         return Assets.moneyIcon;
-      case 'rupee':
+      case Constants.GT_REWARD_RUPEE:
         return Assets.moneyIcon;
-      case 'gold':
+      case Constants.GT_REWARD_GOLD:
         return Assets.digitalGoldBar;
+      case Constants.GT_REWARD_TAMBOLA_TICKET:
+        return Assets.howToPlayAsset1Tambola;
     }
   }
 
   getSuffix(String? type) {
     switch (type) {
-      case 'flc':
+      case Constants.GT_REWARD_FLC:
         return " tokens";
-      case 'amt':
+      case Constants.GT_REWARD_AMT:
         return "";
-      case 'rupee':
+      case Constants.GT_REWARD_RUPEE:
         return "";
-      case 'gold':
+      case Constants.GT_REWARD_GOLD:
         return " worth of gold";
+      case Constants.GT_REWARD_TAMBOLA_TICKET:
+        return " Tambola Ticket";
+      default:
+        return "";
     }
   }
 
   getPrefix(String? type) {
     switch (type) {
-      case 'flc':
+      case Constants.GT_REWARD_FLC:
         return "";
-      case 'amt':
+      case Constants.GT_REWARD_AMT:
         return "₹ ";
-      case 'rupee':
+      case Constants.GT_REWARD_RUPEE:
         return "₹ ";
-      case 'gold':
+      case Constants.GT_REWARD_GOLD:
         return "₹ ";
+      default:
+        return "";
     }
   }
 }
