@@ -152,10 +152,6 @@ class GTInstantViewModel extends BaseViewModel {
           "An error occured while redeeming your golden ticket",
           "Please try again in your winnings section");
     }
-
-    Future.delayed(Duration(seconds: 3), () {
-      AppState.backButtonDispatcher!.didPopRoute();
-    });
   }
 
   Future<String> _getBearerToken() async {

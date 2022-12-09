@@ -78,7 +78,9 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
           alignment: Alignment.bottomCenter,
           children: [
             Container(
-              height: SizeConfig.screenHeight! * 0.4,
+              height: widget.isComingFromSave
+                  ? SizeConfig.screenHeight! * 0.35
+                  : SizeConfig.screenHeight! * 0.4,
               width: SizeConfig.screenWidth,
               decoration: BoxDecoration(
                   color: UiConstants.kSaveDigitalGoldCardBg,
@@ -190,11 +192,13 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                                 }
                               });
                         } else {
-                          BaseUtil.showPositiveAlert("We will notify",
-                              "We will notify you before the next happy hour starts");
+                          ;
                           locator<MixpanelAnalytics>()
                               .track(eventName: "Happy Hour Notify");
-                          AppState.backButtonDispatcher!.didPopRoute();
+                          AppState.backButtonDispatcher!.didPopRoute().then(
+                              (value) => BaseUtil.showPositiveAlert(
+                                  "We will notify",
+                                  "We will notify you before the next happy hour starts"));
                         }
                       },
                       title:
@@ -206,7 +210,9 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
               ),
             ),
             Positioned(
-              bottom: SizeConfig.screenHeight! * 0.35,
+              bottom: widget.isComingFromSave
+                  ? SizeConfig.screenHeight! * 0.3
+                  : SizeConfig.screenHeight! * 0.35,
               child: SvgPicture.asset(
                 Assets.sandTimer,
                 height: 120,
