@@ -112,6 +112,7 @@ class BankAndPanService
     _isSellButtonVisible = false;
     isSellLocked = false;
     userPan = null;
+    userKycData = null;
     activeBankAccountDetails = null;
   }
 

@@ -1,6 +1,8 @@
 //Project imports
 import 'dart:async';
 
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
@@ -8,12 +10,8 @@ import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
-
 //Flutter imports
 import 'package:flutter/material.dart';
-
 //Pub imports
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -147,6 +145,9 @@ class AppState extends ChangeNotifier {
     });
   }
 
+  static dump() {
+    isRootAvailableForIncomingTaskExecution = true;
+  }
   // setLastTapIndex() {
   //   SharedPreferences.getInstance().then((instance) {
   //     rootIndex = instance.getInt('lastTab');

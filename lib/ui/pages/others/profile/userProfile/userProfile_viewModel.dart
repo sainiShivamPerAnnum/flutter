@@ -520,7 +520,6 @@ class UserProfileVM extends BaseViewModel {
               await _userRepo!.removeUserFCM(_userService!.baseUser!.uid);
             }).then((flag) async {
               if (flag) {
-                //log.debug('Sign out process complete');
                 await _baseUtil!.signOut();
                 _journeyService!.dump();
                 _marketingService.dump();
@@ -530,6 +529,7 @@ class UserProfileVM extends BaseViewModel {
                 _paytmService!.signout();
                 _bankAndKycService!.dump();
                 GoldenTicketService.dump();
+                AppState.dump();
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
