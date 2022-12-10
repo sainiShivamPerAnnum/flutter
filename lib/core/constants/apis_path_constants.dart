@@ -3,6 +3,7 @@ class ApiPath {
 
   //Augmont Ops
   get kGetGoldRates => "/gold/rates";
+  static String get happyHour => "/happy-hours/active";
 
   //User Ops Apis
   get kAddNewUser => "/v2/new";

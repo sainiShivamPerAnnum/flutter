@@ -264,6 +264,7 @@ class CustomSaveButton extends StatelessWidget {
   final double? height;
   final Border? border;
   final Color? color;
+  final bool showBorder;
 
   const CustomSaveButton(
       {Key? key,
@@ -272,6 +273,7 @@ class CustomSaveButton extends StatelessWidget {
       this.title,
       this.width,
       this.border,
+      this.showBorder=true,
       this.color})
       : super(key: key);
 
@@ -283,7 +285,7 @@ class CustomSaveButton extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
           color: color ?? UiConstants.kBackgroundDividerColor,
-          border: border ?? Border.all()),
+          border:showBorder? border ?? Border.all():null),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness5),
         child: MaterialButton(

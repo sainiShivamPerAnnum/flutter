@@ -72,8 +72,8 @@ import 'core/service/notifier_services/user_coin_service.dart';
 
 Future mainInit() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupLocator();
-  
+  await setupLocator();
+
   try {
     await PreferenceHelper.initiate();
 

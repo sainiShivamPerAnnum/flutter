@@ -90,18 +90,20 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
+import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/service/analytics/appflyer_analytics.dart';
 
 GetIt locator = GetIt.instance;
 
-void setupLocator() {
+Future<void> setupLocator() async {
   //Utils
   locator.registerLazySingleton(() => CustomLogger());
   locator.registerLazySingleton(() => ApiPath());
@@ -142,6 +144,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => JourneyService());
   locator.registerLazySingleton(() => GoogleSignInService());
   locator.registerLazySingleton(() => RazorpayService());
+  locator.registerSingletonAsync(() => SharedPreferences.getInstance());
   locator.registerLazySingleton(() => MarketingEventHandlerService());
 
   //Repository
@@ -219,4 +222,6 @@ void setupLocator() {
   locator.registerFactory(() => SourceAdaptiveAssetViewModel());
   locator.registerFactory(() => SubscriptionCardViewModel());
   locator.registerFactory(() => TambolaCardModel());
+  // locator.registerFactory<UsernameInputViewModel>(() => UsernameInputViewModel());
+  await locator.allReady();
 }

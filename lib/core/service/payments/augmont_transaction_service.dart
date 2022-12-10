@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -10,7 +9,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/payment_mode_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -30,7 +28,6 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -38,7 +35,6 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/material.dart';
 
 class AugmontTransactionService extends BaseTransactionService {
   final UserService? _userService = locator<UserService>();
@@ -65,6 +61,14 @@ class AugmontTransactionService extends BaseTransactionService {
   set isGoldBuyInProgress(value) {
     this._isGoldBuyInProgress = value;
     notifyListeners(TransactionServiceProperties.transactionStatus);
+  }
+
+  TransactionResponseModel? _model;
+
+  TransactionResponseModel? get transactionResponseModel => _model;
+
+  set transactionResponseModel(TransactionResponseModel? model) {
+    _model = model;
   }
 
   bool get isGoldSellInProgress => this._isGoldSellInProgress;
@@ -266,8 +270,10 @@ class AugmontTransactionService extends BaseTransactionService {
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
+            transactionResponseModel = res.model;
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
+
             if (res.model!.data != null &&
                 res.model!.data!.goldInTxnBought != null &&
                 res.model!.data!.goldInTxnBought! > 0)
@@ -305,8 +311,7 @@ class AugmontTransactionService extends BaseTransactionService {
       return null;
 
     double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
-    final mid = 
-        AppConfig.getValue(AppConfigKey.paytmMid);
+    final mid = AppConfig.getValue(AppConfigKey.paytmMid);
     final Map<String, dynamic> augMap = {
       "aBlockId": augmontRates.blockId.toString(),
       "aLockPrice": augmontRates.goldBuyPrice,

@@ -13,6 +13,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
@@ -28,16 +29,19 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
+
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/deposit_options_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
+
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -51,6 +55,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -138,6 +144,9 @@ class BaseUtil extends ChangeNotifier {
       show_finance_tutorial;
   static bool? isDeviceOffline, ticketRequestSent, playScreenFirst;
   static int? ticketCountBeforeRequest, infoSliderIndex;
+
+  BuildContext get rootContext =>
+      AppState.delegate!.navigatorKey.currentContext!;
 
   _setRuntimeDefaults() {
     isNewUser = false;
@@ -330,7 +339,7 @@ class BaseUtil extends ChangeNotifier {
         );
       }
 
-      return BaseUtil.openModalBottomSheet(
+      BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
@@ -379,7 +388,7 @@ class BaseUtil extends ChangeNotifier {
               ? AnalyticsEvents.goldSellModalSheet
               : AnalyticsEvents.lBoxSellModalSheet);
 
-      return BaseUtil.openModalBottomSheet(
+      BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
@@ -458,7 +467,7 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static void openModalBottomSheet({
+  static Future<void> openModalBottomSheet({
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
@@ -468,12 +477,12 @@ class BaseUtil extends ChangeNotifier {
     bool isScrollControlled = false,
     BoxConstraints? boxContraints,
     bool enableDrag = false,
-  }) {
+  }) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     print("Current Stack: ${AppState.screenStack}");
-    showModalBottomSheet(
+    await showModalBottomSheet(
       enableDrag: enableDrag,
       constraints: boxContraints,
       shape: RoundedRectangleBorder(
@@ -881,6 +890,21 @@ class BaseUtil extends ChangeNotifier {
   set isUpiInfoMissing(bool? value) {
     this._isUpiInfoMissing = value;
     notifyListeners();
+  }
+
+  Future showHappyHourDialog(HappyHourCampign model,
+      {bool afterHappyHour = false, bool isComingFromSave = false}) async {
+    return openModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      addToScreenStack: true,
+      hapticVibrate: true,
+      content: HappyHourModel(
+        model: model,
+        isAfterHappyHour: afterHappyHour,
+        isComingFromSave: isComingFromSave,
+      ),
+      isBarrierDismissible: true,
+    );
   }
 }
 

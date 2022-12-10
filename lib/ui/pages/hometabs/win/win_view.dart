@@ -26,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
+import '../../../../base_util.dart';
 import '../../../../core/enums/app_config_keys.dart';
 
 List<Color> randomColors = [

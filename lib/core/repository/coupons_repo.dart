@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
@@ -33,7 +35,8 @@ class CouponRepository extends BaseRepo {
       _logger!.d("initiateUserDeposit:: Pre encryption: $_body");
       if (await _rsaEncryption.init()) {
         _body = _rsaEncryption.encryptRequestBody(_body);
-        _logger!.d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
+        _logger!
+            .d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
       } else {
         _logger!.e("Encrypter initialization failed!! exiting method");
       }
@@ -62,6 +65,7 @@ class CouponRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
         token: token,
       );
+
       final List<CouponModel> coupons =
           CouponModel.helper.fromMapArray(couponResponse['data']);
 

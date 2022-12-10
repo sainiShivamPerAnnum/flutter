@@ -1,6 +1,8 @@
 import "dart:math" as math;
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -64,6 +66,8 @@ class GoldBuyInputView extends StatelessWidget {
             if (model.assetOptionsModel != null)
               BannerWidget(
                 model: model.assetOptionsModel!.data.banner,
+                happyHourCampign:
+                    locator.isRegistered<HappyHourCampign>() ? locator() : null,
               ),
             if (model.animationController != null)
               EnterAmountView(

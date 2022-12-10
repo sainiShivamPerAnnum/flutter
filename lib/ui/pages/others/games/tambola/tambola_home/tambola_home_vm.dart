@@ -353,13 +353,13 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   void decreaseTicketCount() {
-    if (buyTicketCount > 0)
+    if (buyTicketCount > 1) {
       buyTicketCount -= 1;
-    else
-      BaseUtil.showNegativeAlert("Failed", "Negative counts not supported");
-    ticketCountController!.text = buyTicketCount.toString();
-    updateTicketSavedAmount(buyTicketCount);
-    notifyListeners();
+
+      ticketCountController!.text = buyTicketCount.toString();
+      updateTicketSavedAmount(buyTicketCount);
+      notifyListeners();
+    }
   }
 
   // Future<void> buyTickets(BuildContext context) async {

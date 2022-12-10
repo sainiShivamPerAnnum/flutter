@@ -121,6 +121,7 @@ class Assets {
 
   static final String noTickets = "assets/svg/no_tickets_asset.svg";
   static final String noData = "assets/lotties/no_data.json";
+  static final String sandTimer = "assets/svg/sand_timer.svg";
 
   //PROFILE PICTURES
   static final String cvtar1 = "assets/vectors/userAvatars/AV1.svg";
