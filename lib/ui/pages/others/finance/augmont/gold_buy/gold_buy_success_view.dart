@@ -248,10 +248,7 @@ class GoldBuySuccessView extends StatelessWidget {
                       title: 'Golden Ticket',
                       tooltip: "Scratch and win rewards!",
                       asset: Assets.unredemmedGoldenTicketBG,
-                      qty: Provider.of<RootViewModel>(context, listen: false)
-                              .showHappyHourBanner
-                          ? 2
-                          : 1),
+                      qty: 1),
                 if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
                   SizedBox(width: SizeConfig.padding12),
                 if (_augTxnService!.currentTxnTambolaTicketsCount > 0)

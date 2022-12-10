@@ -127,13 +127,12 @@ class LendboxSuccessView extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyles.sourceSans.body2.setOpecity(0.7)),
               )
-            else ...[
+            else
               Text(
                 "Your investment was successfully processed",
                 textAlign: TextAlign.center,
                 style: TextStyles.sourceSans.body2.setOpecity(0.7),
               ),
-            ],
             SizedBox(
               height: SizeConfig.padding20,
             ),
@@ -235,7 +234,7 @@ class LendboxSuccessView extends StatelessWidget {
                         title: 'Golden Ticket',
                         tooltip: "Scratch and win rewards!",
                         asset: Assets.unredemmedGoldenTicketBG,
-                        qty: Provider.of<RootViewModel>(context,listen: false).showHappyHourBanner?2:1),
+                        qty: 1),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
                     SizedBox(width: SizeConfig.padding12),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
