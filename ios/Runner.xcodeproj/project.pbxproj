@@ -60,26 +60,12 @@
 			remoteGlobalIDString = 1054C982E06652E88574B37F69D4B914;
 			remoteInfo = open_filex;
 		};
-		381A1E70291E841800848F4A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = AD23E40CD48FC8E37DB61F915EBE813E;
-			remoteInfo = camera_avfoundation;
-		};
 		381A1E72291E841800848F4A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 18D1938E2D5D13EFBEC5567066EF4E64;
 			remoteInfo = local_auth_ios;
-		};
-		381A1E74291E841800848F4A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C39BE06027F24EB0328A76E7507FA463;
-			remoteInfo = package_info_plus;
 		};
 		385870BE286B48EE006AA702 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -130,6 +116,41 @@
 			remoteGlobalIDString = B799BFFEC5B11F90F501202080A57F37;
 			remoteInfo = sqflite;
 		};
+		387E0C25294463C400624E8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81418C93A311F0492F62A8F88C3BD66B;
+			remoteInfo = FirebaseAppCheckInterop;
+		};
+		387E0C27294463C400624E8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 09D8B108F8926BC5DC78684FF235123E;
+			remoteInfo = FirebaseAuthInterop;
+		};
+		387E0C29294463C400624E8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AEF1DC80F0EB62580B81D18786BAF924;
+			remoteInfo = FirebaseCoreExtension;
+		};
+		387E0C2B294463C400624E8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 148D0F9E8C7373FEAF40D800FC5F1BAA;
+			remoteInfo = FirebaseCoreInternal;
+		};
+		387E0C2D294463C400624E8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A72F97E6F2EBFC3F463C7C79966B3F3E;
+			remoteInfo = FirebaseStorageInternal;
+		};
 		38E2401828F714C300C7A39F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -143,13 +164,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = F30519B33821643382CCBFBCFA6B7525;
 			remoteInfo = video_player_avfoundation;
-		};
-		38FFBC802886085500F22FF5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2DDE5DE1EA082BAED8A4D3405F56ABE;
-			remoteInfo = another_flushbar;
 		};
 		38FFBC8C2886085500F22FF5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -659,12 +673,10 @@
 			isa = PBXGroup;
 			children = (
 				53C8032627A85D5C00190100 /* abseil */,
-				38FFBC812886085500F22FF5 /* another_flushbar */,
 				53C8032827A85D5C00190100 /* app_install_date */,
 				53E99BD02770AA48000F1EEC /* AppAuth */,
 				537E775627BBCB83004DA35F /* appsflyer_sdk */,
 				53C8032A27A85D5C00190100 /* BoringSSL-GRPC */,
-				381A1E71291E841800848F4A /* camera_avfoundation */,
 				53E99BD42770AA48000F1EEC /* cloud_firestore */,
 				53E99BD62770AA48000F1EEC /* connectivity_plus */,
 				385870BF286B48EE006AA702 /* device_info_plus */,
@@ -681,9 +693,13 @@
 				53E99BF02770AA48000F1EEC /* firebase_remote_config */,
 				53E99BF22770AA48000F1EEC /* firebase_storage */,
 				53E99BF42770AA48000F1EEC /* FirebaseABTesting */,
+				387E0C26294463C400624E8B /* FirebaseAppCheckInterop */,
 				53E99BF62770AA48000F1EEC /* FirebaseAuth */,
+				387E0C28294463C400624E8B /* FirebaseAuthInterop */,
 				53E99BF82770AA48000F1EEC /* FirebaseCore */,
 				53E99BFA2770AA48000F1EEC /* FirebaseCoreDiagnostics */,
+				387E0C2A294463C400624E8B /* FirebaseCoreExtension */,
+				387E0C2C294463C400624E8B /* FirebaseCoreInternal */,
 				53E99BFC2770AA48000F1EEC /* FirebaseCrashlytics */,
 				53E99BFE2770AA48000F1EEC /* FirebaseDatabase */,
 				53E99C002770AA48000F1EEC /* FirebaseDynamicLinks */,
@@ -695,6 +711,7 @@
 				53E99C0A2770AA48000F1EEC /* FirebasePerformance */,
 				53E99C0C2770AA48000F1EEC /* FirebaseRemoteConfig */,
 				53E99C0E2770AA48000F1EEC /* FirebaseStorage */,
+				387E0C2E294463C400624E8B /* FirebaseStorageInternal */,
 				53E99C102770AA48000F1EEC /* flutter_facebook_sdk */,
 				53E99C162770AA48000F1EEC /* flutter_share_me */,
 				07AE377328BCC63900FC1168 /* fluttertoast */,
@@ -736,7 +753,7 @@
 				07AE377928BCC63900FC1168 /* upi_pay */,
 				53C8034027A85D5C00190100 /* url_launcher_ios */,
 				38E67FEA28EEEB80006595C4 /* video_player_avfoundation */,
-				53A33C5527994C080046F585 /* webengage_flutter.framework */,
+				53A33C5527994C080046F585 /* webengage_flutter */,
 				53C8034227A85D5C00190100 /* webview_flutter_wkwebview */,
 			);
 			name = Products;
@@ -904,28 +921,12 @@
 			remoteRef = 3819519328D0FDD8006AC089 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		381A1E71291E841800848F4A /* camera_avfoundation */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = camera_avfoundation;
-			path = camera_avfoundation.framework;
-			remoteRef = 381A1E70291E841800848F4A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		381A1E73291E841800848F4A /* local_auth_ios */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			name = local_auth_ios;
 			path = local_auth_ios.framework;
 			remoteRef = 381A1E72291E841800848F4A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		381A1E75291E841800848F4A /* package_info_plus */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = package_info_plus;
-			path = package_info_plus.framework;
-			remoteRef = 381A1E74291E841800848F4A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		385870BF286B48EE006AA702 /* device_info_plus */ = {
@@ -984,6 +985,46 @@
 			remoteRef = 386929102886DEF600813FBA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		387E0C26294463C400624E8B /* FirebaseAppCheckInterop */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FirebaseAppCheckInterop;
+			path = FirebaseAppCheckInterop.framework;
+			remoteRef = 387E0C25294463C400624E8B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		387E0C28294463C400624E8B /* FirebaseAuthInterop */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FirebaseAuthInterop;
+			path = FirebaseAuthInterop.framework;
+			remoteRef = 387E0C27294463C400624E8B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		387E0C2A294463C400624E8B /* FirebaseCoreExtension */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FirebaseCoreExtension;
+			path = FirebaseCoreExtension.framework;
+			remoteRef = 387E0C29294463C400624E8B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		387E0C2C294463C400624E8B /* FirebaseCoreInternal */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FirebaseCoreInternal;
+			path = FirebaseCoreInternal.framework;
+			remoteRef = 387E0C2B294463C400624E8B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		387E0C2E294463C400624E8B /* FirebaseStorageInternal */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FirebaseStorageInternal;
+			path = FirebaseStorageInternal.framework;
+			remoteRef = 387E0C2D294463C400624E8B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		38E2401928F714C300C7A39F /* permission_handler_apple */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -998,14 +1039,6 @@
 			name = video_player_avfoundation;
 			path = video_player_avfoundation.framework;
 			remoteRef = 38E67FE928EEEB80006595C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		38FFBC812886085500F22FF5 /* another_flushbar */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = another_flushbar;
-			path = another_flushbar.framework;
-			remoteRef = 38FFBC802886085500F22FF5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		38FFBC8D2886085500F22FF5 /* GoogleSignIn */ = {
@@ -1048,9 +1081,10 @@
 			remoteRef = 537E775527BBCB83004DA35F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53A33C5527994C080046F585 /* webengage_flutter.framework */ = {
+		53A33C5527994C080046F585 /* webengage_flutter */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = webengage_flutter;
 			path = webengage_flutter.framework;
 			remoteRef = 53A33C5427994C080046F585 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1735,7 +1769,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 133;
+				CURRENT_PROJECT_VERSION = 148;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
@@ -1755,7 +1789,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.0.2;
+				MARKETING_VERSION = 4.0.10;
 				ONLY_ACTIVE_ARCH = YES;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
@@ -1834,7 +1868,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 133;
+				CURRENT_PROJECT_VERSION = 148;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -1854,7 +1888,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.0.2;
+				MARKETING_VERSION = 4.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1930,7 +1964,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 133;
+				CURRENT_PROJECT_VERSION = 148;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
@@ -1948,7 +1982,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.0.2;
+				MARKETING_VERSION = 4.0.10;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2022,7 +2056,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 133;
+				CURRENT_PROJECT_VERSION = 148;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
@@ -2042,7 +2076,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.0.2;
+				MARKETING_VERSION = 4.0.10;
 				ONLY_ACTIVE_ARCH = YES;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.qa;
@@ -2122,7 +2156,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 133;
+				CURRENT_PROJECT_VERSION = 148;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2142,7 +2176,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.0.2;
+				MARKETING_VERSION = 4.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2218,7 +2252,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 133;
+				CURRENT_PROJECT_VERSION = 148;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2235,7 +2269,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.0.2;
+				MARKETING_VERSION = 4.0.10;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2309,7 +2343,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 133;
+				CURRENT_PROJECT_VERSION = 148;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
@@ -2329,7 +2363,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.0.2;
+				MARKETING_VERSION = 4.0.10;
 				ONLY_ACTIVE_ARCH = YES;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
@@ -2462,7 +2496,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 133;
+				CURRENT_PROJECT_VERSION = 148;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2481,7 +2515,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.0.2;
+				MARKETING_VERSION = 4.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2503,7 +2537,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 133;
+				CURRENT_PROJECT_VERSION = 148;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_prod.dart;
@@ -2521,7 +2555,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.0.2;
+				MARKETING_VERSION = 4.0.10;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";

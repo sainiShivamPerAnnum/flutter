@@ -105,7 +105,7 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Can I use the camera please?</string>
+	<string>Access to camera is requested. This is only required for KYC verification.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Why is my app authenticating using face id?</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -113,9 +113,11 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location when open.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Can I use the mic please?</string>
+	<string>Access to microphone is requested. This is only required for KYC verification.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access to photos is requested. This is only required for choosing your profile picture.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location helps us to verify you kYC details</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -148,9 +150,5 @@
 	<string>$(WEBENGAGE_LICENSE_CODE)</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
-	<key>NSCameraUsageDescription</key>
-<string>your usage description here</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>your usage description here</string>
 </dict>
 </plist>
