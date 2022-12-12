@@ -194,7 +194,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                             )
                           : RichText(
                               text: TextSpan(
-                                text: "You have got a ",
+                                text: "You have won a ",
                                 style: TextStyles.body1.colour(Colors.white),
                                 children: [
                                   TextSpan(

@@ -190,9 +190,9 @@ class KYCDetailsViewModel extends BaseViewModel {
           await _userService.setBaseUser();
 
           _bankAndPanService.checkForUserBankAccountDetails();
+          AppState.backButtonDispatcher!.didPopRoute();
           BaseUtil.showPositiveAlert("KYC successfully completed ✅",
               "Your KYC verification has been successfully completed");
-          AppState.backButtonDispatcher!.didPopRoute();
         } else {
           capturedImage = null;
           kycErrorMessage = forgeryUploadRes.errorMessage;

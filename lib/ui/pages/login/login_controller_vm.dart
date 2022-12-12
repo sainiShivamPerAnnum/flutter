@@ -315,6 +315,8 @@ class LoginControllerViewModel extends BaseViewModel {
       _isSignup = true;
       logger!.d(
           "No existing user details found or found incomplete details for user. Moving to details page");
+      AppState.isFirstTime = true;
+
       if (source == LoginSource.TRUECALLER)
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerSignup);
       //Move to name input page
@@ -389,7 +391,6 @@ class LoginControllerViewModel extends BaseViewModel {
     );
 
     AppState.isOnboardingInProgress = false;
-    AppState.isFirstTime = true;
     appStateProvider.rootIndex = 0;
 
     Map<String, dynamic> response = await _internalOpsService!.initDeviceInfo();

@@ -852,9 +852,10 @@ class UserProfileVM extends BaseViewModel {
     if (res.isSuccess()) {
       await _userService!.setBaseUser();
       AppState.unblockNavigation();
+      AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showPositiveAlert("Username created successfully",
           "Your username ${_userService!.baseUser?.username ?? ''} has been successfully registered!");
-      AppState.backButtonDispatcher!.didPopRoute();
+
       return true;
     } else {
       inEditMode = true;

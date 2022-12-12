@@ -28,6 +28,40 @@ class SellConfirmationView extends StatelessWidget {
     return val;
   }
 
+  getFomoWidget() {
+    double cv = compoundedValue();
+    double diff = (compoundedValue() - amount).abs();
+    if (cv < 100 || (investmentType == InvestmentType.LENDBOXP2P && diff < 100))
+      return Text(
+        "Users have earned huge interests on their savings by holding for more than a year 💸",
+        textAlign: TextAlign.center,
+        style: TextStyles.body2.colour(UiConstants.kTextColor),
+      );
+    else
+      return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+            text: "Your",
+            style: TextStyles.body2.colour(UiConstants.kTextColor2),
+            children: [
+              TextSpan(
+                text: investmentType == InvestmentType.AUGGOLD99
+                    ? " $grams gms "
+                    : " ₹ ${BaseUtil.getIntOrDouble(amount)} ",
+                style:
+                    TextStyles.sourceSansB.body2.colour(UiConstants.kTextColor),
+              ),
+              TextSpan(text: "could have grown to "),
+              TextSpan(
+                text: "₹ ${compoundedValue().toInt()} ",
+                style:
+                    TextStyles.sourceSansB.body2.colour(UiConstants.kTextColor),
+              ),
+              TextSpan(text: "by 2030")
+            ]),
+      );
+  }
+
   const SellConfirmationView(
       {Key? key,
       required this.amount,
@@ -41,12 +75,16 @@ class SellConfirmationView extends StatelessWidget {
     print("Gold in grams: $grams");
     print("Gold in amount: $amount");
     return Scaffold(
-      backgroundColor: UiConstants.kSecondaryBackgroundColor,
+      backgroundColor: UiConstants.kBackgroundColor,
+      appBar:
+          AppBar(backgroundColor: UiConstants.kBackgroundColor, elevation: 0),
       body: SafeArea(
           child: Container(
-        margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.pageHorizontalMargins,
-            vertical: SizeConfig.pageHorizontalMargins / 2),
+        margin: EdgeInsets.only(
+            top: 0,
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins,
+            bottom: SizeConfig.pageHorizontalMargins / 2),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -66,33 +104,11 @@ class SellConfirmationView extends StatelessWidget {
               child: Lottie.asset(Assets.jarLottie, fit: BoxFit.contain),
             ),
             Transform.translate(
-              offset: Offset(0, -SizeConfig.pageHorizontalMargins),
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                    text: "Your",
-                    style: TextStyles.body2.colour(UiConstants.kTextColor2),
-                    children: [
-                      TextSpan(
-                        text: investmentType == InvestmentType.AUGGOLD99
-                            ? " $grams gms "
-                            : " ₹ ${BaseUtil.getIntOrDouble(amount)} ",
-                        style: TextStyles.sourceSansB.body2
-                            .colour(UiConstants.kTextColor),
-                      ),
-                      TextSpan(text: "could have grown to "),
-                      TextSpan(
-                        text: "₹ ${compoundedValue().toInt()} ",
-                        style: TextStyles.sourceSansB.body2
-                            .colour(UiConstants.kTextColor),
-                      ),
-                      TextSpan(text: "by 2030")
-                    ]),
-              ),
-            ),
+                offset: Offset(0, -SizeConfig.pageHorizontalMargins),
+                child: getFomoWidget()),
             BankDetailsCard(),
             Text(
-              '₹${BaseUtil.digitPrecision(amount, 2)} will be credited to your linked bank account instantly',
+              'By continuing, ₹${BaseUtil.digitPrecision(amount, 2)} will be credited to your linked bank account instantly',
               textAlign: TextAlign.center,
               style: TextStyles.body2.colour(
                 UiConstants.kTextColor3,
@@ -103,7 +119,7 @@ class SellConfirmationView extends StatelessWidget {
             SizedBox(height: SizeConfig.padding16),
             AppNegativeBtn(
                 width: SizeConfig.screenWidth,
-                btnText: "Keep Growing",
+                btnText: "CANCEL",
                 onPressed: () => AppState.backButtonDispatcher!.didPopRoute())
           ],
         ),

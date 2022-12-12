@@ -178,10 +178,10 @@ class VerifyEmailState extends State<VerifyEmail> {
       });
       if (res.model!) {
         await _userService!.setBaseUser();
-        BaseUtil.showPositiveAlert(
-            "Email verified", "Thank you for verifying your email");
         while (AppState.screenStack.length > 1)
           AppState.backButtonDispatcher!.didPopRoute();
+        BaseUtil.showPositiveAlert(
+            "Email verified", "Thank you for verifying your email");
       } else {
         BaseUtil.showNegativeAlert(
           "Email verification failed",
@@ -232,9 +232,9 @@ class VerifyEmailState extends State<VerifyEmail> {
           setState(() {
             baseProvider.isGoogleSignInProgress = false;
           });
-          BaseUtil.showPositiveAlert("Success", "Email Verified successfully");
           Navigator.pop(context);
           AppState.backButtonDispatcher!.didPopRoute();
+          BaseUtil.showPositiveAlert("Success", "Email Verified successfully");
         } else {
           baseProvider.isGoogleSignInProgress = false;
           BaseUtil.showNegativeAlert(

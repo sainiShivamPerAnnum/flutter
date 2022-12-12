@@ -18,7 +18,6 @@ import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -26,7 +25,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-import '../../../../base_util.dart';
 import '../../../../core/enums/app_config_keys.dart';
 
 List<Color> randomColors = [
@@ -94,7 +92,8 @@ class Win extends StatelessWidget {
                                         'Current Winnings',
                                         style: TextStyles.rajdhaniSB.copyWith(
                                             fontSize: SizeConfig.body0),
-                                            key: ValueKey(Constants.CURRENT_WINNINGS),
+                                        key: ValueKey(
+                                            Constants.CURRENT_WINNINGS),
                                       ),
                                       Text(
                                         '₹ ${currentWinning.truncate() ?? '-'}',
@@ -144,7 +143,7 @@ class Win extends StatelessWidget {
                                                         ),
                                                         TextSpan(
                                                           text:
-                                                              " on reaching ₹200",
+                                                              " on reaching ₹${model.minWithdrawPrize}",
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
@@ -564,159 +563,159 @@ class FelloNewsComponent extends StatelessWidget {
   }
 }
 
-class ReferAndEarnComponent extends StatelessWidget {
-  ReferAndEarnComponent({
-    Key? key,
-    required this.model,
-  }) : super(key: key);
+// class ReferAndEarnComponent extends StatelessWidget {
+//   ReferAndEarnComponent({
+//     Key? key,
+//     required this.model,
+//   }) : super(key: key);
 
-  final WinViewModel model;
+//   final WinViewModel model;
 
-  bool isShareButtonEnabled = true;
+//   bool isShareButtonEnabled = true;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Container(
-            margin: EdgeInsets.fromLTRB(
-                SizeConfig.padding24,
-                SizeConfig.padding44,
-                SizeConfig.padding24,
-                (SizeConfig.screenWidth! * 0.15) / 2),
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: UiConstants.kSecondaryBackgroundColor,
-                borderRadius:
-                    BorderRadius.all(Radius.circular(SizeConfig.roundness12))),
-            child: Container(
-              padding: EdgeInsets.all(
-                SizeConfig.padding24,
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    child: SvgPicture.asset(Assets.referAndEarn,
-                        height: SizeConfig.padding90 + SizeConfig.padding10),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding28,
-                  ),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                            text: 'Earn upto Rs.50 and',
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTextColor3)),
-                        WidgetSpan(
-                            child: Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding4),
-                          height: 17,
-                          width: 17,
-                          child: SvgPicture.asset(
-                            Assets.token,
-                          ),
-                        )),
-                        TextSpan(
-                            text:
-                                '200 from every Golden Ticket. Win an iPad every month.',
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTextColor3)),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding28,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding32,
-                            vertical: SizeConfig.padding6),
-                        decoration: BoxDecoration(
-                            color: UiConstants.kArrowButtonBackgroundColor,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(SizeConfig.roundness8),
-                            ),
-                            border:
-                                Border.all(color: Colors.white, width: 0.6)),
-                        child: Text(
-                          model.loadingRefCode ? '-' : model.refCode,
-                          style:
-                              TextStyles.rajdhaniEB.title2.colour(Colors.white),
-                        ),
-                      ),
-                      Container(
-                        child: Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                model.copyReferCode();
-                              },
-                              icon: Icon(
-                                Icons.copy,
-                                color: UiConstants.kTabBorderColor,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                model.shareLink();
-                              },
-                              icon: Icon(
-                                Icons.share,
-                                color: UiConstants.kTabBorderColor,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding32,
-                  )
-                ],
-              ),
-            ),
-          ),
-          Container(
-            width: SizeConfig.screenWidth! * 0.17,
-            height: SizeConfig.screenWidth! * 0.17,
-            decoration: BoxDecoration(
-              color: UiConstants.kSecondaryBackgroundColor,
-              shape: BoxShape.circle,
-            ),
-            child: GestureDetector(
-              onTap: () {
-                model.navigateToRefer();
-              },
-              child: Container(
-                margin: EdgeInsets.all(SizeConfig.padding6),
-                padding: EdgeInsets.all(SizeConfig.padding8),
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  color: UiConstants.kArrowButtonBackgroundColor,
-                  shape: BoxShape.circle,
-                ),
-                child: SvgPicture.asset(
-                  Assets.chevRonRightArrow,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       child: Stack(
+//         alignment: Alignment.bottomCenter,
+//         children: [
+//           Container(
+//             margin: EdgeInsets.fromLTRB(
+//                 SizeConfig.padding24,
+//                 SizeConfig.padding44,
+//                 SizeConfig.padding24,
+//                 (SizeConfig.screenWidth! * 0.15) / 2),
+//             width: double.infinity,
+//             decoration: BoxDecoration(
+//                 color: UiConstants.kSecondaryBackgroundColor,
+//                 borderRadius:
+//                     BorderRadius.all(Radius.circular(SizeConfig.roundness12))),
+//             child: Container(
+//               padding: EdgeInsets.all(
+//                 SizeConfig.padding24,
+//               ),
+//               child: Column(
+//                 children: [
+//                   Container(
+//                     child: SvgPicture.asset(Assets.referAndEarn,
+//                         height: SizeConfig.padding90 + SizeConfig.padding10),
+//                   ),
+//                   SizedBox(
+//                     height: SizeConfig.padding28,
+//                   ),
+//                   RichText(
+//                     textAlign: TextAlign.center,
+//                     text: TextSpan(
+//                       children: [
+//                         TextSpan(
+//                             text: 'Earn upto Rs.50 and',
+//                             style: TextStyles.sourceSans.body3
+//                                 .colour(UiConstants.kTextColor3)),
+//                         WidgetSpan(
+//                             child: Container(
+//                           margin: EdgeInsets.symmetric(
+//                               horizontal: SizeConfig.padding4),
+//                           height: 17,
+//                           width: 17,
+//                           child: SvgPicture.asset(
+//                             Assets.token,
+//                           ),
+//                         )),
+//                         TextSpan(
+//                             text:
+//                                 '200 from every Golden Ticket. Win an iPad every month.',
+//                             style: TextStyles.sourceSans.body3
+//                                 .colour(UiConstants.kTextColor3)),
+//                       ],
+//                     ),
+//                   ),
+//                   SizedBox(
+//                     height: SizeConfig.padding28,
+//                   ),
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       Container(
+//                         padding: EdgeInsets.symmetric(
+//                             horizontal: SizeConfig.padding32,
+//                             vertical: SizeConfig.padding6),
+//                         decoration: BoxDecoration(
+//                             color: UiConstants.kArrowButtonBackgroundColor,
+//                             borderRadius: BorderRadius.all(
+//                               Radius.circular(SizeConfig.roundness8),
+//                             ),
+//                             border:
+//                                 Border.all(color: Colors.white, width: 0.6)),
+//                         child: Text(
+//                           model.loadingRefCode ? '-' : model.refCode,
+//                           style:
+//                               TextStyles.rajdhaniEB.title2.colour(Colors.white),
+//                         ),
+//                       ),
+//                       Container(
+//                         child: Row(
+//                           children: [
+//                             IconButton(
+//                               onPressed: () {
+//                                 model.copyReferCode();
+//                               },
+//                               icon: Icon(
+//                                 Icons.copy,
+//                                 color: UiConstants.kTabBorderColor,
+//                               ),
+//                             ),
+//                             IconButton(
+//                               onPressed: () {
+//                                 model.shareLink();
+//                               },
+//                               icon: Icon(
+//                                 Icons.share,
+//                                 color: UiConstants.kTabBorderColor,
+//                               ),
+//                             )
+//                           ],
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   SizedBox(
+//                     height: SizeConfig.padding32,
+//                   )
+//                 ],
+//               ),
+//             ),
+//           ),
+//           Container(
+//             width: SizeConfig.screenWidth! * 0.17,
+//             height: SizeConfig.screenWidth! * 0.17,
+//             decoration: BoxDecoration(
+//               color: UiConstants.kSecondaryBackgroundColor,
+//               shape: BoxShape.circle,
+//             ),
+//             child: GestureDetector(
+//               onTap: () {
+//                 model.navigateToRefer();
+//               },
+//               child: Container(
+//                 margin: EdgeInsets.all(SizeConfig.padding6),
+//                 padding: EdgeInsets.all(SizeConfig.padding8),
+//                 width: double.maxFinite,
+//                 decoration: BoxDecoration(
+//                   color: UiConstants.kArrowButtonBackgroundColor,
+//                   shape: BoxShape.circle,
+//                 ),
+//                 child: SvgPicture.asset(
+//                   Assets.chevRonRightArrow,
+//                   color: Colors.white,
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class RewardsAvatar extends StatelessWidget {
   final Color? color;
