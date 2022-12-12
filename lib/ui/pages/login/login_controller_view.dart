@@ -112,7 +112,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   bottom: MediaQuery.of(context).viewInsets.bottom,
                   child: GestureDetector(
                     onTap: () {
-                      if (BaseUtil.showNoInternetAlert()) ;
+                      if (BaseUtil.showNoInternetAlert()) return;
                       if (model.state == ViewState.Idle)
                         model.processScreenInput(
                           model.currentPage,

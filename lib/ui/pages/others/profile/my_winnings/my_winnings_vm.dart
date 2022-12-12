@@ -8,7 +8,6 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -22,7 +21,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -43,7 +41,7 @@ class MyWinningsViewModel extends BaseViewModel {
   final UserService _userService = locator<UserService>();
   final TransactionHistoryService? _transactionHistoryService =
       locator<TransactionHistoryService>();
-  final LocalDBModel? _localDBModel = locator<LocalDBModel>();
+  // final LocalDBModel? _localDBModel = locator<LocalDBModel>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
@@ -282,7 +280,7 @@ class MyWinningsViewModel extends BaseViewModel {
       _userService!.getUserFundWalletData();
       _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
-      await _localDBModel!.savePrizeClaimChoice(choice);
+      // await _localDBModel!.savePrizeClaimChoice(choice);
 
       return true;
     } else {

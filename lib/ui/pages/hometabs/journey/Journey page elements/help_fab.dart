@@ -1,6 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -105,3 +104,20 @@ class _HelpFabState extends State<HelpFab> {
     );
   }
 }
+
+// class HelpFabUI {
+//   factory HelpFabUI(SingleInfo fabData) {
+//     if (fabData.iconUri.isEmpty && fabData.title.isEmpty)
+//       return NoFabUI();
+//     else
+//       return FabUI();
+//   }
+// }
+
+// class NoFabUI implements HelpFabUI {}
+
+// class FabUI implements HelpFabUI {
+//   Widget build() {
+//     return FloatingActionButton(onPressed: onPressed);
+//   }
+// }

@@ -1,7 +1,6 @@
 // import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
-import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
@@ -14,7 +13,6 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/enums/winner_service_enum.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -119,7 +117,7 @@ class _MyAppState extends State<MyApp> {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
-          ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
+          // ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
           ChangeNotifierProvider(create: (_) => locator<AugmontService>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
           ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),

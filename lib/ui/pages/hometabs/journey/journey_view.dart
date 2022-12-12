@@ -506,7 +506,7 @@ class CacheClearWidget extends StatelessWidget {
         children: [
           InkWell(
             onTap: () async {
-              CacheService().invalidateAll();
+              await CacheService.invalidateAll();
               BaseUtil.showPositiveAlert(
                   "Isar cleared successfully", "get back to work");
             },

@@ -1,4 +1,5 @@
-import 'package:felloapp/core/base_remote_config.dart';
+import 'dart:ui' as ui;
+
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_image.dart';
@@ -13,7 +14,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:ui' as ui;
 
 class LowerCaseTextFormatter extends TextInputFormatter {
   @override
@@ -97,7 +97,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       onSubmit: (_) => widget.loginModel.processScreenInput(2),
                       // suffix: SizedBox(),
                       validator: (value) {
-                        if (value != null && value.isNotEmpty) {
+                        if (value != null && value.trim().isNotEmpty) {
                           // model.hasInputError = false;
                           return null;
                         } else {

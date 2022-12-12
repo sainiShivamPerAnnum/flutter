@@ -7,7 +7,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
-import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -42,7 +41,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shared_preferences_android/shared_preferences_android.dart';
 
 class RootViewModel extends BaseViewModel {
   final BaseUtil? _baseUtil = locator<BaseUtil>();
@@ -575,7 +573,7 @@ class RootViewModel extends BaseViewModel {
         if (_userService.userBootUp!.data!.cache!.keys != null) {
           for (String id
               in _userService.userBootUp!.data!.cache!.keys as List<String>) {
-            CacheService().invalidateByKey(id);
+            CacheService.invalidateByKey(id);
           }
         }
 

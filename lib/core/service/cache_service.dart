@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,7 +22,8 @@ class CacheService {
     }
   }
 
-  Future<void> invalidateAll() async {
+  static Future<void> invalidateAll() async {
+    final CustomLogger? _logger = locator<CustomLogger>();
     try {
       _logger!.d('cache: invalidate all');
       await _isar!.writeTxn((i) async {
@@ -107,7 +107,8 @@ class CacheService {
     }
   }
 
-  Future<bool> invalidateByKey(String key) async {
+  static Future<bool> invalidateByKey(String key) async {
+    final CustomLogger? _logger = locator<CustomLogger>();
     try {
       _logger!.d('cache: invalidating key $key');
 
@@ -118,7 +119,7 @@ class CacheService {
 
         final c = await i.cacheModels
             .deleteAll(data.map((e) => e.id).toList() as List<int>);
-        _logger!.d('cache: invalidated $c');
+        _logger.d('cache: invalidated $c');
       });
 
       return true;

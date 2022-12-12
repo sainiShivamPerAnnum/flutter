@@ -6,7 +6,6 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -57,7 +56,7 @@ class LauncherViewModel extends BaseViewModel {
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
-  final LocalDBModel _localDBModel = locator<LocalDBModel>();
+  // final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final UserService _userService = locator<UserService>();
 
   FirebasePerformance _performance = FirebasePerformance.instance;
@@ -131,7 +130,7 @@ class LauncherViewModel extends BaseViewModel {
       final _invalidate =
           AppConfig.getValue(AppConfigKey.invalidateBefore) as int;
       if (now <= _invalidate) {
-        await new CacheService().invalidateAll();
+        await CacheService.invalidateAll();
       }
       // test
       // await new CacheService().invalidateAll();

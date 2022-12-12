@@ -139,6 +139,7 @@ class AnalyticsEvents {
   static const bannerClick = "Banner Click";
   static const challengeTapped = "Challenge Tapped";
   static const challengeCtaTapped = "Challenge CTA Tapped";
+  static const assetOptionsModalTapped = "Assets Options Modalsheet tapped";
   static const notificationsClicked = "Notifications Click";
   static const sellInitiate = "Sell Initiate";
   static const playSection = "Play Tab Tapped";

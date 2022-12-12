@@ -14,11 +14,8 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -158,7 +155,7 @@ class WinViewModel extends BaseViewModel {
   get refCode => _refCode;
   get refUrl => _refUrl;
 
-  LocalDBModel? _localDBModel = locator<LocalDBModel>();
+  // LocalDBModel? _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
   WinnersModel? _winners;
   int _currentPage = 0;
@@ -273,7 +270,8 @@ class WinViewModel extends BaseViewModel {
   }
 
   fetchBasicConstantValues() {
-    _minWithdrawPrize = AppConfig.getValue(AppConfigKey.min_withdrawable_prize).toString();
+    _minWithdrawPrize =
+        AppConfig.getValue(AppConfigKey.min_withdrawable_prize).toString();
     _refUnlock = AppConfig.getValue(AppConfigKey.unlock_referral_amt);
     _refUnlockAmt = BaseUtil.toInt(_refUnlock);
     _minWithdrawPrizeAmt = BaseUtil.toInt(_minWithdrawPrize);
@@ -417,9 +415,9 @@ class WinViewModel extends BaseViewModel {
       return "Share";
   }
 
-  Future<PrizeClaimChoice> getClaimChoice() async {
-    return await _localDBModel!.getPrizeClaimChoice();
-  }
+  // Future<PrizeClaimChoice> getClaimChoice() async {
+  //   return await _localDBModel!.getPrizeClaimChoice();
+  // }
 
   void navigateToMyWinnings(WinViewModel model) {
     AppState.delegate!.appState.currentAction = PageAction(
@@ -551,7 +549,7 @@ class WinViewModel extends BaseViewModel {
       _userService!.getUserFundWalletData();
       _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
-      await _localDBModel!.savePrizeClaimChoice(choice);
+      // await _localDBModel!.savePrizeClaimChoice(choice);
 
       return true;
     } else {

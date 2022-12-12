@@ -1,15 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 import 'dart:developer';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
-import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -251,6 +248,7 @@ class GoldenTicketRepository extends BaseRepo {
           ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
           token: bearer,
           cBaseUrl: _baseUrl);
+      logger.d("DAILY APP : $response");
       final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);
 
       //NETWORK CHECK IF EVENT OVER FOR THIS USER

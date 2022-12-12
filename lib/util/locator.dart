@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
@@ -90,7 +89,6 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
-import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
@@ -149,7 +147,7 @@ Future<void> setupLocator() async {
 
   //Repository
   locator.registerLazySingleton(() => DBModel());
-  locator.registerLazySingleton(() => LocalDBModel());
+  // locator.registerLazySingleton(() => LocalDBModel());
   locator.registerLazySingleton(() => AugmontService());
   locator.registerLazySingleton(() => UserRepository());
   locator.registerLazySingleton(() => TambolaRepo());

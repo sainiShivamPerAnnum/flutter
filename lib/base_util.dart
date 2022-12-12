@@ -8,7 +8,6 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -24,16 +23,13 @@ import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
-
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
@@ -41,13 +37,12 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
-
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
+import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -55,15 +50,13 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
   final DBModel? _dbModel = locator<DBModel>();
-  final LocalDBModel? _lModel = locator<LocalDBModel>();
+  // final LocalDBModel? _lModel = locator<LocalDBModel>();
   final AppState? _appState = locator<AppState>();
   final UserService? _userService = locator<UserService>();
   final UserRepository? _userRepo = locator<UserRepository>();
@@ -409,7 +402,8 @@ class BaseUtil extends ChangeNotifier {
     //       isBarrierDismissible: true,
     //       hapticVibrate: false,
     //       content: CompleteProfileDialog());
-    _analyticsService!.track(eventName: AnalyticsEvents.challengeCtaTapped);
+    _analyticsService!
+        .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
     return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
@@ -440,13 +434,13 @@ class BaseUtil extends ChangeNotifier {
     return AppToasts.showNoInternetToast();
   }
 
-  Future<bool> getDrawStatus() async {
-    if (DateTime.now().weekday != await _lModel!.getDailyPickAnimLastDay() &&
-        DateTime.now().hour >= 18 &&
-        DateTime.now().hour < 24) return true;
+  // Future<bool> getDrawStatus() async {
+  //   if (DateTime.now().weekday != await _lModel!.getDailyPickAnimLastDay() &&
+  //       DateTime.now().hour >= 18 &&
+  //       DateTime.now().hour < 24) return true;
 
-    return false;
-  }
+  //   return false;
+  // }
 
   static void openDialog({
     Widget? content,
@@ -517,7 +511,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> signOut() async {
     try {
-      await _lModel!.deleteLocalAppData();
+      // await _lModel!.deleteLocalAppData();
       logger.d('Cleared local cache');
       _appState!.setCurrentTabIndex = 0;
 
@@ -582,18 +576,18 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  void openTambolaGame() async {
-    if (await getDrawStatus()) {
-      await _lModel!.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
-            (value) =>
-                print("Daily Picks Draw Animation Save Status Code: $value"),
-          );
-      AppState.delegate!.appState.currentAction =
-          PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
-    } else
-      AppState.delegate!.appState.currentAction =
-          PageAction(state: PageState.addPage, page: TGamePageConfig);
-  }
+  // void openTambolaGame() async {
+  //   if (await getDrawStatus()) {
+  //     await _lModel!.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
+  //           (value) =>
+  //               print("Daily Picks Draw Animation Save Status Code: $value"),
+  //         );
+  //     AppState.delegate!.appState.currentAction =
+  //         PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
+  //   } else
+  //     AppState.delegate!.appState.currentAction =
+  //         PageAction(state: PageState.addPage, page: TGamePageConfig);
+  // }
 
   bool isOldCustomer() {
     //all users before april 2021 are marked old
@@ -860,7 +854,7 @@ class BaseUtil extends ChangeNotifier {
 
   bool isSignedIn() => (firebaseUser != null && firebaseUser!.uid != null);
 
-  bool isActiveUser() => (_myUser != null && !_myUser!.hasIncompleteDetails());
+  // bool isActiveUser() => (_myUser != null && !_myUser!.hasIncompleteDetails());
 
   DateTime? get userCreationTimestamp => _userCreationTimestamp;
 
