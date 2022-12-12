@@ -100,6 +100,8 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                         if (value != null && value.trim().isNotEmpty) {
                           // model.hasInputError = false;
                           return null;
+                        } else if (value!.trim().length < 4) {
+                          return "At least 3 characters required";
                         } else {
                           // model.hasInputError = true;
                           return 'Please enter your name as per PAN';
