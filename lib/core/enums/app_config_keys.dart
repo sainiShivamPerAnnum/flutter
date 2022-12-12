@@ -45,8 +45,7 @@ extension AppConfigKeys on String {
 
       case 'tambolaDailyPickCount':
         return AppConfigKey.tambola_daily_pick_count;
-      case 'appShareMessage':
-        return AppConfigKey.appShareMessage;
+
       case 'minWithdrawablePrice':
         return AppConfigKey.min_withdrawable_prize;
       case 'unlock_referral_amt':
