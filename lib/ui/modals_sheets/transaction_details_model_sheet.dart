@@ -257,6 +257,18 @@ class _TransactionDetailsBottomSheetState
                             ),
                           ),
                         ],
+                        if (widget.transaction?.misMap
+                                ?.containsKey("happyHourErrorMessage") ??
+                            false) ...[
+                          SizedBox(height: SizeConfig.padding12),
+                          Text(
+                              widget.transaction
+                                      ?.misMap?["happyHourErrorMessage"] ??
+                                  "",
+                              textAlign: TextAlign.center,
+                              style: TextStyles.sourceSans.body2
+                                  .colour(Color(0xffB5CDCB)))
+                        ],
                         SizedBox(height: SizeConfig.padding12),
                         Padding(
                           padding: EdgeInsets.only(
