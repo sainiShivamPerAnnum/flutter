@@ -20,7 +20,10 @@ class SellConfirmationView extends StatelessWidget {
   final InvestmentType investmentType;
 
   double compoundedValue() {
-    double val = amount * (math.pow((1 + 0.065), (2030 - DateTime.now().year)));
+    double val = amount *
+        (math.pow(
+            (1 + (investmentType == InvestmentType.AUGGOLD99 ? 0.065 : 0.1)),
+            (2030 - DateTime.now().year)));
     print("Compounded value: $val");
     return val;
   }

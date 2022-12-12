@@ -165,7 +165,6 @@ class GoldenTicketService
       Future.delayed(Duration(milliseconds: 200), () {
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
-
         Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
           PageRouteBuilder(
             opaque: false,

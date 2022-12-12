@@ -88,7 +88,6 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       hintText: "Enter Full Name",
                       focusNode: model.nameFocusNode,
                       textCapitalization: TextCapitalization.words,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
                           RegExp(r'[a-zA-Z ]'),
@@ -98,12 +97,10 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       // suffix: SizedBox(),
                       validator: (value) {
                         if (value != null && value.trim().isNotEmpty) {
-                          // model.hasInputError = false;
+                          if (value.trim().length < 3)
+                            return "At least 3 characters required";
                           return null;
-                        } else if (value!.trim().length < 4) {
-                          return "At least 3 characters required";
                         } else {
-                          // model.hasInputError = true;
                           return 'Please enter your name as per PAN';
                         }
                       },

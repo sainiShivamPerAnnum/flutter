@@ -36,7 +36,7 @@ class AppState extends ChangeNotifier {
   static Map<String, dynamic>? startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String? _fcmData;
-  static bool isFirstTime = true;
+  static bool isFirstTime = false;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
   static bool isWebGameLInProgress = false;
@@ -48,6 +48,7 @@ class AppState extends ChangeNotifier {
   static bool isSaveOpened = false;
   static bool isWinOpened = false;
   static bool isRootAvailableForIncomingTaskExecution = true;
+  static bool isInstantGtViewInView = false;
 
   static List<ScreenItem> screenStack = [];
   static FelloRouterDelegate? delegate;
@@ -147,6 +148,7 @@ class AppState extends ChangeNotifier {
 
   static dump() {
     isRootAvailableForIncomingTaskExecution = true;
+    isFirstTime = false;
   }
   // setLastTapIndex() {
   //   SharedPreferences.getInstance().then((instance) {

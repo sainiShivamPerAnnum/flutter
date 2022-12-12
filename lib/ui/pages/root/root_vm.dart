@@ -97,9 +97,10 @@ class RootViewModel extends BaseViewModel {
       _userService.checkForNewNotifications();
       _userService.getProfilePicture();
       _initAdhocNotifications();
-
-      _marketingService.checkUserDailyAppCheckInStatus().then((value) {
-        getHappyHourCampaign();
+      Future.delayed(Duration(seconds: 4), () {
+        _marketingService.checkUserDailyAppCheckInStatus().then((value) {
+          getHappyHourCampaign();
+        });
       });
     });
   }
@@ -286,8 +287,9 @@ class RootViewModel extends BaseViewModel {
           locator<SharedPreferences>().remove('showedAfterHappyHourDialog');
         }
       }
+
       if (campaign.model!.data!.showHappyHour) {
-        if (!_isDuringHappyHourVisited) {
+        if (!_isDuringHappyHourVisited && !AppState.isFirstTime) {
           locator<BaseUtil>().showHappyHourDialog(campaign.model!);
           locator<SharedPreferences>().setBool("duringHappyHourVisited", true);
           locator<SharedPreferences>()

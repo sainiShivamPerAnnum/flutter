@@ -1,5 +1,3 @@
-import 'package:felloapp/core/model/app_config_model.dart';
-
 enum AppConfigKey {
   loginAssetUrl,
   invalidateBefore,
@@ -58,7 +56,7 @@ extension AppConfigKeys on String {
         return AppConfigKey.enabled_psp_apps;
       case 'appShareMessage':
         return AppConfigKey.appShareMessage;
-      case 'minPrincipleForPrice':
+      case 'minPrincipleForPrize':
         return AppConfigKey.min_principle_for_prize;
       case 'tambolaCost':
         return AppConfigKey.tambola_cost;

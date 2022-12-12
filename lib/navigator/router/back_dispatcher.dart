@@ -59,11 +59,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
     // _journeyService!.checkForMilestoneLevelChange();
-    if (_journeyService!.isJourneyOnboardingInView) {
-      _journeyService!.isJourneyOnboardingInView = false;
-      _journeyService!.isUserJourneyOnboarded = true;
-    }
-
+    // if (_journeyService!.isJourneyOnboardingInView) {
+    //   _journeyService!.isJourneyOnboardingInView = false;
+    //   _journeyService!.isUserJourneyOnboarded = true;
+    // }
+    if (AppState.isInstantGtViewInView) return Future.value(true);
     if (AppState.screenStack.last == ScreenItem.loader)
       return Future.value(true);
 

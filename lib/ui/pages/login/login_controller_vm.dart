@@ -212,8 +212,9 @@ class LoginControllerViewModel extends BaseViewModel {
 
             setState(ViewState.Busy);
 
-            String name =
-                _nameKey.currentState!.model.nameController.text.trim();
+            String name = _nameKey.currentState!.model.nameController.text
+                .trim()
+                .replaceAll(new RegExp(r"\s+\b|\b\s"), " ");
             String gender =
                 _formatGender(_nameKey.currentState!.model.genderValue);
             if (userService.baseUser == null) {
@@ -386,7 +387,9 @@ class LoginControllerViewModel extends BaseViewModel {
       isOnBoarded: userService.isUserOnboarded,
       baseUser: userService.baseUser,
     );
+
     AppState.isOnboardingInProgress = false;
+    AppState.isFirstTime = true;
     appStateProvider.rootIndex = 0;
 
     Map<String, dynamic> response = await _internalOpsService!.initDeviceInfo();

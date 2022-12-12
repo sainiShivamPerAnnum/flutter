@@ -14,8 +14,6 @@ import 'package:felloapp/ui/service_elements/events/daily_app_bonus_modalsheet.d
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -30,6 +28,13 @@ class MarketingEventHandlerService
   DailyAppCheckInEventModel? _dailyAppCheckInEventData;
   bool _isDailyAppBonusClaimInProgress = false;
   bool _isDailyAppBonusClaimed = false;
+  bool _showModalsheet = true;
+  bool get showModalsheet => this._showModalsheet;
+
+  set showModalsheet(bool value) {
+    this._showModalsheet = value;
+    notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
+  }
 
   get isDailyAppBonusClaimed => this._isDailyAppBonusClaimed;
 
@@ -82,8 +87,7 @@ class MarketingEventHandlerService
         await BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-          backgroundColor: UiConstants.kSaveDigitalGoldCardBg,
+          backgroundColor: Colors.transparent,
           hapticVibrate: true,
           isScrollControlled: true,
           content: DailyAppCheckInEventModalSheet(),
@@ -120,6 +124,7 @@ class MarketingEventHandlerService
     await _gtService.fetchAndVerifyGoldenTicketByID();
     _isDailyAppBonusClaimed = true;
     isDailyAppBonusClaimInProgress = false;
+    showModalsheet = false;
     _gtService.showInstantGoldenTicketView(
         source: GTSOURCE.game, onJourney: true);
   }

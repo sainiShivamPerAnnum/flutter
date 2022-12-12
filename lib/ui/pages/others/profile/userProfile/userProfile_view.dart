@@ -102,11 +102,11 @@ class UserProfileForm extends StatelessWidget {
                     )
                   : SizedBox(),
               validator: (value) {
-                if (value != null && value.isNotEmpty) {
-                  // model.hasInputError = false;
+                if (value != null && value.trim().isNotEmpty) {
+                  if (value.trim().length < 3)
+                    return "At least 3 characters required";
                   return null;
                 } else {
-                  // model.hasInputError = true;
                   return 'Please enter your name as per PAN';
                 }
               },

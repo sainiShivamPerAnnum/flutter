@@ -279,7 +279,7 @@ class UserProfileVM extends BaseViewModel {
       context: AppState.delegate!.navigatorKey.currentContext!,
       initialDate: DateTime(2000, 1, 1),
       firstDate: DateTime(1950, 1, 1),
-      lastDate: DateTime(2002, 1, 1),
+      lastDate: DateTime(2004, 1, 1),
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.dark().copyWith(
@@ -363,7 +363,9 @@ class UserProfileVM extends BaseViewModel {
           await _userRepo.updateUser(
             uid: _userService!.baseUser!.uid,
             dMap: {
-              BaseUser.fldName: _userService!.baseUser!.name,
+              BaseUser.fldName: _userService!.baseUser!.name!
+                  .trim()
+                  .replaceAll(new RegExp(r"\s+\b|\b\s"), " "),
               BaseUser.fldDob: _userService!.baseUser!.dob,
               BaseUser.fldGender: _userService!.baseUser!.gender,
               BaseUser.fldIsEmailVerified:

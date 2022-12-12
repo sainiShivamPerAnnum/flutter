@@ -2,7 +2,6 @@ import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -26,7 +25,7 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
   final String? appBarTitle;
 
   getGameName(String? gameCode) {
-    return _gamesRepo.allgames!
+    return _gamesRepo.games!
         .firstWhere((game) => game.gameCode == gameCode)
         .gameName;
   }
