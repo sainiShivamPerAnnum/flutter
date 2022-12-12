@@ -303,6 +303,10 @@ class RootViewModel extends BaseViewModel {
       }
 
       final endTime = DateTime.parse(campaign.model!.data!.endTime!);
+
+      if (endTime.day != DateTime.now().day) {
+        return;
+      }
       final isVistedDuringHappyHour =
           locator<SharedPreferences>().getBool('duringHappyHourVisited') ??
               false;
