@@ -178,7 +178,7 @@ class AllParticipantsView extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "${model!.pastWinners![index].score!.truncateToDecimalPlaces(3)} gm"
+                                  "₹ ${model!.pastWinners![index].score!.truncateToDecimalPlaces(3)}"
                                       .toString(),
                                   style: TextStyles.rajdhaniM.body3,
                                 ),

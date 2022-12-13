@@ -97,7 +97,7 @@ class RootViewModel extends BaseViewModel {
       _userService.checkForNewNotifications();
       _userService.getProfilePicture();
       _initAdhocNotifications();
-      Future.delayed(Duration(seconds: 4), () {
+      Future.delayed(Duration(seconds: 3), () {
         _marketingService.checkUserDailyAppCheckInStatus().then((value) {
           getHappyHourCampaign();
         });

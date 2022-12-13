@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/draw_time_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -16,7 +13,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 
 class HappyHourModel extends StatefulWidget {
   final HappyHourCampign model;
@@ -196,7 +192,8 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                               .didPopRoute()
                               .then((value) {
                             if (value)
-                              BaseUtil.showPositiveAlert("We will notify",
+                              BaseUtil.showPositiveAlert(
+                                  "Your Happy hour notifications is set!",
                                   "We will notify you before the next happy hour starts");
                           });
                           // locator<MixpanelAnalytics>()

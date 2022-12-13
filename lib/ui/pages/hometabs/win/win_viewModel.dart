@@ -514,7 +514,6 @@ class WinViewModel extends BaseViewModel {
   claim(PrizeClaimChoice choice, double claimPrize) {
     // double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
-      AppState.backButtonDispatcher!.didPopRoute();
       getGramsWon(claimPrize).then((value) {
         if (flag) {
           showSuccessPrizeWithdrawalDialog(
@@ -550,9 +549,11 @@ class WinViewModel extends BaseViewModel {
       _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
       // await _localDBModel!.savePrizeClaimChoice(choice);
+      AppState.backButtonDispatcher!.didPopRoute();
 
       return true;
     } else {
+      AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showNegativeAlert(
         'Withdrawal Failed',
         response.errorMessage ?? "Please try again after sometime",

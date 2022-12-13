@@ -4,9 +4,7 @@ import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
-import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:intl/intl.dart';
@@ -124,6 +122,7 @@ class WinnerService extends PropertyChangeNotifier<WinnerServiceProperties> {
         _winners.addAll(gameWinners.winners!);
       }
     });
+    _winners.sort((a, b) => b.amount!.compareTo(a.amount!));
     setWinners();
   }
 

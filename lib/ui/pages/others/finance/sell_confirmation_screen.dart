@@ -33,7 +33,7 @@ class SellConfirmationView extends StatelessWidget {
     double diff = (compoundedValue() - amount).abs();
     if (cv < 100 || (investmentType == InvestmentType.LENDBOXP2P && diff < 100))
       return Text(
-        "Users have earned huge interests on their savings by holding for more than a year 💸",
+        "Users have earned huge interests on their savings by holding for more than a year 💰",
         textAlign: TextAlign.center,
         style: TextStyles.body2.colour(UiConstants.kTextColor),
       );
@@ -57,7 +57,7 @@ class SellConfirmationView extends StatelessWidget {
                 style:
                     TextStyles.sourceSansB.body2.colour(UiConstants.kTextColor),
               ),
-              TextSpan(text: "by 2030")
+              TextSpan(text: "by 2030! 💸")
             ]),
       );
   }
