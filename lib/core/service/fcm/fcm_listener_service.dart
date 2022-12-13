@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:apxor_flutter/apxor_flutter.dart';
@@ -58,6 +59,13 @@ class FcmListener {
           AppState.startupNotifMessage = message.data;
         }
       });
+
+      final data = PreferenceHelper.getString("fcmData");
+
+      if (AppState.startupNotifMessage == null) {
+        AppState.startupNotifMessage = jsonDecode(data);
+        PreferenceHelper.remove("fcmData");
+      }
 
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         RemoteNotification? notification = message.notification;
