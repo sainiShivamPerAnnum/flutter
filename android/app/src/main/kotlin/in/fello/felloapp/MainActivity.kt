@@ -3,83 +3,159 @@ package `in`.fello.felloapp
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import android.view.View
-import androidx.annotation.NonNull
-import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import java.io.ByteArrayOutputStream
+import kotlin.math.log
 
 
-class MainActivity : FlutterFragmentActivity() {
+class MainActivity : FlutterFragmentActivity()  {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
     private val getUpiApps="getUpiApps"
-    private val intiateTransaction="intiateTransaction"
+    private val intiateTransaction="initiateTransaction"
     private lateinit var result: MethodChannel.Result
     private val successRequestCode = 101
-
-
+    private lateinit var context:Context
     override fun configureFlutterEngine( flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+            context=applicationContext
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
                 // Note: this method is invoked on the main thread.
                 call, result ->
+            isAlreadyReturend=false;
             this.result=result;
             when (call.method){
                 "createNotificationChannel" ->{
                     val argData = call.arguments as HashMap<String,String>
                     val completed = createNotificationChannel(argData)
 
-                    result.success(completed)
+                    returnResult(completed as Object)
                 }
 
-                getUpiApps->startUpiChannel(UPIMethod.getApps,"")
-                    intiateTransaction ->startUpiChannel(UPIMethod.startTransaction,call.argument<String>("deepLink").toString(),call.argument<String>("app").toString())
+                getUpiApps->getupiApps()
+                intiateTransaction ->startTransation(call.argument<String>("deepLink").toString(),call.argument<String>("app").toString())
+                else -> result.notImplemented();
             }
+
 
 
 
         }
     }
 
+    private var isAlreadyReturend=false
 
-    private fun  startUpiChannel(type:UPIMethod,deepLink:String="",app:String=""){
-        var intent= Intent(this,UpiChannel::class.java)
-        if(type==UPIMethod.startTransaction){
-            intent.putExtra("deepLink",deepLink)
-            intent.putExtra("app",app)
-            intent.putExtra("type",type)
+    private fun returnResult(re:Object){
+        if(!isAlreadyReturend){
+            isAlreadyReturend=true
+            result.success(re)
+
         }
-        startActivityForResult(intent,successRequestCode)
 
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        if(requestCode==Activity.RESULT_OK && requestCode==requestCode){
-            val e=data?.getIntExtra("error",400)
-            val message=data?.getStringExtra("message")
-            val list=data?.getLongArrayExtra("apps")
+        if(requestCode==Activity.RESULT_OK ){
+            result.success(data?.getStringExtra("response")!!)
 
-            if(e!=200){
-                result.error(e.toString(),message,"")
-            }else{
-                if (list != null) {
-                    if(list.isEmpty()){
-                        result.success(message)
-                            return
-                    }
-                }
-                result.success(list)
+        }else {
 
-            }
-
+            returnResult("user_cancelled" as Object)
         }
+
+
+
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+
+    private fun startTransation(app:String,deepLink:String){
+
+        try {
+            val uri = Uri.parse(deepLink)
+            val deepLinkIntent=Intent(Intent.ACTION_VIEW)
+            deepLinkIntent.data = uri;
+
+
+            val chooser = Intent.createChooser(deepLinkIntent, "Pay with")
+            if(deepLinkIntent.resolveActivity(context.packageManager)==null){
+
+                result.error("400","No App Found","No UPI Apps Found")
+                return
+            }
+            else
+            this.startActivityForResult(chooser,successRequestCode)
+
+
+
+        }catch (e: Exception){
+            Log.d("Something went Wrong:" ,"$e")
+            e.printStackTrace()
+        }
+    }
+
+
+
+
+    private fun getupiApps(){
+
+        val packageManager = context.packageManager
+        val mainIntent = Intent(Intent.ACTION_MAIN, null)
+        mainIntent.addCategory(Intent.CATEGORY_DEFAULT)
+        mainIntent.addCategory(Intent.CATEGORY_BROWSABLE)
+        mainIntent.action = Intent.ACTION_VIEW
+        val uri1 = Uri.Builder().scheme("upi").authority("pay").build()
+        mainIntent.data = uri1
+        var list= mutableListOf<Map<String,String>>()
+
+        try {
+            val activities = packageManager.queryIntentActivities(mainIntent, PackageManager.MATCH_DEFAULT_ONLY)
+            Log.d(activities.toString(),"UPI Apps Present")
+            // Convert the activities into a response that can be transferred over the channel.
+
+        for(it in activities){
+            val packageName = it.activityInfo.packageName
+            val drawable = packageManager.getApplicationIcon(packageName)
+
+            val bitmap = getBitmapFromDrawable(drawable)
+            val icon = if (bitmap != null) {
+                encodeToBase64(bitmap)
+            } else {
+                null
+            }
+            var map=mapOf(
+                    "packageName" to packageName,
+                    "icon" to icon,
+                    "priority" to it.priority,
+                    "preferredOrder" to it.preferredOrder
+            )
+            list.add(
+                    map as Map<String, String>
+            )
+        }
+
+
+            Log.d(list.size.toString(),"List")
+            returnResult(list as Object)
+
+        } catch (ex: Exception) {
+            Log.e("UPI",ex.message!!)
+            result.error("400", "exception",ex.message )
+        }
     }
 
 
@@ -117,4 +193,23 @@ class MainActivity : FlutterFragmentActivity() {
         }
         return completed
     }
+
+
+
+
+
+    private fun encodeToBase64(image: Bitmap): String? {
+        val byteArrayOS = ByteArrayOutputStream()
+        image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOS)
+        return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.NO_WRAP)
+    }
+
+    private fun getBitmapFromDrawable(drawable: Drawable): Bitmap? {
+        val bmp: Bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bmp)
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
+        drawable.draw(canvas)
+        return bmp
+    }
+
 }

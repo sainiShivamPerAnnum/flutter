@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:upi_pay/src/transaction_details.dart';
 
 class UpiMethodChannel {
-  MethodChannel _channel = MethodChannel('upi_pay');
+  MethodChannel _channel =
+      MethodChannel('fello.in/dev/notifications/channel/tambola');
   static final _singleton = UpiMethodChannel._inner();
   factory UpiMethodChannel() {
     return _singleton;
@@ -31,7 +32,7 @@ class UpiMethodChannel {
   Future<List<Map<dynamic, dynamic>>?> getInstalledUpiApps() async {
     if (io.Platform.isAndroid) {
       return await _channel
-          .invokeListMethod<Map<dynamic, dynamic>>('getInstalledUpiApps');
+          .invokeListMethod<Map<dynamic, dynamic>>('getUpiApps');
     }
     throw UnsupportedError('The `getInstalledUpiApps` call is supported only '
         'on Android');

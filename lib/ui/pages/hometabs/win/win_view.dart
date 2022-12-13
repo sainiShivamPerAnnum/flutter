@@ -23,6 +23,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:upi_pay/upi_pay.dart';
 
 List<Color> randomColors = [
   Color(0xffF79780),
@@ -31,6 +32,17 @@ List<Color> randomColors = [
 ];
 
 class Win extends StatelessWidget {
+  printUpiApps() async {
+    final sa = await UpiPay.getInstalledUpiApplications(
+        paymentType: UpiApplicationDiscoveryAppPaymentType.nonMerchant,
+        statusType: UpiApplicationDiscoveryAppStatusType.all);
+    // await UpiPay.initiateTransaction(
+    //     app: UpiApplication.airtel,
+    //     deepLinkUrl:
+    //         'upi://pay?pa=9000000009@upi&pn=User1&tn=Test UPI&am=20&cu=INR&mc=1234&tr=01234');
+    print(sa.length);
+  }
+
   @override
   Widget build(BuildContext context) {
     S? locale = S.of(context);
@@ -60,8 +72,7 @@ class Win extends StatelessWidget {
                     children: [
                       //Current Winnings section
                       GestureDetector(
-                        onTap: () => AppState.delegate!
-                            .parseRoute(Uri.parse('/myWinnings')),
+                        onTap: () => printUpiApps(),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.transparent,
