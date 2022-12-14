@@ -5,6 +5,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -48,6 +49,7 @@ class TrendingGamesSection extends StatelessWidget {
                   ? TrendingGamesShimmer()
                   : TrendingGames(
                       game: model.trendingGamesListData[index],
+                        key: ValueKey(Constants.ALL_GAMES),
                     );
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

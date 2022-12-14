@@ -4,17 +4,20 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -31,14 +34,11 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
-import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
 
 import '../../../util/haptic.dart';
 
@@ -59,7 +59,7 @@ class LoginControllerViewModel extends BaseViewModel {
   final JourneyService? _journeyService = locator<JourneyService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
 
-  static LocalDBModel? lclDbProvider = locator<LocalDBModel>();
+  // static LocalDBModel? lclDbProvider = locator<LocalDBModel>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
 
   //Controllers
@@ -126,6 +126,7 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   processScreenInput(int? currentPage) async {
+    if (BaseUtil.showNoInternetAlert()) return;
     if (state == ViewState.Busy) return;
     switch (currentPage) {
       case LoginMobileView.index:
@@ -211,12 +212,11 @@ class LoginControllerViewModel extends BaseViewModel {
 
             setState(ViewState.Busy);
 
-            String name =
-                _nameKey.currentState!.model.nameController.text.trim();
+            String name = _nameKey.currentState!.model.nameController.text
+                .trim()
+                .replaceAll(new RegExp(r"\s+\b|\b\s"), " ");
             String gender =
                 _formatGender(_nameKey.currentState!.model.genderValue);
-
-//TEST DATA ---STARTS---//
             if (userService.baseUser == null) {
               //firebase user should never be null at this point
               userService.baseUser = BaseUser.newUser(
@@ -290,12 +290,12 @@ class LoginControllerViewModel extends BaseViewModel {
 
   void _onSignInSuccess(LoginSource source) async {
     logger!.d("User authenticated. Now check if details previously available.");
-    userService!.firebaseUser = FirebaseAuth.instance.currentUser;
-    logger!.d("User is set: " + userService!.firebaseUser!.uid);
-    _otpScreenKey?.currentState?.model?.otpFocusNode?.requestFocus();
-
-    ApiResponse user =
-        await _userRepo!.getUserById(id: userService!.firebaseUser!.uid);
+    userService.firebaseUser = FirebaseAuth.instance.currentUser;
+    logger!.d("User is set: " + userService.firebaseUser!.uid);
+    _otpScreenKey.currentState?.model?.otpFocusNode.requestFocus();
+    await CacheService.invalidateByKey(CacheKeys.USER);
+    ApiResponse<BaseUser> user =
+        await _userRepo!.getUserById(id: userService.firebaseUser!.uid);
     logger!.d("User data found: ${user.model}");
     if (user.code == 400) {
       BaseUtil.showNegativeAlert('Your account is under maintenance',
@@ -307,7 +307,7 @@ class LoginControllerViewModel extends BaseViewModel {
         (user.model != null && user.model!.hasIncompleteDetails())) {
       if (user.model == null) {
         logger!.d("New User, initializing BaseUser");
-        userService!.baseUser =
+        userService.baseUser =
             BaseUser.newUser(userService!.firebaseUser!.uid, userMobile!);
       }
 
@@ -315,6 +315,8 @@ class LoginControllerViewModel extends BaseViewModel {
       _isSignup = true;
       logger!.d(
           "No existing user details found or found incomplete details for user. Moving to details page");
+      AppState.isFirstTime = true;
+
       if (source == LoginSource.TRUECALLER)
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerSignup);
       //Move to name input page
@@ -363,35 +365,33 @@ class LoginControllerViewModel extends BaseViewModel {
 
   Future _onSignUpComplete() async {
     if (_isSignup) {
-      _userRepo!.updateUserAppFlyer(userService!.baseUser!,
-          await userService!.firebaseUser!.getIdToken());
+      _userRepo!.updateUserAppFlyer(
+          userService!.baseUser!, await userService.firebaseUser!.getIdToken());
       await _analyticsService!.login(
-          isOnBoarded: userService!.isUserOnboarded,
-          baseUser: userService!.baseUser);
+          isOnBoarded: userService.isUserOnboarded,
+          baseUser: userService.baseUser);
 
       BaseAnalytics.analytics!.logSignUp(signUpMethod: 'phoneNumber');
-      _analyticsService!.trackSignup(userService!.baseUser!.uid);
+      _analyticsService!.trackSignup(userService.baseUser!.uid);
     }
 
-    BaseAnalytics.logUserProfile(userService!.baseUser!);
-    await userService!.init();
+    BaseAnalytics.logUserProfile(userService.baseUser!);
+    await userService.init();
     _userCoinService!.init();
     baseProvider!.init();
     AnalyticsProperties().init();
-    userService!.userBootUpEE();
-    if (userService!.isUserOnboarded) await _journeyService!.init();
-    if (userService!.isUserOnboarded) await _journeyRepo!.init();
+    userService.userBootUpEE();
+    if (userService.isUserOnboarded) await _journeyService!.init();
+    if (userService.isUserOnboarded) await _journeyRepo!.init();
     fcmListener!.setupFcm();
     logger!.i("Calling analytics init for new onboarded user");
     await _analyticsService!.login(
-      isOnBoarded: userService!.isUserOnboarded,
-      baseUser: userService!.baseUser,
+      isOnBoarded: userService.isUserOnboarded,
+      baseUser: userService.baseUser,
     );
+
     AppState.isOnboardingInProgress = false;
     appStateProvider.rootIndex = 0;
-
-    bool res =
-        PreferenceHelper.exists(PreferenceHelper.CACHE_ONBOARDING_COMPLETION);
 
     Map<String, dynamic> response = await _internalOpsService!.initDeviceInfo();
     logger!.d("Device Details: $response");
@@ -403,7 +403,7 @@ class LoginControllerViewModel extends BaseViewModel {
       final bool? isPhysicalDevice = response["isPhysicalDevice"];
       final String? version = response["version"];
       _userRepo!.setNewDeviceId(
-        uid: userService!.baseUser!.uid,
+        uid: userService.baseUser!.uid,
         deviceId: deviceId,
         platform: platform,
         model: model,
@@ -416,7 +416,7 @@ class LoginControllerViewModel extends BaseViewModel {
     setState(ViewState.Idle);
 
     ///check if the account is blocked
-    if (userService?.baseUser != null && userService!.baseUser!.isBlocked!) {
+    if (userService.baseUser != null && userService.baseUser!.isBlocked!) {
       AppState.isUpdateScreen = true;
       appStateProvider.currentAction =
           PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
@@ -427,7 +427,7 @@ class LoginControllerViewModel extends BaseViewModel {
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     BaseUtil.showPositiveAlert(
       'Sign In Complete',
-      'Welcome to ${Constants.APP_NAME}, ${userService!.baseUser!.name}',
+      'Welcome to ${Constants.APP_NAME}, ${userService.baseUser!.name}',
     );
     //process complete
   }

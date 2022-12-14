@@ -5,7 +5,8 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/repository/getters_repo.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -22,6 +24,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -32,124 +35,100 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-//TODO : analytics for promos, challenges and blogs
 class RootViewModel extends BaseViewModel {
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final FcmHandler? _fcmListener = locator<FcmHandler>();
-  final UserService? _userService = locator<UserService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final UserService _userService = locator<UserService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger? _logger = locator<CustomLogger>();
-  final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
-  final JourneyService? _journeyService = locator<JourneyService>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
-  int _bottomNavBarIndex = 1;
+  int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
-
+  bool showHappyHourBanner = false;
   final WinnerService? winnerService = locator<WinnerService>();
-
-  final TransactionHistoryService? _txnHistoryService =
+  final ReferralRepo _refRepo = locator<ReferralRepo>();
+  final TransactionHistoryService _txnHistoryService =
       locator<TransactionHistoryService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
-
-  final ReferralRepo? _refRepo = locator<ReferralRepo>();
-
-  BuildContext? rootContext;
-  bool _isUploading = false;
-
-  get isUploading => this._isUploading;
-  String _svgSource = '';
-
-  String get svgSource => this._svgSource;
-  int get bottomNavBarIndex => this._bottomNavBarIndex;
-
-  set svgSource(value) {
-    this._svgSource = value;
-    notifyListeners();
-  }
-
-  set isUploading(value) {
-    this._isUploading = value;
-    notifyListeners();
-  }
-
-  set bottomNavBarIndex(int index) {
-    this._bottomNavBarIndex = index;
-    notifyListeners();
-  }
-
-  String? get myUserDpUrl => _userService!.myUserDpUrl;
-  //int get currentTabIndex => _appState.rootIndex;
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final PaytmService _paytmService = locator<PaytmService>();
+  final ReferralService _referralService = locator<ReferralService>();
+  final MarketingEventHandlerService _marketingService =
+      locator<MarketingEventHandlerService>();
 
   Future<void> refresh() async {
-    await _userCoinService!.getUserCoinBalance();
-    await _userService!.getUserFundWalletData();
-
-    _txnHistoryService!.signOut();
-    _paytmService!.getActiveSubscriptionDetails();
-    await _txnHistoryService!
-        .fetchTransactions(subtype: InvestmentType.AUGGOLD99);
-    await _journeyService!.checkForMilestoneLevelChange();
-    await _gtService!.updateUnscratchedGTCount();
-    await _journeyService!.getUnscratchedGT();
+    await _userCoinService.getUserCoinBalance();
+    await _userService.getUserFundWalletData();
+    _txnHistoryService.signOut();
+    _paytmService.getActiveSubscriptionDetails();
+    await _txnHistoryService.fetchTransactions(
+        subtype: InvestmentType.AUGGOLD99);
+    await _journeyService.checkForMilestoneLevelChange();
+    await _gtService?.updateUnscratchedGTCount();
+    await _journeyService.getUnscratchedGT();
   }
 
-  static final GlobalKey<ScaffoldState> scaffoldKey =
-      new GlobalKey<ScaffoldState>();
-  // List<Widget> pages;
-
   onInit() {
-    // pages = <Widget>[Save(), Play(), Win()];
-    // AppState.delegate.appState.setCurrentTabIndex = 1;
     AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
-    _initDynamicLinks(AppState.delegate!.navigatorKey.currentContext);
-    _verifyReferral(AppState.delegate!.navigatorKey.currentContext);
+    _referralService.verifyReferral();
+    _referralService.initDynamicLinks();
     initialize();
   }
 
-  onDispose() {
-    // if (_baseUtil != null) _baseUtil.cancelIncomingNotifications();
-    AppState.isUserSignedIn = false;
-    _fcmListener!.addIncomingMessageListener(null);
+  initialize() async {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await verifyUserBootupDetails();
+      await checkForBootUpAlerts();
+
+      await handleStartUpNotificationData();
+      _userService.getUserFundWalletData();
+      _userService.checkForNewNotifications();
+      _userService.getProfilePicture();
+      _initAdhocNotifications();
+      Future.delayed(Duration(seconds: 3), () {
+        _marketingService.checkUserDailyAppCheckInStatus().then((value) {
+          getHappyHourCampaign();
+        });
+      });
+    });
   }
 
-  openAlertsScreen() {
-    Haptic.vibrate();
-    AppState.delegate!.appState.currentAction =
-        PageAction(state: PageState.addPage, page: NotificationsConfig);
+  onDispose() {
+    AppState.isUserSignedIn = false;
+    _fcmListener!.addIncomingMessageListener(null);
   }
 
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;
     switch (index) {
       case 0:
-        _analyticsService!.track(
+        _analyticsService.track(
             eventName: AnalyticsEvents.journeySection,
             properties: AnalyticsProperties.getDefaultPropertiesMap());
         break;
       case 1:
-        _analyticsService!.track(
+        _analyticsService.track(
             eventName: AnalyticsEvents.saveSection,
             properties: AnalyticsProperties.getDefaultPropertiesMap());
         break;
       case 2:
         {
-          _analyticsService!.track(
+          _analyticsService.track(
               eventName: AnalyticsEvents.playSection,
               properties:
                   AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-                //TODO : time left not coming
                 "Time left for draw Tambola (mins)":
                     AnalyticsProperties.getTimeLeftForTambolaDraw(),
                 "Tambola Tickets Owned":
@@ -159,12 +138,12 @@ class RootViewModel extends BaseViewModel {
         break;
       case 3:
         {
-          _analyticsService!.track(
+          _analyticsService.track(
               eventName: AnalyticsEvents.winSection,
               properties:
                   AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
                 "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
-                "Unscratched Ticket Count": _gtService!.unscratchedTicketsCount,
+                "Unscratched Ticket Count": _gtService?.unscratchedTicketsCount,
                 "Scratched Ticket Count":
                     (_gtService!.activeGoldenTickets.length) -
                         _gtService!.unscratchedTicketsCount,
@@ -174,11 +153,10 @@ class RootViewModel extends BaseViewModel {
 
       default:
     }
-    bottomNavBarIndex = index;
     AppState.delegate!.appState.setCurrentTabIndex = index;
     Haptic.vibrate();
     if (AppState.delegate!.appState.getCurrentTabIndex == 0)
-      _journeyService!.checkForMilestoneLevelChange();
+      _journeyService.checkForMilestoneLevelChange();
   }
 
   _initAdhocNotifications() {
@@ -216,24 +194,30 @@ class RootViewModel extends BaseViewModel {
           UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
       content: SecurityModalSheet(),
     );
+    _fcmListener?.addIncomingMessageListener((valueMap) {
+      if (valueMap['title'] != null && valueMap['body'] != null) {
+        BaseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
+            seconds: 5);
+      }
+    });
   }
 
   checkForBootUpAlerts() async {
-    bool updateAvilable =
-        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVILABLE, def: false);
-    bool isMsgNoticeAvilable =
-        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVILABLE, def: false);
-
-    if (updateAvilable) {
-      canExecuteStartupNotification = false;
+    bool updateAvailable =
+        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
+    bool isMsgNoticeAvailable =
+        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
+    if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
+    if (updateAvailable) {
+      AppState.isRootAvailableForIncomingTaskExecution = false;
       BaseUtil.openDialog(
         isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
         content: ConfirmationDialog(
-          title: "App Update Avilable",
+          title: "App Update Available",
           description:
-              "A new version of the app is avilable. Update now to enjoy the hastle free experience.",
+              "A new version of the app is available. Update now to enjoy the hassle free experience.",
           buttonText: "Update Now",
           cancelBtnText: "Not now",
           confirmAction: () {
@@ -243,9 +227,7 @@ class RootViewModel extends BaseViewModel {
               else if (Platform.isAndroid)
                 BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
             } catch (e) {
-              Log(e.toString());
-              // BaseUtil.showNegativeAlert(
-              //     "Something went wrong", "Please try again");
+              _logger?.e(e.toString());
             }
             AppState.backButtonDispatcher!.didPopRoute();
           },
@@ -255,9 +237,9 @@ class RootViewModel extends BaseViewModel {
           },
         ),
       );
-    } else if (isMsgNoticeAvilable) {
-      canExecuteStartupNotification = false;
-      String msg = PreferenceHelper.getString(Constants.MSG_NOTICE) ?? " ";
+    } else if (isMsgNoticeAvailable) {
+      AppState.isRootAvailableForIncomingTaskExecution = false;
+      String msg = PreferenceHelper.getString(Constants.MSG_NOTICE);
       BaseUtil.openDialog(
         isBarrierDismissible: false,
         hapticVibrate: true,
@@ -280,27 +262,74 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  initialize() async {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      await _userService!.getUserFundWalletData();
-      _userService!.checkForNewNotifications();
-      _userService!.getProfilePicture();
+  late HappyHourCampign happyHourCampaign;
 
-      _initAdhocNotifications();
-      await verifyUserBootupDetails();
-      await checkForBootUpAlerts();
-      await handleStartUpNotificationData();
-      // await checkIfAppLockModalSheetIsRequired();
-    });
+  Future getHappyHourCampaign() async {
+    final campaign = await locator<CampaignRepo>().getHappyHourCampaign();
+    if (campaign.code == 200 && campaign.model != null) {
+      if (locator.isRegistered<HappyHourCampign>()) {
+        locator.unregister<HappyHourCampign>();
+      }
+      locator.registerSingleton<HappyHourCampign>(campaign.model!);
+      final _isDuringHappyHourVisited =
+          locator<SharedPreferences>().getBool("duringHappyHourVisited") ??
+              false;
+      if (_isDuringHappyHourVisited) {
+        final date =
+            locator<SharedPreferences>().getString("timStampOfHappyHour") ??
+                DateTime.now().toString();
+
+        final shouldClearCache = DateTime.now().day != DateTime.parse(date).day;
+
+        if (shouldClearCache) {
+          locator<SharedPreferences>().remove('timStampOfHappyHour');
+          locator<SharedPreferences>().remove('duringHappyHourVisited');
+          locator<SharedPreferences>().remove('showedAfterHappyHourDialog');
+        }
+      }
+
+      if (campaign.model!.data!.showHappyHour) {
+        if (!_isDuringHappyHourVisited && !AppState.isFirstTime) {
+          locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+          locator<SharedPreferences>().setBool("duringHappyHourVisited", true);
+          locator<SharedPreferences>()
+              .setString('timStampOfHappyHour', DateTime.now().toString());
+        }
+
+        happyHourCampaign = campaign.model!;
+        showHappyHourBanner = true;
+        notifyListeners();
+        return;
+      }
+
+      final endTime = DateTime.parse(campaign.model!.data!.endTime!);
+
+      if (endTime.day != DateTime.now().day) {
+        return;
+      }
+      final isVistedDuringHappyHour =
+          locator<SharedPreferences>().getBool('duringHappyHourVisited') ??
+              false;
+      final isalreadyShowed =
+          locator<SharedPreferences>().getBool("showedAfterHappyHourDialog") ??
+              false;
+      if (DateTime.now().isAfter(endTime) &&
+          !isVistedDuringHappyHour &&
+          !isalreadyShowed) {
+        locator<BaseUtil>()
+            .showHappyHourDialog(campaign.model!, afterHappyHour: true);
+        locator<SharedPreferences>()
+            .setBool("showedAfterHappyHourDialog", true);
+      }
+      ;
+    }
   }
 
   handleStartUpNotificationData() {
-    if (canExecuteStartupNotification && AppState.startupNotifMessage != null) {
-      canExecuteStartupNotification = false;
-      _logger!.d(
-        "terminated startup message: ${AppState.startupNotifMessage}",
-      );
-      _fcmListener!.handleMessage(
+    if (AppState.isRootAvailableForIncomingTaskExecution == true &&
+        AppState.startupNotifMessage != null) {
+      AppState.isRootAvailableForIncomingTaskExecution = false;
+      _fcmListener?.handleMessage(
         AppState.startupNotifMessage,
         MsgSource.Terminated,
       );
@@ -409,6 +438,11 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
+  void setShowHappyHour(bool showHappyHour) {
+    showHappyHourBanner = showHappyHour;
+    notifyListeners();
+  }
+
   _processDynamicLink(
       String? userId, Uri deepLink, BuildContext? context) async {
     String _uri = deepLink.toString();
@@ -485,12 +519,12 @@ class RootViewModel extends BaseViewModel {
 
   Future<void> verifyUserBootupDetails() async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (_userService!.baseUser != null && _userService!.userBootUp != null) {
+      if (_userService.baseUser != null && _userService.userBootUp != null) {
         //1.check if the account is blocked
-        if (_userService!.userBootUp!.data != null &&
-            _userService!.userBootUp!.data!.isBlocked != null &&
-            _userService!.userBootUp!.data!.isBlocked == true) {
-          canExecuteStartupNotification = false;
+        if (_userService.userBootUp!.data != null &&
+            _userService.userBootUp!.data!.isBlocked != null &&
+            _userService.userBootUp!.data!.isBlocked == true) {
+          AppState.isRootAvailableForIncomingTaskExecution = false;
           AppState.isUpdateScreen = true;
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.replaceAll,
@@ -499,34 +533,31 @@ class RootViewModel extends BaseViewModel {
           return;
         }
         // //2.Checking for forced App Update
-        if (_userService!.userBootUp!.data!.isAppForcedUpdateRequired != null &&
-            _userService!.userBootUp!.data!.isAppForcedUpdateRequired == true) {
+        if (_userService.userBootUp!.data!.isAppForcedUpdateRequired != null &&
+            _userService.userBootUp!.data!.isAppForcedUpdateRequired == true) {
           AppState.isUpdateScreen = true;
-          canExecuteStartupNotification = false;
+          AppState.isRootAvailableForIncomingTaskExecution = false;
           AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.replaceAll, page: UpdateRequiredConfig);
           return;
         }
 
         //3. Sign out the user automatically
-        if (_userService!.userBootUp!.data!.signOutUser != null &&
-            _userService!.userBootUp!.data!.signOutUser == true) {
+        if (_userService.userBootUp!.data!.signOutUser != null &&
+            _userService.userBootUp!.data!.signOutUser == true) {
           Haptic.vibrate();
-          canExecuteStartupNotification = false;
-          _userService!.signOut(() async {
-            _analyticsService!.track(eventName: AnalyticsEvents.signOut);
-            _analyticsService!.signOut();
-            await _userRepo!.removeUserFCM(_userService!.baseUser!.uid);
+          AppState.isRootAvailableForIncomingTaskExecution = false;
+          _userService.signOut(() async {
+            _analyticsService.track(eventName: AnalyticsEvents.signOut);
+            _analyticsService.signOut();
+            await _userRepo?.removeUserFCM(_userService.baseUser!.uid);
           }).then((flag) async {
             if (flag) {
-              //log.debug('Sign out process complete');
               await BaseUtil().signOut();
-              // _journeyService.dump();
-              _tambolaService!.signOut();
-              _analyticsService!.signOut();
-              _paytmService!.signout();
-              _bankAndKycService!.dump();
-
+              _tambolaService?.signOut();
+              _analyticsService.signOut();
+              _paytmService.signout();
+              _bankAndKycService?.dump();
               AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(
@@ -538,51 +569,41 @@ class RootViewModel extends BaseViewModel {
         }
 
         //4. App update present (Not forced)
-        if (_userService!.userBootUp!.data!.isAppUpdateRequired != null) {
-          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVILABLE,
-              _userService!.userBootUp!.data!.isAppUpdateRequired!);
-        } else {
-          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVILABLE, false);
-        }
+        if (_userService.userBootUp!.data!.isAppUpdateRequired != null) {
+          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE,
+              _userService.userBootUp!.data!.isAppUpdateRequired!);
+        } else
+          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE, false);
 
         //5. Clear all the caches
-        if (_userService!.userBootUp!.data!.cache!.keys != null) {
-// <<<<<<< HEAD
+        if (_userService.userBootUp!.data!.cache!.keys != null) {
           for (String id
-              in _userService!.userBootUp!.data!.cache!.keys as List<String>) {
-// =======
-//           for (String id in _userService!.userBootUp!.data!.cache!.keys!
-//               ) {
-// >>>>>>> feat/nullSafe
-            CacheService().invalidateByKey(id);
+              in _userService.userBootUp!.data!.cache!.keys as List<String>) {
+            CacheService.invalidateByKey(id);
           }
         }
 
         //6. Notice
-        if (_userService!.userBootUp!.data!.notice != null) {
-          if (_userService!.userBootUp!.data!.notice!.message != null &&
-              _userService!.userBootUp!.data!.notice!.message != "") {
-            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVILABLE, true);
+        if (_userService.userBootUp?.data?.notice != null) {
+          if (_userService.userBootUp!.data!.notice!.message != null &&
+              _userService.userBootUp!.data!.notice!.message != "") {
+            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVAILABLE, true);
             PreferenceHelper.setString(Constants.MSG_NOTICE,
-                _userService!.userBootUp!.data!.notice!.message!);
+                _userService.userBootUp!.data!.notice!.message!);
           } else {
-            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVILABLE, false);
+            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVAILABLE, false);
           }
 
-          if (_userService!.userBootUp!.data!.notice!.url != null &&
-              _userService!.userBootUp!.data!.notice!.url != "") {
-            canExecuteStartupNotification = false;
+          if (_userService.userBootUp!.data!.notice!.url != null &&
+              _userService.userBootUp!.data!.notice!.url != "") {
+            AppState.isRootAvailableForIncomingTaskExecution = false;
             try {
               if (Platform.isIOS)
-                BaseUtil.launchUrl(
-                    _userService!.userBootUp!.data!.notice!.url!);
+                BaseUtil.launchUrl(_userService.userBootUp!.data!.notice!.url!);
               else if (Platform.isAndroid)
-                BaseUtil.launchUrl(
-                    _userService!.userBootUp!.data!.notice!.url!);
+                BaseUtil.launchUrl(_userService.userBootUp!.data!.notice!.url!);
             } catch (e) {
-              _logger!.d(e.toString());
-              // BaseUtil.showNegativeAlert(
-              //     "Something went wrong", "Please try again");
+              _logger?.d(e.toString());
             }
           } else {}
         }

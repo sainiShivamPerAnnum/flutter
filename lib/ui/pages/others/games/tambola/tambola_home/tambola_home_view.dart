@@ -4,13 +4,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -41,7 +44,8 @@ class TambolaHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context);
+        Provider.of<ConnectivityService>(context, listen: true)
+            .connectivityStatus;
 
     return BaseView<TambolaHomeViewModel>(
       onModelReady: (model) {
@@ -63,7 +67,7 @@ class TambolaHomeView extends StatelessWidget {
               showCoinBar: false,
               showHelpButton: false,
               title: "Tambola",
-              backgroundColor: UiConstants.kArowButtonBackgroundColor,
+              backgroundColor: UiConstants.kArrowButtonBackgroundColor,
             ),
             backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(
@@ -685,7 +689,7 @@ class ButTicketsComponent extends StatelessWidget {
                       style: TextStyles.rajdhaniSB.body1,
                     ),
                     Text(
-                      "Get 1 Ticket for every ₹${(BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLACOST).isEmpty ? '500' : BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLACOST))} saved",
+                      "Get 1 Ticket for every ₹${(AppConfig.getValue(AppConfigKey.tambola_cost).toString().isEmpty ? '500' : AppConfig.getValue(AppConfigKey.tambola_cost))} saved",
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kTextColor2),
                     ),
@@ -771,7 +775,7 @@ class ButTicketsComponent extends StatelessWidget {
                       // onPressed: model.decreaseTicketCount,
                     ),
                     SizedBox(
-                      width: SizeConfig.screenHeight! * 0.02,
+                      width: SizeConfig.screenHeight! * 0.03,
                       height: SizeConfig.padding35,
                       child: Center(
                         child: TextField(
@@ -973,7 +977,7 @@ class TodayWeeklyPicksCard extends StatelessWidget {
         bottom: SizeConfig.pageHorizontalMargins + SizeConfig.padding16,
       ),
       decoration: BoxDecoration(
-        color: UiConstants.kArowButtonBackgroundColor,
+        color: UiConstants.kArrowButtonBackgroundColor,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(
             SizeConfig.roundness32,
@@ -1216,8 +1220,8 @@ class TambolaPrize extends StatelessWidget {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding54),
                 child: Text(
-                  BaseRemoteConfig.remoteConfig.getString(
-                          BaseRemoteConfig.GAME_TAMBOLA_ANNOUNCEMENT) ??
+                  AppConfig.getValue<String?>(
+                          AppConfigKey.game_tambola_announcement) ??
                       "Winners are announced every Sunday at midnight, Complete a Full House and win 1Crore!",
                   textAlign: TextAlign.center,
                   style: TextStyles.sourceSans.body4.colour(

@@ -481,7 +481,7 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ConnectivityStatus>(
+    return Consumer<ConnectivityService>(
         builder: (ctx, model, child) => Container(
               height: SizeConfig.screenWidth! * 0.1556,
               width: widget.width ??
@@ -492,7 +492,7 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
                   SizeConfig.buttonBorderRadius,
                 ),
                 gradient: LinearGradient(
-                  colors: model == ConnectivityStatus.Offline
+                  colors: model.connectivityStatus == ConnectivityStatus.Offline
                       ? [
                           UiConstants.kTextColor,
                           Colors.grey,
@@ -510,14 +510,15 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
               ),
               child: MaterialButton(
                 // padding: EdgeInsets.zero,
-                onPressed: model == ConnectivityStatus.Offline
-                    ? BaseUtil.showNoInternetAlert
-                    : () async {
-                        if (isLoading) return;
-                        isLoading = true;
-                        await widget.onPressed();
-                        isLoading = false;
-                      },
+                onPressed:
+                    model.connectivityStatus == ConnectivityStatus.Offline
+                        ? BaseUtil.showNoInternetAlert
+                        : () async {
+                            if (isLoading) return;
+                            isLoading = true;
+                            await widget.onPressed();
+                            isLoading = false;
+                          },
                 child: isLoading
                     ? SpinKitThreeBounce(
                         size: SizeConfig.title5,
@@ -551,7 +552,7 @@ class AppNegativeBtn extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         child: Text(
-          btnText,
+          btnText.toUpperCase(),
           style: TextStyles.rajdhaniSB.body1,
         ),
         style: ButtonStyle(
@@ -722,7 +723,7 @@ class CustomKeyboardSubmitButton extends StatelessWidget {
           ? Container(
               width: SizeConfig.screenWidth,
               height: SizeConfig.padding54,
-              color: UiConstants.kArowButtonBackgroundColor,
+              color: UiConstants.kArrowButtonBackgroundColor,
               padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.pageHorizontalMargins,
               ),

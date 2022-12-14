@@ -71,7 +71,7 @@ class GTDetailedView extends StatelessWidget {
                             color: Colors.transparent,
                             accuracy: ScratchAccuracy.low,
                             brushSize: 50,
-                            threshold: 40,
+                            threshold: 20,
                             key: scratchKey,
                             onThreshold: () => model.redeemCard(ticket),
                             image: Image.asset(

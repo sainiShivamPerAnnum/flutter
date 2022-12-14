@@ -100,7 +100,9 @@ class KYCDetailsViewModel extends BaseViewModel {
   init() {
     nameController = new TextEditingController();
     panController = new TextEditingController();
-    checkForKycExistence();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      checkForKycExistence();
+    });
   }
 
   void verifyImage() {
@@ -184,13 +186,13 @@ class KYCDetailsViewModel extends BaseViewModel {
           _bankAndPanService.activeBankAccountDetails = null;
           _bankAndPanService.isBankDetailsAdded = false;
           await checkForKycExistence();
-          _cacheService.invalidateByKey(CacheKeys.USER);
+          await CacheService.invalidateByKey(CacheKeys.USER);
           await _userService.setBaseUser();
 
           _bankAndPanService.checkForUserBankAccountDetails();
+          AppState.backButtonDispatcher!.didPopRoute();
           BaseUtil.showPositiveAlert("KYC successfully completed ✅",
               "Your KYC verification has been successfully completed");
-          AppState.backButtonDispatcher!.didPopRoute();
         } else {
           capturedImage = null;
           kycErrorMessage = forgeryUploadRes.errorMessage;

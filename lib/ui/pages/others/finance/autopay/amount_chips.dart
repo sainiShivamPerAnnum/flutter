@@ -23,6 +23,7 @@ class AmountChips extends StatelessWidget {
           FocusScope.of(context).unfocus();
           Haptic.vibrate();
           model.amountFieldController.text = amount.toString();
+          
           model.onAmountValueChanged(amount.toString());
           model.lastTappedChipAmount = amount;
         },

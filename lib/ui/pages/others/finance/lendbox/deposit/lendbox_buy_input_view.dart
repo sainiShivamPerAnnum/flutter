@@ -1,6 +1,7 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/ui/pages/others/finance/amount_input_view.dart';
@@ -53,7 +54,10 @@ class LendboxBuyInputView extends StatelessWidget {
               },
             ),
             SizedBox(height: SizeConfig.padding32),
-            BannerWidget(model: model.assetOptionsModel!.data.banner),
+            BannerWidget(
+              model: model.assetOptionsModel!.data.banner,
+              happyHourCampign: locator.isRegistered<HappyHourCampign>()?locator():null,
+            ),
             AmountInputView(
               amountController: model.amountController,
               focusNode: model.buyFieldNode,

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class Constants {
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
@@ -24,6 +26,13 @@ class Constants {
   static const String HS_MONTHLY_SAVER = "SAVER_MONTHLY";
   static const String BUG_BOUNTY = "BUG_BOUNTY";
   static const String NEW_FELLO_UI = "NEW_FELLO";
+
+  //GOLDEN TICKETS REWARD TYPES
+  static const String GT_REWARD_GOLD = "gold";
+  static const String GT_REWARD_FLC = "flc";
+  static const String GT_REWARD_RUPEE = "rupee";
+  static const String GT_REWARD_TAMBOLA_TICKET = "tt";
+  static const String GT_REWARD_AMT = "amt";
 
   //Collections
   static final String COLN_USERS = "users";
@@ -118,13 +127,27 @@ class Constants {
   static const DATE_TODAY = "date_today";
   static const DAY_OPENED_COUNT = "day_open_count";
   //Notices
-  static const IS_MSG_NOTICE_AVILABLE = "isNoticeMessageAvilable";
+  static const IS_MSG_NOTICE_AVAILABLE = "isNoticeMessageAvilable";
   static const MSG_NOTICE = "url_message";
   //Normal app update dialog show
-  static const IS_APP_UPDATE_AVILABLE = "isAppUpdateAvilable";
+  static const IS_APP_UPDATE_AVAILABLE = "isAppUpdateAvilable";
 
   static const PLAY_STORE_APP_LINK =
       "https://play.google.com/store/apps/details?id=in.fello.felloapp";
   static const APPLE_STORE_APP_LINK =
       "https://apps.apple.com/in/app/fello-save-play-win/id1558445254";
+
+  // View keys for Apxor Nudges
+  static const TOTAL_SAVINGS_JAPPBAR = "savingsJourneyAppBar";
+  static const TOTAL_WINNINGS_JAPPBAR = "winningsJourneyAppBar";
+  static const PROFILE_JAPPBAR = "profileJourneyAppBar";
+  static const PROFILE = "profile";
+  static const HELP_FAB = "helpFab";
+  static const FELLO_COIN_BAR = "felloCoinBar";
+  static const TOTAL_SAVINGS = "totalSavings";
+  static const FELLO_FLO = "felloFLO";
+  static const DIGITIAL_GOLD = "digitalGold";
+  static const CURRENT_WINNINGS = "currentWinnings";
+  static const TAMBOLA = "tambola";
+  static const ALL_GAMES = "allGames";
 }

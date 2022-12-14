@@ -4,7 +4,9 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
@@ -383,6 +385,8 @@ class GoldBuyViewModel extends BaseViewModel {
     goldBuyAmount = assetOptionsModel?.data.userOptions[index].value.toDouble();
     goldAmountController!.text = goldBuyAmount!.toInt().toString();
     updateGoldAmount();
+    goldAmountController!.selection = TextSelection.fromPosition(
+        TextPosition(offset: goldAmountController!.text.length));
     //checkIfCouponIsStillApplicable();
     appliedCoupon = null;
     _analyticsService
@@ -506,8 +510,9 @@ class GoldBuyViewModel extends BaseViewModel {
 
   int checkAugmontStatus() {
     //check who is allowed to deposit
-    String _perm = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.AUGMONT_DEPOSIT_PERMISSION);
+    String _perm =
+        AppConfig.getValue(AppConfigKey.augmont_deposit_permission).toString();
+
     int _isGeneralUserAllowed = 1;
     bool _isAllowed = false;
     if (_perm != null && _perm.isNotEmpty) {

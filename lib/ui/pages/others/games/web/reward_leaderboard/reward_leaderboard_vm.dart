@@ -17,7 +17,7 @@ class RewardLeaderboardViewModel extends BaseViewModel {
   int _tabNo = 0;
 
   //Getters
-  final PrizeService? _prizeService = locator<PrizeService>();
+  final PrizeService _prizeService = locator<PrizeService>();
   final LeaderboardService? _lbService = locator<LeaderboardService>();
   String? get currentGame => this._currentGame;
   bool get isPrizesLoading => this._isPrizesLoading;
@@ -82,50 +82,11 @@ class RewardLeaderboardViewModel extends BaseViewModel {
     tabNo = tab;
   }
 
-//OPTIMIZE: pass game type and fetch all the prizes instead of separate fetch functions
   refreshPrizes() async {
     isPrizesLoading = true;
-    switch (currentGame) {
-      case Constants.GAME_TYPE_POOLCLUB:
-        if (_prizeService!.poolClubPrizes == null)
-          await _prizeService!.fetchPoolClubPrizes();
-        prizes = _prizeService!.poolClubPrizes;
-
-        break;
-      case Constants.GAME_TYPE_CRICKET:
-        if (_prizeService!.cricketPrizes == null)
-          await _prizeService!.fetchCricketPrizes();
-        prizes = _prizeService!.cricketPrizes;
-
-        break;
-      case Constants.GAME_TYPE_TAMBOLA:
-        if (_prizeService!.tambolaPrizes == null)
-          await _prizeService!.fetchTambolaPrizes();
-        prizes = _prizeService!.tambolaPrizes;
-
-        break;
-      case Constants.GAME_TYPE_FOOTBALL:
-        if (_prizeService!.footballPrizes == null)
-          await _prizeService!.fetchFootballPrizes();
-        prizes = _prizeService!.footballPrizes;
-
-        break;
-      case Constants.GAME_TYPE_CANDYFIESTA:
-        if (_prizeService!.candyFiestaPrizes == null)
-          await _prizeService!.fetchCandyFiestaPrizes();
-        prizes = _prizeService!.candyFiestaPrizes;
-        break;
-      case Constants.GAME_TYPE_BOTTLEFLIP:
-        if (_prizeService!.bottleFlipPrizes == null)
-          await _prizeService!.fetchBottleFlipPrizes();
-        prizes = _prizeService!.bottleFlipPrizes;
-        break;
-      case Constants.GAME_TYPE_BOWLING:
-        if (_prizeService!.bowlingPrizes == null)
-          await _prizeService!.fetchBowlingPrizes();
-        prizes = _prizeService!.bowlingPrizes;
-        break;
-    }
+    if (!_prizeService.gamePrizeMap.containsKey(currentGame))
+      await _prizeService.fetchPrizeByGameType(currentGame!);
+    prizes = _prizeService.gamePrizeMap[currentGame];
     isPrizesLoading = false;
     if (prizes == null)
       BaseUtil.showNegativeAlert(

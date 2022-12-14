@@ -7,7 +7,6 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_inp
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_loading_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_success_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
-
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +83,7 @@ class GoldSellView extends StatelessWidget {
 
   double? _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight! * 0.9;
+      return SizeConfig.screenHeight! * 0.84;
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return SizeConfig.screenHeight! * 0.95;
     } else if (txnService.currentTransactionState == TransactionState.success) {

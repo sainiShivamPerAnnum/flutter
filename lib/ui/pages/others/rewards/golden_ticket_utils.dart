@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/util/assets.dart';
@@ -213,7 +214,8 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   Widget singleRewardWidget(Reward reward, double maxWidth) {
     Widget rewardWidget;
     bool noPaddingRequired = false;
-    if (reward.type == 'rupee' || reward.type == 'amt') {
+    if (reward.type == Constants.GT_REWARD_RUPEE ||
+        reward.type == Constants.GT_REWARD_AMT) {
       rewardWidget = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -228,7 +230,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
         ],
       );
-    } else if (reward.type == 'flc') {
+    } else if (reward.type == Constants.GT_REWARD_FLC) {
       noPaddingRequired = true;
       rewardWidget = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,11 +254,11 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           ),
           Text(
             reward.value! > 1 ? "Tokens won!" : "Token won!",
-            style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12),
+            style: TextStyles.body4,
           )
         ],
       );
-    } else if (reward.type == 'gold') {
+    } else if (reward.type == Constants.GT_REWARD_GOLD) {
       rewardWidget = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -275,6 +277,35 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           ),
           Text(
             "worths of Gold",
+            style: TextStyles.sourceSans.body4.colour(Colors.black),
+          )
+        ],
+      );
+    } else if (reward.type == Constants.GT_REWARD_TAMBOLA_TICKET) {
+      rewardWidget = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RichText(
+            text: TextSpan(
+              style: TextStyles.rajdhani.bold
+                  .colour(Colors.black)
+                  .copyWith(fontSize: SizeConfig.padding20),
+              children: [
+                WidgetSpan(
+                    child: SvgPicture.asset(
+                  Assets.howToPlayAsset1Tambola,
+                  width: SizeConfig.padding32,
+                  height: SizeConfig.padding32,
+                )),
+                TextSpan(
+                    text: " ${reward.value}",
+                    style: TextStyles.rajdhaniB.title2.colour(Colors.black)),
+              ],
+            ),
+          ),
+          Text(
+            reward.value! > 1 ? "Tambola tickets won" : "Tambola ticket won",
             style: TextStyles.sourceSans.body4.colour(Colors.black),
           )
         ],
@@ -304,74 +335,142 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   doubleRewardWidget(
     List<Reward> rewards,
   ) {
-    int rupee = rewards
-            .firstWhereOrNull((e) => e.type == 'rupee' || e.type == 'amt')!
-            .value ??
-        0;
-    int flc = rewards.firstWhereOrNull((e) => e.type == 'flc')!.value ?? 0;
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        //Cashback
-        Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              RichText(
-                text: TextSpan(
-                  text: '₹ $rupee',
-                  style: TextStyles.rajdhaniSB.title4.colour(Colors.black),
-                  // children: [
-                  //   TextSpan(
-                  //       text: "$rupee",
-                  //       style: TextStyles.rajdhaniB
-                  //           .colour(Colors.black)
-                  //           .copyWith(fontSize: SizeConfig.padding20)),
-                  // ],
+    return ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
+        itemBuilder: (ctx, i) {
+          switch (rewards[i].type) {
+            case Constants.GT_REWARD_RUPEE:
+              return Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: '₹ ${rewards[i].value}',
+                        style:
+                            TextStyles.rajdhaniSB.title4.colour(Colors.black),
+                      ),
+                    ),
+                    Text(
+                      ' reward won!',
+                      style: TextStyles.sourceSans.body4.colour(Colors.black),
+                    )
+                  ],
                 ),
-              ),
-              Text(
-                ' reward won!',
-                style: TextStyles.sourceSans.body4.colour(Colors.black),
-              )
-            ],
-          ),
-        ),
-
-        SizedBox(
-          height: SizeConfig.padding4,
-        ),
-
-        //flc tokens
-        Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+              );
+            case Constants.GT_REWARD_AMT:
+              return Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: '₹ ${rewards[i].value}',
+                        style:
+                            TextStyles.rajdhaniSB.title4.colour(Colors.black),
+                      ),
+                    ),
+                    Text(
+                      ' reward won!',
+                      style: TextStyles.sourceSans.body4.colour(Colors.black),
+                    )
+                  ],
+                ),
+              );
+            case Constants.GT_REWARD_FLC:
+              return Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          Assets.token,
+                          width: SizeConfig.padding24,
+                          height: SizeConfig.padding24,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding4,
+                        ),
+                        Text("${rewards[i].value} ",
+                            style: TextStyles.rajdhaniB.title2
+                                .colour(Colors.black)),
+                      ],
+                    ),
+                    Text(
+                      ' Tokens Won!',
+                      style: TextStyles.sourceSans.body4.colour(Colors.black),
+                    )
+                  ],
+                ),
+              );
+            case Constants.GT_REWARD_GOLD:
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    Assets.token,
-                    width: SizeConfig.padding24,
-                    height: SizeConfig.padding24,
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyles.rajdhani.bold
+                          .colour(Colors.black)
+                          .copyWith(fontSize: SizeConfig.padding20),
+                      children: [
+                        TextSpan(
+                            text: "₹ ${rewards[i].value}",
+                            style: TextStyles.rajdhaniB.title2
+                                .colour(Colors.black)),
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    width: SizeConfig.padding4,
-                  ),
-                  Text("$flc ",
-                      style: TextStyles.rajdhaniB.title2.colour(Colors.black)),
+                  Text(
+                    "worths of Gold",
+                    style: TextStyles.sourceSans.body4.colour(Colors.black),
+                  )
                 ],
-              ),
-              Text(
-                ' Tokens Won!',
-                style: TextStyles.sourceSans.body4.colour(Colors.black),
-              )
-            ],
-          ),
-        )
-      ],
-    );
+              );
+
+            case Constants.GT_REWARD_TAMBOLA_TICKET:
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyles.rajdhani.bold
+                          .colour(Colors.black)
+                          .copyWith(fontSize: SizeConfig.padding20),
+                      children: [
+                        WidgetSpan(
+                            child: SvgPicture.asset(
+                          Assets.howToPlayAsset1Tambola,
+                          width: SizeConfig.padding32,
+                          height: SizeConfig.padding32,
+                        )),
+                        TextSpan(
+                            text: " ${rewards[i].value}",
+                            style: TextStyles.rajdhaniB.title2
+                                .colour(Colors.black)),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    rewards[i].value! > 1
+                        ? "Tambola tickets won"
+                        : "Tambola ticket won",
+                    style: TextStyles.sourceSans.body4.colour(Colors.black),
+                  )
+                ],
+              );
+            default:
+              return SizedBox();
+          }
+        },
+        separatorBuilder: (ctx, i) {
+          return SizedBox(height: i == 0 ? SizeConfig.padding8 : 0);
+        },
+        itemCount: rewards.length);
   }
 
   Widget bulletTiles(String title) {

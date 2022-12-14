@@ -4,19 +4,18 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
+// import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -98,16 +97,7 @@ class WinViewModel extends BaseViewModel {
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
   bool loadingRefCode = true;
-  bool _isWinningHistoryLoading = false;
   bool _isShareLoading = false;
-
-  List<UserTransaction>? _winningHistory;
-
-  List<UserTransaction>? get winningHistory => this._winningHistory;
-  set winningHistory(List<UserTransaction>? value) {
-    this._winningHistory = value;
-    notifyListeners();
-  }
 
   List<FelloFactsModel>? fellofacts = [];
 
@@ -119,8 +109,7 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String appShareMessage =
-      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.APP_SHARE_MSG);
+  String appShareMessage = AppConfig.getValue(AppConfigKey.appShareMessage);
   final FcmListener? _fcmListener = locator<FcmListener>();
   PageController? _pageController;
 
@@ -135,12 +124,6 @@ class WinViewModel extends BaseViewModel {
 
   //GETTERS SETTERS
   bool get isShareLoading => _isShareLoading;
-
-  get isWinningHistoryLoading => this._isWinningHistoryLoading;
-  set isWinningHistoryLoading(value) {
-    this._isWinningHistoryLoading = value;
-    notifyListeners();
-  }
 
   String? get minWithdrawPrize => _minWithdrawPrize;
   String? get refUnlock => _refUnlock;
@@ -172,7 +155,7 @@ class WinViewModel extends BaseViewModel {
   get refCode => _refCode;
   get refUrl => _refUrl;
 
-  LocalDBModel? _localDBModel = locator<LocalDBModel>();
+  // LocalDBModel? _localDBModel = locator<LocalDBModel>();
   bool isWinnersLoading = false;
   WinnersModel? _winners;
   int _currentPage = 0;
@@ -223,8 +206,6 @@ class WinViewModel extends BaseViewModel {
     // _baseUtil.fetchUserAugmontDetail();
     getFelloFacts();
     _lbService!.fetchReferralLeaderBoard();
-
-    _winnerService!.fetchWinners();
   }
 
   Future<void> shareLink() async {
@@ -289,10 +270,9 @@ class WinViewModel extends BaseViewModel {
   }
 
   fetchBasicConstantValues() {
-    _minWithdrawPrize = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.MIN_WITHDRAWABLE_PRIZE);
-    _refUnlock = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+    _minWithdrawPrize =
+        AppConfig.getValue(AppConfigKey.min_withdrawable_prize).toString();
+    _refUnlock = AppConfig.getValue(AppConfigKey.unlock_referral_amt);
     _refUnlockAmt = BaseUtil.toInt(_refUnlock);
     _minWithdrawPrizeAmt = BaseUtil.toInt(_minWithdrawPrize);
   }
@@ -381,7 +361,7 @@ class WinViewModel extends BaseViewModel {
     }
     _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
         ? appShareMessage
-        : 'Hey I am gifting you ₹${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS)} and ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_FLC_BONUS)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
+        : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
 
     loadingRefCode = false;
     refresh();
@@ -435,9 +415,9 @@ class WinViewModel extends BaseViewModel {
       return "Share";
   }
 
-  Future<PrizeClaimChoice> getClaimChoice() async {
-    return await _localDBModel!.getPrizeClaimChoice();
-  }
+  // Future<PrizeClaimChoice> getClaimChoice() async {
+  //   return await _localDBModel!.getPrizeClaimChoice();
+  // }
 
   void navigateToMyWinnings(WinViewModel model) {
     AppState.delegate!.appState.currentAction = PageAction(
@@ -534,17 +514,8 @@ class WinViewModel extends BaseViewModel {
   claim(PrizeClaimChoice choice, double claimPrize) {
     // double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
-      AppState.backButtonDispatcher!.didPopRoute();
       getGramsWon(claimPrize).then((value) {
         if (flag) {
-          isWinningHistoryLoading = true;
-          _userRepo
-              .getWinningHistory(_userService!.baseUser!.uid)!
-              .then((temp) {
-            temp.model!.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
-            winningHistory = temp.model;
-            isWinningHistoryLoading = true;
-          });
           showSuccessPrizeWithdrawalDialog(
               choice,
               choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold",
@@ -577,10 +548,12 @@ class WinViewModel extends BaseViewModel {
       _userService!.getUserFundWalletData();
       _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
-      await _localDBModel!.savePrizeClaimChoice(choice);
+      // await _localDBModel!.savePrizeClaimChoice(choice);
+      AppState.backButtonDispatcher!.didPopRoute();
 
       return true;
     } else {
+      AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showNegativeAlert(
         'Withdrawal Failed',
         response.errorMessage ?? "Please try again after sometime",
@@ -660,9 +633,8 @@ class WinViewModel extends BaseViewModel {
       RenderRepaintBoundary imageObject =
           imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
-      ByteData byteData = await (image.toByteData(format: ImageByteFormat.png)
-          as Future<ByteData>);
-      final pngBytes = byteData.buffer.asUint8List();
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      final pngBytes = byteData?.buffer.asUint8List();
 
       return pngBytes;
     } catch (e) {
