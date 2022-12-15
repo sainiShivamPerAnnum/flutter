@@ -136,8 +136,10 @@ class LendboxBuyViewModel extends BaseViewModel {
           "Asset": "Flo",
           "Amount Entered": amountController?.text,
           "Best flag": assetOptionsModel?.data.userOptions
-              .firstWhere((element) =>
-                  element.value.toString() == amountController!.text)
+              .firstWhere(
+                  (element) =>
+                      element.value.toString() == amountController!.text,
+                  orElse: () => UserOption(order: 0, value: 0, best: false))
               .value
         }));
     return buyAmount;

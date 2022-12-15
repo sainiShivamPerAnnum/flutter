@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -8,11 +7,9 @@ import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
-import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -24,7 +21,6 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'base_repo.dart';
 
@@ -91,7 +87,7 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<dynamic>> getUserById({required String? id}) async {
+  Future<ApiResponse<BaseUser>> getUserById({required String? id}) async {
     try {
       final token = await getBearerToken();
 
@@ -106,7 +102,6 @@ class UserRepository extends BaseRepo {
         try {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
             final _user = BaseUser.fromMap(res["data"], id!);
-            logger!.d('asdasdasdsa $_user');
             return ApiResponse<BaseUser>(model: _user, code: 200);
           } else
             return ApiResponse<BaseUser>(model: null, code: 200);
@@ -146,7 +141,7 @@ class UserRepository extends BaseRepo {
       );
 
       // clear cache
-      await _cacheService.invalidateByKey(CacheKeys.USER);
+      await CacheService.invalidateByKey(CacheKeys.USER);
 
       return ApiResponse(code: 200);
     } catch (e) {
@@ -233,33 +228,6 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger!.e('coin balance $e');
       return ApiResponse.withError(e.toString(), 400);
-    }
-  }
-
-  Future<ApiResponse<List<UserTransaction>>>? getWinningHistory(
-      String? userUid) async {
-    List<UserTransaction> _userPrizeTransactions = [];
-    try {
-      final QuerySnapshot _querySnapshot =
-          await _api!.getUserPrizeTransactionDocuments(userUid);
-
-      if (_querySnapshot.docs.length != 0) {
-        _querySnapshot.docs.forEach((element) {
-          _userPrizeTransactions.add(
-            UserTransaction.fromMap(
-                element.data() as Map<String, dynamic>, element.id),
-          );
-        });
-        logger.d(
-            "User prize transaction successfully fetched: ${_userPrizeTransactions.first.toJson().toString()}");
-      } else {
-        logger.d("user prize transaction empty");
-      }
-
-      return ApiResponse(model: _userPrizeTransactions, code: 200);
-    } catch (e) {
-      logger.e(e);
-      throw e;
     }
   }
 
@@ -412,7 +380,7 @@ class UserRepository extends BaseRepo {
         GoldenTicketService.goldenTicketId = resData['gtId'];
       }
       // clear cache
-      await _cacheService.invalidateByKey(CacheKeys.USER);
+      await CacheService.invalidateByKey(CacheKeys.USER);
 
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {

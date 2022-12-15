@@ -4,6 +4,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/help_and_support/faq/faq_page.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -28,16 +29,22 @@ class FaqPill extends StatelessWidget {
           );
         },
         child: Container(
+          key: ValueKey(Constants.HELP_FAB),
             // height: SizeConfig.navBarHeight * 0.5,
-            padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding12,
-                horizontal: SizeConfig.padding16),
-            decoration: BoxDecoration(
-              color: UiConstants.kDarkBackgroundColor,
-              borderRadius:
-                  BorderRadius.all(Radius.circular(SizeConfig.roundness112)),
+            margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding8,
             ),
-            child: Wrap(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding12,
+                vertical: SizeConfig.padding6),
+            height: SizeConfig.avatarRadius * 2,
+            decoration: BoxDecoration(
+              color: UiConstants.kTextFieldColor.withOpacity(0.4),
+              border: Border.all(color: Colors.white10),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(

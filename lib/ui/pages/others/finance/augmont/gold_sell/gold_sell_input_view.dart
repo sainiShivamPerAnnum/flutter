@@ -1,14 +1,15 @@
 //Project Imports
-import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_input_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
+import 'package:felloapp/ui/pages/others/finance/sell_confirmation_screen.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
-import 'package:felloapp/ui/service_elements/bank_details_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -231,26 +232,40 @@ class GoldSellInputView extends StatelessWidget {
                           bool isDetailComplete =
                               await model.verifyGoldSaleDetails();
                           if (isDetailComplete)
-                            BaseUtil.openDialog(
-                              addToScreenStack: true,
-                              hapticVibrate: true,
-                              isBarrierDismissible: false,
-                              content: ConfirmationDialog(
-                                title: 'Are you sure you want\nto sell?',
-                                // asset: SvgPicture.asset(Assets.magicalSpiritBall),
-                                asset: BankDetailsCard(),
-                                description:
-                                    '₹${BaseUtil.digitPrecision(model.goldAmountFromGrams, 2)} will be credited to your linked bank account instantly',
-                                buttonText: 'SELL',
-                                confirmAction: () async {
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                              widget: SellConfirmationView(
+                                amount: model.goldAmountFromGrams,
+                                grams: model.goldSellGrams!,
+                                onSuccess: () {
                                   AppState.backButtonDispatcher!.didPopRoute();
-                                  await model.initiateSell();
+                                  model.initiateSell();
                                 },
-                                cancelAction: () {
-                                  AppState.backButtonDispatcher!.didPopRoute();
-                                },
+                                investmentType: InvestmentType.AUGGOLD99,
                               ),
+                              page: SellConfirmationViewConfig,
+                              state: PageState.addWidget,
                             );
+                          // BaseUtil.openDialog(
+                          //   addToScreenStack: true,
+                          //   hapticVibrate: true,
+                          //   isBarrierDismissible: false,
+                          //   content: ConfirmationDialog(
+                          //     title: 'Are you sure you want\nto sell?',
+                          //     // asset: SvgPicture.asset(Assets.magicalSpiritBall),
+                          //     asset: BankDetailsCard(),
+                          //     description:
+                          //         '₹${BaseUtil.digitPrecision(model.goldAmountFromGrams, 2)} will be credited to your linked bank account instantly',
+                          //     buttonText: 'SELL',
+                          //     confirmAction: () async {
+                          //       AppState.backButtonDispatcher!.didPopRoute();
+                          //       await model.initiateSell();
+                          //     },
+                          //     cancelAction: () {
+                          //       AppState.backButtonDispatcher!.didPopRoute();
+                          //     },
+                          //   ),
+                          // );
                         }
                       },
                     ),

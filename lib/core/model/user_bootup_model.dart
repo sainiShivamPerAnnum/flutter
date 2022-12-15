@@ -2,10 +2,9 @@
 
 import 'dart:convert';
 
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:felloapp/core/model/timestamp_model.dart';
 
 class UserBootUpDetailsModel {
   final String? message;
@@ -476,12 +475,16 @@ class GamesBanMap {
   AssetBanMap? poolClubMap;
   AssetBanMap? footballMap;
   AssetBanMap? candyFiestaMap;
+  AssetBanMap? bowlingMap;
+  AssetBanMap? bottleFlipMap;
   GamesBanMap({
     @required this.cricketMap,
     @required this.tambolaMap,
     @required this.poolClubMap,
     @required this.footballMap,
     @required this.candyFiestaMap,
+    @required this.bowlingMap,
+    @required this.bottleFlipMap,
   });
 
   GamesBanMap.base() {
@@ -490,6 +493,8 @@ class GamesBanMap {
     poolClubMap = AssetBanMap.base();
     footballMap = AssetBanMap.base();
     candyFiestaMap = AssetBanMap.base();
+    bowlingMap = AssetBanMap.base();
+    bottleFlipMap = AssetBanMap.base();
   }
 
   GamesBanMap copyWith({
@@ -498,6 +503,8 @@ class GamesBanMap {
     AssetBanMap? poolClubMap,
     AssetBanMap? footballMap,
     AssetBanMap? candyFiestaMap,
+AssetBanMap? bowlingMap,
+AssetBanMap? bottleFlipMap
   }) {
     return GamesBanMap(
       cricketMap: cricketMap ?? this.cricketMap,
@@ -505,6 +512,8 @@ class GamesBanMap {
       poolClubMap: poolClubMap ?? this.poolClubMap,
       footballMap: footballMap ?? this.footballMap,
       candyFiestaMap: candyFiestaMap ?? this.candyFiestaMap,
+      bowlingMap: bowlingMap ?? this.bowlingMap,
+      bottleFlipMap: bottleFlipMap ?? this.bottleFlipMap
     );
   }
 
@@ -515,6 +524,8 @@ class GamesBanMap {
       'poolClubMap': poolClubMap!.toMap(),
       'footballMap': footballMap!.toMap(),
       'candyFiestaMap': candyFiestaMap!.toMap(),
+      'bowlingMap': bowlingMap!.toMap(),
+      'bottleFlipMap': bottleFlipMap!.toMap()
     };
   }
 
@@ -545,6 +556,15 @@ class GamesBanMap {
               map[Constants.GAME_TYPE_CANDYFIESTA] as Map<String, dynamic>,
               Constants.GAME_TYPE_CANDYFIESTA)
           : null,
+        bowlingMap: map[Constants.GAME_TYPE_BOWLING] != null
+          ? AssetBanMap.fromMap(
+              map[Constants.GAME_TYPE_BOWLING] as Map<String, dynamic>,
+              Constants.GAME_TYPE_BOWLING)
+          : null,
+        bottleFlipMap: map[Constants.GAME_TYPE_BOTTLEFLIP] != null  ? AssetBanMap.fromMap(
+              map[Constants.GAME_TYPE_BOTTLEFLIP] as Map<String, dynamic>,
+              Constants.GAME_TYPE_BOTTLEFLIP)
+          : null,
     );
   }
 
@@ -555,7 +575,7 @@ class GamesBanMap {
 
   @override
   String toString() {
-    return 'GamesBanMap(cricketMap: $cricketMap, tambolaMap: $tambolaMap, poolClubMap: $poolClubMap, footballMap: $footballMap, candyFiestaMap: $candyFiestaMap)';
+    return 'GamesBanMap(cricketMap: $cricketMap, tambolaMap: $tambolaMap, poolClubMap: $poolClubMap, footballMap: $footballMap, candyFiestaMap: $candyFiestaMap, bowlingMap: $bowlingMap, bottleFlipMap: $bottleFlipMap)';
   }
 
   @override

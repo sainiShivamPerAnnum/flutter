@@ -1,8 +1,8 @@
-import 'dart:developer';
 import "dart:math" as math;
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -13,7 +13,6 @@ import 'package:felloapp/ui/pages/others/finance/coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -21,8 +20,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class GoldBuyInputView extends StatelessWidget {
   // final int? amount;
@@ -69,6 +66,8 @@ class GoldBuyInputView extends StatelessWidget {
             if (model.assetOptionsModel != null)
               BannerWidget(
                 model: model.assetOptionsModel!.data.banner,
+                happyHourCampign:
+                    locator.isRegistered<HappyHourCampign>() ? locator() : null,
               ),
             if (model.animationController != null)
               EnterAmountView(
@@ -270,7 +269,7 @@ class EnterAmountView extends StatelessWidget {
                                   focusedBorder: InputBorder.none,
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
-                                  // isCollapsed: true,
+                                  // isCollapse: true,
                                   disabledBorder: InputBorder.none,
                                   isDense: true,
                                 ),

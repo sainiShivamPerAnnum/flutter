@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
@@ -25,7 +26,7 @@ class _LauncherViewState extends State<LauncherView>
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context, listen: true);
+        Provider.of<ConnectivityService>(context, listen: true).connectivityStatus;
     S? locale = S.of(context);
     return BaseView<LauncherViewModel>(
       onModelReady: (model) {

@@ -35,7 +35,7 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     ConnectivityStatus connectivityStatus =
-//         Provider.of<ConnectivityStatus>(context);
+//         Provider.of<ConnectivityService>(context, listen: true).connectivityStatus;
 //     BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
 
 //     return Dialog(

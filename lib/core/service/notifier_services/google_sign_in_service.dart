@@ -46,7 +46,7 @@ class GoogleSignInService extends ChangeNotifier {
       _userService!.setEmail(userEmail);
       final res = await _userRepo!.updateUser(dMap: {
         BaseUser.fldIsEmailVerified: true,
-        'email': userEmail,
+        BaseUser.fldEmail: userEmail,
       });
       if (res.isSuccess() && res.model!) {
         _userService!.isEmailVerified = true;

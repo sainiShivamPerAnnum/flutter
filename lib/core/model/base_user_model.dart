@@ -5,31 +5,31 @@ import 'package:felloapp/util/logger.dart';
 
 class BaseUser {
   static Log log = new Log("User");
-  String?  uid;
-  String?  mobile;
-  String?  name;
-  String?  email;
-  String?  dob;
-  String?  gender; // 0: Male | 1: Female | -1: Rather Not to say
-  String?  username;
-  String?  verifiedName;
-  String?  client_token; //fetched from a subcollection
-  bool?  isInvested;
-  bool?  isIciciOnboarded;
-  bool?  isAugmontOnboarded;
-  bool?  isSimpleKycVerified;
-  bool?  isBlocked;
+  String? uid;
+  String? mobile;
+  String? name;
+  String? email;
+  String? dob;
+  String? gender; // 0: Male | 1: Female | -1: Rather Not to say
+  String? username;
+  String? verifiedName;
+  String? client_token; //fetched from a subcollection
+  bool? isInvested;
+  bool? isIciciOnboarded;
+  bool? isAugmontOnboarded;
+  bool? isSimpleKycVerified;
+  bool? isBlocked;
   int isKycVerified;
-  String ? kycName;
-  String ? pendingTxnId;
-  bool ? isIciciEnabled;
-  bool ? isAugmontEnabled;
-  bool ? isEmailVerified;
+  String? kycName;
+  String? pendingTxnId;
+  bool? isIciciEnabled;
+  bool? isAugmontEnabled;
+  bool? isEmailVerified;
   UserPreferences userPreferences;
   TimestampModel createdOn;
-  String ? appFlyerId;
-  String ? avatarId;
-  bool?  isOldUser;
+  String? appFlyerId;
+  String? avatarId;
+  bool? isOldUser;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -96,11 +96,11 @@ class BaseUser {
           '',
           '',
           '',
-          '', 
-          '' , 
+          '',
+          '',
           false,
-          false, 
-          false, 
+          false,
+          false,
           false,
           0,
           '',
@@ -116,18 +116,18 @@ class BaseUser {
           '',
           false,
         );
-BaseUser.base()
+  BaseUser.base()
       : this(
           '',
           '',
           '',
           '',
           '',
-          '', 
-          '' , 
+          '',
+          '',
           false,
-          false, 
-          false, 
+          false,
+          false,
           false,
           0,
           '',
@@ -138,15 +138,15 @@ BaseUser.base()
           false,
           false,
           UserPreferences({}),
-          TimestampModel(seconds: 0,nanoseconds: 0),
+          TimestampModel(seconds: 0, nanoseconds: 0),
           '',
           '',
           false,
         );
-  BaseUser.fromMap(Map<String, dynamic> data, String id, [String ? client_token])
+  BaseUser.fromMap(Map<String, dynamic> data, String id, [String? client_token])
       : this(
             id,
-            data[fldMobile]?.toString()?? '',
+            data[fldMobile]?.toString() ?? '',
             data[fldEmail]?.toString() ?? '',
             data[fldName]?.toString() ?? '',
             data[fldDob]?.toString() ?? '',
@@ -231,8 +231,8 @@ class UserPreferences {
 
   UserPreferences(Map<dynamic, dynamic>? remValues) {
     for (Preferences p in Preferences.values) {
-      String?  _fKey = _index[p];
-      int ? _defValue = _defValues[p];
+      String? _fKey = _index[p];
+      int? _defValue = _defValues[p];
       _activePrefs[_fKey] = (remValues != {} &&
               remValues![_fKey] != null &&
               remValues[_fKey] is int)

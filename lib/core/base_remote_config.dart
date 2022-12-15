@@ -8,25 +8,27 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 class BaseRemoteConfig {
   static late RemoteConfig remoteConfig;
   static UserService? _userService = locator<UserService>();
-  static final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  static final InternalOpsService? _internalOpsService =
+      locator<InternalOpsService>();
 
   ///Each config is set as a map = {name, default value}
 
-  static const Map<String, String> _LOGIN_ASSET_URL = {'login_asset_url': 'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/games%2Fthumbnails%2Fcricketthumb.svg?alt=media&token=e3a8fcc4-4217-42a1-99b4-ada4bac35fad'};
+  static const Map<String, String> _LOGIN_ASSET_URL = {
+    'loginAssetUrl':
+        'https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/temp%2Fmain.svg?alt=media&token=2d4ceda1-2d0b-44c4-8433-1de255da8664'
+  };
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
 
   static const Map<String, String> _TAMBOLA_HEADER_FIRST = {
     'tambola_header_1': 'Today\'s picks'
   };
 
-  static const Map<String, String> _TAMBOLA_COST = {
-    'tambola_cost': '500'
-  };
+  static const Map<String, int> _TAMBOLA_COST = {'tambolaCost': 500};
   static const Map<String, String> _TAMBOLA_HEADER_SECOND = {
     'tambola_header_2': 'Pull to see the other picks'
   };
   static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
-    'tambola_daily_pick_count': '3'
+    'tambolaDailyPickCount': '3'
   };
   static const Map<String, String> _FORCE_MIN_BUILD_NUMBER_IOS = {
     'force_min_build_number_ios': '0'
@@ -67,12 +69,12 @@ class BaseRemoteConfig {
   static const Map<String, String> _TAMBOLA_WIN_FULL = {
     'tambola_win_full': '25,000'
   };
-  static const Map<String, String> _REFERRAL_BONUS = {'referral_bonus': '25'};
+  static const Map<String, String> _REFERRAL_BONUS = {'referralBonus': '25'};
   static const Map<String, String> _REFERRAL_TICKET_BONUS = {
     'referral_ticket_bonus': '10'
   };
   static const Map<String, String> _REFERRAL_FLC_BONUS = {
-    'referral_flc_bonus': '100'
+    'referralFlcBonus': '100'
   };
   static const Map<String, String> _AWS_ICICI_KEY_INDEX = {
     'aws_icici_key_index': '1'
@@ -96,7 +98,7 @@ class BaseRemoteConfig {
     'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
   };
   static const Map<String, String> _UNLOCK_REFERRAL_AMT = {
-    'min_principle_for_prize': '100'
+    'unlock_referral_amt': '100'
   };
 
   static const Map<String, String> _WEEK_NUMBER = {'week_number': '12'};
@@ -173,7 +175,7 @@ class BaseRemoteConfig {
   };
 
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
-    'min_withdrawable_prize': '100'
+    'minWithdrawablePrice': '100'
   };
   static const Map<String, String> _GAME_TAMBOLA_ANNOUNCEMENT = {
     'game_tambola_announcement':
@@ -187,33 +189,33 @@ class BaseRemoteConfig {
         'The highest scorers of the week win prizes every Sunday at midnight'
   };
   static const Map<String, String> _APP_SHARE_MSG = {
-    'app_share_message':
+    'appShareMessage':
         'Hey I am gifting you ₹10 and 200 gaming tokens. Lets start saving and playing together ! '
   };
   static const Map<String, String> _RESTRICT_PAYTM_APP_INVOKE = {
     'restrict_paytm_app_invoke': 'false'
   };
-  static const Map<String, int> _CACHE_INVALIDATION = {'invalidate_before': 0};
+  static const Map<String, int> _CACHE_INVALIDATION = {'invalidateBefore': 0};
 
   static const Map<String, String> _ACTIVE_PG_ANDROID = {
-    'active_pg_android': 'PAYTM'
+    'activePgAndroid': 'PAYTM'
   };
 
-  static const Map<String, String> _ACTIVE_PG_IOS = {'active_pg_ios': 'PAYTM'};
+  static const Map<String, String> _ACTIVE_PG_IOS = {'activePgIos': 'PAYTM'};
 
   static const Map<String, String> _ENABLED_PSP_APPS = {
-    'enabled_psp_apps': 'EGP'
+    'enabledPspApps': 'EGP'
   };
 
-  static const Map<String, String> _PAYTM_PROD_MID = {'paytm_prod_mid': 'ppm'};
+  static const Map<String, String> _PAYTM_PROD_MID = {'paytmMid': 'ppm'};
 
   static const Map<String, String> _PAYTM_DEV_MID = {'paytm_dev_mid': 'pdm'};
 
-  static const Map<String, String> _RZP_PROD_MID = {'rzp_prod_mid': 'rpm'};
+  static const Map<String, String> _RZP_PROD_MID = {'rzpMid': 'rpm'};
 
   static const Map<String, String> _RZP_DEV_MID = {'rzp_dev_mid': 'rdm'};
 
-  static const Map<String, bool> _AUTOSAVE_ACTIVE = {'autosave_active': true};
+  static const Map<String, bool> _AUTOSAVE_ACTIVE = {'autosaveActive': true};
   static const Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
@@ -373,8 +375,8 @@ class BaseRemoteConfig {
   static String get PLAY_SCREEN_FIRST => _PLAY_SCREEN_FIRST.keys.first;
 
   static String get DEPOSIT_UPI_ADDRESS => _DEPOSIT_UPI_ADDRESS.keys.first;
-  
-static String get TAMBOLACOST => _TAMBOLA_COST.keys.first;
+
+  static String get TAMBOLACOST => _TAMBOLA_COST.keys.first;
   static String get TAMBOLA_HEADER_SECOND => _TAMBOLA_HEADER_SECOND.keys.first;
 
   static String get TAMBOLA_HEADER_FIRST => _TAMBOLA_HEADER_FIRST.keys.first;

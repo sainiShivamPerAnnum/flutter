@@ -192,7 +192,7 @@ class AnalyticsProperties {
   }
 
   static int getTambolaTicketCount() {
-    return _tambolaService!.ticketCount ?? 0;
+    return TambolaService.ticketCount ?? 0;
   }
 
   static Map<String, dynamic> getDefaultPropertiesMap(

@@ -49,7 +49,9 @@ class DateHelper {
     return weekEnd.difference(now).inMinutes;
   }
 
-  static bool isAdult(DateTime dt) {
+  static bool isAdult(DateTime? dt) {
+    log("Selected date: ${dt.toString()}");
+    if (dt == null) return true;
     // Current time - at this moment
     DateTime today = DateTime.now();
     // Date to check but moved 18 years ahead

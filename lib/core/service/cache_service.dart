@@ -22,7 +22,8 @@ class CacheService {
     }
   }
 
-  Future<void> invalidateAll() async {
+  static Future<void> invalidateAll() async {
+    final CustomLogger? _logger = locator<CustomLogger>();
     try {
       _logger!.d('cache: invalidate all');
       await _isar?.writeTxn(() async {
@@ -33,17 +34,18 @@ class CacheService {
     }
   }
 
-  Future<ApiResponse> cachedApi(
+  Future<ApiResponse<T>> cachedApi<T>(
     String key,
     int ttl,
     Future<dynamic> Function() apiReq,
-    ApiResponse Function(dynamic) parseData,
+    ApiResponse<T> Function(dynamic) parseData,
   ) async {
     final cachedData = await getData(key);
 
     if (cachedData != null && ttl != 0) {
       try {
         _logger!.d('cache: data read successfully');
+
         return parseData(json.decode(cachedData.data!));
       } catch (e) {
         _logger!.e(
@@ -61,13 +63,14 @@ class CacheService {
     return await _processApiAndSaveToCache(key, ttl, apiReq, parseData);
   }
 
-  Future<ApiResponse> _processApiAndSaveToCache(
+  Future<ApiResponse<T>> _processApiAndSaveToCache<T>(
     String key,
     int ttl,
     Future<dynamic> Function() apiReq,
-    ApiResponse Function(dynamic) parseData,
+    ApiResponse<T> Function(dynamic) parseData,
   ) async {
     final response = await apiReq();
+
     final res = parseData(response);
 
     if (response != null &&
@@ -104,16 +107,19 @@ class CacheService {
     }
   }
 
-  Future<bool> invalidateByKey(String key) async {
+  static Future<bool> invalidateByKey(String key) async {
+    final CustomLogger? _logger = locator<CustomLogger>();
     try {
       _logger!.d('cache: invalidating key $key');
 
       await _isar!.writeTxn(() async {
-        final List<CacheModel> data = await _isar!.cacheModels.filter().keyEqualTo(key).findAll();
+        final List<CacheModel> data =
+            await _isar!.collection<CacheModel>().filter().keyEqualTo(key).findAll();
         _logger!.d('cache: $data');
 
-        final c = await _isar?.cacheModels.deleteAll(data.map((e) => e.id).toList());
-        _logger!.d('cache: invalidated $c');
+        final c = await _isar!.collection()
+            .deleteAll(data.map((e) => e.id).toList());
+        _logger.d('cache: invalidated $c');
       });
 
       return true;
@@ -213,8 +219,12 @@ class CacheService {
     final response = await apiReq();
     final responseData = response['data'];
     final res = parseData(responseData);
+    List<dynamic>? items = responseData["items"];
 
-    if (responseData != null && responseData.isNotEmpty && ttl != 0) {
+    if (responseData != null &&
+        responseData.isNotEmpty &&
+        ttl != 0 &&
+        items!.isNotEmpty) {
       final start = responseData["start"];
       final end = responseData["end"];
       List<dynamic>? items = responseData["items"];

@@ -47,7 +47,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
               : SizedBox(),
           Text(
             '${title ?? ''}',
-            style: TextStyles.rajdhaniSB.title3,
+            style: TextStyles.rajdhaniSB.title5,
           ),
         ],
       ),

@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
@@ -38,13 +40,19 @@ class LendboxTransactionService extends BaseTransactionService {
   final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
   final TambolaService? _tambolaService = locator<TambolaService>();
-
+  TransactionResponseModel? _model;
   bool skipMl = false;
 
   Future<void> initiateWithdrawal(double txnAmount, String? txnId) async {
     this.currentTransactionState = TransactionState.success;
     await _txnHistoryService!.updateTransactions(InvestmentType.LENDBOXP2P);
   }
+
+  set transactionReponseModel(TransactionResponseModel? model) {
+    _model = model;
+  }
+
+  TransactionResponseModel? get transactionReponseModel => _model;
 
   Future<void> initiateTransaction(double txnAmount, bool skipMl) async {
     this.currentTxnAmount = txnAmount;
@@ -107,10 +115,7 @@ class LendboxTransactionService extends BaseTransactionService {
 
   Future<CreatePaytmTransactionModel?> createPaytmTransaction() async {
     if (this.currentTxnAmount == null) return null;
-    final mid = BaseRemoteConfig.remoteConfig.getString(
-        FlavorConfig.isDevelopment()
-            ? BaseRemoteConfig.PATYM_DEV_MID
-            : BaseRemoteConfig.PATYM_PROD_MID);
+    final mid = AppConfig.getValue(AppConfigKey.paytmMid);
     final ApiResponse<CreatePaytmTransactionModel>
         paytmSubscriptionApiResponse = await _paytmRepo!.createTransaction(
       this.currentTxnAmount!.toDouble(),
@@ -147,12 +152,13 @@ class LendboxTransactionService extends BaseTransactionService {
     final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
       TransactionResponseModel txnStatus = res.model!;
+
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             _tambolaService!.weeklyTicksFetched = false;
-
+            transactionReponseModel = res.model!;
             timer!.cancel();
             return transactionResponseUpdate(
               amount: this.currentTxnAmount,

@@ -1,15 +1,12 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -25,30 +22,39 @@ class HelpFab extends StatefulWidget {
 class _HelpFabState extends State<HelpFab> {
   final UserService _userService = locator<UserService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-
-  double width = SizeConfig.padding90;
   bool isOpen = true;
   expandFab() {
     setState(() {
       isOpen = true;
-      width = SizeConfig.padding80;
-    });
-    Future.delayed(Duration(seconds: 5), () {
-      collapseFab();
     });
   }
 
   collapseFab() {
     setState(() {
       isOpen = false;
-      width = SizeConfig.avatarRadius * 2.4;
     });
   }
 
   trackHelpTappedEvent() {
     _analyticsService!.track(
-        eventName: AnalyticsEvents.journeyHelpTapped,
+        eventName: AnalyticsEvents.journeyFloatingIconTapped,
         properties: AnalyticsProperties.getDefaultPropertiesMap());
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      if (DynamicUiUtils.helpFab.isCollapse) collapseFab();
+    });
+    super.initState();
+  }
+
+  clearCache() {
+    PreferenceHelper.remove(
+        PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE);
+    PreferenceHelper.remove(
+        PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP);
+    BaseUtil.showNegativeAlert("Cache Cleared", "Restart to see changes");
   }
 
   @override
@@ -60,13 +66,14 @@ class _HelpFabState extends State<HelpFab> {
       right: SizeConfig.padding16,
       child: InkWell(
         onTap: () {
-          isOpen ? collapseFab() : expandFab();
-          AppState.screenStack.add(ScreenItem.dialog);
+          // clearCache();
           trackHelpTappedEvent();
           AppState.delegate!
               .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
-        child: Container(
+        child: AnimatedContainer(
+            duration: Duration(seconds: 1),
+            curve: Curves.easeIn,
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
             height: SizeConfig.avatarRadius * 2.4,
             decoration: BoxDecoration(
@@ -79,19 +86,38 @@ class _HelpFabState extends State<HelpFab> {
               children: [
                 SvgPicture.network(
                   DynamicUiUtils.helpFab.iconUri,
-                  // height: SizeConfig.avatarRadius * 1.8,
                   width: SizeConfig.avatarRadius * 1.8,
+                  height: SizeConfig.avatarRadius * 1.8,
+                  fit: BoxFit.contain,
                 ),
-                SizedBox(width: SizeConfig.padding4),
-                Container(
-                  child: Text(
-                    " ${DynamicUiUtils.helpFab.title}",
-                    style: TextStyles.sourceSansSB.body3,
-                  ),
-                )
+                if (isOpen) SizedBox(width: SizeConfig.padding4),
+                if (isOpen)
+                  Container(
+                    child: Text(
+                      " ${DynamicUiUtils.helpFab.title}",
+                      style: TextStyles.sourceSansSB.body3,
+                    ),
+                  )
               ],
             )),
       ),
     );
   }
 }
+
+// class HelpFabUI {
+//   factory HelpFabUI(SingleInfo fabData) {
+//     if (fabData.iconUri.isEmpty && fabData.title.isEmpty)
+//       return NoFabUI();
+//     else
+//       return FabUI();
+//   }
+// }
+
+// class NoFabUI implements HelpFabUI {}
+
+// class FabUI implements HelpFabUI {
+//   Widget build() {
+//     return FloatingActionButton(onPressed: onPressed);
+//   }
+// }

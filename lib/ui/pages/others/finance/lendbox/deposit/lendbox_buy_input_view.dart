@@ -1,6 +1,7 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/ui/pages/others/finance/amount_input_view.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/ui/pages/others/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -30,7 +32,7 @@ class LendboxBuyInputView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-    if (model.state == ViewState.Busy) return SizedBox();
+    if (model.state == ViewState.Busy) return Center(child: FullScreenLoader());
 
     return Stack(
       children: [
@@ -52,7 +54,10 @@ class LendboxBuyInputView extends StatelessWidget {
               },
             ),
             SizedBox(height: SizeConfig.padding32),
-            BannerWidget(model: model.assetOptionsModel!.data.banner),
+            BannerWidget(
+              model: model.assetOptionsModel!.data.banner,
+              happyHourCampign: locator.isRegistered<HappyHourCampign>()?locator():null,
+            ),
             AmountInputView(
               amountController: model.amountController,
               focusNode: model.buyFieldNode,
@@ -66,7 +71,7 @@ class LendboxBuyInputView extends StatelessWidget {
               onAmountChange: (int amount) {},
               bestChipIndex: 2,
               readOnly: model.readOnly,
-              onTap:()=> model.showKeyBoard(),
+              onTap: () => model.showKeyBoard(),
             ),
             Spacer(),
             SizedBox(

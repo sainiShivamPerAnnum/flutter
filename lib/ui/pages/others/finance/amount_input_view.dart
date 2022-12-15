@@ -54,7 +54,11 @@ class _AmountInputViewState extends State<AmountInputView> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.chipAmounts.firstWhere((e) => e.best).order;
+    if (widget.chipAmounts.isNotEmpty) {
+      _selectedIndex = widget.chipAmounts.firstWhere((e) => e.best).order;
+    } else {
+      widget.amountController!.text = '1';
+    }
     updateFieldWidth();
   }
 
@@ -62,6 +66,8 @@ class _AmountInputViewState extends State<AmountInputView> {
     int n = widget.amountController!.text.length;
     if (n == 0) n++;
     _fieldWidth = (SizeConfig.padding40 * n.toDouble());
+    widget.amountController!.selection = TextSelection.fromPosition(
+        TextPosition(offset: widget.amountController!.text.length));
   }
 
   @override
@@ -141,7 +147,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                         focusedBorder: InputBorder.none,
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
-                        // isCollapsed: true,
+                        // isCollapse: true,
                         disabledBorder: InputBorder.none,
                         isDense: true,
                         counter: Offstage(),

@@ -15,12 +15,12 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -59,6 +59,7 @@ class UserProfileVM extends BaseViewModel {
   bool _isContinuedWithGoogle = false;
   bool _isSigningInWithGoogle = false;
   bool _isNameEnabled = true;
+  bool _isDateEnabled = true;
 
   bool isUsernameLoading = false;
   bool? isValid = false;
@@ -81,6 +82,8 @@ class UserProfileVM extends BaseViewModel {
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
   final DBModel? dbProvider = locator<DBModel>();
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final MarketingEventHandlerService _marketingService =
+      locator<MarketingEventHandlerService>();
 
   double? picSize;
   XFile? selectedProfilePicture;
@@ -91,7 +94,7 @@ class UserProfileVM extends BaseViewModel {
   bool _hasInputError = false;
   int? _gen;
   String? gender;
-  late DateTime selectedDate;
+  DateTime? selectedDate;
   String _dateInputError = "";
   String username = "";
   double _errorPadding = 0;
@@ -145,6 +148,7 @@ class UserProfileVM extends BaseViewModel {
   get isgmailFieldEnabled => this._isgmailFieldEnabled;
   get errorPadding => this._errorPadding;
   get isNameEnabled => this._isNameEnabled;
+  get isDateEnabled => this._isDateEnabled;
 
   // Setters
   set isTambolaNotificationLoading(bool val) {
@@ -213,9 +217,9 @@ class UserProfileVM extends BaseViewModel {
     notifyListeners();
   }
 
-  set isNameEnabled(value) {
-    this._isNameEnabled = value;
-  }
+  set isNameEnabled(value) => this._isNameEnabled = value;
+
+  set isDateEnabled(value) => this._isDateEnabled = value;
 
   init(bool inu) {
     isNewUser = inu;
@@ -275,7 +279,7 @@ class UserProfileVM extends BaseViewModel {
       context: AppState.delegate!.navigatorKey.currentContext!,
       initialDate: DateTime(2000, 1, 1),
       firstDate: DateTime(1950, 1, 1),
-      lastDate: DateTime(2002, 1, 1),
+      lastDate: DateTime(2004, 1, 1),
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.dark().copyWith(
@@ -329,9 +333,10 @@ class UserProfileVM extends BaseViewModel {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       setState(ViewState.Busy);
       if (_bankAndKycService!.isKYCVerified) {
-        nameController!.text =
-            _userService!.baseUser!.kycName ?? _userService!.baseUser!.name!;
+        // nameController!.text =
+        //     _userService!.baseUser!.kycName ?? _userService!.baseUser!.name!;
         isNameEnabled = false;
+        if (myDob.isNotEmpty) isDateEnabled = false;
       }
       setState(ViewState.Idle);
     });
@@ -342,11 +347,13 @@ class UserProfileVM extends BaseViewModel {
         isValidDate() &&
         await usernameIsValid()) {
       if (_checkForChanges() && checkForNullData()) {
-        if (DateHelper.isAdult(selectedDate)) {
+        if (checkIfAdult()) {
           isUpdaingUserDetails = true;
-          _userService!.baseUser!.name = nameController!.text.trim();
-          _userService!.baseUser!.dob =
-              "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
+          if (isNameEnabled)
+            _userService!.baseUser!.name = nameController!.text.trim();
+          if (isDateEnabled)
+            _userService!.baseUser!.dob =
+                "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
           _userService!.baseUser!.gender = getGender();
           _userService!.baseUser!.isEmailVerified =
               _userService!.isEmailVerified;
@@ -356,7 +363,9 @@ class UserProfileVM extends BaseViewModel {
           await _userRepo.updateUser(
             uid: _userService!.baseUser!.uid,
             dMap: {
-              BaseUser.fldName: _userService!.baseUser!.name,
+              BaseUser.fldName: _userService!.baseUser!.name!
+                  .trim()
+                  .replaceAll(new RegExp(r"\s+\b|\b\s"), " "),
               BaseUser.fldDob: _userService!.baseUser!.dob,
               BaseUser.fldGender: _userService!.baseUser!.gender,
               BaseUser.fldIsEmailVerified:
@@ -368,12 +377,15 @@ class UserProfileVM extends BaseViewModel {
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
               await _userRepo!.getUserById(id: _userService!.baseUser!.uid);
-              _userService!.setMyUserName(_userService?.baseUser?.kycName ??
-                  _userService!.baseUser!.name);
-              _userService!.setEmail(_userService!.baseUser!.email);
-              _userService!.setDateOfBirth(_userService!.baseUser!.dob);
-              _userService!.setGender(_userService!.baseUser!.gender);
+              await _userService!.setBaseUser();
+              // _userService!.setMyUserName(_userService?.baseUser?.kycName ??
+              //     _userService!.baseUser!.name);
+              // _userService!.setEmail(_userService!.baseUser!.email);
+              // _userService!.setDateOfBirth(_userService!.baseUser!.dob);
+              // _userService!.setGender(_userService!.baseUser!.gender);
               setGender();
+              setDate();
+              nameController!.text = _userService!.name!;
               dobController!.text = _userService!.baseUser!.dob!;
               isUpdaingUserDetails = false;
               inEditMode = false;
@@ -402,6 +414,13 @@ class UserProfileVM extends BaseViewModel {
     } else
       BaseUtil.showNegativeAlert(
           "Invalid details", "please check the fields again");
+  }
+
+  bool checkIfAdult() {
+    if (selectedDate == null && !isDateEnabled)
+      return true;
+    else
+      return DateHelper.isAdult(selectedDate);
   }
 
   Future<bool> usernameIsValid() async {
@@ -503,15 +522,16 @@ class UserProfileVM extends BaseViewModel {
               await _userRepo!.removeUserFCM(_userService!.baseUser!.uid);
             }).then((flag) async {
               if (flag) {
-                //log.debug('Sign out process complete');
                 await _baseUtil!.signOut();
                 _journeyService!.dump();
+                _marketingService.dump();
                 _txnHistoryService!.signOut();
                 _tambolaService!.signOut();
                 _analyticsService!.signOut();
                 _paytmService!.signout();
                 _bankAndKycService!.dump();
                 GoldenTicketService.dump();
+                AppState.dump();
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
@@ -535,6 +555,10 @@ class UserProfileVM extends BaseViewModel {
   }
 
   bool isValidDate() {
+    if (!isDateEnabled) {
+      selectedDate = null;
+      return true;
+    }
     dateInputError = "";
     String inputDate = yearFieldController!.text +
         monthFieldController!.text +
@@ -786,7 +810,7 @@ class UserProfileVM extends BaseViewModel {
     baseProvider!.isGoogleSignInProgress = false;
     emailOptionsFocusNode.unfocus();
     BaseUtil.openModalBottomSheet(
-        isBarrierDismissable: true,
+        isBarrierDismissible: true,
         backgroundColor:
             UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
         borderRadius: BorderRadius.circular(15),
@@ -817,7 +841,7 @@ class UserProfileVM extends BaseViewModel {
     isSigningInWithGoogle = false;
   }
 
-  Future updateUsername(String? subtitle) async {
+  Future updateUsername() async {
     if (isUpdaingUserDetails) return;
     if (!(await validateUsername() ?? false)) return;
     AppState.blockNavigation();
@@ -828,8 +852,10 @@ class UserProfileVM extends BaseViewModel {
     if (res.isSuccess()) {
       await _userService!.setBaseUser();
       AppState.unblockNavigation();
-      BaseUtil.showPositiveAlert("", subtitle);
       AppState.backButtonDispatcher!.didPopRoute();
+      BaseUtil.showPositiveAlert("Username created successfully",
+          "Your username ${_userService!.baseUser?.username ?? ''} has been successfully registered!");
+
       return true;
     } else {
       inEditMode = true;
@@ -956,16 +982,19 @@ class UserProfileVM extends BaseViewModel {
 
   navigateToKycScreen() {
     Haptic.vibrate();
+    _analyticsService!.track(eventName: AnalyticsEvents.kycDetailsTapped);
     AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addPage,
+      state: PageState.replace,
       page: KycDetailsPageConfig,
     );
   }
 
   navigateToBankDetailsScreen() {
+    _analyticsService!.track(eventName: AnalyticsEvents.bankDetailsTapped);
+
     Haptic.vibrate();
     AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addPage,
+      state: PageState.replace,
       page: BankDetailsPageConfig,
     );
   }

@@ -10,9 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UsernameInputView extends StatelessWidget {
-  final String? subtitle;
-  const UsernameInputView({Key? key, this.subtitle}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return BaseView<UserProfileVM>(
@@ -35,24 +32,22 @@ class UsernameInputView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Add Username',
-                              style: TextStyles.rajdhaniB.title3,
-                            ),
-                            SizedBox(height: SizeConfig.padding6),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                subtitle ??
-                                    "Add username to participate in fun events",
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Create your username',
+                                style: TextStyles.rajdhaniB.title3,
+                              ),
+                              SizedBox(height: SizeConfig.padding6),
+                              Text(
+                                "This will be your unique name across our games and challenges leaderboard",
                                 style: TextStyles.sourceSans.body3
                                     .colour(UiConstants.kTextColor2),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                         GestureDetector(
                           onTap: () {
@@ -96,10 +91,7 @@ class UsernameInputView extends StatelessWidget {
                   ),
                   if (model.showResult().runtimeType != SizedBox)
                     Container(
-                      margin: EdgeInsets.only(
-                        // top: SizeConfig.padding8,
-                        top: SizeConfig.padding4,
-                      ),
+                      height: SizeConfig.padding20,
                       child: model.showResult(),
                     ),
                   Container(
@@ -113,7 +105,7 @@ class UsernameInputView extends StatelessWidget {
                           )
                         : AppPositiveBtn(
                             btnText: "ADD",
-                            onPressed: () => model.updateUsername(subtitle)),
+                            onPressed: () => model.updateUsername()),
                   )
                 ]),
           )),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
@@ -64,7 +65,8 @@ class _FelloButtonState extends State<FelloButton> {
   @override
   Widget build(BuildContext context) {
     ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context);
+        Provider.of<ConnectivityService>(context, listen: true)
+            .connectivityStatus;
     final JourneyService? _journeyService = locator<JourneyService>();
     if (connectivityStatus == ConnectivityStatus.Offline)
       return widget.offlineButtonUI != null

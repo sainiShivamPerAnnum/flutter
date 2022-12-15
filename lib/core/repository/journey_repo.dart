@@ -13,6 +13,7 @@ import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/foundation.dart';
@@ -182,16 +183,21 @@ class JourneyRepository extends BaseRepo {
         List<dynamic>? items = responseData["items"];
 
         List<JourneyPage> journeyPages = [];
+        if (items!.isEmpty)
+          return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+
         for (int i = start; i <= end; i++) {
-          journeyPages.add(JourneyPage.fromMap(items![i - start as int], i));
+          journeyPages.add(JourneyPage.fromMap(items[i - start as int], i));
         }
 
         return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
       }))) as ApiResponse<List<JourneyPage>>;
+    } on FetchDataException catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 500);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e?.toString() ?? "Unable to journey pages", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 

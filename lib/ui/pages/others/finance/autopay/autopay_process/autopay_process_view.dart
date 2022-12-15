@@ -543,7 +543,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                           focusedBorder: InputBorder.none,
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
-                          // isCollapsed: true,
+                          // isCollapse: true,
                           isDense: true,
                         ),
                         textAlign: TextAlign.center,
@@ -640,7 +640,8 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                               model.amountFieldController.text.isEmpty
                           ? '0'
                           : model.amountFieldController.text,
-                    )!.toDouble(),
+                    )!
+                        .toDouble(),
                   );
                   // model.pageController.jumpToPage(3);
                 },
@@ -765,8 +766,8 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
             child: AppPositiveBtn(
               btnText: "DONE",
-              width:
-                  SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
+              width: SizeConfig.screenWidth! -
+                  SizeConfig.pageHorizontalMargins * 2,
               onPressed: () {
                 AppState.backButtonDispatcher!.didPopRoute();
               },

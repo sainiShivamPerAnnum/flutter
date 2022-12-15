@@ -1,4 +1,5 @@
-import 'package:felloapp/core/base_remote_config.dart';
+import 'dart:ui' as ui;
+
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_image.dart';
@@ -13,7 +14,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:ui' as ui;
 
 class LowerCaseTextFormatter extends TextInputFormatter {
   @override
@@ -55,11 +55,20 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
             SizedBox(height: SizeConfig.padding8),
             Align(
               alignment: Alignment.center,
-              child: Text(
-                'Some Details',
-                style: TextStyles.rajdhaniB.title2,
+              child: Column(
+                children: [
+                  Text(
+                    'Enter Details',
+                    style: TextStyles.rajdhaniB.title2,
+                  ),
+                  Text(
+                    "You're one step away from 10% returns",
+                    style: TextStyles.body3.colour(UiConstants.kTextColor2),
+                  )
+                ],
               ),
             ),
+
             SizedBox(height: SizeConfig.padding20),
 
             //input
@@ -76,10 +85,9 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       textEditingController: model.nameController,
                       isEnabled: model.enabled,
 
-                      hintText: "Enter your name as per your PAN",
+                      hintText: "Enter Full Name",
                       focusNode: model.nameFocusNode,
                       textCapitalization: TextCapitalization.words,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
                           RegExp(r'[a-zA-Z ]'),
@@ -88,11 +96,11 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       onSubmit: (_) => widget.loginModel.processScreenInput(2),
                       // suffix: SizedBox(),
                       validator: (value) {
-                        if (value != null && value.isNotEmpty) {
-                          // model.hasInputError = false;
+                        if (value != null && value.trim().isNotEmpty) {
+                          if (value.trim().length < 3)
+                            return "At least 3 characters required";
                           return null;
                         } else {
-                          // model.hasInputError = true;
                           return 'Please enter your name as per PAN';
                         }
                       },
@@ -163,13 +171,16 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       },
                     ),
                   ),
-                  SizedBox(height: SizeConfig.padding20),
+                  SizedBox(height: SizeConfig.padding14),
                   model.hasReferralCode
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: SizeConfig.padding4),
-                            AppTextFieldLabel("Referral Code (Optional)"),
+                            SizedBox(height: SizeConfig.padding10),
+                            AppTextFieldLabel(
+                              "Referral Code (Optional)",
+                              leftPadding: 0,
+                            ),
                             AppTextField(
                               textEditingController:
                                   model.referralCodeController,
@@ -197,31 +208,26 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                             ),
                           ],
                         )
-                      : OutlinedButton(
-                          onPressed: () {
-                            if (widget.loginModel.state == ViewState.Busy)
-                              return;
-                            model.hasReferralCode = true;
-                          },
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness8),
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MaterialButton(
+                              onPressed: () {
+                                if (widget.loginModel.state == ViewState.Busy)
+                                  return;
+                                model.hasReferralCode = true;
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(SizeConfig.padding8),
+                                child: Text(
+                                  "Have a referral code?",
+                                  style: TextStyles.body2.bold
+                                      .colour(UiConstants.kPrimaryColor),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                             ),
-                            side: BorderSide(
-                              width: 1,
-                              color: UiConstants.primaryColor.withOpacity(0.2),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(SizeConfig.padding8),
-                            child: Text(
-                              "Have a referral code?",
-                              style: TextStyles.body2.bold
-                                  .colour(UiConstants.kPrimaryColor),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                          ],
                         )
                 ],
               ),
@@ -237,7 +243,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                 "By proceeding, you agree that you are 18 years and older.",
                 textAlign: TextAlign.center,
                 style: TextStyles.body3.colour(
-                  UiConstants.kTextColor2.withOpacity(0.5),
+                  UiConstants.kTextColor2,
                 ),
               ),
             ),

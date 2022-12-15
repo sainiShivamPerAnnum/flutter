@@ -2,7 +2,9 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -48,5 +50,26 @@ class UserFundQuantitySE extends StatelessWidget {
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );
+  }
+}
+
+class LboxGrowthArrow extends StatelessWidget {
+  const LboxGrowthArrow({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PropertyChangeConsumer<UserService, UserServiceProperties>(
+        properties: [
+          UserServiceProperties.myUserFund,
+          UserServiceProperties.myUserWallet
+        ],
+        builder: (context, model, property) =>
+            (model!.userFundWallet?.wLbBalance ?? 0) > 0
+                ? Icon(
+                    Icons.arrow_upward,
+                    size: SizeConfig.padding14,
+                    color: UiConstants.primaryColor,
+                  )
+                : SizedBox());
   }
 }

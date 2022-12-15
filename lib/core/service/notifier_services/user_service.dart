@@ -15,7 +15,6 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
@@ -52,7 +51,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final DBModel? _dbModel = locator<DBModel>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final ApiCacheManager? _apiCacheManager = locator<ApiCacheManager>();
+  // final ApiCacheManager? _apiCacheManager = locator<ApiCacheManager>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
@@ -352,10 +351,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       await _userRepo!.logOut();
       await signOut();
-      new CacheService().invalidateAll();
+      await CacheService.invalidateAll();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
-      await _apiCacheManager!.clearCacheMemory();
+      // await _apiCacheManager!.clearCacheMemory();
       _logger!.d("UserService signout called");
       _userFundWallet = null;
       _firebaseUser = null;
@@ -671,7 +670,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
                           asset: SvgPicture.asset(Assets.securityCheck,
                               width: SizeConfig.screenWidth! * 0.3),
                           description:
-                              "Fello protects your data to avoid unauthorized access. Please unlock Fello to continue.",
+                              "You have enabled added security for accessing Fello. Kindly unlock to continue.",
                           buttonText: "Unlock",
                           confirmAction: () {
                             Navigator.of(AppState

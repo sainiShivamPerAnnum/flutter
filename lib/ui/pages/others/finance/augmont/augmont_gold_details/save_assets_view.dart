@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/others/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
@@ -34,7 +35,11 @@ class SaveAssetView extends StatelessWidget {
         elevation: 0,
         leading: FelloAppBarBackButton(),
         actions: [
-          FaqButtonRounded(type: FaqsType.savings),
+          Row(
+            children: [
+              FaqPill(type: FaqsType.savings),
+            ],
+          ),
           SizedBox(
             width: SizeConfig.padding24,
           )

@@ -102,11 +102,11 @@ class UserProfileForm extends StatelessWidget {
                     )
                   : SizedBox(),
               validator: (value) {
-                if (value != null && value.isNotEmpty) {
-                  // model.hasInputError = false;
+                if (value != null && value.trim().isNotEmpty) {
+                  if (value.trim().length < 3)
+                    return "At least 3 characters required";
                   return null;
                 } else {
-                  // model.hasInputError = true;
                   return 'Please enter your name as per PAN';
                 }
               },
@@ -223,7 +223,7 @@ class UserProfileForm extends StatelessWidget {
               locale!.obDobLabel,
             ),
 
-            model.inEditMode
+            model.inEditMode && model.isDateEnabled
                 ? Container(
                     width: double.infinity,
                     // height: SizeConfig.screenWidth * 0.1377,
@@ -335,8 +335,15 @@ class UserProfileForm extends StatelessWidget {
                     isEnabled: false,
                     textEditingController: model.dobController,
                     validator: (val) {
-                      return "";
+                      return null;
                     },
+                    suffixIcon: !model.isDateEnabled
+                        ? Icon(
+                            Icons.verified,
+                            color: UiConstants.primaryColor,
+                            size: SizeConfig.iconSize1,
+                          )
+                        : SizedBox(),
                     // child: Text(
                     //   "${model.dobController.text}",
                     //   style: TextStyles.body2.colour(

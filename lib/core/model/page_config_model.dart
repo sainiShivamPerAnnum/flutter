@@ -90,10 +90,12 @@ class SingleInfo {
   String iconUri;
   String actionUri;
   String title;
+  bool isCollapse;
   SingleInfo({
     required this.iconUri,
     required this.actionUri,
     required this.title,
+    required this.isCollapse,
   });
 
   SingleInfo copyWith({
@@ -105,6 +107,7 @@ class SingleInfo {
       iconUri: iconUri,
       actionUri: actionUri,
       title: title,
+      isCollapse: isCollapse,
     );
   }
 
@@ -113,15 +116,16 @@ class SingleInfo {
       'iconUri': iconUri,
       'actionUri': actionUri,
       'title': title,
+      'isCollapse': isCollapse,
     };
   }
 
   factory SingleInfo.fromMap(Map<String, dynamic> map) {
     return SingleInfo(
-      iconUri: (map['iconUri'] ?? '') as String,
-      actionUri: (map['actionUri'] ?? '') as String,
-      title: (map['title'] ?? '') as String,
-    );
+        iconUri: (map['iconUri'] ?? '') as String,
+        actionUri: (map['actionUri'] ?? '') as String,
+        title: (map['title'] ?? '') as String,
+        isCollapse: (map['isCollapse'] ?? true) as bool);
   }
 
   String toJson() => json.encode(toMap());
@@ -131,7 +135,7 @@ class SingleInfo {
 
   @override
   String toString() =>
-      'SingleInfo(iconUri: $iconUri, actionUri: $actionUri, title: $title)';
+      'SingleInfo(iconUri: $iconUri, actionUri: $actionUri, title: $title, isCollapse: $isCollapse)';
 
   @override
   bool operator ==(covariant SingleInfo other) {

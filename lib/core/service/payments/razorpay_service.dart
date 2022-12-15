@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
@@ -112,10 +114,7 @@ class RazorpayService extends ChangeNotifier {
     required InvestmentType investmentType,
   }) async {
     if (!init(investmentType)) return null; //initialise razorpay
-    final mid = BaseRemoteConfig.remoteConfig.getString(
-        FlavorConfig.isDevelopment()
-            ? BaseRemoteConfig.RZP_DEV_MID
-            : BaseRemoteConfig.RZP_PROD_MID);
+    final mid = AppConfig.getValue(AppConfigKey.rzpMid);
     final ApiResponse<CreatePaytmTransactionModel> txnResponse =
         await _paytmRepo!.createTransaction(
       amount,
@@ -131,10 +130,7 @@ class RazorpayService extends ChangeNotifier {
       print(txnResponse.model!.data!.orderId);
       _txnService!.currentTxnOrderId = txnResponse.model!.data!.txnId;
       _txnService!.currentTxnAmount = amount;
-      String _keyId = BaseRemoteConfig.remoteConfig.getString(
-          FlavorConfig.isDevelopment()
-              ? BaseRemoteConfig.RZP_DEV_MID
-              : BaseRemoteConfig.RZP_PROD_MID);
+      String _keyId = AppConfig.getValue(AppConfigKey.rzpMid);
       // RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
       final options = {
         'key': _keyId,
@@ -193,6 +189,8 @@ class RazorpayService extends ChangeNotifier {
           'Failed to create transaction',
           'Please try after sometime',
         );
+        AppState.unblockNavigation();
+
         return false;
       }
     } else {
@@ -200,6 +198,7 @@ class RazorpayService extends ChangeNotifier {
         'Transaction failed',
         txnResponse.errorMessage,
       );
+      AppState.unblockNavigation();
     }
   }
 

@@ -5,45 +5,33 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
-import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-
-import '../../../../../util/locator.dart';
 
 class GTDetailedViewModel extends BaseViewModel {
   bool _viewScratcher = false;
   double _detailsModalHeight = 0;
-  bool _bottompadding = true;
   bool _viewScratchedCard = false;
   bool isCardScratched = false;
   bool _isShareLoading = false;
   final UserService? _userService = locator<UserService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final GoldenTicketService _gtService = locator<GoldenTicketService>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final ApiPath? _apiPaths = locator<ApiPath>();
   final JourneyService _journeyService = locator<JourneyService>();
 
   final _rsaEncryption = new RSAEncryption();
   final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
-
-  // bool _isTicketRedeemedSuccessfully = true;
-
-  // get isTicketRedeemedSuccessfully => this._isTicketRedeemedSuccessfully;
-
-  // set isTicketRedeemedSuccessfully(value) {
-  //   this._isTicketRedeemedSuccessfully = value;
-  //   notifyListeners();
-  // }
 
   get viewScratchedCard => this._viewScratchedCard;
 
@@ -57,10 +45,6 @@ class GTDetailedViewModel extends BaseViewModel {
 
   set detailsModalHeight(value) => this._detailsModalHeight = value;
 
-  get bottompadding => this._bottompadding;
-
-  set bottompadding(value) => this._bottompadding = value;
-
   bool get isShareLoading => _isShareLoading;
 
   set isShareLoading(bool val) {
@@ -68,19 +52,9 @@ class GTDetailedViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // showDetailsModal(bool isRewarding) {
-  //   _bottompadding = false;
-  //   _detailsModalHeight = isRewarding
-  //       ? SizeConfig.screenHeight * 0.5
-  //       : SizeConfig.screenHeight * 0.2;
-  //   notifyListeners();
-  // }
-
   changeToUnlockedUI() {
-    _bottompadding = false;
     _detailsModalHeight = SizeConfig.screenHeight! * 0.5;
     isCardScratched = true;
-    //isTicketRedeemedSuccessfully = true;
     _viewScratchedCard = true;
     notifyListeners();
   }
@@ -90,7 +64,9 @@ class GTDetailedViewModel extends BaseViewModel {
     // showDetailsModal(ticket.isRewarding);
     isCardScratched = true;
     setState(ViewState.Busy);
+    AppState.blockNavigation();
     await redeemTicket(ticket);
+    AppState.unblockNavigation();
     log(ticket.redeemedTimestamp.toString());
     setState(ViewState.Idle);
   }
@@ -98,12 +74,11 @@ class GTDetailedViewModel extends BaseViewModel {
   Future<bool> redeemTicket(GoldenTicket ticket) async {
     try {
       await _gtRepo!.redeemReward(ticket.gtId);
-
-      _gtService!.updateUnscratchedGTCount();
+      _gtService.updateUnscratchedGTCount();
       _userService!.getUserFundWalletData();
       _userCoinService!.getUserCoinBalance();
       _journeyService.updateRewardStatus(ticket.prizeSubtype!);
-
+      _gtService.refreshTickets(prizeSubtype: ticket.prizeSubtype!);
       return true;
     } catch (e) {
       _logger!.e(e);
@@ -119,7 +94,6 @@ class GTDetailedViewModel extends BaseViewModel {
       changeToUnlockedUI();
     } else {
       if (ticket.isRewarding!) {
-        //ticket has some reward
       } else {
         //Pity ticket
       }
@@ -136,12 +110,4 @@ class GTDetailedViewModel extends BaseViewModel {
 
     return token;
   }
-
-  // share(GoldenTicket ticket) async {
-  //   isShareLoading = true;
-  //   _gtService.shareGoldenTicket(ticket);
-  //   Future.delayed(Duration(seconds: 2), () {
-  //     isShareLoading = false;
-  //   });
-  // }
 }

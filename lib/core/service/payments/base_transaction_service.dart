@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/upi_intent_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
@@ -48,12 +50,10 @@ abstract class BaseTransactionService
 
   String getPaymentMode() {
     String paymentMode = "PAYTM-PG";
-    if (Platform.isAndroid)
-      paymentMode = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.ACTIVE_PG_ANDROID);
-    else if (Platform.isIOS)
-      paymentMode = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.ACTIVE_PG_IOS);
+
+    paymentMode = Platform.isAndroid
+        ? AppConfig.getValue(AppConfigKey.active_pg_android)
+        : AppConfig.getValue(AppConfigKey.active_pg_ios);
 
     return paymentMode;
   }
@@ -67,7 +67,7 @@ abstract class BaseTransactionService
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
       backgroundColor: Colors.transparent,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(SizeConfig.roundness12),
         topRight: Radius.circular(SizeConfig.roundness12),
@@ -83,21 +83,17 @@ abstract class BaseTransactionService
               statusType: UpiApplicationDiscoveryAppStatusType.all);
       allUpiApps.forEach((element) {
         if (element.upiApplication.appName == "Paytm" &&
-            BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
+            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
                 .contains('P')) {
           appMetaList.add(element);
         }
         if (element.upiApplication.appName == "PhonePe" &&
-            BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
+            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
                 .contains('E')) {
           appMetaList.add(element);
         }
         if (element.upiApplication.appName == "Google Pay" &&
-            BaseRemoteConfig.remoteConfig
-                .getString(BaseRemoteConfig.ENABLED_PSP_APPS)
-                .contains('G')) {
+            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps).contains('G')) {
           appMetaList.add(element);
         }
       });

@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -18,7 +20,7 @@ class TambolaService extends ChangeNotifier {
   final TambolaRepo? _tambolaRepo = locator<TambolaRepo>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
 
-  static int? _ticketCount;
+  static int? ticketCount;
   static int? _dailyPicksCount = 3;
   static List<int>? _todaysPicks;
   static DailyPick? _weeklyDigits;
@@ -36,11 +38,11 @@ class TambolaService extends ChangeNotifier {
     _winnerDialogCalled = false;
     _weeklyDigits = null;
     _todaysPicks = null;
-    _ticketCount = null;
+    // _ticketCount = null;
     _userWeeklyBoards = null;
   }
 
-  int? get ticketCount => _ticketCount;
+  // int? get ticketCount => _ticketCount;
 
   get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
 
@@ -54,11 +56,11 @@ class TambolaService extends ChangeNotifier {
 
   get dailyPicksCount => _dailyPicksCount;
 
-  set setTicketCount(int? val) {
-    _ticketCount = val;
-    _logger!.d("Ticket Wallet updated");
-    notifyListeners();
-  }
+  // set setTicketCount(int? val) {
+  //   _ticketCount = val;
+  //   _logger!.d("Ticket Wallet updated");
+  //   notifyListeners();
+  // }
 
   set dailyPicksCount(value) {
     _dailyPicksCount = value;
@@ -115,14 +117,14 @@ class TambolaService extends ChangeNotifier {
     setUpDailyPicksCount();
   }
 
-  Future<void> getTicketCount() async {
-    final count = await _tambolaRepo!.getTicketCount();
-    if (count.code == 200) {
-      setTicketCount = count.model;
-    } else {
-      BaseUtil.showNegativeAlert(count.errorMessage, '');
-    }
-  }
+  // Future<void> getTicketCount() async {
+  //   final count = await _tambolaRepo!.getTicketCount();
+  //   if (count.code == 200) {
+  //     setTicketCount = count.model;
+  //   } else {
+  //     BaseUtil.showNegativeAlert(count.errorMessage, '');
+  //   }
+  // }
 
   dump() {
     _dailyPicksCount = null;
@@ -184,9 +186,10 @@ class TambolaService extends ChangeNotifier {
   }
 
   setUpDailyPicksCount() {
-    String _dpc = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
-    if (_dpc == null || _dpc.isEmpty) _dpc = '3';
+    String _dpc = (AppConfig.getValue(AppConfigKey.tambola_daily_pick_count)
+            .toString()) ??
+        '';
+    if (_dpc.isEmpty) _dpc = '3';
     dailyPicksCount = 3;
     try {
       dailyPicksCount = int.parse(_dpc);

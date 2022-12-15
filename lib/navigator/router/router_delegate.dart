@@ -11,21 +11,17 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/pages/help_and_support/faq/faq_page.dart';
 import 'package:felloapp/ui/pages/help_and_support/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/help_and_support/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/help_and_support/support.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
-import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
-import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/all_participants.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
@@ -35,12 +31,8 @@ import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_det
 import 'package:felloapp/ui/pages/others/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_existing_user_page.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
-import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
@@ -49,12 +41,10 @@ import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/refe
 import 'package:felloapp/ui/pages/others/profile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
-import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/assets.dart';
@@ -65,7 +55,9 @@ import 'package:felloapp/util/preference_helper.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+import '../../core/enums/app_config_keys.dart';
+import '../../core/model/app_config_model.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -326,7 +318,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.SettingsView:
           _addPageData(SettingsView(), SettingsViewPageConfig);
           break;
-
         default:
           break;
       }
@@ -615,6 +606,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.SettingsView:
         SettingsViewPageConfig.currentPageAction = action;
         break;
+      case Pages.SellConfirmationView:
+        SellConfirmationViewConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -689,6 +683,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         final segment = uri.pathSegments[i];
         if (segment.startsWith('d-', 0)) {
           dialogCheck(segment.split('-').last);
+        } else if (segment.startsWith('GM_')) {
+          openWebGame(segment);
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else if (segment.startsWith('story-')) {
@@ -734,6 +730,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void openStoryView(String topic) {
+    AppState.screenStack.add(ScreenItem.dialog);
     Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, anotherAnimation) {
@@ -786,6 +783,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'kycVerify':
         pageConfiguration = KycDetailsPageConfig;
+        break;
+      case 'assetBuy':
+        BaseUtil().openDepositOptionsModalSheet();
         break;
       case 'augBuy':
         BaseUtil()
@@ -844,6 +844,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'FPL':
         openTopSaverScreen('FPL');
         break;
+      // BACKWARD COMPATIBILITY --START
       case 'footballHome':
         openWebGame(Constants.GAME_TYPE_FOOTBALL);
         break;
@@ -862,11 +863,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'bottleFlipHome':
         openWebGame(Constants.GAME_TYPE_BOTTLEFLIP);
         break;
+      // BACKWARD COMPATIBILITY --END
       case 'pop':
         AppState.backButtonDispatcher!.didPopRoute();
         break;
       case 'autosaveDetails':
-        if (!BaseRemoteConfig.AUTOSAVE_ACTIVE) break;
+        if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool))
+          break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
       case 'userAutosaveDetails':

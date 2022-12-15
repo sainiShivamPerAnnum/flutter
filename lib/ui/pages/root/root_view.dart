@@ -4,13 +4,12 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/ui/pages/static/transaction_loader.dart';
 import 'package:felloapp/ui/widgets/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -38,7 +37,6 @@ class Root extends StatelessWidget {
 
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          key: RootViewModel.scaffoldKey,
           drawerEnableOpenDragGesture: false,
           body: Stack(
             children: [
@@ -57,6 +55,16 @@ class Root extends StatelessWidget {
                   ),
                 ),
               ),
+              if (model.showHappyHourBanner)
+                Consumer<AppState>(
+                  builder: (ctx, m, child) => AnimatedPositioned(
+                    bottom: AppState.delegate!.appState.getCurrentTabIndex != 0
+                        ? SizeConfig.navBarHeight
+                        : -50,
+                    duration: Duration(milliseconds: 400),
+                    child: HappyHourBanner(model: model.happyHourCampaign),
+                  ),
+                ),
               BottomNavBar(
                 parentModel: model,
               ),

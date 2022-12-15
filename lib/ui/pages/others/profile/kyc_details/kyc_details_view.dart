@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_error.dart';
 import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_verification_views.dart/kyc_success.dart';
@@ -70,7 +71,11 @@ class KYCDetailsView extends StatelessWidget {
           ),
           actions: [
             if (!model.isUpdatingKycDetails)
-              FaqButtonRounded(type: FaqsType.yourAccount),
+              Row(
+                children: [
+                  FaqPill(type: FaqsType.yourAccount),
+                ],
+              ),
             SizedBox(width: SizeConfig.padding16)
           ],
         ),
@@ -134,7 +139,7 @@ class KYCDetailsView extends StatelessWidget {
                                       onPressed: () async {
                                         await model.onSubmit(context);
                                       },
-                                      btnText: locale.btnSubmit,
+                                      btnText: locale.btnSumbit,
                                       width: SizeConfig.screenWidth,
                                     ),
                             ],

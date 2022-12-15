@@ -7,6 +7,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/titlesGames.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/others/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
@@ -34,7 +35,11 @@ class LendboxDetailsView extends StatelessWidget {
         elevation: 0,
         leading: FelloAppBarBackButton(),
         actions: [
-          FaqButtonRounded(type: FaqsType.savings),
+          Row(
+            children: [
+              FaqPill(type: FaqsType.savings),
+            ],
+          ),
           SizedBox(
             width: SizeConfig.padding24,
           )
@@ -218,11 +223,7 @@ class LBoxAssetCard extends StatelessWidget {
                                     UiConstants.kTextColor.withOpacity(0.8)),
                               ),
                               SizedBox(width: SizeConfig.padding4),
-                              Icon(
-                                Icons.arrow_upward,
-                                size: SizeConfig.padding14,
-                                color: UiConstants.primaryColor,
-                              )
+                              LboxGrowthArrow()
                             ],
                           ),
                         ],

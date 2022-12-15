@@ -1,20 +1,18 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
-import 'dart:math' as math;
 import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart';
 //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
@@ -25,24 +23,22 @@ import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/deposit_options_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
-import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
+import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -54,21 +50,19 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BaseUtil extends ChangeNotifier {
-  final CustomLogger? logger = locator<CustomLogger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final DBModel? _dbModel = locator<DBModel>();
-  final LocalDBModel? _lModel = locator<LocalDBModel>();
+  // final LocalDBModel? _lModel = locator<LocalDBModel>();
   final AppState? _appState = locator<AppState>();
   final UserService? _userService = locator<UserService>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-
+  static Flushbar? flushbar;
   BaseUser? _myUser;
   UserFundWallet? _userFundWallet;
   int? _ticketCount;
@@ -144,6 +138,9 @@ class BaseUtil extends ChangeNotifier {
   static bool? isDeviceOffline, ticketRequestSent, playScreenFirst;
   static int? ticketCountBeforeRequest, infoSliderIndex;
 
+  BuildContext get rootContext =>
+      AppState.delegate!.navigatorKey.currentContext!;
+
   _setRuntimeDefaults() {
     isNewUser = false;
     isFirstFetchDone = true;
@@ -187,7 +184,7 @@ class BaseUtil extends ChangeNotifier {
 
   void init() {
     try {
-      logger!.i('inside init base util');
+      logger.i('inside init base util');
       _setRuntimeDefaults();
 
       //Analytics logs app open state.
@@ -212,7 +209,7 @@ class BaseUtil extends ChangeNotifier {
         zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
       }
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       _internalOpsService!.logFailure(
         _userService!.baseUser?.uid ?? '',
         FailType.Splash,
@@ -287,12 +284,12 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static showUsernameInputModalSheet({String? subtitle}) {
+  static showUsernameInputModalSheet() {
     return openModalBottomSheet(
       isScrollControlled: true,
-      isBarrierDismissable: false,
+      isBarrierDismissible: false,
       addToScreenStack: true,
-      content: UsernameInputView(subtitle: subtitle),
+      content: UsernameInputView(),
       hapticVibrate: true,
     );
   }
@@ -335,11 +332,11 @@ class BaseUtil extends ChangeNotifier {
         );
       }
 
-      return BaseUtil.openModalBottomSheet(
+      BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
@@ -357,12 +354,6 @@ class BaseUtil extends ChangeNotifier {
 
   void openSellModalSheet({required InvestmentType investmentType}) {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      // if (_userService!.userJourneyStats!.mlIndex == 1)
-      //   return BaseUtil.openDialog(
-      //       addToScreenStack: true,
-      //       isBarrierDismissible: true,
-      //       hapticVibrate: false,
-      //       content: CompleteProfileDialog());
       final bool? isAugSellLocked = _userService?.userBootUp?.data!.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
       final String? augSellBanNotice = _userService
@@ -390,11 +381,11 @@ class BaseUtil extends ChangeNotifier {
               ? AnalyticsEvents.goldSellModalSheet
               : AnalyticsEvents.lBoxSellModalSheet);
 
-      return BaseUtil.openModalBottomSheet(
+      BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
@@ -411,14 +402,15 @@ class BaseUtil extends ChangeNotifier {
     //       isBarrierDismissible: true,
     //       hapticVibrate: false,
     //       content: CompleteProfileDialog());
-    _analyticsService!.track(eventName: AnalyticsEvents.challengeCtaTapped);
+    _analyticsService!
+        .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
     return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         enableDrag: false,
         hapticVibrate: true,
         backgroundColor:
             UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-        isBarrierDismissable: true,
+        isBarrierDismissible: true,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(
             SizeConfig.roundness12,
@@ -428,180 +420,27 @@ class BaseUtil extends ChangeNotifier {
         content: DepositOptionModalSheet(amount: amount, isSkipMl: isSkipMl));
   }
 
-  static showGtWinFlushBar(String title, String message, {int seconds = 2}) {
-    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    if ((title != null && title.length > 200) ||
-        (message != null && message.length > 200)) return;
-    bool isKeyboardOpen =
-        MediaQuery.of(AppState.delegate!.navigatorKey.currentContext!)
-                .viewInsets
-                .bottom !=
-            0;
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Flushbar(
-        flushbarPosition:
-            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        icon: SvgPicture.asset(
-          Assets.flatIsland,
-          height: SizeConfig.padding24,
-        ),
-        margin: EdgeInsets.only(
-            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
-                ? SizeConfig.navBarHeight +
-                    math.max(SizeConfig.viewInsets.bottom,
-                        SizeConfig.pageHorizontalMargins)
-                : SizeConfig.pageHorizontalMargins,
-            left: SizeConfig.pageHorizontalMargins,
-            right: SizeConfig.pageHorizontalMargins),
-        borderRadius: BorderRadius.all(Radius.circular(SizeConfig.roundness12)),
-        title: title,
-        message: message,
-        duration: Duration(seconds: seconds),
-        backgroundColor: Colors.black,
-        // onTap: (_) {
-        //   _.dismiss();
-        //   AppState.delegate!.parseRoute(Uri.parse("/myWinnings"));
-        // },
-        boxShadows: [
-          BoxShadow(
-            color: UiConstants.positiveAlertColor!,
-            offset: Offset(0.0, 2.0),
-            blurRadius: 3.0,
-          )
-        ],
-      )..show(AppState.delegate!.navigatorKey.currentContext!);
-    });
-  }
-
   static showPositiveAlert(String? title, String? message, {int seconds = 2}) {
-    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    if ((title != null && title.length > 200) ||
-        (message != null && message.length > 200)) return;
-    bool isKeyboardOpen =
-        MediaQuery.of(AppState.delegate!.navigatorKey.currentContext!)
-                .viewInsets
-                .bottom !=
-            0;
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Flushbar(
-        flushbarPosition:
-            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        icon: Icon(
-          Icons.flag,
-          size: 28.0,
-          color: UiConstants.primaryColor,
-        ),
-        margin: EdgeInsets.only(
-            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
-                ? SizeConfig.navBarHeight +
-                    math.max(SizeConfig.viewInsets.bottom,
-                        SizeConfig.pageHorizontalMargins)
-                : SizeConfig.pageHorizontalMargins,
-            left: SizeConfig.pageHorizontalMargins,
-            right: SizeConfig.pageHorizontalMargins),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        title: title,
-        message: message,
-        duration: Duration(seconds: seconds),
-        backgroundColor: Colors.black,
-        boxShadows: [
-          BoxShadow(
-            color: UiConstants.positiveAlertColor!,
-            offset: Offset(0.0, 2.0),
-            blurRadius: 3.0,
-          )
-        ],
-      )..show(AppState.delegate!.navigatorKey.currentContext!);
-    });
+    AppToasts.showPositiveToast(
+        title: title, subtitle: message, seconds: seconds);
   }
 
   static showNegativeAlert(String? title, String? message, {int? seconds}) {
-    // if (AppState.backButtonDispatcher.isAnyDialogOpen()) return;
-    if ((title != null && title.length > 200) ||
-        (message != null && message.length > 200 ||
-            message!.toUpperCase().contains('EXCEPTION') ||
-            message.toUpperCase().contains('SOCKET'))) return;
-    bool isKeyboardOpen =
-        MediaQuery.of(AppState.delegate!.navigatorKey.currentContext!)
-                .viewInsets
-                .bottom !=
-            0;
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Flushbar(
-        flushbarPosition:
-            isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        icon: Icon(
-          Icons.assignment_late,
-          size: 28.0,
-          color: UiConstants.tertiarySolid,
-        ),
-        margin: EdgeInsets.only(
-            bottom: AppState.screenStack.length == 1 && AppState.isUserSignedIn
-                ? SizeConfig.navBarHeight + SizeConfig.pageHorizontalMargins
-                : SizeConfig.pageHorizontalMargins,
-            left: SizeConfig.pageHorizontalMargins,
-            right: SizeConfig.pageHorizontalMargins),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        title:
-            (title == null || title.isEmpty) ? "Something went wrong" : title,
-        message:
-            (message.isEmpty) ? "Please try again after sometime" : message,
-        duration: Duration(seconds: seconds ?? 2),
-        backgroundColor: Colors.black,
-        boxShadows: [
-          BoxShadow(
-            color: UiConstants.negativeAlertColor,
-            offset: Offset(0.0, 2.0),
-            blurRadius: 3.0,
-          )
-        ],
-      )..show(AppState.delegate!.navigatorKey.currentContext!);
-    });
+    AppToasts.showNegativeToast(
+        title: title, subtitle: message, seconds: seconds);
   }
 
   static showNoInternetAlert() {
-    ConnectivityStatus connectivityStatus = Provider.of<ConnectivityStatus>(
-        AppState.delegate!.navigatorKey.currentContext!,
-        listen: false);
-
-    if (connectivityStatus == ConnectivityStatus.Offline) {
-      Flushbar(
-        flushbarPosition: FlushbarPosition.TOP,
-        flushbarStyle: FlushbarStyle.FLOATING,
-        icon: Icon(
-          Icons.error,
-          size: 28.0,
-          color: Colors.white,
-        ),
-        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        title: "No Internet",
-        message: "Please check your network connection and try again",
-        duration: Duration(seconds: 2),
-        backgroundColor: Colors.red,
-        boxShadows: [
-          BoxShadow(
-            color: Colors.red[800]!,
-            offset: Offset(0.0, 2.0),
-            blurRadius: 3.0,
-          )
-        ],
-      )..show(AppState.delegate!.navigatorKey.currentContext!);
-      return true;
-    }
-    return false;
+    return AppToasts.showNoInternetToast();
   }
 
-  Future<bool> getDrawStatus() async {
-    if (DateTime.now().weekday != await _lModel!.getDailyPickAnimLastDay() &&
-        DateTime.now().hour >= 18 &&
-        DateTime.now().hour < 24) return true;
+  // Future<bool> getDrawStatus() async {
+  //   if (DateTime.now().weekday != await _lModel!.getDailyPickAnimLastDay() &&
+  //       DateTime.now().hour >= 18 &&
+  //       DateTime.now().hour < 24) return true;
 
-    return false;
-  }
+  //   return false;
+  // }
 
   static void openDialog({
     Widget? content,
@@ -612,7 +451,7 @@ class BaseUtil extends ChangeNotifier {
   }) {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
-    CustomLogger().d("Added a dialog");
+    print("Current Stack: ${AppState.screenStack}");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     showDialog(
       context: AppState.delegate!.navigatorKey.currentContext!,
@@ -622,21 +461,22 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static void openModalBottomSheet({
+  static Future<void> openModalBottomSheet({
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
     Color? backgroundColor,
-    required bool isBarrierDismissable,
+    required bool isBarrierDismissible,
     BorderRadius? borderRadius,
     bool isScrollControlled = false,
     BoxConstraints? boxContraints,
     bool enableDrag = false,
-  }) {
+  }) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
-    showModalBottomSheet(
+    print("Current Stack: ${AppState.screenStack}");
+    await showModalBottomSheet(
       enableDrag: enableDrag,
       constraints: boxContraints,
       shape: RoundedRectangleBorder(
@@ -649,21 +489,21 @@ class BaseUtil extends ChangeNotifier {
       isScrollControlled: isScrollControlled,
       backgroundColor: backgroundColor ??
           UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-      isDismissible: isBarrierDismissable,
+      isDismissible: isBarrierDismissible,
       context: AppState.delegate!.navigatorKey.currentContext!,
       builder: (ctx) => content!,
     );
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {
-    logger!.d("Verification credetials: " + credential.toString());
+    logger.d("Verification credetials: " + credential.toString());
     // FirebaseAuth.instance.signInWithCustomToken(token)
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
       this.firebaseUser = res.user;
-      logger!.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
+      logger.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
       return true;
     }).catchError((e) {
-      logger!.e(
+      logger.e(
           "User Authentication failed with credential: Error: " + e.toString());
       return false;
     });
@@ -671,8 +511,8 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> signOut() async {
     try {
-      await _lModel!.deleteLocalAppData();
-      logger!.d('Cleared local cache');
+      // await _lModel!.deleteLocalAppData();
+      logger.d('Cleared local cache');
       _appState!.setCurrentTabIndex = 0;
 
       //remove  token from remote
@@ -722,31 +562,32 @@ class BaseUtil extends ChangeNotifier {
 
       return true;
     } catch (e) {
-      logger!.e('Failed to clear data/sign out user: ' + e.toString());
+      logger.e('Failed to clear data/sign out user: ' + e.toString());
       return false;
     }
   }
 
   static void launchUrl(String url) async {
     if (await canLaunch(url)) {
-      await launch(url);
+      launch(url);
     } else {
-      throw 'Could not launch $url';
+      BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
+          "Please try again after sometime");
     }
   }
 
-  void openTambolaGame() async {
-    if (await getDrawStatus()) {
-      await _lModel!.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
-            (value) =>
-                print("Daily Picks Draw Animation Save Status Code: $value"),
-          );
-      AppState.delegate!.appState.currentAction =
-          PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
-    } else
-      AppState.delegate!.appState.currentAction =
-          PageAction(state: PageState.addPage, page: TGamePageConfig);
-  }
+  // void openTambolaGame() async {
+  //   if (await getDrawStatus()) {
+  //     await _lModel!.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
+  //           (value) =>
+  //               print("Daily Picks Draw Animation Save Status Code: $value"),
+  //         );
+  //     AppState.delegate!.appState.currentAction =
+  //         PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
+  //   } else
+  //     AppState.delegate!.appState.currentAction =
+  //         PageAction(state: PageState.addPage, page: TGamePageConfig);
+  // }
 
   bool isOldCustomer() {
     //all users before april 2021 are marked old
@@ -1013,7 +854,7 @@ class BaseUtil extends ChangeNotifier {
 
   bool isSignedIn() => (firebaseUser != null && firebaseUser!.uid != null);
 
-  bool isActiveUser() => (_myUser != null && !_myUser!.hasIncompleteDetails());
+  // bool isActiveUser() => (_myUser != null && !_myUser!.hasIncompleteDetails());
 
   DateTime? get userCreationTimestamp => _userCreationTimestamp;
 
@@ -1043,6 +884,21 @@ class BaseUtil extends ChangeNotifier {
   set isUpiInfoMissing(bool? value) {
     this._isUpiInfoMissing = value;
     notifyListeners();
+  }
+
+  Future showHappyHourDialog(HappyHourCampign model,
+      {bool afterHappyHour = false, bool isComingFromSave = false}) async {
+    return openModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      addToScreenStack: true,
+      hapticVibrate: true,
+      content: HappyHourModel(
+        model: model,
+        isAfterHappyHour: afterHappyHour,
+        isComingFromSave: isComingFromSave,
+      ),
+      isBarrierDismissible: true,
+    );
   }
 }
 
