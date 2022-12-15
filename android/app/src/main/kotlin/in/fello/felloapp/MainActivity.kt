@@ -46,7 +46,7 @@ class MainActivity : FlutterFragmentActivity()  {
                 }
 
                 getUpiApps->getupiApps()
-                intiateTransaction ->startTransation(call.argument<String>("deepLink").toString(),call.argument<String>("app").toString())
+                intiateTransaction ->startTransation(call.argument<String>("app").toString(),call.argument<String>("deepLinkUrl").toString())
                 else -> result.notImplemented();
             }
 
@@ -86,19 +86,22 @@ class MainActivity : FlutterFragmentActivity()  {
     private fun startTransation(app:String,deepLink:String){
 
         try {
+            Log.d(deepLink,"Deep Link")
+            Log.d(app,"app")
+
+
             val uri = Uri.parse(deepLink)
-            val deepLinkIntent=Intent(Intent.ACTION_VIEW)
-            deepLinkIntent.data = uri;
+            val deepLinkIntent=Intent(Intent.ACTION_VIEW,uri)
+            deepLinkIntent.setPackage(app)
 
 
-            val chooser = Intent.createChooser(deepLinkIntent, "Pay with")
             if(deepLinkIntent.resolveActivity(context.packageManager)==null){
 
                 result.error("400","No App Found","No UPI Apps Found")
                 return
             }
             else
-            this.startActivityForResult(chooser,successRequestCode)
+            this.startActivityForResult(deepLinkIntent,successRequestCode)
 
 
 

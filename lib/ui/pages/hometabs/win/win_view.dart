@@ -32,16 +32,7 @@ List<Color> randomColors = [
 ];
 
 class Win extends StatelessWidget {
-  printUpiApps() async {
-    final sa = await UpiPay.getInstalledUpiApplications(
-        paymentType: UpiApplicationDiscoveryAppPaymentType.nonMerchant,
-        statusType: UpiApplicationDiscoveryAppStatusType.all);
-    // await UpiPay.initiateTransaction(
-    //     app: UpiApplication.airtel,
-    //     deepLinkUrl:
-    //         'upi://pay?pa=9000000009@upi&pn=User1&tn=Test UPI&am=20&cu=INR&mc=1234&tr=01234');
-    print(sa.length);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +63,8 @@ class Win extends StatelessWidget {
                     children: [
                       //Current Winnings section
                       GestureDetector(
-                        onTap: () => printUpiApps(),
+                        onTap: () => AppState.delegate!
+                            .parseRoute(Uri.parse('/myWinnings')),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.transparent,
