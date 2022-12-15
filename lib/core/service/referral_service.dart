@@ -88,17 +88,12 @@ class ReferralService {
   }
 
   Future<dynamic> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData? dynamicLink) async {
-      final Uri? deepLink = dynamicLink?.link;
+    FirebaseDynamicLinks.instance.onLink.listen(((event) {
+      final Uri? deepLink = event.link;
       if (deepLink == null) return null;
       _logger.d('Received deep link. Process the referral');
       return _processDynamicLink(_userService.baseUser!.uid, deepLink);
-    }, onError: (OnLinkErrorException e) async {
-      _logger.e('Error in fetching deeplink');
-      _logger.e(e);
-      return null;
-    });
+    }));
 
     final PendingDynamicLinkData? data =
         await FirebaseDynamicLinks.instance.getInitialLink();
