@@ -19,6 +19,7 @@ import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayOutputStream
+import java.util.logging.Logger
 import kotlin.math.log
 
 
@@ -26,7 +27,7 @@ class MainActivity : FlutterFragmentActivity()  {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
     private val getUpiApps="getUpiApps"
     private val intiateTransaction="initiateTransaction"
-    private lateinit var result: MethodChannel.Result
+    private  var res: MethodChannel.Result?=null
     private val successRequestCode = 101
     private lateinit var context:Context
     override fun configureFlutterEngine( flutterEngine: FlutterEngine) {
@@ -35,10 +36,12 @@ class MainActivity : FlutterFragmentActivity()  {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
                 // Note: this method is invoked on the main thread.
                 call, result ->
-            isAlreadyReturend=false;
-            this.result=result;
+            isAlreadyReturend=false
+            res=result;
+            Log.d("Result Intiated","");
             when (call.method){
                 "createNotificationChannel" ->{
+
                     val argData = call.arguments as HashMap<String,String>
                     val completed = createNotificationChannel(argData)
 
@@ -61,20 +64,19 @@ class MainActivity : FlutterFragmentActivity()  {
     private fun returnResult(re:Object){
         if(!isAlreadyReturend){
             isAlreadyReturend=true
-            result.success(re)
-
+            res?.success(re);
         }
 
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
+        if(res!=null)
         if(requestCode==Activity.RESULT_OK ){
-            result.success(data?.getStringExtra("response")!!)
+            returnResult(data?.getStringExtra("response")!! as Object)
 
         }else {
 
-            returnResult("user_cancelled" as Object)
+            res?.error("400","user_cancelled","Something went wrong")
         }
 
 
@@ -86,8 +88,6 @@ class MainActivity : FlutterFragmentActivity()  {
     private fun startTransation(app:String,deepLink:String){
 
         try {
-            Log.d(deepLink,"Deep Link")
-            Log.d(app,"app")
 
 
             val uri = Uri.parse(deepLink)
@@ -97,7 +97,7 @@ class MainActivity : FlutterFragmentActivity()  {
 
             if(deepLinkIntent.resolveActivity(context.packageManager)==null){
 
-                result.error("400","No App Found","No UPI Apps Found")
+                res?.error("400","No App Found","No UPI Apps Found")
                 return
             }
             else
@@ -157,7 +157,7 @@ class MainActivity : FlutterFragmentActivity()  {
 
         } catch (ex: Exception) {
             Log.e("UPI",ex.message!!)
-            result.error("400", "exception",ex.message )
+            res?.error("400", "exception",ex.message )
         }
     }
 
