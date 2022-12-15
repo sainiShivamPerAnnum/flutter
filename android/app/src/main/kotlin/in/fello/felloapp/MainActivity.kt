@@ -38,7 +38,7 @@ class MainActivity : FlutterFragmentActivity()  {
                 call, result ->
             isAlreadyReturend=false
             res=result;
-            Log.d("Result Intiated","");
+
             when (call.method){
                 "createNotificationChannel" ->{
 
