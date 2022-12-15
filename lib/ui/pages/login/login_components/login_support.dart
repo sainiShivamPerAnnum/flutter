@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/help_and_support/faq/faq_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -16,6 +17,7 @@ class FaqPill extends StatelessWidget {
   const FaqPill({Key? key, this.type}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return SafeArea(
       child: InkWell(
         onTap: () {
@@ -48,7 +50,7 @@ class FaqPill extends StatelessWidget {
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Help",
+                  locale.obHelp,
                   style: TextStyles.body4.colour(UiConstants.kTextColor),
                 ),
                 Padding(

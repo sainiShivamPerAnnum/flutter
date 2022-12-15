@@ -92,21 +92,21 @@ class S {
 
   // skipped getter for the '----------------------------------' key
 
-  /// `Enter your phone number`
-  String get obEnterMobile {
+  /// `Login/Sign up`
+  String get obLoginHeading {
     return Intl.message(
-      'Enter your phone number',
-      name: 'obEnterMobile',
+      'Login/Sign up',
+      name: 'obLoginHeading',
       desc: '',
       args: [],
     );
   }
 
-  /// `For verification purposes, an OTP will be sent to this number.`
-  String get obMobileDesc {
+  /// ` Enter your 10 digit phone number`
+  String get obEnterMobile {
     return Intl.message(
-      'For verification purposes, an OTP will be sent to this number.',
-      name: 'obMobileDesc',
+      ' Enter your 10 digit phone number',
+      name: 'obEnterMobile',
       desc: '',
       args: [],
     );
@@ -122,40 +122,40 @@ class S {
     );
   }
 
-  /// `OTP Authentication`
+  /// `Verify OTP`
   String get obOtpLabel {
     return Intl.message(
-      'OTP Authentication',
+      'Verify OTP',
       name: 'obOtpLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Please enter the 6 digit code sent to your mobile number +91 ******{number}`
-  String obOtpDesc(Object number) {
-    return Intl.message(
-      'Please enter the 6 digit code sent to your mobile number +91 ******$number',
-      name: 'obOtpDesc',
-      desc: '',
-      args: [number],
-    );
-  }
-
-  /// `Didn't get an OTP? `
+  /// `Didn't receive? `
   String get obDidntGetOtp {
     return Intl.message(
-      'Didn\'t get an OTP? ',
+      'Didn\'t receive? ',
       name: 'obDidntGetOtp',
       desc: '',
       args: [],
     );
   }
 
-  /// ` Resend`
+  /// `Didn't get an OTP? Request in `
+  String get obOtpRequest {
+    return Intl.message(
+      'Didn\'t get an OTP? Request in ',
+      name: 'obOtpRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `RESEND`
   String get obResend {
     return Intl.message(
-      ' Resend',
+      'RESEND',
       name: 'obResend',
       desc: '',
       args: [],
@@ -177,6 +177,26 @@ class S {
     return Intl.message(
       'Email Address',
       name: 'obEmailLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Details`
+  String get obEnterDetails {
+    return Intl.message(
+      'Enter Details',
+      name: 'obEnterDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You're one step away from 10% returns`
+  String get obEnterDetailsTitle {
+    return Intl.message(
+      'You\'re one step away from 10% returns',
+      name: 'obEnterDetailsTitle',
       desc: '',
       args: [],
     );
@@ -232,10 +252,10 @@ class S {
     );
   }
 
-  /// `Enter your full name`
+  /// `Enter Full name`
   String get obNameHint {
     return Intl.message(
-      'Enter your full name',
+      'Enter Full name',
       name: 'obNameHint',
       desc: '',
       args: [],
@@ -247,6 +267,36 @@ class S {
     return Intl.message(
       'Select your gender',
       name: 'obGenderHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your name as per PAN`
+  String get obNameAsPerPan {
+    return Intl.message(
+      'Please enter your name as per PAN',
+      name: 'obNameAsPerPan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `At least 3 characters required`
+  String get obNameRules {
+    return Intl.message(
+      'At least 3 characters required',
+      name: 'obNameRules',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gender`
+  String get ObGenderLabel {
+    return Intl.message(
+      'Gender',
+      name: 'ObGenderLabel',
       desc: '',
       args: [],
     );
@@ -267,6 +317,16 @@ class S {
     return Intl.message(
       'Female',
       name: 'obGenderFemale',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `By proceeding, you agree that you are 18 years and older.`
+  String get obIsOlder {
+    return Intl.message(
+      'By proceeding, you agree that you are 18 years and older.',
+      name: 'obIsOlder',
       desc: '',
       args: [],
     );
@@ -377,6 +437,86 @@ class S {
     return Intl.message(
       'Your Fello Account has been banned for activity that violates our ',
       name: 'obBlockedSubtitle1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Join over 5 Lakh users who save and win with us!`
+  String get obJoinUsBottomTitle {
+    return Intl.message(
+      'Join over 5 Lakh users who save and win with us!',
+      name: 'obJoinUsBottomTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `By continuing, you agree to our `
+  String get obAgreeText {
+    return Intl.message(
+      'By continuing, you agree to our ',
+      name: 'obAgreeText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms of Service`
+  String get obTermsofService {
+    return Intl.message(
+      'Terms of Service',
+      name: 'obTermsofService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logging in with`
+  String get obLoggingInWith {
+    return Intl.message(
+      'Logging in with',
+      name: 'obLoggingInWith',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading...`
+  String get obLoading {
+    return Intl.message(
+      'Loading...',
+      name: 'obLoading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FINISH`
+  String get obFinish {
+    return Intl.message(
+      'FINISH',
+      name: 'obFinish',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NEXT`
+  String get obNext {
+    return Intl.message(
+      'NEXT',
+      name: 'obNext',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Help`
+  String get obHelp {
+    return Intl.message(
+      'Help',
+      name: 'obHelp',
       desc: '',
       args: [],
     );
@@ -895,6 +1035,46 @@ class S {
     return Intl.message(
       'Both you and your friend receive ₹ 25 and 200 Fello tokens in your account.',
       name: 'refStep3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Referral Code (Optional)`
+  String get refCodeOptional {
+    return Intl.message(
+      'Referral Code (Optional)',
+      name: 'refCodeOptional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your referral code here`
+  String get refCodeHint {
+    return Intl.message(
+      'Enter your referral code here',
+      name: 'refCodeHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid referral code`
+  String get refInvalid {
+    return Intl.message(
+      'Invalid referral code',
+      name: 'refInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Have a referral code?`
+  String get refHaveReferral {
+    return Intl.message(
+      'Have a referral code?',
+      name: 'refHaveReferral',
       desc: '',
       args: [],
     );

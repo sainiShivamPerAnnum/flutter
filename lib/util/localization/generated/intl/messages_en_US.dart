@@ -22,23 +22,21 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(version) => "Version ${version}";
 
-  static String m1(number) =>
-      "Please enter the 6 digit code sent to your mobile number +91 ******${number}";
+  static String m1(servingSize) => "*Based on ${servingSize} fl. oz serving.";
 
-  static String m2(servingSize) => "*Based on ${servingSize} fl. oz serving.";
-
-  static String m3(quantity, formattedNumber) =>
+  static String m2(quantity, formattedNumber) =>
       "${Intl.plural(quantity, one: 'One serving.', other: '${formattedNumber} servings in your system at one time.')}";
 
-  static String m4(quantity, formattedNumber) =>
+  static String m3(quantity, formattedNumber) =>
       "${Intl.plural(quantity, one: 'One serving per day.', other: '${formattedNumber} servings per day.')}";
 
-  static String m5(goldAmount) => "${goldAmount} gm";
+  static String m4(goldAmount) => "${goldAmount} gm";
 
-  static String m6(winningsAmout) => "₹ ${winningsAmout}";
+  static String m5(winningsAmout) => "₹ ${winningsAmout}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "ObGenderLabel": MessageLookupByLibrary.simpleMessage("Gender"),
         "abBuyDigitalGold":
             MessageLookupByLibrary.simpleMessage("Buy Digital Gold"),
         "abCompleteYourProfile":
@@ -80,6 +78,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "navWMT": MessageLookupByLibrary.simpleMessage("Earn more tokens"),
         "noTransaction":
             MessageLookupByLibrary.simpleMessage("No transactions to show yet"),
+        "obAgreeText": MessageLookupByLibrary.simpleMessage(
+            "By continuing, you agree to our "),
         "obBlockedAb":
             MessageLookupByLibrary.simpleMessage("Account Information"),
         "obBlockedSubtitle1": MessageLookupByLibrary.simpleMessage(
@@ -87,15 +87,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "obBlockedTitle": MessageLookupByLibrary.simpleMessage(
             "Your Account Has Been blocked"),
         "obDidntGetOtp":
-            MessageLookupByLibrary.simpleMessage("Didn\'t get an OTP? "),
+            MessageLookupByLibrary.simpleMessage("Didn\'t receive? "),
         "obDobLabel": MessageLookupByLibrary.simpleMessage("Date of Birth"),
         "obEmailHint":
             MessageLookupByLibrary.simpleMessage("Enter your email address"),
         "obEmailLabel": MessageLookupByLibrary.simpleMessage("Email Address"),
-        "obEnterMobile":
-            MessageLookupByLibrary.simpleMessage("Enter your phone number"),
+        "obEnterDetails": MessageLookupByLibrary.simpleMessage("Enter Details"),
+        "obEnterDetailsTitle": MessageLookupByLibrary.simpleMessage(
+            "You\'re one step away from 10% returns"),
+        "obEnterMobile": MessageLookupByLibrary.simpleMessage(
+            " Enter your 10 digit phone number"),
         "obEverInvestedLabel":
             MessageLookupByLibrary.simpleMessage("Ever saved or invested"),
+        "obFinish": MessageLookupByLibrary.simpleMessage("FINISH"),
         "obGenderFemale": MessageLookupByLibrary.simpleMessage("Female"),
         "obGenderHint":
             MessageLookupByLibrary.simpleMessage("Select your gender"),
@@ -103,18 +107,31 @@ class MessageLookup extends MessageLookupByLibrary {
         "obGenderMale": MessageLookupByLibrary.simpleMessage("Male"),
         "obGenderOthers":
             MessageLookupByLibrary.simpleMessage("Rather not say"),
-        "obMobileDesc": MessageLookupByLibrary.simpleMessage(
-            "For verification purposes, an OTP will be sent to this number."),
+        "obHelp": MessageLookupByLibrary.simpleMessage("Help"),
+        "obIsOlder": MessageLookupByLibrary.simpleMessage(
+            "By proceeding, you agree that you are 18 years and older."),
+        "obJoinUsBottomTitle": MessageLookupByLibrary.simpleMessage(
+            "Join over 5 Lakh users who save and win with us!"),
+        "obLoading": MessageLookupByLibrary.simpleMessage("Loading..."),
+        "obLoggingInWith":
+            MessageLookupByLibrary.simpleMessage("Logging in with"),
+        "obLoginHeading": MessageLookupByLibrary.simpleMessage("Login/Sign up"),
         "obMobileLabel": MessageLookupByLibrary.simpleMessage("Mobile Number"),
-        "obNameHint":
-            MessageLookupByLibrary.simpleMessage("Enter your full name"),
+        "obNameAsPerPan": MessageLookupByLibrary.simpleMessage(
+            "Please enter your name as per PAN"),
+        "obNameHint": MessageLookupByLibrary.simpleMessage("Enter Full name"),
         "obNameLabel": MessageLookupByLibrary.simpleMessage("Name"),
-        "obOtpDesc": m1,
-        "obOtpLabel":
-            MessageLookupByLibrary.simpleMessage("OTP Authentication"),
+        "obNameRules": MessageLookupByLibrary.simpleMessage(
+            "At least 3 characters required"),
+        "obNext": MessageLookupByLibrary.simpleMessage("NEXT"),
+        "obOtpLabel": MessageLookupByLibrary.simpleMessage("Verify OTP"),
+        "obOtpRequest": MessageLookupByLibrary.simpleMessage(
+            "Didn\'t get an OTP? Request in "),
         "obOtpTryExceed": MessageLookupByLibrary.simpleMessage(
             "OTP requests exceeded. Please try again in sometime or contact us."),
-        "obResend": MessageLookupByLibrary.simpleMessage(" Resend"),
+        "obResend": MessageLookupByLibrary.simpleMessage("RESEND"),
+        "obTermsofService":
+            MessageLookupByLibrary.simpleMessage("Terms of Service"),
         "obUsernameHint":
             MessageLookupByLibrary.simpleMessage("Enter a username"),
         "obUsernameLabel":
@@ -144,7 +161,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "pkStateLabel": MessageLookupByLibrary.simpleMessage("State"),
         "playTrendingGames":
             MessageLookupByLibrary.simpleMessage("Trending Games"),
+        "refCodeHint": MessageLookupByLibrary.simpleMessage(
+            "Enter your referral code here"),
+        "refCodeOptional":
+            MessageLookupByLibrary.simpleMessage("Referral Code (Optional)"),
         "refHIW": MessageLookupByLibrary.simpleMessage("How do you earn?"),
+        "refHaveReferral":
+            MessageLookupByLibrary.simpleMessage("Have a referral code?"),
+        "refInvalid":
+            MessageLookupByLibrary.simpleMessage("Invalid referral code"),
         "refShareLink": MessageLookupByLibrary.simpleMessage("Share Link"),
         "refStep2": MessageLookupByLibrary.simpleMessage(
             "Your friend makes their first saving of ₹ 100 on the app."),
@@ -155,9 +180,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Your friend installs Fello and signs up using your referral link or referral code."),
         "refsubtitle": MessageLookupByLibrary.simpleMessage(
             "Earn ₹ 25 and 200 Fello tokens for every referral and referrer of the month will get a brand new iphone 13"),
-        "resultsPageFirstDisclaimer": m2,
-        "resultsPageLethalDosageMessage": m3,
-        "resultsPageSafeDosageMessage": m4,
+        "resultsPageFirstDisclaimer": m1,
+        "resultsPageLethalDosageMessage": m2,
+        "resultsPageSafeDosageMessage": m3,
         "resultsPageSafeDosageTitle":
             MessageLookupByLibrary.simpleMessage("Daily Safe Maximum"),
         "resultsPageSecondDisclaimer": MessageLookupByLibrary.simpleMessage(
@@ -166,7 +191,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "You get 1 token for every Rupee saved"),
         "saveBuyButton": MessageLookupByLibrary.simpleMessage("BUY"),
         "saveGold24k": MessageLookupByLibrary.simpleMessage("24K"),
-        "saveGoldBalanceValue": m5,
+        "saveGoldBalanceValue": m4,
         "saveGoldBalancelabel":
             MessageLookupByLibrary.simpleMessage("My Gold Balance:"),
         "saveGoldPure": MessageLookupByLibrary.simpleMessage("99.99% Pure"),
@@ -176,7 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "saveViewAll": MessageLookupByLibrary.simpleMessage("View All"),
         "saveWinningsLabel":
             MessageLookupByLibrary.simpleMessage("My Active Winnings"),
-        "saveWinningsValue": m6,
+        "saveWinningsValue": m5,
         "signout": MessageLookupByLibrary.simpleMessage("Sign Out"),
         "splashNoInternet": MessageLookupByLibrary.simpleMessage(
             "No active internet connection"),

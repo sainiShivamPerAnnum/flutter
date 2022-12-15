@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dar
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/fello_rich_text.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -86,6 +87,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
 
   @override
   Widget build(BuildContext context) {
+        S? locale = S.of(context);
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom !=
         SizeConfig.viewInsets.bottom;
     return BaseView<LoginMobileViewModel>(
@@ -101,7 +103,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
             LoginImage(),
             SizedBox(height: SizeConfig.padding8),
             Text(
-              'Login/Sign up',
+              locale.obLoginHeading,
               style: TextStyles.rajdhaniB.title2,
             ),
             SizedBox(height: SizeConfig.padding20),
@@ -114,7 +116,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
             Form(
               key: model.formKey,
               child: AppTextField(
-                hintText: ' Enter your 10 digit phone number',
+                hintText: locale.obEnterMobile,
                 isEnabled: widget?.loginModel?.state == ViewState.Idle &&
                     widget?.loginModel?.loginUsingTrueCaller == false,
                 focusNode: model.mobileFocusNode,
