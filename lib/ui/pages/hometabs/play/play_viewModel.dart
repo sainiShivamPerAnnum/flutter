@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
@@ -106,6 +107,7 @@ class PlayViewModel extends BaseViewModel {
     isGamesListDataLoading = true;
     final response = await gamesRepo!.getGames();
     _winnerService.fetchWinnersForAllGames();
+     ApxorFlutter.trackScreen("Play");
     showSecurityMessageAtTop =
         _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
     if (response.isSuccess()) {
