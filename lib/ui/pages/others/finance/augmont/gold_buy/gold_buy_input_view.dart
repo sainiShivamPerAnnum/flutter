@@ -1,7 +1,6 @@
 import "dart:math" as math;
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
@@ -62,7 +61,7 @@ class GoldBuyInputView extends StatelessWidget {
                     });
               },
             ),
-            SizedBox(height: SizeConfig.padding32),
+            SizedBox(height: SizeConfig.padding24),
             if (model.assetOptionsModel != null)
               BannerWidget(
                 model: model.assetOptionsModel!.data.banner,
@@ -75,15 +74,16 @@ class GoldBuyInputView extends StatelessWidget {
                 txnService: augTxnService,
               ),
             SizedBox(
-              height: 40,
+              height: SizeConfig.padding32,
             ),
-            CouponWidget(
-              model.couponList,
-              model,
-              onTap: (coupon) {
-                model.applyCoupon(coupon.code, false);
-              },
-            ),
+            if (model.showCoupons)
+              CouponWidget(
+                model.couponList,
+                model,
+                onTap: (coupon) {
+                  model.applyCoupon(coupon.code, false);
+                },
+              ),
             Spacer(),
             augTxnService.isGoldBuyInProgress
                 ? Container(
@@ -106,7 +106,7 @@ class GoldBuyInputView extends StatelessWidget {
                     width: SizeConfig.screenWidth! * 0.813,
                   ),
             SizedBox(
-              height: SizeConfig.padding24,
+              height: SizeConfig.padding32,
             ),
           ],
         ),

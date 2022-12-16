@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/all_tambola_tickets.dart';
@@ -102,9 +103,20 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                            'Total Tickets: ${widget.model.activeTambolaCardCount}',
-                            style: TextStyles.rajdhaniSB.body1),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Total Tickets: ${widget.model.activeTambolaCardCount}',
+                                style: TextStyles.rajdhaniSB.body1),
+                            if (TambolaRepo.expiringTicketCount != 0)
+                              Text(
+                                "${TambolaRepo.expiringTicketCount} ticket${TambolaRepo.expiringTicketCount > 1 ? 's' : ''} expiring this sunday",
+                                style: TextStyles.sourceSansSB.body3
+                                    .colour(Colors.redAccent),
+                              ),
+                          ],
+                        ),
                         GestureDetector(
                           onTap: () {
                             _scrollController.animateTo(
