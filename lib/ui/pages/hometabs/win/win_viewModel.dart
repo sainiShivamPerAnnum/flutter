@@ -201,7 +201,6 @@ class WinViewModel extends BaseViewModel {
   init() {
     // setupAutoEventScroll();
     _pageController = PageController(initialPage: 0);
-    ApxorFlutter.trackScreen("Win");
     fetchReferralCode();
     fetchBasicConstantValues();
     // _baseUtil.fetchUserAugmontDetail();

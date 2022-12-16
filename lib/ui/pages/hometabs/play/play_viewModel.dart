@@ -107,7 +107,6 @@ class PlayViewModel extends BaseViewModel {
     isGamesListDataLoading = true;
     final response = await gamesRepo!.getGames();
     _winnerService.fetchWinnersForAllGames();
-     ApxorFlutter.trackScreen("Play");
     showSecurityMessageAtTop =
         _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
     if (response.isSuccess()) {

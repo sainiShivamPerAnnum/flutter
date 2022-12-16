@@ -1,6 +1,7 @@
 //Project imports
 import 'dart:async';
 
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
@@ -113,6 +114,23 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
+    
+     switch (index) {
+      case 0:
+            ApxorFlutter.trackScreen('Journey');
+        break;
+      case 1:
+            ApxorFlutter.trackScreen('Save');
+        break;
+      case 2:
+         ApxorFlutter.trackScreen('Play');
+        break;
+      case 3:
+        ApxorFlutter.trackScreen('Win');
+        break;
+      default:
+    }
+
     // homeTabPageController.jumpToPage(_rootIndex);
     if (index == 2 && isWinOpened == false) {
       _lbService!.fetchReferralLeaderBoard();

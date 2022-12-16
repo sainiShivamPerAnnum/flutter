@@ -148,7 +148,6 @@ class SaveViewModel extends BaseViewModel {
   init() {
     // _baseUtil.fetchUserAugmontDetail();
     baseProvider = BaseUtil();
-     ApxorFlutter.trackScreen("Save");
     getCampaignEvents();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       // fetchLockedGoldQnt();
