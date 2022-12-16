@@ -157,4 +157,7 @@ class Constants {
   static const PLAY_SCREEN_TAG = "playScreenTag";
   static const Game_WEB_VIEW_HOME = "gameWebViewHome";
   static const TAMBOLA_HOME_SCREEN = "tambolaHomeScreenTag";
+  static const REWARDS = "rewards";
+  static const LEADERBOARD = "leaderBoard";
+  static const GET_TAMBOLA_TICKETS="getTambolaTickets";
 }
