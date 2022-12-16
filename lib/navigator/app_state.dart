@@ -1,9 +1,10 @@
 //Project imports
 import 'dart:async';
-
+import 'dart:io';
 import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
@@ -28,6 +29,7 @@ class PageAction {
 class AppState extends ChangeNotifier {
   final WinnerService? _winnerService = locator<WinnerService>();
   final LeaderboardService? _lbService = locator<LeaderboardService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   int _rootIndex = 0;
   static PageController homeTabPageController = PageController(initialPage: 0);
   // Future _txnFunction;
@@ -114,22 +116,22 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
-    
-     switch (index) {
-      case 0:
-            ApxorFlutter.trackScreen('Journey');
-        break;
-      case 1:
-            ApxorFlutter.trackScreen('Save');
-        break;
-      case 2:
-         ApxorFlutter.trackScreen('Play');
-        break;
-      case 3:
-        ApxorFlutter.trackScreen('Win');
-        break;
-      default:
-    }
+      switch (index) {
+        case 0:
+          _analyticsService!.trackScreen(screen: 'Journey',properties: {});
+          break;
+        case 1:
+          _analyticsService!.trackScreen(screen: 'Save',properties: {});
+          break;
+        case 2:
+          _analyticsService!.trackScreen(screen: 'Play',properties: {});
+          break;
+        case 3:
+          _analyticsService!.trackScreen(screen: 'Win',properties: {});
+          break;
+        default:
+      }
+  
 
     // homeTabPageController.jumpToPage(_rootIndex);
     if (index == 2 && isWinOpened == false) {
