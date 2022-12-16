@@ -22,18 +22,18 @@ dependencies:
   # device_preview: 1.0.0
   video_player:
   encrypt: ^5.0.0
-  firebase_analytics:
-  firebase_auth:
+  firebase_analytics: ^10.0.7
+  firebase_auth: ^4.2.1
   # firebase_core_platform_interface: 4.4.0
-  firebase_core: 
-  firebase_crashlytics:
-  firebase_database: 
-  firebase_dynamic_links: 
-  firebase_in_app_messaging:
-  firebase_messaging: 
-  firebase_performance:
-  firebase_remote_config:
-  firebase_storage: 
+  firebase_core: ^2.4.0
+  firebase_crashlytics: ^3.0.7
+  firebase_database: ^10.0.7
+  firebase_dynamic_links: ^5.0.9
+  firebase_in_app_messaging: ^0.7.0-8
+  firebase_messaging: ^14.1.4
+  firebase_performance: ^0.9.0-7
+  firebase_remote_config: ^3.0.7
+  firebase_storage: ^11.0.8
   another_flushbar: 1.12.29
   flutter:
     sdk: flutter
@@ -57,8 +57,8 @@ dependencies:
   path_provider: ^2.0.2
   paytm_allinonesdk: ^1.1.4
   # flutter_facebook_sdk:
-  #   git:
-  #     url: https://github.com/abdoosaed/flutter_facebook_sdk.git
+    # git:
+    #   url: https://github.com/abdoosaed/flutter_facebook_sdk.git
 
   pdf: ^3.1.0
   permission_handler: ^10.1.0
