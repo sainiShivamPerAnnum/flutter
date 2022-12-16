@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "felloFloText": MessageLookupByLibrary.simpleMessage("Fello Flo"),
         "getStartedWithSIP": MessageLookupByLibrary.simpleMessage(
             "Get started with a weekly/ daily SIP"),
+        "goldSellingCapacity": MessageLookupByLibrary.simpleMessage(
+            "Upto ₹ 50,000 can be sold at one go."),
         "investSafelyInGoldText": MessageLookupByLibrary.simpleMessage(
             "Invest safely in Gold\nwith our Auto SIP to win tokens"),
         "kycGrantPermissionText": MessageLookupByLibrary.simpleMessage(
@@ -83,6 +85,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "kycUseCamera": MessageLookupByLibrary.simpleMessage("Use Camera"),
         "kycVerifyText": MessageLookupByLibrary.simpleMessage(
             "This is required to securely verify your identity."),
+        "minimumAmount":
+            MessageLookupByLibrary.simpleMessage("Minimum sell amount is ₹ 10"),
         "navBarJourney": MessageLookupByLibrary.simpleMessage("Journey"),
         "navBarPlay": MessageLookupByLibrary.simpleMessage("Play"),
         "navBarSave": MessageLookupByLibrary.simpleMessage("Save"),
@@ -185,6 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pkStateLabel": MessageLookupByLibrary.simpleMessage("State"),
         "playTrendingGames":
             MessageLookupByLibrary.simpleMessage("Trending Games"),
+        "received": MessageLookupByLibrary.simpleMessage("Received"),
         "refCodeHint": MessageLookupByLibrary.simpleMessage(
             "Enter your referral code here"),
         "refCodeOptional":
@@ -213,11 +218,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "*Applies to age 18 and over. This calculator does not replace professional medical advice."),
         "saveBaseline": MessageLookupByLibrary.simpleMessage(
             "You get 1 token for every Rupee saved"),
-        "saveBuyButton": MessageLookupByLibrary.simpleMessage("BUY"),
         "saveGold24k": MessageLookupByLibrary.simpleMessage("24K"),
         "saveGoldBalanceValue": m4,
         "saveGoldBalancelabel":
-            MessageLookupByLibrary.simpleMessage("My Gold Balance:"),
+            MessageLookupByLibrary.simpleMessage("Gold Balance:"),
         "saveGoldPure": MessageLookupByLibrary.simpleMessage("99.99% Pure"),
         "saveHistory": MessageLookupByLibrary.simpleMessage("History"),
         "saveSecure": MessageLookupByLibrary.simpleMessage("100% secure"),
@@ -227,6 +231,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("My Active Winnings"),
         "saveWinningsValue": m5,
         "signout": MessageLookupByLibrary.simpleMessage("Sign Out"),
+        "sold": MessageLookupByLibrary.simpleMessage("Sold"),
         "splashNoInternet": MessageLookupByLibrary.simpleMessage(
             "No active internet connection"),
         "splashSecureText":
@@ -265,6 +270,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("₹ 1 Lakh every week"),
         "winMoneySmallText":
             MessageLookupByLibrary.simpleMessage("Play and win"),
-        "winMyWinnings": MessageLookupByLibrary.simpleMessage("My Winnings")
+        "winMyWinnings": MessageLookupByLibrary.simpleMessage("My Winnings"),
+        "withdrawGoldBalance":
+            MessageLookupByLibrary.simpleMessage("Withdrawable Gold Balance")
       };
 }

@@ -54,7 +54,7 @@ class GoldSellInputView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Withdrawable Gold Balance',
+                    locale.withdrawGoldBalance,
                     style: TextStyles.sourceSans.body3
                         .colour(UiConstants.kTextColor2),
                   ),
@@ -192,7 +192,7 @@ class GoldSellInputView extends StatelessWidget {
                     vertical: SizeConfig.padding8,
                     horizontal: SizeConfig.pageHorizontalMargins * 1.5),
                 child: Text(
-                  "Upto ₹ 50,000 can be sold at one go.",
+                  locale.goldSellingCapacity,
                   style: TextStyles.sourceSans.body4.bold
                       .colour(UiConstants.primaryColor),
                 ),
@@ -203,7 +203,7 @@ class GoldSellInputView extends StatelessWidget {
                     vertical: SizeConfig.padding8,
                     horizontal: SizeConfig.pageHorizontalMargins * 1.5),
                 child: Text(
-                  "Minimum sell amount is ₹ 10",
+                  locale.minimumAmount,
                   style:
                       TextStyles.sourceSans.body4.bold.colour(Colors.red[400]),
                 ),
@@ -224,7 +224,7 @@ class GoldSellInputView extends StatelessWidget {
                 : Container(
                     margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     child: ReactivePositiveAppButton(
-                      btnText: 'SELL',
+                      btnText: locale.saveSellButton,
                       onPressed: () async {
                         if (!augTxnService.isGoldSellInProgress &&
                             !model.isQntFetching) {

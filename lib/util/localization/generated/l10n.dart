@@ -678,16 +678,6 @@ class S {
 
   // skipped getter for the '-------------------------------------' key
 
-  /// `BUY`
-  String get saveBuyButton {
-    return Intl.message(
-      'BUY',
-      name: 'saveBuyButton',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `SELL`
   String get saveSellButton {
     return Intl.message(
@@ -698,10 +688,10 @@ class S {
     );
   }
 
-  /// `My Gold Balance:`
+  /// `Gold Balance:`
   String get saveGoldBalancelabel {
     return Intl.message(
-      'My Gold Balance:',
+      'Gold Balance:',
       name: 'saveGoldBalancelabel',
       desc: '',
       args: [],
@@ -788,6 +778,16 @@ class S {
     );
   }
 
+  /// `Sold`
+  String get sold {
+    return Intl.message(
+      'Sold',
+      name: 'sold',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `99.99% Pure`
   String get saveGoldPure {
     return Intl.message(
@@ -803,6 +803,16 @@ class S {
     return Intl.message(
       'Balance',
       name: 'balanceText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Received`
+  String get received {
+    return Intl.message(
+      'Received',
+      name: 'received',
       desc: '',
       args: [],
     );
@@ -828,11 +838,41 @@ class S {
     );
   }
 
+  /// `Withdrawable Gold Balance`
+  String get withdrawGoldBalance {
+    return Intl.message(
+      'Withdrawable Gold Balance',
+      name: 'withdrawGoldBalance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upto ₹ 50,000 can be sold at one go.`
+  String get goldSellingCapacity {
+    return Intl.message(
+      'Upto ₹ 50,000 can be sold at one go.',
+      name: 'goldSellingCapacity',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Fello Flo`
   String get felloFloText {
     return Intl.message(
       'Fello Flo',
       name: 'felloFloText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minimum sell amount is ₹ 10`
+  String get minimumAmount {
+    return Intl.message(
+      'Minimum sell amount is ₹ 10',
+      name: 'minimumAmount',
       desc: '',
       args: [],
     );
