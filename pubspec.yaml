@@ -56,9 +56,9 @@ dependencies:
   package_info: ^2.0.0
   path_provider: ^2.0.2
   paytm_allinonesdk: ^1.1.4
-  flutter_facebook_sdk:
-    git:
-      url: https://github.com/abdoosaed/flutter_facebook_sdk.git
+  # flutter_facebook_sdk:
+  #   git:
+  #     url: https://github.com/abdoosaed/flutter_facebook_sdk.git
 
   pdf: ^3.1.0
   permission_handler: ^10.1.0

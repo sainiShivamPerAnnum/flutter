@@ -37,7 +37,7 @@ class MainActivity : FlutterFragmentActivity()  {
                 // Note: this method is invoked on the main thread.
                 call, result ->
             isAlreadyReturend=false
-            res=result;
+            res=result
 
             when (call.method){
                 "createNotificationChannel" ->{
@@ -70,15 +70,18 @@ class MainActivity : FlutterFragmentActivity()  {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(res!=null)
-        if(requestCode==Activity.RESULT_OK ){
-            returnResult(data?.getStringExtra("response")!! as Object)
+        if(res!=null) {
 
-        }else {
 
-            res?.error("400","user_cancelled","Something went wrong")
+            if (requestCode == successRequestCode && data != null) {
+
+                returnResult(data?.getStringExtra("response")!! as Object)
+
+            } else {
+
+                res?.error("400", "user_cancelled", "Something went wrong")
+            }
         }
-
 
 
         super.onActivityResult(requestCode, resultCode, data)
@@ -93,10 +96,7 @@ class MainActivity : FlutterFragmentActivity()  {
             val uri = Uri.parse(deepLink)
             val deepLinkIntent=Intent(Intent.ACTION_VIEW,uri)
             deepLinkIntent.setPackage(app)
-
-
             if(deepLinkIntent.resolveActivity(context.packageManager)==null){
-
                 res?.error("400","No App Found","No UPI Apps Found")
                 return
             }

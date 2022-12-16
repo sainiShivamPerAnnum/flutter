@@ -101,6 +101,7 @@ class AugmontTransactionService extends BaseTransactionService {
   //6 -- UPI
   Future<void> processUpiTransaction() async {
     isGoldBuyInProgress = true;
+    // currentTransactionState = TransactionState.ongoing;
     AppState.blockNavigation();
     CreatePaytmTransactionModel? createdPaytmTransactionData =
         await this.createPaytmTransaction(
@@ -123,7 +124,11 @@ class AugmontTransactionService extends BaseTransactionService {
           url: deepUri,
           investmentType: InvestmentType.AUGGOLD99,
         );
-        if (res && Platform.isAndroid) initiatePolling();
+        if (res && Platform.isAndroid) {
+          currentTransactionState = TransactionState.ongoing;
+          initiatePolling();
+        }
+        
         // resetBuyOptions();
         isGoldBuyInProgress = false;
         AppState.unblockNavigation();
@@ -136,6 +141,8 @@ class AugmontTransactionService extends BaseTransactionService {
       }
     } else {
       isGoldBuyInProgress = false;
+      currentTransactionState = TransactionState.idle;
+
       AppState.unblockNavigation();
 
       return BaseUtil.showNegativeAlert(

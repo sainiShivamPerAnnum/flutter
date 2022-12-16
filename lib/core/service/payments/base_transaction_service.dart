@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-
 abstract class BaseTransactionService
     extends PropertyChangeNotifier<TransactionServiceProperties> {
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
@@ -93,7 +92,8 @@ abstract class BaseTransactionService
           appMetaList.add(element);
         }
         if (element.upiApplication.appName == "Google Pay" &&
-            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps).contains('G')) {
+            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                .contains('G')) {
           appMetaList.add(element);
         }
       });
