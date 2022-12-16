@@ -145,13 +145,16 @@ class Constants {
   static const HELP_FAB = "helpFab";
   static const FELLO_COIN_BAR = "felloCoinBar";
   static const TOTAL_SAVINGS = "totalSavings";
-  static const FELLO_FLO = "felloFLO";
-  static const DIGITIAL_GOLD = "digitalGold";
   static const CURRENT_WINNINGS = "currentWinnings";
   static const CURRENT_WINNING_AMOUNT = "currentWinningsAmount";
   static const GOLDENTICKET = "goldenTicket";
   static const TAMBOLA = "tambola";
   static const ALL_GAMES = "allGames";
   static const ALL_GAMES_TITLE = "allGamesTitle";
-
+  static const JOURNEY_SCREEN_TAG = "journeyScreenTag";
+  static const SAVE_SCREEN_TAG = "saveScreenTag";
+  static const WIN_SCREEN_TAG = "winScreenTag";
+  static const PLAY_SCREEN_TAG = "playScreenTag";
+  static const Game_WEB_VIEW_HOME = "gameWebViewHome";
+  static const TAMBOLA_HOME_SCREEN = "tambolaHomeScreenTag";
 }
