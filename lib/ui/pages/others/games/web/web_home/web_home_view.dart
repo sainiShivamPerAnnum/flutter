@@ -20,6 +20,7 @@ import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allPa
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -69,6 +70,7 @@ class WebHomeView extends StatelessWidget {
           backgroundColor: Colors.black,
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
+            key:ValueKey(Constants.Game_WEB_VIEW_HOME),
             appBar: Platform.isIOS
                 ? AppBar(
                     backgroundColor: model.currentGameModel!.shadowColor,

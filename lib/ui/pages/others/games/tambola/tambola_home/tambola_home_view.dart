@@ -30,6 +30,7 @@ import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -61,6 +62,7 @@ class TambolaHomeView extends StatelessWidget {
           backgroundColor: Colors.black,
           onRefresh: model.refreshTambolaTickets,
           child: Scaffold(
+            key: ValueKey(Constants.TAMBOLA_HOME_SCREEN),
             appBar: FAppBar(
               type: FaqsType.play,
               showAvatar: false,

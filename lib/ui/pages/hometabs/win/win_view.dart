@@ -52,6 +52,7 @@ class Win extends StatelessWidget {
             builder: (context, m, property) {
               double currentWinning = m!.userFundWallet?.unclaimedBalance ?? 0;
               return Scaffold(
+                key: ValueKey(Constants.WIN_SCREEN_TAG),
                 backgroundColor: Colors.transparent,
                 appBar: FAppBar(
                   type: FaqsType.winnings,
