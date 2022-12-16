@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/cache_model/cache_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_ticket_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/date_helper.dart';
 import 'package:intl/intl.dart';
 
 import '../../util/flavor_config.dart';
@@ -42,7 +46,7 @@ class TambolaRepo extends BaseRepo {
       //     code: 200,
       //   );
       // });
-
+      await preProcessTambolaTickets();
       final response = await APIService.instance.getData(
         ApiPath.tambolaTickets(uid),
         token: token,
@@ -51,7 +55,7 @@ class TambolaRepo extends BaseRepo {
             : {},
         cBaseUrl: _baseUrl,
       );
-      postProcessTambolaTickets(response);
+      await postProcessTambolaTickets(response);
       return ApiResponse<List<TambolaModel>>(
         model: activeTambolaTickets,
         code: 200,
@@ -62,13 +66,41 @@ class TambolaRepo extends BaseRepo {
     }
   }
 
-  void postProcessTambolaTickets(dynamic response) {
+  Future<void> preProcessTambolaTickets() async {
+    CacheModel? cache = await _cacheService.getData(CacheKeys.TAMBOLA_TICKETS);
+    if (cache != null) {
+      dynamic cachedData = json.decode(cache.data!);
+      final List<TambolaModel> cachedTickets =
+          TambolaModel.helper.fromMapArray(cachedData["tickets"]);
+      expiringTicketCount = cachedData["expiringTicketsCount"] ?? 0;
+      arrangeTambolaTickets(cachedTickets, []);
+    }
+  }
+
+  Future<void> postProcessTambolaTickets(dynamic response) async {
     final List<TambolaModel> tickets =
         TambolaModel.helper.fromMapArray(response["data"]["tickets"]);
     final List<TambolaModel> deletedTickets =
         TambolaModel.helper.fromMapArray(response["data"]["deletedTickets"]);
     expiringTicketCount = response["data"]["expiringTicketsCount"] ?? 0;
+    if (tickets.isEmpty && deletedTickets.isEmpty) return;
+    arrangeTambolaTickets(tickets, deletedTickets);
+    List<Map<String, dynamic>> ticketData = [];
+    if (activeTambolaTickets.isNotEmpty) {
+      activeTambolaTickets.forEach((ticket) {
+        ticketData.add(ticket.toMap());
+      });
+    }
+    await CacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
+    if (ticketData.isNotEmpty)
+      _cacheService.writeMap(
+          CacheKeys.TAMBOLA_TICKETS,
+          DateHelper.timeToWeekendInMinutes(),
+          {"tickets": ticketData, "expiringTicketsCount": expiringTicketCount});
+  }
 
+  arrangeTambolaTickets(
+      List<TambolaModel> tickets, List<TambolaModel> deletedTickets) {
     if (activeTambolaTickets.isEmpty)
       activeTambolaTickets = tickets;
     else {
@@ -80,7 +112,9 @@ class TambolaRepo extends BaseRepo {
       }
       if (tickets.isNotEmpty) {
         tickets.forEach((t) {
-          if (!activeTambolaTickets.contains(t)) activeTambolaTickets.add(t);
+          if (activeTambolaTickets.firstWhere((ticket) => ticket.id == t.id,
+                  orElse: () => TambolaModel.none()) ==
+              TambolaModel.none()) activeTambolaTickets.add(t);
         });
       }
     }
