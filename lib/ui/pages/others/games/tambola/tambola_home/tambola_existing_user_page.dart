@@ -112,8 +112,8 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                             if (TambolaRepo.expiringTicketCount != 0)
                               Text(
                                 "${TambolaRepo.expiringTicketCount} ticket${TambolaRepo.expiringTicketCount > 1 ? 's' : ''} expiring this sunday",
-                                style: TextStyles.sourceSansSB.body3
-                                    .colour(Colors.redAccent),
+                                style: TextStyles.sourceSansSB.body4
+                                    .colour(Colors.redAccent.withOpacity(0.8)),
                               ),
                           ],
                         ),

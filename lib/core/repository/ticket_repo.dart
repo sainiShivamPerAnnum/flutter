@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:intl/intl.dart';
 
 import '../../util/flavor_config.dart';
 import '../constants/cache_keys.dart';
@@ -45,7 +46,9 @@ class TambolaRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.tambolaTickets(uid),
         token: token,
-        headers: {'lastTimestamp': lastTimeStamp},
+        headers: lastTimeStamp != null
+            ? {'lastTimestamp': lastTimeStamp?.toDate().toIso8601String()}
+            : {},
         cBaseUrl: _baseUrl,
       );
       postProcessTambolaTickets(response);
@@ -74,11 +77,11 @@ class TambolaRepo extends BaseRepo {
           if (activeTambolaTickets.contains(dt))
             activeTambolaTickets.remove(dt);
         });
-        if (tickets.isNotEmpty) {
-          tickets.forEach((t) {
-            if (!activeTambolaTickets.contains(t)) activeTambolaTickets.add(t);
-          });
-        }
+      }
+      if (tickets.isNotEmpty) {
+        tickets.forEach((t) {
+          if (!activeTambolaTickets.contains(t)) activeTambolaTickets.add(t);
+        });
       }
     }
 
@@ -88,6 +91,8 @@ class TambolaRepo extends BaseRepo {
       else if (tt.assignedTime!.toDate().isAfter(lastTimeStamp!.toDate()))
         lastTimeStamp = tt.assignedTime;
     });
+    logger.d(
+        "Latest TimeStamp: ${lastTimeStamp != null ? DateFormat('d MMMM, yyyy - hh:mm a').format(lastTimeStamp!.toDate()) : 'null'}");
   }
 
   // Future<ApiResponse<FlcModel>> buyTambolaTickets(int ticketCount) async {
