@@ -144,6 +144,7 @@ class Constants {
   static const PROFILE = "profile";
   static const HELP_FAB = "helpFab";
   static const FELLO_COIN_BAR = "felloCoinBar";
+  static const FELLO_COIN_BAR_JAPPBAR = "felloCoinsJourney";
   static const TOTAL_SAVINGS = "totalSavings";
   static const CURRENT_WINNINGS = "currentWinnings";
   static const CURRENT_WINNING_AMOUNT = "currentWinningsAmount";
