@@ -252,6 +252,16 @@ class S {
     );
   }
 
+  /// `Please enter a valid email`
+  String get obValidEmail {
+    return Intl.message(
+      'Please enter a valid email',
+      name: 'obValidEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Enter Full name`
   String get obNameHint {
     return Intl.message(
@@ -342,10 +352,30 @@ class S {
     );
   }
 
-  /// `Unique username`
+  /// `Date field cannot be empty`
+  String get obDateFieldVal {
+    return Intl.message(
+      'Date field cannot be empty',
+      name: 'obDateFieldVal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid date`
+  String get obInValidDate {
+    return Intl.message(
+      'Invalid date',
+      name: 'obInValidDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username`
   String get obUsernameLabel {
     return Intl.message(
-      'Unique username',
+      'Username',
       name: 'obUsernameLabel',
       desc: '',
       args: [],
@@ -412,6 +442,36 @@ class S {
     );
   }
 
+  /// `Your KYC Details`
+  String get obKYCDetailsLabel {
+    return Intl.message(
+      'Your KYC Details',
+      name: 'obKYCDetailsLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Bank Account Details`
+  String get obBankDetails {
+    return Intl.message(
+      'Your Bank Account Details',
+      name: 'obBankDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `App Lock`
+  String get obAppLock {
+    return Intl.message(
+      'App Lock',
+      name: 'obAppLock',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Account Information`
   String get obBlockedAb {
     return Intl.message(
@@ -432,10 +492,10 @@ class S {
     );
   }
 
-  /// `Your Fello Account has been banned for activity that violates our `
+  /// `Your Fello Account has been banned for activity that violates our policy`
   String get obBlockedSubtitle1 {
     return Intl.message(
-      'Your Fello Account has been banned for activity that violates our ',
+      'Your Fello Account has been banned for activity that violates our policy',
       name: 'obBlockedSubtitle1',
       desc: '',
       args: [],
@@ -517,6 +577,36 @@ class S {
     return Intl.message(
       'Help',
       name: 'obHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `EDIT`
+  String get obEdit {
+    return Intl.message(
+      'EDIT',
+      name: 'obEdit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DONE`
+  String get obDone {
+    return Intl.message(
+      'DONE',
+      name: 'obDone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Need Help?`
+  String get obNeedHelp {
+    return Intl.message(
+      'Need Help?',
+      name: 'obNeedHelp',
       desc: '',
       args: [],
     );
@@ -1196,6 +1286,36 @@ class S {
     );
   }
 
+  /// `Complete`
+  String get btnComplete {
+    return Intl.message(
+      'Complete',
+      name: 'btnComplete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIGN OUT`
+  String get btnSignout {
+    return Intl.message(
+      'SIGN OUT',
+      name: 'btnSignout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grant Permission`
+  String get btnGrantPermission {
+    return Intl.message(
+      'Grant Permission',
+      name: 'btnGrantPermission',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '------------------' key
 
   /// `Name as per your PAN Card`
@@ -1203,6 +1323,56 @@ class S {
     return Intl.message(
       'Name as per your PAN Card',
       name: 'kycNameLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `KYC DETAILS`
+  String get kycTitle {
+    return Intl.message(
+      'KYC DETAILS',
+      name: 'kycTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is required to securely verify your identity.`
+  String get kycVerifyText {
+    return Intl.message(
+      'This is required to securely verify your identity.',
+      name: 'kycVerifyText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload your PAN Card`
+  String get kycPanUpload {
+    return Intl.message(
+      'Upload your PAN Card',
+      name: 'kycPanUpload',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use Camera`
+  String get kycUseCamera {
+    return Intl.message(
+      'Use Camera',
+      name: 'kycUseCamera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please grant camera access permission to continue`
+  String get kycGrantPermissionText {
+    return Intl.message(
+      'Please grant camera access permission to continue',
+      name: 'kycGrantPermissionText',
       desc: '',
       args: [],
     );

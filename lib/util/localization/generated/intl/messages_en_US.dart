@@ -48,9 +48,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Add Bank information"),
         "app_version": m0,
         "balanceText": MessageLookupByLibrary.simpleMessage("Balance"),
+        "btnComplete": MessageLookupByLibrary.simpleMessage("Complete"),
         "btnEdit": MessageLookupByLibrary.simpleMessage("Edit"),
+        "btnGrantPermission":
+            MessageLookupByLibrary.simpleMessage("Grant Permission"),
         "btnNo": MessageLookupByLibrary.simpleMessage("No"),
         "btnSave": MessageLookupByLibrary.simpleMessage("Save"),
+        "btnSignout": MessageLookupByLibrary.simpleMessage("SIGN OUT"),
         "btnSumbit": MessageLookupByLibrary.simpleMessage("Submit"),
         "btnUpdate": MessageLookupByLibrary.simpleMessage("Update"),
         "btnYes": MessageLookupByLibrary.simpleMessage("Yes"),
@@ -69,8 +73,16 @@ class MessageLookup extends MessageLookupByLibrary {
             "Get started with a weekly/ daily SIP"),
         "investSafelyInGoldText": MessageLookupByLibrary.simpleMessage(
             "Invest safely in Gold\nwith our Auto SIP to win tokens"),
+        "kycGrantPermissionText": MessageLookupByLibrary.simpleMessage(
+            "Please grant camera access permission to continue"),
         "kycNameLabel":
             MessageLookupByLibrary.simpleMessage("Name as per your PAN Card"),
+        "kycPanUpload":
+            MessageLookupByLibrary.simpleMessage("Upload your PAN Card"),
+        "kycTitle": MessageLookupByLibrary.simpleMessage("KYC DETAILS"),
+        "kycUseCamera": MessageLookupByLibrary.simpleMessage("Use Camera"),
+        "kycVerifyText": MessageLookupByLibrary.simpleMessage(
+            "This is required to securely verify your identity."),
         "navBarJourney": MessageLookupByLibrary.simpleMessage("Journey"),
         "navBarPlay": MessageLookupByLibrary.simpleMessage("Play"),
         "navBarSave": MessageLookupByLibrary.simpleMessage("Save"),
@@ -80,15 +92,22 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No transactions to show yet"),
         "obAgreeText": MessageLookupByLibrary.simpleMessage(
             "By continuing, you agree to our "),
+        "obAppLock": MessageLookupByLibrary.simpleMessage("App Lock"),
+        "obBankDetails":
+            MessageLookupByLibrary.simpleMessage("Your Bank Account Details"),
         "obBlockedAb":
             MessageLookupByLibrary.simpleMessage("Account Information"),
         "obBlockedSubtitle1": MessageLookupByLibrary.simpleMessage(
-            "Your Fello Account has been banned for activity that violates our "),
+            "Your Fello Account has been banned for activity that violates our policy"),
         "obBlockedTitle": MessageLookupByLibrary.simpleMessage(
             "Your Account Has Been blocked"),
+        "obDateFieldVal":
+            MessageLookupByLibrary.simpleMessage("Date field cannot be empty"),
         "obDidntGetOtp":
             MessageLookupByLibrary.simpleMessage("Didn\'t receive? "),
         "obDobLabel": MessageLookupByLibrary.simpleMessage("Date of Birth"),
+        "obDone": MessageLookupByLibrary.simpleMessage("DONE"),
+        "obEdit": MessageLookupByLibrary.simpleMessage("EDIT"),
         "obEmailHint":
             MessageLookupByLibrary.simpleMessage("Enter your email address"),
         "obEmailLabel": MessageLookupByLibrary.simpleMessage("Email Address"),
@@ -108,10 +127,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "obGenderOthers":
             MessageLookupByLibrary.simpleMessage("Rather not say"),
         "obHelp": MessageLookupByLibrary.simpleMessage("Help"),
+        "obInValidDate": MessageLookupByLibrary.simpleMessage("Invalid date"),
         "obIsOlder": MessageLookupByLibrary.simpleMessage(
             "By proceeding, you agree that you are 18 years and older."),
         "obJoinUsBottomTitle": MessageLookupByLibrary.simpleMessage(
             "Join over 5 Lakh users who save and win with us!"),
+        "obKYCDetailsLabel":
+            MessageLookupByLibrary.simpleMessage("Your KYC Details"),
         "obLoading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "obLoggingInWith":
             MessageLookupByLibrary.simpleMessage("Logging in with"),
@@ -123,6 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obNameLabel": MessageLookupByLibrary.simpleMessage("Name"),
         "obNameRules": MessageLookupByLibrary.simpleMessage(
             "At least 3 characters required"),
+        "obNeedHelp": MessageLookupByLibrary.simpleMessage("Need Help?"),
         "obNext": MessageLookupByLibrary.simpleMessage("NEXT"),
         "obOtpLabel": MessageLookupByLibrary.simpleMessage("Verify OTP"),
         "obOtpRequest": MessageLookupByLibrary.simpleMessage(
@@ -134,8 +157,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Terms of Service"),
         "obUsernameHint":
             MessageLookupByLibrary.simpleMessage("Enter a username"),
-        "obUsernameLabel":
-            MessageLookupByLibrary.simpleMessage("Unique username"),
+        "obUsernameLabel": MessageLookupByLibrary.simpleMessage("Username"),
         "obUsernameRule1": MessageLookupByLibrary.simpleMessage(
             "must be more than 4 and less than 20 letters"),
         "obUsernameRule2": MessageLookupByLibrary.simpleMessage(
@@ -146,6 +168,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames "),
         "obUsernameRulesTitle":
             MessageLookupByLibrary.simpleMessage("Rules for a valid username"),
+        "obValidEmail":
+            MessageLookupByLibrary.simpleMessage("Please enter a valid email"),
         "onboardText1": MessageLookupByLibrary.simpleMessage(
             "Save or invest ₹100 and get 1 game ticket every Monday"),
         "onboardText2": MessageLookupByLibrary.simpleMessage(

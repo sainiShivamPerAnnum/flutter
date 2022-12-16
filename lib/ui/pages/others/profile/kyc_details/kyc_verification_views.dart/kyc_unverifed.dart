@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -20,12 +21,13 @@ class KycUnVerifiedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         model.capturedImage != null
             ? KycBriefTile(
-                label: "Uploaded PAN Card",
+                label: locale.kycPanUpload,
                 title: model.capturedImage!.name,
                 model: model,
                 subtitle: "${model.fileSize.toString()} MB",
@@ -47,7 +49,7 @@ class KycUnVerifiedView extends StatelessWidget {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppTextFieldLabel("Upload your PAN Card"),
+                  AppTextFieldLabel(locale.kycPanUpload),
                   Container(
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.screenWidth! / 2.5,
@@ -55,7 +57,7 @@ class KycUnVerifiedView extends StatelessWidget {
                     child: Row(children: [
                       FileCaptureOption(
                         icon: Assets.ic_camera,
-                        desc: "Use Camera",
+                        desc: locale.kycUseCamera,
                         padding: EdgeInsets.all(SizeConfig.padding12),
                         func: () async {
                           try {
@@ -80,8 +82,8 @@ class KycUnVerifiedView extends StatelessWidget {
                                 content: MoreInfoDialog(
                                   title: "Alert!",
                                   text:
-                                      "Please grant camera access permission to continue.",
-                                  btnText: "Grant Permission",
+                                      locale.kycGrantPermissionText,
+                                  btnText: locale.btnGrantPermission,
                                   onPressed: () async {
                                     await openAppSettings();
                                     AppState.backButtonDispatcher!
@@ -98,7 +100,7 @@ class KycUnVerifiedView extends StatelessWidget {
                                 content: MoreInfoDialog(
                                   title: "Alert!",
                                   text:
-                                      "Please grant camera access permission to continue.",
+                                      locale.kycGrantPermissionText,
                                 ),
                               );
                             }

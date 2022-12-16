@@ -1,5 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -20,13 +21,14 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return AppBar(
       backgroundColor: isNewUser
           ? Colors.transparent
           : UiConstants.kSecondaryBackgroundColor,
       elevation: 0.0,
       title: Text(
-        'My Profile',
+        locale.abMyProfile,
         style: TextStyles.rajdhaniSB.title4,
       ),
       centerTitle: false,
@@ -56,7 +58,7 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
                             color: UiConstants.kTextColor),
                         // SizedBox(width: SizeConfig.padding8),
                         label: Text(
-                          'EDIT',
+                          locale.obEdit,
                           style: TextStyles.sourceSansSB.body2,
                         ),
                         onPressed: () => model.enableEdit(),
@@ -69,7 +71,7 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
                           }
                         },
                         child: Text(
-                          'DONE',
+                          locale.obDone,
                           style: TextStyles.sourceSansSB.body2.colour(
                             UiConstants.kTabBorderColor,
                           ),
