@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/base_util.dart';
 // import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -200,7 +201,6 @@ class WinViewModel extends BaseViewModel {
   init() {
     // setupAutoEventScroll();
     _pageController = PageController(initialPage: 0);
-
     fetchReferralCode();
     fetchBasicConstantValues();
     // _baseUtil.fetchUserAugmontDetail();
