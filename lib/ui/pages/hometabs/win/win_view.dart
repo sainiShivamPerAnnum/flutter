@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -99,6 +100,7 @@ class Win extends StatelessWidget {
                                         '₹ ${currentWinning.truncate() ?? '-'}',
                                         style: TextStyles.title1.extraBold
                                             .colour(Colors.white),
+                                            key:ValueKey(Constants.CURRENT_WINNING_AMOUNT)
                                       ),
                                       SizedBox(
                                         height: SizeConfig.padding32,
@@ -194,7 +196,9 @@ class Win extends StatelessWidget {
                                           'Golden Tickets',
                                           style: TextStyles.sourceSans.body2
                                               .colour(Colors.white),
+                                              key: ValueKey(Constants.GOLDENTICKET),
                                         ),
+
                                       ],
                                     ),
                                     Row(

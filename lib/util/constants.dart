@@ -148,6 +148,10 @@ class Constants {
   static const FELLO_FLO = "felloFLO";
   static const DIGITIAL_GOLD = "digitalGold";
   static const CURRENT_WINNINGS = "currentWinnings";
+  static const CURRENT_WINNING_AMOUNT = "currentWinningsAmount";
+  static const GOLDENTICKET = "goldenTicket";
   static const TAMBOLA = "tambola";
   static const ALL_GAMES = "allGames";
+  static const ALL_GAMES_TITLE = "allGamesTitle";
+
 }
