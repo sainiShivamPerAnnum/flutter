@@ -16,7 +16,7 @@ import '../constants/cache_keys.dart';
 import '../service/cache_service.dart';
 
 class TambolaRepo extends BaseRepo {
-  final _cacheService = new CacheService();
+  final _cacheService = CacheService();
   TimestampModel? lastTimeStamp;
   List<TambolaModel> activeTambolaTickets = [];
   static int expiringTicketCount = 0;
@@ -47,11 +47,15 @@ class TambolaRepo extends BaseRepo {
       //   );
       // });
       await preProcessTambolaTickets();
+
       final response = await APIService.instance.getData(
         ApiPath.tambolaTickets(uid),
         token: token,
-        headers: lastTimeStamp != null
-            ? {'lastTimestamp': lastTimeStamp?.toDate().toIso8601String()}
+        queryParams: lastTimeStamp != null
+            ? {
+                'lastTimestamp':
+                    lastTimeStamp?.toDate().toUtc().toIso8601String()
+              }
             : {},
         cBaseUrl: _baseUrl,
       );
@@ -126,7 +130,7 @@ class TambolaRepo extends BaseRepo {
         lastTimeStamp = tt.assignedTime;
     });
     logger.d(
-        "Latest TimeStamp: ${lastTimeStamp != null ? DateFormat('d MMMM, yyyy - hh:mm a').format(lastTimeStamp!.toDate()) : 'null'}");
+        "Latest TimeStamp: ${lastTimeStamp != null ? DateFormat('d MMMM, yyyy - hh:mm a').format(lastTimeStamp!.toDate()) + ' ' + lastTimeStamp!.toDate().toUtc().toString() + ' ' + lastTimeStamp!.toDate().toUtc().toIso8601String() : 'null'}");
   }
 
   // Future<ApiResponse<FlcModel>> buyTambolaTickets(int ticketCount) async {
@@ -189,24 +193,9 @@ class TambolaRepo extends BaseRepo {
     }
   }
 
-  // Future<ApiResponse<int>> getTicketCount() async {
-  //   try {
-  //     final uid = userService!.baseUser!.uid;
-  //     final String bearer = await getBearerToken();
-
-  //     final response = await APIService.instance.getData(
-  //       ApiPath.ticketCount(uid),
-  //       token: bearer,
-  //       cBaseUrl: _baseUrl,
-  //     );
-
-  //     final data = response['data'];
-  //     logger!.d('tambola repo $data');
-
-  //     return ApiResponse(model: data['count'], code: 200);
-  //   } catch (e) {
-  //     logger!.e(e);
-  //     return ApiResponse.withError(e.toString(), 400);
-  //   }
-  // }
+  void dump() {
+    lastTimeStamp = null;
+    activeTambolaTickets = [];
+    expiringTicketCount = 0;
+  }
 }

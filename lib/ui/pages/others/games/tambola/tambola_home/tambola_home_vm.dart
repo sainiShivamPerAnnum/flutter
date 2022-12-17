@@ -301,6 +301,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   // }
 
   getGameDetails() async {
+    if (game != null) return;
     final response =
         await _gamesRepo!.getGameByCode(gameCode: Constants.GAME_TYPE_TAMBOLA);
     if (response.isSuccess()) {

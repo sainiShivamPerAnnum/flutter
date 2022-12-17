@@ -125,7 +125,7 @@ class MarketingEventHandlerService
     _isDailyAppBonusClaimed = true;
     isDailyAppBonusClaimInProgress = false;
     showModalsheet = false;
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 250), () {
       _gtService.showInstantGoldenTicketView(
         source: GTSOURCE.game,
         onJourney: true,
