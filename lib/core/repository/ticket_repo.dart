@@ -110,8 +110,12 @@ class TambolaRepo extends BaseRepo {
     else {
       if (deletedTickets.isNotEmpty) {
         deletedTickets.forEach((dt) {
-          if (activeTambolaTickets.contains(dt))
-            activeTambolaTickets.remove(dt);
+          //   if (activeTambolaTickets.contains(dt))
+          //     activeTambolaTickets.remove(dt);
+          if (activeTambolaTickets.firstWhere((ticket) => ticket.id == dt.id,
+                  orElse: () => TambolaModel.none()) !=
+              TambolaModel.none())
+            activeTambolaTickets.removeWhere((ticket) => ticket.id == dt.id);
         });
       }
       if (tickets.isNotEmpty) {
