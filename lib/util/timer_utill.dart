@@ -12,7 +12,7 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
 
   @override
   void initState() {
-    init();
+    if (mounted) init();
     super.initState();
   }
 
