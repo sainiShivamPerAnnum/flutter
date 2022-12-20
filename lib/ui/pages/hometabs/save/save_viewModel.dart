@@ -97,7 +97,7 @@ class SaveViewModel extends BaseViewModel {
   List<String> boxTitllesFlo = [
     '10% returns per annum',
     'Interest credited everyday',
-    '48 hour lock-in period',
+    '1 day lock-in period',
   ];
 
   List<EventModel>? get ongoingEvents => this._ongoingEvents;

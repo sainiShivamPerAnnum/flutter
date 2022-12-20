@@ -47,14 +47,15 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
       onTap: () {
         locator<BaseUtil>().showHappyHourDialog(widget.model);
         locator<MixpanelAnalytics>()
-            .track(eventName: "Happy Hour CTA Tapped ", properties: {
+            .track(eventName: "Happy Hour Strip Tapped ", properties: {
           "Reward": {
             "asset":
                 locator<HappyHourCampign>().data?.rewards?.first.type ?? "",
             "amount":
                 locator<HappyHourCampign>().data?.rewards?.first.value ?? "",
             "timer": "$inHours:$inMinutes:$inSeconds"
-          }
+          },
+          "location":"Purple Strip"
         });
       },
       child: SizedBox(
