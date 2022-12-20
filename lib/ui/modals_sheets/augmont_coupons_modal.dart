@@ -103,7 +103,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding24),
           Text(
-           locale.txnInvalidCouponCode,
+           locale.txnActiveCoupon,
             style: TextStyles.body2.light,
           ),
           Expanded(
