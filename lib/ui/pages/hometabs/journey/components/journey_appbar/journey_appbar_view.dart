@@ -12,6 +12,7 @@ import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -24,6 +25,7 @@ class JourneyAppBar extends StatelessWidget {
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
       properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
       builder: (context, m, properties) {
@@ -79,7 +81,7 @@ class JourneyAppBar extends StatelessWidget {
                                     onTap: () =>
                                         _baseUtil!.openProfileDetailsScreen(),
                                     child: Text(
-                                      "Level ${model!.userJourneyStats?.level}",
+                                      locale.jLevel+" ${model!.userJourneyStats?.level}",
                                       style: TextStyles.rajdhaniSB.title5
                                           .colour(UiConstants.kTextColor),
                                     ),

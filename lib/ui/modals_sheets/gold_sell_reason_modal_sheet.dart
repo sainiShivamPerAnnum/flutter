@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -28,6 +29,7 @@ class SellingReasonBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
         AppState.screenStack.removeLast();
@@ -42,7 +44,7 @@ class SellingReasonBottomSheet extends StatelessWidget {
               height: SizeConfig.padding40,
             ),
             Text(
-              'What makes you want to sell?',
+              locale.goldSellReason,
               style: TextStyles.rajdhaniSB.body1,
             ),
             SizedBox(

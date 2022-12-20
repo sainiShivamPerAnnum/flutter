@@ -5,6 +5,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -21,6 +22,7 @@ class CouponModalSheet extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     final _analyticsService = locator<AnalyticsService>();
 
     List<String?> taggedCoupons = [];
@@ -73,7 +75,7 @@ class CouponModalSheet extends StatelessWidget {
                   width: SizeConfig.padding8,
                 ),
                 Text(
-                  'Apply a coupon code',
+                  locale.txnApplyCoupon,
                   style: TextStyles.sourceSans.body2
                       .colour(UiConstants.kPrimaryColor),
                 ),
@@ -90,13 +92,13 @@ class CouponModalSheet extends StatelessWidget {
               child: AppTextField(
                 fillColor: UiConstants.kBackgroundColor,
                 textEditingController: couponCodeController,
-                hintText: 'Enter coupon code here',
+                hintText: locale.txnEnterCode,
                 inputFormatters: [
                   UpperCaseTextFormatter(),
                 ],
                 suffixIcon: InkWell(
                   child: Text(
-                    "Apply",
+                    locale.txnApply,
                     style: TextStyles.sourceSans.body3.bold
                         .colour(UiConstants.kPrimaryColor),
                   ),
@@ -113,9 +115,9 @@ class CouponModalSheet extends StatelessWidget {
                 ),
                 validator: (val) {
                   if (val!.trim().length == 0)
-                    return "Please enter a code to continue";
+                    return locale.txnEnterCode;
                   if (val.trim().length < 3 || val.trim().length > 10)
-                    return "Invalid Coupon code";
+                    return locale.txnInvalidCouponCode;
                   return null;
                 },
                 isEnabled: true,

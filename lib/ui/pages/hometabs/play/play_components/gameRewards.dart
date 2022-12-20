@@ -1,4 +1,5 @@
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class GameRewards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Row(
       children: [
         SvgPicture.asset(
@@ -21,7 +23,8 @@ class GameRewards extends StatelessWidget {
           height: SizeConfig.padding20,
         ),
         Text(
-          'Win upto Rs.$prizeAmount',
+          locale.gameRewardsAmount(prizeAmount)
+          ,
           style: TextStyles.sourceSans.body3.colour(Colors.grey.shade600),
         ),
       ],

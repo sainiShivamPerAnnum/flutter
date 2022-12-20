@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -67,6 +68,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     print("Skip Map: ${widget.milestone!.skipCost}");
     return WillPopScope(
       onWillPop: () async {
@@ -109,12 +111,12 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Skip Milestone?",
+                      locale.jSkipMilestoneSecondary,
                       style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
                     ),
                     SizedBox(height: SizeConfig.padding10),
                     Text(
-                      "To skip this milestone and go one level ahead, save in any of the asset",
+                      locale.jSkipMileStoneDesc,
                       style:
                           TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
                     ),
@@ -124,7 +126,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Amount of Invest",
+                              locale.jInvestAmountTitile,
                               style: TextStyles.body3
                                   .colour(Colors.grey.withOpacity(0.6)),
                             ),
@@ -147,7 +149,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Tokens Required",
+                              locale.tokensRequired,
                               style: TextStyles.body3
                                   .colour(Colors.grey.withOpacity(0.6)),
                             ),
@@ -178,9 +180,10 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                           )
                         : Column(
                             children: [
-                              if (widget.milestone!.skipCost!.containsKey('amt'))
+                              if (widget.milestone!.skipCost!
+                                  .containsKey('amt'))
                                 AppPositiveBtn(
-                                    btnText: "Save Now",
+                                    btnText: locale.btnSaveNow,
                                     onPressed: () {
                                       AppState.backButtonDispatcher!
                                           .didPopRoute();
@@ -194,10 +197,11 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                       );
                                     },
                                     width: SizeConfig.screenWidth),
-                              if (widget.milestone!.skipCost!.containsKey('flc'))
+                              if (widget.milestone!.skipCost!
+                                  .containsKey('flc'))
                                 widget.milestone!.skipCost!.length == 1
                                     ? AppNegativeBtn(
-                                        btnText: "SKIP WITH TOKENS",
+                                        btnText: locale.btnSkipWithTokens,
                                         width: SizeConfig.screenWidth,
                                         onPressed: onTokenSkipPressed,
                                       )
@@ -206,7 +210,9 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                         alignment: Alignment.center,
                                         child: TextButton(
                                           child: Text(
-                                            "SKIP WITH ${widget.milestone!.skipCost!['flc']} TOKENS",
+                                            locale.skipWithtokenCost({
+                                              widget.milestone!.skipCost!['flc']
+                                            }),
                                             style: TextStyles.sourceSansL.body3
                                                 .colour(Colors.white),
                                           ),

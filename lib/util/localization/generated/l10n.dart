@@ -90,6 +90,16 @@ class S {
     );
   }
 
+  /// `Offline`
+  String get offline {
+    return Intl.message(
+      'Offline',
+      name: 'offline',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '----------------------------------' key
 
   /// `Login/Sign up`
@@ -612,6 +622,16 @@ class S {
     );
   }
 
+  /// `Update Avatar`
+  String get obUpdateAvatar {
+    return Intl.message(
+      'Update Avatar',
+      name: 'obUpdateAvatar',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '-----------------------------------' key
 
   /// `Journey`
@@ -778,6 +798,16 @@ class S {
     );
   }
 
+  /// `Buy 24K pure Digital Gold`
+  String get buyGold {
+    return Intl.message(
+      'Buy 24K pure Digital Gold',
+      name: 'buyGold',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Sold`
   String get sold {
     return Intl.message(
@@ -888,6 +918,126 @@ class S {
     );
   }
 
+  /// `Choose your asset`
+  String get chooseYourAsset {
+    return Intl.message(
+      'Choose your asset',
+      name: 'chooseYourAsset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn 1 Token for every ₹1 you invest`
+  String get earnOneToken {
+    return Intl.message(
+      'Earn 1 Token for every ₹1 you invest',
+      name: 'earnOneToken',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enjoy stable returns of 10%`
+  String get felloFloEarnTxt {
+    return Intl.message(
+      'Enjoy stable returns of 10%',
+      name: 'felloFloEarnTxt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What makes you want to sell?`
+  String get goldSellReason {
+    return Intl.message(
+      'What makes you want to sell?',
+      name: 'goldSellReason',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Purchase Rate:`
+  String get purchaseRate {
+    return Intl.message(
+      'Purchase Rate:',
+      name: 'purchaseRate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gold Purchased:`
+  String get goldPurchased {
+    return Intl.message(
+      'Gold Purchased:',
+      name: 'goldPurchased',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sell Rate:`
+  String get sellRate {
+    return Intl.message(
+      'Sell Rate:',
+      name: 'sellRate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gold Sold:`
+  String get goldSold {
+    return Intl.message(
+      'Gold Sold:',
+      name: 'goldSold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set up Autosave`
+  String get saveAutoSaveTitle {
+    return Intl.message(
+      'Set up Autosave',
+      name: 'saveAutoSaveTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set up Autosave & earn daily tokens `
+  String get saveAutoSaveSubTitle {
+    return Intl.message(
+      'Set up Autosave & earn daily tokens ',
+      name: 'saveAutoSaveSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start Saving`
+  String get startSaving {
+    return Intl.message(
+      'Start Saving',
+      name: 'startSaving',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Savings`
+  String get totalSavings {
+    return Intl.message(
+      'Total Savings',
+      name: 'totalSavings',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '--------------------------------' key
 
   /// `Add Bank information`
@@ -977,6 +1127,16 @@ class S {
     return Intl.message(
       'and win iPad Air',
       name: 'winIphoneBigText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Win ₹1 Crore!`
+  String get win1Crore {
+    return Intl.message(
+      'Win ₹1 Crore!',
+      name: 'win1Crore',
       desc: '',
       args: [],
     );
@@ -1210,7 +1370,57 @@ class S {
     );
   }
 
-  // skipped getter for the '--------------------------' key
+  /// `Unavailable`
+  String get refUnAvailable {
+    return Intl.message(
+      'Unavailable',
+      name: 'refUnAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refer your friends`
+  String get referFriends {
+    return Intl.message(
+      'Refer your friends',
+      name: 'referFriends',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn Golden Tickets for every referral`
+  String get getGoldenTickets {
+    return Intl.message(
+      'Earn Golden Tickets for every referral',
+      name: 'getGoldenTickets',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Referral Policy`
+  String get refPolicy {
+    return Intl.message(
+      'Referral Policy',
+      name: 'refPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load the Referral Policy at the moment. Please try again later`
+  String get refPolicyFailed {
+    return Intl.message(
+      'Failed to load the Referral Policy at the moment. Please try again later',
+      name: 'refPolicyFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '---------------------------' key
 
   /// `PAN Number`
   String get pkPanLabel {
@@ -1351,6 +1561,146 @@ class S {
     return Intl.message(
       'Grant Permission',
       name: 'btnGrantPermission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get btnCancel {
+    return Intl.message(
+      'Cancel',
+      name: 'btnCancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading`
+  String get btnLoading {
+    return Intl.message(
+      'Loading',
+      name: 'btnLoading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable`
+  String get btnEnable {
+    return Intl.message(
+      'Enable',
+      name: 'btnEnable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not Now`
+  String get btnNotNow {
+    return Intl.message(
+      'Not Now',
+      name: 'btnNotNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download Invoice`
+  String get btnDownloadInvoice {
+    return Intl.message(
+      'Download Invoice',
+      name: 'btnDownloadInvoice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get btnRetry {
+    return Intl.message(
+      'Retry',
+      name: 'btnRetry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Let's Go`
+  String get btnLetsGo {
+    return Intl.message(
+      'Let\'s Go',
+      name: 'btnLetsGo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Now`
+  String get btnSaveNow {
+    return Intl.message(
+      'Save Now',
+      name: 'btnSaveNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SKIP WITH TOKENS`
+  String get btnSkipWithTokens {
+    return Intl.message(
+      'SKIP WITH TOKENS',
+      name: 'btnSkipWithTokens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PLAY`
+  String get btnPlay {
+    return Intl.message(
+      'PLAY',
+      name: 'btnPlay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WIN`
+  String get btnWin {
+    return Intl.message(
+      'WIN',
+      name: 'btnWin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start Playing`
+  String get btnStartPlaying {
+    return Intl.message(
+      'Start Playing',
+      name: 'btnStartPlaying',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See All`
+  String get btnSeeAll {
+    return Intl.message(
+      'See All',
+      name: 'btnSeeAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NOTIFY ME`
+  String get btnNotifyMe {
+    return Intl.message(
+      'NOTIFY ME',
+      name: 'btnNotifyMe',
       desc: '',
       args: [],
     );
@@ -1572,7 +1922,47 @@ class S {
     );
   }
 
-  // skipped getter for the '--------------------------------------------' key
+  /// `NEW`
+  String get tambolaNew {
+    return Intl.message(
+      'NEW',
+      name: 'tambolaNew',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generated on :`
+  String get tGeneratedOn {
+    return Intl.message(
+      'Generated on :',
+      name: 'tGeneratedOn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How to participate`
+  String get howToParticipate {
+    return Intl.message(
+      'How to participate',
+      name: 'howToParticipate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today’s draw at 6 PM `
+  String get tDrawTime {
+    return Intl.message(
+      'Today’s draw at 6 PM ',
+      name: 'tDrawTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '-------------------------------------------' key
 
   /// `No transactions to show yet`
   String get noTransaction {
@@ -1643,6 +2033,614 @@ class S {
     return Intl.message(
       'Sign Out',
       name: 'signout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '------------------------------------------' key
+
+  /// `Play fun games and get a chance to\nwin rewards as Digital Gold!`
+  String get shareCardTitle {
+    return Intl.message(
+      'Play fun games and get a chance to\nwin rewards as Digital Gold!',
+      name: 'shareCardTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You've won an Amazon Gift Voucher\n worth`
+  String get priceClaimTitle1 {
+    return Intl.message(
+      'You\'ve won an Amazon Gift Voucher\n worth',
+      name: 'priceClaimTitle1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I've won ₹${prizeAmount} as\nDigital Gold on Fello!`
+  String priceClaimTitle2(Object prizeAmount) {
+    return Intl.message(
+      'I\'ve won ₹\$$prizeAmount as\nDigital Gold on Fello!',
+      name: 'priceClaimTitle2',
+      desc: '',
+      args: [prizeAmount],
+    );
+  }
+
+  /// `You've won Fello Rewards\n worth`
+  String get priceClaimTitle3 {
+    return Intl.message(
+      'You\'ve won Fello Rewards\n worth',
+      name: 'priceClaimTitle3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '------------------------' key
+
+  /// `Apply a Coupon`
+  String get txnApplyCoupon {
+    return Intl.message(
+      'Apply a Coupon',
+      name: 'txnApplyCoupon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a Coupon Code here`
+  String get txnEnterCoupon {
+    return Intl.message(
+      'Enter a Coupon Code here',
+      name: 'txnEnterCoupon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Apply`
+  String get txnApply {
+    return Intl.message(
+      'Apply',
+      name: 'txnApply',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a code to continue`
+  String get txnEnterCode {
+    return Intl.message(
+      'Please enter a code to continue',
+      name: 'txnEnterCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid Coupon code`
+  String get txnInvalidCouponCode {
+    return Intl.message(
+      'Invalid Coupon code',
+      name: 'txnInvalidCouponCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active Coupons`
+  String get txnActiveCoupon {
+    return Intl.message(
+      'Active Coupons',
+      name: 'txnActiveCoupon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction Details`
+  String get txnDetailsTitle {
+    return Intl.message(
+      'Transaction Details',
+      name: 'txnDetailsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction Amount`
+  String get txnAmountTitle {
+    return Intl.message(
+      'Transaction Amount',
+      name: 'txnAmountTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` coupon applied`
+  String get couponApplied {
+    return Intl.message(
+      ' coupon applied',
+      name: 'couponApplied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoice could not be loaded`
+  String get txnInvoiceFailed {
+    return Intl.message(
+      'Invoice could not be loaded',
+      name: 'txnInvoiceFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try in some time`
+  String get txnTryAfterSomeTime {
+    return Intl.message(
+      'Please try in some time',
+      name: 'txnTryAfterSomeTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '--------------------------' key
+
+  /// `Happy Hour is over`
+  String get happyHourIsOver {
+    return Intl.message(
+      'Happy Hour is over',
+      name: 'happyHourIsOver',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Missed out on the happy hour offer?`
+  String get missedHappyHour {
+    return Intl.message(
+      'Missed out on the happy hour offer?',
+      name: 'missedHappyHour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get notified when the next happy hour is live`
+  String get getHappyHourNotified {
+    return Intl.message(
+      'Get notified when the next happy hour is live',
+      name: 'getHappyHourNotified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Happy hour notifications is set!`
+  String get happyHourNotificationSetPrimary {
+    return Intl.message(
+      'Your Happy hour notifications is set!',
+      name: 'happyHourNotificationSetPrimary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We will notify you before the next happy hour starts`
+  String get happyHourNotificationSetSecondary {
+    return Intl.message(
+      'We will notify you before the next happy hour starts',
+      name: 'happyHourNotificationSetSecondary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have made a transaction during \nHappy Hours!`
+  String get txnHappyHours {
+    return Intl.message(
+      'You have made a transaction during \nHappy Hours!',
+      name: 'txnHappyHours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order Summary`
+  String get orderSummary {
+    return Intl.message(
+      'Order Summary',
+      name: 'orderSummary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Happy Hour ending in `
+  String get happyHoursEndingin {
+    return Intl.message(
+      'Happy Hour ending in ',
+      name: 'happyHoursEndingin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '---------------------------------------------' key
+
+  /// `Secure Fello`
+  String get secureFelloTitle {
+    return Intl.message(
+      'Secure Fello',
+      name: 'secureFelloTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms of Service`
+  String get termsOfService {
+    return Intl.message(
+      'Terms of Service',
+      name: 'termsOfService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy Policy`
+  String get privacyPolicy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'privacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Need more help?`
+  String get needHelp {
+    return Intl.message(
+      'Need more help?',
+      name: 'needHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '--------------------------------------------' key
+
+  /// `Current Tokens:`
+  String get currentTokens {
+    return Intl.message(
+      'Current Tokens:',
+      name: 'currentTokens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You ran out of Fello tokens, here are some ways to get back on the track:`
+  String get ranOutOfTokens {
+    return Intl.message(
+      'You ran out of Fello tokens, here are some ways to get back on the track:',
+      name: 'ranOutOfTokens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save More Money`
+  String get saveMoney {
+    return Intl.message(
+      'Save More Money',
+      name: 'saveMoney',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get 1 token for every Rupee saved`
+  String get get1Token {
+    return Intl.message(
+      'Get 1 token for every Rupee saved',
+      name: 'get1Token',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tokens Required`
+  String get tokensRequired {
+    return Intl.message(
+      'Tokens Required',
+      name: 'tokensRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SKIP WITH {cost} TOKENS`
+  String skipWithtokenCost(Object cost) {
+    return Intl.message(
+      'SKIP WITH $cost TOKENS',
+      name: 'skipWithtokenCost',
+      desc: '',
+      args: [cost],
+    );
+  }
+
+  // skipped getter for the '--------------------------------------' key
+
+  /// `Journey failed to load`
+  String get jFailed {
+    return Intl.message(
+      'Journey failed to load',
+      name: 'jFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading more levels for you,please wait`
+  String get jLoadinglevels {
+    return Intl.message(
+      'Loading more levels for you,please wait',
+      name: 'jLoadinglevels',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Level `
+  String get jLevel {
+    return Intl.message(
+      'Level ',
+      name: 'jLevel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hello World`
+  String get jBanner1 {
+    return Intl.message(
+      'Hello World',
+      name: 'jBanner1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome to this Universe and win `
+  String get jBanner2 {
+    return Intl.message(
+      'Welcome to this Universe and win ',
+      name: 'jBanner2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Milestone {index}`
+  String jMileStone(Object index) {
+    return Intl.message(
+      'Milestone $index',
+      name: 'jMileStone',
+      desc: '',
+      args: [index],
+    );
+  }
+
+  /// `You have completed this milestone`
+  String get mileStoneCompleted {
+    return Intl.message(
+      'You have completed this milestone',
+      name: 'mileStoneCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Win a {ticketType} ticket`
+  String winATicket(Object ticketType) {
+    return Intl.message(
+      'Win a $ticketType ticket',
+      name: 'winATicket',
+      desc: '',
+      args: [ticketType],
+    );
+  }
+
+  /// `SKIP MILESTONE`
+  String get jSkipMileStone {
+    return Intl.message(
+      'SKIP MILESTONE',
+      name: 'jSkipMileStone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `YOU WON`
+  String get jWon {
+    return Intl.message(
+      'YOU WON',
+      name: 'jWon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Skip Milestone?`
+  String get jSkipMilestoneSecondary {
+    return Intl.message(
+      'Skip Milestone?',
+      name: 'jSkipMilestoneSecondary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To skip this milestone and go one level ahead, save in any of the asset`
+  String get jSkipMileStoneDesc {
+    return Intl.message(
+      'To skip this milestone and go one level ahead, save in any of the asset',
+      name: 'jSkipMileStoneDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount of Invest`
+  String get jInvestAmountTitile {
+    return Intl.message(
+      'Amount of Invest',
+      name: 'jInvestAmountTitile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Milestone Skipped Successfully`
+  String get jMileStoneSKipSuccessTitle1 {
+    return Intl.message(
+      'Milestone Skipped Successfully',
+      name: 'jMileStoneSKipSuccessTitle1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Let's get to the next milestone`
+  String get jMileStoneSKipSuccessTitle2 {
+    return Intl.message(
+      'Let\'s get to the next milestone',
+      name: 'jMileStoneSKipSuccessTitle2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '---------------------------------------' key
+
+  /// `Win upto Rs.{prizeAmount}`
+  String gameRewardsAmount(Object prizeAmount) {
+    return Intl.message(
+      'Win upto Rs.$prizeAmount',
+      name: 'gameRewardsAmount',
+      desc: '',
+      args: [prizeAmount],
+    );
+  }
+
+  /// `Win upto `
+  String get gameWinUptoTitle {
+    return Intl.message(
+      'Win upto ',
+      name: 'gameWinUptoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Game of the week`
+  String get gameOfWeek {
+    return Intl.message(
+      'Game of the week',
+      name: 'gameOfWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Explore More Games`
+  String get moreGamesTitle {
+    return Intl.message(
+      'Explore More Games',
+      name: 'moreGamesTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New games are added regularly. Keep checking out`
+  String get moreGamesSubTitle {
+    return Intl.message(
+      'New games are added regularly. Keep checking out',
+      name: 'moreGamesSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Games are played with Fello tokens`
+  String get gamesSafetyTitle {
+    return Intl.message(
+      'Games are played with Fello tokens',
+      name: 'gamesSafetyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello games do not use any money from your savings or investments`
+  String get gamesSafetySubTitle {
+    return Intl.message(
+      'Fello games do not use any money from your savings or investments',
+      name: 'gamesSafetySubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '----------------------------------------' key
+
+  /// `Fin-gyan`
+  String get blogsTitle {
+    return Intl.message(
+      'Fin-gyan',
+      name: 'blogsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read about the world of games and finance`
+  String get blogsSubTitle {
+    return Intl.message(
+      'Read about the world of games and finance',
+      name: 'blogsSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '-----------------------------------------' key
+
+  /// `Challenges`
+  String get challenges {
+    return Intl.message(
+      'Challenges',
+      name: 'challenges',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take part in fun and exciting contests`
+  String get contestTitle {
+    return Intl.message(
+      'Take part in fun and exciting contests',
+      name: 'contestTitle',
       desc: '',
       args: [],
     );

@@ -10,6 +10,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -81,6 +82,7 @@ class SaveNetWorthSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: [UserServiceProperties.myUserFund],
       builder: (context, model, property) => Container(
@@ -110,7 +112,7 @@ class SaveNetWorthSection extends StatelessWidget {
                           height: SizeConfig.padding12,
                         ),
                         Text(
-                          'Total Savings',
+                          locale.totalSavings,
                           style: TextStyles.rajdhani.body2
                               .colour(UiConstants.kTextColor),
                               key: ValueKey(Constants.TOTAL_SAVINGS),

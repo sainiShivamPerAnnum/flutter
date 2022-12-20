@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -62,6 +63,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
 
   @override
   Widget buildBody(BuildContext context) {
+    S locale = S.of(context);
     final data = widget.model.data!;
     return WillPopScope(
       onWillPop: () async {
@@ -92,7 +94,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                     height: SizeConfig.screenHeight! * .06,
                   ),
                   Text(
-                    isHappyHourEnded ? "Happy Hour is over" : data.title ?? '',
+                    isHappyHourEnded ? locale.happyHourIsOver : data.title ?? '',
                     style: TextStyles.sourceSansSB.body0,
                   ),
                   SizedBox(
@@ -143,7 +145,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                   Flexible(
                     child: Text(
                         isHappyHourEnded
-                            ? "Missed out on the happy hour offer?"
+                            ? locale.missedHappyHour
                             : (data.bottomSheetHeading ?? ""),
                         textAlign: TextAlign.center,
                         style:
@@ -154,7 +156,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                   ),
                   Text(
                     isHappyHourEnded
-                        ? "Get notified when the next happy hour is live"
+                        ? locale.getHappyHourNotified
                         : data.bottomSheetSubHeading ?? '',
                     style: TextStyles.sourceSans.body3
                         .colour(Colors.white.withOpacity(0.6)),
@@ -193,15 +195,15 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                               .then((value) {
                             if (value)
                               BaseUtil.showPositiveAlert(
-                                  "Your Happy hour notifications is set!",
-                                  "We will notify you before the next happy hour starts");
+                                  locale.happyHourNotificationSetPrimary,
+                                  locale.happyHourNotificationSetSecondary);
                           });
                           // locator<MixpanelAnalytics>()
                           // .track(eventName: "Happy Hour Notify");
                         }
                       },
                       title:
-                          isHappyHourEnded ? "NOTIFY ME" : data.ctaText ?? '',
+                          isHappyHourEnded ? locale.btnNotifyMe : data.ctaText ?? '',
                       width: SizeConfig.screenWidth! * 0.3,
                       height: SizeConfig.screenWidth! * 0.11,
                     )

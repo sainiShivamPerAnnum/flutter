@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -65,6 +66,7 @@ class _TransactionDetailsBottomSheetState
       (gms == null || gms == 0) ? 'N/A' : gms.toStringAsFixed(4);
 
   Widget dialogContent(BuildContext context) {
+    S locale = S.of(context);
     final isGold = widget.transaction!.subType ==
         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD;
     return WillPopScope(
@@ -97,7 +99,7 @@ class _TransactionDetailsBottomSheetState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Transaction Details',
+                        locale.txnDetailsTitle,
                         style: TextStyles.rajdhaniB.title3,
                       ),
                       GestureDetector(
@@ -130,12 +132,12 @@ class _TransactionDetailsBottomSheetState
                       children: [
                         Center(
                           child: Text(
-                            isGold ? 'Digital Gold' : 'Fello Flo',
+                            isGold ? locale.digitalGoldText : locale.felloFloText,
                             style: TextStyles.rajdhaniM.body2,
                           ),
                         ),
                         Text(
-                          'Transaction Details',
+                         locale.txnDetailsTitle,
                           style: TextStyles.rajdhani.body4.colour(
                             UiConstants.kTextColor2,
                           ),
@@ -153,7 +155,7 @@ class _TransactionDetailsBottomSheetState
                   style: TextStyles.rajdhaniB.title0
                       .colour(UiConstants.kTextColor),
                 ),
-                Text("Transaction Amount",
+                Text(locale.txnAmountTitle,
                     style: TextStyles.sourceSans.body4
                         .colour(UiConstants.kTextColor2)),
                 Padding(
@@ -184,15 +186,15 @@ class _TransactionDetailsBottomSheetState
                   Row(
                     children: [
                       referralTile(
-                          'Purchase Rate:',
+                          locale.purchaseRate,
                           widget.transaction!.augmnt![
                                       UserTransaction.subFldAugLockPrice] !=
                                   null
                               ? '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice]}/gm'
-                              : "Unavailable",
+                              : locale.refUnAvailable,
                           UiConstants.primaryColor),
                       referralTile(
-                          'Gold Purchased:',
+                          locale.goldPurchased,
                           '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction!.augmnt![UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A' as double)} grams',
                           UiConstants.primaryColor)
                     ],
@@ -204,12 +206,12 @@ class _TransactionDetailsBottomSheetState
                   Row(
                     children: [
                       referralTile(
-                        'Sell Rate:',
+                        locale.sellRate,
                         '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
                         Colors.redAccent.withOpacity(0.6),
                       ),
                       referralTile(
-                        'Gold Sold:',
+                        locale.goldSold,
                         '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction!.augmnt![UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A' as double)} grams',
                         Colors.redAccent.withOpacity(0.6),
                       )
@@ -222,12 +224,12 @@ class _TransactionDetailsBottomSheetState
                   Row(
                     children: [
                       referralTile(
-                        'Sell Rate:',
+                        locale.sellRate,
                         '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
                         Colors.redAccent.withOpacity(0.6),
                       ),
                       referralTile(
-                        'Gold Sold:',
+                        locale.goldSold,
                         '${_getAugmontGoldGrams(BaseUtil.toDouble(widget.transaction!.augmnt![UserTransaction.subFldAugCurrentGoldGm]) ?? 'N/A' as double)} grams',
                         Colors.redAccent.withOpacity(0.6),
                       )
@@ -250,7 +252,7 @@ class _TransactionDetailsBottomSheetState
                             child: Padding(
                               padding: EdgeInsets.only(top: 4, bottom: 8),
                               child: Text(
-                                  "You have made a transaction during \nHappy Hours!",
+                                  locale.txnHappyHours,
                                   textAlign: TextAlign.center,
                                   style: TextStyles.sourceSans.body2
                                       .colour(Color(0xffB5CDCB))),
@@ -276,7 +278,7 @@ class _TransactionDetailsBottomSheetState
                             bottom: SizeConfig.padding6,
                           ),
                           child: Text(
-                            "Order Summary",
+                          locale.orderSummary,
                             style: TextStyles.sourceSans.body2.underline.bold,
                           ),
                         ),
@@ -301,7 +303,7 @@ class _TransactionDetailsBottomSheetState
                       ),
                       Text(
                         widget.transaction!.couponCode ??
-                            '' + " coupon applied",
+                            '' + locale.couponApplied,
                         style: TextStyles.sourceSans.body2
                             .colour(UiConstants.kPrimaryColor),
                       ),
@@ -323,7 +325,7 @@ class _TransactionDetailsBottomSheetState
                                   color: Colors.white,
                                   duration: Duration(milliseconds: 500),
                                 )
-                              : Text('Download Invoice'.toUpperCase(),
+                              : Text(locale.btnDownloadInvoice.toUpperCase(),
                                   style: TextStyles.rajdhaniSB.body1),
                           onPressed: () async {
                             if (widget.transaction!
@@ -343,14 +345,14 @@ class _TransactionDetailsBottomSheetState
                                   OpenFilex.open(generatedPdfFilePath);
                                 } else {
                                   BaseUtil.showNegativeAlert(
-                                      'Invoice could not be loaded',
-                                      'Please try in some time');
+                                      locale.txnInvoiceFailed,
+                                    locale.txnTryAfterSomeTime);
                                 }
                               });
                             } else {
                               BaseUtil.showNegativeAlert(
-                                  'Invoice could not be loaded',
-                                  'Please try again in some time');
+                                  locale.txnInvoiceFailed,
+                                  locale.txnTryAfterSomeTime);
                             }
                           },
                           width: SizeConfig.screenWidth! / 2,
