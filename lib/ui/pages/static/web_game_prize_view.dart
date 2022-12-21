@@ -73,7 +73,7 @@ class PrizesView extends StatelessWidget {
                 SizedBox(width: SizeConfig.padding12),
                 Expanded(
                   child: Text(
-                    model!.prizesA![i].displayName ?? locale.price({i + 1}),
+                    model!.prizesA![i].displayName ?? locale.price(i + 1),
                     style: TextStyles.body3.bold,
                   ),
                 ),

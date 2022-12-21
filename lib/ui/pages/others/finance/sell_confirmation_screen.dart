@@ -111,8 +111,7 @@ class SellConfirmationView extends StatelessWidget {
                 child: getFomoWidget(context)),
             BankDetailsCard(),
             Text(
-              locale.creditedToYourLinkedBankAccount(
-                  {BaseUtil.digitPrecision(amount, 2)}),
+              locale.creditedToYourLinkedBankAccount(BaseUtil.digitPrecision(amount, 2)),
               textAlign: TextAlign.center,
               style: TextStyles.body2.colour(
                 UiConstants.kTextColor3,

@@ -300,6 +300,7 @@ class BaseUtil extends ChangeNotifier {
     required InvestmentType investmentType,
   }) {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      
       // if (_userService!.userJourneyStats?.mlIndex == 1)
       //   return BaseUtil.openDialog(
       //     addToScreenStack: true,

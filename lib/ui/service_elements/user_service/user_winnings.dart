@@ -21,7 +21,7 @@ class UserWinningsSE extends StatelessWidget {
         // double lockedBal = model.userFundWallet.lockedPrizeBalance ?? 0.0;
         double unclaimedBal = model!.userFundWallet?.prizeBalance ?? 0.0;
         return Text(
-          locale!.saveWinningsValue((unclaimedBal).toInt() ?? "-"),
+          locale.saveWinningsValue((unclaimedBal).toInt() ?? "-"),
           style: style ?? TextStyles.body3.bold.colour(Colors.white),
         );
       },

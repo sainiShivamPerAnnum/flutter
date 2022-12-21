@@ -261,7 +261,7 @@ class Win extends StatelessWidget {
                                                           .kTextColor3)),
                                               TextSpan(
                                                   text:
-                                                      '₹${AppConfig.getValue(AppConfigKey.referralBonus)}'+locale.and,
+                                                      '₹${AppConfig.getValue(AppConfigKey.referralBonus)} '+locale.and,
                                                   style: TextStyles
                                                       .sourceSansB.body3
                                                       .colour(UiConstants

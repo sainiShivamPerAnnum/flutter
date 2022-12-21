@@ -210,9 +210,9 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                         alignment: Alignment.center,
                                         child: TextButton(
                                           child: Text(
-                                            locale.skipWithtokenCost({
+                                            locale.skipWithtokenCost(
                                               widget.milestone!.skipCost!['flc']
-                                            }),
+                                            ),
                                             style: TextStyles.sourceSansL.body3
                                                 .colour(Colors.white),
                                           ),

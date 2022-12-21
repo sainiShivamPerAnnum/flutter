@@ -203,9 +203,9 @@ class TicketsView extends StatelessWidget {
                         SizedBox(height: 16),
                         Text(
                           locale.tgenerated +
-                              "${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount}" +
+                              " ${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount} " +
                               locale.tgeneratedCount(
-                                  {model!.tambolaService!.ticketGenerateCount}),
+                                  model!.tambolaService!.ticketGenerateCount.toString()),
                           style: TextStyles.rajdhani.body2.colour(Colors.white),
                         ),
                       ],
@@ -698,13 +698,13 @@ class ButTicketsComponent extends StatelessWidget {
                       style: TextStyles.rajdhaniSB.body1,
                     ),
                     Text(
-                      locale.get1Ticket({
+                      locale.get1Ticket(
                         (AppConfig.getValue(AppConfigKey.tambola_cost)
                                 .toString()
                                 .isEmpty
                             ? '500'
                             : AppConfig.getValue(AppConfigKey.tambola_cost))
-                      }),
+                      ),
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kTextColor2),
                     ),
@@ -1297,7 +1297,7 @@ class TambolaPrize extends StatelessWidget {
                                           .colour(Colors.white),
                                     ),
                                     Text(
-                                    locale.tCompleteToGet({model.tPrizes!.prizesA![index].displayName}),
+                                    locale.tCompleteToGet(model.tPrizes!.prizesA![index].displayName.toString()),
                                       style: TextStyles.sourceSans.body4.colour(
                                           Colors.white.withOpacity(0.5)),
                                     )

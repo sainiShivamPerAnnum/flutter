@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/fello_rich_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -27,6 +28,7 @@ class LoginMobileView extends StatefulWidget {
 
 class LoginMobileViewState extends State<LoginMobileView> {
   late LoginMobileViewModel model;
+  S locale = locator<S>();
 
   static TextSpan renderedWidget(String paragraph) {
     if (paragraph.isEmpty ||
@@ -65,7 +67,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
                   TextStyles.sourceSans.body3.colour(UiConstants.kTextColor3),
             ));
           } else {
-            print('Groupd added: non bold non italic');
+            print('Groupd added: non bol;d non italic');
             groups.add(TextSpan(
               text: snip,
               style:
@@ -87,7 +89,6 @@ class LoginMobileViewState extends State<LoginMobileView> {
 
   @override
   Widget build(BuildContext context) {
-        S? locale = S.of(context);
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom !=
         SizeConfig.viewInsets.bottom;
     return BaseView<LoginMobileViewModel>(

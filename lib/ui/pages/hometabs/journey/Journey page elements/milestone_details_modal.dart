@@ -157,7 +157,7 @@ class _JourneyMilestoneDetailsModalSheetState
                 ),
               ),
               Text(
-                locale.jMileStone({widget.milestone.index}),
+                locale.jMileStone(widget.milestone.index.toString()),
                 style: TextStyles.sourceSansL.body3,
               ),
               SizedBox(height: SizeConfig.padding12),
@@ -182,7 +182,7 @@ class _JourneyMilestoneDetailsModalSheetState
                         ),
                         SizedBox(height: SizeConfig.padding24),
                         Text(
-                         locale.winATicket({getTicketType(widget.milestone.index)}),
+                         locale.winATicket(getTicketType(widget.milestone.index)),
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.primaryColor),
                         )

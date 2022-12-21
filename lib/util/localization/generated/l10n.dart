@@ -1732,10 +1732,10 @@ class S {
     );
   }
 
-  /// `from every Golden Ticket. Highest referrer wins iPad every month`
+  /// ` from every Golden Ticket. Highest referrer wins iPad every month`
   String get winIpadFromGT {
     return Intl.message(
-      'from every Golden Ticket. Highest referrer wins iPad every month',
+      ' from every Golden Ticket. Highest referrer wins iPad every month',
       name: 'winIpadFromGT',
       desc: '',
       args: [],
@@ -1812,10 +1812,10 @@ class S {
     );
   }
 
-  /// `from every Golden Ticket. Highest referrer wins an iPad every month.`
+  /// ` from every Golden Ticket. Highest referrer wins an iPad every month.`
   String get winipadText {
     return Intl.message(
-      'from every Golden Ticket. Highest referrer wins an iPad every month.',
+      ' from every Golden Ticket. Highest referrer wins an iPad every month.',
       name: 'winipadText',
       desc: '',
       args: [],
@@ -2680,10 +2680,10 @@ class S {
     );
   }
 
-  /// `Once your friend makes their first investment of`
+  /// `Once your friend makes their first investment of `
   String get askfrndForInvesText {
     return Intl.message(
-      'Once your friend makes their first investment of',
+      'Once your friend makes their first investment of ',
       name: 'askfrndForInvesText',
       desc: '',
       args: [],
@@ -2700,10 +2700,10 @@ class S {
     );
   }
 
-  /// `and {Value} Fello tokens.`
+  /// ` and {Value} Fello tokens.`
   String askfrndForInvesText2(Object Value) {
     return Intl.message(
-      'and $Value Fello tokens.',
+      ' and $Value Fello tokens.',
       name: 'askfrndForInvesText2',
       desc: '',
       args: [Value],
@@ -3912,10 +3912,10 @@ class S {
     );
   }
 
-  /// `Complete {prize} to get`
+  /// `Complete {prize} to get `
   String tCompleteToGet(Object prize) {
     return Intl.message(
-      'Complete $prize to get',
+      'Complete $prize to get ',
       name: 'tCompleteToGet',
       desc: '',
       args: [prize],
@@ -4714,10 +4714,10 @@ class S {
     );
   }
 
-  /// `Enter your UPI address:`
+  /// `Enter your UPI address: `
   String get txnEnterUPIFeild {
     return Intl.message(
-      'Enter your UPI address:',
+      'Enter your UPI address: ',
       name: 'txnEnterUPIFeild',
       desc: '',
       args: [],
@@ -4794,10 +4794,10 @@ class S {
     );
   }
 
-  /// `age Expires in`
+  /// `Page Expires in `
   String get txnPageExpiresIn {
     return Intl.message(
-      'age Expires in',
+      'Page Expires in ',
       name: 'txnPageExpiresIn',
       desc: '',
       args: [],
@@ -5416,10 +5416,10 @@ class S {
     );
   }
 
-  /// `s top scorers:`
+  /// `s top scorers: `
   String get topScroresText2 {
     return Intl.message(
-      's top scorers:',
+      's top scorers: ',
       name: 'topScroresText2',
       desc: '',
       args: [],
@@ -5570,10 +5570,10 @@ class S {
     );
   }
 
-  /// `in India`
+  /// ` in India`
   String get inIndia {
     return Intl.message(
-      'in India',
+      ' in India',
       name: 'inIndia',
       desc: '',
       args: [],

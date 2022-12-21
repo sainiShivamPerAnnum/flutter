@@ -267,7 +267,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   child: Text(
                                       model.referalList == null
                                           ? '-'
-                                          : "${model.referalList!.length}"+ locale.referrals,
+                                          : "${model.referalList!.length} "+ locale.referrals,
                                       style: TextStyles.body3
                                           .colour(UiConstants.kTextColor2)),
                                 ),
@@ -849,7 +849,7 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                     InfoTile(
                       title:
                           locale.askfrndForInvesText+"₹${widget.model.unlockReferralBonus}"+locale.askfrndForInvesText1+
-                         "${AppConfig.getValue(AppConfigKey.referralBonus)}"+ locale.askfrndForInvesText2({AppConfig.getValue(AppConfigKey.referralFlcBonus)}),
+                         "${AppConfig.getValue(AppConfigKey.referralBonus)}"+ locale.askfrndForInvesText2(AppConfig.getValue(AppConfigKey.referralFlcBonus)),
                       leadingAsset: Assets.tickets,
                     ),
                     SizedBox(height: SizeConfig.padding8),
@@ -973,7 +973,7 @@ class ReferAndEarnAsset extends StatelessWidget {
                   style:
                       getHeadingCustomTextStyle(UiConstants.kTabBorderColor)),
               TextSpan(
-                  text: '& ', style: getHeadingCustomTextStyle(Colors.white)),
+                  text: ' & ', style: getHeadingCustomTextStyle(Colors.white)),
               TextSpan(
                   text: locale.earn.toUpperCase(),
                   style: getHeadingCustomTextStyle(

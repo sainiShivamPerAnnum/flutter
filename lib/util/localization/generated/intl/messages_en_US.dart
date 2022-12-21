@@ -22,7 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(version) => "Version ${version}";
 
-  static String m1(Value) => "and ${Value} Fello tokens.";
+  static String m1(Value) => " and ${Value} Fello tokens.";
 
   static String m2(amount) =>
       "By continuing, ₹${amount} will be credited to your linked bank account instantly";
@@ -57,7 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m15(cost) => "SKIP WITH ${cost} TOKENS";
 
-  static String m16(prize) => "Complete ${prize} to get";
+  static String m16(prize) => "Complete ${prize} to get ";
 
   static String m17(ticketGenerateCount) =>
       "of your ${ticketGenerateCount} tickets";
@@ -89,7 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "app_version": m0,
         "areYouSure": MessageLookupByLibrary.simpleMessage("Are you sure ?"),
         "askfrndForInvesText": MessageLookupByLibrary.simpleMessage(
-            "Once your friend makes their first investment of"),
+            "Once your friend makes their first investment of "),
         "askfrndForInvesText1": MessageLookupByLibrary.simpleMessage(
             ", you and your friend both receive ₹"),
         "askfrndForInvesText2": m1,
@@ -314,7 +314,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "hurray": MessageLookupByLibrary.simpleMessage("Hurray!"),
         "improvingAppText": MessageLookupByLibrary.simpleMessage(
             "We are constantly improving the app and your feedback would be really valuable."),
-        "inIndia": MessageLookupByLibrary.simpleMessage("in India"),
+        "inIndia": MessageLookupByLibrary.simpleMessage(" in India"),
         "interestOnGold":
             MessageLookupByLibrary.simpleMessage("Interest\non Gold"),
         "invalidBankAcc":
@@ -773,7 +773,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "topRef": MessageLookupByLibrary.simpleMessage("Top Referrers"),
         "topScroresText1": MessageLookupByLibrary.simpleMessage("This week"),
         "topScroresText2":
-            MessageLookupByLibrary.simpleMessage("s top scorers:"),
+            MessageLookupByLibrary.simpleMessage("s top scorers: "),
         "topWinners": MessageLookupByLibrary.simpleMessage("Top Winners"),
         "totalBalance": MessageLookupByLibrary.simpleMessage("Total Balance"),
         "totalRewards": MessageLookupByLibrary.simpleMessage("Total Rewards"),
@@ -808,7 +808,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "txnEnterHereText": MessageLookupByLibrary.simpleMessage("Enter here"),
         "txnEnterUPI": MessageLookupByLibrary.simpleMessage("Enter UPI ID"),
         "txnEnterUPIFeild":
-            MessageLookupByLibrary.simpleMessage("Enter your UPI address:"),
+            MessageLookupByLibrary.simpleMessage("Enter your UPI address: "),
         "txnHappyHours": MessageLookupByLibrary.simpleMessage(
             "You have made a transaction during \nHappy Hours!"),
         "txnHavDiffCoupunCode": MessageLookupByLibrary.simpleMessage(
@@ -826,7 +826,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "txnNoUPI":
             MessageLookupByLibrary.simpleMessage("No UPI apps available"),
         "txnPageExpiresIn":
-            MessageLookupByLibrary.simpleMessage("age Expires in"),
+            MessageLookupByLibrary.simpleMessage("Page Expires in "),
         "txnRecent": MessageLookupByLibrary.simpleMessage("Recent Transaction"),
         "txnSelectUPI":
             MessageLookupByLibrary.simpleMessage("Please select a UPI App"),
@@ -883,7 +883,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "winGrandRewards": MessageLookupByLibrary.simpleMessage(
             "Win grand rewards\nas digital gold."),
         "winIpadFromGT": MessageLookupByLibrary.simpleMessage(
-            "from every Golden Ticket. Highest referrer wins iPad every month"),
+            " from every Golden Ticket. Highest referrer wins iPad every month"),
         "winIphoneBigText":
             MessageLookupByLibrary.simpleMessage("and win iPad Air"),
         "winIphoneSmallText":
@@ -897,7 +897,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Winnings can be redeemed as "),
         "winRewardsTitle": MessageLookupByLibrary.simpleMessage("My Rewards"),
         "winipadText": MessageLookupByLibrary.simpleMessage(
-            "from every Golden Ticket. Highest referrer wins an iPad every month."),
+            " from every Golden Ticket. Highest referrer wins an iPad every month."),
         "withdrawGoldBalance":
             MessageLookupByLibrary.simpleMessage("Withdrawable Gold Balance"),
         "wonGT":

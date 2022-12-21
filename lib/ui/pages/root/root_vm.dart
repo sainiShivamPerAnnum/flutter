@@ -34,6 +34,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -54,6 +55,7 @@ class RootViewModel extends BaseViewModel {
   final TambolaService? _tambolaService = locator<TambolaService>();
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
+  final S locale = locator<S>();
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;

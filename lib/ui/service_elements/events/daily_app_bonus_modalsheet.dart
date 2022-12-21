@@ -219,7 +219,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                           : CustomSaveButton(
                               title: model.isDailyAppBonusClaimed
                                   ? locale.gotIt
-                                  : locale.dayRerward({model.currentDay + 1}),
+                                  : locale.dayRerward(model.currentDay + 1),
                               onTap: model.isDailyAppBonusClaimed
                                   ? () => model.gotItTapped()
                                   : () => model.sudoClaimDailyReward(),

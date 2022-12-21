@@ -23,7 +23,7 @@ class GameRewards extends StatelessWidget {
           height: SizeConfig.padding20,
         ),
         Text(
-          locale.gameRewardsAmount({prizeAmount}),
+          locale.gameRewardsAmount(prizeAmount),
           style: TextStyles.sourceSans.body3.colour(Colors.grey.shade600),
         ),
       ],
