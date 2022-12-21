@@ -37,7 +37,7 @@ dependencies:
   another_flushbar: 1.12.29
   flutter:
     sdk: flutter
-  flutter_facebook_sdk: ^1.0.0
+  # flutter_facebook_sdk: ^1.0.0
   flutter_localizations:
     sdk: flutter
   flutter_share_me: ^1.2.0
