@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -64,6 +65,7 @@ class _FelloButtonState extends State<FelloButton> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityService>(context, listen: true)
             .connectivityStatus;
@@ -91,7 +93,7 @@ class _FelloButtonState extends State<FelloButton> {
               style: ElevatedButton.styleFrom(primary: Colors.grey),
               child: Opacity(
                 opacity: 0.7,
-                child: Text(widget.defaultButtonText ?? "Button"),
+                child: Text(widget.defaultButtonText ??locale.btn),
               ),
             );
     else {
@@ -159,7 +161,7 @@ class _FelloButtonState extends State<FelloButton> {
                   isAlreadyClicked = false;
                 },
                 child: Text(
-                  widget.defaultButtonText ?? "Button",
+                  widget.defaultButtonText ?? locale.btn,
                   style: widget.textStyle ?? TextStyles.body2.bold,
                 ),
               );

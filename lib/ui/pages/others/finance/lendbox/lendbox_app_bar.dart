@@ -2,18 +2,21 @@ import "dart:math" as math;
 
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LendboxAppBar extends StatelessWidget {
+
   final bool isEnabled;
   final Function? trackClosingEvent;
   const LendboxAppBar({required this.isEnabled, this.trackClosingEvent});
 
   @override
   Widget build(BuildContext context) {
+      S locale = S.of(context);
     return ListTile(
       leading: Container(
         width: SizeConfig.screenWidth! * 0.168,
@@ -40,9 +43,9 @@ class LendboxAppBar extends StatelessWidget {
           ),
         ),
       ),
-      title: Text('Fello Flo', style: TextStyles.rajdhaniSB.body2),
+      title: Text(locale.felloFloText, style: TextStyles.rajdhaniSB.body2),
       subtitle: Text(
-        "10% returns on investment",
+        locale.flo10PercentReturns,
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
       ),
       trailing: !isEnabled

@@ -25,6 +25,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import '../../../../util/assets.dart';
 
 class PlayViewModel extends BaseViewModel {
@@ -159,3 +160,4 @@ class PlayViewModel extends BaseViewModel {
         PageAction(state: PageState.addPage, page: THomePageConfig);
   }
 }
+

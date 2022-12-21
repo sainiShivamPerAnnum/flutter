@@ -3,6 +3,7 @@ import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -60,12 +61,13 @@ class AllParticipantsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: UiConstants.kBackgroundColor,
           elevation: 0.0,
           title: Text(
-            forPastWinners ? 'Past Winners' : 'Top Participants',
+            forPastWinners ? locale.pastWinners : locale.topParticipants,
             maxLines: 1,
             overflow: TextOverflow.clip,
             style: TextStyles.title4.bold.colour(Colors.white),

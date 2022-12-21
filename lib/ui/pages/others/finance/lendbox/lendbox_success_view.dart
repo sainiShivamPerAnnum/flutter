@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_succe
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -32,6 +33,7 @@ class LendboxSuccessView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Material(
       color: Colors.black,
       child: Padding(
@@ -112,7 +114,7 @@ class LendboxSuccessView extends StatelessWidget {
               ),
             ),
             Text(
-              "Congratulations!",
+              locale.btnCongratulations,
               style: TextStyles.rajdhaniB.title2,
             ),
             SizedBox(height: SizeConfig.padding12),
@@ -129,7 +131,7 @@ class LendboxSuccessView extends StatelessWidget {
               )
             else
               Text(
-                "Your investment was successfully processed",
+              locale.txnInvestmentSuccess,
                 textAlign: TextAlign.center,
                 style: TextStyles.sourceSans.body2.setOpecity(0.7),
               ),
@@ -162,7 +164,7 @@ class LendboxSuccessView extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Invested",
+                            Text(locale.invested,
                                 style: TextStyles.sourceSans.body2
                                     .colour(UiConstants.kTextColor2)),
                             SizedBox(height: SizeConfig.padding16),
@@ -193,7 +195,7 @@ class LendboxSuccessView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Total Balance",
+                             locale.totalBalance,
                               style: TextStyles.sourceSans.body2
                                   .colour(UiConstants.kTextColor2),
                             ),
@@ -223,24 +225,24 @@ class LendboxSuccessView extends StatelessWidget {
               child: Row(
                 children: [
                   WinningChips(
-                      title: 'Fello Tokens',
-                      tooltip: "Use tokens to play games!",
+                      title: locale.felloTokens,
+                      tooltip: locale.winChipsTitle1,
                       asset: Assets.token,
                       qty: _txnService!.currentTxnAmount!.toInt()),
                   if (GoldenTicketService.currentGT != null)
                     SizedBox(width: SizeConfig.padding12),
                   if (GoldenTicketService.currentGT != null)
                     WinningChips(
-                        title: 'Golden Ticket',
-                        tooltip: "Scratch and win rewards!",
+                        title: locale.goldenTicket,
+                        tooltip: locale.winChipsTitle2,
                         asset: Assets.unredemmedGoldenTicketBG,
                         qty: 1),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
                     SizedBox(width: SizeConfig.padding12),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
                     WinningChips(
-                      title: 'Tambola Ticket',
-                      tooltip: "Win upto ₹1 Crore in Tambola!",
+                      title: locale.tTicket,
+                      tooltip:locale.winChipsTitle3,
                       asset: Assets.singleTmbolaTicket,
                       qty: _txnService!.currentTxnTambolaTicketsCount.toInt(),
                     )
@@ -254,7 +256,7 @@ class LendboxSuccessView extends StatelessWidget {
                 this.showGtIfAvailable();
               },
               child: Text(
-                "DONE",
+                locale.obDone,
                 style: TextStyles.rajdhaniSB.body0
                     .colour(UiConstants.primaryColor),
               ),

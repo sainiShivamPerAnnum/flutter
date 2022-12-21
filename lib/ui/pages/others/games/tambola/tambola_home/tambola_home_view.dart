@@ -30,6 +30,7 @@ import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -43,6 +44,7 @@ import 'package:provider/provider.dart';
 class TambolaHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityService>(context, listen: true)
             .connectivityStatus;
@@ -66,7 +68,7 @@ class TambolaHomeView extends StatelessWidget {
               showAvatar: false,
               showCoinBar: false,
               showHelpButton: false,
-              title: "Tambola",
+              title: locale.tTitle,
               backgroundColor: UiConstants.kArrowButtonBackgroundColor,
             ),
             backgroundColor: UiConstants.kBackgroundColor,
@@ -97,7 +99,7 @@ class TambolaHomeView extends StatelessWidget {
                                       FullScreenLoader(),
                                       SizedBox(height: SizeConfig.padding20),
                                       Text(
-                                        "Fetching your tambola tickets..",
+                                        locale.tFetch,
                                         style: TextStyles.sourceSans.body2
                                             .colour(Colors.white),
                                       ),
@@ -107,7 +109,7 @@ class TambolaHomeView extends StatelessWidget {
                           : SizedBox.shrink(),
                       (Platform.isIOS)
                           ? Text(
-                              'Apple is not associated with Fello Tambola',
+                              locale.tAppleInfo,
                               style: TextStyle(
                                   fontWeight: FontWeight.w100,
                                   fontSize: SizeConfig.mediumTextSize,
@@ -156,6 +158,7 @@ class TicketsView extends StatelessWidget {
   TicketsView({this.model});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     if (!model!.weeklyTicksFetched || !model!.weeklyDrawFetched) {
       return SizedBox();
     } else if (model!.userWeeklyBoards == null ||
@@ -199,7 +202,10 @@ class TicketsView extends StatelessWidget {
                         ),
                         SizedBox(height: 16),
                         Text(
-                          'Generated ${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount} of your ${model!.tambolaService!.ticketGenerateCount} tickets',
+                          locale.tgenerated +
+                              "${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount}" +
+                              locale.tgeneratedCount(
+                                  {model!.tambolaService!.ticketGenerateCount}),
                           style: TextStyles.rajdhani.body2.colour(Colors.white),
                         ),
                       ],
@@ -319,6 +325,7 @@ class TambolaResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return GestureDetector(
       onTap: () => AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
@@ -345,12 +352,12 @@ class TambolaResultCard extends StatelessWidget {
           title: FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              "Tambola results are out   ",
+              locale.tResultsOut,
               style: TextStyles.rajdhaniB.title3,
             ),
           ),
           subtitle: Text(
-            "Find out if your tickets won",
+            locale.tCheckIfWon,
             style: TextStyles.sourceSans.body2,
           ),
           trailing: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
@@ -553,6 +560,7 @@ class Odds extends StatelessWidget {
 
   @override
   Widget build(BuildContext cx) {
+    S locale = S.of(cx);
     if (_board == null) return Container();
     List<int> _digits = (_digitsObj != null) ? _digitsObj.toList() : [];
     switch (currentIndex) {
@@ -560,45 +568,45 @@ class Odds extends StatelessWidget {
         return _buildRow(
             cx,
             Icons.border_top,
-            'Top Row',
-            _board.getRowOdds(0, _digits).toString() + ' left',
-            _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+            locale.tTopRow,
+            _board.getRowOdds(0, _digits).toString() + locale.tLeft,
+            _bestBoards[0].getRowOdds(0, _digits).toString() + locale.tLeft,
             _bestBoards[0],
             _digits);
       case 1:
         return _buildRow(
             cx,
             Icons.border_horizontal,
-            'Middle Row',
-            _board.getRowOdds(1, _digits).toString() + ' left',
-            _bestBoards[1].getRowOdds(1, _digits).toString() + ' left',
+            locale.tMiddleRow,
+            _board.getRowOdds(1, _digits).toString() + locale.tLeft,
+            _bestBoards[1].getRowOdds(1, _digits).toString() + locale.tLeft,
             _bestBoards[1],
             _digits);
       case 2:
         return _buildRow(
             cx,
             Icons.border_bottom,
-            'Bottom Row',
-            _board.getRowOdds(2, _digits).toString() + ' left',
-            _bestBoards[2].getRowOdds(2, _digits).toString() + ' left',
+            locale.tBottomRow,
+            _board.getRowOdds(2, _digits).toString() + locale.tLeft,
+            _bestBoards[2].getRowOdds(2, _digits).toString() + locale.tLeft,
             _bestBoards[2],
             _digits);
       case 3:
         return _buildRow(
             cx,
             Icons.border_outer,
-            'Corners',
-            _board.getCornerOdds(_digits).toString() + ' left',
-            _bestBoards[3].getCornerOdds(_digits).toString() + ' left',
+            locale.tCorners,
+            _board.getCornerOdds(_digits).toString() + locale.tLeft,
+            _bestBoards[3].getCornerOdds(_digits).toString() + locale.tLeft,
             _bestBoards[3],
             _digits);
       case 4:
         return _buildRow(
             cx,
             Icons.apps,
-            'Full House',
-            _board.getFullHouseOdds(_digits).toString() + ' left',
-            _bestBoards[4].getFullHouseOdds(_digits).toString() + ' left',
+            locale.tFullHouse,
+            _board.getFullHouseOdds(_digits).toString() + locale.tLeft,
+            _bestBoards[4].getFullHouseOdds(_digits).toString() + locale.tLeft,
             _bestBoards[4],
             _digits);
 
@@ -606,9 +614,9 @@ class Odds extends StatelessWidget {
         return _buildRow(
             cx,
             Icons.border_top,
-            'Top Row',
-            _board.getRowOdds(0, _digits).toString() + ' left',
-            _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+            locale.tTopRow,
+            _board.getRowOdds(0, _digits).toString() + locale.tLeft,
+            _bestBoards[0].getRowOdds(0, _digits).toString() + locale.tLeft,
             _bestBoards[0],
             _digits);
     }
@@ -660,6 +668,7 @@ class ButTicketsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       width: SizeConfig.screenWidth,
       margin: EdgeInsets.symmetric(horizontal: 18),
@@ -684,12 +693,18 @@ class ButTicketsComponent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Get more tickets",
+                      locale.tGetMore,
                       textAlign: TextAlign.left,
                       style: TextStyles.rajdhaniSB.body1,
                     ),
                     Text(
-                      "Get 1 Ticket for every ₹${(AppConfig.getValue(AppConfigKey.tambola_cost).toString().isEmpty ? '500' : AppConfig.getValue(AppConfigKey.tambola_cost))} saved",
+                      locale.get1Ticket({
+                        (AppConfig.getValue(AppConfigKey.tambola_cost)
+                                .toString()
+                                .isEmpty
+                            ? '500'
+                            : AppConfig.getValue(AppConfigKey.tambola_cost))
+                      }),
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kTextColor2),
                     ),
@@ -739,7 +754,7 @@ class ButTicketsComponent extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  'View Prizes',
+                  locale.viewPrizes,
                   style: TextStyles.rajdhaniSB.body3.copyWith(
                     decoration: TextDecoration.underline,
                   ),
@@ -1002,6 +1017,7 @@ class TambolaLeaderBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       child: Column(
@@ -1011,7 +1027,7 @@ class TambolaLeaderBoard extends StatelessWidget {
             height: SizeConfig.pageHorizontalMargins + SizeConfig.padding12,
           ),
           Text(
-            "Last week winners",
+           locale.lastWeekWinners,
             style: TextStyles.rajdhaniSB.body0,
           ),
           SizedBox(
@@ -1026,7 +1042,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                         height: SizeConfig.padding16,
                       ),
                       Text(
-                        "Fetching last week winners.",
+                        locale.fetchWinners,
                         style: TextStyles.rajdhaniB.body2.colour(Colors.white),
                       ),
                     ],
@@ -1042,7 +1058,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                       child: NoRecordDisplayWidget(
                         topPadding: false,
                         assetSvg: Assets.noWinnersAsset,
-                        text: "Leaderboard will be updated soon",
+                        text: locale.leaderboardUpdateSoon,
                       ),
                     )
                   : Column(
@@ -1062,7 +1078,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text("Names",
+                                  Text(locale.names,
                                       style: TextStyles.sourceSans.body3
                                           .colour(UiConstants.kTextColor2)),
                                   SizedBox(height: SizeConfig.padding4),
@@ -1070,7 +1086,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "Cashprize",
+                              locale.cashPrize,
                               style: TextStyles.sourceSans.body3
                                   .colour(UiConstants.kTextColor2),
                             )
@@ -1200,6 +1216,7 @@ class TambolaPrize extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -1214,7 +1231,7 @@ class TambolaPrize extends StatelessWidget {
                 height: SizeConfig.screenWidth! * 0.17,
               ),
               Text(
-                "Tambola Prizes",
+                locale.tPrizes,
                 style: TextStyles.rajdhaniB.title4.colour(Colors.white),
               ),
               Container(
@@ -1222,7 +1239,7 @@ class TambolaPrize extends StatelessWidget {
                 child: Text(
                   AppConfig.getValue<String?>(
                           AppConfigKey.game_tambola_announcement) ??
-                      "Winners are announced every Sunday at midnight, Complete a Full House and win 1Crore!",
+                    locale.tWin1Crore,
                   textAlign: TextAlign.center,
                   style: TextStyles.sourceSans.body4.colour(
                     Colors.white.withOpacity(0.5),
@@ -1242,7 +1259,7 @@ class TambolaPrize extends StatelessWidget {
                               height: SizeConfig.padding16,
                             ),
                             Text(
-                              "Fetching Tambola prizes, please wait.",
+                              locale.tFetch,
                               style: TextStyles.rajdhaniB.body2
                                   .colour(Colors.white),
                             ),
@@ -1280,7 +1297,7 @@ class TambolaPrize extends StatelessWidget {
                                           .colour(Colors.white),
                                     ),
                                     Text(
-                                      "Complete ${model.tPrizes!.prizesA![index].displayName} to get",
+                                    locale.tCompleteToGet({model.tPrizes!.prizesA![index].displayName}),
                                       style: TextStyles.sourceSans.body4.colour(
                                           Colors.white.withOpacity(0.5)),
                                     )

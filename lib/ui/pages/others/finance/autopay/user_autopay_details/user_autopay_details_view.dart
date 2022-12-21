@@ -26,6 +26,7 @@ import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -46,6 +47,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<UserAutosaveDetailsViewModel>(
       onModelReady: (model) {
         model.init();
@@ -56,7 +58,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: Text(
-              'Autosave Details',
+              locale.autoSaveDetails,
               style: TextStyles.rajdhaniSB.title4,
             ),
             centerTitle: false,
@@ -84,17 +86,17 @@ class UserAutosaveDetailsView extends StatelessWidget {
                           ? Center(
                               child: NoRecordDisplayWidget(
                                 assetSvg: Assets.noTransactionAsset,
-                                text: "No Autosave Details available",
+                                text: locale.autoSaveDetailsEmpty,
                               ),
                             )
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildAmountSavedCard(model),
+                                _buildAmountSavedCard(model,context),
                                 SizedBox(
                                   height: SizeConfig.padding40,
                                 ),
-                                _buildPaymentMethod(model),
+                                _buildPaymentMethod(model,context),
                                 SizedBox(
                                   height: SizeConfig.padding32,
                                 ),
@@ -111,7 +113,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Text(
-                                        "Recent Transaction",
+                                        locale.txnRecent,
                                         style: TextStyles.rajdhaniSB.body1,
                                       ),
                                       Spacer(),
@@ -139,7 +141,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                                                 padding: EdgeInsets.only(
                                                   top: SizeConfig.padding2,
                                                 ),
-                                                child: Text('See All',
+                                                child: Text(locale.btnSeeAll,
                                                     style: TextStyles
                                                         .rajdhaniSB.body2),
                                               ),
@@ -166,7 +168,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                                         ? Center(
                                             child: NoRecordDisplayWidget(
                                             assetSvg: Assets.noTransactionAsset,
-                                            text: "No Transactions to show yet",
+                                            text: locale.txnsEmpty,
                                           ))
                                         : Container(
                                             color: Color(0xFF595F5F)
@@ -236,8 +238,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
                                         Constants.SUBSCRIPTION_INACTIVE &&
                                     model.activeSubscription!.resumeDate!
                                         .isEmpty)
-                                ? _buildRestartAutoPay()
-                                : _buildUpdateAutoPay(model),
+                                ? _buildRestartAutoPay(context)
+                                : _buildUpdateAutoPay(model,context),
                           ),
                         ),
                       ),
@@ -248,7 +250,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
     );
   }
 
-  Padding _buildPaymentMethod(UserAutosaveDetailsViewModel model) {
+  Padding _buildPaymentMethod(UserAutosaveDetailsViewModel model, BuildContext context) {
+    S locale = S.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding32,
@@ -257,7 +260,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Payment Method",
+            locale.paymentMethod,
             style: TextStyles.rajdhaniSB.body1,
           ),
           SizedBox(
@@ -308,7 +311,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                     height: SizeConfig.padding6,
                   ),
                   Text(
-                    "Primary UPI",
+                    locale.primaryUPI,
                     style: TextStyles.sourceSansSB.body3.setOpecity(0.5),
                   ),
                 ],
@@ -320,7 +323,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildAmountSavedCard(UserAutosaveDetailsViewModel model) {
+  Widget _buildAmountSavedCard(UserAutosaveDetailsViewModel model,BuildContext context) {
+    S locale = S.of(context);
     return Container(
       // height: SizeConfig.screenWidth * 0.5433,
       width: SizeConfig.screenWidth! * 0.8426,
@@ -344,7 +348,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                   m.activeSubscription!.resumeDate!.isEmpty)
               ? Center(
                   child: Text(
-                    "Autosave Inactive",
+                    locale.autoSaveInActive,
                     style: TextStyles.title3.bold.colour(Colors.white),
                   ),
                 )
@@ -359,7 +363,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                           horizontal: SizeConfig.padding16,
                         ),
                         child: Text(
-                          "AMOUNT SAVED",
+                          locale.amountSaved,
                           style: TextStyles.rajdhani.body3
                               .setOpecity(0.6)
                               .letterSpace(SizeConfig.padding2),
@@ -399,7 +403,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Your Autosave account is ',
+                            text: locale.yourAutoSave,
                             style: TextStyles.sourceSans.body4
                                 .setOpecity(0.4)
                                 .copyWith(fontStyle: FontStyle.italic),
@@ -428,10 +432,11 @@ class UserAutosaveDetailsView extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRestartAutoPay() {
+  List<Widget> _buildRestartAutoPay(BuildContext context) {
+    S locale = S.of(context);
     return [
       AppPositiveBtn(
-        btnText: "Restart Autosave",
+        btnText: locale.btnRestartAutoSave,
         onPressed: () {
           AppState.delegate!.appState.currentAction = PageAction(
             page: AutosaveProcessViewPageConfig,
@@ -444,11 +449,12 @@ class UserAutosaveDetailsView extends StatelessWidget {
     ];
   }
 
-  _buildUpdateAutoPay(UserAutosaveDetailsViewModel model) {
+  _buildUpdateAutoPay(UserAutosaveDetailsViewModel model, BuildContext context) {
+    S locale = S.of(context);
     return [
       if (model.activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE)
         AppPositiveBtn(
-          btnText: 'Update',
+          btnText: locale.btnUpdate,
           onPressed: () {
             //NOTE: CHECK IN EDIT MODE
             AppState.delegate!.appState.currentAction = PageAction(
@@ -480,8 +486,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
                 child: Text(
                   model.activeSubscription!.status ==
                           Constants.SUBSCRIPTION_INACTIVE
-                      ? "RESUME AUTOSAVE"
-                      : "PAUSE AUTOSAVE",
+                      ? locale.resumeAutoSave.toUpperCase()
+                      : locale.pauseAutoSave.toUpperCase(),
                   style: TextStyles.rajdhani.body3,
                 ),
               ),
@@ -585,6 +591,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       child: Wrap(
@@ -594,7 +601,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
         children: [
           Row(
             children: [
-              Text("Pause Autosave", style: TextStyles.rajdhaniB.title3),
+              Text(locale.pauseAutoSave, style: TextStyles.rajdhaniB.title3),
               Spacer(),
               CircleAvatar(
                 backgroundColor: Colors.transparent,
@@ -636,7 +643,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                     size: SizeConfig.padding16,
                   )
                 : Text(
-                    "PAUSE",
+                    locale.btnPause.toUpperCase(),
                     style: TextStyles.rajdhaniB.body1.bold.colour(Colors.white),
                   ),
             onPressed: () async {
@@ -646,14 +653,14 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                   isBarrierDismissible: false,
                   hapticVibrate: true,
                   content: ConfirmationDialog(
-                    title: "Are you sure ?",
+                    title: locale.areYouSure,
                     description:
-                        "You will lose out on automated savings & many exclusive rewards⏸️",
-                    cancelBtnText: "No",
+                        locale.loseAutoSave,
+                    cancelBtnText: locale.btnNo,
                     cancelAction: () {
                       AppState.backButtonDispatcher!.didPopRoute();
                     },
-                    buttonText: "Yes",
+                    buttonText: locale.btnYes,
                     confirmAction: () async {
                       if (isPausing) return;
                       setState(() {

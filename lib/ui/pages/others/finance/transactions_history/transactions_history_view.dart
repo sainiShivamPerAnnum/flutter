@@ -30,6 +30,7 @@ class TransactionsHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<TransactionsHistoryViewModel>(
       onModelReady: (model) {
         model.init(investmentType, showAutosave);
@@ -42,7 +43,7 @@ class TransactionsHistory extends StatelessWidget {
               elevation: 0,
               leading: FelloAppBarBackButton(),
               title: Text(
-                'Transaction History',
+                locale.txnHistory,
                 style: TextStyles.rajdhaniSB.title5,
               ),
             ),
@@ -91,6 +92,7 @@ class SingleTransactionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Column(
       children: [
         Padding(
@@ -121,11 +123,11 @@ class SingleTransactionView extends StatelessWidget {
               elevation: 0,
               icon: Icon(Icons.keyboard_arrow_down_rounded),
               hint: Text(
-                'Type',
+                locale.type,
                 style:
                     TextStyles.sourceSans.body4.colour(UiConstants.kTextColor),
               ),
-              value: model!.filterValue ?? "Type",
+              value: model!.filterValue ?? locale.type,
               items: model!.tranTypeFilterItems
                   .map((e) => DropdownMenuItem(
                       value: e,
@@ -159,7 +161,7 @@ class SingleTransactionView extends StatelessWidget {
                                 SvgPicture.asset(Assets.noTransactionAsset),
                                 SizedBox(height: SizeConfig.padding16),
                                 Text(
-                                  "No transactions yet",
+                                  locale.txnsEmpty,
                                   style: TextStyles.sourceSans.body2
                                       .colour(Colors.white),
                                 ),
@@ -190,7 +192,7 @@ class SingleTransactionView extends StatelessWidget {
                             ),
                             SizedBox(height: SizeConfig.padding4),
                             Text(
-                              "Looking for more transactions, please wait ...",
+                              locale.moretxns,
                               style: TextStyles.body4.colour(Colors.grey),
                             )
                           ],
@@ -211,6 +213,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return model!.state == ViewState.Busy
         ? Center(
             child: FullScreenLoader(),
@@ -225,7 +228,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
                             SvgPicture.asset(Assets.noTransactionAsset),
                             SizedBox(height: SizeConfig.padding16),
                             Text(
-                              "No transactions yet",
+                              locale.txnsEmpty,
                               style: TextStyles.sourceSans.body2
                                   .colour(Colors.white),
                             ),
@@ -256,7 +259,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
                       ),
                       SizedBox(height: SizeConfig.padding4),
                       Text(
-                        "Looking for more transactions, please wait ...",
+                        locale.moretxns,
                         style: TextStyles.body4.colour(Colors.grey),
                       )
                     ],
@@ -405,6 +408,7 @@ class TransactionSIPTile extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return ListTile(
       onTap: () {
         Haptic.vibrate();
@@ -412,7 +416,7 @@ class TransactionSIPTile extends StatelessWidget {
       contentPadding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       dense: true,
-      title: Text('DEPOSIT', style: TextStyles.sourceSans.body3),
+      title: Text(locale.btnDeposit.toUpperCase(), style: TextStyles.sourceSans.body3),
       subtitle: Text(
         _txnHistoryService!
             .getFormattedSIPDate(DateTime.parse(txn!.txnDateTime!)),
@@ -449,6 +453,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
         height: SizeConfig.screenWidth! * 0.09,
         width: SizeConfig.screenWidth! * 0.6,
@@ -470,7 +475,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                         height: SizeConfig.padding24,
                         // width: SizeConfig.padding44,
                         color: Colors.transparent,
-                        child: Text('Single',
+                        child: Text(locale.single,
                             style: TextStyles.sourceSansSB.body2))),
                 SizedBox(
                   width: SizeConfig.padding64,
@@ -487,7 +492,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                     // width: SizeConfig.padding32,
                     color: Colors.transparent,
                     child:
-                        Text('Autosave', style: TextStyles.sourceSansSB.body2),
+                        Text(locale.autoSave, style: TextStyles.sourceSansSB.body2),
                   ),
                 ),
               ],

@@ -4,6 +4,7 @@ import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,7 +19,9 @@ class LendboxWithdrawalInputView extends StatelessWidget {
   }) : super(key: key);
 
   @override
+
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Stack(
       children: [
         Column(
@@ -46,9 +49,9 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               readOnly: model.readOnly,
               onTap: () => model.readOnly = false,
               maxAmount: model!.withdrawableQuantity?.amount ?? 2,
-              maxAmountMsg: "You can't withdraw more than available balance",
+              maxAmountMsg: locale.txnWithDrawLimit,
               minAmount: model!.minAmount,
-              minAmountMsg: "how are you gonna withdraw less than 1?",
+              minAmountMsg: locale.txnWithDrawMin,
               notice: model!.buyNotice,
               bestChipIndex: 1,
               onAmountChange: (int amount) {},
@@ -60,7 +63,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Withdrawable Balance',
+                    locale.txnWithdrawablebalance,
                     style: TextStyles.sourceSans.body3
                         .colour(UiConstants.kTextColor2),
                   ),
@@ -87,7 +90,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                     ),
                   )
                 : AppPositiveBtn(
-                    btnText: 'WITHDRAW',
+                    btnText:locale.btnWithDraw.toUpperCase(),
                     onPressed: () async {
                       if (!model!.inProgress) {
                         FocusScope.of(context).unfocus();

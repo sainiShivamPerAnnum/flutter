@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -55,6 +56,7 @@ class TopPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+      S locale = S.of(context);
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       appBar: AppBar(
@@ -65,12 +67,12 @@ class TopPlayer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Leaderboard",
+                  locale.leaderBoard,
                   style: TextStyles.rajdhaniSB.title3,
                 ),
                 if (model!.lastupdated != null)
                   Text(
-                    "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model!.lastupdated!.toDate())} ${model!.scoreboard!.length}",
+                    locale.updatedOn+"${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model!.lastupdated!.toDate())} ${model!.scoreboard!.length}",
                     style: TextStyles.sourceSans.body3
                         .colour(UiConstants.kTextColor2),
                   ),
@@ -139,7 +141,7 @@ class TopPlayer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   int countedIndex = index + 3;
-                  return _buildLeaderboardTile(countedIndex);
+                  return _buildLeaderboardTile(countedIndex,context);
                 },
               ),
             ),
@@ -150,7 +152,8 @@ class TopPlayer extends StatelessWidget {
   }
 
   //
-  Widget _buildLeaderboardTile(int countedIndex) {
+  Widget _buildLeaderboardTile(int countedIndex,BuildContext context) {
+    S locale = S.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.padding20,
@@ -181,7 +184,7 @@ class TopPlayer extends StatelessWidget {
             ),
           ),
           Text(
-            '${model!.scoreboard![countedIndex].score!.toInt()} points',
+            '${model!.scoreboard![countedIndex].score!.toInt()} '+ locale.points,
             style: TextStyles.rajdhaniM.body3,
           ),
         ],
@@ -189,7 +192,8 @@ class TopPlayer extends StatelessWidget {
     );
   }
 
-  Padding _buildLeaderBoardHeader() {
+  Padding _buildLeaderBoardHeader(BuildContext context) {
+    S locale = S.of(context);
     return Padding(
       padding: EdgeInsets.only(
         right: SizeConfig.padding16,
@@ -201,7 +205,7 @@ class TopPlayer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "${model!.scoreboard!.length} Players",
+            "${model!.scoreboard!.length} "+locale.players,
             style: TextStyles.sourceSansSB.body3,
           ),
           Text(

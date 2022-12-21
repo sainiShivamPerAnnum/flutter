@@ -17,6 +17,7 @@ import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -137,6 +138,7 @@ class LBoxAssetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       margin:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
@@ -168,8 +170,8 @@ class LBoxAssetCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Fello Flo', style: TextStyles.rajdhaniB.title2),
-                        Text('10% p.a. returns | RBI regulated | P2P asset',
+                        Text(locale.felloFloText, style: TextStyles.rajdhaniB.title2),
+                        Text(locale.felloFloSubTitle,
                             style: TextStyles.sourceSans.body4),
                       ],
                     ),
@@ -195,7 +197,7 @@ class LBoxAssetCard extends StatelessWidget {
                             height: SizeConfig.padding2,
                           ),
                           Text(
-                            'Invested',
+                          locale.invested,
                             style: TextStyles.sourceSans.body3.colour(
                               UiConstants.kTextColor.withOpacity(0.8),
                             ),
@@ -218,7 +220,7 @@ class LBoxAssetCard extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'Current',
+                                locale.currentText,
                                 style: TextStyles.sourceSans.body3.colour(
                                     UiConstants.kTextColor.withOpacity(0.8)),
                               ),
@@ -245,6 +247,7 @@ class AssetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Stack(
       children: [
         BaseView<SaveViewModel>(
@@ -267,9 +270,9 @@ class AssetCard extends StatelessWidget {
                   padding: EdgeInsets.only(top: SizeConfig.screenWidth! * 0.25),
                   child: Column(
                     children: [
-                      Text('Fello Flo', style: TextStyles.rajdhaniB.title2),
+                      Text(locale.felloFloText, style: TextStyles.rajdhaniB.title2),
                       Text(
-                        '10% p.a. returns | RBI regulated | P2P asset',
+                      locale.felloFloSubTitle,
                         style: TextStyles.sourceSans.body4,
                       ),
                       SizedBox(
@@ -292,7 +295,7 @@ class AssetCard extends StatelessWidget {
                                   height: SizeConfig.padding2,
                                 ),
                                 Text(
-                                  'Invested',
+                                  locale.invested,
                                   style: TextStyles.sourceSans.body3.colour(
                                     UiConstants.kTextColor.withOpacity(0.8),
                                   ),
@@ -310,7 +313,7 @@ class AssetCard extends StatelessWidget {
                                   height: SizeConfig.padding2,
                                 ),
                                 Text(
-                                  'Current',
+                              locale.currentText,
                                   style: TextStyles.sourceSans.body3.colour(
                                       UiConstants.kTextColor.withOpacity(0.8)),
                                 ),
@@ -328,7 +331,7 @@ class AssetCard extends StatelessWidget {
                             investmentType: InvestmentType.LENDBOXP2P,
                           );
                         },
-                        title: 'Save',
+                        title: locale.btnSave,
                         width: SizeConfig.screenWidth! * 0.2,
                       ),
                     ],

@@ -10,6 +10,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/modals_sheets/gold_sell_reason_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -25,6 +26,7 @@ class SellCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return PropertyChangeConsumer<BankAndPanService,
         BankAndPanServiceProperties>(
       properties: [
@@ -98,7 +100,7 @@ class SellCardView extends StatelessWidget {
                           sellService.isBankDetailsAdded
                       ? SizedBox()
                       : Text(
-                          'To enable sell,\ncomplete the following:',
+                          locale.enableSell,
                           style: TextStyles.sourceSans.body4.colour(
                             UiConstants.primaryColor,
                           ),
@@ -109,13 +111,13 @@ class SellCardView extends StatelessWidget {
               SizedBox(height: SizeConfig.padding12),
               if (!sellService.isKYCVerified || sellService.userKycData == null)
                 SellActionButton(
-                  title: 'Complete KYC',
+                  title:locale.completeKYCText ,
                   onTap: navigateToKycScreen,
                 ),
               if (!sellService.isBankDetailsAdded ||
                   sellService.activeBankAccountDetails == null)
                 SellActionButton(
-                  title: 'Add Bank Details',
+                  title: locale.addBankDetails,
                   onTap: navigateToBankDetailsScreen,
                 ),
               // SizedBox(height: SizeConfig.padding12),

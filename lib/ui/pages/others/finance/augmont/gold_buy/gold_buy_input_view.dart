@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/others/finance/coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -123,6 +124,7 @@ class RechargeModalSheetAppBar extends StatelessWidget {
   RechargeModalSheetAppBar({required this.txnService, this.trackCloseTapped});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return ListTile(
       leading: Container(
         width: SizeConfig.screenWidth! * 0.168,
@@ -149,9 +151,9 @@ class RechargeModalSheetAppBar extends StatelessWidget {
           ),
         ),
       ),
-      title: Text('Digital Gold', style: TextStyles.rajdhaniSB.body2),
+      title: Text(locale.digitalGoldText, style: TextStyles.rajdhaniSB.body2),
       subtitle: Text(
-        "Safest Digital Investment",
+        locale.safestDigitalInvestment,
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
       ),
       trailing:
@@ -175,6 +177,8 @@ class EnterAmountView extends StatelessWidget {
   final AugmontTransactionService txnService;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
       child: Column(
@@ -290,7 +294,7 @@ class EnterAmountView extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                     child: Text(
-                      "Upto ₹ 50,000 can be invested at one go.",
+                      locale.upto50000,
                       style: TextStyles.sourceSans.body4.bold
                           .colour(UiConstants.primaryColor),
                     ),
@@ -300,7 +304,7 @@ class EnterAmountView extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                     child: Text(
-                      "Minimum purchase amount is ₹ 10",
+                      locale.minPurchaseText,
                       style: TextStyles.sourceSans.body4.bold
                           .colour(Colors.red[400]),
                     ),
@@ -341,7 +345,7 @@ class EnterAmountView extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
                     child: Text(
-                      "${model.goldAmountInGrams} gm",
+                      "${model.goldAmountInGrams}"+ locale.gms,
                       style: TextStyles.sourceSansSB.body1,
                     ),
                   ),

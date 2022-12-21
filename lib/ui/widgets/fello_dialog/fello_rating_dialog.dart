@@ -6,6 +6,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -38,6 +39,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return FelloDialog(
       content: Column(
         children: [
@@ -52,13 +54,13 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
-              "Enjoying Fello?",
+              locale.enjoyingFello,
               style: TextStyles.title2.bold,
             ),
           ),
           SizedBox(height: SizeConfig.padding16),
           Text(
-            "We are constantly improving the app and your feedback would be really valuable.",
+            locale.improvingAppText,
             textAlign: TextAlign.center,
             style: TextStyles.body2.colour(Colors.grey),
           ),
@@ -90,7 +92,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
             Padding(
               padding: EdgeInsets.all(SizeConfig.padding4),
               child: Text(
-                "Please select a rating",
+                locale.selectRating,
                 style: TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
               ),
             ),
@@ -113,7 +115,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(
                         child: Text(
-                          "Rate",
+                        locale.rate,
                           style: TextStyles.body3.bold.colour(Colors.white),
                         ),
                         color: UiConstants.primaryColor,
@@ -165,8 +167,8 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                             }
                           } else {
                             BaseUtil.showPositiveAlert(
-                                "Thank you for your feedback",
-                                "We hope to serve you better");
+                               locale.feedBackGreeting1,
+                              locale.feedBackGreeting2);
                           }
                           AppState.backButtonDispatcher!.didPopRoute();
                         },
@@ -177,7 +179,7 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(
                         child: Text(
-                          "Maybe later",
+                          locale.mayBeLater,
                           style: TextStyles.body3.bold,
                         ),
                         color: Colors.grey.withOpacity(0.5),

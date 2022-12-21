@@ -17,6 +17,7 @@ import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -135,6 +136,7 @@ class GoldAssetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       margin:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
@@ -168,9 +170,9 @@ class GoldAssetCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Digital Gold',
+                        Text(locale.digitalGoldText,
                             style: TextStyles.rajdhaniB.title2),
-                        Text('99.9% pure | 24K Gold | 100% secure',
+                        Text(locale.digitalGoldSubTitle,
                             style: TextStyles.sourceSans.body4),
                         SizedBox(
                           height: SizeConfig.padding20,
@@ -179,7 +181,7 @@ class GoldAssetCard extends StatelessWidget {
                           style: TextStyles.rajdhaniSB.title4,
                         ),
                         Text(
-                          'You own',
+                          locale.youOwn,
                           style: TextStyles.sourceSans.body3,
                         ),
                       ],

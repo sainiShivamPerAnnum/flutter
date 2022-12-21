@@ -2,6 +2,7 @@ import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -39,12 +40,13 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
         elevation: 0.0,
         title: Text(
-          appBarTitle ?? (isForTopReferrers ? 'Top Referers' : 'Top Winners'),
+          appBarTitle ?? (isForTopReferrers ? locale.topRef :locale.topWinners),
           maxLines: 1,
           overflow: TextOverflow.clip,
           style: TextStyles.rajdhaniSB.title4,

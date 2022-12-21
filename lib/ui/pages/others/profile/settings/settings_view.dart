@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_name_text.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -17,6 +18,7 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<SettingsViewModel>(
       onModelReady: (model) => model.init(),
       onModelDispose: (model) {},
@@ -24,7 +26,7 @@ class SettingsView extends StatelessWidget {
             backgroundColor: UiConstants.kBackgroundColor,
             appBar: AppBar(
               title: Text(
-                "Settings",
+                locale.settings,
                 style: TextStyles.rajdhaniSB.title4,
               ),
               elevation: 0,

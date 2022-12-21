@@ -1,6 +1,7 @@
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       height: SizeConfig.screenWidth! * 0.5,
       width: SizeConfig.screenWidth,
@@ -37,8 +39,8 @@ class UPIAppsBottomSheet extends StatelessWidget {
                   children: [
                     Text(
                       txnServiceInstance!.appMetaList.length > 0
-                          ? 'Please select a UPI App'
-                          : "No UPI apps available",
+                          ? locale.txnSelectUPI
+                          : locale.txnNoUPI,
                       style: TextStyles.title5.bold,
                     ),
                     GestureDetector(
@@ -61,7 +63,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                           SvgPicture.asset(Assets.noTickets,
                               height: SizeConfig.screenWidth! * 0.16),
                           SizedBox(height: SizeConfig.padding12),
-                          Text('Could not find any installed UPI applications.',
+                          Text(locale.txnCouldNotFindUPI,
                               style: TextStyles.body1.colour(Colors.grey)),
                         ],
                       ),

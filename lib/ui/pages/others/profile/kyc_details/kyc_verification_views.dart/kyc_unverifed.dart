@@ -30,7 +30,7 @@ class KycUnVerifiedView extends StatelessWidget {
                 label: locale.kycPanUpload,
                 title: model.capturedImage!.name,
                 model: model,
-                subtitle: "${model.fileSize.toString()} MB",
+                subtitle: "${model.fileSize.toString()}"+ locale.mb.toUpperCase(),
                 trailing: Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
@@ -80,7 +80,7 @@ class KycUnVerifiedView extends StatelessWidget {
                                 addToScreenStack: true,
                                 hapticVibrate: true,
                                 content: MoreInfoDialog(
-                                  title: "Alert!",
+                                  title: locale.btnAlert,
                                   text:
                                       locale.kycGrantPermissionText,
                                   btnText: locale.btnGrantPermission,
@@ -98,7 +98,7 @@ class KycUnVerifiedView extends StatelessWidget {
                                 addToScreenStack: true,
                                 hapticVibrate: true,
                                 content: MoreInfoDialog(
-                                  title: "Alert!",
+                                  title: locale.btnAlert,
                                   text:
                                       locale.kycGrantPermissionText,
                                 ),
@@ -125,7 +125,7 @@ class KycUnVerifiedView extends StatelessWidget {
                       SizedBox(width: SizeConfig.pageHorizontalMargins / 2),
                       FileCaptureOption(
                         icon: Assets.ic_upload_file,
-                        desc: "Upload from device",
+                        desc: locale.uploadFromDevice,
                         padding: EdgeInsets.all(SizeConfig.padding16),
                         func: () async {
                           model.capturedImage = await ImagePicker()
@@ -143,13 +143,13 @@ class KycUnVerifiedView extends StatelessWidget {
         SizedBox(height: SizeConfig.padding10),
         Row(
           children: [
-            AppTextFieldLabel("Max size: 5 MB", leftPadding: 0),
+            AppTextFieldLabel(locale.maxSizeText, leftPadding: 0),
             SizedBox(
               width: SizeConfig.padding16,
             )
           ],
         ),
-        AppTextFieldLabel("Formats: PNG, JPEG, JPG", leftPadding: 0),
+        AppTextFieldLabel(locale.formatsText, leftPadding: 0),
         if (model.kycVerificationStatus == KycVerificationStatus.FAILED &&
             model.kycErrorMessage != null)
           Padding(
@@ -171,7 +171,7 @@ class KycUnVerifiedView extends StatelessWidget {
                   Expanded(
                     child: Text(
                       model.kycErrorMessage ??
-                          'Something went wrong, please try again.',
+                          locale.someThingWentWrongError,
                       maxLines: 2,
                       style: TextStyles.body3.colour(Colors.red),
                     ),

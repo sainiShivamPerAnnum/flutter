@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -82,6 +83,7 @@ class WinnerBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Column(
       children: [
         Container(
@@ -100,12 +102,12 @@ class WinnerBox extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Category",
+                    locale.category,
                     style: TextStyles.sourceSans.body4
                         .colour(UiConstants.kFAQsAnswerColor),
                   ),
                   Text(
-                    "Ticket No.",
+                    locale.tTicketNo,
                     style: TextStyles.sourceSans.body4
                         .colour(UiConstants.kFAQsAnswerColor),
                   ),

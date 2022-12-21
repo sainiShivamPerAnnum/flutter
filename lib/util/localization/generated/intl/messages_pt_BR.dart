@@ -20,13 +20,13 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'pt_BR';
 
-  static String m4(servingSize) =>
+  static String m10(servingSize) =>
       "*Baseado em uma porção de ${servingSize} fl. oz.";
 
-  static String m5(quantity, formattedNumber) =>
+  static String m11(quantity, formattedNumber) =>
       "${Intl.plural(quantity, one: 'Uma porção.', other: '${formattedNumber} porções no seu sistema de uma vez.')}";
 
-  static String m6(quantity, formattedNumber) =>
+  static String m12(quantity, formattedNumber) =>
       "${Intl.plural(quantity, one: 'Uma porção por dia.', other: '${formattedNumber} porções por dia.')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -40,9 +40,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardTitle": MessageLookupByLibrary.simpleMessage(
             "Poupança baseada em jogos \n e investimentos🎉"),
         "onboradButton": MessageLookupByLibrary.simpleMessage("INICIAR"),
-        "resultsPageFirstDisclaimer": m4,
-        "resultsPageLethalDosageMessage": m5,
-        "resultsPageSafeDosageMessage": m6,
+        "resultsPageFirstDisclaimer": m10,
+        "resultsPageLethalDosageMessage": m11,
+        "resultsPageSafeDosageMessage": m12,
         "resultsPageSafeDosageTitle":
             MessageLookupByLibrary.simpleMessage("Limite Seguro Diário"),
         "resultsPageSecondDisclaimer": MessageLookupByLibrary.simpleMessage(

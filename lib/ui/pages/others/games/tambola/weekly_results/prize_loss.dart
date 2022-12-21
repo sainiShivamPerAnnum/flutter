@@ -30,7 +30,7 @@ class Loser extends StatelessWidget {
               height: SizeConfig.padding54,
             ),
             Text(
-              "Better luck next time!",
+                 locale.tBetterLuckText,
               style: TextStyles.rajdhaniB.title3.colour(Colors.white),
             ),
             Padding(
@@ -38,7 +38,7 @@ class Loser extends StatelessWidget {
                 vertical: SizeConfig.padding20,
               ),
               child: Text(
-                  "None of your tickets matched this time.\nSave & get Tambola tickets for the coming week!",
+                  locale.tNoneOfTicketsMatched,
                   textAlign: TextAlign.center,
                   style: TextStyles.sourceSans.body3
                       .colour(UiConstants.kFAQsAnswerColor)),
@@ -49,7 +49,7 @@ class Loser extends StatelessWidget {
                   vertical: SizeConfig.pageHorizontalMargins),
               width: SizeConfig.navBarWidth,
               child: AppPositiveBtn(
-                  btnText: "SAVE MORE",
+                  btnText: locale.btnSaveMore.toUpperCase(),
                   onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
                     AppState.backButtonDispatcher!.didPopRoute();

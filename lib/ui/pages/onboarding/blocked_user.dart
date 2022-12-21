@@ -50,7 +50,7 @@ class BlockedUserView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                'Your account has been blocked',
+                locale.obBlockedTitle,
                 style: TextStyles.rajdhaniB.title2,
                 textAlign: TextAlign.center,
               ),
@@ -64,7 +64,7 @@ class BlockedUserView extends StatelessWidget {
                     style: TextStyles.rajdhani.colour(Colors.grey),
                     children: [
                       new TextSpan(
-                        text: 'Terms of use',
+                        text: locale.termsOfService,
                         style: TextStyles.rajdhani.underline,
                         recognizer: new TapGestureRecognizer()
                           ..onTap = () {
@@ -75,8 +75,8 @@ class BlockedUserView extends StatelessWidget {
                               BaseUtil.launchUrl('https://fello.in/policy/tnc');
                             } catch (e) {
                               BaseUtil.showNegativeAlert(
-                                'Something went wrong',
-                                'Could not launch T&C right now. Please try again later',
+                                locale.obSomeThingWentWrong,
+                                locale.obCouldNotLaunch,
                               );
                             }
                           },

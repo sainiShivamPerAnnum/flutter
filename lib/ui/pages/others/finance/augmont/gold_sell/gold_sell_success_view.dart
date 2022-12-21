@@ -51,12 +51,12 @@ class GoldSellSuccessView extends StatelessWidget {
             ),
           ),
           Text(
-            "Congratulations!",
+            locale.btnCongratulations,
             style: TextStyles.rajdhaniB.title2,
           ),
           SizedBox(height: SizeConfig.padding12),
           Text(
-            "Your withdrawal was successfully processed",
+          locale.txnWithDrawalSuccess,
             style: TextStyles.sourceSans.body2.setOpecity(0.7),
           ),
           Container(
@@ -75,7 +75,7 @@ class GoldSellSuccessView extends StatelessWidget {
               vertical: SizeConfig.padding12,
             ),
             child: Row(children: [
-              Text("Tokens Deducted", style: TextStyles.rajdhani.body1),
+              Text(locale.tokensDeducted, style: TextStyles.rajdhani.body1),
               Spacer(),
               SvgPicture.asset(
                 Assets.token,
@@ -106,7 +106,7 @@ class GoldSellSuccessView extends StatelessWidget {
                 vertical: SizeConfig.padding12,
               ),
               child: Row(children: [
-                Text("Tambola Tickets Deducted",
+                Text(locale.tTicketsDeducted,
                     style: TextStyles.rajdhani.body1),
                 Spacer(),
                 SvgPicture.asset(

@@ -12,6 +12,7 @@ import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allPa
 import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -34,6 +35,7 @@ class ReferralLeaderboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return PropertyChangeConsumer<LeaderboardService,
             LeaderBoardServiceProperties>(
         properties: [LeaderBoardServiceProperties.ReferralLeaderboard],
@@ -59,7 +61,7 @@ class ReferralLeaderboard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "Top Referrers",
+                          locale.topRef,
                           style: TextStyles.rajdhaniSB.body0.colour(
                               UiConstants.kSecondaryLeaderBoardTextColor),
                         ),
@@ -98,7 +100,7 @@ class ReferralLeaderboard extends StatelessWidget {
                               padding: EdgeInsets.only(
                                 top: SizeConfig.padding2,
                               ),
-                              child: Text('See All',
+                              child: Text(locale.btnSeeAll,
                                   style: TextStyles.rajdhaniSB.body2),
                             ),
                             SvgPicture.asset(
@@ -145,7 +147,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                       topPadding: false,
                                       assetSvg: Assets.noReferralAsset,
                                       text:
-                                          "Referral Leaderboard will be updated soon",
+                                          locale.refLeaderboardUpdate,
                                     ),
                                   )
                                 : Column(
@@ -169,7 +171,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Text("Names",
+                                                Text(locale.names,
                                                     style: TextStyles
                                                         .sourceSans.body3
                                                         .colour(UiConstants
@@ -181,7 +183,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            "Referrals",
+                                            locale.referrals,
                                             style: TextStyles.sourceSans.body3
                                                 .colour(
                                                     UiConstants.kTextColor2),

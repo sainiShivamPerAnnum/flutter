@@ -140,7 +140,7 @@ class GoldSellInputView extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Text("g",
+                            Text(locale.g,
                                 style: TextStyles.rajdhaniB.title2
                                     .colour(UiConstants.kTextColor))
                           ],
