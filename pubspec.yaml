@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 4.1.1+153
+version: 4.1.1+157
 
 environment:
   sdk: '>=2.16.2 <3.0.0'
@@ -52,10 +52,14 @@ dependencies:
   logger: ^1.0.0
   lottie: ^1.1.0
   webengage_flutter: ^1.2.1
-  mixpanel_flutter: ^1.3.1
+  mixpanel_flutter: ^2.0.0
   open_filex: ^3.4.0
   package_info: ^2.0.0
   path_provider: ^2.0.2
+  flutter_dynamic_icon:
+    git:
+      url: https://github.com/tastelessjolt/flutter_dynamic_icon.git
+      ref: GioPan04-android-support
   paytm_allinonesdk: ^1.1.4
   pdf: ^3.1.0
   permission_handler: ^10.1.0

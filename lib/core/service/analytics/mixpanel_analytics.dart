@@ -16,9 +16,9 @@ class MixpanelAnalytics extends BaseAnalyticsService {
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     try {
       _mixpanel = await Mixpanel.init(
-        FlavorConfig.instance!.values.mixpanelToken,
-        optOutTrackingDefault: false,
-      );
+          FlavorConfig.instance!.values.mixpanelToken,
+          optOutTrackingDefault: false,
+          trackAutomaticEvents: true);
 
       if (isOnBoarded != null && isOnBoarded && baseUser != null) {
         _mixpanel!.identify(baseUser.uid!);
