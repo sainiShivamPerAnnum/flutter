@@ -23,7 +23,7 @@ class CampaignOverviewWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-              locale.day+"${model.weekDay.toString().padLeft(2, '0')}",
+              locale.day.toUpperCase()+"${model.weekDay.toString().padLeft(2, '0')}",
                 style: TextStyles.rajdhaniB.title5.colour(Colors.white),
               ),
               const SizedBox(

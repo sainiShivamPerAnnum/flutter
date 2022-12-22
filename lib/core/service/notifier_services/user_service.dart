@@ -29,6 +29,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -56,6 +57,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
   final GetterRepository _gettersRepo = locator<GetterRepository>();
+  S locale = locator<S>();
 
   User? _firebaseUser;
   BaseUser? _baseUser;
@@ -716,7 +718,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               _logger.d("Auth: Maximum no of tries exceeded");
             } else {
               return BaseUtil.showNegativeAlert(
-                  'Authentication Failed', 'Please restart and try again');
+                  locale.authFailed, locale.restartAndTry);
             }
           }
         } else {
@@ -731,7 +733,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
     } catch (e) {
       return BaseUtil.showNegativeAlert(
-          'Authentication Failed', 'Please restart and try again');
+          locale.authFailed, locale.restartAndTry);
     }
   }
 }

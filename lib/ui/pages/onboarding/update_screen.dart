@@ -69,7 +69,7 @@ class UpdateRequiredScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(SizeConfig.padding34),
                 child: AppPositiveBtn(
-                  btnText: "Update Now".toUpperCase(),
+                  btnText: locale.updateNow.toUpperCase(),
                   onPressed: () {
                     try {
                       if (Platform.isIOS)

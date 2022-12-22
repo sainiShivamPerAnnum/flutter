@@ -18,7 +18,7 @@ class WebGameLeaderBoardView extends StatelessWidget {
   final String? game;
 
   WebGameLeaderBoardView({this.game});
-
+S locale = locator<S>();
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<LeaderboardService,
@@ -28,7 +28,7 @@ class WebGameLeaderBoardView extends StatelessWidget {
         return m!.WebGameLeaderBoard == null
             ? NoRecordDisplayWidget(
                 assetSvg: Assets.noWinnersAsset,
-                text: "Leaderboard will be updated soon",
+                text: locale.leaderboardUpdateSoon,
               )
             : LeaderBoardView(
                 model: m.WebGameLeaderBoard,

@@ -402,6 +402,36 @@ class S {
     );
   }
 
+  /// `Invalid OTP`
+  String get obInValidOTP {
+    return Intl.message(
+      'Invalid OTP',
+      name: 'obInValidOTP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid one time password`
+  String get obOneTimePass {
+    return Intl.message(
+      'Please enter a valid one time password',
+      name: 'obOneTimePass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid otp or try again after sometime`
+  String get obEnterValidOTP {
+    return Intl.message(
+      'Please enter a valid otp or try again after sometime',
+      name: 'obEnterValidOTP',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Username`
   String get obUsernameLabel {
     return Intl.message(
@@ -872,6 +902,56 @@ class S {
     );
   }
 
+  /// `Complete Profile`
+  String get obCompleteProfile {
+    return Intl.message(
+      'Complete Profile',
+      name: 'obCompleteProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please complete your profile to win your first reward and to start saving`
+  String get obCompleteProfileSubTitle {
+    return Intl.message(
+      'Please complete your profile to win your first reward and to start saving',
+      name: 'obCompleteProfileSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Male`
+  String get obMale {
+    return Intl.message(
+      'Male',
+      name: 'obMale',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Female`
+  String get obFemale {
+    return Intl.message(
+      'Female',
+      name: 'obFemale',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rather Not Say`
+  String get obPreferNotToSay {
+    return Intl.message(
+      'Rather Not Say',
+      name: 'obPreferNotToSay',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '-----------------------------------' key
 
   /// `Journey`
@@ -1048,10 +1128,10 @@ class S {
     );
   }
 
-  /// `You own`
+  /// `You Own`
   String get youOwn {
     return Intl.message(
-      'You own',
+      'You Own',
       name: 'youOwn',
       desc: '',
       args: [],
@@ -1588,6 +1668,36 @@ class S {
     );
   }
 
+  /// `Fello Flo (10%)`
+  String get felloFloMainTitle {
+    return Intl.message(
+      'Fello Flo (10%)',
+      name: 'felloFloMainTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Digital Gold`
+  String get digitalGoldMailTitle {
+    return Intl.message(
+      'Digital Gold',
+      name: 'digitalGoldMailTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Value`
+  String get currentValue {
+    return Intl.message(
+      'Current Value',
+      name: 'currentValue',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Sell your Digital Gold \nat current market rate`
   String get sellCardTitle1 {
     return Intl.message(
@@ -1623,6 +1733,66 @@ class S {
     return Intl.message(
       'To enable sell,\ncomplete the following:',
       name: 'enableSell',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The gold in grams shall be credited to your wallet in the next`
+  String get goldCreditedInWallet {
+    return Intl.message(
+      'The gold in grams shall be credited to your wallet in the next',
+      name: 'goldCreditedInWallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You will receive the gift card on your registered email and mobile in the next `
+  String get giftCard {
+    return Intl.message(
+      'You will receive the gift card on your registered email and mobile in the next ',
+      name: 'giftCard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What is Digital Gold?`
+  String get digitalGoldInfoTitle {
+    return Intl.message(
+      'What is Digital Gold?',
+      name: 'digitalGoldInfoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Digital gold is the new way of saving in gold online. For every gram of gold you buy, actual 24k gold is stored in a locker backed by Augmont Gold and IDBI trust.`
+  String get digitalGoldInfoSubTitle {
+    return Intl.message(
+      'Digital gold is the new way of saving in gold online. For every gram of gold you buy, actual 24k gold is stored in a locker backed by Augmont Gold and IDBI trust.',
+      name: 'digitalGoldInfoSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What is Fello Flo?`
+  String get felloFloinfoTitle {
+    return Intl.message(
+      'What is Fello Flo?',
+      name: 'felloFloinfoTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello Flo is an RBI regulated peer to peer lending asset offered in partnership with Lendbox-an RBI regulated P2P NBFC. The money invested is lent to high credit worthy borrowers for better returns with minimum risk.`
+  String get felloFloinfoSubTitle {
+    return Intl.message(
+      'Fello Flo is an RBI regulated peer to peer lending asset offered in partnership with Lendbox-an RBI regulated P2P NBFC. The money invested is lent to high credit worthy borrowers for better returns with minimum risk.',
+      name: 'felloFloinfoSubTitle',
       desc: '',
       args: [],
     );
@@ -1675,6 +1845,16 @@ class S {
     return Intl.message(
       'You need to complete your KYC before you can invest',
       name: 'kycIncomplete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Why to invest?`
+  String get whyToInvest {
+    return Intl.message(
+      'Why to invest?',
+      name: 'whyToInvest',
       desc: '',
       args: [],
     );
@@ -2182,6 +2362,16 @@ class S {
     );
   }
 
+  /// `Update Now`
+  String get updateNow {
+    return Intl.message(
+      'Update Now',
+      name: 'updateNow',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Daily Bonus`
   String get dailyBonusText {
     return Intl.message(
@@ -2247,6 +2437,76 @@ class S {
     return Intl.message(
       'Total Rewards',
       name: 'totalRewards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `worth of gold`
+  String get worthOfGold {
+    return Intl.message(
+      'worth of gold',
+      name: 'worthOfGold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Oh no..`
+  String get ohNo {
+    return Intl.message(
+      'Oh no..',
+      name: 'ohNo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Better Luck Next Time`
+  String get betterLuckNextTime {
+    return Intl.message(
+      'Better Luck Next Time',
+      name: 'betterLuckNextTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `reward won!`
+  String get rewardWon {
+    return Intl.message(
+      'reward won!',
+      name: 'rewardWon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tokens won!`
+  String get tokensWon {
+    return Intl.message(
+      'Tokens won!',
+      name: 'tokensWon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Token won!`
+  String get tokenWon {
+    return Intl.message(
+      'Token won!',
+      name: 'tokenWon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `worths of Gold`
+  String get worthsOfGold {
+    return Intl.message(
+      'worths of Gold',
+      name: 'worthsOfGold',
       desc: '',
       args: [],
     );
@@ -2946,6 +3206,16 @@ class S {
     );
   }
 
+  /// `Ok`
+  String get btnOk {
+    return Intl.message(
+      'Ok',
+      name: 'btnOk',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Loading`
   String get btnLoading {
     return Intl.message(
@@ -3226,6 +3496,16 @@ class S {
     );
   }
 
+  /// `Discard`
+  String get btnDiscard {
+    return Intl.message(
+      'Discard',
+      name: 'btnDiscard',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '------------------' key
 
   /// `Name as per your PAN Card`
@@ -3339,46 +3619,6 @@ class S {
   }
 
   // skipped getter for the '----------------------' key
-
-  /// `Game based Savings \n & Investments🎉`
-  String get onboardTitle {
-    return Intl.message(
-      'Game based Savings \n & Investments🎉',
-      name: 'onboardTitle',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Save or invest ₹100 and get 1 game ticket every Monday`
-  String get onboardText1 {
-    return Intl.message(
-      'Save or invest ₹100 and get 1 game ticket every Monday',
-      name: 'onboardText1',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Use the tickets to participate in exciting weekly games`
-  String get onboardText2 {
-    return Intl.message(
-      'Use the tickets to participate in exciting weekly games',
-      name: 'onboardText2',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Your money keeps growing with great returns while you play fun games and win prizes!`
-  String get onboardText3 {
-    return Intl.message(
-      'Your money keeps growing with great returns while you play fun games and win prizes!',
-      name: 'onboardText3',
-      desc: '',
-      args: [],
-    );
-  }
 
   /// `GET STARTED`
   String get onboradButton {
@@ -3552,10 +3792,10 @@ class S {
     );
   }
 
-  /// `DAY`
+  /// `Day`
   String get day {
     return Intl.message(
-      'DAY',
+      'Day',
       name: 'day',
       desc: '',
       args: [],
@@ -3937,6 +4177,26 @@ class S {
     return Intl.message(
       'This account will be used for crediting your \n withdrawals',
       name: 'txnWithdrawAccountText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tambola tickets won`
+  String get tTicketsWon {
+    return Intl.message(
+      'Tambola tickets won',
+      name: 'tTicketsWon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tambola ticket won`
+  String get tTicketWon {
+    return Intl.message(
+      'Tambola ticket won',
+      name: 'tTicketWon',
       desc: '',
       args: [],
     );
@@ -4502,6 +4762,196 @@ class S {
     );
   }
 
+  /// `Put your savings on autopilot`
+  String get savingsOnAuto {
+    return Intl.message(
+      'Put your savings on autopilot',
+      name: 'savingsOnAuto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Now you can save in Digital Gold automatically without opening the app. Setup Fello autosave now!`
+  String get savingsOnAutoSubtitle {
+    return Intl.message(
+      'Now you can save in Digital Gold automatically without opening the app. Setup Fello autosave now!',
+      name: 'savingsOnAutoSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Setup Autosave`
+  String get btnSetupAutoSave {
+    return Intl.message(
+      'Setup Autosave',
+      name: 'btnSetupAutoSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello Autosave`
+  String get felloAutoSave {
+    return Intl.message(
+      'Fello Autosave',
+      name: 'felloAutoSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `in Progress`
+  String get inProgress {
+    return Intl.message(
+      'in Progress',
+      name: 'inProgress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start saving now`
+  String get startSavingNow {
+    return Intl.message(
+      'Start saving now',
+      name: 'startSavingNow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `till`
+  String get till {
+    return Intl.message(
+      'till',
+      name: 'till',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `0.0/day`
+  String get zeroperDay {
+    return Intl.message(
+      '0.0/day',
+      name: 'zeroperDay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View`
+  String get view {
+    return Intl.message(
+      'View',
+      name: 'view',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set Amount`
+  String get setAmount {
+    return Intl.message(
+      'Set Amount',
+      name: 'setAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restart`
+  String get restart {
+    return Intl.message(
+      'Restart',
+      name: 'restart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resume`
+  String get resume {
+    return Intl.message(
+      'Resume',
+      name: 'resume',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Details`
+  String get details {
+    return Intl.message(
+      'Details',
+      name: 'details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Paused`
+  String get paused {
+    return Intl.message(
+      'Paused',
+      name: 'paused',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start an SIP`
+  String get startAnSIP {
+    return Intl.message(
+      'Start an SIP',
+      name: 'startAnSIP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start an SIP with Fello Autosave`
+  String get sipWithAutoSave {
+    return Intl.message(
+      'Start an SIP with Fello Autosave',
+      name: 'sipWithAutoSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `active`
+  String get active {
+    return Intl.message(
+      'active',
+      name: 'active',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Autosave setup is complete`
+  String get autoSaveSetupComplete {
+    return Intl.message(
+      'Your Autosave setup is complete',
+      name: 'autoSaveSetupComplete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Savings on autopilot with`
+  String get savingsOnAutoPilot {
+    return Intl.message(
+      'Savings on autopilot with',
+      name: 'savingsOnAutoPilot',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '------------------------' key
 
   /// `Apply a Coupon`
@@ -4924,6 +5374,76 @@ class S {
     );
   }
 
+  /// `Verifying transaction`
+  String get txnVerify {
+    return Intl.message(
+      'Verifying transaction',
+      name: 'txnVerify',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your transaction is being verified and will be updated shortly`
+  String get txnVerifySubTitle {
+    return Intl.message(
+      'Your transaction is being verified and will be updated shortly',
+      name: 'txnVerifySubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdrawal processing`
+  String get withDrawalProcessing {
+    return Intl.message(
+      'Withdrawal processing',
+      name: 'withDrawalProcessing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The amount will be credited to your UPI registered bank account shortly`
+  String get amountWillbeCreditedShortly {
+    return Intl.message(
+      'The amount will be credited to your UPI registered bank account shortly',
+      name: 'amountWillbeCreditedShortly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to fetch transactions`
+  String get txnFetchFailed {
+    return Intl.message(
+      'Unable to fetch transactions',
+      name: 'txnFetchFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your transaction is taking longer than usual. We'll get back to you in `
+  String get txnDelay {
+    return Intl.message(
+      'Your transaction is taking longer than usual. We\'ll get back to you in ',
+      name: 'txnDelay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unavailable`
+  String get unavailable {
+    return Intl.message(
+      'Unavailable',
+      name: 'unavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '--------------------------' key
 
   /// `Happy Hour is over`
@@ -5130,6 +5650,16 @@ class S {
     );
   }
 
+  /// `Tokens`
+  String get tokens {
+    return Intl.message(
+      'Tokens',
+      name: 'tokens',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '--------------------------------------' key
 
   /// `Journey failed to load`
@@ -5305,6 +5835,220 @@ class S {
   }
 
   // skipped getter for the '---------------------------------------' key
+
+  /// `Safe mode of saving`
+  String get boxGoldTitles1 {
+    return Intl.message(
+      'Safe mode of saving',
+      name: 'boxGoldTitles1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grows with the price of gold`
+  String get boxGoldTitles2 {
+    return Intl.message(
+      'Grows with the price of gold',
+      name: 'boxGoldTitles2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pure 99.9% BIS Hallmark`
+  String get boxGoldTitles3 {
+    return Intl.message(
+      'Pure 99.9% BIS Hallmark',
+      name: 'boxGoldTitles3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `10% returns per annum`
+  String get boxFloTitles1 {
+    return Intl.message(
+      '10% returns per annum',
+      name: 'boxFloTitles1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Interest credited everyday`
+  String get boxFloTitles2 {
+    return Intl.message(
+      'Interest credited everyday',
+      name: 'boxFloTitles2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `48 hour lock-in period`
+  String get boxFloTitles3 {
+    return Intl.message(
+      '48 hour lock-in period',
+      name: 'boxFloTitles3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How Fello games work?`
+  String get howGamesWork {
+    return Intl.message(
+      'How Fello games work?',
+      name: 'howGamesWork',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn tokens by saving & completing milestone`
+  String get boxPlayTitle1 {
+    return Intl.message(
+      'Earn tokens by saving & completing milestone',
+      name: 'boxPlayTitle1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use tokens to play different games`
+  String get boxPlayTitle2 {
+    return Intl.message(
+      'Use tokens to play different games',
+      name: 'boxPlayTitle2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get listed on the game leaderboard`
+  String get boxPlayTitle3 {
+    return Intl.message(
+      'Get listed on the game leaderboard',
+      name: 'boxPlayTitle3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Win rewards every sunday midnight`
+  String get boxPlayTitle4 {
+    return Intl.message(
+      'Win rewards every sunday midnight',
+      name: 'boxPlayTitle4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not interested in the asset`
+  String get sellingReasons1 {
+    return Intl.message(
+      'Not interested in the asset',
+      name: 'sellingReasons1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Returns are not good enough`
+  String get sellingReasons2 {
+    return Intl.message(
+      'Returns are not good enough',
+      name: 'sellingReasons2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Require immediate funds`
+  String get sellingReasons3 {
+    return Intl.message(
+      'Require immediate funds',
+      name: 'sellingReasons3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Others`
+  String get sellingReasons4 {
+    return Intl.message(
+      'Others',
+      name: 'sellingReasons4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '--------------------------------------------------' key
+
+  /// `Earn 10% returns`
+  String get onboardingTitle1 {
+    return Intl.message(
+      'Earn 10% returns',
+      name: 'onboardingTitle1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `By saving in safe and secure assets like Digital Gold and 10% fund Fello Flo`
+  String get onboardingSubTitle1 {
+    return Intl.message(
+      'By saving in safe and secure assets like Digital Gold and 10% fund Fello Flo',
+      name: 'onboardingSubTitle1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Play fun games`
+  String get onboardingTitle2 {
+    return Intl.message(
+      'Play fun games',
+      name: 'onboardingTitle2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn tambola tickets and Fello tokens for your savings and play weekly games`
+  String get onboardingSubTitle2 {
+    return Intl.message(
+      'Earn tambola tickets and Fello tokens for your savings and play weekly games',
+      name: 'onboardingSubTitle2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Win Rs.1 Crore!`
+  String get onboardingTitle3 {
+    return Intl.message(
+      'Win Rs.1 Crore!',
+      name: 'onboardingTitle3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Win the daily and weekly games and earn upto Rs 1 Crore in rewards`
+  String get onboardingSubTitle3 {
+    return Intl.message(
+      'Win the daily and weekly games and earn upto Rs 1 Crore in rewards',
+      name: 'onboardingSubTitle3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '------------------------------------------------' key
 
   /// `Win upto Rs.{prizeAmount}`
   String gameRewardsAmount(Object prizeAmount) {
@@ -5496,6 +6240,16 @@ class S {
     );
   }
 
+  /// `All Games`
+  String get allgames {
+    return Intl.message(
+      'All Games',
+      name: 'allgames',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '----------------------------------------' key
 
   /// `Fin-gyan`
@@ -5645,6 +6399,1558 @@ class S {
     return Intl.message(
       'Maybe later',
       name: 'mayBeLater',
+      desc: '',
+      args: [],
+    );
+  }
+
+  // skipped getter for the '---------------------' key
+
+  /// `Asset not available at the moment`
+  String get assetNotAvailable {
+    return Intl.message(
+      'Asset not available at the moment',
+      name: 'assetNotAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try after some time`
+  String get tryLater {
+    return Intl.message(
+      'Please try after some time',
+      name: 'tryLater',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Operation cannot be completed at the moment`
+  String get operationCannotBeCompleted {
+    return Intl.message(
+      'Operation cannot be completed at the moment',
+      name: 'operationCannotBeCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Task Failed`
+  String get taskFailed {
+    return Intl.message(
+      'Task Failed',
+      name: 'taskFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to capture the card at the moment`
+  String get unableToCapture {
+    return Intl.message(
+      'Unable to capture the card at the moment',
+      name: 'unableToCapture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to share the picture at the moment`
+  String get UnableToSharePicture {
+    return Intl.message(
+      'Unable to share the picture at the moment',
+      name: 'UnableToSharePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No account selected`
+  String get noAccSelected {
+    return Intl.message(
+      'No account selected',
+      name: 'noAccSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please choose an account from the list`
+  String get chooseAnAcc {
+    return Intl.message(
+      'Please choose an account from the list',
+      name: 'chooseAnAcc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email already registered`
+  String get emailAlreadyRegistered {
+    return Intl.message(
+      'Email already registered',
+      name: 'emailAlreadyRegistered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try with another email`
+  String get anotherEmail {
+    return Intl.message(
+      'Please try with another email',
+      name: 'anotherEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to verify`
+  String get verifyFailed {
+    return Intl.message(
+      'Unable to verify',
+      name: 'verifyFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email cannot be verified at the moment, please try again in sometime.`
+  String get emailVerifyFailed {
+    return Intl.message(
+      'Email cannot be verified at the moment, please try again in sometime.',
+      name: 'emailVerifyFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try a different method`
+  String get tryAnotherMethod {
+    return Intl.message(
+      'Please try a different method',
+      name: 'tryAnotherMethod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Authentication Failed`
+  String get authFailed {
+    return Intl.message(
+      'Authentication Failed',
+      name: 'authFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please restart and try again`
+  String get restartAndTry {
+    return Intl.message(
+      'Please restart and try again',
+      name: 'restartAndTry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to connect to upi app`
+  String get upiConnectFailed {
+    return Intl.message(
+      'Failed to connect to upi app',
+      name: 'upiConnectFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to get Upi apps`
+  String get unableToGetUpi {
+    return Intl.message(
+      'Unable to get Upi apps',
+      name: 'unableToGetUpi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to create transaction`
+  String get failedToCreateTxn {
+    return Intl.message(
+      'Failed to create transaction',
+      name: 'failedToCreateTxn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction failed`
+  String get txnFailed {
+    return Intl.message(
+      'Transaction failed',
+      name: 'txnFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your transaction was unsuccessful. Please try again`
+  String get txnFailedSubtitle {
+    return Intl.message(
+      'Your transaction was unsuccessful. Please try again',
+      name: 'txnFailedSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have successfully saved `
+  String get youSaved {
+    return Intl.message(
+      'You have successfully saved ',
+      name: 'youSaved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to pause subscription`
+  String get unableToPauseSub {
+    return Intl.message(
+      'Unable to pause subscription',
+      name: 'unableToPauseSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoice could not be loaded`
+  String get invoiceLoadFailed {
+    return Intl.message(
+      'Invoice could not be loaded',
+      name: 'invoiceLoadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generating link failed `
+  String get generatingLinkFailed {
+    return Intl.message(
+      'Generating link failed ',
+      name: 'generatingLinkFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Whatsapp not detected`
+  String get whatsappNotDetected {
+    return Intl.message(
+      'Whatsapp not detected',
+      name: 'whatsappNotDetected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please use other option to share. `
+  String get otherShareOption {
+    return Intl.message(
+      'Please use other option to share. ',
+      name: 'otherShareOption',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occured!`
+  String get errorOccured {
+    return Intl.message(
+      'An error occured!',
+      name: 'errorOccured',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdrawal Failed`
+  String get withDrawalFailed {
+    return Intl.message(
+      'Withdrawal Failed',
+      name: 'withDrawalFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1-2 business working days`
+  String get businessDays {
+    return Intl.message(
+      '1-2 business working days',
+      name: 'businessDays',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mobile number not allowed`
+  String get mbNoNotAllowed {
+    return Intl.message(
+      'Mobile number not allowed',
+      name: 'mbNoNotAllowed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only dummy numbers are allowed in QA mode`
+  String get dummyNoAlert {
+    return Intl.message(
+      'Only dummy numbers are allowed in QA mode',
+      name: 'dummyNoAlert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update failed`
+  String get updateFailed {
+    return Intl.message(
+      'Update failed',
+      name: 'updateFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your account is under maintenance`
+  String get accountMaintenance {
+    return Intl.message(
+      'Your account is under maintenance',
+      name: 'accountMaintenance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please reach out to customer support`
+  String get customerSupportText {
+    return Intl.message(
+      'Please reach out to customer support',
+      name: 'customerSupportText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sending OTP failed`
+  String get sendingOtpFailed {
+    return Intl.message(
+      'Sending OTP failed',
+      name: 'sendingOtpFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please check your network or number and try again`
+  String get checkNetwork {
+    return Intl.message(
+      'Please check your network or number and try again',
+      name: 'checkNetwork',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign In Failed`
+  String get signInFailedText {
+    return Intl.message(
+      'Sign In Failed',
+      name: 'signInFailedText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have exceeded the number of allowed OTP attempts. Please try again in sometime`
+  String get exceededOTPs {
+    return Intl.message(
+      'You have exceeded the number of allowed OTP attempts. Please try again in sometime',
+      name: 'exceededOTPs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter your mobile number to authenticate.`
+  String get authenticateNumber {
+    return Intl.message(
+      'Please enter your mobile number to authenticate.',
+      name: 'authenticateNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading Gold Rates`
+  String get loadingGoldRates {
+    return Intl.message(
+      'Loading Gold Rates',
+      name: 'loadingGoldRates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please wait while the Gold rates load`
+  String get loadingGoldRates1 {
+    return Intl.message(
+      'Please wait while the Gold rates load',
+      name: 'loadingGoldRates1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No amount entered`
+  String get noAmountEntered {
+    return Intl.message(
+      'No amount entered',
+      name: 'noAmountEntered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter an amount`
+  String get enterAmount {
+    return Intl.message(
+      'Please enter an amount',
+      name: 'enterAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Purchase Failed`
+  String get purchaseFailed {
+    return Intl.message(
+      'Purchase Failed',
+      name: 'purchaseFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gold buying is currently on hold. Please try again after sometime.`
+  String get goldBuyHold {
+    return Intl.message(
+      'Gold buying is currently on hold. Please try again after sometime.',
+      name: 'goldBuyHold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Portal unavailable`
+  String get portalUnavailable {
+    return Intl.message(
+      'Portal unavailable',
+      name: 'portalUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The current rates couldn't be loaded.Please try again`
+  String get currentRatesNotLoadedText1 {
+    return Intl.message(
+      'The current rates couldn\'t be loaded.Please try again',
+      name: 'currentRatesNotLoadedText1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coupon Applied Successfully`
+  String get couponAppliedSucc {
+    return Intl.message(
+      'Coupon Applied Successfully',
+      name: 'couponAppliedSucc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coupon not applied`
+  String get couponNotApplied {
+    return Intl.message(
+      'Coupon not applied',
+      name: 'couponNotApplied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coupon cannot be applied`
+  String get couponCannotBeApplied {
+    return Intl.message(
+      'Coupon cannot be applied',
+      name: 'couponCannotBeApplied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try another coupon`
+  String get anotherCoupon {
+    return Intl.message(
+      'Please try another coupon',
+      name: 'anotherCoupon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We're still Processing`
+  String get processing {
+    return Intl.message(
+      'We\'re still Processing',
+      name: 'processing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount too low`
+  String get amountLow {
+    return Intl.message(
+      'Amount too low',
+      name: 'amountLow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a greater Amount`
+  String get amountLowSubTitle {
+    return Intl.message(
+      'Please enter a greater Amount',
+      name: 'amountLowSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try a low amount`
+  String get tryLowerAmount {
+    return Intl.message(
+      'Please try a low amount',
+      name: 'tryLowerAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Some of your gold is locked for now`
+  String get goldLocked {
+    return Intl.message(
+      'Some of your gold is locked for now',
+      name: 'goldLocked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a lower quantity`
+  String get enterLowQuantity {
+    return Intl.message(
+      'Please enter a lower quantity',
+      name: 'enterLowQuantity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A maximum of 8 gms can be sold in one go`
+  String get max8gms {
+    return Intl.message(
+      'A maximum of 8 gms can be sold in one go',
+      name: 'max8gms',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a higher quantity`
+  String get enterHigherQuant {
+    return Intl.message(
+      'Please enter a higher quantity',
+      name: 'enterHigherQuant',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A minimum of ₹10 can be sold in one go`
+  String get min10rs {
+    return Intl.message(
+      'A minimum of ₹10 can be sold in one go',
+      name: 'min10rs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insufficient balance`
+  String get inSufficientBal {
+    return Intl.message(
+      'Insufficient balance',
+      name: 'inSufficientBal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sell Failed`
+  String get sellFailed {
+    return Intl.message(
+      'Sell Failed',
+      name: 'sellFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gold sell is currently on hold. Please try again after sometime.`
+  String get sellFailedSubtitle {
+    return Intl.message(
+      'Gold sell is currently on hold. Please try again after sometime.',
+      name: 'sellFailedSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upto 4 decimals allowed`
+  String get upto4DecimalsAllowed {
+    return Intl.message(
+      'Upto 4 decimals allowed',
+      name: 'upto4DecimalsAllowed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sell did not complete`
+  String get sellInCompleteTitle {
+    return Intl.message(
+      'Sell did not complete',
+      name: 'sellInCompleteTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your gold sell could not be completed at the moment`
+  String get sellInCompleteSubTitle {
+    return Intl.message(
+      'Your gold sell could not be completed at the moment',
+      name: 'sellInCompleteSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check transactions for more details`
+  String get checkTransactions {
+    return Intl.message(
+      'Check transactions for more details',
+      name: 'checkTransactions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Too many attempts`
+  String get tooManyAttempts {
+    return Intl.message(
+      'Too many attempts',
+      name: 'tooManyAttempts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You are not onboarded to augmont yet`
+  String get augmountOnboardTitle {
+    return Intl.message(
+      'You are not onboarded to augmont yet',
+      name: 'augmountOnboardTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please finish augmont onboarding first`
+  String get augmountOnboardSubTitle {
+    return Intl.message(
+      'Please finish augmont onboarding first',
+      name: 'augmountOnboardSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter some amount to continue`
+  String get pleaseEnterSomeAmount {
+    return Intl.message(
+      'Please enter some amount to continue',
+      name: 'pleaseEnterSomeAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minimum amount should be ₹`
+  String get minAmountShouldBe {
+    return Intl.message(
+      'Minimum amount should be ₹',
+      name: 'minAmountShouldBe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter an amount grater than `
+  String get enterAmountGreaterThan {
+    return Intl.message(
+      'Please enter an amount grater than ',
+      name: 'enterAmountGreaterThan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter an amount lower than `
+  String get enterAmountLowerThan {
+    return Intl.message(
+      'Please enter an amount lower than ',
+      name: 'enterAmountLowerThan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min amount is `
+  String get minAmountIs {
+    return Intl.message(
+      'Min amount is ',
+      name: 'minAmountIs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Max amount is `
+  String get maxAmountIs {
+    return Intl.message(
+      'Max amount is ',
+      name: 'maxAmountIs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a minimum amount of ₹`
+  String get enterMinAmount {
+    return Intl.message(
+      'Please enter a minimum amount of ₹',
+      name: 'enterMinAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Autosave is taking longer than usual. We'll get back to you in `
+  String get autoSaveDelay {
+    return Intl.message(
+      'Your Autosave is taking longer than usual. We\'ll get back to you in ',
+      name: 'autoSaveDelay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `minutes`
+  String get minutes {
+    return Intl.message(
+      'minutes',
+      name: 'minutes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This week's prizes could not be fetched`
+  String get prizeFetchFailed {
+    return Intl.message(
+      'This week\'s prizes could not be fetched',
+      name: 'prizeFetchFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maximum tickets exceeded`
+  String get ticketsExceeded {
+    return Intl.message(
+      'Maximum tickets exceeded',
+      name: 'ticketsExceeded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can purchase upto 30 tambola tickets at once`
+  String get tktsPurchaseLimit {
+    return Intl.message(
+      'You can purchase upto 30 tambola tickets at once',
+      name: 'tktsPurchaseLimit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to fetch prizes at the moment`
+  String get unableToFetchPrizes {
+    return Intl.message(
+      'Unable to fetch prizes at the moment',
+      name: 'unableToFetchPrizes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Game Loading`
+  String get gameLoading {
+    return Intl.message(
+      'Game Loading',
+      name: 'gameLoading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This game might take longer than usual to load`
+  String get gameLoadingSubTitle {
+    return Intl.message(
+      'This game might take longer than usual to load',
+      name: 'gameLoadingSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Simulators not allowed`
+  String get simulatorsNotAllowed {
+    return Intl.message(
+      'Simulators not allowed',
+      name: 'simulatorsNotAllowed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please use the app on a real device`
+  String get tryOnRealDevice {
+    return Intl.message(
+      'Please use the app on a real device',
+      name: 'tryOnRealDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Game locked for security reasons`
+  String get gameLocked {
+    return Intl.message(
+      'Game locked for security reasons',
+      name: 'gameLocked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please contact us for more details`
+  String get contactUs {
+    return Intl.message(
+      'Please contact us for more details',
+      name: 'contactUs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification Failed`
+  String get verificationFailed {
+    return Intl.message(
+      'Verification Failed',
+      name: 'verificationFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email verified Successfully`
+  String get emailVerified {
+    return Intl.message(
+      'Email verified Successfully',
+      name: 'emailVerified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thank you for verifying your email`
+  String get emailVerified1 {
+    return Intl.message(
+      'Thank you for verifying your email',
+      name: 'emailVerified1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Success`
+  String get success {
+    return Intl.message(
+      'Success',
+      name: 'success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No changes detected`
+  String get noChangesDetected {
+    return Intl.message(
+      'No changes detected',
+      name: 'noChangesDetected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please make some changes to update details`
+  String get makeSomeChanges {
+    return Intl.message(
+      'Please make some changes to update details',
+      name: 'makeSomeChanges',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fields mismatch`
+  String get feildsMismatch {
+    return Intl.message(
+      'Fields mismatch',
+      name: 'feildsMismatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bank details successfully updated ✅`
+  String get bankDetailsUpdatedTitle {
+    return Intl.message(
+      'Bank details successfully updated ✅',
+      name: 'bankDetailsUpdatedTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your bank details have been updated successfully`
+  String get bankDetailsUpdatedSubTitle {
+    return Intl.message(
+      'Your bank details have been updated successfully',
+      name: 'bankDetailsUpdatedSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No file selected`
+  String get noFileSelected {
+    return Intl.message(
+      'No file selected',
+      name: 'noFileSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please select a valid PAN image`
+  String get selectValidPan {
+    return Intl.message(
+      'Please select a valid PAN image',
+      name: 'selectValidPan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PAN verification failed`
+  String get panVerifyFailed {
+    return Intl.message(
+      'PAN verification failed',
+      name: 'panVerifyFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid File`
+  String get invalidFile {
+    return Intl.message(
+      'Invalid File',
+      name: 'invalidFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selected file size is very large. Please select an image of size less than 5 MB.`
+  String get invalidFileSubtitle {
+    return Intl.message(
+      'Selected file size is very large. Please select an image of size less than 5 MB.',
+      name: 'invalidFileSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `KYC successfully completed ✅`
+  String get kycSuccessTitle {
+    return Intl.message(
+      'KYC successfully completed ✅',
+      name: 'kycSuccessTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your KYC verification has been successfully completed`
+  String get kycSuccessSubTitle {
+    return Intl.message(
+      'Your KYC verification has been successfully completed',
+      name: 'kycSuccessSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to upload your PAN image`
+  String get failedToUploadPAN {
+    return Intl.message(
+      'Failed to upload your PAN image',
+      name: 'failedToUploadPAN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Share`
+  String get share {
+    return Intl.message(
+      'Share',
+      name: 'share',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updated Successfully`
+  String get updatedSuccessfully {
+    return Intl.message(
+      'Updated Successfully',
+      name: 'updatedSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile updated successfully`
+  String get profileUpdated {
+    return Intl.message(
+      'Profile updated successfully',
+      name: 'profileUpdated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile Update failed`
+  String get profileUpdateFailed {
+    return Intl.message(
+      'Profile Update failed',
+      name: 'profileUpdateFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Profile Picture could not be updated at the moment`
+  String get profileUpdateFailedSubtitle {
+    return Intl.message(
+      'Your Profile Picture could not be updated at the moment',
+      name: 'profileUpdateFailedSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ineligible`
+  String get ineligible {
+    return Intl.message(
+      'Ineligible',
+      name: 'ineligible',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You need to be above 18 to join`
+  String get above18 {
+    return Intl.message(
+      'You need to be above 18 to join',
+      name: 'above18',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid Details`
+  String get invalidDetails {
+    return Intl.message(
+      'Invalid Details',
+      name: 'invalidDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `please check the fields again`
+  String get checkFeilds {
+    return Intl.message(
+      'please check the fields again',
+      name: 'checkFeilds',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username invalid`
+  String get invalidUsername {
+    return Intl.message(
+      'Username invalid',
+      name: 'invalidUsername',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `please try another username`
+  String get anotherUserName {
+    return Intl.message(
+      'please try another username',
+      name: 'anotherUserName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Empty fields`
+  String get feildsEmpty {
+    return Intl.message(
+      'Empty fields',
+      name: 'feildsEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `please fill all fields`
+  String get fillAllFeilds {
+    return Intl.message(
+      'please fill all fields',
+      name: 'fillAllFeilds',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm`
+  String get confirm {
+    return Intl.message(
+      'Confirm',
+      name: 'confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to sign out?`
+  String get signOutAlert {
+    return Intl.message(
+      'Are you sure you want to sign out?',
+      name: 'signOutAlert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signed Out`
+  String get signedOut {
+    return Intl.message(
+      'Signed Out',
+      name: 'signedOut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hope to see you soon`
+  String get hopeToSeeYouSoon {
+    return Intl.message(
+      'Hope to see you soon',
+      name: 'hopeToSeeYouSoon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign out failed`
+  String get signOutFailed {
+    return Intl.message(
+      'Sign out failed',
+      name: 'signOutFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Couldn't signout. Please try again`
+  String get SignOutFailedSubTitle {
+    return Intl.message(
+      'Couldn\'t signout. Please try again',
+      name: 'SignOutFailedSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request Permission`
+  String get reqPermission {
+    return Intl.message(
+      'Request Permission',
+      name: 'reqPermission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼`
+  String get galleryAccess {
+    return Intl.message(
+      'Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼',
+      name: 'galleryAccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Permission Unavailable`
+  String get permissionUnavailable {
+    return Intl.message(
+      'Permission Unavailable',
+      name: 'permissionUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enable permission from settings to continue`
+  String get enablePermission {
+    return Intl.message(
+      'Please enable permission from settings to continue',
+      name: 'enablePermission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to update your profile picture`
+  String get profileUpdateAlert {
+    return Intl.message(
+      'Are you sure you want to update your profile picture',
+      name: 'profileUpdateAlert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Picture`
+  String get updatePicture {
+    return Intl.message(
+      'Update Picture',
+      name: 'updatePicture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your profile picture has been updated`
+  String get profileUpdated1 {
+    return Intl.message(
+      'Your profile picture has been updated',
+      name: 'profileUpdated1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed`
+  String get failed {
+    return Intl.message(
+      'Failed',
+      name: 'failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `username cannot be empty`
+  String get userNameEmptyAlert {
+    return Intl.message(
+      'username cannot be empty',
+      name: 'userNameEmptyAlert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `is not available`
+  String get isNotAvailable {
+    return Intl.message(
+      'is not available',
+      name: 'isNotAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `is available`
+  String get isAvailable {
+    return Intl.message(
+      'is available',
+      name: 'isAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username created successfully`
+  String get userNameSuccess {
+    return Intl.message(
+      'Username created successfully',
+      name: 'userNameSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your username {username} has been successfully registered!`
+  String userNameSuccessSubtitle(Object username) {
+    return Intl.message(
+      'Your username $username has been successfully registered!',
+      name: 'userNameSuccessSubtitle',
+      desc: '',
+      args: [username],
+    );
+  }
+
+  /// `please enter a username with more than 3 characters.`
+  String get userNameVal1 {
+    return Intl.message(
+      'please enter a username with more than 3 characters.',
+      name: 'userNameVal1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `please enter a username with less than 20 characters.`
+  String get userNameVal2 {
+    return Intl.message(
+      'please enter a username with less than 20 characters.',
+      name: 'userNameVal2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `is invalid`
+  String get isValid {
+    return Intl.message(
+      'is invalid',
+      name: 'isValid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occured while redeeming your golden ticket`
+  String get gtRedeemErrorTitle {
+    return Intl.message(
+      'An error occured while redeeming your golden ticket',
+      name: 'gtRedeemErrorTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try again in your winnings section`
+  String get getRedeemErrorSubtitle {
+    return Intl.message(
+      'Please try again in your winnings section',
+      name: 'getRedeemErrorSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Game Over`
+  String get gameOver {
+    return Intl.message(
+      'Game Over',
+      name: 'gameOver',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Protect your Fello account by using your phone's default security`
+  String get protectFelloAcc {
+    return Intl.message(
+      'Protect your Fello account by using your phone\'s default security',
+      name: 'protectFelloAcc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Help & Support`
+  String get helpAndSupport {
+    return Intl.message(
+      'Help & Support',
+      name: 'helpAndSupport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact Us`
+  String get contactUsTitle {
+    return Intl.message(
+      'Contact Us',
+      name: 'contactUsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Milestone Skipped Successfully`
+  String get skipMileStoneSuccessTitle {
+    return Intl.message(
+      'Milestone Skipped Successfully',
+      name: 'skipMileStoneSuccessTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Let's get to the next milestone`
+  String get skipMileStoneSuccessSubtile {
+    return Intl.message(
+      'Let\'s get to the next milestone',
+      name: 'skipMileStoneSuccessSubtile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OTP resent successfully`
+  String get otpSentSuccess {
+    return Intl.message(
+      'OTP resent successfully',
+      name: 'otpSentSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please wait for the new otp`
+  String get waitForNewOTP {
+    return Intl.message(
+      'Please wait for the new otp',
+      name: 'waitForNewOTP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a valid mobile number`
+  String get validMobileNumber {
+    return Intl.message(
+      'Enter a valid mobile number',
+      name: 'validMobileNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to redeem ₹{Value} as an Amazon gift voucher?`
+  String redeemAmznGiftVchr(Object Value) {
+    return Intl.message(
+      'Are you sure you want to redeem ₹$Value as an Amazon gift voucher?',
+      name: 'redeemAmznGiftVchr',
+      desc: '',
+      args: [Value],
+    );
+  }
+
+  /// `Are you sure you want to redeem ₹{Value} as Digital Gold?`
+  String redeemDigitalGold(Object Value) {
+    return Intl.message(
+      'Are you sure you want to redeem ₹$Value as Digital Gold?',
+      name: 'redeemDigitalGold',
+      desc: '',
+      args: [Value],
+    );
+  }
+
+  /// `Confirmation`
+  String get confirmation {
+    return Intl.message(
+      'Confirmation',
+      name: 'confirmation',
       desc: '',
       args: [],
     );

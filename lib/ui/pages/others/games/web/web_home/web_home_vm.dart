@@ -26,6 +26,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -52,7 +53,7 @@ class WebHomeViewModel extends BaseViewModel {
   final GetterRepository? _getterRepo = locator<GetterRepository>();
   final DBModel? _dbModel = locator<DBModel>();
   final InternalOpsService? _internalOps = locator<InternalOpsService>();
-
+  S locale = locator<S>();
   //Local Variables
   bool _isGameLoading = false;
   String? _currentGame;
@@ -162,7 +163,7 @@ class WebHomeViewModel extends BaseViewModel {
     final bool isReal = await _internalOps!.checkIfDeviceIsReal();
     if (!isReal) {
       BaseUtil.showNegativeAlert(
-          "Simulators not allowed", "Please use the app on a real device");
+          locale.simulatorsNotAllowed, locale.tryOnRealDevice);
       return false;
     }
     return true;
@@ -248,8 +249,8 @@ class WebHomeViewModel extends BaseViewModel {
     }
     if (isUserBannedForThisGame != null && isUserBannedForThisGame) {
       BaseUtil.showNegativeAlert(
-          userBannedNotice ?? "Game locked for security reasons",
-          "Please contact us for more details");
+          userBannedNotice ?? locale.gameLocked,
+       locale.contactUs);
       return false;
     }
     return true;

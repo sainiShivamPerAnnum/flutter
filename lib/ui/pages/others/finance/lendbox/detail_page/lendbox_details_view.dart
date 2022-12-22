@@ -18,6 +18,7 @@ import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -29,6 +30,7 @@ class LendboxDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = locator<S>();
     return Scaffold(
       backgroundColor: UiConstants.kDarkBackgroundColor,
       appBar: AppBar(
@@ -71,10 +73,9 @@ class LendboxDetailsView extends StatelessWidget {
                           children: [
                             LBoxAssetCard(),
                             InfoComponent3(
-                              mainTitle: "What is Fello Flo?",
-                              subTitle:
-                                  "Fello Flo is an RBI regulated peer to peer lending asset offered in partnership with Lendbox-an RBI regulated P2P NBFC. The money invested is lent to high credit worthy borrowers for better returns with minimum risk.",
-                              secondaryTitle: "Why to invest?",
+                              mainTitle: locale.felloFloinfoTitle,
+                              subTitle: locale.felloFloinfoSubTitle,
+                              secondaryTitle: locale.whyToInvest,
                               boxAssets: model.boxAssetsFlo,
                               boxTitlles: model.boxTitllesFlo,
                               isBoxOpen: model.getQuantity(model.userFundWallet,
@@ -116,7 +117,7 @@ class LendboxDetailsView extends StatelessWidget {
                     color: UiConstants.kBackgroundColor,
                     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     child: AppPositiveBtn(
-                      btnText: "SAVE",
+                      btnText: locale.btnSave.toUpperCase(),
                       width: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       onPressed: () => BaseUtil().openRechargeModalSheet(

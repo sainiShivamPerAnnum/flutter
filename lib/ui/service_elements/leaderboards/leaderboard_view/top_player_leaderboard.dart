@@ -153,7 +153,7 @@ class TopPlayer extends StatelessWidget {
 
   //
   Widget _buildLeaderboardTile(int countedIndex,BuildContext context) {
-    S locale = S.of(context);
+    S locale = locator<S>();
     return Padding(
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.padding20,

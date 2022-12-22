@@ -15,6 +15,7 @@ import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -27,6 +28,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
   bool _isResumingInProgress = false;
   bool _isLoading = false;
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  S locale = locator<S>();
 
   bool get isResumingInProcess => _isResumingInProgress;
   bool get isLoading => _isLoading;
@@ -48,25 +50,25 @@ class SubscriptionCardViewModel extends BaseViewModel {
     if (subscription == null ||
         (subscription.status == Constants.SUBSCRIPTION_INIT ||
             subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
-      return "Fello Autosave";
+      return locale.felloAutoSave;
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-      return "in Progress";
+      return locale.inProgress;
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
         return "₹${subscription.autoAmount!.toInt()}${getFreq(subscription.autoFrequency)}";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
         if (subscription.autoAmount == 0.0)
-          return "Start saving now";
+          return locale.startSavingNow;
         else {
           if (subscription.resumeDate!.isEmpty)
-            return "Fello Autosave";
+            return locale.felloAutoSave;
           else
-            return "till ${getResumeDate()}";
+            return locale.till + "${getResumeDate()}";
         }
       }
-      return "0.0/day";
+      return locale.zeroperDay;
     }
   }
 
@@ -74,25 +76,25 @@ class SubscriptionCardViewModel extends BaseViewModel {
     if (subscription == null ||
         (subscription.status == Constants.SUBSCRIPTION_INIT ||
             subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
-      return "Start an SIP";
+      return locale.startAnSIP;
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-      return "View";
+      return locale.view;
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return "View";
+        return locale.view;
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
         if (subscription.autoAmount == 0.0)
-          return "Set amount";
+          return locale.setAmount;
         else {
           if (subscription.resumeDate!.isEmpty)
-            return "Restart";
+            return locale.restart;
           else
-            return "Resume";
+            return locale.resume;
         }
       }
-      return "Details";
+      return locale.details;
     }
   }
 
@@ -186,25 +188,25 @@ class SubscriptionCardViewModel extends BaseViewModel {
     if (subscription == null ||
         (subscription.status == Constants.SUBSCRIPTION_INIT ||
             subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
-      return "Start an SIP with Fello Autosave";
+      return locale.sipWithAutoSave;
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
-      return "AUTO SIP";
+      return locale.autoSIP;
     } else {
       if (subscription.status == Constants.SUBSCRIPTION_ACTIVE) {
-        return "Active";
+        return locale.active;
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
         if (subscription.autoAmount == 0.0)
-          return "Your Autosave setup is complete";
+          return locale.autoSaveSetupComplete;
         else {
           if (subscription.resumeDate!.isEmpty)
-            return "Savings on autopilot with";
+            return locale.savingsOnAutoPilot;
           else
-            return "Paused";
+            return locale.paused;
         }
       }
-      return "Autosave";
+      return locale.autoSave;
     }
   }
 

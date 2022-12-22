@@ -36,6 +36,7 @@ class VerifyEmail extends StatefulWidget {
 }
 
 class VerifyEmailState extends State<VerifyEmail> {
+  S locale = locator<S>();
   TextEditingController email = new TextEditingController();
   TextEditingController otp = new TextEditingController();
   final UserService? _userService = locator<UserService>();
@@ -123,8 +124,8 @@ class VerifyEmailState extends State<VerifyEmail> {
         _isProcessing = false;
       });
       BaseUtil.showNegativeAlert(
-        "Email already registered",
-        "Please try with another email",
+        locale.emailAlreadyRegistered,
+          locale.anotherEmail
       );
 
       return;
@@ -144,8 +145,8 @@ class VerifyEmailState extends State<VerifyEmail> {
             _isProcessing = false;
           });
           BaseUtil.showNegativeAlert(
-            "Verification failed",
-            "Email cannot be verified at the moment, please try again in sometime.",
+        locale.verificationFailed ,
+            locale.emailVerifyFailed,
           );
         }
       });
@@ -182,11 +183,11 @@ class VerifyEmailState extends State<VerifyEmail> {
         while (AppState.screenStack.length > 1)
           AppState.backButtonDispatcher!.didPopRoute();
         BaseUtil.showPositiveAlert(
-            "Email verified", "Thank you for verifying your email");
+            locale.emailVerified, locale.emailVerified1);
       } else {
         BaseUtil.showNegativeAlert(
-          "Email verification failed",
-          "Please try again in sometime",
+          locale.verificationFailed,
+          locale.tryLater,
         );
       }
     } else {
@@ -235,26 +236,26 @@ class VerifyEmailState extends State<VerifyEmail> {
           });
           Navigator.pop(context);
           AppState.backButtonDispatcher!.didPopRoute();
-          BaseUtil.showPositiveAlert("Success", "Email Verified successfully");
+          BaseUtil.showPositiveAlert(locale.success, locale.emailVerified);
         } else {
           baseProvider.isGoogleSignInProgress = false;
           BaseUtil.showNegativeAlert(
-            "Email verification failed",
-            "Your email could not be verified at the moment",
+            locale.verificationFailed,
+           locale.emailVerifyFailed,
           );
         }
       } else {
         baseProvider.isGoogleSignInProgress = false;
         BaseUtil.showNegativeAlert(
-          "Email already registered",
-          "Please try with another email",
+          locale.emailAlreadyRegistered,
+       locale.anotherEmail
         );
       }
     } else {
       baseProvider.isGoogleSignInProgress = false;
       BaseUtil.showNegativeAlert(
-        "No account selected",
-        "Please choose an account from the list",
+        locale.noAccSelected,
+        locale.chooseAnAcc,
       );
     }
     setState(() {});

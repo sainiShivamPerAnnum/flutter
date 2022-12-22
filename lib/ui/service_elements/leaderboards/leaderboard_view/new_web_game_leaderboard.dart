@@ -76,7 +76,7 @@ class NewLeaderBoardView extends StatelessWidget {
     required this.isUserInTopThree,
     required this.currentUserRank,
   });
-
+   S locale = locator<S>();
   final List<ScoreBoard>? scoreBoard;
   final List<String?> userProfilePicUrl;
   final bool isUserInTopThree;
@@ -132,7 +132,7 @@ class NewLeaderBoardView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'See All',
+                    locale.btnSeeAll,
                     style: TextStyles.rajdhaniSB.body2,
                   ),
                   SizedBox(

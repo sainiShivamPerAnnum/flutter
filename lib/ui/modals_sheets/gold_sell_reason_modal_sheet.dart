@@ -11,21 +11,36 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
-class SellingReasonBottomSheet extends StatelessWidget {
+class SellingReasonBottomSheet extends StatefulWidget {
   final InvestmentType investmentType;
-
-  final List<String> _sellingReasons = [
-    'Not interested in the asset',
-    'Returns are not good enough',
-    'Require immediate funds',
-    'Others'
-  ];
-
-  String selectedReasonForSelling = '';
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
   SellingReasonBottomSheet({Key? key, required this.investmentType})
       : super(key: key);
+
+  @override
+  State<SellingReasonBottomSheet> createState() =>
+      _SellingReasonBottomSheetState();
+}
+
+class _SellingReasonBottomSheetState extends State<SellingReasonBottomSheet> {
+  S locale = locator<S>();
+
+  List<String> _sellingReasons = [];
+
+  @override
+  void initState() {
+    _sellingReasons.addAll([
+      locale.sellingReasons1,
+      locale.sellingReasons2,
+      locale.sellingReasons3,
+      locale.sellingReasons4,
+    ]);
+    super.initState();
+  }
+
+  String selectedReasonForSelling = '';
+
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +80,8 @@ class SellingReasonBottomSheet extends StatelessWidget {
                             eventName: AnalyticsEvents.sellReason,
                             properties: {"Reason": selectedReasonForSelling});
                         AppState.backButtonDispatcher!.didPopRoute();
-                        BaseUtil()
-                            .openSellModalSheet(investmentType: investmentType);
+                        BaseUtil().openSellModalSheet(
+                            investmentType: widget.investmentType);
                       },
                       title: Text(
                         x,

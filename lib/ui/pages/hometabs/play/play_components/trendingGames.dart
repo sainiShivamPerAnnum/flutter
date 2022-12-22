@@ -28,11 +28,12 @@ class TrendingGamesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = locator<S>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSubtitleContainer(
-          title: "All games",
+          title: locale.allgames,
         ),
         Container(
           width: SizeConfig.screenWidth,

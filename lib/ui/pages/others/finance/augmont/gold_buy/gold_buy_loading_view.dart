@@ -24,8 +24,7 @@ class GoldBuyLoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
-
+    S locale = locator<S>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -114,15 +113,16 @@ class GoldBuyLoadingView extends StatelessWidget {
   }
 
   showTransactionPendingDialog() {
+    S locale = locator<S>();
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
       isBarrierDismissible: false,
       content: PendingDialog(
-        title: "We're still processing!",
+        title: locale.processing,
         subtitle:
-            "Your transaction is taking longer than usual. We'll get back to you in ",
-        duration: '15 minutes',
+            locale.txnDelay,
+        duration: '15 '+locale.minutes,
       ),
     );
   }

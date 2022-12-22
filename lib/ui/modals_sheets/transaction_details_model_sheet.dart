@@ -36,6 +36,7 @@ class _TransactionDetailsBottomSheetState
   final AugmontService? augmontProvider = locator<AugmontService>();
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
+      S locale = locator<S>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
   bool _isInvoiceLoading = false;
 
@@ -63,7 +64,7 @@ class _TransactionDetailsBottomSheetState
   }
 
   String _getAugmontGoldGrams(double gms) =>
-      (gms == null || gms == 0) ? 'N/A' : gms.toStringAsFixed(4);
+      (gms == null || gms == 0) ? locale.na : gms.toStringAsFixed(4);
 
   Widget dialogContent(BuildContext context) {
     S locale = S.of(context);
@@ -190,7 +191,7 @@ class _TransactionDetailsBottomSheetState
                           widget.transaction!.augmnt![
                                       UserTransaction.subFldAugLockPrice] !=
                                   null
-                              ? '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice]}/gm'
+                              ? '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice]}/'+locale.gm
                               : locale.refUnAvailable,
                           UiConstants.primaryColor),
                       referralTile(
@@ -207,7 +208,7 @@ class _TransactionDetailsBottomSheetState
                     children: [
                       referralTile(
                         locale.sellRate,
-                        '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
+                        '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? locale.na}/'+locale.gm,
                         Colors.redAccent.withOpacity(0.6),
                       ),
                       referralTile(
@@ -225,7 +226,7 @@ class _TransactionDetailsBottomSheetState
                     children: [
                       referralTile(
                         locale.sellRate,
-                        '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
+                        '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? locale.na}/'+locale.gm,
                         Colors.redAccent.withOpacity(0.6),
                       ),
                       referralTile(

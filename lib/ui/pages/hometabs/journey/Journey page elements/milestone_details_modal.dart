@@ -44,6 +44,7 @@ class _JourneyMilestoneDetailsModalSheetState
   final GoldenTicketRepository? _gtService = locator<GoldenTicketRepository>();
   final JourneyService? _journeyService = locator<JourneyService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  S locale = locator<S>();
   bool _isLoading = false;
   GoldenTicket? ticket;
 
@@ -93,7 +94,6 @@ class _JourneyMilestoneDetailsModalSheetState
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
         log("Milestone details Modalsheet closed");
@@ -367,15 +367,15 @@ class _JourneyMilestoneDetailsModalSheetState
   getSuffix(String? type, ) {
     switch (type) {
       case Constants.GT_REWARD_FLC:
-        return " tokens";
+        return " "+locale.tokens.toLowerCase();
       case Constants.GT_REWARD_AMT:
         return "";
       case Constants.GT_REWARD_RUPEE:
         return "";
       case Constants.GT_REWARD_GOLD:
-        return " worth of gold";
+        return " "+locale.worthOfGold;
       case Constants.GT_REWARD_TAMBOLA_TICKET:
-        return " Tambola Ticket";
+        return " "+locale.tTicket;
       default:
         return "";
     }

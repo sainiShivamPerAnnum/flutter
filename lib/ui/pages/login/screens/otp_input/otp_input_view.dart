@@ -129,8 +129,8 @@ class LoginOtpViewState extends State<LoginOtpView> {
                         baseProvider.isOtpResendCount++;
                         logger!.d(baseProvider.isOtpResendCount);
                         BaseUtil.showPositiveAlert(
-                          "OTP resent successfully",
-                          "Please wait for the new otp",
+                          locale.otpSentSuccess,
+                          locale.waitForNewOTP,
                         );
                       }
                     },

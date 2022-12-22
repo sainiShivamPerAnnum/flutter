@@ -27,6 +27,7 @@ class GoldSellLoadingView extends StatelessWidget {
       locator<AugmontTransactionService>();
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
+      S locale = locator<S>();
   final int waitTimeInSec = 45;
 
   GoldSellLoadingView({Key? key, required this.model}) : super(key: key);

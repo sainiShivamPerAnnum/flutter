@@ -146,7 +146,7 @@ class GoldSellSuccessView extends StatelessWidget {
                         children: [
                           Text(locale.sold, style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${augTxnservice.currentTxnGms} gm",
+                          Text("${augTxnservice.currentTxnGms}"+ locale.gm,
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],

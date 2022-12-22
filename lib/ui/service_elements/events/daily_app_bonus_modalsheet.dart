@@ -131,7 +131,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              "Day",
+                                              locale.day,
                                               style: TextStyles.sourceSans.body4
                                                   .colour(getTextColor(i)),
                                             ),

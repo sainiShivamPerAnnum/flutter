@@ -24,6 +24,7 @@ import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -47,7 +48,7 @@ class MyWinningsViewModel extends BaseViewModel {
   final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
   final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
   final GoldenTicketService _gtService = locator<GoldenTicketService>();
-
+  S locale = locator<S>();
   // LOCAL VARIABLES
   PrizeClaimChoice? _choice;
   get choice => this._choice;
@@ -193,7 +194,7 @@ class MyWinningsViewModel extends BaseViewModel {
                     } catch (e) {
                       _logger!.e(e.toString());
                       BaseUtil.showNegativeAlert(
-                          "An error occurred!", "Please try again");
+                        locale.errorOccured, locale.tryLater);
                     }
                   }
                 },
@@ -220,7 +221,7 @@ class MyWinningsViewModel extends BaseViewModel {
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        "Congratulations!",
+                       locale.btnCongratulations,
                         style: TextStyles.title2.bold,
                       ),
                     ),
@@ -230,8 +231,8 @@ class MyWinningsViewModel extends BaseViewModel {
                   ],
                 ),
                 showCrossIcon: true,
-                accept: "Share",
-                reject: "Done",
+                accept: locale.share,
+                reject: locale.obDone,
                 acceptColor: UiConstants.primaryColor,
                 rejectColor: Colors.grey[300],
                 onReject: AppState.backButtonDispatcher!.didPopRoute,
@@ -285,8 +286,8 @@ class MyWinningsViewModel extends BaseViewModel {
       return true;
     } else {
       BaseUtil.showNegativeAlert(
-        'Withdrawal Failed',
-        response.errorMessage ?? "Please try again after sometime",
+        locale.withDrawalFailed,
+        response.errorMessage ?? locale.tryLater,
       );
       return false;
     }
@@ -298,12 +299,12 @@ class MyWinningsViewModel extends BaseViewModel {
         textAlign: TextAlign.center,
         text: TextSpan(
           text: subtitle == "gold"
-              ? "The gold in grams shall be credited to your wallet in the next "
-              : "You will receive the gift card on your registered email and mobile in the next ",
+              ? locale.goldCreditedInWallet
+              : locale.giftCard,
           style: TextStyles.body3.colour(Colors.grey),
           children: [
             TextSpan(
-              text: "1-2 business working days",
+              text: locale.businessDays,
               style: TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
             )
           ],
@@ -379,7 +380,7 @@ class MyWinningsViewModel extends BaseViewModel {
       AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
-          "Task Failed", "Unable to capture the card at the moment");
+          locale.taskFailed, locale.unableToCapture);
     }
     return null;
   }
@@ -436,7 +437,7 @@ class MyWinningsViewModel extends BaseViewModel {
       // backButtonDispatcher.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
-          "Task Failed", "Unable to share the picture at the moment");
+       locale.taskFailed, locale.unableToCapture);
     }
   }
 }

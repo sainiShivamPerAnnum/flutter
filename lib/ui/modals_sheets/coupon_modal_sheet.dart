@@ -25,6 +25,7 @@ class CouponModalSheet extends StatelessWidget {
     S locale = S.of(context);
     final _analyticsService = locator<AnalyticsService>();
 
+
     List<String?> taggedCoupons = [];
     for (CouponModel cm in model!.couponList!) {
       taggedCoupons.add(cm.code);
@@ -168,9 +169,11 @@ class CouponModalSheet extends StatelessWidget {
   }
 
   Widget _buildCoupenListTile(
+    
       {required String couponCode,
       required String desc,
       required Function onTap}) {
+        S locale = locator<S>();
     return Container(
       margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
@@ -220,7 +223,7 @@ class CouponModalSheet extends StatelessWidget {
               TextButton(
                 onPressed: onTap as void Function()?,
                 child: Text(
-                  'APPLY',
+                  locale.txnApply.toUpperCase(),
                   style: TextStyles.sourceSans.body3
                       .colour(UiConstants.kTabBorderColor),
                 ),

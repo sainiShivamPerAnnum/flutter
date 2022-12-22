@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 class SecurityModalSheet extends StatelessWidget {
   SecurityModalSheet();
   final UserRepository? userRepo = locator<UserRepository>();
+  S locale = locator<S>();
   final UserService? userService = locator<UserService>();
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class SecurityModalSheet extends StatelessWidget {
               height: SizeConfig.padding8,
             ),
             Text(
-                'Protect your Fello account by using your phone\'s default security.',
+                locale.protectFelloAcc,
                 textAlign: TextAlign.center,
                 style: TextStyles.sourceSans.body2),
             Container(

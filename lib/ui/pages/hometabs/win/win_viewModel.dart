@@ -44,6 +44,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -74,6 +75,7 @@ class WinViewModel extends BaseViewModel {
   final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
   final UserRepository _userRepo = locator<UserRepository>();
   int _unscratchedGTCount = 0;
+  S locale = locator<S>();
 
   Timer? _timer;
   bool _showOldView = false;
@@ -240,8 +242,8 @@ class WinViewModel extends BaseViewModel {
 
     if (url == null) {
       BaseUtil.showNegativeAlert(
-        'Generating link failed',
-        'Please try again in some time',
+        locale.generatingLinkFailed,
+       locale.tryLater
       );
     } else {
       if (Platform.isIOS) {
@@ -311,8 +313,8 @@ class WinViewModel extends BaseViewModel {
 
     if (url == null) {
       BaseUtil.showNegativeAlert(
-        'Generating link failed',
-        'Please try again in some time',
+        locale.generatingLinkFailed,
+        locale.tryLater
       );
       return;
     } else
@@ -327,7 +329,7 @@ class WinViewModel extends BaseViewModel {
             _logger!.d(flag);
             if (flag == "false") {
               BaseUtil.showNegativeAlert(
-                  "Whatsapp not detected", "Please use other option to share.");
+                  locale.whatsappNotDetected,locale.otherShareOption);
             }
           });
         }
@@ -410,9 +412,9 @@ class WinViewModel extends BaseViewModel {
 
   String getWinningsButtonText() {
     if (_userService!.userFundWallet!.isPrizeBalanceUnclaimed())
-      return "Redeem";
+      return locale.redeem;
     else
-      return "Share";
+      return locale.share;
   }
 
   // Future<PrizeClaimChoice> getClaimChoice() async {
@@ -453,12 +455,12 @@ class WinViewModel extends BaseViewModel {
         confirmAction: () async {
           await claim(choice, _userService!.userFundWallet!.unclaimedBalance);
         },
-        title: "Confirmation",
+        title: locale.confirmation,
         description: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
-            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)} as Digital Gold?",
-        buttonText: "Yes",
-        cancelBtnText: "No",
+            ? locale.redeemAmznGiftVchr(BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false))
+            : locale.redeemDigitalGold(BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)),
+        buttonText: locale.btnYes,
+        cancelBtnText: locale.btnNo,
         cancelAction: AppState.backButtonDispatcher!.didPopRoute,
       ),
     );
@@ -506,7 +508,7 @@ class WinViewModel extends BaseViewModel {
             'Hey, I won ₹${prizeAmount.toInt()} on Fello! \nLet\'s save and play together: $url');
     } catch (e) {
       _logger!.e(e.toString());
-      BaseUtil.showNegativeAlert("An error occured!", "Please try again");
+      BaseUtil.showNegativeAlert(locale.errorOccured, locale.tryLater);
     }
     stopShareLoading();
   }
@@ -555,8 +557,8 @@ class WinViewModel extends BaseViewModel {
     } else {
       AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showNegativeAlert(
-        'Withdrawal Failed',
-        response.errorMessage ?? "Please try again after sometime",
+        locale.withDrawalFailed,
+        response.errorMessage ?? locale.tryLater,
       );
       return false;
     }
@@ -568,12 +570,12 @@ class WinViewModel extends BaseViewModel {
         textAlign: TextAlign.center,
         text: TextSpan(
           text: subtitle == "gold"
-              ? "The gold in grams shall be credited to your wallet in the next "
-              : "You will receive the gift card on your registered email and mobile in the next ",
+              ? locale.goldCreditedInWallet
+              : locale.giftCard,
           style: TextStyles.body3.colour(Colors.white),
           children: [
             TextSpan(
-              text: "1-2 business working days",
+              text: locale.businessDays,
               style: TextStyles.body3.colour(Colors.white),
             )
           ],
@@ -649,7 +651,7 @@ class WinViewModel extends BaseViewModel {
       AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
-          "Task Failed", "Unable to capture the card at the moment");
+          locale.taskFailed, locale.UnableToSharePicture);
     }
     return null;
   }
@@ -706,7 +708,7 @@ class WinViewModel extends BaseViewModel {
       // backButtonDispatcher.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
-          "Task Failed", "Unable to share the picture at the moment");
+          locale.taskFailed, locale.UnableToSharePicture);
     }
   }
 

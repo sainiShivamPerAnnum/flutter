@@ -23,6 +23,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class GoldSellViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   BaseUtil? _baseUtil = locator<BaseUtil>();
   DBModel? _dbModel = locator<DBModel>();
+  S locale = locator<S>();
   AugmontService? _augmontModel = locator<AugmontService>();
   UserService? _userService = locator<UserService>();
   UserCoinService? _userCoinService = locator<UserCoinService>();
@@ -224,8 +226,8 @@ class GoldSellViewModel extends BaseViewModel {
     goldRates = await _augmontModel!.getRates();
     if (goldRates == null)
       BaseUtil.showNegativeAlert(
-        'Portal unavailable',
-        'The current rates couldn\'t be loaded. Please try again',
+        locale.portalUnavailable,
+        locale.currentRatesNotLoadedText1,
       );
     isGoldRateFetching = false;
 
@@ -236,15 +238,15 @@ class GoldSellViewModel extends BaseViewModel {
     double? sellGramAmount = double.tryParse(goldAmountController!.text.trim());
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
-        'Portal unavailable',
-        'The current rates couldn\'t be loaded. Please try again',
+       locale.portalUnavailable,
+        locale.currentRatesNotLoadedText1,
       );
       return false;
     }
 
     if (sellGramAmount == null) {
       BaseUtil.showNegativeAlert(
-          "No Amount Entered", "Please enter some amount");
+          locale.noAmountEntered, locale.enterAmount);
       return false;
     }
     // if (!_userService.baseUser.isAugmontOnboarded) {
@@ -256,28 +258,28 @@ class GoldSellViewModel extends BaseViewModel {
     // }
     if (sellGramAmount < 0.0001) {
       BaseUtil.showNegativeAlert(
-          "Amount too low", "Please enter a greater amount");
+          locale.amountLow, locale.amountLowSubTitle);
       return false;
     }
 
     if (sellGramAmount > withdrawableQnt!) {
       BaseUtil.showNegativeAlert(
-          "Please try a low amount", "Some of your gold is locked for now");
+          locale.tryLowerAmount, locale.goldLocked);
       return false;
     }
     if (goldAmountFromGrams > 50000) {
-      BaseUtil.showNegativeAlert("Please enter a lower quantity",
-          "A maximum of 8 gms can be sold in one go");
+      BaseUtil.showNegativeAlert(locale.enterLowQuantity,
+          locale.max8gms);
       return false;
     }
     if (goldAmountFromGrams < 10) {
-      BaseUtil.showNegativeAlert("Please enter a higher quantity",
-          "A minimum of ₹10 can be sold in one go");
+      BaseUtil.showNegativeAlert(locale.enterHigherQuant,
+      locale.min10rs);
       return false;
     }
     if (sellGramAmount > userFundWallet!.augGoldQuantity) {
       BaseUtil.showNegativeAlert(
-          "Insufficient balance", "Please enter a lower amount");
+          locale.inSufficientBal,locale.tryLowerAmount);
       return false;
     }
     // if (sellGramAmount > withdrawableQnt) {
@@ -302,8 +304,8 @@ class GoldSellViewModel extends BaseViewModel {
         fractionalPart[1] != null &&
         fractionalPart[1].length > 4) {
       BaseUtil.showNegativeAlert(
-        'Please try again',
-        'Upto 4 decimals allowed',
+        locale.obPleaseTryAgain,
+        locale.upto4DecimalsAllowed,
       );
       return false;
     }
@@ -317,8 +319,8 @@ class GoldSellViewModel extends BaseViewModel {
     bool _disabled = await _dbModel!.isAugmontSellDisabled();
     if (_disabled != null && _disabled) {
       BaseUtil.showNegativeAlert(
-        'Sell Failed',
-        'Gold sell is currently on hold. Please try again after sometime.',
+        locale.sellFailed,
+        locale.sellFailedSubtitle,
       );
       return false;
     }
@@ -372,9 +374,9 @@ class GoldSellViewModel extends BaseViewModel {
           _augTxnService!.currentTransactionState = TransactionState.idle;
           AppState.backButtonDispatcher!.didPopRoute();
           BaseUtil.showNegativeAlert(
-            'Sell did not complete',
+            locale.sellInCompleteTitle,
             response["message"] ??
-                'Your gold sell could not be completed at the moment',
+                locale.sellInCompleteSubTitle,
           );
         }
       }
@@ -384,12 +386,12 @@ class GoldSellViewModel extends BaseViewModel {
           response['status'] != null &&
           response['status'] == true) {
         BaseUtil.showPositiveAlert(
-            response["message"], "Check transactions for more details");
+            response["message"], locale.checkTransactions);
       } else {
         BaseUtil.showNegativeAlert(
-          'Sell did not complete',
+         locale.sellInCompleteTitle,
           response["message"] ??
-              'Your gold sell could not be completed at the moment',
+              locale.sellInCompleteSubTitle,
         );
       }
     }

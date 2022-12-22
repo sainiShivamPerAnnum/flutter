@@ -39,7 +39,7 @@ class GoldBuyInputView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-
+S locale = locator<S>();
     return Stack(
       children: [
         Column(
@@ -97,7 +97,7 @@ class GoldBuyInputView extends StatelessWidget {
                     ),
                   )
                 : AppPositiveBtn(
-                    btnText: model.status == 2 ? 'Save' : "UNAVAILABLE",
+                    btnText: model.status == 2 ? locale.btnSave : locale.unavailable.toUpperCase(),
                     onPressed: () async {
                       if (!augTxnService.isGoldBuyInProgress) {
                         FocusScope.of(context).unfocus();

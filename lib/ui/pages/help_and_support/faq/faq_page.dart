@@ -31,7 +31,7 @@ class FAQPage extends StatelessWidget {
     return new Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       appBar: FAppBar(
-          title: 'FAQs',
+          title: locale.faqs,
           showAvatar: false,
           showCoinBar: false,
           showHelpButton: false,

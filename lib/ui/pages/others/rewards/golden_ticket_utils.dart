@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/util/assets.dart';
@@ -40,6 +42,7 @@ class GoldenTicketGridItemCard extends StatelessWidget {
     required this.titleStyle2,
     required this.width,
   });
+  S locale = locator<S>();
   @override
   Widget build(BuildContext context) {
     return Hero(
@@ -171,6 +174,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   }
 
   Widget getGTContent(GoldenTicket ticket, double maxWidth) {
+    S locale = locator<S>();
     if (ticket.isRewarding!) {
       //CHECK FOR REWARDS
       if (ticket.rewardArr!.length == 1) {
@@ -202,16 +206,17 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     } else {
       //RETURN BLNT
       return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text("Oh no..",
+        Text(locale.ohNo,
             style: TextStyles.rajdhaniB.title2.colour(Colors.black)),
         SizedBox(height: SizeConfig.padding2),
-        Text("Better Luck Next Time",
+        Text(locale.betterLuckNextTime,
             style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
       ]);
     }
   }
 
   Widget singleRewardWidget(Reward reward, double maxWidth) {
+    S locale = locator<S>();
     Widget rewardWidget;
     bool noPaddingRequired = false;
     if (reward.type == Constants.GT_REWARD_RUPEE ||
@@ -226,7 +231,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               style: TextStyles.rajdhaniB.title2.colour(Colors.black),
             ),
           ),
-          Text(' rewards won!',
+          Text(' '+locale.rewardWon,
               style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
         ],
       );
@@ -253,7 +258,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             ],
           ),
           Text(
-            reward.value! > 1 ? "Tokens won!" : "Token won!",
+            reward.value! > 1 ? locale.tokensWon : locale.tokenWon,
             style: TextStyles.body4,
           )
         ],
@@ -276,7 +281,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             ),
           ),
           Text(
-            "worths of Gold",
+            locale.worthsOfGold,
             style: TextStyles.sourceSans.body4.colour(Colors.black),
           )
         ],
@@ -305,7 +310,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
             ),
           ),
           Text(
-            reward.value! > 1 ? "Tambola tickets won" : "Tambola ticket won",
+            reward.value! > 1 ? locale.tTicketsWon : locale.tTicketWon,
             style: TextStyles.sourceSans.body4.colour(Colors.black),
           )
         ],
@@ -335,6 +340,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   doubleRewardWidget(
     List<Reward> rewards,
   ) {
+    S locale = locator<S>();
     return ListView.separated(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -354,7 +360,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      ' reward won!',
+                      ' '+locale.rewardWon,
                       style: TextStyles.sourceSans.body4.colour(Colors.black),
                     )
                   ],
@@ -373,7 +379,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      ' reward won!',
+                      ' '+locale.rewardWon,
                       style: TextStyles.sourceSans.body4.colour(Colors.black),
                     )
                   ],
@@ -400,7 +406,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      ' Tokens Won!',
+                      ' '+locale.tokensWon,
                       style: TextStyles.sourceSans.body4.colour(Colors.black),
                     )
                   ],
@@ -425,7 +431,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "worths of Gold",
+                    locale.worthsOfGold,
                     style: TextStyles.sourceSans.body4.colour(Colors.black),
                   )
                 ],
@@ -457,8 +463,8 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                   ),
                   Text(
                     rewards[i].value! > 1
-                        ? "Tambola tickets won"
-                        : "Tambola ticket won",
+                        ? locale.tTicketsWon
+                        : locale.tTicketWon,
                     style: TextStyles.sourceSans.body4.colour(Colors.black),
                   )
                 ],

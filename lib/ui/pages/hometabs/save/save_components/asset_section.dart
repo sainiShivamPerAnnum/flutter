@@ -11,6 +11,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -24,14 +25,15 @@ class SaveNetWorthSection extends StatelessWidget {
       : super(key: key);
 
   getAssetsOrder() {
+    S locale = locator<S>();
     List<Widget> orderedAssets = [];
     DynamicUiUtils.saveViewOrder[0].forEach((key) {
       switch (key) {
         case 'LB':
           orderedAssets.add(
             SaveCustomCard(
-              title: 'Fello Flo (10%)',
-              subtitle: "Current Value",
+              title: locale.felloFloMainTitle,
+              subtitle: locale.currentValue,
               key: Key(Constants.ASSET_TYPE_LENDBOX),
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,
@@ -53,8 +55,8 @@ class SaveNetWorthSection extends StatelessWidget {
         case 'AG':
           orderedAssets.add(
             SaveCustomCard(
-              title: 'Digital Gold',
-              subtitle: "You Own",
+              title: locale.digitalGoldMailTitle,
+              subtitle: locale.youOwn,
               key: Key(Constants.ASSET_TYPE_AUGMONT),
               cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
               cardAssetName: Assets.digitalGoldBar,

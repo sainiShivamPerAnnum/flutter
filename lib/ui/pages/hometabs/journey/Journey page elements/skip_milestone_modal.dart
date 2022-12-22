@@ -33,7 +33,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
   final JourneyService? _journeyService = locator<JourneyService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   bool _skippingInProgress = false;
-
+  S locale = locator<S>();
   get skippingInProgress => this._skippingInProgress;
 
   set skippingInProgress(value) {
@@ -54,7 +54,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
         AppState.backButtonDispatcher!.didPopRoute();
 
       BaseUtil.showPositiveAlert(
-          "Milestone Skipped Successfully", "Let's get to the next milestone");
+          locale.skipMileStoneSuccessTitle, locale.skipMileStoneSuccessSubtile);
       _journeyService!.updateAvatarIndexDirectly();
       _journeyService!.checkAndAnimateAvatar();
     } else {

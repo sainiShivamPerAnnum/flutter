@@ -92,6 +92,7 @@ class _BannerWidget extends StatelessWidget {
   final void Function() onTap;
   @override
   Widget build(BuildContext context) {
+    S locale = locator<S>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -110,7 +111,7 @@ class _BannerWidget extends StatelessWidget {
                 onTap: onTap,
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
-                title: 'Start Playing',
+                title: locale.btnStartPlaying,
                 width: SizeConfig.screenWidth! * 0.40,
                 height: SizeConfig.screenWidth! * 0.10,
               ),

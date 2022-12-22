@@ -79,7 +79,7 @@ class _SupportPageState extends State<SupportPage> {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: "Help & Support",
+                title: locale.helpAndSupport,
               ),
               Expanded(
                 child: Container(
@@ -96,7 +96,7 @@ class _SupportPageState extends State<SupportPage> {
                     children: [
                       FelloBriefTile(
                         leadingAsset: Assets.hsCustomerService,
-                        title: "Contact Us",
+                        title: locale.contactUsTitle,
                         onTap: () {
                           Haptic.vibrate();
 
@@ -107,7 +107,7 @@ class _SupportPageState extends State<SupportPage> {
                       ),
                       FelloBriefTile(
                         leadingAsset: Assets.hsFaqs,
-                        title: "FAQs",
+                        title: locale.faqs,
                         onTap: () {
                           Haptic.vibrate();
                           appState.currentAction = PageAction(
