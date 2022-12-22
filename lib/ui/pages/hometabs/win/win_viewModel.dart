@@ -651,7 +651,7 @@ class WinViewModel extends BaseViewModel {
       AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
-          locale.taskFailed, locale.UnableToSharePicture);
+          locale.taskFailed, locale.unableToCapture);
     }
     return null;
   }

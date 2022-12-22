@@ -215,7 +215,7 @@ class GoldenTicketService
               'Hey, I won ${ticket.rewardArr!.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
       } catch (e) {
         _logger!.e(e.toString());
-        BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
+        BaseUtil.showNegativeAlert(locale.errorOccured, locale.obPleaseTryAgain);
       }
     }
   }
@@ -338,7 +338,7 @@ class GoldenTicketService
       // backButtonDispatcher.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
-         locale.taskFailed, locale.unableToCapture);
+         locale.taskFailed, locale.UnableToSharePicture);
     }
   }
 
