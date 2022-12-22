@@ -13,6 +13,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class GoldBuyView extends StatefulWidget {
@@ -104,6 +105,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
                   builder: (ctx, model, child) {
                     if (model.state == ViewState.Busy)
                       return Center(child: FullScreenLoader());
+                    _secureScreenshots(txnService);
                     return _getView(txnService, model);
                   },
                 ),
@@ -129,6 +131,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
     } else if (txnService.currentTransactionState == TransactionState.success) {
       return GoldBuySuccessView();
     }
+
     return GoldBuyLoadingView(model: model);
   }
 
@@ -143,7 +146,19 @@ class _GoldBuyViewState extends State<GoldBuyView>
     return 0;
   }
 
-  _getBackground(AugmontTransactionService txnService) {
+  _secureScreenshots(AugmontTransactionService txnService) async {
+    if (txnService.currentTransactionState == TransactionState.idle) {
+      await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
+      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    } else if (txnService.currentTransactionState == TransactionState.success) {
+      await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    } else {
+      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    }
+  }
+
+  _getBackground(AugmontTransactionService txnService)  {
     if (txnService.currentTransactionState == TransactionState.idle) {
       return Container(
         decoration: BoxDecoration(

@@ -33,6 +33,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:http/http.dart';
 import 'package:upi_pay/upi_pay.dart';
 
@@ -277,6 +278,7 @@ class GoldBuyViewModel extends BaseViewModel {
       _augTxnService!.isGoldBuyInProgress = false;
       return;
     }
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     await _augTxnService!.initateAugmontTransaction(
       details: GoldPurchaseDetails(
         goldBuyAmount: goldBuyAmount,

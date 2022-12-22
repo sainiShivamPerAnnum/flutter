@@ -37,6 +37,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
 
@@ -160,6 +161,7 @@ class LoginControllerViewModel extends BaseViewModel {
         }
       case LoginOtpView.index:
         {
+          
           String otp = _otpScreenKey.currentState!.model!.otp;
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             logger!.d("OTP is $otp");
@@ -626,6 +628,8 @@ class LoginControllerViewModel extends BaseViewModel {
     BaseUtil.launchUrl('https://fello.in/policy/tnc');
     _analyticsService!.track(eventName: AnalyticsEvents.termsAndConditions);
   }
+
+  
 
   exit() {
     _controller!.removeListener(_pageListener);

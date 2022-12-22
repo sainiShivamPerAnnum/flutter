@@ -11,6 +11,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:provider/provider.dart';
 
 class LoginOtpView extends StatefulWidget {
@@ -47,6 +48,10 @@ class LoginOtpViewState extends State<LoginOtpView> {
         this.model = model;
         model.parentModelInstance = widget.loginModel;
         model.init(context);
+      },
+      onModelDispose: (model) {
+        this.model = model;
+        model.exit();
       },
       builder: (ctx, model, child) {
         return ListView(
