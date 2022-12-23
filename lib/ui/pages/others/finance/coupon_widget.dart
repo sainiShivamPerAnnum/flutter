@@ -27,9 +27,22 @@ class CouponWidget extends StatelessWidget {
                 Padding(
                   padding:
                       EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
-                  child: Text(
-                    'Apply Coupon',
-                    style: TextStyles.sourceSansSB.body1,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Apply Coupon',
+                        style: TextStyles.sourceSansSB.body1,
+                      ),
+                      SizedBox(width: SizeConfig.padding10),
+                      if (model.couponApplyInProgress && model.isSpecialCoupon)
+                        SizedBox(
+                            width: SizeConfig.padding16,
+                            height: SizeConfig.padding16,
+                            child: CircularProgressIndicator(
+                              color: UiConstants.primaryColor,
+                              strokeWidth: 2,
+                            )),
+                    ],
                   ),
                 ),
                 SizedBox(

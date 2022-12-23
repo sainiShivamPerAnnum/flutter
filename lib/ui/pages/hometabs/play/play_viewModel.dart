@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';

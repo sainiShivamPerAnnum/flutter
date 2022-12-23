@@ -11,6 +11,8 @@ import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../core/service/analytics/mixpanel_analytics.dart';
+
 class BannerWidget extends StatefulWidget {
   BannerWidget({Key? key, required this.model, required this.happyHourCampign})
       : showHappyHour = happyHourCampign?.data?.showHappyHour ?? false,
@@ -54,9 +56,21 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
   Widget buildBody(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (showHappyHour)
+        if (showHappyHour) {
           locator<BaseUtil>().showHappyHourDialog(locator<HappyHourCampign>(),
               isComingFromSave: true);
+          locator<MixpanelAnalytics>()
+              .track(eventName: "Happy Hour Strip Tapped ", properties: {
+            "Reward": {
+              "asset":
+                  locator<HappyHourCampign>().data?.rewards?.first.type ?? "",
+              "amount":
+                  locator<HappyHourCampign>().data?.rewards?.first.value ?? "",
+              "timer": "$inHours:$inMinutes:$inSeconds"
+            },
+            "location": "Inside Save Strip"
+          });
+        }
       },
       child: Container(
         decoration: BoxDecoration(

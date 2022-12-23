@@ -162,7 +162,7 @@ class LendboxTransactionService extends BaseTransactionService {
             timer!.cancel();
             return transactionResponseUpdate(
               amount: this.currentTxnAmount,
-              gtId: currentTxnOrderId,
+              gtId: transactionReponseModel?.data?.gtId ?? "",
             );
           }
           break;

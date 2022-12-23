@@ -1,4 +1,3 @@
-
 import 'dart:collection';
 import 'dart:math' as math;
 
@@ -41,6 +40,24 @@ class TambolaBoard {
       map['tid'] ?? 0,
       map['week_code'] ?? 0,
     );
+  }
+
+  factory TambolaBoard.none() {
+    return TambolaBoard(
+      TimestampModel.none(),
+      '',
+      '',
+      0,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'createdOn': assigned_time.toMap(),
+      'tid': id,
+      'tval': val,
+      'week_code': week_code,
+    };
   }
 
   bool isValid() {

@@ -25,6 +25,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -62,6 +63,7 @@ class _JourneyViewState extends State<JourneyView>
         log("ROOT: Journey view baseview build called");
 
         return Scaffold(
+          key: ValueKey(Constants.JOURNEY_SCREEN_TAG),
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.black,
           body: model.isLoading && model.pages == null

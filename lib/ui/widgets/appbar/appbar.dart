@@ -5,6 +5,7 @@ import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/appbar/faq_button_rounded.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -57,7 +58,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
       actions: [
         Row(
           children: [
-            if (showCoinBar) FelloCoinBar(svgAsset: Assets.token),
+            if (showCoinBar) FelloCoinBar(svgAsset: Assets.token, key: ValueKey(Constants.FELLO_COIN_BAR)),
             if (type != null) FaqPill(type: type),
             if (action != null) action!,
             SizedBox(width: SizeConfig.padding20)

@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 4.1.0+151
+version: 4.1.1+157
 
 environment:
   sdk: '>=2.16.2 <3.0.0'
@@ -11,7 +11,7 @@ environment:
 dependencies:
   apxor_flutter:
     git: https://github.com/apxor/apxor-flutter-sdk.git
-  
+    ref: 19d6f70
  
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.2.0
@@ -55,6 +55,10 @@ dependencies:
   open_filex: ^4.3.1
   package_info: ^2.0.0
   path_provider: ^2.0.2
+  flutter_dynamic_icon:
+    git:
+      url: https://github.com/tastelessjolt/flutter_dynamic_icon.git
+      ref: GioPan04-android-support
   paytm_allinonesdk: ^1.1.4
   flutter_facebook_sdk:
     git:

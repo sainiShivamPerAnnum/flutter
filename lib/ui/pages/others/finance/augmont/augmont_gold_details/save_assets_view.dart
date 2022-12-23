@@ -75,7 +75,7 @@ class SaveAssetView extends StatelessWidget {
                             InfoComponent3(
                               mainTitle: "What is Digital Gold?",
                               subTitle:
-                                  "Digital gold is the new way of saving in gold online. For every gram of gold you buy, actual 24k gold is stored in a locker backed by Augmont Gold and IDBI trust.",
+                                  "Digital gold is the new way of saving in gold online. For every gram of gold you buy, actual 24k gold is stored in a locker backed by Augmont Gold",
                               secondaryTitle: "Why to invest?",
                               boxAssets: model.boxAssetsGold,
                               boxTitlles: model.boxTitllesGold,

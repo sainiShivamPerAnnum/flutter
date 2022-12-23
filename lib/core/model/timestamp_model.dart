@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class TimestampModel extends Timestamp {
   TimestampModel({required int seconds, required int nanoseconds})
@@ -29,6 +28,10 @@ class TimestampModel extends Timestamp {
     return TimestampModel.fromTimestamp(
       Timestamp.fromDate(DateTime.parse(date)),
     );
+  }
+
+  static toIsoString(TimestampModel date) {
+    return date.toDate().toUtc().toIso8601String();
   }
 
   Map<String, dynamic> toMap() {

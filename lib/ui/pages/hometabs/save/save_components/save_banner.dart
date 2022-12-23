@@ -45,26 +45,18 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
   Widget buildBody(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        locator<BaseUtil>().openDepositOptionsModalSheet();
-        locator<MixpanelAnalytics>().track(
-                            eventName: "Happy Hour CTA Tapped ",
-                            properties: {
-                              "Reward": {
-                                "asset": locator<HappyHourCampign>()
-                                        .data
-                                        ?.rewards
-                                        ?.first
-                                        .type ??
-                                    "",
-                                "amount": locator<HappyHourCampign>()
-                                        .data
-                                        ?.rewards
-                                        ?.first
-                                        .value ??
-                                    "",
-                                "timer": "$inHours:$inMinutes:$inSeconds"
-                              }
-                            });
+        locator<BaseUtil>().showHappyHourDialog(widget.model);
+        locator<MixpanelAnalytics>()
+            .track(eventName: "Happy Hour Strip Tapped ", properties: {
+          "Reward": {
+            "asset":
+                locator<HappyHourCampign>().data?.rewards?.first.type ?? "",
+            "amount":
+                locator<HappyHourCampign>().data?.rewards?.first.value ?? "",
+            "timer": "$inHours:$inMinutes:$inSeconds"
+          },
+          "location":"Purple Strip"
+        });
       },
       child: SizedBox(
         height: SizeConfig.screenHeight! * 0.07,
@@ -98,7 +90,8 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
               ),
               Spacer(),
               GestureDetector(
-                onTap: () => locator<BaseUtil>().openDepositOptionsModalSheet(),
+                onTap: () =>
+                    locator<BaseUtil>().showHappyHourDialog(widget.model),
                 child: Icon(
                   Icons.keyboard_arrow_right_outlined,
                   color: Colors.white,

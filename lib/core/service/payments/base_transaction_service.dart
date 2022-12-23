@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
@@ -48,7 +47,7 @@ abstract class BaseTransactionService
   Future<void> processPolling(Timer timer);
 
   String getPaymentMode() {
-    String paymentMode = "PAYTM-PG";
+    String paymentMode = "RZP-PG";
 
     paymentMode = Platform.isAndroid
         ? AppConfig.getValue(AppConfigKey.active_pg_android)

@@ -16,7 +16,7 @@ enum AppConfigKey {
   tambola_cost,
   min_principle_for_prize,
   game_tambola_announcement,
-
+  changeAppIcon,
   enabled_psp_apps,
   app_share_message,
   unlock_referral_amt,
@@ -40,7 +40,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.paytmMid;
       case 'rzpMid':
         return AppConfigKey.rzpMid;
-
+      case 'changeAppIcon':
+        return AppConfigKey.changeAppIcon;
       case 'tambolaDailyPickCount':
         return AppConfigKey.tambola_daily_pick_count;
 

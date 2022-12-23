@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/username_response_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -84,6 +85,7 @@ class UserProfileVM extends BaseViewModel {
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
+  final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
 
   double? picSize;
   XFile? selectedProfilePicture;
@@ -531,6 +533,7 @@ class UserProfileVM extends BaseViewModel {
                 _paytmService!.signout();
                 _bankAndKycService!.dump();
                 GoldenTicketService.dump();
+                _tambolaRepo.dump();
                 AppState.dump();
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.delegate!.appState.currentAction = PageAction(

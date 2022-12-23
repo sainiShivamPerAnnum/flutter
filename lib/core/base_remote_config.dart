@@ -281,7 +281,8 @@ class BaseRemoteConfig {
     ..._PAYTM_DEV_MID,
     ..._RZP_PROD_MID,
     ..._RZP_DEV_MID,
-    ..._AUTOSAVE_ACTIVE
+    ..._AUTOSAVE_ACTIVE,
+    "changeAppIcon":false
   };
 
   static Future<bool> init() async {
