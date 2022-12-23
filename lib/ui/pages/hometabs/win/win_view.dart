@@ -40,7 +40,7 @@ class Win extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S? locale = S.of(context);
+    S locale = S.of(context);
 
     return BaseView<WinViewModel>(
       onModelReady: (model) {
@@ -94,7 +94,7 @@ class Win extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Current Winnings',
+                                        locale.currentWinings,
                                         style: TextStyles.rajdhaniSB.copyWith(
                                             fontSize: SizeConfig.body0),
                                         key: ValueKey(
@@ -114,7 +114,7 @@ class Win extends StatelessWidget {
                                           ? AppPositiveBtn(
                                               height: SizeConfig.screenWidth! *
                                                   0.12,
-                                              btnText: "Redeem",
+                                              btnText: locale.redeem,
                                               onPressed: () {
                                                 model.showConfirmDialog(
                                                     PrizeClaimChoice
@@ -134,14 +134,14 @@ class Win extends StatelessWidget {
                                                       children: [
                                                         TextSpan(
                                                           text:
-                                                              "Winnings can be redeemed as ",
+                                                              locale.winRedeemText,
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
                                                                   .kTextColor2),
                                                         ),
                                                         TextSpan(
-                                                          text: "digital gold",
+                                                          text: locale.digitalGoldText,
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
@@ -149,7 +149,7 @@ class Win extends StatelessWidget {
                                                         ),
                                                         TextSpan(
                                                           text:
-                                                              " on reaching ₹${model.minWithdrawPrize}",
+                                                              locale.onReaching+"${model.minWithdrawPrize}",
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
@@ -197,7 +197,7 @@ class Win extends StatelessWidget {
                                           width: SizeConfig.padding8,
                                         ),
                                         Text(
-                                          'Golden Tickets',
+                                          locale.goldenTicketText,
                                           style: TextStyles.sourceSans.body2
                                               .colour(Colors.white),
                                               key: ValueKey(Constants.GOLDENTICKET),
@@ -262,14 +262,14 @@ class Win extends StatelessWidget {
                                           text: TextSpan(
                                             children: [
                                               TextSpan(
-                                                  text: 'Earn upto ',
+                                                  text: locale.earnUpto,
                                                   style: TextStyles
                                                       .sourceSans.body3
                                                       .colour(UiConstants
                                                           .kTextColor3)),
                                               TextSpan(
                                                   text:
-                                                      '₹${AppConfig.getValue(AppConfigKey.referralBonus)} and',
+                                                      '₹${AppConfig.getValue(AppConfigKey.referralBonus)} '+locale.and,
                                                   style: TextStyles
                                                       .sourceSansB.body3
                                                       .colour(UiConstants
@@ -294,7 +294,7 @@ class Win extends StatelessWidget {
                                                           .kTextColor)),
                                               TextSpan(
                                                   text:
-                                                      ' from every Golden Ticket. Highest referrer wins an iPad every month.',
+                                                      locale.winipadText,
                                                   style: TextStyles
                                                       .sourceSans.body3
                                                       .colour(UiConstants
@@ -343,7 +343,7 @@ class Win extends StatelessWidget {
                                                     },
                                                     child: Row(
                                                       children: [
-                                                        Text("COPY",
+                                                        Text(locale.copy,
                                                             style: TextStyles
                                                                 .sourceSans
                                                                 .body3
@@ -446,7 +446,7 @@ class Win extends StatelessWidget {
                           left: SizeConfig.padding24,
                         ),
                         child: Text(
-                          "Leaderboard",
+                          locale.leaderBoard,
                           style: TextStyles.sourceSans.semiBold
                               .colour(Colors.white)
                               .title3,
@@ -475,6 +475,7 @@ class FelloNewsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       width: SizeConfig.screenWidth,
       child: Column(
@@ -486,7 +487,7 @@ class FelloNewsComponent extends StatelessWidget {
               left: SizeConfig.padding24,
             ),
             child: Text(
-              "This Week’s Highlights",
+              locale.weekHighlights,
               style: TextStyles.sourceSans.semiBold.colour(Colors.white).title3,
             ),
           ),

@@ -4,6 +4,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -13,6 +14,7 @@ class GoogleSignInService extends ChangeNotifier {
   final UserService? _userService = locator<UserService>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final CustomLogger? _logger = locator<CustomLogger>();
+  S locale = locator<S>();
 
   Future<String?> signInWithGoogle() async {
     try {
@@ -25,8 +27,8 @@ class GoogleSignInService extends ChangeNotifier {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         BaseUtil.showNegativeAlert(
-          "No account selected",
-          "Please choose an account from the list",
+        locale.noAccSelected,
+          locale.chooseAnAcc,
         );
         return null;
       }
@@ -36,8 +38,8 @@ class GoogleSignInService extends ChangeNotifier {
 
       if (isEmailRegistered.model!) {
         BaseUtil.showNegativeAlert(
-          "Email already registered",
-          "Please try with another email",
+          locale.emailAlreadyRegistered,
+          locale.anotherEmail,
         );
         return null;
       }
@@ -54,13 +56,13 @@ class GoogleSignInService extends ChangeNotifier {
         return userEmail;
       } else
         BaseUtil.showNegativeAlert(
-            res.errorMessage ?? "Something is wrong!", "Please try again");
+            res.errorMessage ?? locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
       return null;
     } catch (e) {
       _logger!.d(e.toString());
       BaseUtil.showNegativeAlert(
-        "Unable to verify",
-        "Please try a different method",
+        locale.verifyFailed,
+        locale.tryAnotherMethod,
       );
       return null;
     }

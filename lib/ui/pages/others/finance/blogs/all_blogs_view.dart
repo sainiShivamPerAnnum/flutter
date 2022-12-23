@@ -3,6 +3,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -15,6 +16,7 @@ class ViewAllBlogsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<SaveViewModel>(
       onModelReady: (model) => model.getAllBlogs(),
       builder: ((context, model, child) => Scaffold(
@@ -23,7 +25,7 @@ class ViewAllBlogsView extends StatelessWidget {
               leading: FelloAppBarBackButton(),
               elevation: 0,
               backgroundColor: UiConstants.kBackgroundColor,
-              title: Text('Blogs', style: TextStyles.rajdhaniSB.title5),
+              title: Text(locale.blogs, style: TextStyles.rajdhaniSB.title5),
               centerTitle: false,
             ),
             body: Padding(

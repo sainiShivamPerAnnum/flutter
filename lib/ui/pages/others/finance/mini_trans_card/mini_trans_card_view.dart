@@ -11,6 +11,7 @@ import 'package:felloapp/ui/pages/others/finance/transactions_history/transactio
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -26,6 +27,7 @@ class MiniTransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<MiniTransactionCardViewModel>(
       onModelReady: (model) {
         model.getMiniTransactions(investmentType);
@@ -51,7 +53,7 @@ class MiniTransactionCard extends StatelessWidget {
                   model.state == ViewState.Busy || m.txnList == null
                       ? SizedBox(
                           child: Row(children: [
-                            TitleSubtitleContainer(title: 'Transactions'),
+                            TitleSubtitleContainer(title: locale.txns),
                             Spacer(),
                             Container(
                               width: SizeConfig.avatarRadius,
@@ -76,8 +78,7 @@ class MiniTransactionCard extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      TitleSubtitleContainer(
-                                          title: 'Transactions'),
+                                      TitleSubtitleContainer(title: locale.txns),
                                       Spacer(),
                                       model.state == ViewState.Idle &&
                                               m.txnList != null &&
@@ -89,7 +90,7 @@ class MiniTransactionCard extends StatelessWidget {
                                                   top: SizeConfig.padding2,
                                                 ),
                                                 child: Text(
-                                                  'See All',
+                                                 locale.btnSeeAll,
                                                   style: TextStyles
                                                       .rajdhaniSB.body2
                                                       .colour(UiConstants

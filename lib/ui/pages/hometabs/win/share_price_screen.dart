@@ -4,6 +4,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -24,6 +25,7 @@ class SharePriceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<WinViewModel>(
       onModelReady: (model) {
         model.init();
@@ -47,7 +49,7 @@ class SharePriceScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Share the good news with\nyour friends",
+                      locale.shareGoodNews,
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.semiBold.body2
                           .colour(Colors.white),
@@ -87,7 +89,7 @@ class SharePriceScreen extends StatelessWidget {
                             ),
                           )
                         : AppPositiveBtn(
-                            btnText: "SHARE",
+                            btnText: locale.btnShare,
                             onPressed: () {
                               model.sharePrizeDetails(prizeAmount);
                             },

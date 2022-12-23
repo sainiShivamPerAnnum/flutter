@@ -3,6 +3,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/services.dart';
 class UsernameInputView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<UserProfileVM>(
       onModelReady: (model) => model.usernameInit(),
       onModelDispose: (model) => model.usernameDispose(),
@@ -37,12 +39,11 @@ class UsernameInputView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Create your username',
+                                locale.obCreateUserName,
                                 style: TextStyles.rajdhaniB.title3,
                               ),
                               SizedBox(height: SizeConfig.padding6),
-                              Text(
-                                "This will be your unique name across our games and challenges leaderboard",
+                              Text(locale.obuniqueNameText,
                                 style: TextStyles.sourceSans.body3
                                     .colour(UiConstants.kTextColor2),
                               )
@@ -63,7 +64,7 @@ class UsernameInputView extends StatelessWidget {
                     ),
                   ),
                   AppTextField(
-                    hintText: 'Your username',
+                    hintText: locale.obUserNameHint,
                     onTap: () {},
                     prefixText: '@',
                     autoFocus: true,
@@ -124,10 +125,11 @@ class ModalSheetAppBar extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return ListTile(
-      title: Text(title ?? 'Digital Gold', style: TextStyles.rajdhaniSB.body2),
+      title: Text(title ?? locale.digitalGoldText, style: TextStyles.rajdhaniSB.body2),
       subtitle: Text(
-        subtitle ?? "Safest Digital Investment",
+        subtitle ?? locale.safestDigitalInvestment,
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
       ),
       trailing: trailing ??

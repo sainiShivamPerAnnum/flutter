@@ -3,6 +3,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,6 +19,7 @@ class Blogs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Column(
       children: [
         SizedBox(height: SizeConfig.padding16),
@@ -30,8 +32,8 @@ class Blogs extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TitleSubtitleContainer(
-                title: 'Fin-gyan',
-                subTitle: 'Read about the world of games and finance',
+                title: locale.blogsTitle,
+                subTitle: locale.blogsSubTitle,
               ),
               Padding(
                 padding: EdgeInsets.only(
@@ -44,7 +46,7 @@ class Blogs extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: SizeConfig.padding2),
                       child: Text(
-                        'See All',
+                        locale.btnSeeAll,
                         style: TextStyles.rajdhaniSB.body2,
                       ),
                     ),

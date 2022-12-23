@@ -30,12 +30,25 @@ import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.da
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class SaveViewModel extends BaseViewModel {
+  S? locale;
+  SaveViewModel({this.locale})  {
+    locale = locator<S>();
+    boxTitllesGold.addAll([
+      locale!.boxGoldTitles1,
+      locale!.boxGoldTitles2,
+      locale!.boxGoldTitles3,
+    ]);
+    boxTitllesFlo.addAll(
+        [locale!.boxFloTitles1, locale!.boxFloTitles2, locale!.boxFloTitles3]);
+  }
+  
   final CampaignRepo _campaignRepo = locator<CampaignRepo>();
   final SaveRepo? _saveRepo = locator<SaveRepo>();
   final UserService? _userService = locator<UserService>();
@@ -82,22 +95,12 @@ class SaveViewModel extends BaseViewModel {
     Assets.singleCoinAsset,
     Assets.goldSecure,
   ];
-  List<String> boxTitllesGold = [
-    'Safe mode of saving',
-    'Grows with the price of gold',
-    'Pure 99.9% BIS Hallmark',
-  ];
-
+  List<String> boxTitllesGold = [];
+  List<String> boxTitllesFlo = [];
   List<String> boxAssetsFlo = [
     Assets.star,
     Assets.singleCoinAsset,
     Assets.flatIsland,
-  ];
-
-  List<String> boxTitllesFlo = [
-    '10% returns per annum',
-    'Interest credited everyday',
-    '1 day lock-in period',
   ];
 
   List<EventModel>? get ongoingEvents => this._ongoingEvents;
@@ -145,7 +148,7 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init() {
+  init() async {
     // _baseUtil.fetchUserAugmontDetail();
     baseProvider = BaseUtil();
     getCampaignEvents();

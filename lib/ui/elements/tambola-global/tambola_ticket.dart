@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -81,6 +82,7 @@ class Ticket extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     if (ticketNumbers.isEmpty) generateNumberList();
     print(calledDigits);
     return Container(
@@ -116,7 +118,7 @@ class Ticket extends StatelessWidget {
                               end: Alignment.bottomRight,
                             ),
                             child: Text(
-                              "NEW",
+                              locale.tambolaNew,
                               style: TextStyles.rajdhaniB.body3,
                             ),
                           )
@@ -204,7 +206,7 @@ class Ticket extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(SizeConfig.padding6),
             child: Text(
-              "Generated on: ${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).year}",
+              locale.tGeneratedOn+"${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).year}",
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: SizeConfig.smallTextSize,

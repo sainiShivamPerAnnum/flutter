@@ -20,29 +20,21 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'pt_BR';
 
-  static String m2(servingSize) =>
+  static String m12(servingSize) =>
       "*Baseado em uma porção de ${servingSize} fl. oz.";
 
-  static String m3(quantity, formattedNumber) =>
+  static String m13(quantity, formattedNumber) =>
       "${Intl.plural(quantity, one: 'Uma porção.', other: '${formattedNumber} porções no seu sistema de uma vez.')}";
 
-  static String m4(quantity, formattedNumber) =>
+  static String m14(quantity, formattedNumber) =>
       "${Intl.plural(quantity, one: 'Uma porção por dia.', other: '${formattedNumber} porções por dia.')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "onboardText1": MessageLookupByLibrary.simpleMessage(
-            "Economize ou invista \$ 100 e ganhe 1 ingresso de jogo todas as segundas-feiras"),
-        "onboardText2": MessageLookupByLibrary.simpleMessage(
-            "Use os ingressos para participar de jogos semanais emocionantes"),
-        "onboardText3": MessageLookupByLibrary.simpleMessage(
-            "Seu dinheiro continua crescendo com grandes retornos enquanto você joga jogos divertidos e ganha prêmios!"),
-        "onboardTitle": MessageLookupByLibrary.simpleMessage(
-            "Poupança baseada em jogos \n e investimentos🎉"),
         "onboradButton": MessageLookupByLibrary.simpleMessage("INICIAR"),
-        "resultsPageFirstDisclaimer": m2,
-        "resultsPageLethalDosageMessage": m3,
-        "resultsPageSafeDosageMessage": m4,
+        "resultsPageFirstDisclaimer": m12,
+        "resultsPageLethalDosageMessage": m13,
+        "resultsPageSafeDosageMessage": m14,
         "resultsPageSafeDosageTitle":
             MessageLookupByLibrary.simpleMessage("Limite Seguro Diário"),
         "resultsPageSecondDisclaimer": MessageLookupByLibrary.simpleMessage(

@@ -26,6 +26,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -44,6 +45,7 @@ class GoldenTicketService
   final PaytmService? _paytmService = locator<PaytmService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
+  S locale = locator<S>();
 
   //ALL GOLDEN TICKETS VIEW FIELDS -- START
   bool isLastPageForGoldenTickets = false;
@@ -213,7 +215,7 @@ class GoldenTicketService
               'Hey, I won ${ticket.rewardArr!.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
       } catch (e) {
         _logger!.e(e.toString());
-        BaseUtil.showNegativeAlert("An error occured!", "Please try again");
+        BaseUtil.showNegativeAlert(locale.errorOccured, locale.obPleaseTryAgain);
       }
     }
   }
@@ -279,7 +281,7 @@ class GoldenTicketService
       AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
-          "Task Failed", "Unable to capture the card at the moment");
+          locale.taskFailed, locale.unableToCapture);
     }
     return null;
   }
@@ -336,7 +338,7 @@ class GoldenTicketService
       // backButtonDispatcher.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
-          "Task Failed", "Unable to share the picture at the moment");
+         locale.taskFailed, locale.UnableToSharePicture);
     }
   }
 
@@ -347,12 +349,12 @@ class GoldenTicketService
       isBarrierDismissible: false,
       hapticVibrate: true,
       content: FelloInfoDialog(
-        title: "Put your savings on autopilot",
+        title: locale.savingsOnAuto,
         subtitle:
-            "Now you can save in Digital Gold automatically without opening the app. Setup Fello autosave now!",
+            locale.savingsOnAutoSubtitle,
         png: Assets.preAutosave,
         action: AppPositiveBtn(
-          btnText: "Setup Autosave",
+          btnText: locale.btnSetupAutoSave,
           onPressed: () {
             AppState.backButtonDispatcher!.didPopRoute();
             openAutosave();

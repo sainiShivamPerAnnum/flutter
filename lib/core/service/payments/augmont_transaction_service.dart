@@ -34,6 +34,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 
 class AugmontTransactionService extends BaseTransactionService {
@@ -49,7 +50,7 @@ class AugmontTransactionService extends BaseTransactionService {
   final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
   final TambolaService? _tambolaService = locator<TambolaService>();
-
+  S locale = locator<S>();
   double? currentTxnGms = 0.0;
   DepositFcmResponseModel? depositFcmResponseModel;
   bool _isGoldBuyInProgress = false;
@@ -137,7 +138,7 @@ class AugmontTransactionService extends BaseTransactionService {
         AppState.unblockNavigation();
 
         BaseUtil.showNegativeAlert(
-            'Failed to connect to upi app', 'Please try after sometime');
+            locale.upiConnectFailed, locale.tryLater);
       }
     } else {
       isGoldBuyInProgress = false;
@@ -146,7 +147,7 @@ class AugmontTransactionService extends BaseTransactionService {
       AppState.unblockNavigation();
 
       return BaseUtil.showNegativeAlert(
-          'Failed to create transaction', 'Please try after sometime');
+          locale.failedToCreateTxn, locale.tryLater);
     }
   }
 
@@ -219,8 +220,7 @@ class AugmontTransactionService extends BaseTransactionService {
         }
         AppState.unblockNavigation();
         BaseUtil.showNegativeAlert(
-          'Transaction failed',
-          'Your transaction was unsuccessful. Please try again',
+        locale.txnFailed , locale.txnFailedSubtitle,
         );
       }
       AppState.unblockNavigation();
@@ -230,7 +230,7 @@ class AugmontTransactionService extends BaseTransactionService {
       isGoldBuyInProgress = false;
       AppState.unblockNavigation();
       return BaseUtil.showNegativeAlert(
-          'Failed to create transaction', 'Please try after sometime');
+          locale.failedToCreateTxn, locale.tryLater);
     }
   }
 

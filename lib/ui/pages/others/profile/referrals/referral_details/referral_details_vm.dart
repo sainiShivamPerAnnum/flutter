@@ -19,6 +19,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -39,6 +40,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   final UserRepository? _userRepo = locator<UserRepository>();
   final ReferralRepo? _refRepo = locator<ReferralRepo>();
   final DBModel? _dbModel = locator<DBModel>();
+  S locale = locator<S>();
 
   PageController? _pageController;
   int _tabNo = 0;
@@ -226,8 +228,8 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
     if (url == null) {
       BaseUtil.showNegativeAlert(
-        'Generating link failed',
-        'Please try again in some time',
+        locale.generatingLinkFailed,
+        locale.tryLater
       );
     } else {
       if (Platform.isIOS) {
@@ -282,8 +284,8 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
     if (url == null) {
       BaseUtil.showNegativeAlert(
-        'Generating link failed',
-        'Please try again in some time',
+        locale.generatingLinkFailed,
+        locale.tryLater
       );
       return;
     } else
@@ -298,7 +300,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
             _logger!.d(flag);
             if (flag == "false") {
               BaseUtil.showNegativeAlert(
-                  "Whatsapp not detected", "Please use other option to share.");
+                 locale.whatsappNotDetected, locale.otherShareOption);
             }
           });
         }

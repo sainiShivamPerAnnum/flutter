@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -24,12 +25,13 @@ class MoreGamesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSubtitleContainer(
-            title: "Explore More Games",
-            subTitle: "New games are added regularly. Keep checking out!"),
+            title: locale.moreGamesTitle,
+            subTitle: locale.moreGamesSubTitle),
         Container(
           margin:
               EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
@@ -66,6 +68,7 @@ class MoreGames extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
@@ -127,7 +130,7 @@ class MoreGames extends StatelessWidget {
                           height: SizeConfig.padding8,
                         ),
                         Text(
-                          "Win upto ₹${game!.prizeAmount.toString()}",
+                      locale.gameWinUptoTitle+"₹${game!.prizeAmount.toString()}",
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.kTextColor2),
                         ),
@@ -170,7 +173,7 @@ class MoreGames extends StatelessWidget {
                                     horizontal: SizeConfig.padding28,
                                     vertical: SizeConfig.padding12),
                                 child: Text(
-                                  "PLAY",
+                              locale.btnPlay,
                                   style: TextStyles.rajdhaniSB.body1
                                       .colour(Colors.white),
                                 ),

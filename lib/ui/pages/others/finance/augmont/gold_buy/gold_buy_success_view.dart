@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -25,6 +26,7 @@ class GoldBuySuccessView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: SizeConfig.padding32),
       child: Column(
@@ -42,7 +44,7 @@ class GoldBuySuccessView extends StatelessWidget {
                       _gtService!.showInstantGoldenTicketView(
                         amount: _augTxnService!.currentTxnAmount,
                         title:
-                            "You have successfully saved ₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
+                            locale.successfullySavedText+"₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
                         source: GTSOURCE.deposit,
                       );
                     });
@@ -109,7 +111,7 @@ class GoldBuySuccessView extends StatelessWidget {
             ),
           ),
           Text(
-            "Congratulations!",
+            locale.btnCongratulations,
             style: TextStyles.rajdhaniB.title2,
           ),
           SizedBox(height: SizeConfig.padding12),
@@ -127,7 +129,7 @@ class GoldBuySuccessView extends StatelessWidget {
             )
           else ...[
             Text(
-              "Your investment was successfully processed",
+              locale.txnInvestmentSuccess,
               textAlign: TextAlign.center,
               style: TextStyles.sourceSans.body2.setOpecity(0.7),
             ),
@@ -157,7 +159,7 @@ class GoldBuySuccessView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Invested",
+                          Text(locale.invested,
                               style: TextStyles.sourceSans.body2
                                   .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
@@ -184,11 +186,11 @@ class GoldBuySuccessView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Bought",
+                          Text(locale.bought,
                               style: TextStyles.sourceSans.body2
                                   .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${_augTxnService!.currentTxnGms} gm",
+                          Text("${_augTxnService!.currentTxnGms}"+locale.gm,
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -217,7 +219,7 @@ class GoldBuySuccessView extends StatelessWidget {
             ),
             child: Row(children: [
               Text(
-                "Balance",
+                locale.balanceText,
                 style:
                     TextStyles.rajdhani.body3.colour(UiConstants.kTextColor3),
               ),
@@ -237,24 +239,24 @@ class GoldBuySuccessView extends StatelessWidget {
             child: Row(
               children: [
                 WinningChips(
-                    title: 'Fello Tokens',
-                    tooltip: "Use tokens to play games!",
+                    title: locale.felloTokens,
+                    tooltip: locale.winChipsTitle1,
                     asset: Assets.token,
                     qty: _augTxnService!.currentTxnAmount!.toInt()),
                 if (GoldenTicketService.currentGT != null)
                   SizedBox(width: SizeConfig.padding12),
                 if (GoldenTicketService.currentGT != null)
                   WinningChips(
-                      title: 'Golden Ticket',
-                      tooltip: "Scratch and win rewards!",
+                      title: locale.goldenTicket,
+                      tooltip: locale.winChipsTitle2,
                       asset: Assets.unredemmedGoldenTicketBG,
                       qty: 1),
                 if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
                   SizedBox(width: SizeConfig.padding12),
                 if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
                   WinningChips(
-                      title: 'Tambola Ticket',
-                      tooltip: "Win upto ₹1 Crore in Tambola!",
+                      title: locale.tTicket,
+                      tooltip: locale.winChipsTitle3,
                       asset: Assets.singleTmbolaTicket,
                       qty: _augTxnService!.currentTxnTambolaTicketsCount)
               ],
@@ -269,13 +271,13 @@ class GoldBuySuccessView extends StatelessWidget {
                   amount: _augTxnService!.currentTxnAmount,
                   showAutoSavePrompt: true,
                   title:
-                      "You have successfully saved ₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
+               locale.successfullySavedText+"₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
                   source: GTSOURCE.deposit,
                 );
               });
             },
             child: Text(
-              "DONE",
+              locale.obDone,
               style:
                   TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),

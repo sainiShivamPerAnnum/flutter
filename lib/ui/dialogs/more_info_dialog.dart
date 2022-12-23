@@ -1,6 +1,8 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -22,6 +24,8 @@ class MoreInfoDialog extends StatelessWidget {
       this.btnText,
       this.imageSize});
 
+
+S locale = locator<S>();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -59,7 +63,7 @@ class MoreInfoDialog extends StatelessWidget {
                 ),
                 SizedBox(height: SizeConfig.padding20),
                 AppPositiveBtn(
-                    btnText: btnText ?? "OK",
+                    btnText: btnText ?? locale.btnOk.toUpperCase(),
                     onPressed: onPressed as void Function()? ??
                         (() => AppState.backButtonDispatcher!.didPopRoute()))
               ],

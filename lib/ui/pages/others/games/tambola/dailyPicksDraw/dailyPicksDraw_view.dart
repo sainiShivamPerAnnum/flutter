@@ -5,6 +5,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -20,6 +21,7 @@ import 'dailyPicksDraw_viewModel.dart';
 class PicksDraw extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<DailyPicksDrawViewModel>(onModelReady: (model) {
       model.init();
     }, builder: (ctx, model, child) {
@@ -28,7 +30,7 @@ class PicksDraw extends StatelessWidget {
         body: Column(
           children: [
             FelloAppBar(
-              title: "Daily Picks",
+              title: locale.tDailyPicks,
             ),
             Expanded(
               child: Container(
@@ -49,8 +51,8 @@ class PicksDraw extends StatelessWidget {
                       padding: EdgeInsets.all(SizeConfig.padding24),
                       child: Text(
                           model.state == ViewState.Idle
-                              ? "Today's Picks are:"
-                              : "Please wait, loading today's picks",
+                              ? locale.todaysPicks
+                              : locale.loadingTodaysPicks,
                           textAlign: TextAlign.center,
                           style: TextStyles.title3.bold),
                     ),
@@ -230,7 +232,7 @@ class PicksDraw extends StatelessWidget {
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.blockSizeHorizontal * 10),
                         child: Text(
-                          "Find out how many numbers matched today..",
+                         locale.tNoMatched,
                           textAlign: TextAlign.center,
                           style: TextStyles.body2.light,
                         ),

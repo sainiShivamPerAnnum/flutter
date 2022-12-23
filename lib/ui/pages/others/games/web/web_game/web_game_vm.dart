@@ -20,6 +20,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -35,7 +36,7 @@ class WebGameViewModel extends BaseViewModel {
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final JourneyService? _journeyService = locator<JourneyService>();
-
+  S locale = locator<S>();
   String? _currentGame;
 
   get currentGame => this._currentGame;
@@ -65,8 +66,8 @@ class WebGameViewModel extends BaseViewModel {
 
       Future.delayed(Duration(seconds: 1), () {
         BaseUtil.showNegativeAlert(
-          'Game Loading',
-          'This game might take longer than usual to load',
+          locale.gameLoading,
+         locale.gameLoadingSubTitle,
         );
       });
     }

@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/base_util.dart';
@@ -17,8 +18,9 @@ class TransactionHistoryService
     extends PropertyChangeNotifier<TransactionHistoryServiceProperties> {
   final CustomLogger? _logger = locator<CustomLogger>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
-  final TransactionHistoryRepository? _transactionHistoryRepo = locator<TransactionHistoryRepository>();
-
+  final TransactionHistoryRepository? _transactionHistoryRepo =
+      locator<TransactionHistoryRepository>();
+  S locale = locator<S>();
   List<UserTransaction>? _txnList;
   String? lastTxnDocId;
   String? lastPrizeTxnDocId;
@@ -40,11 +42,12 @@ class TransactionHistoryService
 
   appendTxns(List<UserTransaction> list) {
     list.forEach((txn) {
-      UserTransaction? duplicate = _txnList!
-          .firstWhereOrNull((t) => t.timestamp == txn.timestamp);
+      UserTransaction? duplicate =
+          _txnList!.firstWhereOrNull((t) => t.timestamp == txn.timestamp);
       if (duplicate == null) _txnList!.add(txn);
     });
-    _txnList!.sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
+    _txnList!
+        .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
     notifyListeners(TransactionHistoryServiceProperties.TransactionHistoryList);
   }
 
@@ -63,8 +66,8 @@ class TransactionHistoryService
 
     if (!response.isSuccess()) {
       return BaseUtil.showNegativeAlert(
-        response.errorMessage ?? "Unable to fetch transactions",
-        "Please try again",
+        response.errorMessage ?? locale.txnFetchFailed,
+        locale.obPleaseTryAgain,
       );
     }
     // if transaction list is empty

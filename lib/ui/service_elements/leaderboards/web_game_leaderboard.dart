@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -17,7 +18,7 @@ class WebGameLeaderBoardView extends StatelessWidget {
   final String? game;
 
   WebGameLeaderBoardView({this.game});
-
+S locale = locator<S>();
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<LeaderboardService,
@@ -27,7 +28,7 @@ class WebGameLeaderBoardView extends StatelessWidget {
         return m!.WebGameLeaderBoard == null
             ? NoRecordDisplayWidget(
                 assetSvg: Assets.noWinnersAsset,
-                text: "Leaderboard will be updated soon",
+                text: locale.leaderboardUpdateSoon,
               )
             : LeaderBoardView(
                 model: m.WebGameLeaderBoard,
@@ -47,6 +48,7 @@ class LeaderBoardView extends StatelessWidget {
   LeaderBoardView({this.model, this.controller, this.ownController});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Column(
       children: [
         SizedBox(height: SizeConfig.padding8),
@@ -56,11 +58,11 @@ class LeaderBoardView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'This week\'s top scorers:',
+                locale.topScroresText1+'\''+locale.topScroresText2,
                 style: TextStyles.body4.colour(Colors.grey),
               ),
               Text(
-                "Updated on: ${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model!.lastupdated!.toDate())}",
+                locale.updatedOn+"${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model!.lastupdated!.toDate())}",
                 style: TextStyles.body4.colour(Colors.grey),
               )
             ],

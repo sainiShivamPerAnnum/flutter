@@ -26,6 +26,7 @@ import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controll
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -46,6 +47,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   final UserCoinService? _coinService = locator<UserCoinService>();
   final TambolaRepo? _tambolaRepo = locator<TambolaRepo>();
   final UserService? _userService = locator<UserService>();
+  S locale = locator<S>();
 
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
@@ -288,8 +290,8 @@ class TambolaHomeViewModel extends BaseViewModel {
     notifyListeners();
     await _prizeService!.fetchPrizeByGameType(Constants.GAME_TYPE_TAMBOLA);
     if (tPrizes == null)
-      BaseUtil.showNegativeAlert("This week's prizes could not be fetched",
-          "Please try again in sometime");
+      BaseUtil.showNegativeAlert(locale.prizeFetchFailed,
+         locale.tryLater);
     isPrizesLoading = false;
     notifyListeners();
   }
@@ -335,8 +337,8 @@ class TambolaHomeViewModel extends BaseViewModel {
     if (buyTicketCount < 30)
       buyTicketCount += 1;
     else
-      BaseUtil.showNegativeAlert("Maximum tickets exceeded",
-          "You can purchase upto 30 tambola tickets at once");
+      BaseUtil.showNegativeAlert(locale.ticketsExceeded,
+         locale.tktsPurchaseLimit);
     ticketCountController!.text = buyTicketCount.toString();
     updateTicketSavedAmount(buyTicketCount);
 

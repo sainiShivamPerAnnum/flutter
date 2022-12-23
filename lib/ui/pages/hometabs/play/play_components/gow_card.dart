@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -26,7 +27,7 @@ class GOWCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-
+  S locale = S.of(context);
     return (model.isGamesListDataLoading)
         ? GameCardShimmer()
         : (model.gow == null
@@ -35,7 +36,7 @@ class GOWCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TitleSubtitleContainer(
-                    title: "Game of the week",
+                    title: locale.gameOfWeek,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -78,7 +79,7 @@ class GOWCard extends StatelessWidget {
                                 Text(model.gow!.gameName!,
                                     style: TextStyles.rajdhaniB.title3),
                                 Text(
-                                    'Win upto ' +
+                                    locale.gameWinUptoTitle +
                                         '${NumberFormat.compact().format(model.gow!.prizeAmount)}',
                                     style: TextStyles.sourceSans.body4),
                                 SizedBox(height: SizeConfig.padding16),

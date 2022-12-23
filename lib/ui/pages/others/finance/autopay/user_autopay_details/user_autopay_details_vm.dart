@@ -21,6 +21,7 @@ import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/us
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -33,6 +34,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final SubscriptionRepo? _subcriptionRepo = locator<SubscriptionRepo>();
+  S locale = locator<S>();
 
   ActiveSubscriptionModel? _activeSubscription;
   List<AutosaveTransactionModel>? _filteredList;
@@ -308,8 +310,8 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   setSubscriptionAmount(double amount) async {
     if (amount < minValue) {
       return BaseUtil.showNegativeAlert(
-        'Minimum amount should be ₹ $minValue',
-        'Please enter a minimum amount of ₹ $minValue',
+       locale.minAmountShouldBe+'$minValue',
+        locale.enterMinAmount+'$minValue',
       );
     }
 

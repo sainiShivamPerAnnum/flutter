@@ -22,6 +22,7 @@ import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -554,6 +555,7 @@ class StreamView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return StreamBuilder(
       initialData: null,
       stream: model.getRealTimePlayingStream(game),
@@ -561,7 +563,7 @@ class StreamView extends StatelessWidget {
         if (!snapshot.hasData) {
           return GameInfoBlock(
             coin: "-",
-            coinText: 'Playing',
+            coinText: locale.playing,
             assetHeight: SizeConfig.padding16,
             isDot: true,
           );
@@ -594,7 +596,7 @@ class StreamView extends StatelessWidget {
             child: GameInfoBlock(
               coin:
                   "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
-              coinText: 'Playing',
+              coinText: locale.playing,
               assetHeight: SizeConfig.padding16,
               isDot: true,
               key: ValueKey<String>(requiredTimeData['value'].toString()),
@@ -603,7 +605,7 @@ class StreamView extends StatelessWidget {
         } else {
           return GameInfoBlock(
             coin: "50+",
-            coinText: 'Playing',
+            coinText: locale.playing,
             assetHeight: SizeConfig.padding16,
             isDot: true,
           );
@@ -749,6 +751,7 @@ class PastWeekWinners extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -814,7 +817,7 @@ class PastWeekWinners extends StatelessWidget {
                                   child: NoRecordDisplayWidget(
                                     topPadding: false,
                                     assetSvg: Assets.noWinnersAsset,
-                                    text: " Leaderboard will be updated soon",
+                                    text: locale.leaderboardUpdateSoon,
                                   ),
                                 )
                               : Column(
@@ -837,7 +840,7 @@ class PastWeekWinners extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Text("Names",
+                                              Text(locale.names,
                                                   style: TextStyles
                                                       .sourceSans.body3
                                                       .colour(UiConstants
@@ -848,7 +851,7 @@ class PastWeekWinners extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          "Points",
+                                          locale.points,
                                           style: TextStyles.sourceSans.body3
                                               .colour(UiConstants.kTextColor2),
                                         )
@@ -1005,7 +1008,7 @@ class PastWeekWinners extends StatelessWidget {
                                                 AllParticipantsWinnersTopReferrers(
                                               isForTopReferrers: true,
                                               showPoints: true,
-                                              appBarTitle: "Past Week Winners",
+                                              appBarTitle: locale.pastWeekWinners,
                                               referralLeaderBoard:
                                                   model.pastWeekParticipants,
                                             ),
@@ -1021,7 +1024,7 @@ class PastWeekWinners extends StatelessWidget {
                                               padding: EdgeInsets.only(
                                                 top: SizeConfig.padding2,
                                               ),
-                                              child: Text('See All',
+                                              child: Text(locale.btnSeeAll,
                                                   style: TextStyles
                                                       .sourceSans.body2),
                                             ),

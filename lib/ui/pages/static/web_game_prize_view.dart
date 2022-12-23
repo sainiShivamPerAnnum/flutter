@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -23,6 +24,7 @@ class PrizesView extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return NotificationListener<OverscrollNotification>(
       onNotification: (OverscrollNotification value) {
         if (value.overscroll < 0 && controller!.offset + value.overscroll <= 0) {
@@ -71,7 +73,7 @@ class PrizesView extends StatelessWidget {
                 SizedBox(width: SizeConfig.padding12),
                 Expanded(
                   child: Text(
-                    model!.prizesA![i].displayName ?? "Prize ${i + 1}",
+                    model!.prizesA![i].displayName ?? locale.price(i + 1),
                     style: TextStyles.body3.bold,
                   ),
                 ),

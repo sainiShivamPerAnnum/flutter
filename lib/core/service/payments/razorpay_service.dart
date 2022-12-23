@@ -18,6 +18,8 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,6 +37,7 @@ class RazorpayService extends ChangeNotifier {
   BaseTransactionService? _txnService;
   AnalyticsService? _analyticsService;
   InvestmentType? currentInvestmentType;
+  S locale = locator<S>();
 
   bool init(InvestmentType investmentType) {
     _razorpay = Razorpay();
@@ -75,8 +78,8 @@ class RazorpayService extends ChangeNotifier {
     _txnService!.currentTransactionState = TransactionState.idle;
     AppState.unblockNavigation();
     BaseUtil.showNegativeAlert(
-      'Transaction failed',
-      'Your transaction was unsuccessful. Please try again',
+      locale.txnFailed,
+      locale.txnFailedSubtitle
     );
     log.debug("ERROR: " + response.code.toString() + " - " + response.message!);
     Map<String, dynamic>? currentTxnDetails =
@@ -183,8 +186,7 @@ class RazorpayService extends ChangeNotifier {
         return true;
       } else {
         BaseUtil.showNegativeAlert(
-          'Failed to create transaction',
-          'Please try after sometime',
+         locale.failedToCreateTxn, locale.tryLater
         );
         AppState.unblockNavigation();
 
@@ -192,7 +194,7 @@ class RazorpayService extends ChangeNotifier {
       }
     } else {
       BaseUtil.showNegativeAlert(
-        'Transaction failed',
+        locale.txnFailed,
         txnResponse.errorMessage,
       );
       AppState.unblockNavigation();

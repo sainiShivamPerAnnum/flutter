@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -39,6 +40,7 @@ class AutosaveProcessView extends StatefulWidget {
 class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<AutosaveProcessViewModel>(
       onModelReady: (model) {
         model.init(widget.page);
@@ -88,7 +90,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                     _buildAmountSetUi(model, widget.isUpdate),
                     _buildCompleteUI(model),
                     Center(
-                      child: Text("cancelledUI",
+                      child: Text(locale.cancelledUi,
                           style: TextStyles.rajdhaniSB.title4),
                     ),
                   ],
@@ -120,6 +122,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   }
 
   Widget _buildEnterUpi(AutosaveProcessViewModel model) {
+    S locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -128,14 +131,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.screenWidth! * 0.12,
         ),
         Text(
-          "SETUP AUTO SAVE",
+          locale.setUpAutoSave,
           style: TextStyles.sourceSans.body3.setOpecity(0.5),
         ),
         SizedBox(
           height: SizeConfig.padding10,
         ),
         Text(
-          "Enter UPI ID",
+          locale.txnEnterUPI,
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
@@ -149,7 +152,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppTextFieldLabel(
-                'Enter your UPI address:',
+                locale.txnEnterUPIFeild,
                 leftPadding: SizeConfig.padding8,
               ),
               AppTextField(
@@ -190,7 +193,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
         ),
         Spacer(),
         Text(
-          "Supported by 60+ banks for AutoPay",
+          locale.autoPayBanksSupported,
           style: TextStyles.sourceSansL.body4,
         ),
         SizedBox(
@@ -204,7 +207,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
         model.isSubscriptionInProgress
             ? SubProcessText()
             : AppPositiveBtn(
-                btnText: 'submit',
+                btnText: locale.btnSumbit,
                 onPressed: () {
                   Haptic.vibrate();
                   model.initiateCustomSubscription();
@@ -250,6 +253,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   }
 
   Widget _buildPendingUI(AutosaveProcessViewModel model) {
+    S locale = S.of(context);
     final AnalyticsService? _analyticService = locator<AnalyticsService>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -259,14 +263,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.screenWidth! * 0.12,
         ),
         Text(
-          "SETUP AUTO SAVE",
+          locale.setUpAutoSave,
           style: TextStyles.sourceSans.body3.setOpecity(0.5),
         ),
         SizedBox(
           height: SizeConfig.padding10,
         ),
         Text(
-          "Approve Request",
+       locale.autoPayApproveReq,
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
@@ -280,7 +284,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppTextFieldLabel(
-                'Entered UPI Id',
+               locale.txnEnterUPIFeild,
                 leftPadding: SizeConfig.padding8,
               ),
               AppTextField(
@@ -298,7 +302,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   Icons.verified,
                   color: UiConstants.primaryColor,
                 ),
-                hintText: "Enter amount",
+                hintText:locale.txnEnterAmount ,
               ),
             ],
           ),
@@ -307,13 +311,13 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.padding32,
         ),
         Text(
-          "Approve payment\nrequest on your UPI app",
+         locale.txnApprovePaymentReq,
           style: TextStyles.sourceSans.body1,
           textAlign: TextAlign.center,
         ),
         Spacer(),
         Text(
-          "Do not press back until the payment is completed",
+          locale.txnDontPressBack,
           style: TextStyles.sourceSansL.body4.colour(Colors.red),
         ),
         SizedBox(
@@ -321,7 +325,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
         ),
         // if (model.showAppLaunchButton && PlatformUtils.isAndroid)
         AppPositiveBtn(
-          btnText: 'Open ${getUpiAppName(model)}',
+          btnText: locale.btnOpen +'${getUpiAppName(model)}',
           onPressed: () async {
             Haptic.vibrate();
             _analyticService!.track(
@@ -347,7 +351,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Page Expires in",
+              locale.txnPageExpiresIn,
               style: TextStyles.sourceSansL.body4,
             ),
             TweenAnimationBuilder<Duration>(
@@ -406,7 +410,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
 
   Widget _buildAmountSetUi(AutosaveProcessViewModel model, bool isUpdate) {
     final AnalyticsService? _analyticService = locator<AnalyticsService>();
-
+S locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -415,14 +419,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.screenWidth! * 0.05,
         ),
         Text(
-          isUpdate ? "UPDATE AUTOSAVE" : "SETUP AUTOSAVE",
+          isUpdate ? locale.updateAutoSave : locale.setUpAutoSave,
           style: TextStyles.sourceSans.body3.setOpecity(0.5),
         ),
         SizedBox(
           height: SizeConfig.padding10,
         ),
         Text(
-          isUpdate ? "Update amount" : "Enter amount",
+          isUpdate ? locale.txnUpdateAmount: locale.txnEnterAmount,
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
@@ -476,7 +480,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                       },
                       child: SegmentChips(
                         model: model,
-                        text: "Daily",
+                        text: locale.daily,
                       ),
                     ),
                   ),
@@ -491,7 +495,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                       },
                       child: SegmentChips(
                         model: model,
-                        text: "Weekly",
+                        text: locale.weekly,
                       ),
                     ),
                   ),
@@ -559,7 +563,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 top: SizeConfig.screenWidth! * 0.0666,
                 right: SizeConfig.screenWidth! * 0.0666,
                 child: Text(
-                  model.isDaily ? "Daily" : "Weekly",
+                  model.isDaily ? locale.daily : locale.weekly,
                   style: TextStyles.sourceSans.body4.setOpecity(0.4),
                 ),
               ),
@@ -607,7 +611,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               width: SizeConfig.padding4,
             ),
             Text(
-              "Additional Daily Benefits",
+              locale.additionalBenefits,
               style: TextStyles.sourceSans.body3.setOpecity(0.6),
             ),
           ],
@@ -625,7 +629,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 size: 20,
               )
             : AppPositiveBtn(
-                btnText: isUpdate ? 'Update' : 'Set up',
+                btnText: isUpdate ? locale.btnUpdate : locale.setUpText,
                 onPressed: () async {
                   Haptic.vibrate();
                   if (isUpdate) {
@@ -655,6 +659,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   }
 
   Widget _buildCompleteUI(AutosaveProcessViewModel model) {
+    S locale = S.of(context);
     return Container(
       height: SizeConfig.screenHeight,
       child: Column(
@@ -673,14 +678,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             height: SizeConfig.padding10,
           ),
           Text(
-            "Congrats!",
+            locale.congrats,
             style: TextStyles.rajdhaniSB.title1,
           ),
           SizedBox(
             height: SizeConfig.padding8,
           ),
           Text(
-            "Your fello Autosave account has been\nsuccessfully setup!",
+            locale.autoSaveSetUpSuccess,
             style: TextStyles.sourceSans.body2,
             textAlign: TextAlign.center,
           ),
@@ -751,7 +756,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                             .size(SizeConfig.screenWidth! * 0.1067),
                       ),
                       TextSpan(
-                        text: "${model.isDaily ? "Daily" : "Weekly"}",
+                        text: "${model.isDaily ? locale.daily : locale.weekly}",
                         style: TextStyles.sourceSansSB.body1.setOpecity(0.5),
                       ),
                     ],
@@ -765,7 +770,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             color: UiConstants.kBackgroundColor,
             padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
             child: AppPositiveBtn(
-              btnText: "DONE",
+              btnText: locale.obDone,
               width: SizeConfig.screenWidth! -
                   SizeConfig.pageHorizontalMargins * 2,
               onPressed: () {
@@ -779,6 +784,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   }
 
   Widget _buildBenefits() {
+    S locale = S.of(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -796,7 +802,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               height: SizeConfig.padding12,
             ),
             Text(
-              "Interest\non Gold",
+              locale.interestOnGold,
               style: TextStyles.sourceSans.body4
                   .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
               textAlign: TextAlign.center,
@@ -819,7 +825,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               height: SizeConfig.padding20,
             ),
             Text(
-              "1 Golden\nTicket",
+              locale.oneGoldenTicket,
               style: TextStyles.sourceSans.body4
                   .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
               textAlign: TextAlign.center,
@@ -842,7 +848,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               height: SizeConfig.padding20,
             ),
             Text(
-              "50 Fello\nTokens",
+             locale.fiftyFelloTokens,
               style: TextStyles.sourceSans.body4
                   .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
               textAlign: TextAlign.center,

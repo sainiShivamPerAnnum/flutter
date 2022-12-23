@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class GTInstantViewModel extends BaseViewModel {
   final MarketingEventHandlerService _marketingEventHandlerService =
       locator<MarketingEventHandlerService>();
   final _rsaEncryption = new RSAEncryption();
+  S locale = locator<S>();
   final UserCoinService? _coinService = locator<UserCoinService>();
   final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
   AnimationController? lottieAnimationController;
@@ -150,8 +152,8 @@ class GTInstantViewModel extends BaseViewModel {
     } catch (e) {
       _logger!.e(e);
       BaseUtil.showNegativeAlert(
-          "An error occured while redeeming your golden ticket",
-          "Please try again in your winnings section");
+          locale.gtRedeemErrorTitle,
+         locale.getRedeemErrorSubtitle);
     }
 
     Future.delayed(Duration(seconds: 3), () {

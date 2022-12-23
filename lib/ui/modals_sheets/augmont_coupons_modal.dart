@@ -1,6 +1,7 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -16,6 +17,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
       new TextEditingController();
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       height: SizeConfig.screenHeight! * 0.54,
       decoration: BoxDecoration(),
@@ -30,7 +32,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
           Row(
             children: [
               Text(
-                "Apply a Coupon",
+               locale.txnApplyCoupon ,
                 style: TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w700,
@@ -67,11 +69,11 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                       controller: couponCodeController,
                       //maxLength: 10,
                       decoration: InputDecoration(
-                        hintText: "Enter a Coupon Code here",
+                        hintText: locale.txnEnterCoupon,
                         hintStyle: TextStyles.body3.colour(Colors.grey),
                         suffix: InkWell(
                           child: Text(
-                            "Apply",
+                            locale.txnApply,
                             style: TextStyles.body3.bold
                                 .colour(UiConstants.primaryColor),
                           ),
@@ -90,9 +92,9 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                       // textCapitalization: TextCapitalization.characters,
                       validator: (val) {
                         if (val!.trim().length == 0 || val == null)
-                          return "Please enter a code to continue";
+                          return locale.txnEnterCode;
                         if (val.trim().length < 3 || val.trim().length > 10)
-                          return "Invalid Coupon code";
+                          return locale.txnInvalidCouponCode;
                         return null;
                       }),
                 ),
@@ -101,7 +103,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding24),
           Text(
-            "Active Coupons",
+           locale.txnActiveCoupon,
             style: TextStyles.body2.light,
           ),
           Expanded(

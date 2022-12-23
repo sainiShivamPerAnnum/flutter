@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -32,6 +33,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Scaffold(
       body: Stack(
         alignment: Alignment.bottomCenter,
@@ -65,7 +67,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Congratulations!',
+                  locale.btnCongratulations,
                   style: TextStyles.rajdhaniEB.title1.colour(Colors.white),
                 ),
                 Padding(
@@ -101,7 +103,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Redeemed",
+                                    locale.redeemed,
                                     style: TextStyles.rajdhaniSB.body2
                                         .colour(UiConstants.kTextColor3),
                                   ),
@@ -128,7 +130,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Digital Gold",
+                                   locale.digitalGoldText,
                                     style: TextStyles.rajdhaniSB.body2
                                         .colour(UiConstants.kTextColor3),
                                   ),
@@ -167,7 +169,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Balance",
+                              locale.balanceText,
                               style: TextStyles.sourceSans.body2
                                   .colour(Colors.white),
                             ),
@@ -199,7 +201,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        "SHARE",
+                        locale.btnShare,
                         style: TextStyles.sourceSans.bold.body2
                             .colour(UiConstants.kTabBorderColor),
                       )),

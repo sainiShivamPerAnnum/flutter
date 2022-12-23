@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/pages/static/blinker.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -64,6 +65,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return widget.mini
         ? Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,7 +104,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                 Row(
                   children: [
                     Text(
-                      "Current Price",
+                 locale.currentPrice,
                       style: TextStyles.body1.colour(UiConstants.primaryColor),
                     ),
                     Spacer(),
@@ -125,7 +127,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                 Row(
                   children: [
                     Text(
-                      "Valid for: ",
+                      locale.validFor,
                       style: TextStyles.body4
                           .colour(UiConstants.primaryColor)
                           .light,

@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -49,6 +50,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Scaffold(
       appBar: FAppBar(
         // type: FaqsType.play,
@@ -60,7 +62,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
           child: Padding(
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             child: Text(
-              'How to play',
+              locale.tHowToPlay,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: SizeConfig.body2,
@@ -82,7 +84,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
             );
           },
         ),
-        title: "Tambola",
+        title: locale.tTitle,
         backgroundColor: UiConstants.kArrowButtonBackgroundColor,
       ),
       backgroundColor: UiConstants.kBackgroundColor,
@@ -108,7 +110,8 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                'Total Tickets: ${widget.model.activeTambolaCardCount}',
+                                locale.tTotalTickets +
+                                    "${widget.model.activeTambolaCardCount}",
                                 style: TextStyles.rajdhaniSB.body1),
                             if (TambolaRepo.expiringTicketCount != 0)
                               Text(
@@ -140,7 +143,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                                   BorderRadius.circular(SizeConfig.roundness40),
                             ),
                             child: Text(
-                              '+ Get Tickets',
+                              locale.tGetTickets,
                               style: TextStyles.rajdhaniSB.body2,
                               key: ValueKey(Constants.GET_TAMBOLA_TICKETS),
                             ),
@@ -161,7 +164,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                         FullScreenLoader(),
                         SizedBox(height: SizeConfig.padding20),
                         Text(
-                          "Fetching your tambola tickets..",
+                          locale.tFetch,
                           style:
                               TextStyles.sourceSans.body2.colour(Colors.white),
                         ),
@@ -191,7 +194,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'View All Tickets',
+                          locale.tViewAllTicks,
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Icon(

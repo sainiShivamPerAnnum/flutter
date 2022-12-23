@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -21,6 +22,7 @@ class PrizeClaimCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     String minWithdrawPrize =
         AppConfig.getValue(AppConfigKey.min_withdrawable_prize).toString();
     String refUnlock =
@@ -56,7 +58,7 @@ class PrizeClaimCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Total Rewards",
+                                   locale.totalRewards,
                                     style:
                                         TextStyles.body1.colour(Colors.white),
                                   ),
@@ -147,7 +149,7 @@ class PrizeClaimCard extends StatelessWidget {
                                 ),
                                 child: FittedBox(
                                   child: Text(
-                                    "Savings of ₹$refUnlock required to redeem your winnings.",
+                                   locale.refUnlockText(refUnlock),
                                     style:
                                         TextStyles.body3.colour(Colors.white),
                                   ),
@@ -185,12 +187,13 @@ class ClaimButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(bottom: SizeConfig.padding16),
         child: AppPositiveBtn(
           onPressed: onTap as void Function(),
-          btnText: text ?? "Redeem for amazon pay",
+          btnText: text ?? locale.reedomAmznPay,
           width: double.maxFinite,
         ),
       ),

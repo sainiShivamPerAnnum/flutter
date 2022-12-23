@@ -17,6 +17,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/sell_confirmation_screen.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
@@ -30,6 +31,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   final LendboxRepo? _lendboxRepo = locator<LendboxRepo>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
   final UserService? _userService = locator<UserService>();
+  S locale = locator<S>();
 
   List<ApplicationMeta> appMetaList = [];
   UpiApplication? upiApplication;
@@ -143,13 +145,13 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       } else {
         _logger!.e(withdrawalTxn.errorMessage);
         BaseUtil.showNegativeAlert(
-          'Withdrawal Failed',
+          locale.withDrawalFailed,
           withdrawalTxn.errorMessage,
         );
       }
     } else {
       _logger!.e(bankRes.errorMessage);
-      BaseUtil.showNegativeAlert('Withdrawal Failed', bankRes.errorMessage);
+      BaseUtil.showNegativeAlert(locale.withDrawalFailed, bankRes.errorMessage);
     }
 
     AppState.unblockNavigation();
@@ -161,22 +163,22 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     final amount = int.tryParse(this.amountController!.text) ?? 0;
 
     if (amount == 0) {
-      BaseUtil.showNegativeAlert('No amount entered', 'Please enter an amount');
+      BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
       return 0;
     }
 
     if (amount < minAmount) {
       BaseUtil.showNegativeAlert(
-        'Min amount is ${this.minAmount}',
-        'Please enter an amount grater than ${this.minAmount}',
+        locale.minAmountIs + '${this.minAmount}',
+        locale.enterAmountGreaterThan + '${this.minAmount}',
       );
       return 0;
     }
 
     if (amount > withdrawableQuantity!.amount) {
       BaseUtil.showNegativeAlert(
-        'Max amount is ${this.withdrawableQuantity!.amount}',
-        'Please enter an amount lower than ${this.withdrawableQuantity!.amount}',
+        locale.maxAmountIs + '${this.withdrawableQuantity!.amount}',
+        locale.enterAmountLowerThan + '${this.withdrawableQuantity!.amount}',
       );
       return 0;
     }

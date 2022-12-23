@@ -100,7 +100,7 @@ class KycSuccessView extends StatelessWidget {
                 ),
                 margin: EdgeInsets.only(right: SizeConfig.padding12),
                 child: Text(
-                  "VERIFIED",
+                  locale.btnVerified.toUpperCase(),
                   style: TextStyles.rajdhaniSB.body2
                       .colour(UiConstants.primaryColor),
                 ),

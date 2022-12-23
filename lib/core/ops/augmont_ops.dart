@@ -23,6 +23,7 @@ import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,6 +47,7 @@ class AugmontService extends ChangeNotifier {
       locator<AugmontTransactionService>();
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
+      S locale = locator<S>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
@@ -189,10 +191,10 @@ class AugmontService extends ChangeNotifier {
       if (_onSellCompleteResponse.errorMessage != null &&
           _onSellCompleteResponse.errorMessage!.isNotEmpty)
         BaseUtil.showNegativeAlert(
-            _onSellCompleteResponse.errorMessage, 'Please try again!');
+            _onSellCompleteResponse.errorMessage, locale.obPleaseTryAgain);
       else
-        BaseUtil.showNegativeAlert('Verifying transaction',
-            'Your transaction is being verified and will be updated shortly');
+        BaseUtil.showNegativeAlert(locale.txnVerify,
+            locale.txnVerifySubTitle);
 
       _internalOpsService!.logFailure(
           _userService!.baseUser!.uid, FailType.WithdrawlCompleteApiFailed, {
@@ -210,9 +212,9 @@ class AugmontService extends ChangeNotifier {
       hapticVibrate: true,
       isBarrierDismissible: false,
       content: PendingDialog(
-        title: "Withdrawal processing",
+        title: locale.withDrawalProcessing,
         subtitle:
-            "The amount will be credited to your UPI registered bank account shortly.",
+            locale.amountWillbeCreditedShortly,
         duration: '',
       ),
     );

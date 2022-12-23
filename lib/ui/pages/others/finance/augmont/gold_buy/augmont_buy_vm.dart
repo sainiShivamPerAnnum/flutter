@@ -26,6 +26,7 @@ import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -48,6 +49,7 @@ class GoldBuyViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final CouponRepository? _couponRepo = locator<CouponRepository>();
   final PaytmService? _paytmService = locator<PaytmService>();
+  S locale = locator<S>();
   AssetOptionsModel? assetOptionsModel;
   double? incomingAmount;
   List<ApplicationMeta> appMetaList = [];
@@ -304,12 +306,12 @@ class GoldBuyViewModel extends BaseViewModel {
 
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
-          'Loading Gold Rates', 'Please wait while the Gold rates load');
+         locale.loadingGoldRates,locale.loadingGoldRates1);
 
       return false;
     }
     if (goldBuyAmount == null) {
-      BaseUtil.showNegativeAlert('No amount entered', 'Please enter an amount');
+      BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
       return false;
     }
     if (goldBuyAmount! < 10) {
@@ -332,8 +334,8 @@ class GoldBuyViewModel extends BaseViewModel {
     if (_disabled != null && _disabled) {
       isGoldBuyInProgress = false;
       BaseUtil.showNegativeAlert(
-        'Purchase Failed',
-        'Gold buying is currently on hold. Please try again after sometime.',
+        locale.purchaseFailed,
+        locale.goldBuyHold,
       );
       trackCheckOOutEvent(
           "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
@@ -478,8 +480,8 @@ class GoldBuyViewModel extends BaseViewModel {
     updateGoldAmount();
     if (goldRates == null)
       BaseUtil.showNegativeAlert(
-        'Portal unavailable',
-        'The current rates couldn\'t be loaded. Please try again',
+       locale.portalUnavailable,
+        locale.currentRatesNotLoadedText1,
       );
     isGoldRateFetching = false;
   }
@@ -637,17 +639,17 @@ class GoldBuyViewModel extends BaseViewModel {
         appliedCoupon = response.model;
 
         BaseUtil.showPositiveAlert(
-            "Coupon Applied Successfully", response.model?.message);
+            locale.couponAppliedSucc, response?.model?.message);
       } else {
         BaseUtil.showNegativeAlert(
-            "Coupon cannot be applied", response.model?.message);
+            locale.couponCannotBeApplied, response?.model?.message);
       }
     } else if (response.code == 400) {
-      BaseUtil.showNegativeAlert("Coupon not applied",
-          response?.errorMessage ?? "Please try another coupon");
+      BaseUtil.showNegativeAlert(locale.couponNotApplied,
+          response?.errorMessage ?? locale.anotherCoupon);
     } else {
       BaseUtil.showNegativeAlert(
-          "Coupon not applied", "Please try another coupon");
+          locale.couponNotApplied, locale.anotherCoupon);
     }
     _analyticsService!
         .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
@@ -685,6 +687,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
 class PendingDialog extends StatelessWidget {
   final String title, subtitle, duration;
+  S locale = locator<S>();
 
   PendingDialog(
       {required this.title, required this.subtitle, required this.duration});
@@ -693,8 +696,8 @@ class PendingDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppNegativeDialog(
       btnAction: () {},
-      btnText: "OK",
-      title: "We're still Processing",
+      btnText: locale.btnOk.toUpperCase(),
+      title:locale.processing,
       subtitle: subtitle + duration,
     );
   }

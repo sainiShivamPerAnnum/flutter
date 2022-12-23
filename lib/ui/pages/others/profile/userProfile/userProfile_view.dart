@@ -67,7 +67,7 @@ class UserProfileForm extends StatelessWidget {
     required this.model,
   }) : super(key: key);
 
-  final S? locale;
+  final S locale;
   final UserProfileVM model;
 
   @override
@@ -104,10 +104,10 @@ class UserProfileForm extends StatelessWidget {
               validator: (value) {
                 if (value != null && value.trim().isNotEmpty) {
                   if (value.trim().length < 3)
-                    return "At least 3 characters required";
+                    return locale.obNameRules;
                   return null;
                 } else {
-                  return 'Please enter your name as per PAN';
+                  return locale.obNameAsPerPan;
                 }
               },
             ),
@@ -133,7 +133,7 @@ class UserProfileForm extends StatelessWidget {
                                   value.isNotEmpty &&
                                   model.emailRegex.hasMatch(value))
                               ? null
-                              : 'Please enter a valid email';
+                              : locale.obValidEmail;
                         },
                       )
                     : AppTextField(
@@ -148,7 +148,7 @@ class UserProfileForm extends StatelessWidget {
                         focusNode: model.emailOptionsFocusNode,
                         // suffixIcon: UserEmailVerificationButton(),
                         textEditingController: model.emailController,
-                        hintText: model.inEditMode ? "Enter email" : "",
+                        hintText: model.inEditMode ? locale.obEmailHint : "",
                       ))
                 : AppTextField(
                     readOnly: true,
@@ -161,7 +161,7 @@ class UserProfileForm extends StatelessWidget {
                     focusNode: model.emailOptionsFocusNode,
                     suffixIcon: UserEmailVerificationButton(),
                     textEditingController: model.emailController,
-                    hintText: model.inEditMode ? "Enter email" : "",
+                    hintText: model.inEditMode ? locale.obEmailHint : "",
                   ),
 
             // InkWell(
@@ -252,10 +252,10 @@ class UserProfileForm extends StatelessWidget {
                           validate: (String? val) {
                             if (val == null || val.isEmpty) {
                               model.dateInputError =
-                                  "Date field cannot be empty";
+                                locale.obDateFieldVal;
                             } else if (int.tryParse(val)! > 31 ||
                                 int.tryParse(val)! < 1) {
-                              model.dateInputError = "Invalid date";
+                              model.dateInputError = locale.obInValidDate;
                             }
                             return null;
                           },
@@ -277,13 +277,13 @@ class UserProfileForm extends StatelessWidget {
                               if (val == null || val.isEmpty) {
                                 // setState(() {
                                 model.dateInputError =
-                                    "Date field cannot be empty";
+                                    locale.obDateFieldVal;
                                 // });
                               } else if (int.tryParse(val) != null &&
                                   (int.tryParse(val)! > 13 ||
                                       int.tryParse(val)! < 1)) {
                                 // setState(() {
-                                model.dateInputError = "Invalid date";
+                                model.dateInputError = locale.obInValidDate;
                                 // });
                               }
                               return null;
@@ -305,13 +305,13 @@ class UserProfileForm extends StatelessWidget {
                             if (val == null || val.isEmpty) {
                               // setState(() {
                               model.dateInputError =
-                                  "Date field cannot be empty";
+                                  locale.obDateFieldVal;
                               // });
                             } else if (int.tryParse(val)! >
                                     DateTime.now().year ||
                                 int.tryParse(val)! < 1950) {
                               // setState(() {
-                              model.dateInputError = "Invalid date";
+                              model.dateInputError = locale.obInValidDate;
                               // });
                             }
                             return null;
@@ -374,9 +374,9 @@ class UserProfileForm extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppTextFieldLabel("Username"),
+                  AppTextFieldLabel(locale.obUsernameLabel),
                   AppTextField(
-                    hintText: 'Your username',
+                    hintText: locale.obUsernameHint,
                     onTap: () {},
                     prefixText: '@',
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -442,7 +442,7 @@ class UserProfileForm extends StatelessWidget {
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         onTap: model.navigateToKycScreen,
                         title: Text(
-                          "Your KYC Details",
+                          locale.obKYCDetailsLabel,
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.kTextColor2),
                         ),
@@ -454,7 +454,7 @@ class UserProfileForm extends StatelessWidget {
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         onTap: model.navigateToBankDetailsScreen,
                         title: Text(
-                          "Your Bank Account Details",
+                          locale.obBankDetails,
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.kTextColor2),
                         ),
@@ -471,7 +471,7 @@ class UserProfileForm extends StatelessWidget {
                         child: Row(
                           children: [
                             Text(
-                              "App Lock",
+                              locale.obAppLock,
                               style: TextStyles.sourceSans.body3
                                   .colour(UiConstants.kTextColor2),
                             ),
@@ -506,7 +506,7 @@ class UserProfileForm extends StatelessWidget {
                           // padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text('Need Help?',
+                            Text(locale.obNeedHelp,
                                 style: TextStyles.sourceSansSB.body2
                                     .colour(UiConstants.kTabBorderColor))
                           ],
@@ -517,13 +517,13 @@ class UserProfileForm extends StatelessWidget {
                   )
                 : ReactivePositiveAppButton(
                     width: SizeConfig.screenWidth,
-                    btnText: "Complete",
+                    btnText:locale.btnComplete,
                     onPressed: model.updateDetails),
             SizedBox(height: SizeConfig.padding6),
             Center(
               child: TextButton(
                 child: Text(
-                  'SIGN OUT',
+                  locale.btnSignout,
                   style: TextStyles.rajdhaniB.body1,
                 ),
                 onPressed: model.signout,
