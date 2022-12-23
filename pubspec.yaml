@@ -11,7 +11,7 @@ environment:
 dependencies:
   apxor_flutter:
     git: https://github.com/apxor/apxor-flutter-sdk.git
-    ref: 19d6f70
+    
  
   cached_network_image: ^3.2.3
   cloud_firestore: ^4.2.0
@@ -61,8 +61,7 @@ dependencies:
       ref: GioPan04-android-support
   paytm_allinonesdk: ^1.1.4
   flutter_facebook_sdk:
-    git:
-      url: https://github.com/Tetsukick/flutter_facebook_sdk
+    path: packages/flutter_facebook_sdk/
 
   pdf: ^3.1.0
   permission_handler: ^10.1.0
