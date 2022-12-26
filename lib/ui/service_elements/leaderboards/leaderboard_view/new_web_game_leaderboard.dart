@@ -76,7 +76,7 @@ class NewLeaderBoardView extends StatelessWidget {
     required this.isUserInTopThree,
     required this.currentUserRank,
   });
-   S locale = locator<S>();
+  S locale = locator<S>();
   final List<ScoreBoard>? scoreBoard;
   final List<String?> userProfilePicUrl;
   final bool isUserInTopThree;
@@ -197,7 +197,7 @@ class RemainingRank extends StatelessWidget {
                     ),
                     userProfilePicUrl[countedIndex] == null
                         ? SvgPicture.asset(
-                            getDefaultProfilePicture(countedIndex),
+                            getDefaultProfilePicture(countedIndex + 1),
                             width: SizeConfig.iconSize5,
                             height: SizeConfig.iconSize5,
                             fit: BoxFit.cover,
@@ -227,7 +227,7 @@ class RemainingRank extends StatelessWidget {
                 ),
               ),
               Text(
-                '${scoreboard![countedIndex].score!.toInt()}'+ locale.points,
+                '${scoreboard![countedIndex].score!.toInt()}' + locale.points,
                 style: TextStyles.rajdhaniM.body3,
               ),
             ],
@@ -248,7 +248,7 @@ class RemainingRank extends StatelessWidget {
       case 4:
         return Assets.cvtar4;
       case 5:
-        return Assets.cvtar4;
+        return Assets.cvtar5;
       case 6:
         return Assets.cvtar1;
       default:

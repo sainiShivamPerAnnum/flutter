@@ -184,7 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "boxFloTitles2":
             MessageLookupByLibrary.simpleMessage("Interest credited everyday"),
         "boxFloTitles3":
-            MessageLookupByLibrary.simpleMessage("48 hour lock-in period"),
+            MessageLookupByLibrary.simpleMessage("1 week lock-in period"),
         "boxGoldTitles1":
             MessageLookupByLibrary.simpleMessage("Safe mode of saving"),
         "boxGoldTitles2": MessageLookupByLibrary.simpleMessage(

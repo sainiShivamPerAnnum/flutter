@@ -71,7 +71,7 @@ class UserProfileVM extends BaseViewModel {
   final FcmListener? fcmlistener = locator<FcmListener>();
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
-      S locale = locator<S>();
+  S locale = locator<S>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final PaytmService? _paytmService = locator<PaytmService>();
@@ -259,7 +259,8 @@ class UserProfileVM extends BaseViewModel {
       gen = 0;
     } else if (myGender == "O") {
       gender = _locale!.obGenderOthers;
-      genderController = new TextEditingController(text: locale.obPreferNotToSay);
+      genderController =
+          new TextEditingController(text: locale.obPreferNotToSay);
       gen = -1;
     }
   }
@@ -374,7 +375,7 @@ class UserProfileVM extends BaseViewModel {
               BaseUser.fldIsEmailVerified:
                   _userService!.baseUser!.isEmailVerified,
               BaseUser.fldEmail: _userService!.baseUser!.email,
-              BaseUser.fldAvatarId: "AV1",
+              BaseUser.fldAvatarId: _userService!.avatarId,
               BaseUser.fldUsername: _userService!.baseUser!.username
             },
           ).then((ApiResponse<bool> res) async {
@@ -911,7 +912,7 @@ class UserProfileVM extends BaseViewModel {
     } else if (response == UsernameResponse.INVALID) {
       if (usernameController!.text.trim().length < 4)
         return Text(
-         locale.userNameVal1,
+          locale.userNameVal1,
           maxLines: 2,
           style: TextStyle(
             color: Colors.red,
@@ -929,7 +930,7 @@ class UserProfileVM extends BaseViewModel {
         );
       else
         return Text(
-          "@${usernameController!.text.trim()}"+locale.isValid ,
+          "@${usernameController!.text.trim()}" + locale.isValid,
           maxLines: 2,
           style: TextStyle(
             color: Colors.red,
