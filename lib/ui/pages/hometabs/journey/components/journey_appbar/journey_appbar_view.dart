@@ -23,9 +23,9 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class JourneyAppBar extends StatelessWidget {
   JourneyAppBar({Key? key}) : super(key: key);
   final BaseUtil? _baseUtil = locator<BaseUtil>();
+  S locale = locator<S>();
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
       properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
       builder: (context, m, properties) {
@@ -112,7 +112,7 @@ class JourneyAppBar extends StatelessWidget {
                           JourneyAppBarAssetDetailsTile(
                             key: ValueKey(Constants.TOTAL_SAVINGS_JAPPBAR),
                             actionUri: '/save',
-                            title: "Total Savings",
+                            title: locale.totalSavings,
                             value: NetWorthValue(
                               style: TextStyles.rajdhaniSB.body0
                                   .colour(Colors.white),
@@ -125,7 +125,7 @@ class JourneyAppBar extends StatelessWidget {
                           JourneyAppBarAssetDetailsTile(
                             key: ValueKey(Constants.TOTAL_WINNINGS_JAPPBAR),
                             actionUri: '/win',
-                            title: "Total Winnings",
+                            title: locale.totalWinnings,
                             value: LifeTimeWin(
                               style: TextStyles.rajdhaniSB.body0
                                   .colour(Colors.white),

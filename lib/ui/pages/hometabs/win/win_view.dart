@@ -143,7 +143,7 @@ class Win extends StatelessWidget {
                                                         ),
                                                         TextSpan(
                                                           text:
-                                                              locale.onReaching+"${model.minWithdrawPrize}",
+                                                              locale.onReaching+" ₹${model.minWithdrawPrize}",
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants

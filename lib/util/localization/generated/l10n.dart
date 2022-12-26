@@ -1408,6 +1408,16 @@ class S {
     );
   }
 
+  /// `Total Winnings`
+  String get totalWinnings {
+    return Intl.message(
+      'Total Winnings',
+      name: 'totalWinnings',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Your Savings`
   String get yourSavings {
     return Intl.message(
@@ -1798,6 +1808,36 @@ class S {
     );
   }
 
+  /// `Govt. Accredited`
+  String get govtAcc {
+    return Intl.message(
+      'Govt. Accredited',
+      name: 'govtAcc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `RBI Certified`
+  String get rbiCertified {
+    return Intl.message(
+      'RBI Certified',
+      name: 'rbiCertified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trusted by`
+  String get trustedBy {
+    return Intl.message(
+      'Trusted by',
+      name: 'trustedBy',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '--------------------------------' key
 
   /// `Add Bank information`
@@ -1952,10 +1992,10 @@ class S {
     );
   }
 
-  /// `on reaching ₹`
+  /// `on reaching `
   String get onReaching {
     return Intl.message(
-      'on reaching ₹',
+      'on reaching ',
       name: 'onReaching',
       desc: '',
       args: [],
@@ -2182,6 +2222,16 @@ class S {
     );
   }
 
+  /// `Winnings can be redeemed on reaching ₹{prize}`
+  String winningsRedeem(Object prize) {
+    return Intl.message(
+      'Winnings can be redeemed on reaching ₹$prize',
+      name: 'winningsRedeem',
+      desc: '',
+      args: [prize],
+    );
+  }
+
   /// `Points`
   String get points {
     return Intl.message(
@@ -2303,10 +2353,10 @@ class S {
   }
 
   /// `Adding prize to your wallet`
-  String get addingPrice {
+  String get addingPrize {
     return Intl.message(
       'Adding prize to your wallet',
-      name: 'addingPrice',
+      name: 'addingPrize',
       desc: '',
       args: [],
     );
@@ -2343,10 +2393,10 @@ class S {
   }
 
   /// `Prize ${i}`
-  String price(Object i) {
+  String prize(Object i) {
     return Intl.message(
       'Prize \$$i',
-      name: 'price',
+      name: 'prize',
       desc: '',
       args: [i],
     );
@@ -2507,6 +2557,16 @@ class S {
     return Intl.message(
       'worths of Gold',
       name: 'worthsOfGold',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Per Game`
+  String get perGame {
+    return Intl.message(
+      'Per Game',
+      name: 'perGame',
       desc: '',
       args: [],
     );
@@ -3486,10 +3546,10 @@ class S {
     );
   }
 
-  /// `Buttom`
+  /// `Button`
   String get btn {
     return Intl.message(
-      'Buttom',
+      'Button',
       name: 'btn',
       desc: '',
       args: [],
@@ -5655,6 +5715,16 @@ class S {
     return Intl.message(
       'Tokens',
       name: 'tokens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get More Tokens`
+  String get getMoreTokens {
+    return Intl.message(
+      'Get More Tokens',
+      name: 'getMoreTokens',
       desc: '',
       args: [],
     );
@@ -7955,6 +8025,126 @@ class S {
       args: [],
     );
   }
+
+  /// `Congratulations, you have completed a new milestone! 🎉`
+  String get newMileStoneAlert1 {
+    return Intl.message(
+      'Congratulations, you have completed a new milestone! 🎉',
+      name: 'newMileStoneAlert1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go to your journey to find out what you've won`
+  String get newMileStoneAlert2 {
+    return Intl.message(
+      'Go to your journey to find out what you\'ve won',
+      name: 'newMileStoneAlert2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Congratulations 🎉`
+  String get tambolaTicketWinAlert1 {
+    return Intl.message(
+      'Congratulations 🎉',
+      name: 'tambolaTicketWinAlert1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your tickets have been submitted for processing your prizes!`
+  String get tambolaTicketWinAlert2 {
+    return Intl.message(
+      'Your tickets have been submitted for processing your prizes!',
+      name: 'tambolaTicketWinAlert2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ICICI Prudential Fund`
+  String get icici {
+    return Intl.message(
+      'ICICI Prudential Fund',
+      name: 'icici',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tambola Win`
+  String get tambolaWin {
+    return Intl.message(
+      'Tambola Win',
+      name: 'tambolaWin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Referral Bonus`
+  String get refBonus {
+    return Intl.message(
+      'Referral Bonus',
+      name: 'refBonus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rewards Redeemed`
+  String get rewardsRedemeed {
+    return Intl.message(
+      'Rewards Redeemed',
+      name: 'rewardsRedemeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello Rewards`
+  String get felloRewards {
+    return Intl.message(
+      'Fello Rewards',
+      name: 'felloRewards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prize`
+  String get prizeText {
+    return Intl.message(
+      'Prize',
+      name: 'prizeText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AUTO SIP`
+  String get autoSipText {
+    return Intl.message(
+      'AUTO SIP',
+      name: 'autoSipText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdrawal`
+  String get withdrawal {
+    return Intl.message(
+      'Withdrawal',
+      name: 'withdrawal',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -7963,6 +8153,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en', countryCode: 'US'),
+      Locale.fromSubtags(languageCode: 'hi', countryCode: 'IN'),
       Locale.fromSubtags(languageCode: 'pt', countryCode: 'BR'),
     ];
   }

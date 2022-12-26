@@ -50,10 +50,11 @@ class SudoAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class WebHomeView extends StatelessWidget {
-  const WebHomeView({Key? key, required this.game}) : super(key: key);
+   WebHomeView({Key? key, required this.game}) : super(key: key);
   final String game;
 
   @override
+    S locale = locator<S>();
   Widget build(BuildContext context) {
     ScrollController _controller = ScrollController();
 
@@ -305,14 +306,14 @@ class WebHomeView extends StatelessWidget {
                                     GameInfoBlock(
                                       coin:
                                           '${NumberFormat.compact().format(model.currentGameModel!.prizeAmount)}',
-                                      coinText: 'Win upto',
+                                      coinText: locale.gameWinUptoTitle,
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.rewardGameAsset,
                                     ),
                                     GameInfoBlock(
                                       coin:
                                           '${model.currentGameModel!.playCost}',
-                                      coinText: 'Per Game',
+                                      coinText: locale.perGame,
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.token,
                                     ),
@@ -379,7 +380,7 @@ class WebHomeView extends StatelessWidget {
                                   left: SizeConfig.padding16,
                                   top: SizeConfig.pageHorizontalMargins),
                               child: Text(
-                                "Past Week Winners",
+                                locale.pastWeekWinners,
                                 style: TextStyles.rajdhaniSB.title3,
                               )),
                           SizedBox(
@@ -405,7 +406,7 @@ class WebHomeView extends StatelessWidget {
                           horizontal: SizeConfig.padding24,
                           vertical: SizeConfig.padding16),
                       child: ReactivePositiveAppButton(
-                        btnText: 'Play',
+                        btnText: locale.btnPlay,
                         onPressed: () async {
                           Haptic.vibrate();
                           if (await model.setupGame()) model.launchGame();
@@ -431,9 +432,10 @@ class WebHomeView extends StatelessWidget {
 class RechargeOptions extends StatelessWidget {
   final WebHomeViewModel model;
   const RechargeOptions({Key? key, required this.model}) : super(key: key);
-
+ 
   @override
   Widget build(BuildContext context) {
+    S locale = locator<S>();
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -442,7 +444,7 @@ class RechargeOptions extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
           child: Text(
-            'Get More Tokens',
+            locale.getMoreTokens,
             style: TextStyles.sourceSansSB.title5,
           ),
         ),
