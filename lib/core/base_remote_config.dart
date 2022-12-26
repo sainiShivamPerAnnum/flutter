@@ -198,10 +198,10 @@ class BaseRemoteConfig {
   static const Map<String, int> _CACHE_INVALIDATION = {'invalidateBefore': 0};
 
   static const Map<String, String> _ACTIVE_PG_ANDROID = {
-    'activePgAndroid': 'PAYTM'
+    'activePgAndroid': 'RZP-PG'
   };
 
-  static const Map<String, String> _ACTIVE_PG_IOS = {'activePgIos': 'PAYTM'};
+  static const Map<String, String> _ACTIVE_PG_IOS = {'activePgIos': 'RZP-PG'};
 
   static const Map<String, String> _ENABLED_PSP_APPS = {
     'enabledPspApps': 'EGP'
@@ -211,7 +211,7 @@ class BaseRemoteConfig {
 
   static const Map<String, String> _PAYTM_DEV_MID = {'paytm_dev_mid': 'pdm'};
 
-  static const Map<String, String> _RZP_PROD_MID = {'rzpMid': 'rpm'};
+  static const Map<String, String> _RZP_PROD_MID = {'rzpMid': 'rzp_live_RlTp4Aso51l5Fu'};
 
   static const Map<String, String> _RZP_DEV_MID = {'rzp_dev_mid': 'rdm'};
 
