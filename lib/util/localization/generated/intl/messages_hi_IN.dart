@@ -22,7 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(version) => "संस्करण ${version}";
 
-  static String m1(Value) => "और ${Value} फेलो टोकन।";
+  static String m1(Value) => " और ${Value} फेलो टोकन।";
 
   static String m2(amount) =>
       "जारी रखने पर, ₹${amount} आपके लिंक किए गए बैंक खाते में तुरंत क्रेडिट कर दिए जाएंगे";
@@ -123,9 +123,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "areYouSure":
             MessageLookupByLibrary.simpleMessage("क्या आपको यकीन है ?"),
         "askfrndForInvesText": MessageLookupByLibrary.simpleMessage(
-            "एक बार जब आपका दोस्त अपना पहला निवेश करता है"),
+            "एक बार जब आपका दोस्त अपना पहला निवेश करता है "),
         "askfrndForInvesText1": MessageLookupByLibrary.simpleMessage(
-            ", आपको और आपके दोस्त दोनों को मिलते हैं ₹ "),
+            ",आपको और आपके दोस्त दोनों को मिलते हैं ₹"),
         "askfrndForInvesText2": m1,
         "assetNotAvailable": MessageLookupByLibrary.simpleMessage(
             "संपत्ति इस समय उपलब्ध नहीं है"),
@@ -462,7 +462,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "goldPurchased":
             MessageLookupByLibrary.simpleMessage("खरीदा गया सोना:"),
         "goldSellReason":
-            MessageLookupByLibrary.simpleMessage("आप क्या बेचना चाहते हैं?"),
+            MessageLookupByLibrary.simpleMessage("आप क्यों बेचना चाहते हैं?"),
         "goldSellingCapacity": MessageLookupByLibrary.simpleMessage(
             "एक बार में ₹ 50,000 तक की बिक्री की जा सकती है।"),
         "goldSold": MessageLookupByLibrary.simpleMessage("सोना बिका:"),
