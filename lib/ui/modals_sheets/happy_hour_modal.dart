@@ -85,63 +85,66 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                     : SizeConfig.screenHeight! * 0.4,
                 width: SizeConfig.screenWidth,
                 decoration: BoxDecoration(
-                    color: UiConstants.kSaveDigitalGoldCardBg,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(
-                        SizeConfig.roundness32,
-                      ),
+                  color: UiConstants.kSaveDigitalGoldCardBg,
+                  border: Border.all(color: Color(0xff93B5FE)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(
+                      SizeConfig.roundness32,
                     ),
                   ),
-                  border: Border.all(color: Color(0xff93B5FE))),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: SizeConfig.screenHeight! * .06,
-                  ),
-                  Text(
-                    isHappyHourEnded ? locale.happyHourIsOver : data.title ?? '',
-                    style: TextStyles.sourceSansSB.body0,
-                  ),
-                  SizedBox(
-                    height: SizeConfig.screenHeight! * .02,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: List.generate(
-                      5,
-                      (index) => index % 2 == 0
-                          ? Container(
-                              height: SizeConfig.screenHeight! * 0.08,
-                              width: SizeConfig.screenHeight! * 0.08,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xff1F2C65).withOpacity(0.6),
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurStyle: BlurStyle.outer,
-                                    color: Color(0xff93B5FE).withOpacity(0.4),
-                                    // spreadRadius: 2,
-                                    offset: Offset(0, -1),
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                getTime((index / 2).round()),
-                                style: TextStyles.rajdhaniSB.title3.colour(
-                                    isHappyHourEnded
-                                        ? Color(0xffF79780)
-                                        : Colors.white),
-                              ),
-                            )
-                          : Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
-                              child: Text(
-                                ":",
-                                style: TextStyles.sourceSans.body1
-                                    .colour(Color(0XFFBDBDBE)),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.screenHeight! * .06,
+                    ),
+                    Text(
+                      isHappyHourEnded
+                          ? locale.happyHourIsOver
+                          : data.title ?? '',
+                      style: TextStyles.sourceSansSB.body0,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.screenHeight! * .02,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: List.generate(
+                        5,
+                        (index) => index % 2 == 0
+                            ? Container(
+                                height: SizeConfig.screenHeight! * 0.08,
+                                width: SizeConfig.screenHeight! * 0.08,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xff1F2C65).withOpacity(0.6),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurStyle: BlurStyle.outer,
+                                      color: Color(0xff93B5FE).withOpacity(0.4),
+                                      // spreadRadius: 2,
+                                      offset: Offset(0, -1),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  getTime((index / 2).round()),
+                                  style: TextStyles.rajdhaniSB.title3.colour(
+                                      isHappyHourEnded
+                                          ? Color(0xffF79780)
+                                          : Colors.white),
+                                ),
+                              )
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                child: Text(
+                                  ":",
+                                  style: TextStyles.sourceSans.body1
+                                      .colour(Color(0XFFBDBDBE)),
+                                ),
                               ),
                       ),
                     ),
@@ -208,11 +211,12 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                                 .track(eventName: "Happy Hour Notify");
                           }
                         },
-                        title:
-                            isHappyHourEnded ? locale.btnNotifyMe : data.ctaText ?? '',
+                        title: isHappyHourEnded
+                            ? locale.btnNotifyMe
+                            : data.ctaText ?? '',
                         width: SizeConfig.screenWidth! * 0.3,
                         height: SizeConfig.screenWidth! * 0.11,
-                      )
+                      ),
                   ],
                 ),
               ),
