@@ -35,7 +35,7 @@ class ReferralDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S? locale = S.of(context);
+    S locale = S.of(context);
     return BaseView<ReferralDetailsViewModel>(
         onModelReady: (model) => model.init(context),
         builder: (ctx, model, child) {
@@ -88,7 +88,7 @@ class ReferralDetailsView extends StatelessWidget {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                        text: 'Earn upto ₹' +
+                                        text:locale.earnUpto + '₹' +
                                             AppConfig.getValue(
                                                     AppConfigKey.referralBonus)
                                                 .toString() +
@@ -109,7 +109,7 @@ class ReferralDetailsView extends StatelessWidget {
                                         text: AppConfig.getValue(AppConfigKey
                                                     .referralFlcBonus)
                                                 .toString() +
-                                            ' from every Golden Ticket. Highest referrer wins iPad every month!',
+                                            locale.winIpadFromGT,
                                         style: TextStyles.sourceSans.body3
                                             .colour(UiConstants.kTextColor3)),
                                   ],
@@ -152,7 +152,7 @@ class ReferralDetailsView extends StatelessWidget {
                                           },
                                           child: Row(
                                             children: [
-                                              Text("COPY",
+                                              Text(locale.copy,
                                                   style: TextStyles
                                                       .sourceSans.body3
                                                       .colour(UiConstants
@@ -214,7 +214,7 @@ class ReferralDetailsView extends StatelessWidget {
                           left: SizeConfig.pageHorizontalMargins,
                         ),
                         child: Text(
-                          "My Referrals",
+                          locale.myreferrals,
                           style: TextStyles.sourceSans.semiBold
                               .colour(Colors.white)
                               .title3,
@@ -267,7 +267,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   child: Text(
                                       model.referalList == null
                                           ? '-'
-                                          : "${model.referalList!.length} referrals",
+                                          : "${model.referalList!.length} "+ locale.referrals,
                                       style: TextStyles.body3
                                           .colour(UiConstants.kTextColor2)),
                                 ),
@@ -287,7 +287,7 @@ class ReferralDetailsView extends StatelessWidget {
                                   FullScreenLoader(),
                                   SizedBox(height: SizeConfig.padding20),
                                   Text(
-                                    "Fetching your referals. Please wait..",
+                                    locale.refFetch,
                                     style: TextStyles.sourceSans.body2
                                         .colour(Colors.white),
                                   ),
@@ -302,7 +302,7 @@ class ReferralDetailsView extends StatelessWidget {
                                       SvgPicture.asset(Assets.noReferralAsset),
                                       SizedBox(height: SizeConfig.padding34),
                                       Text(
-                                        "No referrals yet",
+                                       locale.refEmpty,
                                         style: TextStyles.sourceSans.body2
                                             .colour(Colors.white),
                                       ),
@@ -326,7 +326,7 @@ class ReferralDetailsView extends StatelessWidget {
                                               onPressed: () =>
                                                   model.switchTab(0),
                                               child: Text(
-                                                'Successful',
+                                                locale.successful,
                                                 style: model.tabNo == 0
                                                     ? _selectedTextStyle
                                                     : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
@@ -341,7 +341,7 @@ class ReferralDetailsView extends StatelessWidget {
                                               onPressed: () =>
                                                   model.switchTab(1),
                                               child: Text(
-                                                'Have not saved',
+                                                locale.notSaved,
                                                 style: model.tabNo == 1
                                                     ? _selectedTextStyle
                                                     : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
@@ -413,7 +413,7 @@ class ReferralDetailsView extends StatelessWidget {
                     color: UiConstants.kBackgroundColor,
                     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     child: AppPositiveBtn(
-                      btnText: "SHARE",
+                      btnText: locale.btnShare,
                       width: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       onPressed: () {
@@ -439,6 +439,7 @@ class BonusLockedReferals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return model.referalList!.isEmpty
         ? Column(
             children: [
@@ -446,7 +447,7 @@ class BonusLockedReferals extends StatelessWidget {
               SvgPicture.asset(Assets.noReferralAsset),
               SizedBox(height: SizeConfig.padding16),
               Text(
-                "No referrals yet",
+                locale.refEmpty,
                 style: TextStyles.sourceSans.body2.colour(Colors.white),
               ),
               SizedBox(height: SizeConfig.padding16),
@@ -461,12 +462,12 @@ class BonusLockedReferals extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Referals",
+                       locale.referralsTitle,
                           style:
                               TextStyles.sourceSans.body2.colour(Colors.white),
                         ),
                         Text(
-                          "My Reward",
+                         locale.myReward,
                           style:
                               TextStyles.sourceSans.body2.colour(Colors.white),
                         )
@@ -589,7 +590,7 @@ class BonusLockedReferals extends StatelessWidget {
                   SvgPicture.asset(Assets.noReferralAsset),
                   SizedBox(height: SizeConfig.padding16),
                   Text(
-                    "No referrals yet",
+                   locale.refEmpty,
                     style: TextStyles.sourceSans.body2.colour(Colors.white),
                   ),
                   SizedBox(height: SizeConfig.padding16),
@@ -608,6 +609,7 @@ class BonusUnlockedReferals extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return model.referalList!.isEmpty
         ? Column(
             children: [
@@ -615,7 +617,7 @@ class BonusUnlockedReferals extends StatelessWidget {
               SvgPicture.asset(Assets.noReferralAsset),
               SizedBox(height: SizeConfig.padding16),
               Text(
-                "No referrals yet",
+              locale.refEmpty,
                 style: TextStyles.sourceSans.body2.colour(Colors.white),
               ),
               SizedBox(height: SizeConfig.padding16),
@@ -630,12 +632,12 @@ class BonusUnlockedReferals extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Referals",
+                     locale.referralsTitle,
                           style:
                               TextStyles.sourceSans.body2.colour(Colors.white),
                         ),
                         Text(
-                          "My Reward",
+                          locale.myReward,
                           style:
                               TextStyles.sourceSans.body2.colour(Colors.white),
                         )
@@ -756,7 +758,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                   SvgPicture.asset(Assets.noReferralAsset),
                   SizedBox(height: SizeConfig.padding16),
                   Text(
-                    "No referrals yet",
+                    locale.refEmpty,
                     style: TextStyles.sourceSans.body2.colour(Colors.white),
                   ),
                   SizedBox(height: SizeConfig.padding16),
@@ -786,6 +788,7 @@ class _InfoComponentState extends State<HowToEarnComponment> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       width: SizeConfig.screenWidth,
       margin:
@@ -845,7 +848,8 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                     // ),
                     InfoTile(
                       title:
-                          "Once your friend makes their first investment of ₹${widget.model.unlockReferralBonus}, you and your friend both receive ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralFlcBonus)} Fello tokens.",
+                          locale.askfrndForInvesText+"₹${widget.model.unlockReferralBonus}"+locale.askfrndForInvesText1+
+                         "${AppConfig.getValue(AppConfigKey.referralBonus)}"+ locale.askfrndForInvesText2(AppConfig.getValue(AppConfigKey.referralFlcBonus)),
                       leadingAsset: Assets.tickets,
                     ),
                     SizedBox(height: SizeConfig.padding8),
@@ -883,6 +887,7 @@ class InfoTile extends StatelessWidget {
   InfoTile({this.leadingIcon, this.leadingAsset, this.title, this.leadSize});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       margin: EdgeInsets.symmetric(vertical: SizeConfig.padding6),
       child: Row(
@@ -908,7 +913,7 @@ class InfoTile extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              title ?? "title",
+              title ?? locale.title,
               style: TextStyles.body3.colour(UiConstants.kFAQsAnswerColor),
             ),
           ),
@@ -942,6 +947,7 @@ class ReferAndEarnAsset extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Column(
       children: [
         Container(
@@ -963,13 +969,13 @@ class ReferAndEarnAsset extends StatelessWidget {
           text: TextSpan(
             children: [
               TextSpan(
-                  text: 'REFER ',
+                  text:locale.refer.toUpperCase(),
                   style:
                       getHeadingCustomTextStyle(UiConstants.kTabBorderColor)),
               TextSpan(
-                  text: '& ', style: getHeadingCustomTextStyle(Colors.white)),
+                  text: ' & ', style: getHeadingCustomTextStyle(Colors.white)),
               TextSpan(
-                  text: 'EARN',
+                  text: locale.earn.toUpperCase(),
                   style: getHeadingCustomTextStyle(
                       UiConstants.kWinnerPlayerPrimaryColor)),
             ],

@@ -7,6 +7,7 @@ import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/new_w
 import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -25,6 +26,7 @@ class RewardLeaderboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<RewardLeaderboardViewModel>(
       onModelReady: (model) {
         model.init(game);
@@ -41,7 +43,7 @@ class RewardLeaderboardView extends StatelessWidget {
                   child: TextButton(
                     onPressed: () => model.switchTab(0),
                     child: Text(
-                      'Rewards',
+                    locale.rewards,
                       style: model.tabNo == 0
                           ? selectedTextStyle
                           : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
@@ -53,7 +55,7 @@ class RewardLeaderboardView extends StatelessWidget {
                   child: TextButton(
                     onPressed: () => model.switchTab(1),
                     child: Text(
-                      'Leaderboard',
+                      locale.leaderBoard,
                       style: model.tabNo == 1
                           ? selectedTextStyle
                           : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
@@ -77,14 +79,15 @@ class RewardLeaderboardView extends StatelessWidget {
                 )
               ],
             ),
-            _buildTabView(model),
+            _buildTabView(model,context),
           ],
         );
       },
     );
   }
 
-  _buildTabView(RewardLeaderboardViewModel model) {
+  _buildTabView(RewardLeaderboardViewModel model, BuildContext cxt) {
+    S locale = S.of(cxt);
     return HeightAdaptivePageView(
       controller: model.pageController,
       onPageChanged: (int page) {
@@ -103,7 +106,7 @@ class RewardLeaderboardView extends StatelessWidget {
                       ),
                       SizedBox(height: SizeConfig.padding10),
                       Text(
-                        "No rewards yet",
+                        locale.noRewards,
                         style: TextStyles.rajdhaniB.body2.colour(Colors.white),
                       ),
                       SizedBox(height: SizeConfig.padding32),

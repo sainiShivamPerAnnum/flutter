@@ -14,6 +14,7 @@ import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/compo
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
 import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -27,6 +28,7 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return PropertyChangeConsumer<LeaderboardService,
         LeaderBoardServiceProperties>(
       properties: [
@@ -56,7 +58,7 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
                         Assets.noWinnersAsset,
                       ),
                       Text(
-                        "Start playing to see yourself on the leaderboard",
+                        locale.startPlayingToSeeLB,
                         style: TextStyles.sourceSans.body2.colour(Colors.white),
                       ),
                       SizedBox(height: SizeConfig.padding16),
@@ -74,7 +76,7 @@ class NewLeaderBoardView extends StatelessWidget {
     required this.isUserInTopThree,
     required this.currentUserRank,
   });
-
+   S locale = locator<S>();
   final List<ScoreBoard>? scoreBoard;
   final List<String?> userProfilePicUrl;
   final bool isUserInTopThree;
@@ -130,7 +132,7 @@ class NewLeaderBoardView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'See All',
+                    locale.btnSeeAll,
                     style: TextStyles.rajdhaniSB.body2,
                   ),
                   SizedBox(
@@ -163,6 +165,7 @@ class RemainingRank extends StatelessWidget {
   final List<ScoreBoard>? scoreboard;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return ListView.separated(
       itemCount: scoreboard!.length <= 2
           ? scoreboard!.length
@@ -224,7 +227,7 @@ class RemainingRank extends StatelessWidget {
                 ),
               ),
               Text(
-                '${scoreboard![countedIndex].score!.toInt()} points',
+                '${scoreboard![countedIndex].score!.toInt()}'+ locale.points,
                 style: TextStyles.rajdhaniM.body3,
               ),
             ],

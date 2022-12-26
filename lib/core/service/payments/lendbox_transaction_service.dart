@@ -26,6 +26,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 
 class LendboxTransactionService extends BaseTransactionService {
@@ -40,6 +41,7 @@ class LendboxTransactionService extends BaseTransactionService {
   final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
   final TambolaService? _tambolaService = locator<TambolaService>();
+  S locale = locator<S>();
   TransactionResponseModel? _model;
   bool skipMl = false;
 
@@ -98,16 +100,16 @@ class LendboxTransactionService extends BaseTransactionService {
         }
         AppState.unblockNavigation();
         BaseUtil.showNegativeAlert(
-          'Transaction failed',
-          'Your transaction was unsuccessful. Please try again',
+         locale.txnFailed,
+          locale.txnFailedSubtitle,
         );
       }
       AppState.unblockNavigation();
       // resetBuyOptions();
     } else {
       return BaseUtil.showNegativeAlert(
-        'Failed to create transaction',
-        'Please try after sometime',
+        locale.failedToCreateTxn,
+        locale.tryLater,
       );
     }
     AppState.unblockNavigation();
@@ -173,8 +175,8 @@ class LendboxTransactionService extends BaseTransactionService {
           currentTransactionState = TransactionState.idle;
           AppState.unblockNavigation();
           BaseUtil.showNegativeAlert(
-            'Transaction failed',
-            'Your transaction was unsuccessful. Please try again',
+            locale.txnFailed,
+            locale.txnFailedSubtitle,
           );
           break;
       }
@@ -256,13 +258,13 @@ class LendboxTransactionService extends BaseTransactionService {
         AppState.unblockNavigation();
 
         BaseUtil.showNegativeAlert(
-            'Failed to connect to upi app', 'Please try after sometime');
+            locale.upiConnectFailed, locale.tryLater);
       }
     } else {
       AppState.unblockNavigation();
       return BaseUtil.showNegativeAlert(
-        'Failed to create transaction',
-        'Please try after sometime',
+      locale.failedToCreateTxn,
+     locale.tryLater,
       );
     }
   }

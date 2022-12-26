@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -39,6 +40,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
   late LoginNameInputViewModel model;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<LoginNameInputViewModel>(
       onModelReady: (model) {
         this.model = model;
@@ -58,11 +60,11 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
               child: Column(
                 children: [
                   Text(
-                    'Enter Details',
+                   locale.obEnterDetails,
                     style: TextStyles.rajdhaniB.title2,
                   ),
                   Text(
-                    "You're one step away from 10% returns",
+                    locale.obEnterDetailsTitle,
                     style: TextStyles.body3.colour(UiConstants.kTextColor2),
                   )
                 ],
@@ -78,14 +80,14 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppTextFieldLabel("Name", leftPadding: 0),
+                  AppTextFieldLabel(locale.obNameLabel, leftPadding: 0),
                   Form(
                     key: model.formKey,
                     child: AppTextField(
                       textEditingController: model.nameController,
                       isEnabled: model.enabled,
 
-                      hintText: "Enter Full Name",
+                      hintText: locale.obNameHint,
                       focusNode: model.nameFocusNode,
                       textCapitalization: TextCapitalization.words,
                       inputFormatters: [
@@ -98,16 +100,16 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       validator: (value) {
                         if (value != null && value.trim().isNotEmpty) {
                           if (value.trim().length < 3)
-                            return "At least 3 characters required";
+                            return locale.obNameRules;
                           return null;
                         } else {
-                          return 'Please enter your name as per PAN';
+                          return locale.obNameAsPerPan;
                         }
                       },
                     ),
                   ),
                   SizedBox(height: SizeConfig.padding20),
-                  AppTextFieldLabel("Gender", leftPadding: 0),
+                  AppTextFieldLabel(locale.obGenderLabel, leftPadding: 0),
                   Row(
                     children: List.generate(
                       3,
@@ -178,7 +180,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                           children: [
                             SizedBox(height: SizeConfig.padding10),
                             AppTextFieldLabel(
-                              "Referral Code (Optional)",
+                              locale.refCodeOptional,
                               leftPadding: 0,
                             ),
                             AppTextField(
@@ -189,7 +191,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                               isEnabled: true,
                               scrollPadding:
                                   EdgeInsets.only(bottom: SizeConfig.padding80),
-                              hintText: "Enter your referral code here",
+                              hintText: locale.refCodeHint,
                               textAlign: TextAlign.left,
                               onSubmit: (_) =>
                                   widget.loginModel.processScreenInput(2),
@@ -202,7 +204,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                                 if (val!.trim().length == 0) return null;
                                 if (val.trim().length < 6 ||
                                     val.trim().length > 10)
-                                  return "Invalid referral code";
+                                  return locale.refInvalid;
                                 return null;
                               },
                             ),
@@ -220,7 +222,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                               child: Padding(
                                 padding: EdgeInsets.all(SizeConfig.padding8),
                                 child: Text(
-                                  "Have a referral code?",
+                                  locale.refHaveReferral,
                                   style: TextStyles.body2.bold
                                       .colour(UiConstants.kPrimaryColor),
                                   textAlign: TextAlign.center,
@@ -240,7 +242,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                   vertical: SizeConfig.padding12),
               alignment: Alignment.center,
               child: Text(
-                "By proceeding, you agree that you are 18 years and older.",
+               locale.obIsOlder,
                 textAlign: TextAlign.center,
                 style: TextStyles.body3.colour(
                   UiConstants.kTextColor2,

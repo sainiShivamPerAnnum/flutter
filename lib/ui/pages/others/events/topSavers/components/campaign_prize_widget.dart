@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -10,6 +11,7 @@ class CampaignPrizeWidget extends StatelessWidget {
   CampaignPrizeWidget({this.model});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -29,7 +31,7 @@ class CampaignPrizeWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "WIN",
+                      locale.btnWin,
                       style:
                           TextStyles.rajdhaniSB.body0.bold.colour(Colors.white),
                     ),
@@ -39,7 +41,7 @@ class CampaignPrizeWidget extends StatelessWidget {
                           .colour(UiConstants.kWinnerPlayerPrimaryColor),
                     ),
                     Text(
-                      "Win grand rewards\nas digital gold.",
+                      locale.winGrandRewards,
                       style: TextStyles.body3.colour(Colors.white),
                     ),
                   ],

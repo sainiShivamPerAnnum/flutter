@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -17,6 +18,7 @@ class UpdateRequiredScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
@@ -51,7 +53,7 @@ class UpdateRequiredScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                'App Update Required',
+                locale.obAppUpdate,
                 style: TextStyles.rajdhaniB.title2,
                 textAlign: TextAlign.center,
               ),
@@ -60,14 +62,14 @@ class UpdateRequiredScreen extends StatelessWidget {
                   padding:
                       EdgeInsets.symmetric(horizontal: SizeConfig.padding44),
                   child: Text(
-                    "We have come up with critical features and experience improvements that require an update of the application",
+                    locale.obCritialFeaturesUpdate,
                     style: TextStyles.rajdhani.colour(Colors.grey),
                     textAlign: TextAlign.center,
                   )),
               Padding(
                 padding: EdgeInsets.all(SizeConfig.padding34),
                 child: AppPositiveBtn(
-                  btnText: "Update Now".toUpperCase(),
+                  btnText: locale.updateNow.toUpperCase(),
                   onPressed: () {
                     try {
                       if (Platform.isIOS)
@@ -79,7 +81,7 @@ class UpdateRequiredScreen extends StatelessWidget {
                     } catch (e) {
                       Log(e.toString());
                       BaseUtil.showNegativeAlert(
-                          "Something went wrong", "Please try again");
+                          locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
                     }
                   },
                   width: SizeConfig.screenWidth! * 0.8,

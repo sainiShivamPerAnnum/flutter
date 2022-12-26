@@ -3,6 +3,7 @@ import 'package:felloapp/core/service/notifier_services/marketing_event_handler_
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -15,6 +16,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return PropertyChangeConsumer<MarketingEventHandlerService,
         MarketingEventsHandlerProperties>(
       properties: [MarketingEventsHandlerProperties.DailyAppCheckIn],
@@ -81,7 +83,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                           height: SizeConfig.screenWidth! * 0.3),
                       SizedBox(height: SizeConfig.padding10),
                       Text(
-                        model.dailyAppCheckInEventData?.title ?? "Daily Bonus",
+                        model.dailyAppCheckInEventData?.title ?? locale.dailyBonusText,
                         //model!.dailyAppCheckInEventData!.title
                         style:
                             TextStyles.sourceSansB.title3.colour(Colors.white),
@@ -89,7 +91,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                       SizedBox(height: SizeConfig.padding12),
                       Text(
                         model.dailyAppCheckInEventData?.subtitle ??
-                            "Open the app everyday for a week and win assured rewards",
+                            locale.dailyBonusSubtitleText,
                         textAlign: TextAlign.center,
                         style: TextStyles.body2.colour(Colors.white),
                         // model.dailyAppCheckInEventData!.subtitle
@@ -129,7 +131,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              "Day",
+                                              locale.day,
                                               style: TextStyles.sourceSans.body4
                                                   .colour(getTextColor(i)),
                                             ),
@@ -186,7 +188,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                               child: Text(
                                 model.dailyAppCheckInEventData
                                         ?.postClaimMessage ??
-                                    "Reward claimed for today, come back tomorrow for more.",
+                                    locale.claimMessage,
                                 textAlign: TextAlign.center,
                                 style: TextStyles.sourceSansB.body2
                                     .colour(Colors.white),
@@ -194,11 +196,11 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                             )
                           : RichText(
                               text: TextSpan(
-                                text: "You have won a ",
+                                text: locale.youWonA,
                                 style: TextStyles.body1.colour(Colors.white),
                                 children: [
                                   TextSpan(
-                                      text: "Golden Ticket",
+                                      text: locale.goldenTicket,
                                       style: TextStyles.sourceSansB.body1
                                           .colour(Colors.white))
                                 ],
@@ -216,8 +218,8 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                             )
                           : CustomSaveButton(
                               title: model.isDailyAppBonusClaimed
-                                  ? "Got it"
-                                  : "Claim day ${model.currentDay + 1} Reward",
+                                  ? locale.gotIt
+                                  : locale.dayRerward(model.currentDay + 1),
                               onTap: model.isDailyAppBonusClaimed
                                   ? () => model.gotItTapped()
                                   : () => model.sudoClaimDailyReward(),

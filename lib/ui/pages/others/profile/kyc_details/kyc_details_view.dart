@@ -52,8 +52,7 @@ class KYCDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom !=
         SizeConfig.viewInsets.bottom;
-
-    S? locale = S.of(context);
+    S locale = S.of(context);
     return BaseView<KYCDetailsViewModel>(
       onModelReady: (model) {
         model.init();
@@ -66,7 +65,7 @@ class KYCDetailsView extends StatelessWidget {
           ),
           backgroundColor: UiConstants.kSecondaryBackgroundColor,
           title: Text(
-            'KYC Details',
+            locale.kycTitle,
             style: TextStyles.rajdhaniSB.title3,
           ),
           actions: [
@@ -122,7 +121,7 @@ class KYCDetailsView extends StatelessWidget {
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
-                                          'This is required to securely verify your identity.',
+                                          locale.kycVerifyText,
                                           style: TextStyles.sourceSans.body3
                                               .colour(UiConstants.kTextColor2),
                                         ),

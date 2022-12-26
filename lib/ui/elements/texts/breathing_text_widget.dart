@@ -1,3 +1,4 @@
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 class CustomAnimText extends AnimatedWidget {
@@ -12,6 +13,7 @@ class CustomAnimText extends AnimatedWidget {
       : super(key: key, listenable: animation);
 
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     final animation = listenable as Animation<double>;
     return Opacity(
       //margin: EdgeInsets.symmetric(vertical: 10),
@@ -19,7 +21,7 @@ class CustomAnimText extends AnimatedWidget {
       //width: animation.value,
       opacity: _opacityTween.evaluate(animation),
       child: Text(
-        animText ?? 'Loading',
+        animText ?? locale.btnLoading,
         style: textStyle ?? TextStyle(color: Colors.white, fontSize: 20),
       ),
     );

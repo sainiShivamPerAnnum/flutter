@@ -19,6 +19,7 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +32,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final GoldenTicketService _gtService = GoldenTicketService();
   final AnalyticsService? _analyticService = locator<AnalyticsService>();
+  S locale = locator<S>();
 
   FocusNode sipAmountNode = FocusNode();
   bool _showSetAmountView = false;
@@ -351,11 +353,11 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
     if (counter > 4) {
       return BaseUtil.showNegativeAlert(
-          "Too many attempts", "Please try again later");
+          locale.tooManyAttempts, locale.tryLater);
     }
     if (!_userService!.baseUser!.isAugmontOnboarded!) {
-      return BaseUtil.showNegativeAlert("You are not onboarded to augmont yet",
-          "Please finish augmont onboarding first");
+      return BaseUtil.showNegativeAlert(locale.augmountOnboardTitle,
+         locale.augmountOnboardSubTitle);
     }
     isSubscriptionInProgress = true;
     AppState.screenStack.add(ScreenItem.loader);
@@ -389,21 +391,21 @@ class AutosaveProcessViewModel extends BaseViewModel {
       });
     } else
       BaseUtil.showNegativeAlert(
-        response.title ?? "Something went wrong!!",
-        response.subtitle ?? "Please try again",
+        response.title ?? locale.obSomeThingWentWrong,
+        response.subtitle ?? locale.obPleaseTryAgain,
       );
   }
 
   setSubscriptionAmount(double amount) async {
-    if (amount == null || amount == 0) {
+    if (amount == 0) {
       BaseUtil.showNegativeAlert(
-          "No Amount Entered", "Please enter some amount to continue");
+          locale.noAmountEntered, locale.pleaseEnterSomeAmount);
       return;
     }
     if (amount < minValue) {
       return BaseUtil.showNegativeAlert(
-        'Minimum amount should be ₹ $minValue',
-        'Please enter a minimum amount of ₹ $minValue',
+       locale.minAmountShouldBe+'$minValue',
+        locale.enterMinAmount+'$minValue',
       );
     }
     if (_paytmService!.activeSubscription != null) {
@@ -447,12 +449,12 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
     } else if (res['status'] == false) {
       tryAgain();
-      BaseUtil.showNegativeAlert("Something went wrong!!",
-          res['message'] ?? "Please try after sometime");
+      BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong,
+          res['message'] ?? locale.tryLater);
     } else {
       tryAgain();
       BaseUtil.showNegativeAlert(
-          "Something went wrong!", "Please try again after sometime");
+          locale.obSomeThingWentWrong, locale.tryLater);
     }
   }
 
@@ -463,10 +465,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
         hapticVibrate: true,
         isBarrierDismissible: false,
         content: PendingDialog(
-          title: "We're still processing!",
+          title: locale.processing,
           subtitle:
-              "Your Autosave is taking longer than usual. We'll get back to you in ",
-          duration: '20 minutes',
+              locale.autoSaveDelay,
+          duration: '20'+ locale.minutes,
         ),
       );
     });

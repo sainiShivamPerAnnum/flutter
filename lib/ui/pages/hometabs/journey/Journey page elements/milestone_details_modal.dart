@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_as
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -43,6 +44,7 @@ class _JourneyMilestoneDetailsModalSheetState
   final GoldenTicketRepository? _gtService = locator<GoldenTicketRepository>();
   final JourneyService? _journeyService = locator<JourneyService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  S locale = locator<S>();
   bool _isLoading = false;
   GoldenTicket? ticket;
 
@@ -155,7 +157,7 @@ class _JourneyMilestoneDetailsModalSheetState
                 ),
               ),
               Text(
-                "Milestone ${widget.milestone.index}",
+                locale.jMileStone(widget.milestone.index.toString()),
                 style: TextStyles.sourceSansL.body3,
               ),
               SizedBox(height: SizeConfig.padding12),
@@ -166,7 +168,7 @@ class _JourneyMilestoneDetailsModalSheetState
               SizedBox(height: SizeConfig.padding4),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
                   ? Text(
-                      "You have completed this milestone",
+                      locale.mileStoneCompleted,
                       style:
                           TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
                     )
@@ -180,7 +182,7 @@ class _JourneyMilestoneDetailsModalSheetState
                         ),
                         SizedBox(height: SizeConfig.padding24),
                         Text(
-                          "Win a ${getTicketType(widget.milestone.index)} ticket",
+                         locale.winATicket(getTicketType(widget.milestone.index)),
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.primaryColor),
                         )
@@ -197,7 +199,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                         TimestampModel(
                                             seconds: 0, nanoseconds: 0)))
                             ? goldenTicketWidget(ticket!.isLevelChange!)
-                            : rewardWidget(ticket!.rewardArr),
+                            : rewardWidget(ticket!.rewardArr,context),
               SizedBox(height: SizeConfig.padding24),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
                   ? SizedBox()
@@ -205,7 +207,7 @@ class _JourneyMilestoneDetailsModalSheetState
                       ? Column(
                           children: [
                             AppPositiveBtn(
-                                btnText: "Let's Go",
+                                btnText: locale.btnLetsGo,
                                 onPressed: () {
                                   AppState.backButtonDispatcher!.didPopRoute();
                                   if (widget.milestone.actionUri != null &&
@@ -241,7 +243,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                 alignment: Alignment.center,
                                 child: TextButton(
                                   child: Text(
-                                    "SKIP MILESTONE",
+                                    locale.jSkipMileStone,
                                     style: TextStyles.sourceSansL.body3
                                         .colour(Colors.white),
                                   ),
@@ -293,7 +295,8 @@ class _JourneyMilestoneDetailsModalSheetState
     );
   }
 
-  Widget rewardWidget(List<Reward>? rewards) {
+  Widget rewardWidget(List<Reward>? rewards, BuildContext context) {
+     S locale = S.of(context);  
     return (rewards == null || rewards.isEmpty)
         ? SizedBox()
         : Column(
@@ -301,7 +304,7 @@ class _JourneyMilestoneDetailsModalSheetState
             children: [
               SizedBox(height: SizeConfig.padding24),
               Text(
-                "YOU WON",
+                locale.jWon,
                 style: TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
               ),
               SizedBox(height: SizeConfig.padding4),
@@ -361,18 +364,18 @@ class _JourneyMilestoneDetailsModalSheetState
     }
   }
 
-  getSuffix(String? type) {
+  getSuffix(String? type, ) {
     switch (type) {
       case Constants.GT_REWARD_FLC:
-        return " tokens";
+        return " "+locale.tokens.toLowerCase();
       case Constants.GT_REWARD_AMT:
         return "";
       case Constants.GT_REWARD_RUPEE:
         return "";
       case Constants.GT_REWARD_GOLD:
-        return " worth of gold";
+        return " "+locale.worthOfGold;
       case Constants.GT_REWARD_TAMBOLA_TICKET:
-        return " Tambola Ticket";
+        return " "+locale.tTicket;
       default:
         return "";
     }

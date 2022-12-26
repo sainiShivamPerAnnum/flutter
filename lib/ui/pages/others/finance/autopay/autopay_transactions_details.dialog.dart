@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -30,6 +31,7 @@ class AutosaveTransactionDetailsDialogState
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Dialog(
       insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
@@ -45,6 +47,7 @@ class AutosaveTransactionDetailsDialogState
       (gms == null || gms == 0) ? 'N/A' : gms.toStringAsFixed(4);
 
   Widget dialogContent(BuildContext context) {
+    S locale = S.of(context);
     return Wrap(
       children: [
         Container(
@@ -79,7 +82,7 @@ class AutosaveTransactionDetailsDialogState
                 children: [
                   SizedBox(height: 10),
                   Text(
-                    "Transaction Amount",
+                    locale.txnAmountTitle,
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: SizeConfig.smallTextSize,
@@ -139,12 +142,12 @@ class AutosaveTransactionDetailsDialogState
                       Row(
                         children: [
                           referralTile(
-                            'Purchase Rate:',
-                            '₹ ${widget._transaction.augmontMap!.aLockPrice ?? 'N/A'}/gm',
+                            locale.purchaseRate,
+                            '₹ ${widget._transaction.augmontMap!.aLockPrice ?? locale.na}/gm',
                             Colors.redAccent.withOpacity(0.6),
                           ),
                           referralTile(
-                            'Gold Purchased:',
+                            locale.goldPurchased,
                             '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmontMap!.aGoldBalance) ?? 'N/A' as double)} grams',
                             Colors.redAccent.withOpacity(0.6),
                           )
@@ -152,15 +155,15 @@ class AutosaveTransactionDetailsDialogState
                       ),
                     (widget._transaction.status != null)
                         ? referralTileWide(
-                            'Transaction Status:',
+                          locale.txnStatus,
                             widget._transaction.status!,
                             _txnHistoryService!
                                 .getTileColor(widget._transaction.status),
                           )
-                        : referralTileWide('Transaction Status:', "COMPLETED",
+                        : referralTileWide(locale.txnStatus, locale.txnCompleted,
                             UiConstants.primaryColor),
                     referralTileWide(
-                        "Date & Time",
+                        locale.dateTime,
                         "${_getFormattedDate(widget._transaction.createdOn!)}, ${_getFormattedTime(widget._transaction.createdOn!)}",
                         Colors.black)
                   ],

@@ -25,6 +25,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -42,7 +43,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   final GoldenTicketService _gtService = locator<GoldenTicketService>();
   final GoldenTicketRepository _gtRepo = locator<GoldenTicketRepository>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
-
+  final S locale = locator<S>();
   //Local Variables
   List<JourneyLevel>? _levels = [];
   static bool isAvatarAnimationInProgress = false;
@@ -313,8 +314,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     if (!userIsAtJourneyScreen())
       BaseUtil.showPositiveAlert(
-          'Congratulations, you have completed a new milestone! 🎉',
-          "Go to your journey to find out what you've won",
+          locale.newMileStoneAlert1,
+          locale.newMileStoneAlert2,
           seconds: 2);
     checkAndAnimateAvatar();
   }

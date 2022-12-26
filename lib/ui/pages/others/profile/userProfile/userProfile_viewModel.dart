@@ -71,6 +71,7 @@ class UserProfileVM extends BaseViewModel {
   final FcmListener? fcmlistener = locator<FcmListener>();
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
+      S locale = locator<S>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final PaytmService? _paytmService = locator<PaytmService>();
@@ -250,15 +251,15 @@ class UserProfileVM extends BaseViewModel {
   setGender() {
     if (myGender == "M") {
       gender = _locale!.obGenderMale;
-      genderController = new TextEditingController(text: "Male");
+      genderController = new TextEditingController(text: locale.obMale);
       gen = 1;
     } else if (myGender == "F") {
       gender = _locale!.obGenderFemale;
-      genderController = new TextEditingController(text: "Female");
+      genderController = new TextEditingController(text: locale.obFemale);
       gen = 0;
     } else if (myGender == "O") {
       gender = _locale!.obGenderOthers;
-      genderController = new TextEditingController(text: "Rather Not Say");
+      genderController = new TextEditingController(text: locale.obPreferNotToSay);
       gen = -1;
     }
   }
@@ -395,27 +396,26 @@ class UserProfileVM extends BaseViewModel {
               isNewUser = false;
               isEmailEnabled = false;
               BaseUtil.showPositiveAlert(
-                "Updated Successfully",
-                "Profile updated successfully",
+                locale.updatedSuccessfully,
+                locale.profileUpdated,
               );
             } else {
               isUpdaingUserDetails = false;
               BaseUtil.showNegativeAlert(
-                "Profile Update failed",
-                "Please try again in some time",
+                locale.profileUpdateFailed,
+                locale.tryLater,
               );
             }
           });
         } else {
           BaseUtil.showNegativeAlert(
-            'Ineligible',
-            'You need to be above 18 to join',
+            locale.ineligible,
+            locale.above18,
           );
         }
       }
     } else
-      BaseUtil.showNegativeAlert(
-          "Invalid details", "please check the fields again");
+      BaseUtil.showNegativeAlert(locale.invalidDetails, locale.checkFeilds);
   }
 
   bool checkIfAdult() {
@@ -429,7 +429,7 @@ class UserProfileVM extends BaseViewModel {
     if (!isNewUser) return true;
     if (!(await (validateUsername()) ?? false)) {
       BaseUtil.showNegativeAlert(
-          "Username invalid", "please try another username");
+          locale.invalidUsername, locale.anotherUserName);
       return false;
     }
     return (username != null &&
@@ -457,7 +457,7 @@ class UserProfileVM extends BaseViewModel {
         dateFieldController!.text.isNotEmpty &&
         monthFieldController!.text.isNotEmpty &&
         yearFieldController!.text.isNotEmpty) return true;
-    BaseUtil.showNegativeAlert("Empty fields", "please fill all fields");
+    BaseUtil.showNegativeAlert(locale.feildsEmpty, locale.fillAllFeilds);
     return false;
   }
 
@@ -507,12 +507,12 @@ class UserProfileVM extends BaseViewModel {
       isBarrierDismissible: false,
       addToScreenStack: true,
       content: ConfirmationDialog(
-          title: 'Confirm',
-          description: 'Are you sure you want to sign out?',
-          buttonText: 'Yes',
+          title: locale.confirm,
+          description: locale.signOutAlert,
+          buttonText: locale.btnYes,
           // acceptColor: UiConstants.primaryColor,
           // asset: Assets.signout,
-          cancelBtnText: "No",
+          cancelBtnText: locale.btnNo,
           // rejectColor: UiConstants.tertiarySolid,
           // showCrossIcon: false,
           confirmAction: () {
@@ -539,13 +539,13 @@ class UserProfileVM extends BaseViewModel {
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(
-                  'Signed out',
-                  'Hope to see you soon',
+                  locale.signedOut,
+                  locale.hopeToSeeYouSoon,
                 );
               } else {
                 BaseUtil.showNegativeAlert(
-                  'Sign out failed',
-                  'Couldn\'t signout. Please try again',
+                  locale.signOutFailed,
+                  locale.SignOutFailedSubTitle,
                 );
                 //log.error('Sign out process failed');
               }
@@ -595,10 +595,9 @@ class UserProfileVM extends BaseViewModel {
         isBarrierDismissible: false,
         addToScreenStack: true,
         content: ConfirmationDialog(
-          title: "Request Permission",
-          description:
-              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-          buttonText: "Continue",
+          title: locale.reqPermission,
+          description: locale.galleryAccess,
+          buttonText: locale.btnContinue,
           asset: Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
             child: Image.asset(
@@ -619,8 +618,8 @@ class UserProfileVM extends BaseViewModel {
       _chooseprofilePicture();
     } else {
       BaseUtil.showNegativeAlert(
-        'Permission Unavailable',
-        'Please enable permission from settings to continue',
+        locale.permissionUnavailable,
+        locale.enablePermission,
       );
       return false;
     }
@@ -690,10 +689,9 @@ class UserProfileVM extends BaseViewModel {
       _userService!.setMyAvatarId(avatarId);
 
       return BaseUtil.showPositiveAlert(
-          "Update Successful", "Profile picture updated successfully");
+          locale.updatedSuccessfully, locale.profileUpdated);
     } else
-      BaseUtil.showNegativeAlert(
-          "Something went wrong!", "Please try again in sometime");
+      BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.tryLater);
   }
 
   //Model should never user Widgets in it. We should never pass context here...
@@ -717,9 +715,9 @@ class UserProfileVM extends BaseViewModel {
               ),
             ),
           ),
-          buttonText: 'Save',
-          cancelBtnText: 'Discard',
-          description: 'Are you sure you want to update your profile picture',
+          buttonText: locale.btnSave,
+          cancelBtnText: locale.btnDiscard,
+          description: locale.profileUpdateAlert,
           confirmAction: () {
             _userService!.updateProfilePicture(selectedProfilePicture).then(
                   (flag) => _postProfilePictureUpdate(flag),
@@ -728,7 +726,7 @@ class UserProfileVM extends BaseViewModel {
           cancelAction: () {
             AppState.backButtonDispatcher!.didPopRoute();
           },
-          title: 'Update Picture',
+          title: locale.updatePicture,
         ),
       );
       // _rootViewModel.refresh();
@@ -746,13 +744,13 @@ class UserProfileVM extends BaseViewModel {
     if (flag) {
       BaseAnalytics.logProfilePictureAdded();
       BaseUtil.showPositiveAlert(
-        'Complete',
-        'Your profile picture has been updated',
+        locale.btnComplete,
+        locale.profileUpdated1,
       );
     } else {
       BaseUtil.showNegativeAlert(
-        'Failed',
-        'Your Profile Picture could not be updated at the moment',
+        locale.failed,
+        locale.profileUpdateFailedSubtitle,
       );
     }
     AppState.backButtonDispatcher!.didPopRoute();
@@ -856,8 +854,10 @@ class UserProfileVM extends BaseViewModel {
       await _userService!.setBaseUser();
       AppState.unblockNavigation();
       AppState.backButtonDispatcher!.didPopRoute();
-      BaseUtil.showPositiveAlert("Username created successfully",
-          "Your username ${_userService!.baseUser?.username ?? ''} has been successfully registered!");
+      BaseUtil.showPositiveAlert(
+          locale.userNameSuccess,
+          locale.userNameSuccessSubtitle(
+              _userService!.baseUser?.username.toString() ?? ''));
 
       return true;
     } else {
@@ -889,12 +889,12 @@ class UserProfileVM extends BaseViewModel {
       );
     } else if (response == UsernameResponse.EMPTY)
       return Text(
-        "username cannot be empty",
+        locale.userNameEmptyAlert,
         style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
       );
     else if (response == UsernameResponse.UNAVAILABLE)
       return Text(
-        "@${usernameController!.text.trim()} is not available",
+        "@${usernameController!.text.trim()} " + locale.isNotAvailable,
         style: TextStyle(
           color: Colors.red,
           fontWeight: FontWeight.w500,
@@ -902,7 +902,7 @@ class UserProfileVM extends BaseViewModel {
       );
     else if (response == UsernameResponse.AVAILABLE) {
       return Text(
-        "@${usernameController!.text.trim()} is available",
+        "@${usernameController!.text.trim()} " + locale.isAvailable,
         style: TextStyle(
           color: UiConstants.primaryColor,
           fontWeight: FontWeight.w500,
@@ -911,7 +911,7 @@ class UserProfileVM extends BaseViewModel {
     } else if (response == UsernameResponse.INVALID) {
       if (usernameController!.text.trim().length < 4)
         return Text(
-          "please enter a username with more than 3 characters.",
+         locale.userNameVal1,
           maxLines: 2,
           style: TextStyle(
             color: Colors.red,
@@ -920,7 +920,7 @@ class UserProfileVM extends BaseViewModel {
         );
       else if (usernameController!.text.trim().length > 20)
         return Text(
-          "please enter a username with less than 20 characters.",
+          locale.userNameVal2,
           maxLines: 2,
           style: TextStyle(
             color: Colors.red,
@@ -929,7 +929,7 @@ class UserProfileVM extends BaseViewModel {
         );
       else
         return Text(
-          "@${usernameController!.text.trim()} is invalid",
+          "@${usernameController!.text.trim()}"+locale.isValid ,
           maxLines: 2,
           style: TextStyle(
             color: Colors.red,

@@ -7,6 +7,7 @@ import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -27,12 +28,12 @@ class TrendingGamesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = locator<S>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSubtitleContainer(
-          key: ValueKey(Constants.ALL_GAMES_TITLE),
-          title: "All games",
+          title: locale.allgames,
         ),
         Container(
           width: SizeConfig.screenWidth,
@@ -74,6 +75,7 @@ class TrendingGames extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     return GestureDetector(
       onTap: () {
@@ -117,7 +119,7 @@ class TrendingGames extends StatelessWidget {
             SizedBox(height: SizeConfig.padding4),
             RichText(
                 text: TextSpan(
-                    text: 'Win ',
+                    text:locale.btnWin+' ',
                     style: TextStyles.sourceSans.body3.colour(Colors.white),
                     children: [
                   TextSpan(

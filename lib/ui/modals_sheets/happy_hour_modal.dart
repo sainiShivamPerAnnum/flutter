@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -62,6 +63,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
 
   @override
   Widget buildBody(BuildContext context) {
+    S locale = S.of(context);
     final data = widget.model.data!;
     return WillPopScope(
       onWillPop: () async {
@@ -89,59 +91,57 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                         SizeConfig.roundness32,
                       ),
                     ),
-                    border: Border.all(color: Color(0xff93B5FE))),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.screenHeight! * .06,
-                    ),
-                    Text(
-                      isHappyHourEnded
-                          ? "Happy Hour is over"
-                          : data.title ?? '',
-                      style: TextStyles.sourceSansSB.body0,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.screenHeight! * .02,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: List.generate(
-                        5,
-                        (index) => index % 2 == 0
-                            ? Container(
-                                height: SizeConfig.screenHeight! * 0.08,
-                                width: SizeConfig.screenHeight! * 0.08,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xff1F2C65).withOpacity(0.6),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurStyle: BlurStyle.outer,
-                                      color: Color(0xff93B5FE).withOpacity(0.4),
-                                      // spreadRadius: 2,
-                                      offset: Offset(0, -1),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  getTime((index / 2).round()),
-                                  style: TextStyles.rajdhaniSB.title3.colour(
-                                      isHappyHourEnded
-                                          ? Color(0xffF79780)
-                                          : Colors.white),
-                                ),
-                              )
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                child: Text(
-                                  ":",
-                                  style: TextStyles.sourceSans.body1
-                                      .colour(Color(0XFFBDBDBE)),
-                                ),
+                  ),
+                  border: Border.all(color: Color(0xff93B5FE))),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: SizeConfig.screenHeight! * .06,
+                  ),
+                  Text(
+                    isHappyHourEnded ? locale.happyHourIsOver : data.title ?? '',
+                    style: TextStyles.sourceSansSB.body0,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.screenHeight! * .02,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: List.generate(
+                      5,
+                      (index) => index % 2 == 0
+                          ? Container(
+                              height: SizeConfig.screenHeight! * 0.08,
+                              width: SizeConfig.screenHeight! * 0.08,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xff1F2C65).withOpacity(0.6),
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurStyle: BlurStyle.outer,
+                                    color: Color(0xff93B5FE).withOpacity(0.4),
+                                    // spreadRadius: 2,
+                                    offset: Offset(0, -1),
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                getTime((index / 2).round()),
+                                style: TextStyles.rajdhaniSB.title3.colour(
+                                    isHappyHourEnded
+                                        ? Color(0xffF79780)
+                                        : Colors.white),
+                              ),
+                            )
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4),
+                              child: Text(
+                                ":",
+                                style: TextStyles.sourceSans.body1
+                                    .colour(Color(0XFFBDBDBE)),
                               ),
                       ),
                     ),
@@ -150,7 +150,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                       width: SizeConfig.screenWidth! * 0.8,
                       child: Text(
                           isHappyHourEnded
-                              ? "Missed out on the happy hour offer?"
+                              ? locale.missedHappyHour
                               : (data.bottomSheetHeading ?? ""),
                           textAlign: TextAlign.center,
                           maxLines: 2,
@@ -162,7 +162,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                     ),
                     Text(
                       isHappyHourEnded
-                          ? "Get notified when the next happy hour is live"
+                          ? locale.getHappyHourNotified
                           : data.bottomSheetSubHeading ?? '',
                       style: TextStyles.sourceSans.body3
                           .colour(Colors.white.withOpacity(0.6)),
@@ -201,15 +201,15 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                                 .then((value) {
                               if (value)
                                 BaseUtil.showPositiveAlert(
-                                    "Your Happy hour notifications is set!",
-                                    "We will notify you before the next happy hour starts");
+                                    locale.happyHourNotificationSetPrimary,
+                                    locale.happyHourNotificationSetSecondary);
                             });
                             locator<MixpanelAnalytics>()
                                 .track(eventName: "Happy Hour Notify");
                           }
                         },
                         title:
-                            isHappyHourEnded ? "NOTIFY ME" : data.ctaText ?? '',
+                            isHappyHourEnded ? locale.btnNotifyMe : data.ctaText ?? '',
                         width: SizeConfig.screenWidth! * 0.3,
                         height: SizeConfig.screenWidth! * 0.11,
                       )

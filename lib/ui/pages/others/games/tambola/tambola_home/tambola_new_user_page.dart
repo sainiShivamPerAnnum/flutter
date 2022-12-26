@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -98,12 +99,13 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Scaffold(
       appBar: FAppBar(
         showAvatar: false,
         showCoinBar: false,
         showHelpButton: false,
-        title: "Tambola",
+        title: locale.tTicket,
         type: FaqsType.play,
         backgroundColor: UiConstants.kArrowButtonBackgroundColor,
       ),
@@ -172,8 +174,8 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                   ),
                   AppPositiveBtn(
                     btnText: (widget.model.activeTambolaCardCount ?? 0) >= 1
-                        ? "Get Tickets"
-                        : 'Get your first ticket',
+                        ? locale.getTickets
+                        : locale.tgetFirstTkt,
                     onPressed: () {
                       locator<AnalyticsService>().track(
                           eventName:
@@ -241,6 +243,7 @@ class TambolaTicketInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       height: SizeConfig.screenHeight! * 0.10,
       width: SizeConfig.screenWidth! * 0.80,
@@ -282,7 +285,7 @@ class TambolaTicketInfo extends StatelessWidget {
                   style: TextStyles.sourceSansB.title3,
                 ),
                 Text(
-                  'invested',
+                  locale.invested,
                   style: TextStyles.sourceSansSB.body3,
                 )
               ],
@@ -294,9 +297,9 @@ class TambolaTicketInfo extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('1 Ticket', style: TextStyles.sourceSansB.title3),
+                Text(locale.tOneTicket, style: TextStyles.sourceSansB.title3),
                 Text(
-                  'every week for lifetime',
+                  locale.tEveryWeekText,
                   style: TextStyles.sourceSansSB.body4,
                 )
               ],

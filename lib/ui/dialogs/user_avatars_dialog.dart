@@ -1,6 +1,7 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/default_dialog.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -38,6 +39,7 @@ class _UserAvatarSelectionDialogState extends State<UserAvatarSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -47,7 +49,7 @@ class _UserAvatarSelectionDialogState extends State<UserAvatarSelectionDialog> {
               bottom: SizeConfig.padding16,
             ),
             child: Text(
-              "Update Avatar",
+              locale.obUpdateAvatar,
               style: TextStyles.rajdhaniB.title2,
             ),
           ),
@@ -96,14 +98,14 @@ class _UserAvatarSelectionDialogState extends State<UserAvatarSelectionDialog> {
             children: [
               Expanded(
                 child: AppNegativeBtn(
-                  btnText: "Cancel",
+                  btnText: locale.btnCancel,
                   onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
                 ),
               ),
               SizedBox(width: SizeConfig.padding12),
               Expanded(
                 child: ReactivePositiveAppButton(
-                  btnText: "Update",
+                  btnText: locale.btnUpdate,
                   onPressed: () => widget.onPresetAvatarSelection(
                       avatarId: "AV${currentSelectedAvatar + 1}"),
                 ),

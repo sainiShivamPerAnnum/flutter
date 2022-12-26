@@ -1,4 +1,5 @@
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -76,6 +77,7 @@ class RankWidget extends StatelessWidget {
         ((rank - 1.0) *
             SizeConfig.screenWidth! *
             0.055); // 180 - (rank - 1) * 20
+            S locale = S.of(context!);
     return SizedBox(
       height: pillerBoxHeight,
       child: Stack(
@@ -111,7 +113,7 @@ class RankWidget extends StatelessWidget {
                     height: SizeConfig.padding24,
                   ),
                   Text(
-                    'Rs $priceMoney',
+                    locale.rs+' $priceMoney',
                     style: TextStyles.sourceSans.body3,
                   ),
                   SizedBox(

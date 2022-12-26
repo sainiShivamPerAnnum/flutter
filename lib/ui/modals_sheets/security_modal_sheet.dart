@@ -6,6 +6,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -17,9 +18,11 @@ import 'package:provider/provider.dart';
 class SecurityModalSheet extends StatelessWidget {
   SecurityModalSheet();
   final UserRepository? userRepo = locator<UserRepository>();
+  S locale = locator<S>();
   final UserService? userService = locator<UserService>();
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
         AppState.backButtonDispatcher!.didPopRoute();
@@ -41,12 +44,12 @@ class SecurityModalSheet extends StatelessWidget {
                 ),
               ),
             ),
-            Text('Secure Fello', style: TextStyles.rajdhaniB.title3),
+            Text(locale.secureFelloTitle, style: TextStyles.rajdhaniB.title3),
             SizedBox(
               height: SizeConfig.padding8,
             ),
             Text(
-                'Protect your Fello account by using your phone\'s default security.',
+                locale.protectFelloAcc,
                 textAlign: TextAlign.center,
                 style: TextStyles.sourceSans.body2),
             Container(
@@ -57,7 +60,7 @@ class SecurityModalSheet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ReactivePositiveAppButton(
-                    btnText: 'Enable',
+                    btnText: locale.btnEnable,
                     onPressed: () async {
                       // baseProvider.flipSecurityValue(true);
                       await userRepo!.updateUser(dMap: {
@@ -71,7 +74,7 @@ class SecurityModalSheet extends StatelessWidget {
                   SizedBox(height: SizeConfig.padding16),
                   AppNegativeBtn(
                     width: SizeConfig.screenWidth,
-                    btnText: "Not Now",
+                    btnText: locale.btnNotNow,
                     onPressed: () {
                       AppState.backButtonDispatcher!.didPopRoute();
                     },

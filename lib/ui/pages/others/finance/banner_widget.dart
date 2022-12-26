@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/asset_options_model.dart' as I;
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/draw_time_util.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -54,6 +55,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
 
   @override
   Widget buildBody(BuildContext context) {
+    S locale = S.of(context);
     return GestureDetector(
       onTap: () {
         if (showHappyHour) {
@@ -108,7 +110,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
                         text: TextSpan(
                             style: TextStyles.rajdhaniSB.body3
                                 .colour(Color(0XFFB5CDCB)),
-                            text: "Happy Hour ends in ",
+                            text:locale.happyHoursEndsIn ,
                             children: [
                               TextSpan(
                                   text: getString(),

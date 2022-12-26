@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/page_config_model.dart';
 
+
 class DynamicUiUtils {
   static List<List<String>> saveViewOrder = [
     ['AG', 'LB'],

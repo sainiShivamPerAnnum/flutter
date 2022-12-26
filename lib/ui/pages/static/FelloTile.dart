@@ -1,3 +1,4 @@
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -24,6 +25,7 @@ class FelloTile extends StatelessWidget {
       this.showTrailingIcon = true});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return InkWell(
       onTap: onTap as void Function()?,
       child: Container(
@@ -61,14 +63,14 @@ class FelloTile extends StatelessWidget {
                 children: [
                   FittedBox(
                     child: Text(
-                      title ?? "title",
+                      title ?? locale.title.toLowerCase(),
                       style: TextStyles.sourceSansSB.body2,
                     ),
                   ),
                   SizedBox(height: SizeConfig.padding4),
                   FittedBox(
                     child: Text(
-                      subtitle ?? "subtitle",
+                      subtitle ?? locale.subTitle.toLowerCase(),
                       style: TextStyles.sourceSans.body3.colour(Colors.grey),
                     ),
                   )
@@ -101,6 +103,7 @@ class FelloBriefTile extends StatelessWidget {
       this.coloredIcon = false});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return InkWell(
       onTap: onTap as void Function()?,
       child: Container(
@@ -144,7 +147,7 @@ class FelloBriefTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  title ?? "title",
+                  title ?? locale.title.toLowerCase(),
                   overflow: TextOverflow.clip,
                   maxLines: 2,
                   style: TextStyles.body2.bold,

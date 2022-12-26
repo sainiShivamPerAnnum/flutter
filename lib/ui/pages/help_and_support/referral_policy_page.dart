@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -70,6 +71,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return new Scaffold(
       body: Container(
         width: SizeConfig.screenWidth,
@@ -78,7 +80,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
           children: [
             FelloAppBar(
               leading: FelloAppBarBackButton(),
-              title: "Referral Policy",
+              title: locale.refPolicy,
             ),
             Expanded(
               child: Container(
@@ -106,7 +108,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(20),
                                   child: Text(
-                                    'Failed to load the Referral Policy at the moment. Please try again later',
+                                    locale.refPolicyFailed,
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w300,

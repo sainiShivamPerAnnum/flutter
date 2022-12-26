@@ -6,6 +6,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/bank_details_card.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -28,12 +29,13 @@ class SellConfirmationView extends StatelessWidget {
     return val;
   }
 
-  getFomoWidget() {
+  getFomoWidget(BuildContext cxt) {
+    S locale = S.of(cxt);
     double cv = compoundedValue();
     double diff = (compoundedValue() - amount).abs();
     if (cv < 100 || (investmentType == InvestmentType.LENDBOXP2P && diff < 100))
       return Text(
-        "Users have earned huge interests on their savings by holding for more than a year 💰",
+        locale.holdSavingsMoreThanYear,
         textAlign: TextAlign.center,
         style: TextStyles.body2.colour(UiConstants.kTextColor),
       );
@@ -41,23 +43,23 @@ class SellConfirmationView extends StatelessWidget {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-            text: "Your",
+            text: locale.your,
             style: TextStyles.body2.colour(UiConstants.kTextColor2),
             children: [
               TextSpan(
                 text: investmentType == InvestmentType.AUGGOLD99
-                    ? " $grams gms "
+                    ? " $grams" + locale.gms
                     : " ₹ ${BaseUtil.getIntOrDouble(amount)} ",
                 style:
                     TextStyles.sourceSansB.body2.colour(UiConstants.kTextColor),
               ),
-              TextSpan(text: "could have grown to "),
+              TextSpan(text: locale.couldHaveGrown),
               TextSpan(
                 text: "₹ ${compoundedValue().toInt()} ",
                 style:
                     TextStyles.sourceSansB.body2.colour(UiConstants.kTextColor),
               ),
-              TextSpan(text: "by 2030! 💸")
+              TextSpan(text: locale.by2030)
             ]),
       );
   }
@@ -72,6 +74,7 @@ class SellConfirmationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     print("Gold in grams: $grams");
     print("Gold in amount: $amount");
     return Scaffold(
@@ -90,7 +93,7 @@ class SellConfirmationView extends StatelessWidget {
           children: [
             SizedBox(height: SizeConfig.pageHorizontalMargins / 2),
             Text(
-              'Are you sure you want to sell?',
+              locale.wantToSell,
               style: TextStyles.rajdhaniB.title3,
               textAlign: TextAlign.center,
             ),
@@ -105,21 +108,21 @@ class SellConfirmationView extends StatelessWidget {
             ),
             Transform.translate(
                 offset: Offset(0, -SizeConfig.pageHorizontalMargins),
-                child: getFomoWidget()),
+                child: getFomoWidget(context)),
             BankDetailsCard(),
             Text(
-              'By continuing, ₹${BaseUtil.digitPrecision(amount, 2)} will be credited to your linked bank account instantly',
+              locale.creditedToYourLinkedBankAccount(BaseUtil.digitPrecision(amount, 2)),
               textAlign: TextAlign.center,
               style: TextStyles.body2.colour(
                 UiConstants.kTextColor3,
               ),
             ),
             SizedBox(height: SizeConfig.padding32),
-            AppPositiveBtn(btnText: "Continue", onPressed: () => onSuccess()),
+            AppPositiveBtn(btnText: locale.btnContinue, onPressed: () => onSuccess()),
             SizedBox(height: SizeConfig.padding16),
             AppNegativeBtn(
                 width: SizeConfig.screenWidth,
-                btnText: "CANCEL",
+                btnText: locale.btnCancel.toUpperCase(),
                 onPressed: () => AppState.backButtonDispatcher!.didPopRoute())
           ],
         ),
