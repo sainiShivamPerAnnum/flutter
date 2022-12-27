@@ -227,7 +227,7 @@ class RemainingRank extends StatelessWidget {
                 ),
               ),
               Text(
-                '${scoreboard![countedIndex].score!.toInt()}' + locale.points,
+                '${scoreboard![countedIndex].score!.toInt()} ' + locale.points,
                 style: TextStyles.rajdhaniM.body3,
               ),
             ],
