@@ -1,11 +1,19 @@
+import 'dart:io';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
+import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:logger/logger.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
+  final CustomLogger logger = locator<CustomLogger>();
   final pinEditingController = new TextEditingController();
+  final iosScreenShotChannel =  MethodChannel('secureScreenshotChannel');
   Log log = new Log("OtpInputScreen");
   String _loaderMessage = "Enter the received OTP..";
   FocusNode otpFocusNode = FocusNode();
@@ -34,7 +42,15 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
     notifyListeners();
   }
 
-  init(BuildContext context) {
+  init(BuildContext context) async {
+    if(Platform.isAndroid){
+      logger.d("Disabling Screenshots in OTP Screen for Android");
+     await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    }
+    if(Platform.isIOS){
+    logger.d("Disabling Screenshots in OTP Screen for iOS");
+    await iosScreenShotChannel.invokeMethod('secureiOS');
+    }
     listenForCode();
     Future.delayed(Duration(seconds: 30), () {
       try {
@@ -85,6 +101,17 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
       pinEditingController.text = code!;
       parentModelInstance.processScreenInput(1);
       notifyListeners();
+    }
+  }
+
+  void exit() async {
+    if(Platform.isAndroid){
+    logger.d("Enabling Screenshots in OTP Screen for Android");
+    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    }
+    if(Platform.isIOS){
+    logger.d("Enabling Screenshots in OTP Screen for iOS");
+    await  iosScreenShotChannel.invokeMethod("unSecureiOS");
     }
   }
 }

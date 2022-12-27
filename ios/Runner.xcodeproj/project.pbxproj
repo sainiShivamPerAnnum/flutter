@@ -1885,7 +1885,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 152;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = Q2GUH56H25;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_DIR = build/ios;
 				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
@@ -1980,7 +1980,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 152;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = Q2GUH56H25;
 				ENABLE_BITCODE = NO;
 				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2172,7 +2172,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 152;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = Q2GUH56H25;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "armv7 arm64 i386";
 				FLUTTER_BUILD_DIR = build/ios;
@@ -2267,7 +2267,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 152;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = Q2GUH56H25;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2357,7 +2357,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 152;
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = Q2GUH56H25;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
 				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
@@ -2510,7 +2510,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 152;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 7FH5SHLD2G;
+				DEVELOPMENT_TEAM = Q2GUH56H25;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_DIR = build/ios;
 				FRAMEWORK_SEARCH_PATHS = (
