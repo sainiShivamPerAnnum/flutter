@@ -71,6 +71,8 @@ class LendboxTransactionService extends BaseTransactionService {
       case "RZP-PG":
         await processRazorpayTransaction();
         break;
+      default:
+        await processRazorpayTransaction();
     }
 
     return null;
@@ -100,7 +102,7 @@ class LendboxTransactionService extends BaseTransactionService {
         }
         AppState.unblockNavigation();
         BaseUtil.showNegativeAlert(
-         locale.txnFailed,
+          locale.txnFailed,
           locale.txnFailedSubtitle,
         );
       }
@@ -257,14 +259,13 @@ class LendboxTransactionService extends BaseTransactionService {
       } else {
         AppState.unblockNavigation();
 
-        BaseUtil.showNegativeAlert(
-            locale.upiConnectFailed, locale.tryLater);
+        BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
       }
     } else {
       AppState.unblockNavigation();
       return BaseUtil.showNegativeAlert(
-      locale.failedToCreateTxn,
-     locale.tryLater,
+        locale.failedToCreateTxn,
+        locale.tryLater,
       );
     }
   }
