@@ -1,6 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -50,8 +49,6 @@ class AppToasts {
   static showPositiveToast(
       {required String? title, required String? subtitle, int? seconds}) async {
     if (handleToastPreChecks(title, subtitle)) {
-      if (AppState.screenStack.last == ScreenItem.dialog ||
-          AppState.screenStack.last == ScreenItem.modalsheet) return;
       if (flushbar != null) await flushbar!.dismiss();
       flushbar = Flushbar(
         flushbarPosition:

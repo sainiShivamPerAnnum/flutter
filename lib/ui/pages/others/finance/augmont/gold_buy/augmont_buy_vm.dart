@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -11,6 +9,7 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
@@ -24,7 +23,6 @@ import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/finance/amount_chip.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -65,6 +63,9 @@ class GoldBuyViewModel extends BaseViewModel {
   bool _showMinCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
+  bool _addSpecialCoupon = false;
+  bool isSpecialCoupon = true;
+
   bool _skipMl = false;
   double _fieldWidth = 0.0;
   AnimationController? animationController;
@@ -188,6 +189,13 @@ class GoldBuyViewModel extends BaseViewModel {
 
   set skipMl(bool value) {
     this._skipMl = value;
+  }
+
+  get addSpecialCoupon => this._addSpecialCoupon;
+
+  set addSpecialCoupon(value) {
+    this._addSpecialCoupon = value;
+    notifyListeners();
   }
 
   bool readOnly = true;
@@ -379,6 +387,7 @@ class GoldBuyViewModel extends BaseViewModel {
         _augTxnService.isGoldBuyInProgress) return;
     showMaxCapText = false;
     showMinCapText = false;
+    addSpecialCoupon = false;
     Haptic.vibrate();
     lastTappedChipIndex = index;
     // buyFieldNode.unfocus();
@@ -394,10 +403,10 @@ class GoldBuyViewModel extends BaseViewModel {
         .track(eventName: AnalyticsEvents.suggestedAmountTapped, properties: {
       'order': index,
       'Amount': assetOptionsModel?.data.userOptions[index].value,
-      'Best flag': assetOptionsModel?.data.userOptions.firstWhere(
-        (element) => element.best,
-        orElse: () => UserOption(order: 0, value: 0, best: false),
-      )
+      'Best flag': assetOptionsModel?.data.userOptions
+          .firstWhere((element) => element.best,
+              orElse: () => UserOption(order: 0, value: 0, best: false))
+          .value
     });
     notifyListeners();
   }
@@ -481,6 +490,7 @@ class GoldBuyViewModel extends BaseViewModel {
     _logger!.d("Value: $val");
     if (showMaxCapText) showMaxCapText = false;
     if (showMinCapText) showMinCapText = false;
+    addSpecialCoupon = false;
     if (val != null && val.isNotEmpty) {
       if (double.tryParse(val.trim())! > 50000.0) {
         goldBuyAmount = 50000;
@@ -587,9 +597,11 @@ class GoldBuyViewModel extends BaseViewModel {
     int order = -1;
     int? minTransaction = -1;
     int counter = 0;
+    isSpecialCoupon = true;
     for (CouponModel c in couponList!) {
       if (c.code == couponCode) {
         order = counter;
+        isSpecialCoupon = false;
         minTransaction = c.minPurchase;
         break;
       }
@@ -618,16 +630,19 @@ class GoldBuyViewModel extends BaseViewModel {
               response.model!.minAmountRequired!.toInt().toString();
           goldBuyAmount = response.model!.minAmountRequired;
           updateGoldAmount();
+          showMaxCapText = false;
+          showMinCapText = false;
           animationController?.forward();
         }
+        checkForSpecialCoupon(response.model!);
 
         appliedCoupon = response.model;
 
         BaseUtil.showPositiveAlert(
-            "Coupon Applied Successfully", response?.model?.message);
+            "Coupon Applied Successfully", response.model?.message);
       } else {
         BaseUtil.showNegativeAlert(
-            "Coupon cannot be applied", response?.model?.message);
+            "Coupon cannot be applied", response.model?.message);
       }
     } else if (response.code == 400) {
       BaseUtil.showNegativeAlert("Coupon not applied",
@@ -645,6 +660,28 @@ class GoldBuyViewModel extends BaseViewModel {
       "Asset": "Gold",
       "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
     });
+  }
+
+  void checkForSpecialCoupon(EligibleCouponResponseModel model) {
+    if (couponList!.firstWhere((coupon) => coupon.code == model.code,
+            orElse: () => CouponModel.none()) ==
+        CouponModel.none()) {
+      showCoupons = false;
+      couponList!.insert(
+          0,
+          CouponModel(
+              code: model.code,
+              createdOn: TimestampModel.currentTimeStamp(),
+              description: model.message,
+              expiresOn: TimestampModel.currentTimeStamp(),
+              highlight: '',
+              maxUse: 0,
+              minPurchase: model.minAmountRequired?.toInt(),
+              priority: 0,
+              id: ''));
+      addSpecialCoupon = true;
+      showCoupons = true;
+    }
   }
 }
 

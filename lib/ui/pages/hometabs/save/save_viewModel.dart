@@ -1,3 +1,4 @@
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';

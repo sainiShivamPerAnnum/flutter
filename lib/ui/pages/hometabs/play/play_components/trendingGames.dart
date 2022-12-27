@@ -31,6 +31,7 @@ class TrendingGamesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSubtitleContainer(
+          key: ValueKey(Constants.ALL_GAMES_TITLE),
           title: "All games",
         ),
         Container(

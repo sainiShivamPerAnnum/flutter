@@ -62,7 +62,7 @@ class FcmListener {
 
       final data = PreferenceHelper.getString("fcmData");
 
-      if (AppState.startupNotifMessage == null) {
+      if (AppState.startupNotifMessage == null && data.isNotEmpty) {
         AppState.startupNotifMessage = jsonDecode(data);
         PreferenceHelper.remove("fcmData");
       }

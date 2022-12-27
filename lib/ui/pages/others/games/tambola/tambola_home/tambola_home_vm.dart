@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -25,7 +23,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -202,7 +199,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   init() async {
     setState(ViewState.Busy);
     await getGameDetails();
-    getLeaderboard();
+    // getLeaderboard();
     if (tambolaWidgetController == null) {
       tambolaWidgetController = TambolaWidgetController();
     }
@@ -268,23 +265,23 @@ class TambolaHomeViewModel extends BaseViewModel {
     return await _dbModel!.getUserDP(uid);
   }
 
-  Future<void> getLeaderboard() async {
-    isLeaderboardLoading = true;
-    notifyListeners();
+  // Future<void> getLeaderboard() async {
+  //   isLeaderboardLoading = true;
+  //   notifyListeners();
 
-    log("GM_TAMBOLA2020");
-    ApiResponse temp = await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
-      type: "GM_TAMBOLA2020",
-      freq: "weekly",
-    );
-    if (temp.isSuccess()) {
-      _logger!.d(temp.code);
-      if (temp.model != null && temp.model.isNotEmpty)
-        _tLeaderBoard = temp.model;
-      isLeaderboardLoading = false;
-      notifyListeners();
-    }
-  }
+  //   log("GM_TAMBOLA2020");
+  //   ApiResponse temp = await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
+  //     type: "GM_TAMBOLA2020",
+  //     freq: "weekly",
+  //   );
+  //   if (temp.isSuccess()) {
+  //     _logger!.d(temp.code);
+  //     if (temp.model != null && temp.model.isNotEmpty)
+  //       _tLeaderBoard = LeaderboardModel.fromMap(temp.model);
+  //     isLeaderboardLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
 
   Future<void> getPrizes() async {
     isPrizesLoading = true;

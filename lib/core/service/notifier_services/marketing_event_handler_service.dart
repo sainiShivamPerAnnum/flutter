@@ -125,8 +125,12 @@ class MarketingEventHandlerService
     _isDailyAppBonusClaimed = true;
     isDailyAppBonusClaimInProgress = false;
     showModalsheet = false;
-    _gtService.showInstantGoldenTicketView(
-        source: GTSOURCE.game, onJourney: true);
+    Future.delayed(Duration(milliseconds: 500), () {
+      _gtService.showInstantGoldenTicketView(
+        source: GTSOURCE.game,
+        onJourney: true,
+      );
+    });
   }
 
   gotItTapped() {
