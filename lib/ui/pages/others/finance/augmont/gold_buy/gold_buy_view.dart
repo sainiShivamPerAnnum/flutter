@@ -147,14 +147,10 @@ class _GoldBuyViewState extends State<GoldBuyView>
   }
 
   _secureScreenshots(AugmontTransactionService txnService) async {
-    if (txnService.currentTransactionState == TransactionState.idle) {
-      await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
-    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
+    if (txnService.currentTransactionState == TransactionState.ongoing) {
       await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-    } else if (txnService.currentTransactionState == TransactionState.success) {
-      await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     } else {
-      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+      await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     }
   }
 

@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class GoldSellView extends StatelessWidget {
@@ -51,16 +52,19 @@ class GoldSellView extends StatelessWidget {
                   );
                 },
                 child: BaseView<GoldSellViewModel>(
-                  onModelReady: (model) {
-                    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-                      txnService.currentTransactionState =
-                          TransactionState.idle;
-                    });
-                    model.init();
-                  },
-                  onModelDispose: (model) {},
-                  builder: (ctx, model, child) => _getView(txnService, model),
-                ),
+                    onModelReady: (model) {
+                      WidgetsBinding.instance!
+                          .addPostFrameCallback((timeStamp) {
+                        txnService.currentTransactionState =
+                            TransactionState.idle;
+                      });
+                      model.init();
+                    },
+                    onModelDispose: (model) {},
+                    builder: (ctx, model, child) {
+                      _secureScreenshots(txnService);
+                      return _getView(txnService, model);
+                    }),
               ),
             ],
           ),
@@ -79,6 +83,14 @@ class GoldSellView extends StatelessWidget {
       return GoldSellSuccessView(model: model, augTxnservice: txnService);
     }
     return GoldSellInputView(model: model, augTxnService: txnService);
+  }
+
+  _secureScreenshots(AugmontTransactionService txnService) async {
+     if (txnService.isGoldSellInProgress || txnService.currentTransactionState == TransactionState.ongoing ) {
+      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    } else{
+      await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    }
   }
 
   double? _getHeight(txnService) {

@@ -278,7 +278,6 @@ class GoldBuyViewModel extends BaseViewModel {
       _augTxnService!.isGoldBuyInProgress = false;
       return;
     }
-    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     await _augTxnService!.initateAugmontTransaction(
       details: GoldPurchaseDetails(
         goldBuyAmount: goldBuyAmount,

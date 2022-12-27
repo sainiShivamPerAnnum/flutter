@@ -12,6 +12,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LendboxBuyView extends StatefulWidget {
@@ -100,6 +101,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                     widget.skipMl,
                   ),
                   builder: (ctx, model, child) {
+                    _secureScreenshots(lboxTxnService);
                     return _getView(
                       lboxTxnService,
                       model,
@@ -112,6 +114,14 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
         );
       },
     );
+  }
+
+  _secureScreenshots(LendboxTransactionService txnService) async {
+    if (txnService.currentTransactionState == TransactionState.ongoing) {
+      await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    } else {
+      await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    }
   }
 
   Widget _getView(
