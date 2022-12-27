@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -42,9 +43,14 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
   }
 
   init(BuildContext context) async {
-    logger.d("Disabling Screenshots in OTP Screen");
-    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    if(Platform.isAndroid){
+      logger.d("Disabling Screenshots in OTP Screen for Android");
+     await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    }
+    if(Platform.isIOS){
+    logger.d("Disabling Screenshots in OTP Screen for iOS");
     await iosScreenShotChannel.invokeMethod('secureiOS');
+    }
     listenForCode();
     Future.delayed(Duration(seconds: 30), () {
       try {
@@ -99,8 +105,13 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
   }
 
   void exit() async {
-    logger.d("Enabling Screenshots in OTP Screen");
+    if(Platform.isAndroid){
+    logger.d("Enabling Screenshots in OTP Screen for Android");
     await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+    }
+    if(Platform.isIOS){
+    logger.d("Enabling Screenshots in OTP Screen for iOS");
     await  iosScreenShotChannel.invokeMethod("unSecureiOS");
+    }
   }
 }
