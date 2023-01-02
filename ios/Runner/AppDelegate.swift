@@ -11,7 +11,11 @@ import Flutter
     
     var resultMyFlutter: FlutterResult?
         
+
+     private var textField = UITextField()
+
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
         FirebaseApp.configure()
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         let paymentChannel = FlutterMethodChannel(name:"fello.in/dev/notifications/channel/tambola",
@@ -52,6 +56,20 @@ import Flutter
         
         GeneratedPluginRegistrant.register(with: self)
 
+
+
+        makeSecureYourScreen();
+        let securityController : FlutterViewController = self.window?.rootViewController as! FlutterViewController
+            let securityChannel = FlutterMethodChannel(name: "secureScreenshotChannel", binaryMessenger: securityController.binaryMessenger)
+            securityChannel.setMethodCallHandler({
+                (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+                if call.method == "secureiOS" {
+                    self.textField.isSecureTextEntry = true
+                } else if call.method == "unSecureiOS" {
+                    self.textField.isSecureTextEntry = false
+                    print("enabling screenshots") 
+                }
+            })
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
@@ -78,6 +96,18 @@ import Flutter
         }
         return false
       }
+
+     // Screenshot Prevent Functions
+    private func makeSecureYourScreen() {
+       print("disabling screenshots") 
+        if (!self.window.subviews.contains(textField)) {
+            self.window.addSubview(textField)
+            textField.centerYAnchor.constraint(equalTo: self.window.centerYAnchor).isActive = true
+            textField.centerXAnchor.constraint(equalTo: self.window.centerXAnchor).isActive = true
+            self.window.layer.superlayer?.addSublayer(textField.layer)
+            textField.layer.sublayers?.first?.addSublayer(self.window.layer)
+        }
+    }
 
     override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         super.application(application, didReceiveRemoteNotification: userInfo, fetchCompletionHandler: completionHandler)

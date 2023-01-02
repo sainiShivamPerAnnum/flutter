@@ -43,11 +43,11 @@ class TambolaHomeViewModel extends BaseViewModel {
   final GameRepo? _gamesRepo = locator<GameRepo>();
   final WinnerService? _winnerService = locator<WinnerService>();
   final DBModel? _dbModel = locator<DBModel>();
+  final S locale = locator<S>();
   final TambolaService? tambolaService = locator<TambolaService>();
   final UserCoinService? _coinService = locator<UserCoinService>();
   final TambolaRepo? _tambolaRepo = locator<TambolaRepo>();
   final UserService? _userService = locator<UserService>();
-  S locale = locator<S>();
 
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
@@ -290,8 +290,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     notifyListeners();
     await _prizeService!.fetchPrizeByGameType(Constants.GAME_TYPE_TAMBOLA);
     if (tPrizes == null)
-      BaseUtil.showNegativeAlert(locale.prizeFetchFailed,
-         locale.tryLater);
+      BaseUtil.showNegativeAlert(locale.prizeFetchFailed, locale.tryLater);
     isPrizesLoading = false;
     notifyListeners();
   }
@@ -337,8 +336,8 @@ class TambolaHomeViewModel extends BaseViewModel {
     if (buyTicketCount < 30)
       buyTicketCount += 1;
     else
-      BaseUtil.showNegativeAlert(locale.ticketsExceeded,
-         locale.tktsPurchaseLimit);
+      BaseUtil.showNegativeAlert(
+          locale.ticketsExceeded, locale.tktsPurchaseLimit);
     ticketCountController!.text = buyTicketCount.toString();
     updateTicketSavedAmount(buyTicketCount);
 
@@ -547,8 +546,8 @@ class TambolaHomeViewModel extends BaseViewModel {
 
     if (ticketCodeWinIndex.length > 0) {
       BaseUtil.showPositiveAlert(
-        'Congratulations 🎉',
-        'Your tickets have been submitted for processing your prizes!',
+        locale.tambolaTicketWinAlert1,
+        locale.tambolaTicketWinAlert2,
       );
     }
 

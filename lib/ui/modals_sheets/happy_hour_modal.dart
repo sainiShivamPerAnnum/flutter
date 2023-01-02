@@ -85,138 +85,140 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                     : SizeConfig.screenHeight! * 0.4,
                 width: SizeConfig.screenWidth,
                 decoration: BoxDecoration(
+                  color: UiConstants.kSaveDigitalGoldCardBg,
                   border: Border.all(color: Color(0xff93B5FE)),
-                    color: UiConstants.kSaveDigitalGoldCardBg,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(
-                        SizeConfig.roundness32,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(
+                      SizeConfig.roundness32,
+                    ),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.screenHeight! * .06,
+                    ),
+                    Text(
+                      isHappyHourEnded
+                          ? locale.happyHourIsOver
+                          : data.title ?? '',
+                      style: TextStyles.sourceSansSB.body0,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.screenHeight! * .02,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: List.generate(
+                        5,
+                        (index) => index % 2 == 0
+                            ? Container(
+                                height: SizeConfig.screenHeight! * 0.08,
+                                width: SizeConfig.screenHeight! * 0.08,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xff1F2C65).withOpacity(0.6),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurStyle: BlurStyle.outer,
+                                      color: Color(0xff93B5FE).withOpacity(0.4),
+                                      // spreadRadius: 2,
+                                      offset: Offset(0, -1),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  getTime((index / 2).round()),
+                                  style: TextStyles.rajdhaniSB.title3.colour(
+                                      isHappyHourEnded
+                                          ? Color(0xffF79780)
+                                          : Colors.white),
+                                ),
+                              )
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                child: Text(
+                                  ":",
+                                  style: TextStyles.sourceSans.body1
+                                      .colour(Color(0XFFBDBDBE)),
+                                ),
+                              ),
                       ),
-                      
                     ),
-                  ),
-                
-                  
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: SizeConfig.screenHeight! * .06,
-                  ),
-                  Text(
-                    isHappyHourEnded ? locale.happyHourIsOver : data.title ?? '',
-                    style: TextStyles.sourceSansSB.body0,
-                  ),
-                  SizedBox(
-                    height: SizeConfig.screenHeight! * .02,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: List.generate(
-                      5,
-                      (index) => index % 2 == 0
-                          ? Container(
-                              height: SizeConfig.screenHeight! * 0.08,
-                              width: SizeConfig.screenHeight! * 0.08,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xff1F2C65).withOpacity(0.6),
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurStyle: BlurStyle.outer,
-                                    color: Color(0xff93B5FE).withOpacity(0.4),
-                                    // spreadRadius: 2,
-                                    offset: Offset(0, -1),
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                getTime((index / 2).round()),
-                                style: TextStyles.rajdhaniSB.title3.colour(
-                                    isHappyHourEnded
-                                        ? Color(0xffF79780)
-                                        : Colors.white),
-                              ),
-                            )
-                          : Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
-                              child: Text(
-                                ":",
-                                style: TextStyles.sourceSans.body1
-                                    .colour(Color(0XFFBDBDBE)),
-                              ),
-                            ),
+                    SizedBox(height: SizeConfig.screenHeight! * 0.03),
+                    SizedBox(
+                      width: SizeConfig.screenWidth! * 0.8,
+                      child: Text(
+                          isHappyHourEnded
+                              ? locale.missedHappyHour
+                              : (data.bottomSheetHeading ?? ""),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style:
+                              TextStyles.sourceSans.body3.colour(Colors.white)),
                     ),
-                  ),
-                  SizedBox(height: SizeConfig.screenHeight! * 0.03),
-                  Flexible(
-                    child: Text(
-                        isHappyHourEnded
-                            ? locale.missedHappyHour
-                            : (data.bottomSheetHeading ?? ""),
-                        textAlign: TextAlign.center,
-                        style:
-                            TextStyles.sourceSans.body3.colour(Colors.white)),
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    isHappyHourEnded
-                        ? locale.getHappyHourNotified
-                        : data.bottomSheetSubHeading ?? '',
-                    style: TextStyles.sourceSans.body3
-                        .colour(Colors.white.withOpacity(0.6)),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.screenHeight! * .03,
-                  ),
-                  if (!widget.isComingFromSave)
-                    CustomSaveButton(
-                      onTap: () {
-                        if (!isHappyHourEnded) {
-                          AppState.backButtonDispatcher!.didPopRoute();
-                          locator<BaseUtil>().openDepositOptionsModalSheet();
-                          locator<MixpanelAnalytics>().track(
-                              eventName: "Happy Hour CTA Tapped ",
-                              properties: {
-                                "Reward": {
-                                  "asset": locator<HappyHourCampign>()
-                                          .data
-                                          ?.rewards
-                                          ?.first
-                                          .type ??
-                                      "",
-                                  "amount": locator<HappyHourCampign>()
-                                          .data
-                                          ?.rewards
-                                          ?.first
-                                          .value ??
-                                      "",
-                                  "timer": "$inHours:$inMinutes:$inSeconds"
-                                }
-                              });
-                        } else {
-                          AppState.backButtonDispatcher!
-                              .didPopRoute()
-                              .then((value) {
-                            if (value)
-                              BaseUtil.showPositiveAlert(
-                                  locale.happyHourNotificationSetPrimary,
-                                  locale.happyHourNotificationSetSecondary);
-                          });
-                          // locator<MixpanelAnalytics>()
-                          // .track(eventName: "Happy Hour Notify");
-                        }
-                      },
-                      title:
-                          isHappyHourEnded ? locale.btnNotifyMe : data.ctaText ?? '',
-                      width: SizeConfig.screenWidth! * 0.3,
-                      height: SizeConfig.screenWidth! * 0.11,
-                    )
-                ],
-              ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      isHappyHourEnded
+                          ? locale.getHappyHourNotified
+                          : data.bottomSheetSubHeading ?? '',
+                      style: TextStyles.sourceSans.body3
+                          .colour(Colors.white.withOpacity(0.6)),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.screenHeight! * .03,
+                    ),
+                    if (!widget.isComingFromSave)
+                      CustomSaveButton(
+                        onTap: () {
+                          if (!isHappyHourEnded) {
+                            AppState.backButtonDispatcher!.didPopRoute();
+                            locator<BaseUtil>().openDepositOptionsModalSheet();
+                            locator<MixpanelAnalytics>().track(
+                                eventName: "Happy Hour CTA Tapped ",
+                                properties: {
+                                  "Reward": {
+                                    "asset": locator<HappyHourCampign>()
+                                            .data
+                                            ?.rewards
+                                            ?.first
+                                            .type ??
+                                        "",
+                                    "amount": locator<HappyHourCampign>()
+                                            .data
+                                            ?.rewards
+                                            ?.first
+                                            .value ??
+                                        "",
+                                    "timer": "$inHours:$inMinutes:$inSeconds"
+                                  }
+                                });
+                          } else {
+                            AppState.backButtonDispatcher!
+                                .didPopRoute()
+                                .then((value) {
+                              if (value)
+                                BaseUtil.showPositiveAlert(
+                                    locale.happyHourNotificationSetPrimary,
+                                    locale.happyHourNotificationSetSecondary);
+                            });
+                            locator<MixpanelAnalytics>()
+                                .track(eventName: "Happy Hour Notify");
+                          }
+                        },
+                        title: isHappyHourEnded
+                            ? locale.btnNotifyMe
+                            : data.ctaText ?? '',
+                        width: SizeConfig.screenWidth! * 0.3,
+                        height: SizeConfig.screenWidth! * 0.11,
+                      ),
+                  ],
+                ),
               ),
               Positioned(
                 bottom: widget.isComingFromSave

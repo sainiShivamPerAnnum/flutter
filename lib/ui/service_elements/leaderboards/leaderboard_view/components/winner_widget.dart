@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -13,7 +15,7 @@ import 'dart:ui' as ui;
 import 'package:flutter_svg/svg.dart';
 
 class WinnerWidgets extends StatelessWidget {
-  const WinnerWidgets({
+  WinnerWidgets({
     Key? key,
     required this.scoreboard,
     required this.userProfilePicUrl,
@@ -49,16 +51,18 @@ class WinnerWidgets extends StatelessWidget {
     );
   }
 
+  final rand = 1 + Random().nextInt(4);
+
   getDefaultProfilePicture(int rank) {
     switch (rank) {
-      case 1:
+      case 0:
         return Assets.cvtar1;
-      case 2:
+      case 1:
         return Assets.cvtar2;
-      case 3:
+      case 2:
         return Assets.cvtar3;
       default:
-        return Assets.profilePic;
+        return "assets/vectors/userAvatars/AV$rand.svg";
     }
   }
 

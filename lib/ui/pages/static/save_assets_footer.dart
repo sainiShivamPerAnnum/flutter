@@ -1,5 +1,7 @@
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -8,9 +10,10 @@ import 'package:flutter_svg/svg.dart';
 
 class SaveAssetsFooter extends StatelessWidget {
   const SaveAssetsFooter({Key? key}) : super(key: key);
-
+ 
   @override
   Widget build(BuildContext context) {
+    S locale = locator<S>();
     return Padding(
       padding: EdgeInsets.only(
           left: SizeConfig.pageHorizontalMargins,
@@ -23,7 +26,7 @@ class SaveAssetsFooter extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SaveInfoSection(
-              title: 'Govt. Accredited',
+              title: locale.govtAcc,
               imageAsset: Assets.augmontLogo,
               imageHeight: SizeConfig.screenWidth! * 0.07,
               imageWidth: SizeConfig.screenWidth! * 0.16,
@@ -36,7 +39,7 @@ class SaveAssetsFooter extends StatelessWidget {
               endIndent: 2,
             ),
             SaveInfoSection(
-              title: 'RBI Certified',
+              title: locale.rbiCertified,
               imageAsset: Assets.lendboxLogo,
               imageHeight: SizeConfig.screenWidth! * 0.07,
               imageWidth: SizeConfig.screenWidth! * 0.16,
@@ -49,7 +52,7 @@ class SaveAssetsFooter extends StatelessWidget {
               endIndent: 2,
             ),
             SaveInfoSection(
-              title: 'Trusted by',
+              title: locale.trustedBy,
               imageAsset: Assets.rbiLogo,
               imageHeight: SizeConfig.screenWidth! * 0.07,
               imageWidth: SizeConfig.screenWidth! * 0.16,

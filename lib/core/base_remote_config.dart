@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
@@ -175,7 +178,7 @@ class BaseRemoteConfig {
   };
 
   static const Map<String, String> _MIN_WITHDRAWABLE_PRIZE = {
-    'minWithdrawablePrice': '100'
+    'minWithdrawablePrize': '100'
   };
   static const Map<String, String> _GAME_TAMBOLA_ANNOUNCEMENT = {
     'game_tambola_announcement':
@@ -198,10 +201,10 @@ class BaseRemoteConfig {
   static const Map<String, int> _CACHE_INVALIDATION = {'invalidateBefore': 0};
 
   static const Map<String, String> _ACTIVE_PG_ANDROID = {
-    'activePgAndroid': 'PAYTM'
+    'activePgAndroid': 'RZP-PG'
   };
 
-  static const Map<String, String> _ACTIVE_PG_IOS = {'activePgIos': 'PAYTM'};
+  static const Map<String, String> _ACTIVE_PG_IOS = {'activePgIos': 'RZP-PG'};
 
   static const Map<String, String> _ENABLED_PSP_APPS = {
     'enabledPspApps': 'EGP'
@@ -211,12 +214,16 @@ class BaseRemoteConfig {
 
   static const Map<String, String> _PAYTM_DEV_MID = {'paytm_dev_mid': 'pdm'};
 
-  static const Map<String, String> _RZP_PROD_MID = {'rzpMid': 'rpm'};
+  static Map<String, String> _RZP_PROD_MID = {
+    'rzpMid': FlavorConfig.isDevelopment()
+        ? 'rzp_test_UqHw6vJBbC8dR8'
+        : 'rzp_live_RlTp4Aso51l5Fu'
+  };
 
   static const Map<String, String> _RZP_DEV_MID = {'rzp_dev_mid': 'rdm'};
 
   static const Map<String, bool> _AUTOSAVE_ACTIVE = {'autosaveActive': true};
-  static const Map<String, dynamic> DEFAULTS = {
+  static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
@@ -282,7 +289,7 @@ class BaseRemoteConfig {
     ..._RZP_PROD_MID,
     ..._RZP_DEV_MID,
     ..._AUTOSAVE_ACTIVE,
-    "changeAppIcon":false
+    "changeAppIcon": false
   };
 
   static Future<bool> init() async {

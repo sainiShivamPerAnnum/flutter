@@ -110,8 +110,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                locale.tTotalTickets +
-                                    "${widget.model.activeTambolaCardCount}",
+                                locale.tTotalTickets +"${widget.model.activeTambolaCardCount}",
                                 style: TextStyles.rajdhaniSB.body1),
                             if (TambolaRepo.expiringTicketCount != 0)
                               Text(

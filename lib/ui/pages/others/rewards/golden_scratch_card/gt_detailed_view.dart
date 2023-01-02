@@ -256,7 +256,7 @@ class GTDetailedView extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.padding12),
                   Text(
-                    locale.addingPrice,
+                    locale.addingPrize,
                     style: TextStyles.body2.bold.colour(Colors.white),
                   ),
                 ],

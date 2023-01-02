@@ -38,7 +38,7 @@ import 'package:flutter/material.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
-  SaveViewModel({this.locale})  {
+  SaveViewModel({this.locale}) {
     locale = locator<S>();
     boxTitllesGold.addAll([
       locale!.boxGoldTitles1,
@@ -48,7 +48,7 @@ class SaveViewModel extends BaseViewModel {
     boxTitllesFlo.addAll(
         [locale!.boxFloTitles1, locale!.boxFloTitles2, locale!.boxFloTitles3]);
   }
-  
+
   final CampaignRepo _campaignRepo = locator<CampaignRepo>();
   final SaveRepo? _saveRepo = locator<SaveRepo>();
   final UserService? _userService = locator<UserService>();

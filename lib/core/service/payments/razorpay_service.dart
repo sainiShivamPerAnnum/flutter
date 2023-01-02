@@ -182,7 +182,7 @@ class RazorpayService extends ChangeNotifier {
           'prefill': {'contact': mobile, 'email': "hello@fello.in"}
         };
 
-        _razorpay!.open(options);
+         _razorpay!.open(options);
         return true;
       } else {
         BaseUtil.showNegativeAlert(

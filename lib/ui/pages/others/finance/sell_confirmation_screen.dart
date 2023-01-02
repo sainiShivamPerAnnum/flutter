@@ -82,51 +82,54 @@ class SellConfirmationView extends StatelessWidget {
       appBar:
           AppBar(backgroundColor: UiConstants.kBackgroundColor, elevation: 0),
       body: SafeArea(
-          child: Container(
-        margin: EdgeInsets.only(
-            top: 0,
-            left: SizeConfig.pageHorizontalMargins,
-            right: SizeConfig.pageHorizontalMargins,
-            bottom: SizeConfig.pageHorizontalMargins / 2),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: SizeConfig.pageHorizontalMargins / 2),
-            Text(
-              locale.wantToSell,
-              style: TextStyles.rajdhaniB.title3,
-              textAlign: TextAlign.center,
-            ),
-            // Text(
-            //   "Stay invested a little longer,\nreap higher rewards",
-            //   textAlign: TextAlign.center,
-            //   style:
-            //       TextStyles.sourceSansSB.body2.colour(UiConstants.kTextColor3),
-            // ),
-            Expanded(
-              child: Lottie.asset(Assets.jarLottie, fit: BoxFit.contain),
-            ),
-            Transform.translate(
-                offset: Offset(0, -SizeConfig.pageHorizontalMargins),
-                child: getFomoWidget(context)),
-            BankDetailsCard(),
-            Text(
-              locale.creditedToYourLinkedBankAccount(BaseUtil.digitPrecision(amount, 2)),
-              textAlign: TextAlign.center,
-              style: TextStyles.body2.colour(
-                UiConstants.kTextColor3,
+        child: Container(
+          margin: EdgeInsets.only(
+              top: 0,
+              left: SizeConfig.pageHorizontalMargins,
+              right: SizeConfig.pageHorizontalMargins,
+              bottom: SizeConfig.pageHorizontalMargins / 2),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: SizeConfig.pageHorizontalMargins / 2),
+              Text(
+                locale.wantToSell,
+                style: TextStyles.rajdhaniB.title3,
+                textAlign: TextAlign.center,
               ),
-            ),
-            SizedBox(height: SizeConfig.padding32),
-            AppPositiveBtn(btnText: locale.btnContinue, onPressed: () => onSuccess()),
-            SizedBox(height: SizeConfig.padding16),
-            AppNegativeBtn(
-                width: SizeConfig.screenWidth,
-                btnText: locale.btnCancel.toUpperCase(),
-                onPressed: () => AppState.backButtonDispatcher!.didPopRoute())
-          ],
+              // Text(
+              //   "Stay invested a little longer,\nreap higher rewards",
+              //   textAlign: TextAlign.center,
+              //   style:
+              //       TextStyles.sourceSansSB.body2.colour(UiConstants.kTextColor3),
+              // ),
+              Expanded(
+                child: Lottie.asset(Assets.jarLottie, fit: BoxFit.contain),
+              ),
+              Transform.translate(
+                  offset: Offset(0, -SizeConfig.pageHorizontalMargins),
+                  child: getFomoWidget(context)),
+              BankDetailsCard(),
+              Text(
+                locale.creditedToYourLinkedBankAccount(
+                    BaseUtil.digitPrecision(amount, 2)),
+                textAlign: TextAlign.center,
+                style: TextStyles.body2.colour(
+                  UiConstants.kTextColor3,
+                ),
+              ),
+              SizedBox(height: SizeConfig.padding32),
+              AppPositiveBtn(
+                  btnText: locale.btnContinue, onPressed: () => onSuccess()),
+              SizedBox(height: SizeConfig.padding16),
+              AppNegativeBtn(
+                  width: SizeConfig.screenWidth,
+                  btnText: locale.btnCancel.toUpperCase(),
+                  onPressed: () => AppState.backButtonDispatcher!.didPopRoute())
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }

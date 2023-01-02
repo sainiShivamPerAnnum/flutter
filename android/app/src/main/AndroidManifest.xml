@@ -123,7 +123,7 @@
             </intent-filter>
         </activity>
 
-         <activity-alias
+         <!-- <activity-alias
             android:name=".ch"
             android:icon="@mipmap/ic_launcher_ch"
             android:roundIcon="@mipmap/ic_launcher_round_ch"
@@ -140,7 +140,7 @@
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
               />
-        </activity-alias>
+        </activity-alias> -->
 
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

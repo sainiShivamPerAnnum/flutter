@@ -94,6 +94,8 @@ class AugmontTransactionService extends BaseTransactionService {
       case "RZP-PG":
         return processRazorpayTransaction();
         break;
+      default:
+        return processRazorpayTransaction();
     }
 
     return null;
@@ -137,8 +139,7 @@ class AugmontTransactionService extends BaseTransactionService {
         isGoldBuyInProgress = false;
         AppState.unblockNavigation();
 
-        BaseUtil.showNegativeAlert(
-            locale.upiConnectFailed, locale.tryLater);
+        BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
       }
     } else {
       isGoldBuyInProgress = false;
@@ -220,7 +221,8 @@ class AugmontTransactionService extends BaseTransactionService {
         }
         AppState.unblockNavigation();
         BaseUtil.showNegativeAlert(
-        locale.txnFailed , locale.txnFailedSubtitle,
+          locale.txnFailed,
+          locale.txnFailedSubtitle,
         );
       }
       AppState.unblockNavigation();

@@ -56,7 +56,7 @@ class TopPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      S locale = S.of(context);
+    S locale = S.of(context);
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       appBar: AppBar(
@@ -72,7 +72,8 @@ class TopPlayer extends StatelessWidget {
                 ),
                 if (model!.lastupdated != null)
                   Text(
-                    locale.updatedOn+"${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model!.lastupdated!.toDate())} ${model!.scoreboard!.length}",
+                    locale.updatedOn +
+                        "${DateFormat('dd-MMM-yyyy | hh:mm:ss').format(model!.lastupdated!.toDate())} ${model!.scoreboard!.length}",
                     style: TextStyles.sourceSans.body3
                         .colour(UiConstants.kTextColor2),
                   ),
@@ -141,7 +142,7 @@ class TopPlayer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   int countedIndex = index + 3;
-                  return _buildLeaderboardTile(countedIndex,context);
+                  return _buildLeaderboardTile(countedIndex, context);
                 },
               ),
             ),
@@ -152,7 +153,7 @@ class TopPlayer extends StatelessWidget {
   }
 
   //
-  Widget _buildLeaderboardTile(int countedIndex,BuildContext context) {
+  Widget _buildLeaderboardTile(int countedIndex, BuildContext context) {
     S locale = locator<S>();
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -184,7 +185,8 @@ class TopPlayer extends StatelessWidget {
             ),
           ),
           Text(
-            '${model!.scoreboard![countedIndex].score!.toInt()} '+ locale.points,
+            '${model!.scoreboard![countedIndex].score!.toInt()} ' +
+                locale.points,
             style: TextStyles.rajdhaniM.body3,
           ),
         ],
@@ -205,7 +207,7 @@ class TopPlayer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "${model!.scoreboard!.length} "+locale.players,
+            "${model!.scoreboard!.length} " + locale.players,
             style: TextStyles.sourceSansSB.body3,
           ),
           Text(

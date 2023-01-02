@@ -136,8 +136,10 @@ class BankAndPanService
   checkForUserBankAccountDetails() async {
     if (activeBankAccountDetails != null) return;
     final res = await _paymentRepo!.getActiveBankAccountDetails();
-    if (res.isSuccess()) activeBankAccountDetails = res.model;
-    isBankDetailsAdded = true;
+    if (res.isSuccess()) {
+      activeBankAccountDetails = res.model;
+      isBankDetailsAdded = true;
+    }
   }
 
   verifyBankDetails() async {

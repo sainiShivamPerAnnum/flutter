@@ -127,7 +127,7 @@ class PrizeClaimCard extends StatelessWidget {
                                 ),
                                 child: FittedBox(
                                   child: Text(
-                                    "Winnings can be redeemed on reaching ₹$minWithdrawPrize",
+                                 locale.winningsRedeem(minWithdrawPrize),
                                     style:
                                         TextStyles.body3.colour(Colors.white),
                                   ),

@@ -516,7 +516,7 @@ class WinViewModel extends BaseViewModel {
   claim(PrizeClaimChoice choice, double claimPrize) {
     // double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
-      getGramsWon(claimPrize).then((value) {
+      getGramsWon(claimPrize).then((  value) {
         if (flag) {
           showSuccessPrizeWithdrawalDialog(
               choice,

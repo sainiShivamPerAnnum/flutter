@@ -17,10 +17,10 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class TransactionHistoryService
     extends PropertyChangeNotifier<TransactionHistoryServiceProperties> {
   final CustomLogger? _logger = locator<CustomLogger>();
+  final S locale = locator<S>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
-  S locale = locator<S>();
   List<UserTransaction>? _txnList;
   String? lastTxnDocId;
   String? lastPrizeTxnDocId;
@@ -235,29 +235,29 @@ class TransactionHistoryService
 
   String getTileTitle(String type) {
     if (type == UserTransaction.TRAN_SUBTYPE_ICICI) {
-      return "ICICI Prudential Fund";
+      return locale.icici;
     } else if (type == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD) {
-      return "Digital Gold";
+      return locale.digitalGoldText;
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
-      return "Tambola Win";
+      return locale.tambolaWin;
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
-      return "Referral Bonus";
+      return locale.refBonus;
     } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
-      return "Rewards Redeemed";
+      return locale.rewardsRedemeed;
     } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK)
-      return "Golden Ticket";
-    return "Fello Rewards";
+      return locale.goldenTicket;
+    return locale.felloRewards;
   }
 
   String getTileSubtitle(String type) {
     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
-      return "Deposit";
+      return locale.btnDeposit.toUpperCase();
     } else if (type == UserTransaction.TRAN_TYPE_PRIZE) {
-      return "Prize";
+      return locale.prizeText;
     } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-      return "Withdrawal";
+      return locale.withdrawal;
     }
-    return "AUTO SIP";
+    return locale.autoSipText;
   }
 
   Color getTransactionTypeColor(String type) {
