@@ -525,6 +525,7 @@ class UserProfileVM extends BaseViewModel {
               await _userRepo!.removeUserFCM(_userService!.baseUser!.uid);
             }).then((flag) async {
               if (flag) {
+                
                 await _baseUtil!.signOut();
                 _journeyService!.dump();
                 _marketingService.dump();

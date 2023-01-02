@@ -11,7 +11,7 @@ class AppConfig {
   static Map<String, AppConfig> _instances = {};
   factory AppConfig.instance(Map<String, dynamic> json) =>
       _instances.putIfAbsent('instance', () => AppConfig._fromJson(json));
-  
+
   AppConfig({required this.message, required this.data});
 
   factory AppConfig._fromJson(Map<String, dynamic> json) {
@@ -21,7 +21,8 @@ class AppConfig {
 
     _data.forEach(
       (key, value) {
-        mapOFData[key.toString().appConfigKeyFromName] = value??BaseRemoteConfig.DEFAULTS[key];
+        mapOFData[key.toString().appConfigKeyFromName] =
+            value ?? BaseRemoteConfig.DEFAULTS[key];
       },
     );
 

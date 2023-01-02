@@ -15,7 +15,8 @@ class BackgroundFcmHandler {
     log("Background message: ${message.data}");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.reload();
-    prefs.setString('fcmData', json.encode(message.data));
+    await prefs.remove("fcmData");
+    await prefs.setString('fcmData', json.encode(message.data));
     return Future<void>.value();
   }
 }

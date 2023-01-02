@@ -165,6 +165,13 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
       return 0;
     }
+    if (withdrawableQuantity!.amount == 0.0) {
+      BaseUtil.showNegativeAlert(
+        "No available amount for withdrawal",
+        "Please retry after sometime",
+      );
+      return 0;
+    }
 
     if (amount < minAmount) {
       BaseUtil.showNegativeAlert(
