@@ -33,7 +33,7 @@ class PrizeClaimCard extends StatelessWidget {
         properties: [UserServiceProperties.myUserFund],
         builder: (context, m, property) => Column(
               children: [
-                (m!.userFundWallet!.isPrizeBalanceUnclaimed())
+                (m?.userFundWallet?.isPrizeBalanceUnclaimed() ?? false)
                     ? Container(
                         width: SizeConfig.screenWidth,
                         margin: EdgeInsets.only(
@@ -58,12 +58,12 @@ class PrizeClaimCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                   locale.totalRewards,
+                                    locale.totalRewards,
                                     style:
                                         TextStyles.body1.colour(Colors.white),
                                   ),
                                   Text(
-                                    "₹ ${m.userFundWallet!.unclaimedBalance.toInt() ?? '-'}",
+                                    "₹ ${m?.userFundWallet?.unclaimedBalance.toInt() ?? '-'}",
                                     style: TextStyles.rajdhaniB.bold
                                         .colour(UiConstants
                                             .kcashBackAmountTextColor)
@@ -111,7 +111,7 @@ class PrizeClaimCard extends StatelessWidget {
                             //       ],
                             //     ),
                             //   ),
-                            if (m.userFundWallet!.unclaimedBalance <
+                            if ((m?.userFundWallet?.unclaimedBalance ?? 0) <
                                 minWithdrawPrizeAmt)
                               Container(
                                 margin:
@@ -127,13 +127,14 @@ class PrizeClaimCard extends StatelessWidget {
                                 ),
                                 child: FittedBox(
                                   child: Text(
-                                 locale.winningsRedeem(minWithdrawPrize),
+                                    locale.winningsRedeem(minWithdrawPrize),
                                     style:
                                         TextStyles.body3.colour(Colors.white),
                                   ),
                                 ),
                               )
-                            else if (m.userFundWallet!.augGoldPrinciple <
+                            else if ((m?.userFundWallet?.augGoldPrinciple ??
+                                    0) <
                                 refUnlockAmt)
                               Container(
                                 margin:
@@ -149,7 +150,7 @@ class PrizeClaimCard extends StatelessWidget {
                                 ),
                                 child: FittedBox(
                                   child: Text(
-                                   locale.refUnlockText(refUnlock),
+                                    locale.refUnlockText(refUnlock),
                                     style:
                                         TextStyles.body3.colour(Colors.white),
                                   ),
