@@ -84,9 +84,14 @@ class MainActivity : FlutterFragmentActivity()  {
 
                 returnResult(data?.getStringExtra("response") as Object?)
 
-            } else {
+            }
+            else {
+                if(!isAlreadyReturend){
+                    isAlreadyReturend=true
+                    res?.error("400", "user_cancelled", "Something went wrong")
+                }
 
-                res?.error("400", "user_cancelled", "Something went wrong")
+
             }
         }
 
