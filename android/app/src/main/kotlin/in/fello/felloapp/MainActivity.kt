@@ -1,5 +1,6 @@
 package `in`.fello.felloapp
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -61,7 +62,10 @@ class MainActivity : FlutterFragmentActivity()  {
 
     private var isAlreadyReturend=false
 
-    private fun returnResult(re:Object){
+    private fun returnResult(re:Object?){
+        if(re==null){
+            return;
+        }
         if(!isAlreadyReturend){
             isAlreadyReturend=true
             res?.success(re);
@@ -70,12 +74,15 @@ class MainActivity : FlutterFragmentActivity()  {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(data==null){
+            return;
+        }
         if(res!=null) {
 
 
-            if (requestCode == successRequestCode && data != null) {
+            if (requestCode == successRequestCode) {
 
-                returnResult(data?.getStringExtra("response")!! as Object)
+                returnResult(data?.getStringExtra("response") as Object?)
 
             } else {
 
@@ -88,7 +95,8 @@ class MainActivity : FlutterFragmentActivity()  {
     }
 
 
-    private fun startTransation(app:String,deepLink:String){
+    @SuppressLint("SuspiciousIndentation")
+    private fun startTransation(app:String, deepLink:String){
 
         try {
 

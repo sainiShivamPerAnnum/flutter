@@ -110,7 +110,7 @@ class GTDetailedView extends StatelessWidget {
                   duration: Duration(seconds: 1),
                   curve: Curves.easeIn,
                   width: SizeConfig.screenWidth,
-                  child: setModalContent(model,context))
+                  child: setModalContent(model, context))
             ],
           ),
         );
@@ -118,8 +118,10 @@ class GTDetailedView extends StatelessWidget {
     );
   }
 
-  Widget setTicketHeader(GTDetailedViewModel model,) {
-    S locale =locator<S>();
+  Widget setTicketHeader(
+    GTDetailedViewModel model,
+  ) {
+    S locale = locator<S>();
     if (ticket.redeemedTimestamp != null &&
         ticket.redeemedTimestamp !=
             TimestampModel(seconds: 0, nanoseconds: 0)) {
@@ -226,10 +228,10 @@ class GTDetailedView extends StatelessWidget {
           (ticket.redeemedTimestamp != null &&
                   ticket.redeemedTimestamp !=
                       TimestampModel(seconds: 0, nanoseconds: 0))
-              ? bulletTiles(
-               locale.redeemedOn+"${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
-              : bulletTiles(
-                  locale.receivedOn+"${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
+              ? bulletTiles(locale.redeemedOn +
+                  "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
+              : bulletTiles(locale.receivedOn +
+                  "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
         ]),
       );
     } else {
@@ -277,10 +279,10 @@ class GTDetailedView extends StatelessWidget {
                     (ticket.redeemedTimestamp != null &&
                             ticket.redeemedTimestamp !=
                                 TimestampModel(seconds: 0, nanoseconds: 0))
-                        ? bulletTiles(
-                            locale.redeemedOn+"${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
-                        : bulletTiles(
-                            locale.receivedOn+"${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
+                        ? bulletTiles(locale.redeemedOn +
+                            "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
+                        : bulletTiles(locale.receivedOn +
+                            "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
                   ]),
             );
           }
