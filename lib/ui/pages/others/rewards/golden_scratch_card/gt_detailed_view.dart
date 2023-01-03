@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -102,7 +103,7 @@ class GTDetailedView extends StatelessWidget {
                   duration: Duration(seconds: 1),
                   curve: Curves.easeIn,
                   width: SizeConfig.screenWidth,
-                  child: setTicketHeader(model,context)),
+                  child: setTicketHeader(model)),
               Spacer(flex: 2),
               AnimatedContainer(
                   decoration: BoxDecoration(),
@@ -117,8 +118,8 @@ class GTDetailedView extends StatelessWidget {
     );
   }
 
-  Widget setTicketHeader(GTDetailedViewModel model,BuildContext cxt) {
-    S locale = S.of(cxt);
+  Widget setTicketHeader(GTDetailedViewModel model,) {
+    S locale =locator<S>();
     if (ticket.redeemedTimestamp != null &&
         ticket.redeemedTimestamp !=
             TimestampModel(seconds: 0, nanoseconds: 0)) {

@@ -89,15 +89,17 @@ class GoldSellView extends StatelessWidget {
   }
 
   _secureScreenshots(AugmontTransactionService txnService) async {
-   if (Platform.isAndroid) {
-      if (txnService.isGoldSellInProgress || txnService.currentTransactionState == TransactionState.ongoing) {
+    if (Platform.isAndroid) {
+      if (txnService.isGoldSellInProgress ||
+          txnService.currentTransactionState == TransactionState.ongoing) {
         await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
       } else {
         await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
       }
     }
     if (Platform.isIOS) {
-      if (txnService.isGoldSellInProgress || txnService.currentTransactionState == TransactionState.ongoing) {
+      if (txnService.isGoldSellInProgress ||
+          txnService.currentTransactionState == TransactionState.ongoing) {
         iosScreenShotChannel.invokeMethod('secureiOS');
       } else {
         iosScreenShotChannel.invokeMethod("unSecureiOS");

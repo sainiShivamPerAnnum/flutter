@@ -148,7 +148,7 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init() async {
+  init() {
     // _baseUtil.fetchUserAugmontDetail();
     baseProvider = BaseUtil();
     getCampaignEvents();

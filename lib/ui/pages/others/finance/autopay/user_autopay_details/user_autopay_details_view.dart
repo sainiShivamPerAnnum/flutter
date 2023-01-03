@@ -92,11 +92,11 @@ class UserAutosaveDetailsView extends StatelessWidget {
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildAmountSavedCard(model,context),
+                                _buildAmountSavedCard(model, context),
                                 SizedBox(
                                   height: SizeConfig.padding40,
                                 ),
-                                _buildPaymentMethod(model,context),
+                                _buildPaymentMethod(model, context),
                                 SizedBox(
                                   height: SizeConfig.padding32,
                                 ),
@@ -238,8 +238,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
                                         Constants.SUBSCRIPTION_INACTIVE &&
                                     model.activeSubscription!.resumeDate!
                                         .isEmpty)
-                                ? _buildRestartAutoPay(context)
-                                : _buildUpdateAutoPay(model,context),
+                                ? _buildRestartAutoPay()
+                                : _buildUpdateAutoPay(model),
                           ),
                         ),
                       ),
@@ -250,7 +250,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
     );
   }
 
-  Padding _buildPaymentMethod(UserAutosaveDetailsViewModel model, BuildContext context) {
+  Padding _buildPaymentMethod(
+      UserAutosaveDetailsViewModel model, BuildContext context) {
     S locale = S.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -323,7 +324,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildAmountSavedCard(UserAutosaveDetailsViewModel model,BuildContext context) {
+  Widget _buildAmountSavedCard(
+      UserAutosaveDetailsViewModel model, BuildContext context) {
     S locale = S.of(context);
     return Container(
       // height: SizeConfig.screenWidth * 0.5433,
@@ -432,8 +434,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRestartAutoPay(BuildContext context) {
-    S locale = S.of(context);
+  List<Widget> _buildRestartAutoPay() {
+    S locale = locator<S>();
     return [
       AppPositiveBtn(
         btnText: locale.btnRestartAutoSave,
@@ -449,8 +451,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
     ];
   }
 
-  _buildUpdateAutoPay(UserAutosaveDetailsViewModel model, BuildContext context) {
-    S locale = S.of(context);
+  _buildUpdateAutoPay(UserAutosaveDetailsViewModel model) {
+    S locale = locator<S>();
     return [
       if (model.activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE)
         AppPositiveBtn(
@@ -654,8 +656,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                   hapticVibrate: true,
                   content: ConfirmationDialog(
                     title: locale.areYouSure,
-                    description:
-                        locale.loseAutoSave,
+                    description: locale.loseAutoSave,
                     cancelBtnText: locale.btnNo,
                     cancelAction: () {
                       AppState.backButtonDispatcher!.didPopRoute();

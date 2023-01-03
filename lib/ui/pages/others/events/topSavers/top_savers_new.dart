@@ -17,6 +17,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -81,7 +82,7 @@ class CampaignView extends StatelessWidget {
                                     padding: EdgeInsets.only(
                                       top: SizeConfig.padding10,
                                     ),
-                                    child: _realtimeView(model,context),
+                                    child: _realtimeView(model),
                                   ),
                                   isLoading: model.event == null,
                                   topPadding: 1,
@@ -124,7 +125,8 @@ class CampaignView extends StatelessWidget {
                                             padding: EdgeInsets.only(
                                               top: SizeConfig.padding10,
                                             ),
-                                            child: _realtimeView(model,context),
+                                            child:
+                                                _realtimeView(model),
                                           ),
                                           isLoading: model.event == null,
                                           topPadding: 90,
@@ -196,8 +198,10 @@ class CampaignView extends StatelessWidget {
     );
   }
 
-  Row _realtimeView(TopSaverViewModel model, BuildContext cxt) {
-    S locale = S.of(cxt);
+  Row _realtimeView(
+    TopSaverViewModel model,
+  ) {
+    S locale = locator<S>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -215,14 +219,16 @@ class CampaignView extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text(
-                "${model.getDeafultRealTimeStat(eventType)} "+locale.participants,
+                "${model.getDeafultRealTimeStat(eventType)} " +
+                    locale.participants,
                 style: TextStyles.body3.colour(Colors.white),
               );
             }
 
             if (!snapshot.hasData) {
               return Text(
-                "${model.getDeafultRealTimeStat(eventType)} "+ locale.participants,
+                "${model.getDeafultRealTimeStat(eventType)} " +
+                    locale.participants,
                 style: TextStyles.body3.colour(Colors.white),
               );
             }
@@ -241,14 +247,16 @@ class CampaignView extends StatelessWidget {
                   return ScaleTransition(scale: animation, child: child);
                 },
                 child: Text(
-                  "${model.sortPlayerNumbers(sortedData['value'].toString())} "+ locale.participants,
+                  "${model.sortPlayerNumbers(sortedData['value'].toString())} " +
+                      locale.participants,
                   style: TextStyles.body3.colour(Colors.white),
                   key: ValueKey<String>(sortedData['value'].toString()),
                 ),
               );
             } else {
               return Text(
-                "${model.getDeafultRealTimeStat(eventType)} "+locale.participants,
+                "${model.getDeafultRealTimeStat(eventType)} " +
+                    locale.participants,
                 style: TextStyles.body3.colour(Colors.white),
               );
             }
@@ -401,7 +409,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                           locale.btnSeeAll,
+                                              locale.btnSeeAll,
                                               style:
                                                   TextStyles.rajdhaniSB.body2,
                                             ),

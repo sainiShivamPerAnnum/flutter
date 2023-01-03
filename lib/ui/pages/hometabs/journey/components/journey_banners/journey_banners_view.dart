@@ -3,6 +3,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -14,7 +15,7 @@ class JourneyBannersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S locale = locator<S>();
     return BaseView<JourneyBannersViewModel>(
       onModelReady: (model) => model.loadOfferList(),
       onModelDispose: (model) => model.clear(),
@@ -71,7 +72,7 @@ class JourneyBannersView extends StatelessWidget {
                                     ),
                                     Text(
                                       model.offerList![i].subtitle ??
-                                        locale.jBanner2,
+                                          locale.jBanner2,
                                       style: TextStyles.sourceSans.body4
                                           .colour(Colors.white),
                                     ),
