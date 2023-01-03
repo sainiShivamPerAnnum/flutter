@@ -27,11 +27,11 @@ class GOWCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  S locale = S.of(context);
+    S locale = S.of(context);
     return (model.isGamesListDataLoading)
         ? GameCardShimmer()
         : (model.gow == null
-            ? SizedBox
+            ? SizedBox()
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -85,7 +85,7 @@ class GOWCard extends StatelessWidget {
                                 SizedBox(height: SizeConfig.padding16),
                                 Container(
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 14, vertical: 8),
+                                      horizontal: 12, vertical: 8),
                                   decoration: BoxDecoration(
                                     color: Color(0xff232326),
                                     border:
@@ -109,13 +109,15 @@ class GOWCard extends StatelessWidget {
                           Spacer(),
                           SvgPicture.network(
                             model.gow!.thumbnailUri!,
+                            fit: BoxFit.cover,
+                            height: SizeConfig.screenHeight! * 0.2,
                           ),
                         ],
                       ),
                     ),
                   ),
                 ],
-              )) as Widget;
+              ));
   }
 }
 
