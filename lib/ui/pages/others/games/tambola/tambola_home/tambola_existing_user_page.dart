@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -17,6 +19,9 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../../../util/assets.dart';
 
 class TambolaExistingUserPage extends StatefulWidget {
   TambolaExistingUserPage({Key? key, required this.model}) : super(key: key);
@@ -99,6 +104,10 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                 TodayWeeklyPicksCard(
                   model: widget.model,
                 ),
+                SizedBox(
+                  height: 16,
+                ),
+                TambolaStickyNote(),
                 if (widget.model.userWeeklyBoards != null) ...[
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -110,7 +119,8 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                locale.tTotalTickets +"${widget.model.activeTambolaCardCount}",
+                                locale.tTotalTickets +
+                                    "${widget.model.activeTambolaCardCount}",
                                 style: TextStyles.rajdhaniSB.body1),
                             if (TambolaRepo.expiringTicketCount != 0)
                               Text(
@@ -228,6 +238,90 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class TambolaStickyNote extends StatelessWidget {
+  const TambolaStickyNote({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: SizeConfig.screenHeight! * 0.08,
+      margin: EdgeInsets.symmetric(horizontal: 24),
+      decoration: BoxDecoration(
+        border: Border.all(color: Color(0xff627F8E)),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          tileMode: TileMode.mirror,
+          end: Alignment.centerRight,
+          stops: [0, 0.5, 0.5, 1],
+          colors: [
+            Color(
+              0xff627F8E,
+            ).withOpacity(0.2),
+            Color(
+              0xff627F8E,
+            ).withOpacity(0.2),
+            Colors.transparent,
+            Colors.transparent
+          ],
+        ),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: SizeConfig.screenWidth! * 0.41,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "₹" +
+                      (AppConfig.getValue(AppConfigKey.tambola_cost)
+                              .toString()
+                              .isEmpty
+                          ? '500'
+                          : AppConfig.getValue<int>(AppConfigKey.tambola_cost)
+                              .toString()),
+                  style: TextStyles.sourceSansB.title3,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "invested",
+                  style: TextStyles.sourceSansSB.body3,
+                )
+              ],
+            ),
+          ),
+          Text('=', style: TextStyles.sourceSansB.title1),
+          SizedBox(
+            width: SizeConfig.screenWidth! * 0.41,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 16,
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Text("1", style: TextStyles.sourceSansB.title3),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "ticket every week",
+                  style: TextStyles.sourceSansSB.body4,
+                )
+              ],
+            ),
+          )
         ],
       ),
     );

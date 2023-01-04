@@ -35,6 +35,13 @@ class TrendingGamesSection extends StatelessWidget {
         TitleSubtitleContainer(
           title: locale.allgames,
         ),
+        SizedBox(
+          height: 12,
+        ),
+        Center(child: PlayViewStickyNote()),
+        SizedBox(
+          height: 12,
+        ),
         Container(
           width: SizeConfig.screenWidth,
           margin: EdgeInsets.symmetric(
@@ -51,7 +58,7 @@ class TrendingGamesSection extends StatelessWidget {
                   ? TrendingGamesShimmer()
                   : TrendingGames(
                       game: model.trendingGamesListData[index],
-                        key: ValueKey(Constants.ALL_GAMES),
+                      key: ValueKey(Constants.ALL_GAMES),
                     );
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -119,7 +126,7 @@ class TrendingGames extends StatelessWidget {
             SizedBox(height: SizeConfig.padding4),
             RichText(
                 text: TextSpan(
-                    text:locale.btnWin+' ',
+                    text: locale.btnWin + ' ',
                     style: TextStyles.sourceSans.body3.colour(Colors.white),
                     children: [
                   TextSpan(
@@ -217,6 +224,88 @@ class TrendingGamesShimmer extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class PlayViewStickyNote extends StatelessWidget {
+  const PlayViewStickyNote({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: SizeConfig.screenHeight! * 0.08,
+      margin: EdgeInsets.symmetric(horizontal: 24),
+      decoration: BoxDecoration(
+        border: Border.all(color: Color(0xff627F8E)),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          tileMode: TileMode.mirror,
+          end: Alignment.centerRight,
+          stops: [0, 0.5, 0.5, 1],
+          colors: [
+            Color(
+              0xff627F8E,
+            ).withOpacity(0.2),
+            Color(
+              0xff627F8E,
+            ).withOpacity(0.2),
+            Colors.transparent,
+            Colors.transparent
+          ],
+        ),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: SizeConfig.screenWidth! * 0.41,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "₹1",
+                  style: TextStyles.sourceSansB.title3,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "invested",
+                  style: TextStyles.sourceSansSB.body3,
+                )
+              ],
+            ),
+          ),
+          Text('=', style: TextStyles.sourceSansB.title1),
+          SizedBox(
+            width: SizeConfig.screenWidth! * 0.41,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 16,
+                ),
+                SvgPicture.asset(
+                  Assets.token,
+                  height: 15,
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Text("1", style: TextStyles.sourceSansB.title3),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "Gaming Token",
+                  style: TextStyles.sourceSansSB.body4,
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
