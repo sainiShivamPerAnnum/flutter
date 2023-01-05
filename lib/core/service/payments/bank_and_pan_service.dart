@@ -40,7 +40,9 @@ class BankAndPanService
 
   set activeBankAccountDetails(value) {
     this._activeBankAccountDetails = value;
+
     notifyListeners(BankAndPanServiceProperties.bankDetailsVerified);
+    _logger!.d("Bank Details Property Notified");
   }
 
   bool _isKYCVerified = false;
@@ -104,12 +106,13 @@ class BankAndPanService
   }
 
   dump() {
-    _isBankDetailsAdded = false;
-    _isKYCVerified = false;
-    _isLockInReached = false;
+    isBankDetailsAdded = false;
+    isKYCVerified = false;
+    isLockInReached = false;
     _isSellButtonVisible = false;
-    _isSellLocked = false;
+    isSellLocked = false;
     userPan = null;
+    userKycData = null;
     activeBankAccountDetails = null;
   }
 
@@ -167,7 +170,7 @@ class BankAndPanService
     if (isKYCVerified &&
         isBankDetailsAdded &&
         !isSellLocked &&
-        userPan != null &&
+        userKycData != null &&
         activeBankAccountDetails != null) return true;
     return false;
   }

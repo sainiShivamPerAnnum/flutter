@@ -115,7 +115,9 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Can I use the mic please?</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Access to photos is requested. This is only required for choosing your profile picture.</string>
+	<string>Access to photos is requested. This is only required for choosing your profile picture and completing KYC Verification.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location helps us to verify you kYC details</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -148,9 +150,5 @@
 	<string>$(WEBENGAGE_LICENSE_CODE)</string>
 	<key>WEGLogLevel</key>
 	<string>VERBOSE</string>
-	<key>NSCameraUsageDescription</key>
-<string>your usage description here</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>your usage description here</string>
 </dict>
 </plist>

@@ -1,6 +1,4 @@
 //Project Imports
-import 'dart:developer';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -12,6 +10,7 @@ import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -58,15 +57,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
-    log("Back Request called: current Stack : ${AppState.screenStack}");
-
+    AppToasts.flushbar?.dismiss();
     // _journeyService!.checkForMilestoneLevelChange();
-    if (_journeyService!.isJourneyOnboardingInView) {
-      _journeyService!.isJourneyOnboardingInView = false;
-      _journeyService!.isUserJourneyOnboarded = true;
-    }
-
-    if (JourneyService.isAvatarAnimationInProgress) return Future.value(false);
+    // if (_journeyService!.isJourneyOnboardingInView) {
+    //   _journeyService!.isJourneyOnboardingInView = false;
+    //   _journeyService!.isUserJourneyOnboarded = true;
+    // }
+    if (AppState.isInstantGtViewInView) return Future.value(true);
     if (AppState.screenStack.last == ScreenItem.loader)
       return Future.value(true);
 
@@ -129,7 +126,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         AppState.delegate!.appState.rootIndex != 0) {
       logger!.w("Checking if app can be closed");
       AppState.delegate!.appState.setCurrentTabIndex = 0;
-
+      _journeyService!.checkForMilestoneLevelChange();
       return Future.value(true);
     }
 
@@ -143,14 +140,14 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       icon: Icon(
         Icons.assignment_late,
         size: 28.0,
-        color: Colors.white,
+        color: UiConstants.tertiarySolid,
       ),
       margin: EdgeInsets.all(10),
       borderRadius: BorderRadius.circular(SizeConfig.roundness8),
       title: title,
       message: message,
       duration: Duration(seconds: seconds ?? 3),
-      backgroundColor: UiConstants.negativeAlertColor,
+      backgroundColor: Colors.black,
       boxShadows: [
         BoxShadow(
           color: UiConstants.negativeAlertColor,

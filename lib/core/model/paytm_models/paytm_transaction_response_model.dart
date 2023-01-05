@@ -65,10 +65,12 @@ class Data {
   bool? isUpdating;
   int? tickets;
   double? goldInTxnBought;
+  String? txnDisplayMsg;
   Data(
       {@required this.status,
       @required this.isUpdating,
       @required this.tickets,
+      this.txnDisplayMsg,
       this.goldInTxnBought});
 
   // Data copyWith(
@@ -94,7 +96,8 @@ class Data {
             map['status'] as String? ?? Constants.TXN_STATUS_RESPONSE_PENDING,
         isUpdating: map['isUpdating'] as bool? ?? true,
         tickets: map['tickets'] as int? ?? 0,
-        goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble());
+        goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble(),
+        txnDisplayMsg: map['displayMessage']);
   }
 
   Data.base() {
@@ -122,4 +125,3 @@ class Data {
   @override
   int get hashCode => status.hashCode ^ isUpdating.hashCode;
 }
-

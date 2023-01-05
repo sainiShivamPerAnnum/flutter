@@ -1,29 +1,23 @@
-import 'dart:developer';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_existing_user_page.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/util/url_type_helper.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +42,7 @@ class TambolaWrapper extends StatelessWidget {
               showCoinBar: false,
               showHelpButton: false,
               title: "Tambola",
-              backgroundColor: UiConstants.kArowButtonBackgroundColor,
+              backgroundColor: UiConstants.kArrowButtonBackgroundColor,
             ),
             backgroundColor: UiConstants.kBackgroundColor,
           );
@@ -111,7 +105,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
         showHelpButton: false,
         title: "Tambola",
         type: FaqsType.play,
-        backgroundColor: UiConstants.kArowButtonBackgroundColor,
+        backgroundColor: UiConstants.kArrowButtonBackgroundColor,
       ),
       backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(
@@ -182,14 +176,18 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                         : 'Get your first ticket',
                     onPressed: () {
                       locator<AnalyticsService>().track(
-                          eventName: AnalyticsEvents.tambolaSaveTapped,
+                          eventName:
+                              (widget.model.activeTambolaCardCount ?? 0) >= 1
+                                  ? AnalyticsEvents.tambolaSaveTapped
+                                  : AnalyticsEvents.tambolaGetFirstTicketTapped,
                           properties: AnalyticsProperties
                               .getDefaultPropertiesMap(extraValuesMap: {
                             "Time left for draw Tambola (mins)":
                                 AnalyticsProperties.getTimeLeftForTambolaDraw(),
                             "Tambola Tickets Owned":
                                 AnalyticsProperties.getTambolaTicketCount(),
-                            "Number of Tickets": 1,
+                            "Number of Tickets":
+                                widget.model.activeTambolaCardCount ?? 0,
                             "Amount": widget.model.ticketSavedAmount,
                           }));
                       widget.model.updateTicketSavedAmount(1);
@@ -275,12 +273,12 @@ class TambolaTicketInfo extends StatelessWidget {
               children: [
                 Text(
                   "₹ " +
-                      (BaseRemoteConfig.remoteConfig
-                              .getString(BaseRemoteConfig.TAMBOLACOST)
+                      (AppConfig.getValue(AppConfigKey.tambola_cost)
+                              .toString()
                               .isEmpty
                           ? '500'
-                          : BaseRemoteConfig.remoteConfig
-                              .getString(BaseRemoteConfig.TAMBOLACOST)),
+                          : AppConfig.getValue<int>(AppConfigKey.tambola_cost)
+                              .toString()),
                   style: TextStyles.sourceSansB.title3,
                 ),
                 Text(
@@ -335,7 +333,6 @@ class _TambolaVideoPlayerState extends State<TambolaVideoPlayer> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _controller?.dispose();
     super.dispose();
   }

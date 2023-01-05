@@ -22,7 +22,8 @@ class CacheService {
     }
   }
 
-  Future<void> invalidateAll() async {
+  static Future<void> invalidateAll() async {
+    final CustomLogger? _logger = locator<CustomLogger>();
     try {
       _logger!.d('cache: invalidate all');
       await _isar!.writeTxn((i) async {
@@ -33,17 +34,18 @@ class CacheService {
     }
   }
 
-  Future<ApiResponse> cachedApi(
+  Future<ApiResponse<T>> cachedApi<T>(
     String key,
     int ttl,
     Future<dynamic> Function() apiReq,
-    ApiResponse Function(dynamic) parseData,
+    ApiResponse<T> Function(dynamic) parseData,
   ) async {
     final cachedData = await getData(key);
 
     if (cachedData != null && ttl != 0) {
       try {
         _logger!.d('cache: data read successfully');
+
         return parseData(json.decode(cachedData.data!));
       } catch (e) {
         _logger!.e(
@@ -61,13 +63,14 @@ class CacheService {
     return await _processApiAndSaveToCache(key, ttl, apiReq, parseData);
   }
 
-  Future<ApiResponse> _processApiAndSaveToCache(
+  Future<ApiResponse<T>> _processApiAndSaveToCache<T>(
     String key,
     int ttl,
     Future<dynamic> Function() apiReq,
-    ApiResponse Function(dynamic) parseData,
+    ApiResponse<T> Function(dynamic) parseData,
   ) async {
     final response = await apiReq();
+
     final res = parseData(response);
 
     if (response != null &&
@@ -104,7 +107,8 @@ class CacheService {
     }
   }
 
-  Future<bool> invalidateByKey(String key) async {
+  static Future<bool> invalidateByKey(String key) async {
+    final CustomLogger? _logger = locator<CustomLogger>();
     try {
       _logger!.d('cache: invalidating key $key');
 
@@ -115,7 +119,7 @@ class CacheService {
 
         final c = await i.cacheModels
             .deleteAll(data.map((e) => e.id).toList() as List<int>);
-        _logger!.d('cache: invalidated $c');
+        _logger.d('cache: invalidated $c');
       });
 
       return true;

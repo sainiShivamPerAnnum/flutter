@@ -8,7 +8,6 @@ import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
@@ -98,8 +97,9 @@ class BankDetailsViewModel extends BaseViewModel {
       _sellService!.isBankDetailsAdded = true;
       _analyticsService!.track(eventName: AnalyticsEvents.bankDetailsUpdated);
 
-      BaseUtil.showPositiveAlert('Complete', 'Your details have been updated');
-      AppState.backButtonDispatcher!.didPopRoute();
+      BaseUtil.showPositiveAlert('Bank details successfully updated ✅',
+          'Your bank details have been updated successfully');
+      // AppState.backButtonDispatcher!.didPopRoute();
       isDetailsUpdating = false;
     } else {
       BaseUtil.showNegativeAlert(

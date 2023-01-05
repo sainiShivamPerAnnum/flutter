@@ -94,7 +94,7 @@ class TambolaRepo extends BaseRepo {
       final now = DateTime.now();
       final ttl = ((18 - now.hour) % 24) * 60 - now.minute;
 
-      return (await _cacheService.cachedApi(
+      return await _cacheService.cachedApi(
           CacheKeys.TAMBOLA_PICKS,
           0,
           () => APIService.instance.getData(
@@ -110,7 +110,7 @@ class TambolaRepo extends BaseRepo {
           );
         else
           return ApiResponse<DailyPick>(model: DailyPick.noPicks(), code: 200);
-      })) as ApiResponse<DailyPick>;
+      });
     } catch (e) {
       logger.e('daily pick $e');
       return ApiResponse<DailyPick>(model: DailyPick.noPicks(), code: 200);

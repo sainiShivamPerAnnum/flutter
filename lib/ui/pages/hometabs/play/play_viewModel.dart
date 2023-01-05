@@ -8,6 +8,7 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -32,6 +33,7 @@ class PlayViewModel extends BaseViewModel {
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final GameRepo? gamesRepo = locator<GameRepo>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final WinnerService _winnerService = locator<WinnerService>();
   bool _showSecurityMessageAtTop = true;
   final TambolaWidgetController _tambolaController = TambolaWidgetController();
 
@@ -103,6 +105,7 @@ class PlayViewModel extends BaseViewModel {
   init() async {
     isGamesListDataLoading = true;
     final response = await gamesRepo!.getGames();
+    _winnerService.fetchWinnersForAllGames();
     showSecurityMessageAtTop =
         _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
     if (response.isSuccess()) {

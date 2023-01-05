@@ -8,7 +8,6 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -22,7 +21,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -40,38 +38,25 @@ import 'package:share_plus/share_plus.dart';
 class MyWinningsViewModel extends BaseViewModel {
   //LOCATORS
   final CustomLogger? _logger = locator<CustomLogger>();
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   final TransactionHistoryService? _transactionHistoryService =
       locator<TransactionHistoryService>();
-  final LocalDBModel? _localDBModel = locator<LocalDBModel>();
+  // final LocalDBModel? _localDBModel = locator<LocalDBModel>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
   final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final GoldenTicketService _gtService = locator<GoldenTicketService>();
 
   // LOCAL VARIABLES
   PrizeClaimChoice? _choice;
   get choice => this._choice;
-  bool _isWinningHistoryLoading = false;
   final GlobalKey imageKey = GlobalKey();
   final UserRepository? userRepo = locator<UserRepository>();
-  List<UserTransaction>? _winningHistory;
 
   //GETTERS SETTERS
-  get isWinningHistoryLoading => this._isWinningHistoryLoading;
-  set isWinningHistoryLoading(value) {
-    this._isWinningHistoryLoading = value;
-    notifyListeners();
-  }
 
-  List<UserTransaction>? get winningHistory => this._winningHistory;
-  set winningHistory(List<UserTransaction>? value) {
-    this._winningHistory = value;
-    notifyListeners();
-  }
-
-  UserService? get userService => _userService;
+  UserService get userService => _userService;
   // AugmontTransactionService get txnService => _GoldTransactionService;
 
   set choice(value) {
@@ -79,19 +64,12 @@ class MyWinningsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  getWinningHistory() async {
-    _isWinningHistoryLoading = true;
-    _gtService!.updateUnscratchedGTCount();
-    // trackGoldenTicketsOpen();
-    ApiResponse<List<UserTransaction>>? temp =
-        await userRepo!.getWinningHistory(_userService!.baseUser!.uid);
-    if (temp != null) {
-      temp.model!.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
-      winningHistory = temp.model;
-    } else
-      BaseUtil.showNegativeAlert(
-          "Winning History fetch failed", "Please try again after sometime");
-    isWinningHistoryLoading = false;
+  init() {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _gtService.isLastPageForGoldenTickets = false;
+      _gtService.goldenTicketsListLastTicketId = null;
+      _gtService.fetchAllGoldenTickets();
+    });
   }
 
   trackGoldenTicketsOpen() {
@@ -272,7 +250,6 @@ class MyWinningsViewModel extends BaseViewModel {
     _registerClaimChoice(choice).then((flag) {
       AppState.backButtonDispatcher!.didPopRoute();
       if (flag) {
-        getWinningHistory();
         showSuccessPrizeWithdrawalDialog(
             choice, choice == PrizeClaimChoice.AMZ_VOUCHER ? "amazon" : "gold");
       }
@@ -303,7 +280,7 @@ class MyWinningsViewModel extends BaseViewModel {
       _userService!.getUserFundWalletData();
       _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
-      await _localDBModel!.savePrizeClaimChoice(choice);
+      // await _localDBModel!.savePrizeClaimChoice(choice);
 
       return true;
     } else {
@@ -386,9 +363,8 @@ class MyWinningsViewModel extends BaseViewModel {
       RenderRepaintBoundary imageObject =
           imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
-      ByteData byteData = await (image.toByteData(format: ImageByteFormat.png)
-          as Future<ByteData>);
-      final pngBytes = byteData.buffer.asUint8List();
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      final pngBytes = byteData?.buffer.asUint8List();
 
       return pngBytes;
     } catch (e) {

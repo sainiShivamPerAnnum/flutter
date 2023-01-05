@@ -3,6 +3,7 @@ class ApiPath {
 
   //Augmont Ops
   get kGetGoldRates => "/gold/rates";
+  static String get happyHour => "/happy-hours/active";
 
   //User Ops Apis
   get kAddNewUser => "/v2/new";
@@ -130,4 +131,9 @@ class ApiPath {
 
   static const kOnboardingStory = '/story/onboarding';
   static const kTambolaStory = '/story/tambola';
+
+  static String get getAppConfig => '/app/config';
+
+  //marketing events
+  static String kDailyAppBonusEvent(String uid) => "/user/$uid/daily-bonus";
 }

@@ -68,6 +68,7 @@ class AnalyticsEvents {
   static const investedInGold = "Invested in gold";
   static const emailInitiated = "Email Initiated";
   static const bankDetailsUpdated = "Bank details updated";
+  static const bankDetailsTapped = "Bank details tapped";
   static const referCodeCopied = "Refer code copied";
   static const whatsappShare = "Whatsapp Share";
   static const referralCount = "Referral Count";
@@ -111,13 +112,15 @@ class AnalyticsEvents {
   static const resendOtpTapped = "Resend OTP Tapped";
   static const proceedToSignUp = "Proceed to Signup";
   static const splashScrenProceed = "Splash Screen Proceed";
-  static const journeyHelpTapped = "Journey Help Tapped";
+  static const journeyFloatingIconTapped = "Journey Floating Icon Tapped";
   static const journeyMileStoneTapped = "Journey Milestone Tapped";
   static const journeyMileStarted = "Journey Milestone Start";
 
   static const gameTapped = "Game Tapped";
   static const playGameTapped = "Play Game Tapped";
-  static const tambolaSaveTapped = "Tambola Save Tapped";
+  static const tambolaSaveTapped = "Tambola save tapped";
+  static const tambolaGetTicketsTapped = "Tambola get tickets tapped";
+  static const tambolaGetFirstTicketTapped = "Tambola get first ticket tapped";
   static const tambolaHelpTapped = "Tambola Help Tapped";
   static const assetBannerTapped = "Asset Banner Tapped";
   static const suggestedAmountTapped = "Suggested Amount Tapped";
@@ -132,9 +135,11 @@ class AnalyticsEvents {
   static const autoSaveUpdateTapped = "SIP - Update Autosave Tapped";
   static const autosavePauseModal = "SIP - Pause Autosave Tapped";
   static const completeKYCTapped = "Complete KYC Tapped";
+  static const kycDetailsTapped = "KYC Details Tapped";
   static const bannerClick = "Banner Click";
   static const challengeTapped = "Challenge Tapped";
   static const challengeCtaTapped = "Challenge CTA Tapped";
+  static const assetOptionsModalTapped = "Assets Options Modalsheet tapped";
   static const notificationsClicked = "Notifications Click";
   static const sellInitiate = "Sell Initiate";
   static const playSection = "Play Tab Tapped";
@@ -149,4 +154,9 @@ class AnalyticsEvents {
   static const goldenTicketSectionOpen = 'Golden Ticket section open';
   static const signupEnterMobile = "Entered Mobile number";
   static const mobileOtpDone = "Entered OTP";
+
+  //Marketing Events
+
+  static const dailyAppBonusClaimed = "Tapped on Daily App Bonus";
+  static const dailyAppBonusGotItTapped = "Daily App Open Got It Tapped";
 }

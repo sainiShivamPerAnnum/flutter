@@ -16,6 +16,10 @@ class PreferenceHelper {
   static const FCM_TOKEN = "fcm_token";
   static const CACHE_SHOW_SECURITY_MODALSHEET = "showSecurityModalSheet";
   static const CACHE_IS_USER_JOURNEY_ONBOARDED = "isUserJourneyOnboarded";
+  static const CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE =
+      "isDailyAppBonusEventActive";
+  static const CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP =
+      "lastDailyAppBonusRewardClaimTimestamp";
   static SharedPreferences? _prefs;
 
   static Future<SharedPreferences?> initiate() async {
@@ -69,7 +73,7 @@ class PreferenceHelper {
   static bool getBool(String key, {bool? def}) {
     bool? val = _prefs!.getBool(key);
     if (val == null) {
-      val = def ??false;
+      val = def ?? false;
     }
     return val;
   }

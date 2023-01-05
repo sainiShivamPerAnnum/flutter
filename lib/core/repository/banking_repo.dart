@@ -47,7 +47,7 @@ class BankingRepository extends BaseRepo {
           VerifyPanResponseModel.fromMap(response["data"]);
 
       if (_verifyPanApiResponse.flag!) {
-        await _cacheService.invalidateByKey(CacheKeys.USER);
+        await CacheService.invalidateByKey(CacheKeys.USER);
         return ApiResponse(model: _verifyPanApiResponse, code: 200);
       } else {
         return ApiResponse(

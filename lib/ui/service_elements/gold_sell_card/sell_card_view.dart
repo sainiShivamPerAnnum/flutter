@@ -74,7 +74,7 @@ class SellCardView extends StatelessWidget {
                         BaseUtil.openModalBottomSheet(
                           backgroundColor:
                               UiConstants.kModalSheetBackgroundColor,
-                          isBarrierDismissable: true,
+                          isBarrierDismissible: true,
                           addToScreenStack: true,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(SizeConfig.roundness32),
@@ -158,9 +158,14 @@ class SellCardView extends StatelessWidget {
     );
   }
 
-  navigateToBankDetailsScreen() =>
-      AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.addPage,
-        page: BankDetailsPageConfig,
-      );
+  navigateToBankDetailsScreen() {
+    final _analyticsService = locator<AnalyticsService>();
+
+    _analyticsService.track(eventName: AnalyticsEvents.bankDetailsTapped);
+
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: BankDetailsPageConfig,
+    );
+  }
 }

@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
@@ -26,7 +25,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
-import 'package:felloapp/core/service/api_cache_manager.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -37,6 +35,7 @@ import 'package:felloapp/core/service/notifier_services/golden_ticket_service.da
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -44,10 +43,11 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
-import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
@@ -62,7 +62,6 @@ import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
-import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -87,24 +86,22 @@ import 'package:felloapp/ui/pages/others/profile/settings/settings_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_vm.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
-import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
-import 'package:felloapp/ui/service_elements/username_input/username_input_vm.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/service/analytics/appflyer_analytics.dart';
 
 GetIt locator = GetIt.instance;
 
-void setupLocator() {
+Future<void> setupLocator() async {
   //Utils
   locator.registerLazySingleton(() => CustomLogger());
   locator.registerLazySingleton(() => ApiPath());
@@ -112,11 +109,11 @@ void setupLocator() {
 
   //Services
   locator.registerLazySingleton(() => Api());
-  locator.registerLazySingleton(() => ApiCacheManager());
   locator.registerLazySingleton(() => LocalApi());
   locator.registerLazySingleton(() => FcmHandlerDataPayloads());
-  locator.registerLazySingleton(() => FcmListener());
   locator.registerLazySingleton(() => FcmHandler());
+  locator.registerLazySingleton(() => FcmListener(locator()));
+
   locator.registerLazySingleton(() => PaytmService());
 
   locator.registerLazySingleton(() => AnalyticsService());
@@ -126,6 +123,7 @@ void setupLocator() {
 
   locator.registerLazySingleton(() => InternalOpsService());
   locator.registerLazySingleton(() => BankAndPanService());
+  locator.registerLazySingleton(() => ReferralService());
 
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());
@@ -144,10 +142,12 @@ void setupLocator() {
   locator.registerLazySingleton(() => JourneyService());
   locator.registerLazySingleton(() => GoogleSignInService());
   locator.registerLazySingleton(() => RazorpayService());
+  locator.registerSingletonAsync(() => SharedPreferences.getInstance());
+  locator.registerLazySingleton(() => MarketingEventHandlerService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());
-  locator.registerLazySingleton(() => LocalDBModel());
+  // locator.registerLazySingleton(() => LocalDBModel());
   locator.registerLazySingleton(() => AugmontService());
   locator.registerLazySingleton(() => UserRepository());
   locator.registerLazySingleton(() => TambolaRepo());
@@ -199,7 +199,6 @@ void setupLocator() {
   locator.registerFactory(() => ReferralDetailsViewModel());
   locator.registerFactory(() => MyWinningsViewModel());
   locator.registerFactory(() => NotificationsViewModel());
-  locator.registerFactory(() => GoldenTicketsViewModel());
   locator.registerFactory(() => GTDetailedViewModel());
   locator.registerFactory(() => GTInstantViewModel());
   locator.registerFactory(() => TopSaverViewModel());
@@ -221,5 +220,6 @@ void setupLocator() {
   locator.registerFactory(() => SourceAdaptiveAssetViewModel());
   locator.registerFactory(() => SubscriptionCardViewModel());
   locator.registerFactory(() => TambolaCardModel());
-  locator.registerFactory(() => UsernameInputViewModel());
+  // locator.registerFactory<UsernameInputViewModel>(() => UsernameInputViewModel());
+  await locator.allReady();
 }

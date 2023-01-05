@@ -20,7 +20,9 @@
             "args": [
                 "--flavor",
                 "dev",
-                "--debug"
+                "--debug",
+                "--no-sound-null-safety"
+                
             ]
         },
         {

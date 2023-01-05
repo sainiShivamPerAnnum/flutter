@@ -3,8 +3,10 @@ import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
@@ -16,7 +18,7 @@ class CampaignRepo extends BaseRepo {
       ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com/prod";
 
-  Future<ApiResponse<dynamic> >getOngoingEvents() async {
+  Future<ApiResponse<dynamic>> getOngoingEvents() async {
     List<EventModel> events = [];
     try {
       final String? _uid = userService!.baseUser!.uid;
@@ -44,7 +46,6 @@ class CampaignRepo extends BaseRepo {
           return ApiResponse<List<EventModel>>(model: events, code: 200);
         },
       ))) as ApiResponse<List<EventModel>>;
-
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
@@ -75,6 +76,24 @@ class CampaignRepo extends BaseRepo {
       logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch campaigns", 400);
+    }
+  }
+
+  Future<ApiResponse<HappyHourCampign>> getHappyHourCampaign() async {
+    try {
+      final _token = await getBearerToken();
+
+      final response = await APIService.instance.getData(
+        ApiPath.happyHour,
+        token: _token,
+        cBaseUrl: _baseUrl,
+      );
+
+      return ApiResponse<HappyHourCampign>(
+          model: HappyHourCampign.fromJson(response), code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

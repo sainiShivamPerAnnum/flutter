@@ -1,7 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
-import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -11,7 +11,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -24,11 +23,14 @@ class FcmHandler extends ChangeNotifier {
   final UserService? _userservice = locator<UserService>();
 
   // final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
-  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads = locator<FcmHandlerDataPayloads>();
+  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads =
+      locator<FcmHandlerDataPayloads>();
   final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
-  final AutosaveProcessViewModel? _autosaveProcessViewModel = locator<AutosaveProcessViewModel>();
+  final AutosaveProcessViewModel? _autosaveProcessViewModel =
+      locator<AutosaveProcessViewModel>();
   final PaytmService? _paytmService = locator<PaytmService>();
-  final AugmontTransactionService? _augTxnService = locator<AugmontTransactionService>();
+  final AugmontTransactionService? _augTxnService =
+      locator<AugmontTransactionService>();
 
   final JourneyService? _journeyService = locator<JourneyService>();
   final GoldSellViewModel? _augOps = locator<GoldSellViewModel>();
@@ -41,6 +43,7 @@ class FcmHandler extends ChangeNotifier {
     _logger!.d(
       "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data",
     );
+
     if (lastFcmData != null) {
       if (lastFcmData == data) {
         _logger!.d(
@@ -55,7 +58,19 @@ class FcmHandler extends ChangeNotifier {
     String? title = data!['dialog_title'];
     String? body = data['dialog_body'];
     String? command = data['command'];
-    String? url = data['deep_uri'];
+    String? url;
+    if (data["source"] != null && data["source"] == "webengage") {
+      final _data = jsonDecode(data['message_data']);
+      final _listOfData = _data["custom"] as List;
+      try {
+        url = _listOfData.firstWhere(
+          (element) => element['key'] == 'route',
+        )['value'];
+      } catch (e) {
+        log(e.toString());
+      }
+    } else
+      url = data['deep_uri'] ?? data['route'];
 
     // if (data["test_txn"] == "paytm") {
     // _augTxnService.isOngoingTxn = false;
@@ -70,6 +85,7 @@ class FcmHandler extends ChangeNotifier {
       } else if (source == MsgSource.Background ||
           source == MsgSource.Terminated) {
         showSnackbar = false;
+
         AppState.delegate!.parseRoute(Uri.parse(url));
         return true;
       }
@@ -78,39 +94,23 @@ class FcmHandler extends ChangeNotifier {
     // If message has a command payload
     if (data['command'] != null) {
       showSnackbar = false;
+
+      if (command!.toLowerCase().contains('end'))
+        return _webGameViewModel!
+            .handleGameRoundEnd(data as Map<String, dynamic>);
       switch (command) {
-        // case FcmCommands.DEPOSIT_TRANSACTION_RESPONSE:
-        //   if (_augTxnService.currentTransactionState == TransactionState.idle)
-        //     showSnackbar = true;
-        //   _augTxnService.fcmTransactionResponseUpdate(data['payload']);
-        //   break;
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
           log("User journey stats update fcm response");
-          _journeyService!.fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
+          _journeyService!
+              .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
         case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
           log("Golden Ticket win update fcm response");
-          _journeyService!.fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
+          _journeyService!
+              .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
         case FcmCommands.COMMAND_WITHDRAWAL_RESPONSE:
           _augOps!.handleWithdrawalFcmResponse(data['payload']);
-          break;
-
-        case FcmCommands.COMMAND_CRICKET_HERO_GAME_END:
-          _webGameViewModel!.handleCricketHeroRoundEnd(
-              data as Map<String, dynamic>, Constants.GAME_TYPE_CRICKET);
-          break;
-        case FcmCommands.COMMAND_POOL_CLUB_GAME_END:
-          _webGameViewModel!.handlePoolClubRoundEnd(
-              data as Map<String, dynamic>, Constants.GAME_TYPE_POOLCLUB);
-          break;
-        case FcmCommands.COMMAND_FOOT_BALL_GAME_END:
-          _webGameViewModel!.handleFootBallRoundEnd(
-              data as Map<String, dynamic>, Constants.GAME_TYPE_FOOTBALL);
-          break;
-        case FcmCommands.COMMAND_CANDY_FIESTA_GAME_END:
-          _webGameViewModel!.handleCandyFiestaRoundEnd(
-              data as Map<String, dynamic>, Constants.GAME_TYPE_CANDYFIESTA);
           break;
         case FcmCommands.COMMAND_LOW_BALANCE_ALERT:
           _webGameViewModel!.handleLowBalanceAlert();
@@ -123,9 +123,8 @@ class FcmHandler extends ChangeNotifier {
           break;
         case FcmCommands.COMMAND_SUBSCRIPTION_RESPONSE:
           if (_paytmService!.isOnSubscriptionFlow)
-            await _autosaveProcessViewModel!.handleSubscriptionPayload(data as Map<String, dynamic>);
-          // else
-          //   await _paytmService.handleFCMStatusUpdate(data);
+            await _autosaveProcessViewModel!
+                .handleSubscriptionPayload(data as Map<String, dynamic>);
           break;
         default:
       }

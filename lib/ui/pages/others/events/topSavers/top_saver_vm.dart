@@ -216,34 +216,34 @@ class TopSaverViewModel extends BaseViewModel {
           saverFreq = "monthly";
           break;
         }
-      case Constants.GAME_TYPE_FPL:
-        {
-          appbarTitle = "Fello Premier League";
-          saverFreq = "daily";
-          eventStandingsType = "FPL";
-          actionTitle = "Play Cricket";
-          break;
-        }
-      case Constants.BUG_BOUNTY:
-        {
-          appbarTitle = "Fello Bug Bounty";
-          saverFreq = "monthly";
-          eventStandingsType = "BUG_BOUNTY";
-          showStandingsAndWinners = false;
-          actionTitle = "Review";
-          _winnerService!.fetchBugBountyWinners();
-          break;
-        }
-      case Constants.NEW_FELLO_UI:
-        {
-          appbarTitle = "New Fello App";
-          saverFreq = "monthly";
-          eventStandingsType = "NEW_FELLO";
-          showStandingsAndWinners = false;
-          actionTitle = "View";
-          _winnerService!.fetchNewFelloWinners();
-          break;
-        }
+      // case Constants.GAME_TYPE_FPL:
+      //   {
+      //     appbarTitle = "Fello Premier League";
+      //     saverFreq = "daily";
+      //     eventStandingsType = "FPL";
+      //     actionTitle = "Play Cricket";
+      //     break;
+      //   }
+      // case Constants.BUG_BOUNTY:
+      //   {
+      //     appbarTitle = "Fello Bug Bounty";
+      //     saverFreq = "monthly";
+      //     eventStandingsType = "BUG_BOUNTY";
+      //     showStandingsAndWinners = false;
+      //     actionTitle = "Review";
+      //     _winnerService!.fetchBugBountyWinners();
+      //     break;
+      //   }
+      // case Constants.NEW_FELLO_UI:
+      //   {
+      //     appbarTitle = "New Fello App";
+      //     saverFreq = "monthly";
+      //     eventStandingsType = "NEW_FELLO";
+      //     showStandingsAndWinners = false;
+      //     actionTitle = "View";
+      //     _winnerService!.fetchNewFelloWinners();
+      //     break;
+      //   }
     }
     notifyListeners();
   }
@@ -272,7 +272,8 @@ class TopSaverViewModel extends BaseViewModel {
   }
 
   fetchTopSavers() async {
-    ApiResponse response = await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
+    ApiResponse response =
+        await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
       freq: saverFreq,
       type: eventStandingsType,
     );
@@ -403,7 +404,8 @@ class TopSaverViewModel extends BaseViewModel {
 
   Future<List<WinnersModel>?> getPastWinners(
       String gameType, String freq) async {
-    ApiResponse<List<WinnersModel>> response = await _getterRepo!.getPastWinners(
+    ApiResponse<List<WinnersModel>> response =
+        await _getterRepo!.getPastWinners(
       type: gameType,
       freq: freq,
     );
@@ -438,7 +440,8 @@ class PastHighestSaver {
       this.code,
       this.displayScore});
 
-  factory PastHighestSaver.fromMap(Winners map, String? gameType, String? code) {
+  factory PastHighestSaver.fromMap(
+      Winners map, String? gameType, String? code) {
     return PastHighestSaver(
         score: map.score!.toDouble(),
         userid: map.userid,

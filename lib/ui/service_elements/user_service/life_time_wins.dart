@@ -29,7 +29,7 @@ class LifeTimeWin extends StatelessWidget {
         UserServiceProperties.myUserWallet
       ],
       builder: (context, model, property) => Text(
-        "₹ ${getWinString(model?.userFundWallet?.prizeBalance)}",
+        "₹ ${getWinString(model?.userFundWallet?.unclaimedBalance)}",
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );

@@ -1,6 +1,8 @@
 //Project imports
 import 'dart:async';
 
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
@@ -8,12 +10,8 @@ import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
-
 //Flutter imports
 import 'package:flutter/material.dart';
-
 //Pub imports
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,7 +36,7 @@ class AppState extends ChangeNotifier {
   static Map<String, dynamic>? startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String? _fcmData;
-  static bool isFirstTime = true;
+  static bool isFirstTime = false;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
   static bool isWebGameLInProgress = false;
@@ -49,6 +47,8 @@ class AppState extends ChangeNotifier {
   static bool isUserSignedIn = false;
   static bool isSaveOpened = false;
   static bool isWinOpened = false;
+  static bool isRootAvailableForIncomingTaskExecution = true;
+  static bool isInstantGtViewInView = false;
 
   static List<ScreenItem> screenStack = [];
   static FelloRouterDelegate? delegate;
@@ -118,9 +118,6 @@ class AppState extends ChangeNotifier {
       _lbService!.fetchReferralLeaderBoard();
       isWinOpened = true;
     }
-    if (index == 2) {
-      _winnerService!.fetchWinners();
-    }
     print(_rootIndex);
     notifyListeners();
   }
@@ -149,6 +146,10 @@ class AppState extends ChangeNotifier {
     });
   }
 
+  static dump() {
+    isRootAvailableForIncomingTaskExecution = true;
+    isFirstTime = false;
+  }
   // setLastTapIndex() {
   //   SharedPreferences.getInstance().then((instance) {
   //     rootIndex = instance.getInt('lastTab');

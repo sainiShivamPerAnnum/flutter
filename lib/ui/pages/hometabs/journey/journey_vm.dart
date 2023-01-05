@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
@@ -18,10 +19,8 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
-import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 
 class JourneyPageViewModel extends BaseViewModel {
@@ -109,6 +108,9 @@ class JourneyPageViewModel extends BaseViewModel {
 
   init(TickerProvider ticker) async {
     log("Journey VM init Called");
+    if (Platform.isAndroid) {
+      ApxorFlutter.trackScreen("Journey");
+    }
     isLoading = true;
     _journeyService!.vsync = ticker;
     logger!.d("Pages length: ${_journeyService!.pages!.length ?? 0}");
@@ -151,45 +153,45 @@ class JourneyPageViewModel extends BaseViewModel {
     // checkIfUserIsNewAndNeedsStoryView();
   }
 
-  checkIfUserIsNewAndNeedsStoryView() {
-    Future.delayed(
-      Duration(seconds: 4),
-      () {
-        if (_userService!.userJourneyStats!.mlIndex == 1 &&
-            !_journeyService!.isUserJourneyOnboarded) {
-          openStoryView();
-        }
-      },
-    );
-  }
+  // checkIfUserIsNewAndNeedsStoryView() {
+  //   Future.delayed(
+  //     Duration(seconds: 4),
+  //     () {
+  //       if (_userService!.userJourneyStats!.mlIndex == 1 &&
+  //           !_journeyService!.isUserJourneyOnboarded) {
+  //         openStoryView();
+  //       }
+  //     },
+  //   );
+  // }
 
-  openStoryView() {
-    _journeyService!.isJourneyOnboardingInView = true;
-    PreferenceHelper.setBool(
-        PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
-    AppState.screenStack.add(ScreenItem.dialog);
-    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, anotherAnimation) {
-          return InfoStories(
-            topic: "onboarding",
-          );
-        },
-        transitionDuration: Duration(milliseconds: 500),
-        transitionsBuilder: (context, animation, anotherAnimation, child) {
-          animation =
-              CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
-          return Align(
-            child: SizeTransition(
-              sizeFactor: animation,
-              child: child,
-              axisAlignment: 0.0,
-            ),
-          );
-        },
-      ),
-    );
-  }
+  // openStoryView() {
+  //   _journeyService!.isJourneyOnboardingInView = true;
+  //   PreferenceHelper.setBool(
+  //       PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
+  //   AppState.screenStack.add(ScreenItem.dialog);
+  //   Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+  //     PageRouteBuilder(
+  //       pageBuilder: (context, animation, anotherAnimation) {
+  //         return InfoStories(
+  //           topic: "onboarding",
+  //         );
+  //       },
+  //       transitionDuration: Duration(milliseconds: 500),
+  //       transitionsBuilder: (context, animation, anotherAnimation, child) {
+  //         animation =
+  //             CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
+  //         return Align(
+  //           child: SizeTransition(
+  //             sizeFactor: animation,
+  //             child: child,
+  //             axisAlignment: 0.0,
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   updatingJourneyView() async {
     if (isRefreshing) return;
@@ -305,7 +307,7 @@ class JourneyPageViewModel extends BaseViewModel {
 
     return BaseUtil.openModalBottomSheet(
       backgroundColor: Colors.transparent,
-      isBarrierDismissable: true,
+      isBarrierDismissible: true,
       addToScreenStack: true,
       hapticVibrate: true,
       isScrollControlled: true,

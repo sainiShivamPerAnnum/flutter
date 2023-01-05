@@ -79,7 +79,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   showEmailOptions() {
     baseProvider.isGoogleSignInProgress = false;
     BaseUtil.openModalBottomSheet(
-        isBarrierDismissable: false,
+        isBarrierDismissible: false,
         addToScreenStack: false,
         hapticVibrate: true,
         backgroundColor:
@@ -178,10 +178,10 @@ class VerifyEmailState extends State<VerifyEmail> {
       });
       if (res.model!) {
         await _userService!.setBaseUser();
-        BaseUtil.showPositiveAlert(
-            "Email verified", "Thank you for verifying your email");
         while (AppState.screenStack.length > 1)
           AppState.backButtonDispatcher!.didPopRoute();
+        BaseUtil.showPositiveAlert(
+            "Email verified", "Thank you for verifying your email");
       } else {
         BaseUtil.showNegativeAlert(
           "Email verification failed",
@@ -222,7 +222,8 @@ class VerifyEmailState extends State<VerifyEmail> {
           uid: _userService!.baseUser!.uid,
           dMap: {
             BaseUser.fldEmail: _userService!.baseUser!.email,
-            BaseUser.fldIsEmailVerified: _userService!.baseUser!.isEmailVerified,
+            BaseUser.fldIsEmailVerified:
+                _userService!.baseUser!.isEmailVerified,
           },
         );
 
@@ -231,9 +232,9 @@ class VerifyEmailState extends State<VerifyEmail> {
           setState(() {
             baseProvider.isGoogleSignInProgress = false;
           });
-          BaseUtil.showPositiveAlert("Success", "Email Verified successfully");
           Navigator.pop(context);
           AppState.backButtonDispatcher!.didPopRoute();
+          BaseUtil.showPositiveAlert("Success", "Email Verified successfully");
         } else {
           baseProvider.isGoogleSignInProgress = false;
           BaseUtil.showNegativeAlert(

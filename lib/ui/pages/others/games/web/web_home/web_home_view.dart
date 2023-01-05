@@ -1,6 +1,5 @@
-import 'dart:async';
+import 'dart:io';
 
-import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -30,8 +29,24 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:shimmer/shimmer.dart';
+
+class SudoAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final Color color;
+
+  SudoAppBar({required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: color,
+      height: SizeConfig.viewInsets.top,
+    );
+  }
+
+  @override
+  Size get preferredSize => Size(0, 0);
+}
 
 class WebHomeView extends StatelessWidget {
   const WebHomeView({Key? key, required this.game}) : super(key: key);
@@ -54,64 +69,38 @@ class WebHomeView extends StatelessWidget {
           backgroundColor: Colors.black,
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
+            appBar: Platform.isIOS
+                ? AppBar(
+                    backgroundColor: model.currentGameModel!.shadowColor,
+                    elevation: 0,
+                    actions: [
+                      Row(
+                        children: [
+                          FelloCoinBar(),
+                        ],
+                      )
+                    ],
+                  )
+                : SudoAppBar(color: model.currentGameModel!.shadowColor!),
             body: Stack(
               children: [
                 NewSquareBackground(),
                 CustomScrollView(
                   controller: _controller,
-                  physics: BouncingScrollPhysics(),
+                  physics: ClampingScrollPhysics(),
                   slivers: [
-                    SliverLayoutBuilder(
-                      builder: (context, constraints) {
-                        final scrolled = constraints.scrollOffset > 0;
-                        print(constraints.scrollOffset);
-                        return SliverAppBar(
-                          title: AnimatedOpacity(
-                            duration: Duration(milliseconds: 100),
-                            curve: Curves.easeIn,
-                            opacity: constraints.scrollOffset >
-                                    (SizeConfig.screenWidth! * 0.35)
-                                ? 1
-                                : 0, //constraints.scrollOffset.clamp(0, 1),
-                            child: Text(
-                              model.currentGameModel!.gameName!,
-                              style: TextStyles.rajdhaniB.title5
-                                  .colour(Colors.white),
-                            ),
-                          ),
-                          pinned: true,
-                          centerTitle: false,
-                          backgroundColor: model.currentGameModel!.shadowColor,
-                          actions: [
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(right: SizeConfig.padding4),
-                              child: Row(
+                    Platform.isIOS
+                        ? SliverToBoxAdapter(
+                            child: Container(
+                              color: model.currentGameModel!.shadowColor,
+                              child: Column(
                                 children: [
-                                  FelloCoinBar(svgAsset: Assets.token),
-                                ],
-                              ),
-                            ),
-                          ],
-                          expandedHeight: SizeConfig.screenWidth! * 0.45,
-                          flexibleSpace: FlexibleSpaceBar(
-                            background: model.isLoading
-                                ? Shimmer.fromColors(
-                                    baseColor:
-                                        UiConstants.kUserRankBackgroundColor,
-                                    highlightColor:
-                                        UiConstants.kBackgroundColor,
-                                    child: Container(
-                                      color: Colors.grey,
-                                    ),
-                                  )
-                                : Container(
-                                    color: model.currentGameModel!.shadowColor,
-                                    padding: EdgeInsets.only(
-                                        top: SizeConfig.viewInsets.top +
-                                            SizeConfig.padding12,
-                                        left: SizeConfig.pageHorizontalMargins *
-                                            2),
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        left: SizeConfig.pageHorizontalMargins,
+                                        right:
+                                            SizeConfig.pageHorizontalMargins /
+                                                2),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -145,20 +134,119 @@ class WebHomeView extends StatelessWidget {
                                                 .thumbnailUri!,
                                             fit: BoxFit.cover,
                                             height:
-                                                SizeConfig.screenWidth! * 0.5,
+                                                SizeConfig.screenWidth! * 0.4,
                                             width:
-                                                SizeConfig.screenWidth! * 0.5),
+                                                SizeConfig.screenWidth! * 0.4),
                                       ],
                                     ),
                                   ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : SliverLayoutBuilder(
+                            builder: (context, constraints) {
+                              print(constraints.scrollOffset);
+                              return SliverAppBar(
+                                title: AnimatedOpacity(
+                                  duration: Duration(milliseconds: 100),
+                                  curve: Curves.easeIn,
+                                  opacity: constraints.scrollOffset >
+                                          (SizeConfig.screenWidth! * 0.35)
+                                      ? 1
+                                      : 0, //constraints.scrollOffset.clamp(0, 1),
+                                  child: Text(
+                                    model.currentGameModel!.gameName!,
+                                    style: TextStyles.rajdhaniB.title5
+                                        .colour(Colors.white),
+                                  ),
+                                ),
+                                pinned: true,
+                                centerTitle: false,
+                                backgroundColor:
+                                    model.currentGameModel!.shadowColor,
+                                actions: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        right: SizeConfig.padding4),
+                                    child: Row(
+                                      children: [
+                                        FelloCoinBar(svgAsset: Assets.token),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                                expandedHeight: SizeConfig.screenWidth! * 0.45,
+                                flexibleSpace: FlexibleSpaceBar(
+                                  background: model.isLoading
+                                      ? Shimmer.fromColors(
+                                          baseColor: UiConstants
+                                              .kUserRankBackgroundColor,
+                                          highlightColor:
+                                              UiConstants.kBackgroundColor,
+                                          child: Container(
+                                            color: Colors.grey,
+                                          ),
+                                        )
+                                      : Container(
+                                          color: model
+                                              .currentGameModel!.shadowColor,
+                                          padding: EdgeInsets.only(
+                                              top: SizeConfig.viewInsets.top +
+                                                  SizeConfig.padding12,
+                                              left: SizeConfig
+                                                      .pageHorizontalMargins *
+                                                  2),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                        model.currentGameModel!
+                                                            .gameName!
+                                                            .split(' ')
+                                                            .first,
+                                                        style: TextStyles
+                                                            .rajdhaniB.title1),
+                                                    Text(
+                                                        model.currentGameModel!
+                                                            .gameName!
+                                                            .split(' ')
+                                                            .last,
+                                                        style: TextStyles
+                                                            .rajdhaniSB.title3),
+                                                    SizedBox(
+                                                        height: SizeConfig
+                                                            .padding16),
+                                                  ]),
+                                              Spacer(),
+                                              SvgPicture.network(
+                                                  model.currentGameModel!
+                                                      .thumbnailUri!,
+                                                  fit: BoxFit.cover,
+                                                  height:
+                                                      SizeConfig.screenWidth! *
+                                                          0.5,
+                                                  width:
+                                                      SizeConfig.screenWidth! *
+                                                          0.5),
+                                            ],
+                                          ),
+                                        ),
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
                     SliverList(
                       delegate: SliverChildListDelegate(
                         [
@@ -408,7 +496,7 @@ class PlayButtonOverlapper extends StatelessWidget {
                 ),
                 hapticVibrate: true,
                 isScrollControlled: true,
-                isBarrierDismissable: true,
+                isBarrierDismissible: true,
               );
             },
             child: Container(
@@ -493,7 +581,7 @@ class StreamView extends StatelessWidget {
           String? fieldToFetch = fetchedData['field'] as String?;
 
           Map<Object, Object> requiredTimeData =
-           Map<Object,Object>.from(fetchedData[fieldToFetch!]);
+              Map<Object, Object>.from(fetchedData[fieldToFetch!]);
 // >>>>>>> feat/nullSafe
 
           return AnimatedSwitcher(
@@ -912,8 +1000,8 @@ class PastWeekWinners extends StatelessWidget {
                                               .currentAction = PageAction(
                                             state: PageState.addWidget,
                                             widget:
-                                                AllParticipantsWinnersTopReferers(
-                                              isForTopReferers: true,
+                                                AllParticipantsWinnersTopReferrers(
+                                              isForTopReferrers: true,
                                               showPoints: true,
                                               appBarTitle: "Past Week Winners",
                                               referralLeaderBoard:

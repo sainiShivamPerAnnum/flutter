@@ -10,6 +10,7 @@ import 'package:felloapp/ui/service_elements/user_service/life_time_wins.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -57,6 +58,7 @@ class JourneyAppBar extends StatelessWidget {
                         child: Row(
                           children: [
                             Container(
+                              key: ValueKey(Constants.PROFILE_JAPPBAR),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
@@ -91,7 +93,7 @@ class JourneyAppBar extends StatelessWidget {
                             //           .parseRoute(Uri.parse('/augSell'));
                             //     },
                             //     icon: Icon(Icons.navigation)),
-                            FelloCoinBar(),
+                            FelloCoinBar(key: ValueKey(Constants.FELLO_COIN_BAR),),
                             NotificationButton()
                           ],
                         ),
@@ -106,6 +108,7 @@ class JourneyAppBar extends StatelessWidget {
                       child: Row(
                         children: [
                           JourneyAppBarAssetDetailsTile(
+                            key: ValueKey(Constants.TOTAL_SAVINGS_JAPPBAR),
                             actionUri: '/save',
                             title: "Total Savings",
                             value: NetWorthValue(
@@ -118,6 +121,7 @@ class JourneyAppBar extends StatelessWidget {
                             thickness: 0.5,
                           ),
                           JourneyAppBarAssetDetailsTile(
+                            key: ValueKey(Constants.TOTAL_WINNINGS_JAPPBAR),
                             actionUri: '/win',
                             title: "Total Winnings",
                             value: LifeTimeWin(
@@ -140,10 +144,12 @@ class JourneyAppBar extends StatelessWidget {
 }
 
 class JourneyAppBarAssetDetailsTile extends StatelessWidget {
+  final Key? key;
   final String? title;
   final Widget? value;
   final String? actionUri;
   JourneyAppBarAssetDetailsTile({
+    @required this.key,
     @required this.title,
     @required this.value,
     @required this.actionUri,
