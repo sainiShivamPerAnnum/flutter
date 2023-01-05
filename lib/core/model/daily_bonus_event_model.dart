@@ -1,9 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:flutter/foundation.dart';
 
 class DailyAppCheckInEventModel {
   final String title;
@@ -18,6 +17,7 @@ class DailyAppCheckInEventModel {
   final TimestampModel streakStart;
   final TimestampModel streakEnd;
   bool showStreakBreakMessage = false;
+  final String? gtId;
   DailyAppCheckInEventModel({
     required this.title,
     required this.subtitle,
@@ -30,6 +30,7 @@ class DailyAppCheckInEventModel {
     required this.startedOn,
     required this.streakStart,
     required this.streakEnd,
+    this.gtId,
   });
 
   DailyAppCheckInEventModel copyWith({
@@ -44,6 +45,7 @@ class DailyAppCheckInEventModel {
     TimestampModel? startedOn,
     TimestampModel? streakStart,
     TimestampModel? streakEnd,
+    String? gtId,
   }) {
     return DailyAppCheckInEventModel(
       title: title ?? this.title,
@@ -57,6 +59,7 @@ class DailyAppCheckInEventModel {
       startedOn: startedOn ?? this.startedOn,
       streakStart: streakStart ?? this.streakStart,
       streakEnd: streakEnd ?? this.streakEnd,
+      gtId: gtId,
     );
   }
 
@@ -73,6 +76,7 @@ class DailyAppCheckInEventModel {
       'startedOn': startedOn.toMap(),
       'streakStart': streakStart.toMap(),
       'streakEnd': streakEnd.toMap(),
+      'gtId': gtId,
     };
   }
 
@@ -90,6 +94,7 @@ class DailyAppCheckInEventModel {
       startedOn: TimestampModel.fromMap(map['startedOn']),
       streakStart: TimestampModel.fromMap(map['streakStart']),
       streakEnd: TimestampModel.fromMap(map['streakEnd']),
+      gtId: map['gtId'],
     );
   }
 

@@ -13,7 +13,6 @@ import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instan
 import 'package:felloapp/ui/service_elements/events/daily_app_bonus_modalsheet.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -82,8 +81,7 @@ class MarketingEventHandlerService
       dailyAppCheckInEventData = dailyAppBonusEventResponse.model;
       AppState.isRootAvailableForIncomingTaskExecution = false;
       getCurrentDay(dailyAppCheckInEventData!);
-      // currentDay = dailyAppCheckInEventData!.currentDay;
-      if (await _claimDailyAppBonusReward()) {
+      if (dailyAppCheckInEventData!.gtId != null) {
         await BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,
@@ -99,18 +97,18 @@ class MarketingEventHandlerService
     }
   }
 
-  Future<bool> _claimDailyAppBonusReward() async {
-    final res = await _gtRepo.claimDailyBonusEventDetails();
-    if (res.isSuccess()) {
-      _dailyAppBonusClaimRewardData = res.model;
-      PreferenceHelper.setString(
-          PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP,
-          DateTime.now().toIso8601String());
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // Future<bool> _claimDailyAppBonusReward() async {
+  //   final res = await _gtRepo.claimDailyBonusEventDetails();
+  //   if (res.isSuccess()) {
+  //     _dailyAppBonusClaimRewardData = res.model;
+  //     PreferenceHelper.setInt(
+  //         PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
+  //         DateTime.now().day);
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   Future<void> sudoClaimDailyReward() async {
     isDailyAppBonusClaimInProgress = true;
