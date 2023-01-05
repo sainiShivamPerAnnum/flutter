@@ -2,9 +2,12 @@ import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class MilestoneTooltip extends StatelessWidget {
@@ -56,13 +59,36 @@ class MilestoneTooltip extends StatelessWidget {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text("${milestone.tooltip}",
-                                      style: TextStyles.sourceSansSB.body2),
-                                  Icon(Icons.arrow_forward_ios_rounded,
-                                      color: Colors.white,
-                                      size: SizeConfig.iconSize1),
+                                  SvgPicture.asset(
+                                      Assets.unredemmedGoldenTicketBG,
+                                      height: SizeConfig.iconSize1),
+                                  SizedBox(width: SizeConfig.padding8),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("${milestone.tooltip}",
+                                          style: TextStyles.sourceSansSB.body2),
+                                      Text(
+                                        "Win scratch card",
+                                        style: TextStyles.sourceSansSB.body4
+                                            .colour(UiConstants.kTextColor3),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
+
+                              // child: Row(
+                              //   mainAxisSize: MainAxisSize.min,
+                              //   children: [
+                              //     Text("${milestone.tooltip}",
+                              //         style: TextStyles.sourceSansSB.body2),
+                              //     Icon(Icons.arrow_forward_ios_rounded,
+                              //         color: Colors.white,
+                              //         size: SizeConfig.iconSize1),
+                              //   ],
+                              // ),
                             ),
                           )),
                     ),

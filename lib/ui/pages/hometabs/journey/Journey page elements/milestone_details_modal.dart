@@ -77,6 +77,15 @@ class _JourneyMilestoneDetailsModalSheetState
     return "Golden";
   }
 
+  String getTicketAsset(mlIndex) {
+    for (int i = 0; i < _journeyService!.levels!.length; i++) {
+      if (_journeyService!.levels![i].end == mlIndex) {
+        return Assets.levelUpUnRedeemedGoldenTicketBG;
+      }
+    }
+    return Assets.unredemmedGoldenTicketBG;
+  }
+
   Color getTicketColor(mlIndex) {
     for (int i = 0; i < _journeyService!.levels!.length; i++) {
       if (_journeyService!.levels![i].end == mlIndex) {
@@ -181,11 +190,29 @@ class _JourneyMilestoneDetailsModalSheetState
                               TextStyles.body3.colour(UiConstants.kTextColor3),
                         ),
                         SizedBox(height: SizeConfig.padding24),
-                        Text(
-                         locale.winATicket(getTicketType(widget.milestone.index)),
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.primaryColor),
-                        )
+                        RichText(
+                          text: TextSpan(
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.primaryColor),
+                              children: [
+                                WidgetSpan(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: SizeConfig.padding3),
+                                    child: SvgPicture.asset(
+                                      getTicketAsset(widget.milestone.index),
+                                      height: SizeConfig.body4,
+                                    ),
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: " " +
+                                      locale.winATicket(
+                                        getTicketType(widget.milestone.index),
+                                      ),
+                                )
+                              ]),
+                        ),
                       ],
                     ),
               if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)
@@ -199,7 +226,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                         TimestampModel(
                                             seconds: 0, nanoseconds: 0)))
                             ? goldenTicketWidget(ticket!.isLevelChange!)
-                            : rewardWidget(ticket!.rewardArr,context),
+                            : rewardWidget(ticket!.rewardArr, context),
               SizedBox(height: SizeConfig.padding24),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
                   ? SizedBox()
@@ -296,7 +323,7 @@ class _JourneyMilestoneDetailsModalSheetState
   }
 
   Widget rewardWidget(List<Reward>? rewards, BuildContext context) {
-     S locale = S.of(context);  
+    S locale = S.of(context);
     return (rewards == null || rewards.isEmpty)
         ? SizedBox()
         : Column(
@@ -364,18 +391,20 @@ class _JourneyMilestoneDetailsModalSheetState
     }
   }
 
-  getSuffix(String? type, ) {
+  getSuffix(
+    String? type,
+  ) {
     switch (type) {
       case Constants.GT_REWARD_FLC:
-        return " "+locale.tokens.toLowerCase();
+        return " " + locale.tokens.toLowerCase();
       case Constants.GT_REWARD_AMT:
         return "";
       case Constants.GT_REWARD_RUPEE:
         return "";
       case Constants.GT_REWARD_GOLD:
-        return " "+locale.worthOfGold;
+        return " " + locale.worthOfGold;
       case Constants.GT_REWARD_TAMBOLA_TICKET:
-        return " "+locale.tTicket;
+        return " " + locale.tTicket;
       default:
         return "";
     }

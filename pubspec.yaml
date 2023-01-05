@@ -55,10 +55,10 @@ dependencies:
   open_filex: ^4.3.1
   package_info_plus: ^3.0.2
   path_provider: ^2.0.2
-  flutter_dynamic_icon:
-    git:
-      url: https://github.com/tastelessjolt/flutter_dynamic_icon.git
-      ref: GioPan04-android-support
+  # flutter_dynamic_icon:
+  #   git:
+  #     url: https://github.com/tastelessjolt/flutter_dynamic_icon.git
+  #     ref: GioPan04-android-support
   paytm_allinonesdk: ^1.1.4
   flutter_facebook_sdk:
     path: packages/flutter_facebook_sdk/

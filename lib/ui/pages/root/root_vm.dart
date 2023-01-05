@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
@@ -44,7 +42,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
+// import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RootViewModel extends BaseViewModel {
@@ -109,8 +107,6 @@ class RootViewModel extends BaseViewModel {
         });
       });
     });
-
-    
   }
 
   onDispose() {

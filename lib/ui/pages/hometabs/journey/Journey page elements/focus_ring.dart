@@ -154,7 +154,7 @@ class _FocusRingState extends State<FocusRing>
                                 _analyticsService!.track(
                                     eventName:
                                         AnalyticsEvents.journeyMileStarted);
-                                 BaseUtil.openModalBottomSheet(
+                                BaseUtil.openModalBottomSheet(
                                   backgroundColor: Colors.transparent,
                                   isBarrierDismissible: true,
                                   addToScreenStack: true,

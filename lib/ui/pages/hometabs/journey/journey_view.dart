@@ -100,7 +100,7 @@ class _JourneyViewState extends State<JourneyView>
                         ),
                       ),
                     ),
-                     HelpFab(),
+                    HelpFab(),
                     JourneyAppBar(),
                     JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),
@@ -322,21 +322,49 @@ class LevelBlurView extends StatelessWidget {
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Colors.white.withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness24),
+                                      SizeConfig.roundness40),
                                 ),
                                 padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding6,
-                                    horizontal: SizeConfig.padding10),
-                                child: Row(
+                                    vertical: SizeConfig.padding16,
+                                    horizontal: SizeConfig.padding24),
+                                child: Column(
                                   children: [
-                                    Text(locale.jLevel+"${levelData.level! + 1} ",
-                                        style: TextStyles.rajdhaniB.body1
-                                            .colour(Colors.black)),
-                                    Icon(Icons.lock,
-                                        size: SizeConfig.iconSize1,
-                                        color: Colors.black),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.lock,
+                                            size: SizeConfig.iconSize1,
+                                            color: Colors.black),
+                                        Text(
+                                            " " +
+                                                locale.jLevel +
+                                                " ${levelData.level! + 1}",
+                                            style: TextStyles.rajdhaniB.body1
+                                                .colour(Colors.black)),
+                                      ],
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                          style: TextStyles.body4
+                                              .colour(Colors.black),
+                                          children: [
+                                            TextSpan(text: "Unlock to win a "),
+                                            // WidgetSpan(
+                                            //   child: Padding(
+                                            //     padding: EdgeInsets.only(
+                                            //         bottom:
+                                            //             SizeConfig.padding3),
+                                            //     child: SvgPicture.asset(
+                                            //       Assets
+                                            //           .levelUpUnRedeemedGoldenTicketBG,
+                                            //       height: SizeConfig.body5,
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                            TextSpan(text: " scratch card ")
+                                          ]),
+                                    )
                                   ],
                                 ),
                               ),
