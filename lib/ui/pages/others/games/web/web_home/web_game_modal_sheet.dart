@@ -3,7 +3,9 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_vm.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -32,13 +34,16 @@ class WebGameModalSheet extends StatelessWidget {
               height: SizeConfig.screenHeight! * 0.01,
             ),
             Container(
-              height: 3,
-              width: SizeConfig.screenWidth! * 0.4,
+              height: 4,
+              width: SizeConfig.screenWidth! * 0.3,
               decoration: BoxDecoration(
                   color: Color(0xffD9D9D9).withOpacity(0.4),
                   borderRadius: BorderRadius.circular(8)),
             ),
-            SvgPicture.network(model.currentGameModel!.icon!),
+            SizedBox(
+              height: 24,
+            ),
+            SvgPicture.network(model.currentGameModel!.thumbnailUri!),
             StreamView(model: model, game: game),
             SizedBox(
               height: SizeConfig.padding10,
@@ -59,8 +64,8 @@ class WebGameModalSheet extends StatelessWidget {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.only(top: 8, left: 14, right: 14, bottom: 0),
+              padding: const EdgeInsets.only(
+                  top: 24, left: 14, right: 14, bottom: 0),
               child: RewardCriteria(
                 htmlData: "",
               ),
@@ -75,6 +80,150 @@ class WebGameModalSheet extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding10,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: SizedBox(
+                height: SizeConfig.screenHeight! * 0.15,
+                child: Expanded(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xff050505).withOpacity(0.2),
+                            border: Border.all(
+                              color: Color(0xff919193),
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SvgPicture.asset(Assets.flyingGhost),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                "Last Score",
+                                style: TextStyles.sourceSans.body3.colour(
+                                  Color(0xffFFD979),
+                                ),
+                              ),
+                              Text(
+                                "540 PTS",
+                                style: TextStyles.rajdhaniSB.title5,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xff050505).withOpacity(0.2),
+                                  border: Border.all(
+                                    color: Color(0xff919193),
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      "Your best",
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Color(0xffBDBDBE)),
+                                    ),
+                                    Text(
+                                      "230 pt",
+                                      style: TextStyles.rajdhaniSB.body1.colour(
+                                        Color(0xffBDBDBE),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xff050505).withOpacity(0.2),
+                                  border: Border.all(
+                                    color: Color(0xff919193),
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      "Your best",
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Color(0xffBDBDBE)),
+                                    ),
+                                    Text(
+                                      "230 pt",
+                                      style: TextStyles.rajdhaniSB.body1.colour(
+                                        Color(0xffBDBDBE),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 28),
+              child: AppPositiveBtn(
+                  btnText: "Play",
+                  widget: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "PLAY FOR",
+                        style: TextStyles.rajdhaniB.body1,
+                      ),
+                      SvgPicture.asset(
+                        Assets.token,
+                        height: 20,
+                        width: 20,
+                      ),
+                      Text(model.currentGameModel!.playCost.toString(),
+                          style: TextStyles.rajdhaniB.body1)
+                    ],
+                  ),
+                  onPressed: () {}),
+            ),
+            SizedBox(
+              height: 28,
+            )
           ],
         ),
       );

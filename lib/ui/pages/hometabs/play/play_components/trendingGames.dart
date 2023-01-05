@@ -142,7 +142,7 @@ class TrendingGames extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "PLAY",
+                    "PLAY  ",
                     style: TextStyles.sourceSans.body3.colour(Colors.white),
                   ),
                   SvgPicture.asset(

@@ -300,9 +300,11 @@ class BaseUtil extends ChangeNotifier {
   static openGameModalSheet(String game) {
     return openModalBottomSheet(
       isScrollControlled: true,
-      isBarrierDismissible: false,
+      isBarrierDismissible: true,
       addToScreenStack: true,
-      content: WebGameModalSheet(game: game,),
+      content: WebGameModalSheet(
+        game: game,
+      ),
       backgroundColor: Color(0xff39393C),
       hapticVibrate: true,
     );

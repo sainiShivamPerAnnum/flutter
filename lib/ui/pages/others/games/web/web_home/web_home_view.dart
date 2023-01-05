@@ -563,11 +563,23 @@ class StreamView extends StatelessWidget {
       stream: model.getRealTimePlayingStream(game),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return GameInfoBlock(
-            coin: "-",
-            coinText: locale.playing,
-            assetHeight: SizeConfig.padding16,
-            isDot: true,
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                  backgroundColor: UiConstants.primaryColor,
+                  radius: SizeConfig.padding4),
+              SizedBox(
+                width: SizeConfig.padding8,
+              ),
+              Text(
+                "_",
+                style: TextStyles.sourceSans.body2.colour(
+                  Color(0xffE0E0E0),
+                ),
+              )
+            ],
           );
         }
 
@@ -607,7 +619,7 @@ class StreamView extends StatelessWidget {
                   width: SizeConfig.padding8,
                 ),
                 Text(
-                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} + Playing",
+                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())}+ Playing",
                   style: TextStyles.sourceSans.body2.colour(
                     Color(0xffE0E0E0),
                   ),
@@ -625,11 +637,23 @@ class StreamView extends StatelessWidget {
             // ),
           );
         } else {
-          return GameInfoBlock(
-            coin: "50+",
-            coinText: locale.playing,
-            assetHeight: SizeConfig.padding16,
-            isDot: true,
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                  backgroundColor: UiConstants.primaryColor,
+                  radius: SizeConfig.padding4),
+              SizedBox(
+                width: SizeConfig.padding8,
+              ),
+              Text(
+                "50+ Playing",
+                style: TextStyles.sourceSans.body2.colour(
+                  Color(0xffE0E0E0),
+                ),
+              ),
+            ],
           );
         }
       },

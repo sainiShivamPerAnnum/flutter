@@ -336,16 +336,18 @@ class AppDatePickerField extends StatelessWidget {
 }
 
 class AppPositiveBtn extends StatelessWidget {
-  const AppPositiveBtn({
-    Key? key,
-    required this.btnText,
-    required this.onPressed,
-    this.width,
-    this.height,
-  }) : super(key: key);
+  const AppPositiveBtn(
+      {Key? key,
+      required this.btnText,
+      required this.onPressed,
+      this.width,
+      this.height,
+      this.widget})
+      : super(key: key);
   final String? btnText;
   final VoidCallback onPressed;
   final double? width, height;
+  final Widget? widget;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -369,10 +371,11 @@ class AppPositiveBtn extends StatelessWidget {
           child: MaterialButton(
             // padding: EdgeInsets.zero,
             onPressed: onPressed,
-            child: Text(
-              btnText!.toUpperCase(),
-              style: TextStyles.rajdhaniB.title5,
-            ),
+            child: widget ??
+                Text(
+                  btnText!.toUpperCase(),
+                  style: TextStyles.rajdhaniB.title5,
+                ),
           ),
         ),
         Container(
