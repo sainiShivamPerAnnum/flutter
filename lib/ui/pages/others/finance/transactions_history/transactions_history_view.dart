@@ -416,7 +416,8 @@ class TransactionSIPTile extends StatelessWidget {
       contentPadding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       dense: true,
-      title: Text(locale.btnDeposit.toUpperCase(), style: TextStyles.sourceSans.body3),
+      title: Text(locale.btnDeposit.toUpperCase(),
+          style: TextStyles.sourceSans.body3),
       subtitle: Text(
         _txnHistoryService!
             .getFormattedSIPDate(DateTime.parse(txn!.txnDateTime!)),
@@ -491,8 +492,8 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                     height: SizeConfig.padding24,
                     // width: SizeConfig.padding32,
                     color: Colors.transparent,
-                    child:
-                        Text(locale.autoSave, style: TextStyles.sourceSansSB.body2),
+                    child: Text(locale.autoSave,
+                        style: TextStyles.sourceSansSB.body2),
                   ),
                 ),
               ],

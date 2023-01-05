@@ -88,7 +88,7 @@ class AugmontTransactionService extends BaseTransactionService {
       case "PAYTM-PG":
         return processPaytmTransaction();
         break;
-      case "PAYTM":
+      case "RZP-PG":
         return getUserUpiAppChoice(this);
         break;
       case "RZP-PG":
@@ -131,7 +131,7 @@ class AugmontTransactionService extends BaseTransactionService {
           currentTransactionState = TransactionState.ongoing;
           initiatePolling();
         }
-        
+
         // resetBuyOptions();
         isGoldBuyInProgress = false;
         AppState.unblockNavigation();

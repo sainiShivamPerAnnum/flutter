@@ -51,11 +51,11 @@ class SudoAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class WebHomeView extends StatelessWidget {
-   WebHomeView({Key? key, required this.game}) : super(key: key);
+  WebHomeView({Key? key, required this.game}) : super(key: key);
   final String game;
 
   @override
-    S locale = locator<S>();
+  S locale = locator<S>();
   Widget build(BuildContext context) {
     ScrollController _controller = ScrollController();
 
@@ -72,7 +72,7 @@ class WebHomeView extends StatelessWidget {
           backgroundColor: Colors.black,
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
-            key:ValueKey(Constants.Game_WEB_VIEW_HOME),
+            key: ValueKey(Constants.Game_WEB_VIEW_HOME),
             appBar: Platform.isIOS
                 ? AppBar(
                     backgroundColor: model.currentGameModel!.shadowColor,
@@ -434,7 +434,7 @@ class WebHomeView extends StatelessWidget {
 class RechargeOptions extends StatelessWidget {
   final WebHomeViewModel model;
   const RechargeOptions({Key? key, required this.model}) : super(key: key);
- 
+
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
@@ -595,14 +595,34 @@ class StreamView extends StatelessWidget {
             transitionBuilder: (Widget child, Animation<double> animation) {
               return ScaleTransition(scale: animation, child: child);
             },
-            child: GameInfoBlock(
-              coin:
-                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
-              coinText: locale.playing,
-              assetHeight: SizeConfig.padding16,
-              isDot: true,
-              key: ValueKey<String>(requiredTimeData['value'].toString()),
+
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                    backgroundColor: UiConstants.primaryColor,
+                    radius: SizeConfig.padding4),
+                SizedBox(
+                  width: SizeConfig.padding8,
+                ),
+                Text(
+                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} + Playing",
+                  style: TextStyles.sourceSans.body2.colour(
+                    Color(0xffE0E0E0),
+                  ),
+                )
+              ],
             ),
+
+            // child: GameInfoBlock(
+            //   coin:
+            //       "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
+            //   coinText: locale.playing,
+            //   assetHeight: SizeConfig.padding16,
+            //   isDot: true,
+            //   key: ValueKey<String>(requiredTimeData['value'].toString()),
+            // ),
           );
         } else {
           return GameInfoBlock(
@@ -1010,7 +1030,8 @@ class PastWeekWinners extends StatelessWidget {
                                                 AllParticipantsWinnersTopReferrers(
                                               isForTopReferrers: true,
                                               showPoints: true,
-                                              appBarTitle: locale.pastWeekWinners,
+                                              appBarTitle:
+                                                  locale.pastWeekWinners,
                                               referralLeaderBoard:
                                                   model.pastWeekParticipants,
                                             ),

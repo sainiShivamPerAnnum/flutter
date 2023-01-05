@@ -37,6 +37,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
+import 'package:felloapp/ui/pages/others/games/web/web_home/web_game_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/assets.dart';
@@ -296,13 +297,23 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
+  static openGameModalSheet(String game) {
+    return openModalBottomSheet(
+      isScrollControlled: true,
+      isBarrierDismissible: false,
+      addToScreenStack: true,
+      content: WebGameModalSheet(game: game,),
+      backgroundColor: Color(0xff39393C),
+      hapticVibrate: true,
+    );
+  }
+
   openRechargeModalSheet({
     int? amt,
     bool? isSkipMl,
     required InvestmentType investmentType,
   }) {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      
       // if (_userService!.userJourneyStats?.mlIndex == 1)
       //   return BaseUtil.openDialog(
       //     addToScreenStack: true,
@@ -322,8 +333,7 @@ class BaseUtil extends ChangeNotifier {
           isAugDepositBanned != null &&
           isAugDepositBanned) {
         return BaseUtil.showNegativeAlert(
-            augDepositBanNotice ?? locale.assetNotAvailable,
-          locale.tryLater);
+            augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
       }
 
       if (investmentType == InvestmentType.LENDBOXP2P &&
@@ -369,15 +379,13 @@ class BaseUtil extends ChangeNotifier {
           isAugSellLocked != null &&
           isAugSellLocked) {
         return BaseUtil.showNegativeAlert(
-            augSellBanNotice ?? locale.assetNotAvailable,
-           locale.tryLater);
+            augSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
       }
       if (investmentType == InvestmentType.LENDBOXP2P &&
           islBoxSellBanned != null &&
           islBoxSellBanned) {
         return BaseUtil.showNegativeAlert(
-            lBoxSellBanNotice ?? locale.assetNotAvailable,
-            locale.tryLater);
+            lBoxSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
       }
       _analyticsService!.track(
           eventName: investmentType == InvestmentType.AUGGOLD99
@@ -919,7 +927,7 @@ class CompleteProfileDialog extends StatelessWidget {
       },
       child: MoreInfoDialog(
         title: title ?? locale.obCompleteProfile,
-        text: subtitle ??locale.obCompleteProfileSubTitle,
+        text: subtitle ?? locale.obCompleteProfileSubTitle,
         imagePath: Assets.completeProfile,
         btnText: locale.btnComplete.toUpperCase(),
         onPressed: () {

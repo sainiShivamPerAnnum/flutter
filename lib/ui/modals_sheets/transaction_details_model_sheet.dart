@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_success_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -36,9 +37,10 @@ class _TransactionDetailsBottomSheetState
   final AugmontService? augmontProvider = locator<AugmontService>();
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
-      S locale = locator<S>();
+  S locale = locator<S>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
   bool _isInvoiceLoading = false;
+  ValueNotifier<bool> _showOrderSummary = ValueNotifier(false);
 
   @override
   void initState() {
@@ -55,6 +57,13 @@ class _TransactionDetailsBottomSheetState
             UserTransaction.TRAN_STATUS_COMPLETE &&
         widget.transaction!.couponCode != null &&
         widget.transaction!.couponCode!.isNotEmpty) _showAppliedCoupon = true;
+
+    if (widget.transaction?.tranStatus == "PENDING" ||
+        widget.transaction?.tranStatus == "FAILED" ||
+        !(widget.transaction!.subType ==
+            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)) {
+      _showOrderSummary.value = true;
+    }
     super.initState();
   }
 
@@ -133,12 +142,14 @@ class _TransactionDetailsBottomSheetState
                       children: [
                         Center(
                           child: Text(
-                            isGold ? locale.digitalGoldText : locale.felloFloText,
+                            isGold
+                                ? locale.digitalGoldText
+                                : locale.felloFloText,
                             style: TextStyles.rajdhaniM.body2,
                           ),
                         ),
                         Text(
-                         locale.txnDetailsTitle,
+                          locale.txnDetailsTitle,
                           style: TextStyles.rajdhani.body4.colour(
                             UiConstants.kTextColor2,
                           ),
@@ -191,7 +202,8 @@ class _TransactionDetailsBottomSheetState
                           widget.transaction!.augmnt![
                                       UserTransaction.subFldAugLockPrice] !=
                                   null
-                              ? '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice]}/'+locale.gm
+                              ? '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice]}/' +
+                                  locale.gm
                               : locale.refUnAvailable,
                           UiConstants.primaryColor),
                       referralTile(
@@ -208,7 +220,8 @@ class _TransactionDetailsBottomSheetState
                     children: [
                       referralTile(
                         locale.sellRate,
-                        '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? locale.na}/'+locale.gm,
+                        '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? locale.na}/' +
+                            locale.gm,
                         Colors.redAccent.withOpacity(0.6),
                       ),
                       referralTile(
@@ -226,7 +239,8 @@ class _TransactionDetailsBottomSheetState
                     children: [
                       referralTile(
                         locale.sellRate,
-                        '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? locale.na}/'+locale.gm,
+                        '₹ ${widget.transaction!.augmnt![UserTransaction.subFldAugLockPrice] ?? locale.na}/' +
+                            locale.gm,
                         Colors.redAccent.withOpacity(0.6),
                       ),
                       referralTile(
@@ -252,8 +266,7 @@ class _TransactionDetailsBottomSheetState
                           Center(
                             child: Padding(
                               padding: EdgeInsets.only(top: 4, bottom: 8),
-                              child: Text(
-                                  locale.txnHappyHours,
+                              child: Text(locale.txnHappyHours,
                                   textAlign: TextAlign.center,
                                   style: TextStyles.sourceSans.body2
                                       .colour(Color(0xffB5CDCB))),
@@ -273,43 +286,97 @@ class _TransactionDetailsBottomSheetState
                                   .colour(Color(0xffB5CDCB)))
                         ],
                         SizedBox(height: SizeConfig.padding12),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: SizeConfig.padding16,
-                            bottom: SizeConfig.padding6,
-                          ),
-                          child: Text(
-                          locale.orderSummary,
-                            style: TextStyles.sourceSans.body2.underline.bold,
-                          ),
-                        ),
-                        TransactionSummary(
-                            summary: widget.transaction!.transactionUpdatesMap)
                       ],
                     ),
                   ),
-                SizedBox(height: SizeConfig.padding16),
-                if (_showAppliedCoupon)
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.padding16,
+                    bottom: SizeConfig.padding6,
+                  ),
+                  child: GestureDetector(
+                    onTap: () =>
+                        _showOrderSummary.value = !_showOrderSummary.value,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        locale.orderSummary,
+                        style: TextStyles.sourceSans.body2.underline.bold,
+                      ),
+                      trailing: ValueListenableBuilder<bool>(
+                        valueListenable: _showOrderSummary,
+                        builder: (context, snapshot, _) {
+                          return Transform.rotate(
+                            angle: snapshot ? pi / 2 : pi * 1.5,
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                              size: SizeConfig.padding16,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                ValueListenableBuilder<bool>(
+                    valueListenable: _showOrderSummary,
+                    builder: (context, snapshot, _) {
+                      return snapshot
+                          ? TransactionSummary(
+                              summary:
+                                  widget.transaction!.transactionUpdatesMap)
+                          : SizedBox();
+                    }),
+                // SizedBox(height: SizeConfig.padding8),
+                if (_showAppliedCoupon) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Other benefits on this transaction:",
+                      style: TextStyles.sourceSans.body2.colour(Colors.white),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
-                      SvgPicture.asset(
-                        Assets.ticketTilted,
-                        width: SizeConfig.iconSize0,
-                        height: SizeConfig.iconSize0,
+                      WinningChips(
+                        title: "Fello\nTokens",
+                        asset: Assets.token,
+                        qty: widget.transaction!.amount.round(),
+                        color: Colors.black,
+                        tooltip: "",
                       ),
                       SizedBox(
                         width: SizeConfig.padding8,
                       ),
-                      Text(
-                        widget.transaction!.couponCode ??
-                            '' + locale.couponApplied,
-                        style: TextStyles.sourceSans.body2
-                            .colour(UiConstants.kPrimaryColor),
+                      if ((widget.transaction?.couponMap
+                              ?.containsKey("goldAmount") ??
+                          false)) ...[
+                        WinningChips(
+                          title: "Gold\nWon",
+                          asset: Assets.digitalGold,
+                          qty: widget.transaction?.couponMap!["goldAmount"],
+                          color: Colors.black,
+                          tooltip: '',
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding8,
+                        )
+                      ],
+                      WinningChips(
+                        title: "Tambola\nticket",
+                        asset: Assets.singleTmbolaTicket,
+                        qty: 1,
+                        color: Colors.black,
+                        tooltip: '',
                       ),
                     ],
-                  ),
+                  )
+                ],
                 SizedBox(height: SizeConfig.padding16),
                 if (_showInvoiceButton)
                   Container(
@@ -347,7 +414,7 @@ class _TransactionDetailsBottomSheetState
                                 } else {
                                   BaseUtil.showNegativeAlert(
                                       locale.txnInvoiceFailed,
-                                    locale.txnTryAfterSomeTime);
+                                      locale.txnTryAfterSomeTime);
                                 }
                               });
                             } else {
@@ -436,6 +503,7 @@ class TransactionSummary extends StatelessWidget {
   TransactionSummary({this.summary});
   bool isTBD = false;
   int naPoint = 0;
+
   @override
   Widget build(BuildContext context) {
     summary!.forEach((sum) {

@@ -16,7 +16,7 @@ class CacheService {
     if (_isar == null) {
       final dir = await getApplicationSupportDirectory();
       _isar = await Isar.open(
-         [CacheModelSchema],
+        [CacheModelSchema],
         directory: dir.path,
       );
     }
@@ -113,11 +113,15 @@ class CacheService {
       _logger!.d('cache: invalidating key $key');
 
       await _isar!.writeTxn(() async {
-        final List<CacheModel> data =
-            await _isar!.collection<CacheModel>().filter().keyEqualTo(key).findAll();
+        final List<CacheModel> data = await _isar!
+            .collection<CacheModel>()
+            .filter()
+            .keyEqualTo(key)
+            .findAll();
         _logger!.d('cache: $data');
 
-        final c = await _isar!.collection()
+        final c = await _isar!
+            .collection<CacheModel>()
             .deleteAll(data.map((e) => e.id).toList());
         _logger.d('cache: invalidated $c');
       });

@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -51,12 +52,12 @@ class TrendingGamesSection extends StatelessWidget {
                   ? TrendingGamesShimmer()
                   : TrendingGames(
                       game: model.trendingGamesListData[index],
-                        key: ValueKey(Constants.ALL_GAMES),
+                      key: ValueKey(Constants.ALL_GAMES),
                     );
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: .58,
+                childAspectRatio: .63,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12),
           ),
@@ -93,9 +94,10 @@ class TrendingGames extends StatelessWidget {
               "location": "Trending games"
             }));
         Haptic.vibrate();
-        AppState.delegate!.parseRoute(
-          Uri.parse(game!.route!),
-        );
+        // AppState.delegate!.parseRoute(
+        //   Uri.parse(game!.route!),
+        // );
+        BaseUtil.openGameModalSheet(game!.gameCode!);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -107,48 +109,54 @@ class TrendingGames extends StatelessWidget {
             SvgPicture.network(
               game!.icon!,
               fit: BoxFit.cover,
-              width: SizeConfig.screenWidth! * 0.24,
-              height: SizeConfig.screenWidth! * 0.24,
+              width: SizeConfig.screenWidth! * 0.2,
+              height: SizeConfig.screenWidth! * 0.2,
             ),
             Text(
               game!.gameName!,
               textAlign: TextAlign.center,
-              style: TextStyles.rajdhani.body3
-                  .colour(Colors.white.withOpacity(0.7)),
+              style: TextStyles.sourceSans.body3.colour(Colors.white),
             ),
             SizedBox(height: SizeConfig.padding4),
             RichText(
                 text: TextSpan(
-                    text:locale.btnWin+' ',
-                    style: TextStyles.sourceSans.body3.colour(Colors.white),
+                    text: "Win upto ",
+                    style: TextStyles.sourceSans.body4
+                        .colour(Colors.white.withOpacity(0.6)),
                     children: [
                   TextSpan(
                       text:
-                          '${NumberFormat.compact().format(game!.prizeAmount)}',
-                      style: TextStyles.sourceSansB.body3.colour(Colors.white))
+                          '₹${NumberFormat.compact().format(game!.prizeAmount)}',
+                      style: TextStyles.sourceSansB.body4.colour(Colors.white))
                 ])),
-            SizedBox(height: SizeConfig.padding10),
+            // SizedBox(height: SizeConfig.padding10),
+            Spacer(),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
               decoration: BoxDecoration(
                 color: Color(0xff232326),
                 border: Border.all(color: Color(0xff919193)),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Text(
+                    "PLAY",
+                    style: TextStyles.sourceSans.body3.colour(Colors.white),
+                  ),
                   SvgPicture.asset(
                     Assets.token,
                     height: SizeConfig.padding12,
                     width: SizeConfig.padding12,
                   ),
-                  SizedBox(width: SizeConfig.padding4),
+                  // SizedBox(width: SizeConfig.padding4),
                   Text(game!.playCost.toString(),
                       style: TextStyles.sourceSans.body3),
                 ],
               ),
             ),
+            SizedBox(height: SizeConfig.padding10),
           ],
         ),
       ),

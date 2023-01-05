@@ -126,7 +126,7 @@ class WebHomeViewModel extends BaseViewModel {
     isLoading = true;
     currentCoinValue = _coinService!.flcBalance;
     await setGameDetails(game);
-    fetchTopSaversPastWeek(game);
+    // fetchTopSaversPastWeek(game);
     isLoading = false;
   }
 
@@ -249,8 +249,7 @@ class WebHomeViewModel extends BaseViewModel {
     }
     if (isUserBannedForThisGame != null && isUserBannedForThisGame) {
       BaseUtil.showNegativeAlert(
-          userBannedNotice ?? locale.gameLocked,
-       locale.contactUs);
+          userBannedNotice ?? locale.gameLocked, locale.contactUs);
       return false;
     }
     return true;

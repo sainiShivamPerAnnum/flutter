@@ -43,8 +43,8 @@ class GoldBuySuccessView extends StatelessWidget {
                     Future.delayed(Duration(milliseconds: 500), () {
                       _gtService!.showInstantGoldenTicketView(
                         amount: _augTxnService!.currentTxnAmount,
-                        title:
-                            locale.successfullySavedText+"₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
+                        title: locale.successfullySavedText +
+                            "₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
                         source: GTSOURCE.deposit,
                       );
                     });
@@ -190,7 +190,7 @@ class GoldBuySuccessView extends StatelessWidget {
                               style: TextStyles.sourceSans.body2
                                   .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${_augTxnService!.currentTxnGms}"+locale.gm,
+                          Text("${_augTxnService!.currentTxnGms}" + locale.gm,
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -270,8 +270,8 @@ class GoldBuySuccessView extends StatelessWidget {
                 _gtService!.showInstantGoldenTicketView(
                   amount: _augTxnService!.currentTxnAmount,
                   showAutoSavePrompt: true,
-                  title:
-               locale.successfullySavedText+"₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
+                  title: locale.successfullySavedText +
+                      "₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
                   source: GTSOURCE.deposit,
                 );
               });
@@ -294,6 +294,8 @@ class WinningChips extends StatelessWidget {
   final int qty;
   final String tooltip;
   final EdgeInsets? margin;
+  final Color? color;
+  final Widget? widget;
 
   const WinningChips(
       {Key? key,
@@ -301,6 +303,8 @@ class WinningChips extends StatelessWidget {
       required this.asset,
       required this.qty,
       required this.tooltip,
+      this.widget,
+      this.color,
       this.margin})
       : super(key: key);
 
@@ -315,7 +319,7 @@ class WinningChips extends StatelessWidget {
                 // height: SizeConfig.padding80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  color: UiConstants.darkPrimaryColor2,
+                  color: color ?? UiConstants.darkPrimaryColor2,
                 ),
                 padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins,
@@ -330,11 +334,12 @@ class WinningChips extends StatelessWidget {
                           SizedBox(height: SizeConfig.padding6),
                           Row(
                             children: [
-                              SvgPicture.asset(
-                                asset,
-                                width: SizeConfig.padding20,
-                                height: SizeConfig.padding20,
-                              ),
+                              widget ??
+                                  SvgPicture.asset(
+                                    asset,
+                                    width: SizeConfig.padding20,
+                                    height: SizeConfig.padding20,
+                                  ),
                               SizedBox(
                                 width: SizeConfig.padding6,
                               ),

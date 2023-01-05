@@ -98,6 +98,8 @@ class Assets {
   static final String lendboxLogo = 'assets/svg/lendbox-white.svg';
   static final String idbiTrustee = 'assets/svg/idbi-trustee.svg';
   static final String rbiLogo = "assets/vectors/icons/rbilogo.svg";
+  static final String digitalGold = "assets/svg/digitalgold.svg";
+  static final String flyingGhost = "assets/svg/flying_ghost.svg";
 
   // WIN
 
