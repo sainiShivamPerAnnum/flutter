@@ -30,7 +30,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_share_me/flutter_share_me.dart';
+// import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:share_plus/share_plus.dart';
@@ -215,7 +215,8 @@ class GoldenTicketService
               'Hey, I won ${ticket.rewardArr!.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
       } catch (e) {
         _logger!.e(e.toString());
-        BaseUtil.showNegativeAlert(locale.errorOccured, locale.obPleaseTryAgain);
+        BaseUtil.showNegativeAlert(
+            locale.errorOccured, locale.obPleaseTryAgain);
       }
     }
   }
@@ -239,9 +240,7 @@ class GoldenTicketService
                 _logger!.e(onError);
               });
             } else {
-              FlutterShareMe()
-                  .shareToSystem(msg: shareMessage)
-                  .catchError((onError) {
+              Share.share(shareMessage).catchError((onError) {
                 if (_userService!.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
@@ -280,8 +279,7 @@ class GoldenTicketService
 
       AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
-      BaseUtil.showNegativeAlert(
-          locale.taskFailed, locale.unableToCapture);
+      BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }
     return null;
   }
@@ -338,7 +336,7 @@ class GoldenTicketService
       // backButtonDispatcher.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
-         locale.taskFailed, locale.UnableToSharePicture);
+          locale.taskFailed, locale.UnableToSharePicture);
     }
   }
 
@@ -350,8 +348,7 @@ class GoldenTicketService
       hapticVibrate: true,
       content: FelloInfoDialog(
         title: locale.savingsOnAuto,
-        subtitle:
-            locale.savingsOnAutoSubtitle,
+        subtitle: locale.savingsOnAutoSubtitle,
         png: Assets.preAutosave,
         action: AppPositiveBtn(
           btnText: locale.btnSetupAutoSave,
