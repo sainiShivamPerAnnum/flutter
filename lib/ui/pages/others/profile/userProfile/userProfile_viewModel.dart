@@ -13,10 +13,10 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -83,7 +83,7 @@ class UserProfileVM extends BaseViewModel {
       locator<GoogleSignInService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
   final DBModel? dbProvider = locator<DBModel>();
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final ScratchCardService? _gtService = locator<ScratchCardService>();
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
   final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
@@ -525,7 +525,6 @@ class UserProfileVM extends BaseViewModel {
               await _userRepo!.removeUserFCM(_userService!.baseUser!.uid);
             }).then((flag) async {
               if (flag) {
-                
                 await _baseUtil!.signOut();
                 _journeyService!.dump();
                 _marketingService.dump();
@@ -534,7 +533,7 @@ class UserProfileVM extends BaseViewModel {
                 _analyticsService!.signOut();
                 _paytmService!.signout();
                 _bankAndKycService!.dump();
-                GoldenTicketService.dump();
+                ScratchCardService.dump();
                 _tambolaRepo.dump();
                 AppState.dump();
                 AppState.backButtonDispatcher!.didPopRoute();

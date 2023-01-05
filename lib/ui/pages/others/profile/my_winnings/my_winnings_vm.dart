@@ -13,8 +13,8 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -47,7 +47,7 @@ class MyWinningsViewModel extends BaseViewModel {
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
   final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
-  final GoldenTicketService _gtService = locator<GoldenTicketService>();
+  final ScratchCardService _gtService = locator<ScratchCardService>();
   S locale = locator<S>();
   // LOCAL VARIABLES
   PrizeClaimChoice? _choice;
@@ -67,17 +67,17 @@ class MyWinningsViewModel extends BaseViewModel {
 
   init() {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      _gtService.isLastPageForGoldenTickets = false;
-      _gtService.goldenTicketsListLastTicketId = null;
-      _gtService.fetchAllGoldenTickets();
+      _gtService.isLastPageForScratchCards = false;
+      _gtService.scratchCardsListLastTicketId = null;
+      _gtService.fetchAllScratchCards();
     });
   }
 
-  trackGoldenTicketsOpen() {
+  trackScratchCardsOpen() {
     _analyticsService!
-        .track(eventName: AnalyticsEvents.goldenTicketSectionOpen, properties: {
+        .track(eventName: AnalyticsEvents.scratchCardSectionOpen, properties: {
       "Unscratched tickets count": _gtService!.unscratchedTicketsCount,
-      "Scratched tickets count": _gtService!.activeGoldenTickets.length,
+      "Scratched tickets count": _gtService!.activeScratchCards.length,
       "total prize won": _userService!.userFundWallet!.prizeLifetimeWin,
       "Referred count (total)": AnalyticsProperties.getTotalReferralCount(),
       "Referred count success": AnalyticsProperties.getSuccessReferralCount(),
@@ -103,7 +103,7 @@ class MyWinningsViewModel extends BaseViewModel {
         case UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD:
           return "Digital Gold";
         case UserTransaction.TRAN_SUBTYPE_GLDN_TCK:
-          return "Fello Golden Ticket";
+          return "Fello Scratch Card";
         case UserTransaction.TRAN_SUBTYPE_REF_BONUS:
           return "Referral Bonus";
         case UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN:

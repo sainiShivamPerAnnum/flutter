@@ -2,10 +2,7 @@ import 'dart:developer';
 
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/model/amount_chips_model.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/amount_chips.dart';
@@ -270,7 +267,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.padding10,
         ),
         Text(
-       locale.autoPayApproveReq,
+          locale.autoPayApproveReq,
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
@@ -284,7 +281,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppTextFieldLabel(
-               locale.txnEnterUPIFeild,
+                locale.txnEnterUPIFeild,
                 leftPadding: SizeConfig.padding8,
               ),
               AppTextField(
@@ -302,7 +299,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   Icons.verified,
                   color: UiConstants.primaryColor,
                 ),
-                hintText:locale.txnEnterAmount ,
+                hintText: locale.txnEnterAmount,
               ),
             ],
           ),
@@ -311,7 +308,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.padding32,
         ),
         Text(
-         locale.txnApprovePaymentReq,
+          locale.txnApprovePaymentReq,
           style: TextStyles.sourceSans.body1,
           textAlign: TextAlign.center,
         ),
@@ -325,7 +322,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
         ),
         // if (model.showAppLaunchButton && PlatformUtils.isAndroid)
         AppPositiveBtn(
-          btnText: locale.btnOpen +'${getUpiAppName(model)}',
+          btnText: locale.btnOpen + '${getUpiAppName(model)}',
           onPressed: () async {
             Haptic.vibrate();
             _analyticService!.track(
@@ -410,7 +407,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
 
   Widget _buildAmountSetUi(AutosaveProcessViewModel model, bool isUpdate) {
     final AnalyticsService? _analyticService = locator<AnalyticsService>();
-S locale = S.of(context);
+    S locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -426,7 +423,7 @@ S locale = S.of(context);
           height: SizeConfig.padding10,
         ),
         Text(
-          isUpdate ? locale.txnUpdateAmount: locale.txnEnterAmount,
+          isUpdate ? locale.txnUpdateAmount : locale.txnEnterAmount,
           style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
@@ -825,7 +822,7 @@ S locale = S.of(context);
               height: SizeConfig.padding20,
             ),
             Text(
-              locale.oneGoldenTicket,
+              locale.oneScratchCard,
               style: TextStyles.sourceSans.body4
                   .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
               textAlign: TextAlign.center,
@@ -848,7 +845,7 @@ S locale = S.of(context);
               height: SizeConfig.padding20,
             ),
             Text(
-             locale.fiftyFelloTokens,
+              locale.fiftyFelloTokens,
               style: TextStyles.sourceSans.body4
                   .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
               textAlign: TextAlign.center,

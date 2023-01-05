@@ -1,10 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
+import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
@@ -24,7 +24,7 @@ class GTInstantViewModel extends BaseViewModel {
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final ApiPath? _apiPaths = locator<ApiPath>();
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final ScratchCardService? _gtService = locator<ScratchCardService>();
   final PaytmService? _paytmService = locator<PaytmService>();
   final JourneyService _journeyService = locator<JourneyService>();
   final MarketingEventHandlerService _marketingEventHandlerService =
@@ -32,7 +32,7 @@ class GTInstantViewModel extends BaseViewModel {
   final _rsaEncryption = new RSAEncryption();
   S locale = locator<S>();
   final UserCoinService? _coinService = locator<UserCoinService>();
-  final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
+  final ScratchCardRepository? _gtRepo = locator<ScratchCardRepository>();
   AnimationController? lottieAnimationController;
 
   // double coinsPositionY = SizeConfig.viewInsets.top +
@@ -50,7 +50,7 @@ class GTInstantViewModel extends BaseViewModel {
   int? coinsCount = 0;
   double coinScale = 1;
   bool _isShimmerEnabled = false;
-  GoldenTicket? _goldenTicket;
+  ScratchCard? _scratchCard;
   double _buttonOpacity = 0;
 
   double get buttonOpacity => this._buttonOpacity;
@@ -60,10 +60,10 @@ class GTInstantViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  GoldenTicket? get goldenTicket => this._goldenTicket;
+  ScratchCard? get scratchCard => this._scratchCard;
 
-  set goldenTicket(value) {
-    this._goldenTicket = value;
+  set scratchCard(value) {
+    this._scratchCard = value;
     notifyListeners();
   }
 
@@ -109,8 +109,8 @@ class GTInstantViewModel extends BaseViewModel {
                     Constants.SUBSCRIPTION_INACTIVE &&
                 _paytmService!.activeSubscription!.resumeDate != null &&
                 _paytmService!.activeSubscription!.resumeDate!.isNotEmpty));
-    goldenTicket = GoldenTicketService.currentGT;
-    GoldenTicketService.currentGT = null;
+    scratchCard = ScratchCardService.currentGT;
+    ScratchCardService.currentGT = null;
 
     Future.delayed(Duration(seconds: 3), () {
       if (!isCardScratchStarted) {
@@ -132,7 +132,7 @@ class GTInstantViewModel extends BaseViewModel {
 
     try {
       _getBearerToken().then(
-        (String token) => _gtRepo!.redeemReward(goldenTicket!.gtId).then(
+        (String token) => _gtRepo!.redeemReward(scratchCard!.gtId).then(
           (_) {
             _gtService!.updateUnscratchedGTCount();
             _userService!.getUserFundWalletData();
@@ -148,12 +148,11 @@ class GTInstantViewModel extends BaseViewModel {
           },
         ),
       );
-      _journeyService.updateRewardStatus(goldenTicket!.prizeSubtype!);
+      _journeyService.updateRewardStatus(scratchCard!.prizeSubtype!);
     } catch (e) {
       _logger!.e(e);
       BaseUtil.showNegativeAlert(
-          locale.gtRedeemErrorTitle,
-         locale.getRedeemErrorSubtitle);
+          locale.gtRedeemErrorTitle, locale.getRedeemErrorSubtitle);
     }
 
     Future.delayed(Duration(seconds: 3), () {

@@ -4,10 +4,10 @@
 // import 'package:collection/collection.dart' show IterableExtension;
 // import 'package:felloapp/core/enums/cache_type_enum.dart';
 // import 'package:felloapp/core/enums/screen_item_enum.dart';
-// import 'package:felloapp/core/model/golden_ticket_model.dart';
+// import 'package:felloapp/core/model/scratch_card_model.dart';
 // import 'package:felloapp/core/model/timestamp_model.dart';
 // import 'package:felloapp/core/service/cache_manager.dart';
-// import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+// import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 // import 'package:felloapp/core/service/notifier_services/user_service.dart';
 // import 'package:felloapp/navigator/app_state.dart';
 // import 'package:felloapp/navigator/router/hero_router.dart';
@@ -18,32 +18,32 @@
 // import 'package:felloapp/util/locator.dart';
 // import 'package:flutter/material.dart';
 
-// class GoldenTicketsViewModel extends BaseViewModel {
+// class ScratchCardsViewModel extends BaseViewModel {
 //   //Dependencies
 //   final UserService? _userService = locator<UserService>();
 //   final CustomLogger? _logger = locator<CustomLogger>();
-//   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+//   final ScratchCardService? _gtService = locator<ScratchCardService>();
 
 //   //Local Variables
-//   List<GoldenTicket>? _goldenTicketList;
-//   List<GoldenTicket>? _arrangedGoldenTicketList;
-//   List<DocumentSnapshot> _goldenTicketDocs = [];
+//   List<ScratchCard>? _scratchCardList;
+//   List<ScratchCard>? _arrangedScratchCardList;
+//   List<DocumentSnapshot> _scratchCardDocs = [];
 //   late Query _query;
 //   bool _isRequesting = false;
 //   bool _isFinish = false;
 //   bool showFirst = true;
 
 //   //Getters and Setters
-//   List<GoldenTicket>? get arrangedGoldenTicketList =>
-//       this._arrangedGoldenTicketList;
+//   List<ScratchCard>? get arrangedScratchCardList =>
+//       this._arrangedScratchCardList;
 
-//   List<GoldenTicket>? get goldenTicketList => this._goldenTicketList;
+//   List<ScratchCard>? get scratchCardList => this._scratchCardList;
 
-//   set goldenTicketList(List<GoldenTicket>? value) =>
-//       this._goldenTicketList = value;
+//   set scratchCardList(List<ScratchCard>? value) =>
+//       this._scratchCardList = value;
 
-//   set arrangedGoldenTicketList(List<GoldenTicket>? value) =>
-//       this._arrangedGoldenTicketList = value;
+//   set arrangedScratchCardList(List<ScratchCard>? value) =>
+//       this._arrangedScratchCardList = value;
 
 // // Core Methods
 

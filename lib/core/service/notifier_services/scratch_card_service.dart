@@ -5,13 +5,13 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/scratch_card_service_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -37,10 +37,10 @@ import 'package:share_plus/share_plus.dart';
 
 final GlobalKey ticketImageKey = GlobalKey();
 
-class GoldenTicketService
-    extends PropertyChangeNotifier<GoldenTicketServiceProperties> {
+class ScratchCardService
+    extends PropertyChangeNotifier<ScratchCardServiceProperties> {
   final CustomLogger? _logger = locator<CustomLogger>();
-  final GoldenTicketRepository _gtRepo = locator<GoldenTicketRepository>();
+  final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
   final UserService? _userService = locator<UserService>();
   final PaytmService? _paytmService = locator<PaytmService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
@@ -48,96 +48,96 @@ class GoldenTicketService
   S locale = locator<S>();
 
   //ALL GOLDEN TICKETS VIEW FIELDS -- START
-  bool isLastPageForGoldenTickets = false;
-  bool _isFetchingGoldenTickets = false;
-  String? goldenTicketsListLastTicketId;
-  bool get isFetchingGoldenTickets => this._isFetchingGoldenTickets;
-  set isFetchingGoldenTickets(bool val) {
-    this._isFetchingGoldenTickets = val;
-    notifyListeners(GoldenTicketServiceProperties.AllGoldenTickets);
+  bool isLastPageForScratchCards = false;
+  bool _isFetchingScratchCards = false;
+  String? scratchCardsListLastTicketId;
+  bool get isFetchingScratchCards => this._isFetchingScratchCards;
+  set isFetchingScratchCards(bool val) {
+    this._isFetchingScratchCards = val;
+    notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
-  List<GoldenTicket> _allGoldenTickets = [];
-  List<GoldenTicket> get allGoldenTickets => this._allGoldenTickets;
-  set allGoldenTickets(List<GoldenTicket> value) {
-    this._allGoldenTickets = value;
-    // notifyListeners(GoldenTicketServiceProperties.AllGoldenTickets);
+  List<ScratchCard> _allScratchCards = [];
+  List<ScratchCard> get allScratchCards => this._allScratchCards;
+  set allScratchCards(List<ScratchCard> value) {
+    this._allScratchCards = value;
+    // notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
-  void addGoldenTickets(List<GoldenTicket>? value) {
-    if (value != null) this._allGoldenTickets.addAll(value);
-    // notifyListeners(GoldenTicketServiceProperties.AllGoldenTickets);
+  void addScratchCards(List<ScratchCard>? value) {
+    if (value != null) this._allScratchCards.addAll(value);
+    // notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
   //ALL GOLDEN TICKETS VIEW FIELDS -- START
 
-  // static bool hasGoldenTicket = false;
+  // static bool hasScratchCard = false;
   int _unscratchedTicketsCount = 0;
   int get unscratchedTicketsCount => this._unscratchedTicketsCount;
 
   set unscratchedTicketsCount(int value) {
     this._unscratchedTicketsCount = value;
-    // notifyListeners(GoldenTicketServiceProperties.UnscratchedCount);
+    // notifyListeners(ScratchCardServiceProperties.UnscratchedCount);
   }
 
-  static String? goldenTicketId;
+  static String? scratchCardId;
   static String? gameEndMsgText;
-  static GoldenTicket? currentGT;
-  static String? lastGoldenTicketId;
+  static ScratchCard? currentGT;
+  static String? lastScratchCardId;
   static String previousPrizeSubtype = '';
 
   static dump() {
-    goldenTicketId = null;
+    scratchCardId = null;
     gameEndMsgText = null;
     currentGT = null;
-    lastGoldenTicketId = null;
+    lastScratchCardId = null;
     previousPrizeSubtype = '';
   }
 
-  List<GoldenTicket>? _unscratchedGoldenTickets;
+  List<ScratchCard>? _unscratchedScratchCards;
 
-  List<GoldenTicket> get unscratchedGoldenTickets =>
-      this._unscratchedGoldenTickets ?? [];
+  List<ScratchCard> get unscratchedScratchCards =>
+      this._unscratchedScratchCards ?? [];
 
-  set unscratchedGoldenTickets(List<GoldenTicket> value) {
-    this._unscratchedGoldenTickets = value;
+  set unscratchedScratchCards(List<ScratchCard> value) {
+    this._unscratchedScratchCards = value;
     notifyListeners();
-    log("Unscratched GoldenTicket list updated");
+    log("Unscratched ScratchCard list updated");
   }
 
-  List<GoldenTicket>? _activeGoldenTickets;
+  List<ScratchCard>? _activeScratchCards;
 
-  List<GoldenTicket> get activeGoldenTickets => this._activeGoldenTickets ?? [];
+  List<ScratchCard> get activeScratchCards => this._activeScratchCards ?? [];
 
-  set activeGoldenTickets(List<GoldenTicket>? value) {
-    this._activeGoldenTickets = value;
+  set activeScratchCards(List<ScratchCard>? value) {
+    this._activeScratchCards = value;
     notifyListeners();
-    log("GoldenTicket list updated");
+    log("ScratchCard list updated");
   }
 
-  Future<bool> fetchAndVerifyGoldenTicketByID() async {
-    if (goldenTicketId != null && goldenTicketId!.isNotEmpty) {
-      ApiResponse<GoldenTicket> ticketResponse =
-          await _gtRepo!.getGoldenTicketById(
-        goldenTicketId: goldenTicketId,
+  Future<bool> fetchAndVerifyScratchCardByID() async {
+    if (scratchCardId != null && scratchCardId!.isNotEmpty) {
+      ApiResponse<ScratchCard> ticketResponse =
+          await _gtRepo!.getScratchCardById(
+        scratchCardId: scratchCardId,
       );
 
       if (ticketResponse.code == 200 && isGTValid(ticketResponse.model!)) {
         currentGT = ticketResponse.model;
-        goldenTicketId = null;
+        scratchCardId = null;
         return true;
       } else {
         currentGT = null;
-        goldenTicketId = null;
+        scratchCardId = null;
         return false;
       }
     }
     return false;
   }
 
-  Future<bool> fetchAndVerifyGoldenTicketByPrizeSubtype() async {
+  Future<bool> fetchAndVerifyScratchCardByPrizeSubtype() async {
     if (previousPrizeSubtype != null && previousPrizeSubtype.isNotEmpty) {
-      ApiResponse<GoldenTicket> ticketResponse =
+      ApiResponse<ScratchCard> ticketResponse =
           await _gtRepo!.getGTByPrizeSubtype(
         previousPrizeSubtype,
       );
@@ -153,7 +153,7 @@ class GoldenTicketService
     return false;
   }
 
-  showInstantGoldenTicketView(
+  showInstantScratchCardView(
       {required GTSOURCE source,
       String? title,
       double? amount = 0,
@@ -161,8 +161,8 @@ class GoldenTicketService
       bool showAutoSavePrompt = false}) {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
     if (currentGT != null) {
-      log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${GoldenTicketService.currentGT!.prizeSubtype} ");
-      if (previousPrizeSubtype == GoldenTicketService.currentGT!.prizeSubtype &&
+      log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${ScratchCardService.currentGT!.prizeSubtype} ");
+      if (previousPrizeSubtype == ScratchCardService.currentGT!.prizeSubtype &&
           !onJourney) return;
       Future.delayed(Duration(milliseconds: 200), () {
         // if (source != GTSOURCE.deposit)
@@ -192,7 +192,7 @@ class GoldenTicketService
 
   //HELPERS
 
-  isGTValid(GoldenTicket ticket) {
+  isGTValid(ScratchCard ticket) {
     if (ticket.isRewarding != null &&
         ticket.gtId != null &&
         ticket.gtType != null &&
@@ -200,7 +200,7 @@ class GoldenTicketService
     return false;
   }
 
-  Future shareGoldenTicket(GoldenTicket ticket) async {
+  Future shareScratchCard(ScratchCard ticket) async {
     {
       try {
         String? url;
@@ -377,36 +377,36 @@ class GoldenTicketService
     }
   }
 
-  Future<void> fetchAllGoldenTickets() async {
-    if (isLastPageForGoldenTickets) return;
-    if (isFetchingGoldenTickets) return;
-    allGoldenTickets.clear();
-    isFetchingGoldenTickets = true;
+  Future<void> fetchAllScratchCards() async {
+    if (isLastPageForScratchCards) return;
+    if (isFetchingScratchCards) return;
+    allScratchCards.clear();
+    isFetchingScratchCards = true;
     final res =
-        await _gtRepo.getGoldenTickets(start: goldenTicketsListLastTicketId);
+        await _gtRepo.getScratchCards(start: scratchCardsListLastTicketId);
     if (res.isSuccess()) {
-      allGoldenTickets.clear();
-      if (allGoldenTickets.isEmpty) {
-        allGoldenTickets = res.model?["tickets"];
-        isLastPageForGoldenTickets = res.model?["isLastPage"];
+      allScratchCards.clear();
+      if (allScratchCards.isEmpty) {
+        allScratchCards = res.model?["tickets"];
+        isLastPageForScratchCards = res.model?["isLastPage"];
       } else {
-        addGoldenTickets(res.model?["tickets"]);
-        isLastPageForGoldenTickets = res.model?["isLastPage"];
+        addScratchCards(res.model?["tickets"]);
+        isLastPageForScratchCards = res.model?["isLastPage"];
       }
     }
-    allGoldenTickets = arrangeGoldenTickets();
-    isFetchingGoldenTickets = false;
+    allScratchCards = arrangeScratchCards();
+    isFetchingScratchCards = false;
   }
 
-  List<GoldenTicket> arrangeGoldenTickets() {
-    List<GoldenTicket> arrangedGoldenTicketList = [];
-    List<GoldenTicket> temptickets = allGoldenTickets;
+  List<ScratchCard> arrangeScratchCards() {
+    List<ScratchCard> arrangedScratchCardList = [];
+    List<ScratchCard> temptickets = allScratchCards;
     temptickets
         .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
     temptickets.forEach((e) {
       if (e.redeemedTimestamp == null ||
           e.redeemedTimestamp == TimestampModel(nanoseconds: 0, seconds: 0)) {
-        arrangedGoldenTicketList.add(e);
+        arrangedScratchCardList.add(e);
       }
     });
     temptickets.forEach((e) {
@@ -414,21 +414,21 @@ class GoldenTicketService
               e.redeemedTimestamp !=
                   TimestampModel(nanoseconds: 0, seconds: 0)) &&
           e.isRewarding!) {
-        arrangedGoldenTicketList.add(e);
+        arrangedScratchCardList.add(e);
       }
     });
-    return arrangedGoldenTicketList;
+    return arrangedScratchCardList;
     // CODE FOR TICKET DISTINCTION - USE IF REQUIRED
     // final ids = Set();
-    // arrangedGoldenTicketList.retainWhere((x) => ids.add(x.gtId));
-    // arrangedGoldenTicketList = ids.toList();
+    // arrangedScratchCardList.retainWhere((x) => ids.add(x.gtId));
+    // arrangedScratchCardList = ids.toList();
   }
 
   refreshTickets({required String prizeSubtype}) {
-    allGoldenTickets
+    allScratchCards
         .firstWhere((ticket) => ticket.prizeSubtype == prizeSubtype)
         .redeemedTimestamp = TimestampModel.currentTimeStamp();
-    allGoldenTickets = arrangeGoldenTickets();
-    notifyListeners(GoldenTicketServiceProperties.AllGoldenTickets);
+    allScratchCards = arrangeScratchCards();
+    notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 }

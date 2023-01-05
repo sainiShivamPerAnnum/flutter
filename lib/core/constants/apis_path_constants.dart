@@ -35,7 +35,8 @@ class ApiPath {
   static String fecthLatestTxnDetails(uid) => "/$uid/transaction/rewards";
   static String logOut(String? uid) => "/user/$uid/logout";
   static String userBootUp(String? uid) => "/user/$uid/bootup/alerts";
-  static String goldenTickets(uid) => '/user/$uid/golden_tickets';
+  static String scratchCards(uid) => '/user/$uid/golden_tickets';
+  // '/user/$uid/scratch_cards';
   static String isEmailRegistered(uid) => '/user/$uid/email/registered';
   static String get dynamicUi => '/ui/dynamic';
 
@@ -67,13 +68,14 @@ class ApiPath {
 
   static String kSingleTransactions(String? uid) => "/users/$uid/payments";
 
-  // Golden Ticket rewards Apis
+  // Scratch Card rewards Apis
   static const String prizes = '/prizes';
-  static String getGoldenTicketById(String? uid, String? goldenTicketId) =>
-      "/user/$uid/gt/$goldenTicketId";
+  static String getScratchCardById(String? uid, String? scratchCardId) =>
+      "/user/$uid/gt/$scratchCardId";
   static String getMilestone(String uid) => "/user/$uid/milestones";
   static prizeBySubtype(String? uid) => '/user/$uid/gt';
-  static getGoldenTicket(String? uid) => '/user/$uid/golden_tickets';
+  static getScratchCard(String? uid) =>
+      '/user/$uid/golden_tickets'; // '/user/$uid/scratch_cards';
 
   // Payment Apis
   static String get validateVPA => "/vpa";

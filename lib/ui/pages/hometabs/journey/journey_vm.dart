@@ -6,11 +6,11 @@ import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -44,7 +44,7 @@ class JourneyPageViewModel extends BaseViewModel {
 
   List<MilestoneModel> get completedMilestoneList =>
       _journeyService!.completedMilestoneList;
-  List<GoldenTicket> get completedMilestonePrizeList =>
+  List<ScratchCard> get completedMilestonePrizeList =>
       _journeyService!.completedMilestonesPrizeList;
   ScrollController? get mainController => _journeyService!.mainController;
 

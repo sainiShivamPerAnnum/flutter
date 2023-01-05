@@ -1,11 +1,8 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -16,12 +13,11 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 class GoldBuySuccessView extends StatelessWidget {
   final AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final ScratchCardService? _gtService = locator<ScratchCardService>();
   GoldBuySuccessView({Key? key}) : super(key: key);
 
   @override
@@ -41,10 +37,10 @@ class GoldBuySuccessView extends StatelessWidget {
                   onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
                     Future.delayed(Duration(milliseconds: 500), () {
-                      _gtService!.showInstantGoldenTicketView(
+                      _gtService!.showInstantScratchCardView(
                         amount: _augTxnService!.currentTxnAmount,
-                        title:
-                            locale.successfullySavedText+"₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
+                        title: locale.successfullySavedText +
+                            "₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
                         source: GTSOURCE.deposit,
                       );
                     });
@@ -81,7 +77,7 @@ class GoldBuySuccessView extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (GoldenTicketService.currentGT != null)
+                if (ScratchCardService.currentGT != null)
                   Align(
                     alignment: Alignment.centerRight,
                     child: Container(
@@ -90,7 +86,7 @@ class GoldBuySuccessView extends StatelessWidget {
                         top: SizeConfig.padding24,
                       ),
                       child: Lottie.asset(
-                        Assets.floatingGoldenTicketIslandLottie,
+                        Assets.floatingScratchCardIslandLottie,
                         width: SizeConfig.screenWidth! * 0.3,
                         fit: BoxFit.cover,
                       ),
@@ -190,7 +186,7 @@ class GoldBuySuccessView extends StatelessWidget {
                               style: TextStyles.sourceSans.body2
                                   .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${_augTxnService!.currentTxnGms}"+locale.gm,
+                          Text("${_augTxnService!.currentTxnGms}" + locale.gm,
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -243,13 +239,13 @@ class GoldBuySuccessView extends StatelessWidget {
                     tooltip: locale.winChipsTitle1,
                     asset: Assets.token,
                     qty: _augTxnService!.currentTxnAmount!.toInt()),
-                if (GoldenTicketService.currentGT != null)
+                if (ScratchCardService.currentGT != null)
                   SizedBox(width: SizeConfig.padding12),
-                if (GoldenTicketService.currentGT != null)
+                if (ScratchCardService.currentGT != null)
                   WinningChips(
-                      title: locale.goldenTicket,
+                      title: locale.scratchCard,
                       tooltip: locale.winChipsTitle2,
-                      asset: Assets.unredemmedGoldenTicketBG,
+                      asset: Assets.unredemmedScratchCardBG,
                       qty: 1),
                 if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
                   SizedBox(width: SizeConfig.padding12),
@@ -267,11 +263,11 @@ class GoldBuySuccessView extends StatelessWidget {
               AppState.backButtonDispatcher!.didPopRoute();
               AppState.delegate!.appState.setCurrentTabIndex = 1;
               Future.delayed(Duration(milliseconds: 500), () {
-                _gtService!.showInstantGoldenTicketView(
+                _gtService!.showInstantScratchCardView(
                   amount: _augTxnService!.currentTxnAmount,
                   showAutoSavePrompt: true,
-                  title:
-               locale.successfullySavedText+"₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
+                  title: locale.successfullySavedText +
+                      "₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
                   source: GTSOURCE.deposit,
                 );
               });

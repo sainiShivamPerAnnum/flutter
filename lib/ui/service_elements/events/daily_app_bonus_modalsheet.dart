@@ -83,7 +83,8 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                           height: SizeConfig.screenWidth! * 0.3),
                       SizedBox(height: SizeConfig.padding10),
                       Text(
-                        model.dailyAppCheckInEventData?.title ?? locale.dailyBonusText,
+                        model.dailyAppCheckInEventData?.title ??
+                            locale.dailyBonusText,
                         //model!.dailyAppCheckInEventData!.title
                         style:
                             TextStyles.sourceSansB.title3.colour(Colors.white),
@@ -200,7 +201,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                                 style: TextStyles.body1.colour(Colors.white),
                                 children: [
                                   TextSpan(
-                                      text: locale.goldenTicket,
+                                      text: locale.scratchCard,
                                       style: TextStyles.sourceSansB.body1
                                           .colour(Colors.white))
                                 ],

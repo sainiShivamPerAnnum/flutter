@@ -1,1 +1,0 @@
-enum GoldenTicketServiceProperties { UnscratchedCount, AllGoldenTickets }

@@ -1,12 +1,10 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/scratch_cards/scratch_cards_view.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +56,7 @@ class MyWinningsView extends StatelessWidget {
                   shrinkWrap: true,
                   children: [
                     PrizeClaimCard(),
-                    GoldenTicketsView(),
+                    ScratchCardsView(),
                   ],
                 )
                 // Container(

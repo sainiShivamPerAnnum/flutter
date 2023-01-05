@@ -60,7 +60,7 @@ class MilestoneTooltip extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   SvgPicture.asset(
-                                      Assets.unredemmedGoldenTicketBG,
+                                      Assets.unredemmedScratchCardBG,
                                       height: SizeConfig.iconSize1),
                                   SizedBox(width: SizeConfig.padding8),
                                   Column(

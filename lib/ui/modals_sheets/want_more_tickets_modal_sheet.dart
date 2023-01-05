@@ -1,7 +1,6 @@
-import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -105,8 +104,8 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 subtitle: locale.get1Token,
                 trailingIcon: Icons.arrow_forward_ios_rounded,
                 onTap: () {
-                  _analyticsService!.track(
-                      eventName: AnalyticsEvents.earnMoreSaveMoney);
+                  _analyticsService!
+                      .track(eventName: AnalyticsEvents.earnMoreSaveMoney);
                   while (AppState.screenStack.length > 1)
                     AppState.backButtonDispatcher!.didPopRoute();
                   AppState.delegate!.appState.setCurrentTabIndex = 1;
@@ -116,11 +115,11 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               FelloTile(
                 leadingAsset: Assets.wmtShare,
                 title: locale.referFriends,
-                subtitle: locale.getGoldenTickets,
+                subtitle: locale.getScratchCards,
                 trailingIcon: Icons.arrow_forward_ios_rounded,
                 onTap: () {
-                  _analyticsService!.track(
-                      eventName: AnalyticsEvents.earnMoreRefer);
+                  _analyticsService!
+                      .track(eventName: AnalyticsEvents.earnMoreRefer);
                   AppState.backButtonDispatcher!.didPopRoute();
                   AppState.delegate!.appState.currentAction = PageAction(
                       state: PageState.addPage,
@@ -135,8 +134,8 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   subtitle: locale.saveAutoSaveSubTitle,
                   trailingIcon: Icons.arrow_forward_ios_rounded,
                   onTap: () {
-                    _analyticsService!.track(
-                        eventName: AnalyticsEvents.earnMoreRefer);
+                    _analyticsService!
+                        .track(eventName: AnalyticsEvents.earnMoreRefer);
                     AppState.backButtonDispatcher!.didPopRoute();
                     AppState.delegate!.parseRoute(Uri.parse("augDetails"));
                   },

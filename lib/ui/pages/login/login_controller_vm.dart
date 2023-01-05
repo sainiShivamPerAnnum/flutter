@@ -18,8 +18,8 @@ import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -38,7 +38,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
 
@@ -163,7 +162,6 @@ class LoginControllerViewModel extends BaseViewModel {
         }
       case LoginOtpView.index:
         {
-          
           String otp = _otpScreenKey.currentState!.model!.otp;
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             logger!.d("OTP is $otp");
@@ -252,9 +250,9 @@ class LoginControllerViewModel extends BaseViewModel {
                 final gtId = response.model['gtId'];
                 response.model['flag'] ? flag = true : flag = false;
 
-                logger!.d("Is Golden Ticket Rewarded: $gtId");
+                logger!.d("Is Scratch Card Rewarded: $gtId");
                 if (gtId != null && gtId.toString().isNotEmpty)
-                  GoldenTicketService.goldenTicketId = gtId;
+                  ScratchCardService.scratchCardId = gtId;
               }
             } catch (e) {
               logger!.d(e);
@@ -541,10 +539,7 @@ class LoginControllerViewModel extends BaseViewModel {
           properties: {'mobile': this.userMobile});
     } else {
       _otpScreenKey.currentState!.model!.onOtpResendConfirmed(false);
-      BaseUtil.showNegativeAlert(
-      locale.signInFailedText,
-        locale.exceededOTPs
-      );
+      BaseUtil.showNegativeAlert(locale.signInFailedText, locale.exceededOTPs);
     }
   }
 
@@ -600,8 +595,7 @@ class LoginControllerViewModel extends BaseViewModel {
         await _userRepo!.getCustomUserToken(phno);
 
     if (tokenRes.code == 400) {
-      BaseUtil.showNegativeAlert(
-          locale.authFailed, tokenRes.errorMessage);
+      BaseUtil.showNegativeAlert(locale.authFailed, tokenRes.errorMessage);
     }
 
     final String token = tokenRes.model!;
@@ -616,8 +610,7 @@ class LoginControllerViewModel extends BaseViewModel {
       _onSignInSuccess(LoginSource.TRUECALLER);
     }).catchError((e) {
       logger!.e(e);
-      BaseUtil.showNegativeAlert(locale.authFailed,
-         locale.authenticateNumber);
+      BaseUtil.showNegativeAlert(locale.authFailed, locale.authenticateNumber);
       loginUsingTrueCaller = false;
     });
   }
@@ -627,8 +620,6 @@ class LoginControllerViewModel extends BaseViewModel {
     BaseUtil.launchUrl('https://fello.in/policy/tnc');
     _analyticsService!.track(eventName: AnalyticsEvents.termsAndConditions);
   }
-
-  
 
   exit() {
     _controller!.removeListener(_pageListener);

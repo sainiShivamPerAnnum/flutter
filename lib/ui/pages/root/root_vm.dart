@@ -16,8 +16,8 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -55,7 +55,7 @@ class RootViewModel extends BaseViewModel {
   final JourneyService _journeyService = locator<JourneyService>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final TambolaService? _tambolaService = locator<TambolaService>();
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final ScratchCardService? _gtService = locator<ScratchCardService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
   final S locale = locator<S>();
   int _bottomNavBarIndex = 0;
@@ -149,7 +149,7 @@ class RootViewModel extends BaseViewModel {
                 "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
                 "Unscratched Ticket Count": _gtService?.unscratchedTicketsCount,
                 "Scratched Ticket Count":
-                    (_gtService!.activeGoldenTickets.length) -
+                    (_gtService!.activeScratchCards.length) -
                         _gtService!.unscratchedTicketsCount,
               }));
         }

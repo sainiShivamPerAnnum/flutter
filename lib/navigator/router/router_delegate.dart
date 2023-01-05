@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:apxor_flutter/observer.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -42,7 +41,7 @@ import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/refe
 import 'package:felloapp/ui/pages/others/profile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
+import 'package:felloapp/ui/pages/others/rewards/scratch_cards/scratch_cards_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
@@ -284,8 +283,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
           break;
 
-        case Pages.GoldenTicketsView:
-          _addPageData(GoldenTicketsView(), GoldenTicketsViewPageConfig);
+        case Pages.ScratchCardsView:
+          _addPageData(ScratchCardsView(), ScratchCardsViewPageConfig);
           break;
         case Pages.AutosaveDetailsView:
           _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
@@ -517,11 +516,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.FreshDeskHelp:
         FreshDeskHelpPageConfig.currentPageAction = action;
         break;
-      case Pages.GoldenTicketView:
-        GoldenTicketViewPageConfig.currentPageAction = action;
+      case Pages.ScratchCardView:
+        ScratchCardViewPageConfig.currentPageAction = action;
         break;
-      case Pages.GoldenTicketsView:
-        GoldenTicketsViewPageConfig.currentPageAction = action;
+      case Pages.ScratchCardsView:
+        ScratchCardsViewPageConfig.currentPageAction = action;
         break;
       case Pages.GoldenMilestonesView:
         GoldenMilestonesViewPageConfig.currentPageAction = action;
@@ -870,8 +869,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         AppState.backButtonDispatcher!.didPopRoute();
         break;
       case 'autosaveDetails':
-        if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool))
-          break;
+        if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
       case 'userAutosaveDetails':

@@ -1,9 +1,4 @@
-import 'dart:developer' as dev;
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -12,7 +7,6 @@ import 'package:felloapp/util/logger.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class Api {
@@ -42,7 +36,7 @@ class Api {
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).delete();
   }
 
-  Future<DocumentSnapshot?> fetchGoldenTicketById(
+  Future<DocumentSnapshot?> fetchScratchCardById(
       String userId, String gtId) async {
     DocumentReference docRef = _db
         .collection(Constants.COLN_USERS)

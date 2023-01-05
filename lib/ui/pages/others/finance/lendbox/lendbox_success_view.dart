@@ -1,11 +1,9 @@
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_success_view.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -15,7 +13,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 class LendboxSuccessView extends StatelessWidget {
   final TransactionType transactionType;
@@ -84,7 +81,7 @@ class LendboxSuccessView extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (GoldenTicketService.currentGT != null)
+                  if (ScratchCardService.currentGT != null)
                     Align(
                       alignment: Alignment.centerRight,
                       child: Container(
@@ -93,7 +90,7 @@ class LendboxSuccessView extends StatelessWidget {
                           top: SizeConfig.padding24,
                         ),
                         child: Lottie.asset(
-                          Assets.floatingGoldenTicketIslandLottie,
+                          Assets.floatingScratchCardIslandLottie,
                           width: SizeConfig.screenWidth! * 0.3,
                           fit: BoxFit.cover,
                         ),
@@ -131,7 +128,7 @@ class LendboxSuccessView extends StatelessWidget {
               )
             else
               Text(
-              locale.txnInvestmentSuccess,
+                locale.txnInvestmentSuccess,
                 textAlign: TextAlign.center,
                 style: TextStyles.sourceSans.body2.setOpecity(0.7),
               ),
@@ -195,7 +192,7 @@ class LendboxSuccessView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                             locale.totalBalance,
+                              locale.totalBalance,
                               style: TextStyles.sourceSans.body2
                                   .colour(UiConstants.kTextColor2),
                             ),
@@ -229,20 +226,20 @@ class LendboxSuccessView extends StatelessWidget {
                       tooltip: locale.winChipsTitle1,
                       asset: Assets.token,
                       qty: _txnService!.currentTxnAmount!.toInt()),
-                  if (GoldenTicketService.currentGT != null)
+                  if (ScratchCardService.currentGT != null)
                     SizedBox(width: SizeConfig.padding12),
-                  if (GoldenTicketService.currentGT != null)
+                  if (ScratchCardService.currentGT != null)
                     WinningChips(
-                        title: locale.goldenTicket,
+                        title: locale.scratchCard,
                         tooltip: locale.winChipsTitle2,
-                        asset: Assets.unredemmedGoldenTicketBG,
+                        asset: Assets.unredemmedScratchCardBG,
                         qty: 1),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
                     SizedBox(width: SizeConfig.padding12),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
                     WinningChips(
                       title: locale.tTicket,
-                      tooltip:locale.winChipsTitle3,
+                      tooltip: locale.winChipsTitle3,
                       asset: Assets.singleTmbolaTicket,
                       qty: _txnService!.currentTxnTambolaTicketsCount.toInt(),
                     )

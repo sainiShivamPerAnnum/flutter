@@ -3,38 +3,38 @@ import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/preference_helper.dart';
 
-class GoldenTicketRepository extends BaseRepo {
+class ScratchCardRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://3yoxli7gxc.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://bdqsoy9h84.execute-api.ap-south-1.amazonaws.com/prod';
 
-  Future<ApiResponse<GoldenTicket>> getGoldenTicketById({
-    String? goldenTicketId,
+  Future<ApiResponse<ScratchCard>> getScratchCardById({
+    String? scratchCardId,
   }) async {
     try {
       final token = await getBearerToken();
-      final goldenTicketRespone = await APIService.instance.getData(
-        ApiPath.getGoldenTicketById(
+      final scratchCardRespone = await APIService.instance.getData(
+        ApiPath.getScratchCardById(
           this.userService!.baseUser!.uid,
-          goldenTicketId,
+          scratchCardId,
         ),
         cBaseUrl: _baseUrl,
         token: token,
       );
 
       final ticket =
-          GoldenTicket.fromJson(goldenTicketRespone['data'], goldenTicketId!);
-      return ApiResponse<GoldenTicket>(model: ticket, code: 200);
+          ScratchCard.fromJson(scratchCardRespone['data'], scratchCardId!);
+      return ApiResponse<ScratchCard>(model: ticket, code: 200);
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch ticket", 400);
@@ -91,7 +91,7 @@ class GoldenTicketRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<GoldenTicket>> getGTByPrizeSubtype(
+  Future<ApiResponse<ScratchCard>> getGTByPrizeSubtype(
       String? prizeSubtype) async {
     try {
       final token = await getBearerToken();
@@ -104,8 +104,8 @@ class GoldenTicketRepository extends BaseRepo {
         token: token,
       );
 
-      final goldenTicket = GoldenTicket.fromJson(prizeResponse["data"], "");
-      return ApiResponse<GoldenTicket>(model: goldenTicket, code: 200);
+      final scratchCard = ScratchCard.fromJson(prizeResponse["data"], "");
+      return ApiResponse<ScratchCard>(model: scratchCard, code: 200);
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(
@@ -113,12 +113,12 @@ class GoldenTicketRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<GoldenTicket>>> getUnscratchedGoldenTickets() async {
-    final List<GoldenTicket> unscratchedGoldenTickets = [];
+  Future<ApiResponse<List<ScratchCard>>> getUnscratchedScratchCards() async {
+    final List<ScratchCard> unscratchedScratchCards = [];
     try {
       final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
-        ApiPath.getGoldenTicket(userService!.baseUser!.uid),
+        ApiPath.getScratchCard(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           'type': 'UNSCRATCHED',
@@ -128,12 +128,12 @@ class GoldenTicketRepository extends BaseRepo {
       final Map<String, dynamic>? responseData = prizeResponse["data"];
       if (responseData != null && responseData.isNotEmpty) {
         responseData["gts"].forEach((gt) {
-          unscratchedGoldenTickets.add(GoldenTicket.fromJson(gt, ""));
+          unscratchedScratchCards.add(ScratchCard.fromJson(gt, ""));
         });
       }
 
-      return ApiResponse<List<GoldenTicket>>(
-          model: unscratchedGoldenTickets, code: 200);
+      return ApiResponse<List<ScratchCard>>(
+          model: unscratchedScratchCards, code: 200);
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(
@@ -141,13 +141,13 @@ class GoldenTicketRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<Map<String, dynamic>>> getGoldenTickets(
+  Future<ApiResponse<Map<String, dynamic>>> getScratchCards(
       {String? start}) async {
-    final List<GoldenTicket> goldenTicketsList = [];
+    final List<ScratchCard> scratchCardsList = [];
     try {
       final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
-        ApiPath.getGoldenTicket(userService.baseUser!.uid),
+        ApiPath.getScratchCard(userService.baseUser!.uid),
         cBaseUrl: _baseUrl,
         queryParams: {if (start != null) 'start': start},
         token: token,
@@ -155,12 +155,12 @@ class GoldenTicketRepository extends BaseRepo {
       final Map<String, dynamic>? responseData = prizeResponse["data"];
       if (responseData != null && responseData.isNotEmpty) {
         responseData["gts"].forEach((gt) {
-          goldenTicketsList.add(GoldenTicket.fromJson(gt, ""));
+          scratchCardsList.add(ScratchCard.fromJson(gt, ""));
         });
       }
 
       return ApiResponse(model: {
-        "tickets": goldenTicketsList,
+        "tickets": scratchCardsList,
         "isLastPage": responseData!["isLastPage"]
       }, code: 200);
     } catch (e) {
@@ -169,12 +169,12 @@ class GoldenTicketRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<GoldenTicket>>> getGTByPrizeType(String type) async {
-    List<GoldenTicket> tickets = [];
+  Future<ApiResponse<List<ScratchCard>>> getGTByPrizeType(String type) async {
+    List<ScratchCard> tickets = [];
     try {
       final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
-        ApiPath.goldenTickets(userService!.baseUser!.uid),
+        ApiPath.scratchCards(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           'type': type,
@@ -183,10 +183,10 @@ class GoldenTicketRepository extends BaseRepo {
       );
       List ticketsData = prizeResponse["data"]['gts'];
       ticketsData.forEach((ticket) {
-        tickets.add(GoldenTicket.fromJson(ticket, ""));
+        tickets.add(ScratchCard.fromJson(ticket, ""));
       });
 
-      return ApiResponse<List<GoldenTicket>>(model: tickets, code: 200);
+      return ApiResponse<List<ScratchCard>>(model: tickets, code: 200);
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(
@@ -251,7 +251,7 @@ class GoldenTicketRepository extends BaseRepo {
       logger.d("DAILY APP : $response");
       final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);
       if (responseData.gtId != null) {
-        GoldenTicketService.goldenTicketId = responseData.gtId;
+        ScratchCardService.scratchCardId = responseData.gtId;
         PreferenceHelper.setInt(
             PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
             DateTime.now().day);

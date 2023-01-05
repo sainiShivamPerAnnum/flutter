@@ -1,11 +1,11 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
+import 'package:felloapp/ui/pages/others/rewards/scratch_card_utils.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
@@ -22,7 +22,7 @@ import 'package:scratcher/scratcher.dart';
 final scratchKey = GlobalKey<ScratcherState>();
 
 class GTDetailedView extends StatelessWidget {
-  final GoldenTicket ticket;
+  final ScratchCard ticket;
   GTDetailedView({required this.ticket});
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class GTDetailedView extends StatelessWidget {
                   ? RepaintBoundary(
                       //Scratched card
                       key: ticketImageKey,
-                      child: GoldenTicketGridItemCard(
+                      child: ScratchCardGridItemCard(
                         ticket: ticket,
                         titleStyle: TextStyles.title2,
                         titleStyle2: TextStyles.title4,
@@ -78,8 +78,8 @@ class GTDetailedView extends StatelessWidget {
                             onThreshold: () => model.redeemCard(ticket),
                             image: Image.asset(
                               ticket.isLevelChange!
-                                  ? Assets.levelUpUnredeemedGoldenTicketBGPNG
-                                  : Assets.unredeemedGoldenTicketBG_png,
+                                  ? Assets.levelUpUnredeemedScratchCardBGPNG
+                                  : Assets.unredeemedScratchCardBG_png,
                               fit: BoxFit.fitWidth,
                             ),
                             child: RepaintBoundary(
@@ -91,7 +91,7 @@ class GTDetailedView extends StatelessWidget {
                             ),
                           ),
                         )
-                      : GoldenTicketGridItemCard(
+                      : ScratchCardGridItemCard(
                           ticket: ticket,
                           titleStyle: TextStyles.title2,
                           titleStyle2: TextStyles.title4,

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:felloapp/core/model/timestamp_model.dart';
 
-class GoldenTicket {
+class ScratchCard {
   String? gtId;
   bool? canTransfer;
   String? eventType;
@@ -17,7 +17,7 @@ class GoldenTicket {
   String? userId;
   String? version;
 
-  GoldenTicket({
+  ScratchCard({
     this.gtId,
     this.userId,
     this.timestamp,
@@ -33,8 +33,8 @@ class GoldenTicket {
     this.version,
   });
 
-  factory GoldenTicket.none() => GoldenTicket.fromJson({}, '');
-  GoldenTicket.fromJson(Map<String, dynamic> json, String docId) {
+  factory ScratchCard.none() => ScratchCard.fromJson({}, '');
+  ScratchCard.fromJson(Map<String, dynamic> json, String docId) {
     gtId = json['id'] ?? docId;
     userId = json['userId'] ?? '';
     timestamp = TimestampModel.fromMap(json['timestamp']);

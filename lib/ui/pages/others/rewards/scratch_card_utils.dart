@@ -1,14 +1,13 @@
 import 'dart:ui';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart' show IterableExtension;
+
+import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,11 +30,11 @@ class CustomRectTween extends RectTween {
   }
 }
 
-class GoldenTicketGridItemCard extends StatelessWidget {
-  final GoldenTicket ticket;
+class ScratchCardGridItemCard extends StatelessWidget {
+  final ScratchCard ticket;
   final TextStyle titleStyle, subtitleStyle, titleStyle2;
   final double width;
-  GoldenTicketGridItemCard({
+  ScratchCardGridItemCard({
     required this.ticket,
     required this.titleStyle,
     required this.subtitleStyle,
@@ -67,7 +66,7 @@ class GoldenTicketGridItemCard extends StatelessWidget {
 }
 
 class UnRedeemedGoldenScratchCard extends StatelessWidget {
-  final GoldenTicket ticket;
+  final ScratchCard ticket;
   final double width;
   UnRedeemedGoldenScratchCard({required this.ticket, required this.width});
   @override
@@ -79,8 +78,8 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
       width: width,
       child: SvgPicture.asset(
         ticket.isLevelChange!
-            ? Assets.levelUpUnRedeemedGoldenTicketBG
-            : Assets.unredemmedGoldenTicketBG,
+            ? Assets.levelUpUnRedeemedScratchCardBG
+            : Assets.unredemmedScratchCardBG,
         width: double.maxFinite,
         height: double.maxFinite,
         fit: BoxFit.contain,
@@ -90,7 +89,7 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
 }
 
 class RedeemedGoldenScratchCard extends StatelessWidget {
-  final GoldenTicket? ticket;
+  final ScratchCard? ticket;
   // final TextStyle titleStyle, subtitleStyle, titleStyle2;
   final double width;
   RedeemedGoldenScratchCard(
@@ -150,7 +149,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     );
   }
 
-  String getGTBackground(GoldenTicket ticket) {
+  String getGTBackground(ScratchCard ticket) {
     if (ticket.isRewarding!) {
       //CHECK FOR REWARDS
       if (ticket.rewardArr!.length == 1) {
@@ -173,7 +172,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     }
   }
 
-  Widget getGTContent(GoldenTicket ticket, double maxWidth) {
+  Widget getGTContent(ScratchCard ticket, double maxWidth) {
     S locale = locator<S>();
     if (ticket.isRewarding!) {
       //CHECK FOR REWARDS
@@ -231,7 +230,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               style: TextStyles.rajdhaniB.title2.colour(Colors.black),
             ),
           ),
-          Text(' '+locale.rewardWon,
+          Text(' ' + locale.rewardWon,
               style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
         ],
       );
@@ -360,7 +359,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      ' '+locale.rewardWon,
+                      ' ' + locale.rewardWon,
                       style: TextStyles.sourceSans.body4.colour(Colors.black),
                     )
                   ],
@@ -379,7 +378,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      ' '+locale.rewardWon,
+                      ' ' + locale.rewardWon,
                       style: TextStyles.sourceSans.body4.colour(Colors.black),
                     )
                   ],
@@ -406,7 +405,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      ' '+locale.tokensWon,
+                      ' ' + locale.tokensWon,
                       style: TextStyles.sourceSans.body4.colour(Colors.black),
                     )
                   ],

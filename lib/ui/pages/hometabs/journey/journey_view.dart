@@ -357,7 +357,7 @@ class LevelBlurView extends StatelessWidget {
                                             //             SizeConfig.padding3),
                                             //     child: SvgPicture.asset(
                                             //       Assets
-                                            //           .levelUpUnRedeemedGoldenTicketBG,
+                                            //           .levelUpUnRedeemedScratchCardBG,
                                             //       height: SizeConfig.body5,
                                             //     ),
                                             //   ),

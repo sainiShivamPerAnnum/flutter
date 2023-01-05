@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
@@ -9,14 +8,13 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/score_reject_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -29,7 +27,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class WebGameViewModel extends BaseViewModel {
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final ScratchCardService? _gtService = locator<ScratchCardService>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final LeaderboardService? _lbService = locator<LeaderboardService>();
   final UserRepository? _userRepo = locator<UserRepository>();
@@ -67,7 +65,7 @@ class WebGameViewModel extends BaseViewModel {
       Future.delayed(Duration(seconds: 1), () {
         BaseUtil.showNegativeAlert(
           locale.gameLoading,
-         locale.gameLoadingSubTitle,
+          locale.gameLoadingSubTitle,
         );
       });
     }
@@ -102,7 +100,7 @@ class WebGameViewModel extends BaseViewModel {
         "round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
       _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
-      GoldenTicketService.goldenTicketId = data['gt_id'];
+      ScratchCardService.scratchCardId = data['gt_id'];
     }
     if (data['mlIndex'] != null)
       _journeyService!.avatarRemoteMlIndex = data["mlIndex"];
@@ -110,7 +108,7 @@ class WebGameViewModel extends BaseViewModel {
     if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
         data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
       _logger!.d("Game end message: ${data[FcmCommands.GAME_END_MESSAGE_KEY]}");
-      GoldenTicketService.gameEndMsgText =
+      ScratchCardService.gameEndMsgText =
           data[FcmCommands.GAME_END_MESSAGE_KEY].toString();
     }
     updateFlcBalance();
@@ -120,9 +118,9 @@ class WebGameViewModel extends BaseViewModel {
 
   handleGameSessionEnd({Duration? duration}) {
     updateFlcBalance();
-    _logger!.d("Checking for golden tickets");
-    if (GoldenTicketService.gameEndMsgText != null &&
-        GoldenTicketService.gameEndMsgText!.isNotEmpty) {
+    _logger!.d("Checking for scratch cards");
+    if (ScratchCardService.gameEndMsgText != null &&
+        ScratchCardService.gameEndMsgText!.isNotEmpty) {
       _logger!.d("Showing game end message");
       Future.delayed(duration ?? Duration(milliseconds: 500), () {
         BaseUtil.openDialog(
@@ -130,13 +128,13 @@ class WebGameViewModel extends BaseViewModel {
           isBarrierDismissible: false,
           hapticVibrate: true,
           content: ScoreRejectedDialog(
-              contentText: GoldenTicketService.gameEndMsgText),
+              contentText: ScratchCardService.gameEndMsgText),
         );
-        GoldenTicketService.gameEndMsgText = null;
+        ScratchCardService.gameEndMsgText = null;
       });
       return;
     }
-    _gtService!.fetchAndVerifyGoldenTicketByID();
+    _gtService!.fetchAndVerifyScratchCardByID();
   }
 
   //helper

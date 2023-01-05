@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -16,7 +15,6 @@ import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -88,7 +86,8 @@ class ReferralDetailsView extends StatelessWidget {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                        text:locale.earnUpto + '₹' +
+                                        text: locale.earnUpto +
+                                            '₹' +
                                             AppConfig.getValue(
                                                     AppConfigKey.referralBonus)
                                                 .toString() +
@@ -267,7 +266,8 @@ class ReferralDetailsView extends StatelessWidget {
                                   child: Text(
                                       model.referalList == null
                                           ? '-'
-                                          : "${model.referalList!.length} "+ locale.referrals,
+                                          : "${model.referalList!.length} " +
+                                              locale.referrals,
                                       style: TextStyles.body3
                                           .colour(UiConstants.kTextColor2)),
                                 ),
@@ -302,7 +302,7 @@ class ReferralDetailsView extends StatelessWidget {
                                       SvgPicture.asset(Assets.noReferralAsset),
                                       SizedBox(height: SizeConfig.padding34),
                                       Text(
-                                       locale.refEmpty,
+                                        locale.refEmpty,
                                         style: TextStyles.sourceSans.body2
                                             .colour(Colors.white),
                                       ),
@@ -462,12 +462,12 @@ class BonusLockedReferals extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                       locale.referralsTitle,
+                          locale.referralsTitle,
                           style:
                               TextStyles.sourceSans.body2.colour(Colors.white),
                         ),
                         Text(
-                         locale.myReward,
+                          locale.myReward,
                           style:
                               TextStyles.sourceSans.body2.colour(Colors.white),
                         )
@@ -557,7 +557,7 @@ class BonusLockedReferals extends StatelessWidget {
                                             MainAxisAlignment.end,
                                         children: [
                                           // SvgPicture.asset(
-                                          //   Assets.unredemmedGoldenTicketBG,
+                                          //   Assets.unredemmedScratchCardBG,
                                           //   width: SizeConfig.padding32,
                                           // ),
                                           SizedBox(
@@ -590,7 +590,7 @@ class BonusLockedReferals extends StatelessWidget {
                   SvgPicture.asset(Assets.noReferralAsset),
                   SizedBox(height: SizeConfig.padding16),
                   Text(
-                   locale.refEmpty,
+                    locale.refEmpty,
                     style: TextStyles.sourceSans.body2.colour(Colors.white),
                   ),
                   SizedBox(height: SizeConfig.padding16),
@@ -617,7 +617,7 @@ class BonusUnlockedReferals extends StatelessWidget {
               SvgPicture.asset(Assets.noReferralAsset),
               SizedBox(height: SizeConfig.padding16),
               Text(
-              locale.refEmpty,
+                locale.refEmpty,
                 style: TextStyles.sourceSans.body2.colour(Colors.white),
               ),
               SizedBox(height: SizeConfig.padding16),
@@ -632,7 +632,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                     locale.referralsTitle,
+                          locale.referralsTitle,
                           style:
                               TextStyles.sourceSans.body2.colour(Colors.white),
                         ),
@@ -725,7 +725,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            Assets.unredemmedGoldenTicketBG,
+                                            Assets.unredemmedScratchCardBG,
                                             width: SizeConfig.padding32,
                                           ),
                                           SizedBox(
@@ -843,19 +843,22 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                     ),
                     // InfoTile(
                     //   title:
-                    //       "Once your friend completes their KYC verification, you receive a new Golden Ticket.",
+                    //       "Once your friend completes their KYC verification, you receive a new Scratch Card.",
                     //   leadingAsset: Assets.wmtsaveMoney,
                     // ),
                     InfoTile(
-                      title:
-                          locale.askfrndForInvesText+"₹${widget.model.unlockReferralBonus}"+locale.askfrndForInvesText1+
-                         "${AppConfig.getValue(AppConfigKey.referralBonus)}"+ locale.askfrndForInvesText2(AppConfig.getValue(AppConfigKey.referralFlcBonus)),
+                      title: locale.askfrndForInvesText +
+                          "₹${widget.model.unlockReferralBonus}" +
+                          locale.askfrndForInvesText1 +
+                          "${AppConfig.getValue(AppConfigKey.referralBonus)}" +
+                          locale.askfrndForInvesText2(AppConfig.getValue(
+                              AppConfigKey.referralFlcBonus)),
                       leadingAsset: Assets.tickets,
                     ),
                     SizedBox(height: SizeConfig.padding8),
                     // InfoTile(
                     //   title:
-                    //       "Once your friend plays Cricket or Pool Club more than 10 times, you receive a new Golden Ticket.",
+                    //       "Once your friend plays Cricket or Pool Club more than 10 times, you receive a new Scratch Card.",
                     //   leadingAsset: Assets.wmtShare,
                     // ),
                     // SizedBox(height: SizeConfig.padding8),
@@ -969,7 +972,7 @@ class ReferAndEarnAsset extends StatelessWidget {
           text: TextSpan(
             children: [
               TextSpan(
-                  text:locale.refer.toUpperCase(),
+                  text: locale.refer.toUpperCase(),
                   style:
                       getHeadingCustomTextStyle(UiConstants.kTabBorderColor)),
               TextSpan(

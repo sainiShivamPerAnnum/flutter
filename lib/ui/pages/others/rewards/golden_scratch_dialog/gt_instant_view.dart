@@ -5,8 +5,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/others/rewards/scratch_card_utils.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -14,11 +13,9 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
-import 'package:shimmer/shimmer.dart';
 
 enum GTSOURCE {
   newuser,
@@ -170,8 +167,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                           model.showScratchGuide = false;
                                         },
                                         onThreshold: () {
-                                          if (model
-                                              .goldenTicket!.isRewarding!) {
+                                          if (model.scratchCard!.isRewarding!) {
                                             model.isShimmerEnabled = true;
 
                                             Future.delayed(
@@ -188,11 +184,11 @@ class _GTInstantViewState extends State<GTInstantView>
                                           model.redeemTicket();
                                         },
                                         image: Image.asset(
-                                          model.goldenTicket!.isLevelChange!
+                                          model.scratchCard!.isLevelChange!
                                               ? Assets
-                                                  .levelUpUnredeemedGoldenTicketBGPNG
+                                                  .levelUpUnredeemedScratchCardBGPNG
                                               : Assets
-                                                  .unredeemedGoldenTicketBG_png,
+                                                  .unredeemedScratchCardBG_png,
                                           fit: BoxFit.contain,
                                           height: SizeConfig.screenWidth! * 0.6,
                                           width: SizeConfig.screenWidth! * 0.6,
@@ -206,7 +202,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                                         0.5,
                                               )
                                             : RedeemedGoldenScratchCard(
-                                                ticket: model.goldenTicket,
+                                                ticket: model.scratchCard,
                                                 width: SizeConfig.screenWidth! *
                                                     0.6,
                                               ),
@@ -240,8 +236,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                   horizontal:
                                       SizeConfig.pageHorizontalMargins * 2),
                               child: Text(
-                                  model.goldenTicket!.note ??
-                                      locale.wonGT,
+                                  model.scratchCard!.note ?? locale.wonGT,
                                   style: TextStyles.sourceSans.body3
                                       .colour(Colors.grey),
                                   textAlign: TextAlign.center),
@@ -285,7 +280,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                               page: MyWinningsPageConfig);
                                     },
                                     child: Text(
-                                     locale.winMyWinnings,
+                                      locale.winMyWinnings,
                                       style: TextStyles.body3
                                           .colour(Colors.white)
                                           .underline,

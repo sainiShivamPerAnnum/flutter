@@ -9,13 +9,12 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -30,7 +29,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final UserService? _userService = locator<UserService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final GoldenTicketService _gtService = GoldenTicketService();
+  final ScratchCardService _gtService = ScratchCardService();
   final AnalyticsService? _analyticService = locator<AnalyticsService>();
   S locale = locator<S>();
 
@@ -344,7 +343,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
     _analyticsService!
         .track(eventName: AnalyticsEvents.autosaveCompleteScreenClosed);
     AppState.backButtonDispatcher!.didPopRoute();
-    _gtService.fetchAndVerifyGoldenTicketByID();
+    _gtService.fetchAndVerifyScratchCardByID();
   }
 
   initiateCustomSubscription() async {
@@ -356,8 +355,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
           locale.tooManyAttempts, locale.tryLater);
     }
     if (!_userService!.baseUser!.isAugmontOnboarded!) {
-      return BaseUtil.showNegativeAlert(locale.augmountOnboardTitle,
-         locale.augmountOnboardSubTitle);
+      return BaseUtil.showNegativeAlert(
+          locale.augmountOnboardTitle, locale.augmountOnboardSubTitle);
     }
     isSubscriptionInProgress = true;
     AppState.screenStack.add(ScreenItem.loader);
@@ -404,8 +403,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
     }
     if (amount < minValue) {
       return BaseUtil.showNegativeAlert(
-       locale.minAmountShouldBe+'$minValue',
-        locale.enterMinAmount+'$minValue',
+        locale.minAmountShouldBe + '$minValue',
+        locale.enterMinAmount + '$minValue',
       );
     }
     if (_paytmService!.activeSubscription != null) {
@@ -437,7 +436,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
       // subId = res['subId'] ?? "";
       if (res['gtId'] != null && res['gtId'].toString().isNotEmpty) {
         _logger!.d(res.toString());
-        GoldenTicketService.goldenTicketId = res['gtId'];
+        ScratchCardService.scratchCardId = res['gtId'];
       }
       if (_paytmService!.subscriptionFlowPageController.page == 1.0) {
         // _paytmService!.getActiveSubscriptionDetails();
@@ -449,12 +448,11 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
     } else if (res['status'] == false) {
       tryAgain();
-      BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong,
-          res['message'] ?? locale.tryLater);
+      BaseUtil.showNegativeAlert(
+          locale.obSomeThingWentWrong, res['message'] ?? locale.tryLater);
     } else {
       tryAgain();
-      BaseUtil.showNegativeAlert(
-          locale.obSomeThingWentWrong, locale.tryLater);
+      BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.tryLater);
     }
   }
 
@@ -466,9 +464,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
         isBarrierDismissible: false,
         content: PendingDialog(
           title: locale.processing,
-          subtitle:
-              locale.autoSaveDelay,
-          duration: '20'+ locale.minutes,
+          subtitle: locale.autoSaveDelay,
+          duration: '20' + locale.minutes,
         ),
       );
     });

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
@@ -10,8 +9,8 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -34,7 +33,7 @@ class LendboxTransactionService extends BaseTransactionService {
   final CustomLogger? _logger = locator<CustomLogger>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
-  final _gtService = GoldenTicketService();
+  final _gtService = ScratchCardService();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
@@ -190,14 +189,14 @@ class LendboxTransactionService extends BaseTransactionService {
     try {
       if (gtId != null) {
         print("Hey a new fcm recived with gtId: $gtId");
-        if (GoldenTicketService.lastGoldenTicketId != null) {
-          if (GoldenTicketService.lastGoldenTicketId == gtId) {
+        if (ScratchCardService.lastScratchCardId != null) {
+          if (ScratchCardService.lastScratchCardId == gtId) {
             return;
           } else {
-            GoldenTicketService.lastGoldenTicketId = gtId;
+            ScratchCardService.lastScratchCardId = gtId;
           }
         } else {
-          GoldenTicketService.lastGoldenTicketId = gtId;
+          ScratchCardService.lastScratchCardId = gtId;
         }
       }
 
@@ -211,8 +210,8 @@ class LendboxTransactionService extends BaseTransactionService {
       _userService!.getUserFundWalletData();
       print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
-        GoldenTicketService.goldenTicketId = gtId;
-        await _gtService.fetchAndVerifyGoldenTicketByID();
+        ScratchCardService.scratchCardId = gtId;
+        await _gtService.fetchAndVerifyScratchCardByID();
         await _userService!.getUserJourneyStats();
 
         AppState.unblockNavigation();

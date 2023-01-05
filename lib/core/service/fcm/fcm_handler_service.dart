@@ -104,8 +104,8 @@ class FcmHandler extends ChangeNotifier {
           _journeyService!
               .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
-        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
-          log("Golden Ticket win update fcm response");
+        case FcmCommands.COMMAND_SCRATCH_CARD_WIN:
+          log("Scratch Card win update fcm response");
           _journeyService!
               .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;

@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -25,13 +25,13 @@ class GTDetailedViewModel extends BaseViewModel {
   bool _isShareLoading = false;
   final UserService? _userService = locator<UserService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final GoldenTicketService _gtService = locator<GoldenTicketService>();
+  final ScratchCardService _gtService = locator<ScratchCardService>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final ApiPath? _apiPaths = locator<ApiPath>();
   final JourneyService _journeyService = locator<JourneyService>();
 
   final _rsaEncryption = new RSAEncryption();
-  final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
+  final ScratchCardRepository? _gtRepo = locator<ScratchCardRepository>();
 
   get viewScratchedCard => this._viewScratchedCard;
 
@@ -59,7 +59,7 @@ class GTDetailedViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  redeemCard(GoldenTicket ticket) async {
+  redeemCard(ScratchCard ticket) async {
     scratchKey.currentState!.reveal();
     // showDetailsModal(ticket.isRewarding);
     isCardScratched = true;
@@ -71,7 +71,7 @@ class GTDetailedViewModel extends BaseViewModel {
     setState(ViewState.Idle);
   }
 
-  Future<bool> redeemTicket(GoldenTicket ticket) async {
+  Future<bool> redeemTicket(ScratchCard ticket) async {
     try {
       await _gtRepo!.redeemReward(ticket.gtId);
       _gtService.updateUnscratchedGTCount();
@@ -86,7 +86,7 @@ class GTDetailedViewModel extends BaseViewModel {
     }
   }
 
-  init(GoldenTicket ticket) {
+  init(ScratchCard ticket) {
     if (ticket.redeemedTimestamp != null &&
         ticket.redeemedTimestamp !=
             TimestampModel(seconds: 0, nanoseconds: 0)) {

@@ -6,7 +6,7 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/upi_intent_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -18,7 +18,7 @@ import 'package:upi_pay/upi_pay.dart';
 
 abstract class BaseTransactionService
     extends PropertyChangeNotifier<TransactionServiceProperties> {
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final ScratchCardService? _gtService = locator<ScratchCardService>();
   S locale = locator<S>();
 
   TransactionState _currentTransactionState = TransactionState.idle;
@@ -99,8 +99,7 @@ abstract class BaseTransactionService
         }
       });
     } catch (e) {
-      BaseUtil.showNegativeAlert(
-          locale.unableToGetUpi, locale.tryLater);
+      BaseUtil.showNegativeAlert(locale.unableToGetUpi, locale.tryLater);
     }
   }
 
@@ -113,11 +112,10 @@ abstract class BaseTransactionService
 
   void showGtIfAvailable() {
     Future.delayed(Duration(milliseconds: 500), () {
-      _gtService!.showInstantGoldenTicketView(
+      _gtService!.showInstantScratchCardView(
         amount: this.currentTxnAmount,
         showAutoSavePrompt: true,
-        title:
-          locale.youSaved +"₹${this.getAmount(this.currentTxnAmount!)}",
+        title: locale.youSaved + "₹${this.getAmount(this.currentTxnAmount!)}",
         source: GTSOURCE.deposit,
       );
     });
