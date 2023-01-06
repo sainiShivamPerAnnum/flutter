@@ -118,7 +118,6 @@ class MarketingEventHandlerService
       "Retries left": dailyAppCheckInEventData?.streakReset ?? 0
     });
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
-    GoldenTicketService.goldenTicketId = _dailyAppBonusClaimRewardData!.gtId;
     await _gtService.fetchAndVerifyGoldenTicketByID();
     _isDailyAppBonusClaimed = true;
     isDailyAppBonusClaimInProgress = false;

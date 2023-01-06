@@ -22,7 +22,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-
 class LendboxWithdrawalViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final LendboxTransactionService? _txnService =
@@ -32,6 +31,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
   final UserService? _userService = locator<UserService>();
   S locale = locator<S>();
+  String withdrawableResponseMessage = "";
 
   List<ApplicationMeta> appMetaList = [];
   UpiApplication? upiApplication;
@@ -68,6 +68,8 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     final response = await _lendboxRepo!.getWithdrawableQuantity();
     if (response.isSuccess()) {
       withdrawableQuantity = response.model;
+    } else {
+      withdrawableResponseMessage = response.errorMessage ?? '';
     }
 
     setState(ViewState.Idle);

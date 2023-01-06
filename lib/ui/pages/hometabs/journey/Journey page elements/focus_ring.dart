@@ -7,7 +7,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -63,14 +62,14 @@ class _FocusRingState extends State<FocusRing>
       Future.delayed(Duration(seconds: 2), () {
         _animationController!.forward().then((value) {
           showButton = true;
-          _gtService.fetchAndVerifyGoldenTicketByID().then(
-            (value) {
-              if (value) {
-                _gtService.showInstantGoldenTicketView(
-                    source: GTSOURCE.newuser, onJourney: true);
-              }
-            },
-          );
+          // _gtService.fetchAndVerifyGoldenTicketByID().then(
+          //   (value) {
+          //     if (value) {
+          //       _gtService.showInstantGoldenTicketView(
+          //           source: GTSOURCE.newuser, onJourney: true);
+          //     }
+          //   },
+          // );
         });
       });
     });
@@ -154,7 +153,7 @@ class _FocusRingState extends State<FocusRing>
                                 _analyticsService!.track(
                                     eventName:
                                         AnalyticsEvents.journeyMileStarted);
-                                 BaseUtil.openModalBottomSheet(
+                                BaseUtil.openModalBottomSheet(
                                   backgroundColor: Colors.transparent,
                                   isBarrierDismissible: true,
                                   addToScreenStack: true,

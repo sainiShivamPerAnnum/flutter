@@ -227,7 +227,7 @@ class GoldenTicketRepository extends BaseRepo {
       if (PreferenceHelper.getBool(
               PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE,
               def: true) ==
-          false) return ApiResponse.withError("Event over for this user", 400);
+          false) return ApiResponse.withError("Event Over for this user", 400);
 
       //LOCAL CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
       // print(
@@ -250,12 +250,6 @@ class GoldenTicketRepository extends BaseRepo {
           cBaseUrl: _baseUrl);
       logger.d("DAILY APP : $response");
       final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);
-      if (responseData.gtId != null) {
-        GoldenTicketService.goldenTicketId = responseData.gtId;
-        PreferenceHelper.setInt(
-            PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
-            DateTime.now().day);
-      }
 
       //NETWORK CHECK IF EVENT OVER FOR THIS USER
 
@@ -267,11 +261,17 @@ class GoldenTicketRepository extends BaseRepo {
 
       //NETWORK CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
 
-      if (responseData.streakEnd.toDate().day == DateTime.now().day) {
+      if (responseData.gtId == null) {
         PreferenceHelper.setInt(
             PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
             DateTime.now().day);
         return ApiResponse.withError("Reward claimed for today", 400);
+      } else {
+        GoldenTicketService.goldenTicketId = responseData.gtId;
+        PreferenceHelper.setInt(
+            PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
+            DateTime.now().day);
+        print("DAILY APP BOUNUS: claimed day cached is ${DateTime.now().day}");
       }
       //CHECK IF STREAK IS RESET
       int streakBreakDaysCount = TimestampModel.daysBetween(
@@ -288,23 +288,23 @@ class GoldenTicketRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<DailyAppBonusClaimRewardModel>>
-      claimDailyBonusEventDetails() async {
-    try {
-      final String bearer = await getBearerToken();
-      final response = await APIService.instance.postData(
-          ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
-          token: bearer,
-          cBaseUrl: _baseUrl);
-      final responseData =
-          DailyAppBonusClaimRewardModel.fromMap(response['data']);
-      logger.d(response.toString());
-      return ApiResponse(model: responseData, code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError(e.toString(), 400);
-    }
-  }
+  // Future<ApiResponse<DailyAppBonusClaimRewardModel>>
+  //     claimDailyBonusEventDetails() async {
+  //   try {
+  //     final String bearer = await getBearerToken();
+  //     final response = await APIService.instance.postData(
+  //         ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
+  //         token: bearer,
+  //         cBaseUrl: _baseUrl);
+  //     final responseData =
+  //         DailyAppBonusClaimRewardModel.fromMap(response['data']);
+  //     logger.d(response.toString());
+  //     return ApiResponse(model: responseData, code: 200);
+  //   } catch (e) {
+  //     logger.e(e.toString());
+  //     return ApiResponse.withError(e.toString(), 400);
+  //   }
+  // }
 }
 
 //TEST CASES

@@ -20,21 +20,6 @@
 	<string>6.0</string>
 	<key>CFBundleIcons</key>
 	<dict>
-		<key>CFBundleAlternateIcons</key>
-		<dict>
-			<key>ch</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>ch</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			
-			
-			
-		</dict>
 		<key>CFBundlePrimaryIcon</key>
 		<dict>
 			<key>CFBundleIconFiles</key>
@@ -120,12 +105,11 @@
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		
 		<string>phonepe</string>
 		<string>tez</string>
 		<string>paytm</string>
 		<string>gpay</string>
-    	</array>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
