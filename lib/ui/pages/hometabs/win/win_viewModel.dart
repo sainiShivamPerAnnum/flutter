@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/base_util.dart';
 // import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -52,7 +51,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_share_me/flutter_share_me.dart';
+// import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 // import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -241,17 +240,12 @@ class WinViewModel extends BaseViewModel {
     refresh();
 
     if (url == null) {
-      BaseUtil.showNegativeAlert(
-        locale.generatingLinkFailed,
-       locale.tryLater
-      );
+      BaseUtil.showNegativeAlert(locale.generatingLinkFailed, locale.tryLater);
     } else {
       if (Platform.isIOS) {
         Share.share(_shareMsg + url);
       } else {
-        FlutterShareMe().shareToSystem(msg: _shareMsg + url).then((flag) {
-          _logger!.d(flag);
-        });
+        Share.share(_shareMsg + url);
       }
     }
 
@@ -296,48 +290,45 @@ class WinViewModel extends BaseViewModel {
     });
   }
 
-  Future<void> shareWhatsApp() async {
-    if (await BaseUtil.showNoInternetAlert()) return;
-    _fcmListener!.addSubscription(FcmTopic.REFERRER);
-    BaseAnalytics.analytics!.logShare(
-      contentType: 'referral',
-      itemId: _userService!.baseUser!.uid!,
-      method: 'whatsapp',
-    );
-    shareWhatsappInProgress = true;
-    refresh();
+  // Future<void> shareWhatsApp() async {
+  //   if (await BaseUtil.showNoInternetAlert()) return;
+  //   _fcmListener!.addSubscription(FcmTopic.REFERRER);
+  //   BaseAnalytics.analytics!.logShare(
+  //     contentType: 'referral',
+  //     itemId: _userService!.baseUser!.uid!,
+  //     method: 'whatsapp',
+  //   );
+  //   shareWhatsappInProgress = true;
+  //   refresh();
 
-    String? url = await this.generateLink();
-    shareWhatsappInProgress = false;
-    refresh();
+  //   String? url = await this.generateLink();
+  //   shareWhatsappInProgress = false;
+  //   refresh();
 
-    if (url == null) {
-      BaseUtil.showNegativeAlert(
-        locale.generatingLinkFailed,
-        locale.tryLater
-      );
-      return;
-    } else
-      _logger!.d(url);
-    try {
-      _analyticsService.track(eventName: AnalyticsEvents.whatsappShare);
-      FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
-        if (flag == "false") {
-          FlutterShareMe()
-              .shareToWhatsApp4Biz(msg: _shareMsg + url)
-              .then((flag) {
-            _logger!.d(flag);
-            if (flag == "false") {
-              BaseUtil.showNegativeAlert(
-                  locale.whatsappNotDetected,locale.otherShareOption);
-            }
-          });
-        }
-      });
-    } catch (e) {
-      _logger!.d(e.toString());
-    }
-  }
+  //   if (url == null) {
+  //     BaseUtil.showNegativeAlert(locale.generatingLinkFailed, locale.tryLater);
+  //     return;
+  //   } else
+  //     _logger!.d(url);
+  //   try {
+  //     _analyticsService.track(eventName: AnalyticsEvents.whatsappShare);
+  //     FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
+  //       if (flag == "false") {
+  //         FlutterShareMe()
+  //             .shareToWhatsApp4Biz(msg: _shareMsg + url)
+  //             .then((flag) {
+  //           _logger!.d(flag);
+  //           if (flag == "false") {
+  //             BaseUtil.showNegativeAlert(
+  //                 locale.whatsappNotDetected, locale.otherShareOption);
+  //           }
+  //         });
+  //       }
+  //     });
+  //   } catch (e) {
+  //     _logger!.d(e.toString());
+  //   }
+  // }
 
   Future<String?> generateLink() async {
     if (_refUrl != "") return _refUrl;
@@ -457,8 +448,10 @@ class WinViewModel extends BaseViewModel {
         },
         title: locale.confirmation,
         description: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? locale.redeemAmznGiftVchr(BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false))
-            : locale.redeemDigitalGold(BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)),
+            ? locale.redeemAmznGiftVchr(BaseUtil.digitPrecision(
+                _userService!.userFundWallet!.unclaimedBalance, 2, false))
+            : locale.redeemDigitalGold(BaseUtil.digitPrecision(
+                _userService!.userFundWallet!.unclaimedBalance, 2, false)),
         buttonText: locale.btnYes,
         cancelBtnText: locale.btnNo,
         cancelAction: AppState.backButtonDispatcher!.didPopRoute,
@@ -516,7 +509,7 @@ class WinViewModel extends BaseViewModel {
   claim(PrizeClaimChoice choice, double claimPrize) {
     // double _claimAmt = claimPrize;
     _registerClaimChoice(choice).then((flag) {
-      getGramsWon(claimPrize).then((  value) {
+      getGramsWon(claimPrize).then((value) {
         if (flag) {
           showSuccessPrizeWithdrawalDialog(
               choice,
@@ -609,9 +602,7 @@ class WinViewModel extends BaseViewModel {
                 _logger!.e(onError);
               });
             } else {
-              FlutterShareMe()
-                  .shareToSystem(msg: shareMessage)
-                  .catchError((onError) {
+              Share.share(shareMessage).catchError((onError) {
                 if (_userService!.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
@@ -650,8 +641,7 @@ class WinViewModel extends BaseViewModel {
 
       AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
-      BaseUtil.showNegativeAlert(
-          locale.taskFailed, locale.unableToCapture);
+      BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }
     return null;
   }

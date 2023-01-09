@@ -5956,10 +5956,10 @@ class S {
     );
   }
 
-  /// `48 hour lock-in period`
+  /// `1 week lock-in period`
   String get boxFloTitles3 {
     return Intl.message(
-      '48 hour lock-in period',
+      '1 week lock-in period',
       name: 'boxFloTitles3',
       desc: '',
       args: [],

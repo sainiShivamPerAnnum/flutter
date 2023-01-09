@@ -31,7 +31,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_share_me/flutter_share_me.dart';
+// import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -194,7 +194,7 @@ class MyWinningsViewModel extends BaseViewModel {
                     } catch (e) {
                       _logger!.e(e.toString());
                       BaseUtil.showNegativeAlert(
-                        locale.errorOccured, locale.tryLater);
+                          locale.errorOccured, locale.tryLater);
                     }
                   }
                 },
@@ -221,7 +221,7 @@ class MyWinningsViewModel extends BaseViewModel {
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                       locale.btnCongratulations,
+                        locale.btnCongratulations,
                         style: TextStyles.title2.bold,
                       ),
                     ),
@@ -338,9 +338,7 @@ class MyWinningsViewModel extends BaseViewModel {
                 _logger!.e(onError);
               });
             } else {
-              FlutterShareMe()
-                  .shareToSystem(msg: shareMessage)
-                  .catchError((onError) {
+              Share.share(shareMessage).catchError((onError) {
                 if (_userService!.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
@@ -379,8 +377,7 @@ class MyWinningsViewModel extends BaseViewModel {
 
       AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
-      BaseUtil.showNegativeAlert(
-          locale.taskFailed, locale.unableToCapture);
+      BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }
     return null;
   }
@@ -436,8 +433,7 @@ class MyWinningsViewModel extends BaseViewModel {
     } catch (e) {
       // backButtonDispatcher.didPopRoute();
       print(e.toString());
-      BaseUtil.showNegativeAlert(
-       locale.taskFailed, locale.unableToCapture);
+      BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }
   }
 }
