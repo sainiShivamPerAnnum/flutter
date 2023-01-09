@@ -241,7 +241,7 @@ class GoldenTicketRepository extends BaseRepo {
           ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
           token: bearer,
           cBaseUrl: _baseUrl);
-      logger.d("DAILY APP : $response");
+      log("DAILY APP : $response");
       final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);
 
       //NETWORK CHECK IF EVENT OVER FOR THIS USER
@@ -253,8 +253,7 @@ class GoldenTicketRepository extends BaseRepo {
 
       //NETWORK CHECK IF CLAIM WAS SUCCESSFUL OR NOT
       //If a goldenTicket is received in response model, consider it as a claim
-
-      if (responseData.gtId == null) {
+      if (responseData.gtId.isNotEmpty) {
         PreferenceHelper.setInt(
             PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
             DateTime.now().day);

@@ -81,7 +81,7 @@ class MarketingEventHandlerService
       dailyAppCheckInEventData = dailyAppBonusEventResponse.model;
       AppState.isRootAvailableForIncomingTaskExecution = false;
       getCurrentDay(dailyAppCheckInEventData!);
-      if (dailyAppCheckInEventData!.gtId != null) {
+      if (dailyAppCheckInEventData!.gtId.isNotEmpty) {
         await BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,

@@ -17,7 +17,7 @@ class DailyAppCheckInEventModel {
   final TimestampModel streakStart;
   final TimestampModel streakEnd;
   bool showStreakBreakMessage = false;
-  final String? gtId;
+  final String gtId;
   DailyAppCheckInEventModel({
     required this.title,
     required this.subtitle,
@@ -30,7 +30,7 @@ class DailyAppCheckInEventModel {
     required this.startedOn,
     required this.streakStart,
     required this.streakEnd,
-    this.gtId,
+    required this.gtId,
   });
 
   DailyAppCheckInEventModel copyWith({
@@ -59,7 +59,7 @@ class DailyAppCheckInEventModel {
       startedOn: startedOn ?? this.startedOn,
       streakStart: streakStart ?? this.streakStart,
       streakEnd: streakEnd ?? this.streakEnd,
-      gtId: gtId,
+      gtId: gtId ?? this.gtId,
     );
   }
 
@@ -94,7 +94,7 @@ class DailyAppCheckInEventModel {
       startedOn: TimestampModel.fromMap(map['startedOn']),
       streakStart: TimestampModel.fromMap(map['streakStart']),
       streakEnd: TimestampModel.fromMap(map['streakEnd']),
-      gtId: map['gtId'],
+      gtId: map['gtId'] ?? '',
     );
   }
 
