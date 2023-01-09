@@ -266,7 +266,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;
         case Pages.Notifications:
-          _addPageData(NotficationsPage(), NotificationsConfig);
+          _addPageData(NotificationsPage(), NotificationsConfig);
           break;
         case Pages.LendboxDetails:
           _addPageData(LendboxDetailsView(), LendboxDetailsPageConfig);

@@ -2,23 +2,18 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
-import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
-import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/date_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:felloapp/util/date_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class NotficationsPage extends StatelessWidget {
+class NotificationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    S? locale = S.of(context);
     return BaseView<NotificationsViewModel>(onModelReady: (model) {
       model.init();
     }, builder: (ctx, model, child) {
@@ -97,8 +92,8 @@ class NotficationsPage extends StatelessWidget {
                                         radius:
                                             SizeConfig.notificationAvatarRadius,
                                         child: SvgPicture.asset(
-                                          model.getNotificationAsset(
-                                              model.notifications![index].title!),
+                                          model.getNotificationAsset(model
+                                              .notifications![index].title!),
                                           color: UiConstants.primaryColor,
                                           height: SizeConfig.iconSize1,
                                           fit: BoxFit.contain,
@@ -133,13 +128,12 @@ class NotficationsPage extends StatelessWidget {
                                                         SizeConfig.padding16),
                                                 Text(
                                                   DateHelper.timeAgoSinceDate(
-                                                    DateTime.fromMillisecondsSinceEpoch(
-                                                            model
-                                                                    .notifications![
-                                                                        index]
-                                                                    .createdTime!
-                                                                    .seconds *
-                                                                1000)
+                                                    DateTime.fromMillisecondsSinceEpoch(model
+                                                                .notifications![
+                                                                    index]
+                                                                .createdTime!
+                                                                .seconds *
+                                                            1000)
                                                         .toString(),
                                                   ),
                                                   style: TextStyles.body4
