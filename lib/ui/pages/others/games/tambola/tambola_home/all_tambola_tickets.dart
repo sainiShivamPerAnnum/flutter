@@ -17,15 +17,34 @@ class AllTambolaTickets extends StatefulWidget {
 }
 
 class _AllTambolaTicketsState extends State<AllTambolaTickets> {
-  List<Widget>? activeTicketList;
+  // List<Widget>? activeTicketList;
   ScrollController? ticketController;
   bool isLoadingTickets = false;
+  int? listLength = 0;
   @override
   void initState() {
     ticketController = ScrollController();
-    activeTicketList = widget.ticketList.length > 10
-        ? widget.ticketList.sublist(0, 10)
-        : widget.ticketList;
+    listLength = widget.ticketList.length > 10 ? 10 : widget.ticketList.length;
+    ticketController!.addListener(() {
+      if (ticketController!.offset >=
+          ticketController!.position.maxScrollExtent) {
+        if (isLoadingTickets) return;
+        if (listLength == widget.ticketList.length) return;
+        setState(() {
+          isLoadingTickets = true;
+        });
+        Future.delayed(Duration(seconds: 3)).then((_) {
+          setState(() {
+            listLength = widget.ticketList.length - listLength! > 10
+                ? listLength! + 10
+                : listLength! + (widget.ticketList.length - listLength!);
+            isLoadingTickets = false;
+          });
+          ticketController!.animateTo(ticketController!.offset + 80,
+              duration: Duration(seconds: 1), curve: Curves.easeIn);
+        });
+      }
+    });
     super.initState();
   }
 
@@ -43,43 +62,17 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
       ),
       body: Stack(
         children: [
-          NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollInfo) {
-              if (scrollInfo.metrics.maxScrollExtent ==
-                  scrollInfo.metrics.pixels) {
-                if (activeTicketList?.length == widget.ticketList.length)
-                  return true;
-                setState(() {
-                  isLoadingTickets = true;
-                });
-                Future.delayed(Duration(seconds: 3)).then((_) {
-                  setState(() {
-                    activeTicketList!.addAll(widget.ticketList.sublist(
-                        activeTicketList!.length,
-                        widget.ticketList.length - activeTicketList!.length > 10
-                            ? activeTicketList!.length + 10
-                            : widget.ticketList.length));
-                    isLoadingTickets = false;
-                  });
-                  ticketController!.animateTo(ticketController!.offset + 80,
-                      duration: Duration(seconds: 1), curve: Curves.easeIn);
-                });
-              }
-
-              return true;
+          ListView.builder(
+            shrinkWrap: true,
+            controller: ticketController,
+            scrollDirection: Axis.vertical,
+            itemCount: listLength,
+            itemBuilder: (ctx, index) {
+              return Container(
+                  margin: EdgeInsets.symmetric(
+                      vertical: SizeConfig.pageHorizontalMargins),
+                  child: widget.ticketList[index]);
             },
-            child: ListView.builder(
-              shrinkWrap: true,
-              controller: ticketController,
-              scrollDirection: Axis.vertical,
-              itemCount: activeTicketList!.length,
-              itemBuilder: (ctx, index) {
-                return Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: SizeConfig.pageHorizontalMargins),
-                    child: activeTicketList![index]);
-              },
-            ),
           ),
           if (isLoadingTickets)
             Positioned(
