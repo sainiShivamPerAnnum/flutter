@@ -9,10 +9,12 @@ import 'package:felloapp/ui/pages/others/rewards/scratch_card_utils.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
@@ -227,20 +229,31 @@ class _GTInstantViewState extends State<GTInstantView>
                                   textAlign: TextAlign.center),
                             ),
                             AnimatedContainer(
-                              decoration: BoxDecoration(),
-                              duration: Duration(seconds: 1),
-                              curve: Curves.easeIn,
-                              width: SizeConfig.screenWidth,
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.symmetric(
-                                  horizontal:
-                                      SizeConfig.pageHorizontalMargins * 2),
-                              child: Text(
-                                  model.scratchCard!.note ?? locale.wonGT,
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(Colors.grey),
-                                  textAlign: TextAlign.center),
-                            ),
+                                decoration: BoxDecoration(),
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeIn,
+                                width: SizeConfig.screenWidth,
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins * 2),
+                                child: (model.scratchCard!.note ??
+                                        locale.wonGT)
+                                    .beautify(
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(UiConstants.kTextColor2),
+                                        boldStyle: TextStyles.sourceSansB.body3
+                                            .colour(UiConstants.kTextColor),
+                                        italicStyle: TextStyles.sourceSans.body3
+                                            .colour(UiConstants.kTextColor2)
+                                            .italic,
+                                        alignment: TextAlign.center)
+                                // Text(
+                                //     model.scratchCard!.note ?? locale.wonGT,
+                                //     style: TextStyles.sourceSans.body3
+                                //         .colour(Colors.grey),
+                                //     textAlign: TextAlign.center),
+                                ),
                             Container(
                               margin: EdgeInsets.symmetric(
                                   vertical: SizeConfig.padding64,

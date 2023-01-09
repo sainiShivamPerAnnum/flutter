@@ -297,6 +297,7 @@ class GTDetailedView extends StatelessWidget {
       padding: EdgeInsets.only(bottom: SizeConfig.padding8),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Icon(
             Icons.brightness_1,

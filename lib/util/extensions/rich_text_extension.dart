@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 
 extension RichTextExtension on String {
   RichText beautify(
-      {TextStyle? style, TextStyle? boldStyle, TextStyle? italicStyle}) {
+      {TextStyle? style,
+      TextStyle? boldStyle,
+      TextStyle? italicStyle,
+      TextAlign? alignment}) {
     try {
       if (this.isEmpty || (!this.contains("*") && !this.contains("_"))) {
         return RichText(
+          textAlign: alignment ?? TextAlign.start,
           text: TextSpan(
             text: this,
             style: style ??
@@ -76,9 +80,12 @@ extension RichTextExtension on String {
           ),
         );
       }
-      return new RichText(text: TextSpan(children: groups));
+      return new RichText(
+          textAlign: alignment ?? TextAlign.start,
+          text: TextSpan(children: groups));
     } catch (e) {
       return RichText(
+        textAlign: alignment ?? TextAlign.start,
         text: TextSpan(),
       );
     }
