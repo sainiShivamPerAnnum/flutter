@@ -85,7 +85,7 @@ class DailyAppCheckInEventModel {
       title: map['title'] as String,
       subtitle: map['subtitle'] as String,
       postClaimMessage: map['postClaimMessage'] as String,
-      streakBreakMessage: map['streakBreakMessage'] as String,
+      streakBreakMessage: (map['streakBreakMessage'] ?? '') as String,
       currentDay: (map['currentDay'] ?? -1) as int,
       totalResetCount: (map['totalResetCount'] ?? 3) as int,
       specialRewardPos:

@@ -5,7 +5,6 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
 import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
-import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
@@ -223,26 +222,20 @@ class GoldenTicketRepository extends BaseRepo {
       getDailyBonusEventDetails() async {
     try {
       //LOCAL CHECK IF EVENT IS AVAILABLE FOR THS USER
-
       if (PreferenceHelper.getBool(
               PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE,
               def: true) ==
           false) return ApiResponse.withError("Event Over for this user", 400);
 
       //LOCAL CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
-      // print(
-      //     "DAILY APP BONUS Claim timestamp: ${PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP)}");
-      // print(
-      //     "DAILY APP BONUS Claim timestamp: ${TimestampModel.fromIsoString(PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP)).toDate().day}");
-
       final int lastBonusClaimedDay = PreferenceHelper.getInt(
           PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY);
 
       if (lastBonusClaimedDay != 0 && lastBonusClaimedDay == DateTime.now().day)
         return ApiResponse.withError("Reward Claimed for today", 400);
 
+      //No local restrictions found here. claiming today's bonus
       //FETCH EVENT DETAILS
-
       final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
           ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
@@ -252,14 +245,14 @@ class GoldenTicketRepository extends BaseRepo {
       final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);
 
       //NETWORK CHECK IF EVENT OVER FOR THIS USER
-
       if (responseData.currentDay >= 7) {
         PreferenceHelper.setBool(
             PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE, false);
         return ApiResponse.withError("Event over for this user", 400);
       }
 
-      //NETWORK CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
+      //NETWORK CHECK IF CLAIM WAS SUCCESSFUL OR NOT
+      //If a goldenTicket is received in response model, consider it as a claim
 
       if (responseData.gtId == null) {
         PreferenceHelper.setInt(
@@ -274,9 +267,7 @@ class GoldenTicketRepository extends BaseRepo {
         print("DAILY APP BOUNUS: claimed day cached is ${DateTime.now().day}");
       }
       //CHECK IF STREAK IS RESET
-      int streakBreakDaysCount = TimestampModel.daysBetween(
-          responseData.streakEnd.toDate().toLocal(), DateTime.now().toLocal());
-      if (streakBreakDaysCount > 1 && streakBreakDaysCount < 360)
+      if (responseData.streakBreakMessage.isNotEmpty)
         responseData.showStreakBreakMessage = true;
 
       //ALL GOOD, USER ELIGIBLE FOR DAILY APP REWARDS
@@ -310,4 +301,3 @@ class GoldenTicketRepository extends BaseRepo {
 //TEST CASES
 //NEW USER -> Signup -> first claim
 //EXISTING USER -> Signin -> first claim
-
