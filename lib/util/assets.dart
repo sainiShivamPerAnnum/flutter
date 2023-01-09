@@ -39,6 +39,7 @@ class Assets {
   static final String navPlayLottie = "assets/lotties/nav/play.json";
   static final String navSaveLottie = "assets/lotties/nav/save.json";
   static final String navWinLottie = "assets/lotties/nav/win.json";
+  static final String navTambolaLottie = "assets/lotties/nav/tambola.json";
 
   static final String prizeRankOne = "assets/vectors/rank_first.svg";
   static final String prizeRankTwo = "assets/vectors/rank_second.svg";
@@ -100,6 +101,8 @@ class Assets {
   static final String rbiLogo = "assets/vectors/icons/rbilogo.svg";
   static final String digitalGold = "assets/svg/digitalgold.svg";
   static final String flyingGhost = "assets/svg/flying_ghost.svg";
+  static final String tambolaTicket = "assets/svg/tambola_ticket.svg";
+  static final String scratchCard = "assets/svg/scratch_card.svg";
 
   // WIN
 

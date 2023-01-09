@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -33,6 +34,12 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -48,6 +55,10 @@ import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RootViewModel extends BaseViewModel {
+  RootViewModel({S? l})
+      : locale = l ?? locator<S>(),
+        super();
+
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final FcmHandler? _fcmListener = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
@@ -59,7 +70,7 @@ class RootViewModel extends BaseViewModel {
   final TambolaService? _tambolaService = locator<TambolaService>();
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
-  final S locale = locator<S>();
+  final S locale;
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
@@ -85,7 +96,20 @@ class RootViewModel extends BaseViewModel {
     await _journeyService.getUnscratchedGT();
   }
 
+
+
+  
+
+
   onInit() {
+    navBarItems.addAll({
+      JourneyView():
+          NavBarItemModel(locale.navBarJourney, Assets.navJourneyLottie),
+      Save(): NavBarItemModel(locale.navBarSave, Assets.navSaveLottie),
+      Play(): NavBarItemModel(locale.navBarPlay, Assets.navPlayLottie),
+      Win(): NavBarItemModel(locale.navBarWin, Assets.navWinLottie),
+      TambolaWrapper(): NavBarItemModel("Tambola", Assets.navTambolaLottie)
+    });
     AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
     _referralService.verifyReferral();
@@ -109,14 +133,14 @@ class RootViewModel extends BaseViewModel {
         });
       });
     });
-
-    
   }
 
   onDispose() {
     AppState.isUserSignedIn = false;
     _fcmListener!.addIncomingMessageListener(null);
   }
+
+  Map<Widget, NavBarItemModel> navBarItems = {};
 
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;

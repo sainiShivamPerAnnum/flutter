@@ -77,6 +77,7 @@ const String WebViewScreenPath = "/webViewScreenPath";
 const String SettingsScreenPath = '/settingsScreenPath';
 const String TExistingUserViewPath = '/texistingUserPath';
 const String TNewUserViewPath = '/tnewUserViewPath';
+const String TransactionDetailsPath = '/transactionDetailsPage';
 
 enum Pages {
   Splash,
@@ -152,6 +153,7 @@ enum Pages {
   InfoStoriesView,
   WebView,
   SettingsView,
+  TransactionDetailsPage
 }
 
 class PageConfiguration {
@@ -183,6 +185,12 @@ PageConfiguration SplashPageConfig = PageConfiguration(
   uiPage: Pages.Splash,
   name: 'Splash Screen',
 );
+
+PageConfiguration TransactionDetailsPageConfig = PageConfiguration(
+    key: 'TransactionDetailsPage',
+    path: TransactionDetailsPath,
+    uiPage: Pages.TransactionDetailsPage,
+    name: 'TransactionDetails Screen');
 
 PageConfiguration NotificationsConfig = PageConfiguration(
   key: 'Notifications',

@@ -441,7 +441,7 @@ class _TransactionDetailsBottomSheetState
     switch (redeemtype) {
       case UserTransaction.TRAN_REDEEMTYPE_AUGMONT_GOLD:
         return "Augmont Digital Gold";
-        break;
+
       case UserTransaction.TRAN_REDEEMTYPE_AMZ_VOUCHER:
         return "Amazon Gift Voucher";
         break;
@@ -533,8 +533,8 @@ class TransactionSummary extends StatelessWidget {
     String? subtitle;
     if (isTBD) {
       mainWidget = Container(
-        height: SizeConfig.padding28,
-        width: SizeConfig.padding28,
+        height: SizeConfig.padding20,
+        width: SizeConfig.padding20,
         padding: EdgeInsets.all(SizeConfig.padding8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -545,15 +545,15 @@ class TransactionSummary extends StatelessWidget {
       leadColor = UiConstants.gameCardColor;
     } else if (summary![index].timestamp != null) {
       mainWidget = Container(
-        height: SizeConfig.padding28,
-        width: SizeConfig.padding28,
+        height: SizeConfig.padding20,
+        width: SizeConfig.padding20,
         // padding: EdgeInsets.all(SizeConfig.padding8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(width: 1, color: UiConstants.primaryColor),
         ),
         child: Icon(Icons.check_rounded,
-            color: UiConstants.primaryColor, size: SizeConfig.padding20),
+            color: UiConstants.primaryColor, size: SizeConfig.padding12),
       );
 
       leadColor = UiConstants.primaryColor;
@@ -563,9 +563,9 @@ class TransactionSummary extends StatelessWidget {
       showThread = false;
     } else if (summary[index].value == "TBD") {
       mainWidget = Container(
-        height: SizeConfig.padding28,
-        width: SizeConfig.padding28,
-        padding: EdgeInsets.all(SizeConfig.padding8),
+        height: SizeConfig.padding20,
+        width: SizeConfig.padding20,
+        padding: EdgeInsets.all(SizeConfig.padding4),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(width: 1, color: UiConstants.tertiarySolid),
@@ -579,11 +579,14 @@ class TransactionSummary extends StatelessWidget {
     }
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: SizeConfig.padding32,
-          height: SizeConfig.padding70,
-          child: Column(children: [
+          width: SizeConfig.padding40,
+          height: SizeConfig.padding54,
+          alignment: Alignment.topCenter,
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             Expanded(
               child: VerticalDivider(
                 color: index == 0 ? Colors.transparent : leadColor,
@@ -602,20 +605,26 @@ class TransactionSummary extends StatelessWidget {
         if (showThread)
           Expanded(
             child: Container(
-              height: SizeConfig.padding70,
-              child: ListTile(
-                title: Text(
-                  summary![index].title!,
-                  style: TextStyles.sourceSans.body2,
-                ),
-                subtitle: Text(
-                  subtitle ??
-                      (summary[index].timestamp != null
-                          ? "${_txnHistoryService!.getFormattedDateAndTime(summary[index].timestamp!)}"
-                          : summary[index].value!),
-                  style: TextStyles.sourceSans.body3
-                      .colour(UiConstants.kTextColor2),
-                ),
+              height: SizeConfig.padding54,
+              alignment: Alignment.centerLeft,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    summary![index].title!,
+                    style:
+                        TextStyles.sourceSans.body4.colour(Color(0XFFA9C6D6)),
+                  ),
+                  Text(
+                    subtitle ??
+                        (summary[index].timestamp != null
+                            ? "${_txnHistoryService!.getFormattedDateAndTime(summary[index].timestamp!)}"
+                            : summary[index].value!),
+                    style:
+                        TextStyles.sourceSans.body5.colour(Color(0xffA0A0A0)),
+                  ),
+                ],
               ),
             ),
           )

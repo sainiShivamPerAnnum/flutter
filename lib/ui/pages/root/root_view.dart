@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 GlobalKey felloAppBarKey = new GlobalKey();
-final pages = [JourneyView(), Save(), Play(), Win()];
 
 class Root extends StatelessWidget {
   @override
@@ -49,7 +48,7 @@ class Root extends StatelessWidget {
                 child: Container(
                   child: Consumer<AppState>(
                     builder: (ctx, m, child) => IndexedStack(
-                      children: pages,
+                      children: model.navBarItems.keys.toList(),
                       index: AppState.delegate!.appState.getCurrentTabIndex,
                     ),
                   ),

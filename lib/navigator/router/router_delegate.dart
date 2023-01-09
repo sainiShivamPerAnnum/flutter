@@ -29,6 +29,7 @@ import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.da
 import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
+import 'package:felloapp/ui/pages/others/finance/transactions_history/transaction_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
@@ -320,6 +321,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.SettingsView:
           _addPageData(SettingsView(), SettingsViewPageConfig);
           break;
+        // case Pages.TransactionDetailsPage:
+        //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);
+        //   break;
         default:
           break;
       }
@@ -580,6 +584,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.SellConfirmationView:
         SellConfirmationViewConfig.currentPageAction = action;
+        break;
+      case Pages.TransactionDetailsPage:
+        TransactionDetailsPageConfig.currentPageAction = action;
         break;
       case Pages.ViewAllBlogsView:
         ViewAllBlogsViewConfig.currentPageAction = action;

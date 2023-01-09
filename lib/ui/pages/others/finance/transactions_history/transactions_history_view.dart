@@ -1,11 +1,15 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/transaction_details_model_sheet.dart';
+import 'package:felloapp/ui/pages/others/finance/transactions_history/transaction_details_view.dart';
 import 'package:felloapp/ui/pages/others/finance/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
@@ -320,13 +324,21 @@ class TransactionTile extends StatelessWidget {
           ),
           onTap: () {
             Haptic.vibrate();
-            BaseUtil.openModalBottomSheet(
-              addToScreenStack: true,
-              isBarrierDismissible: true,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              content: TransactionDetailsBottomSheet(
-                transaction: txn,
+            // BaseUtil.openModalBottomSheet(
+            //   addToScreenStack: true,
+            //   isBarrierDismissible: true,
+            //   isScrollControlled: true,
+            //   backgroundColor: Colors.transparent,
+            //   content: TransactionDetailsBottomSheet(
+            //     transaction: txn,
+            //   ),
+            // );
+
+            AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.addWidget,
+              page: TransactionDetailsPageConfig,
+              widget: TransactionDetailsPage(
+                txn: txn,
               ),
             );
           },

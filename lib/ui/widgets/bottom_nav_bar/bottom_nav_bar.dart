@@ -17,18 +17,8 @@ import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatelessWidget {
   final RootViewModel parentModel;
-   S? locale;
-  BottomNavBar({required this.parentModel, this.locale}) {
-     locale = locator<S>();
-    navbarItems.addAll([
-      NavBarItemModel(locale!.navBarJourney, Assets.navJourneyLottie),
-      NavBarItemModel(locale!.navBarSave, Assets.navSaveLottie),
-      NavBarItemModel(locale!.navBarPlay, Assets.navPlayLottie),
-      NavBarItemModel(locale!.navBarWin, Assets.navWinLottie)
-    ]);
-  }
-
-  final List<NavBarItemModel> navbarItems = [];
+  S? locale;
+  BottomNavBar({required this.parentModel});
 
   @override
   Widget build(BuildContext context) {
@@ -50,31 +40,32 @@ class BottomNavBar extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.pageHorizontalMargins / 2),
                 child: Row(
-                  children: List.generate(
-                    4,
-                    (index) => Expanded(
-                      child: superModel.getCurrentTabIndex == index
-                          ? NavBarIcon(
-                              key: ValueKey(navbarItems[index].title),
-                              animate: true,
-                              item: navbarItems[index],
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: List.generate(parentModel.navBarItems.values.length,
+                      (index) {
+                    final navbarItems =
+                        parentModel.navBarItems.values.toList()[index];
+                    return superModel.getCurrentTabIndex == index
+                        ? NavBarIcon(
+                            key: ValueKey(navbarItems.title),
+                            animate: true,
+                            item: navbarItems,
+                            style: TextStyles.rajdhaniSB
+                                .colour(UiConstants.kTextColor),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              parentModel.onItemTapped(index);
+                            },
+                            child: NavBarIcon(
+                              key: ValueKey(navbarItems.title),
+                              animate: false,
+                              item: navbarItems,
                               style: TextStyles.rajdhaniSB
-                                  .colour(UiConstants.kTextColor),
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                parentModel.onItemTapped(index);
-                              },
-                              child: NavBarIcon(
-                                key: ValueKey(navbarItems[index].title),
-                                animate: false,
-                                item: navbarItems[index],
-                                style: TextStyles.rajdhaniSB
-                                    .colour(UiConstants.kTextColor2),
-                              ),
+                                  .colour(UiConstants.kTextColor2),
                             ),
-                    ),
-                  ),
+                          );
+                  }),
                 ),
               ),
             ),
