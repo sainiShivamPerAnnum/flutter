@@ -253,7 +253,7 @@ class GoldenTicketRepository extends BaseRepo {
 
       //NETWORK CHECK IF CLAIM WAS SUCCESSFUL OR NOT
       //If a goldenTicket is received in response model, consider it as a claim
-      if (responseData.gtId.isNotEmpty) {
+      if (responseData.gtId.isEmpty) {
         PreferenceHelper.setInt(
             PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
             DateTime.now().day);
