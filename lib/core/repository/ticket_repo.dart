@@ -28,24 +28,6 @@ class TambolaRepo extends BaseRepo {
     try {
       final uid = userService!.baseUser!.uid;
       final token = await getBearerToken();
-
-      // cache till end of week only
-      // final ttl = DateHelper.timeToWeekendInMinutes();
-      // return await _cacheService.cachedApi(
-      //     CacheKeys.TAMBOLA_TICKETS,
-      //     ttl,
-      //     () => APIService.instance.getData(
-      //           ApiPath.tambolaTickets(uid),
-      //           token: token,
-      //           cBaseUrl: _baseUrl,
-      //         ), (dynamic response) {
-      //   final responseData = response["data"]['tickets'];
-      //   logger.d('tambola repo $responseData');
-      //   return ApiResponse<List<TambolaModel>>(
-      //     model: TambolaModel.helper.fromMapArray(responseData),
-      //     code: 200,
-      //   );
-      // });
       await preProcessTambolaTickets();
 
       final response = await APIService.instance.getData(
@@ -110,8 +92,6 @@ class TambolaRepo extends BaseRepo {
     else {
       if (deletedTickets.isNotEmpty) {
         deletedTickets.forEach((dt) {
-          //   if (activeTambolaTickets.contains(dt))
-          //     activeTambolaTickets.remove(dt);
           if (activeTambolaTickets.firstWhere((ticket) => ticket.id == dt.id,
                   orElse: () => TambolaModel.none()) !=
               TambolaModel.none())
@@ -136,35 +116,6 @@ class TambolaRepo extends BaseRepo {
     logger.d(
         "Latest TimeStamp: ${lastTimeStamp != null ? DateFormat('d MMMM, yyyy - hh:mm a').format(lastTimeStamp!.toDate()) + ' ' + lastTimeStamp!.toDate().toUtc().toString() + ' ' + lastTimeStamp!.toDate().toUtc().toIso8601String() : 'null'}");
   }
-
-  // Future<ApiResponse<FlcModel>> buyTambolaTickets(int ticketCount) async {
-  //   try {
-  //     final uid = userService.baseUser.uid;
-  //     final String bearer = await getBearerToken();
-
-  //     final response = await APIService.instance.postData(
-  //       ApiPath.buyTambolaTicket(uid),
-  //       body: {
-  //         "ticketCount": ticketCount,
-  //       },
-  //       token: bearer,
-  //       cBaseUrl: _baseUrl,
-  //     );
-
-  //     final data = response['data'];
-
-  //     logger.d('tambola repo $data');
-
-  //     // clear cache
-  //     await _cacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
-
-  //     FlcModel _flcModel = FlcModel.fromMap(data);
-  //     return ApiResponse(model: _flcModel, code: 200);
-  //   } catch (e) {
-  //     logger.e(e);
-  //     return ApiResponse.withError(e.toString(), 400);
-  //   }
-  // }
 
   Future<ApiResponse<dynamic>> getWeeklyPicks() async {
     try {
