@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -9,7 +8,6 @@ import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_respo
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
-import 'package:felloapp/core/model/paytm_models/txn_result_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
@@ -17,7 +15,6 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PaytmRepository extends BaseRepo {

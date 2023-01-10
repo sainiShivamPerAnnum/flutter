@@ -1,6 +1,5 @@
 //Project Imports
 import 'package:another_flushbar/flushbar.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -9,8 +8,9 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';

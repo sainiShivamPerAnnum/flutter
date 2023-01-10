@@ -3,8 +3,8 @@ import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
-import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -30,8 +30,7 @@ class MoreGamesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSubtitleContainer(
-            title: locale.moreGamesTitle,
-            subTitle: locale.moreGamesSubTitle),
+            title: locale.moreGamesTitle, subTitle: locale.moreGamesSubTitle),
         Container(
           margin:
               EdgeInsets.symmetric(vertical: SizeConfig.pageHorizontalMargins),
@@ -130,7 +129,8 @@ class MoreGames extends StatelessWidget {
                           height: SizeConfig.padding8,
                         ),
                         Text(
-                      locale.gameWinUptoTitle+"₹${game!.prizeAmount.toString()}",
+                          locale.gameWinUptoTitle +
+                              "₹${game!.prizeAmount.toString()}",
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.kTextColor2),
                         ),
@@ -173,7 +173,7 @@ class MoreGames extends StatelessWidget {
                                     horizontal: SizeConfig.padding28,
                                     vertical: SizeConfig.padding12),
                                 child: Text(
-                              locale.btnPlay,
+                                  locale.btnPlay,
                                   style: TextStyles.rajdhaniSB.body1
                                       .colour(Colors.white),
                                 ),

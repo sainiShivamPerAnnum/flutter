@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
@@ -18,9 +17,10 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
+import 'package:felloapp/ui/pages/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';

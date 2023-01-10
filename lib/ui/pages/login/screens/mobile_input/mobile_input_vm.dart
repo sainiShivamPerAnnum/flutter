@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -69,8 +69,7 @@ class LoginMobileViewModel extends BaseViewModel {
     Pattern pattern = "^[0-9]*\$";
     RegExp regex = new RegExp(pattern as String);
     if (!regex.hasMatch(_mobileController.text) ||
-        _mobileController.text.length != 10)
-      return locale.validMobileNumber;
+        _mobileController.text.length != 10) return locale.validMobileNumber;
 
     if (!(_mobileController.text.startsWith("6") ||
         _mobileController.text.startsWith("7") ||

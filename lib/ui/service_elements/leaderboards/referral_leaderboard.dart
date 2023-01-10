@@ -4,12 +4,10 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/pages/static/web_game_prize_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
-import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -146,8 +144,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                     child: NoRecordDisplayWidget(
                                       topPadding: false,
                                       assetSvg: Assets.noReferralAsset,
-                                      text:
-                                          locale.refLeaderboardUpdate,
+                                      text: locale.refLeaderboardUpdate,
                                     ),
                                   )
                                 : Column(

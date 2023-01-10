@@ -2,9 +2,8 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/hometabs/win/share_price_screen.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
@@ -130,7 +129,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                   locale.digitalGoldText,
+                                    locale.digitalGoldText,
                                     style: TextStyles.rajdhaniSB.body2
                                         .colour(UiConstants.kTextColor3),
                                   ),

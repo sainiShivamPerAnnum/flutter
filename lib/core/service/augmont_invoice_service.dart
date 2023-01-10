@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/invoice_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/pdf_invoice_api.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/services.dart';
@@ -18,8 +18,8 @@ class AugmontInvoiceService {
 
   AugmontInvoiceService();
 
-  Future<String?> generateInvoice(
-      Map<String, dynamic> invoiceMap, Map<String, String?>? userDetails) async {
+  Future<String?> generateInvoice(Map<String, dynamic> invoiceMap,
+      Map<String, String?>? userDetails) async {
     if (invoiceMap == null || invoiceMap[GetInvoice.resTransactionId] == null) {
       return null;
     }

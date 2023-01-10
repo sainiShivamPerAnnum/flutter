@@ -1,13 +1,15 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
-import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -15,8 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/util/locator.dart';
 
 class TrendingGamesSection extends StatelessWidget {
   final PlayViewModel model;
@@ -51,7 +51,7 @@ class TrendingGamesSection extends StatelessWidget {
                   ? TrendingGamesShimmer()
                   : TrendingGames(
                       game: model.trendingGamesListData[index],
-                        key: ValueKey(Constants.ALL_GAMES),
+                      key: ValueKey(Constants.ALL_GAMES),
                     );
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -119,7 +119,7 @@ class TrendingGames extends StatelessWidget {
             SizedBox(height: SizeConfig.padding4),
             RichText(
                 text: TextSpan(
-                    text:locale.btnWin+' ',
+                    text: locale.btnWin + ' ',
                     style: TextStyles.sourceSans.body3.colour(Colors.white),
                     children: [
                   TextSpan(

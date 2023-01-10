@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
@@ -9,8 +8,9 @@ import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/service_elements/events/daily_app_bonus_modalsheet.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';

@@ -1,8 +1,8 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -88,14 +88,13 @@ class ReferralService {
   }
 
   Future<dynamic> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink..listen(((event) {
-      final Uri? deepLink = event.link;
-      if (deepLink == null) return null;
-      _logger.d('Received deep link. Process the referral');
-      return _processDynamicLink(_userService.baseUser!.uid, deepLink);
-    })
-    
-    );
+    FirebaseDynamicLinks.instance.onLink
+      ..listen(((event) {
+        final Uri? deepLink = event.link;
+        if (deepLink == null) return null;
+        _logger.d('Received deep link. Process the referral');
+        return _processDynamicLink(_userService.baseUser!.uid, deepLink);
+      }));
 
     final PendingDynamicLinkData? data =
         await FirebaseDynamicLinks.instance.getInitialLink();

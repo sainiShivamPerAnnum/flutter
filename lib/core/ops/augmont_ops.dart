@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
@@ -17,9 +16,10 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
@@ -47,7 +47,7 @@ class AugmontService extends ChangeNotifier {
       locator<AugmontTransactionService>();
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
-      S locale = locator<S>();
+  S locale = locator<S>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
@@ -99,71 +99,71 @@ class AugmontService extends ChangeNotifier {
     }
   }
 
-  Future<double?> getGoldBalance() async {
-    if (!isInit()) await _init();
-    Map<String, String?> _params = {
-      Passbook.fldAugmontUid: _baseProvider!.augmontDetail!.userId,
-    };
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(Passbook.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
+  // Future<double?> getGoldBalance() async {
+  //   if (!isInit()) await _init();
+  //   Map<String, String?> _params = {
+  //     Passbook.fldAugmontUid: _baseProvider!.augmontDetail!.userId,
+  //   };
+  //   var _request = http.Request(
+  //       'GET', Uri.parse(_constructRequest(Passbook.path, _params)));
+  //   _request.headers.addAll(headers);
+  //   http.StreamedResponse _response = await _request.send();
 
-    final resMap = await _processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
-      log.error('Query Failed');
-      return null;
-    } else {
-      log.debug(resMap[Passbook.resGoldGrams].toString());
-      resMap["flag"] = QUERY_PASSED;
+  //   final resMap = await _processResponse(_response);
+  //   if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
+  //     log.error('Query Failed');
+  //     return null;
+  //   } else {
+  //     log.debug(resMap[Passbook.resGoldGrams].toString());
+  //     resMap["flag"] = QUERY_PASSED;
 
-      String goldGrmsStr = resMap[Passbook.resGoldGrams];
-      double goldGrms = 0;
-      try {
-        goldGrms = double.parse(goldGrmsStr);
-        return goldGrms;
-      } catch (e) {
-        return 0.0;
-      }
-    }
-  }
+  //     String goldGrmsStr = resMap[Passbook.resGoldGrams];
+  //     double goldGrms = 0;
+  //     try {
+  //       goldGrms = double.parse(goldGrmsStr);
+  //       return goldGrms;
+  //     } catch (e) {
+  //       return 0.0;
+  //     }
+  //   }
+  // }
 
-  Future<List<GoldGraphPoint>?> getGoldRateChart(
-      DateTime fromTime, DateTime toTime) async {
-    if (fromTime == null || toTime == null || fromTime.isAfter(toTime))
-      return null;
-    if (!isInit()) await _init();
+  // Future<List<GoldGraphPoint>?> getGoldRateChart(
+  //     DateTime fromTime, DateTime toTime) async {
+  //   if (fromTime == null || toTime == null || fromTime.isAfter(toTime))
+  //     return null;
+  //   if (!isInit()) await _init();
 
-    var _params = {
-      GetRateChart.fldFromTime: '${fromTime.millisecondsSinceEpoch}',
-      GetRateChart.fldToTime: '${toTime.millisecondsSinceEpoch}',
-    };
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(GetRateChart.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
+  //   var _params = {
+  //     GetRateChart.fldFromTime: '${fromTime.millisecondsSinceEpoch}',
+  //     GetRateChart.fldToTime: '${toTime.millisecondsSinceEpoch}',
+  //   };
+  //   var _request = http.Request(
+  //       'GET', Uri.parse(_constructRequest(GetRateChart.path, _params)));
+  //   _request.headers.addAll(headers);
+  //   http.StreamedResponse _response = await _request.send();
 
-    final resMap = await _processResponse(_response);
-    if (resMap == null ||
-        resMap['Items'] == null ||
-        !resMap[INTERNAL_FAIL_FLAG]) {
-      log.error('Query Failed');
-      return null;
-    } else {
-      List<GoldGraphPoint> pointData = [];
-      for (var rPoint in resMap['Items']) {
-        try {
-          GoldGraphPoint point = GoldGraphPoint(
-              BaseUtil.toDouble(rPoint['rRate']),
-              DateTime.fromMillisecondsSinceEpoch(rPoint['rTimestamp']));
-          pointData.add(point);
-        } catch (e) {
-          continue;
-        }
-      }
-      return pointData;
-    }
-  }
+  //   final resMap = await _processResponse(_response);
+  //   if (resMap == null ||
+  //       resMap['Items'] == null ||
+  //       !resMap[INTERNAL_FAIL_FLAG]) {
+  //     log.error('Query Failed');
+  //     return null;
+  //   } else {
+  //     List<GoldGraphPoint> pointData = [];
+  //     for (var rPoint in resMap['Items']) {
+  //       try {
+  //         GoldGraphPoint point = GoldGraphPoint(
+  //             BaseUtil.toDouble(rPoint['rRate']),
+  //             DateTime.fromMillisecondsSinceEpoch(rPoint['rTimestamp']));
+  //         pointData.add(point);
+  //       } catch (e) {
+  //         continue;
+  //       }
+  //     }
+  //     return pointData;
+  //   }
+  // }
 
   Future<bool> initiateWithdrawal(
       AugmontRates sellRates, double quantity) async {
@@ -193,8 +193,7 @@ class AugmontService extends ChangeNotifier {
         BaseUtil.showNegativeAlert(
             _onSellCompleteResponse.errorMessage, locale.obPleaseTryAgain);
       else
-        BaseUtil.showNegativeAlert(locale.txnVerify,
-            locale.txnVerifySubTitle);
+        BaseUtil.showNegativeAlert(locale.txnVerify, locale.txnVerifySubTitle);
 
       _internalOpsService!.logFailure(
           _userService!.baseUser!.uid, FailType.WithdrawlCompleteApiFailed, {
@@ -213,8 +212,7 @@ class AugmontService extends ChangeNotifier {
       isBarrierDismissible: false,
       content: PendingDialog(
         title: locale.withDrawalProcessing,
-        subtitle:
-            locale.amountWillbeCreditedShortly,
+        subtitle: locale.amountWillbeCreditedShortly,
         duration: '',
       ),
     );
@@ -332,15 +330,15 @@ class AugmontService extends ChangeNotifier {
   }
 }
 
-class GoldGraphPoint {
-  final double rate;
-  final DateTime timestamp;
+// class GoldGraphPoint {
+//   final double rate;
+//   final DateTime timestamp;
 
-  GoldGraphPoint(this.rate, this.timestamp);
+//   GoldGraphPoint(this.rate, this.timestamp);
 
-  @override
-  String toString() {
-    return ("Rate ${this.rate} Time ${this.timestamp}");
-    // return super.toString();
-  }
-}
+//   @override
+//   String toString() {
+//     return ("Rate ${this.rate} Time ${this.timestamp}");
+//     // return super.toString();
+//   }
+// }

@@ -1,12 +1,12 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
-import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -117,7 +117,7 @@ class SaveNetWorthSection extends StatelessWidget {
                           locale.totalSavings,
                           style: TextStyles.rajdhani.body2
                               .colour(UiConstants.kTextColor),
-                              key: ValueKey(Constants.TOTAL_SAVINGS),
+                          key: ValueKey(Constants.TOTAL_SAVINGS),
                         ),
                         NetWorthValue(
                           style: TextStyles.sourceSans.title0.bold,

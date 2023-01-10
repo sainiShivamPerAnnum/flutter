@@ -5,12 +5,11 @@ import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
-import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -18,10 +17,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'dart:math' as math;
 
 class WinnerboardView extends StatelessWidget {
   final int? count;
@@ -92,7 +89,7 @@ class WinnerboardView extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                    locale.gameWinners,
+                                      locale.gameWinners,
                                       style: TextStyles.rajdhaniSB.body0.colour(
                                           UiConstants
                                               .kSecondaryLeaderBoardTextColor),
@@ -171,8 +168,7 @@ class WinnerboardView extends StatelessWidget {
                                           child: NoRecordDisplayWidget(
                                             topPadding: false,
                                             assetSvg: Assets.noWinnersAsset,
-                                            text:
-                                                locale.leaderBoardUpdate,
+                                            text: locale.leaderBoardUpdate,
                                           ),
                                         )
                                       : Column(
@@ -214,7 +210,8 @@ class WinnerboardView extends StatelessWidget {
                                                     ],
                                                   ),
                                                 ),
-                                                Text(locale.cashPrize,
+                                                Text(
+                                                  locale.cashPrize,
                                                   style: TextStyles
                                                       .sourceSans.body3
                                                       .colour(UiConstants

@@ -1,13 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:flutter/foundation.dart';
 
 parseTimeStamp(dynamic data) {
   if (data != null) {

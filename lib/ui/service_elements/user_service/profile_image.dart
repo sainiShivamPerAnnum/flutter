@@ -1,17 +1,15 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
@@ -38,8 +36,9 @@ class ProfileImageSE extends StatelessWidget {
           ],
           builder: (context, model, properties) {
             return GestureDetector(
-              onTap:
-                  reactive ? () => _baseUtil!.openProfileDetailsScreen() : () {},
+              onTap: reactive
+                  ? () => _baseUtil!.openProfileDetailsScreen()
+                  : () {},
               child: CircleAvatar(
                 key: ValueKey(Constants.PROFILE),
                 radius: radius ?? SizeConfig.avatarRadius,
@@ -50,14 +49,15 @@ class ProfileImageSE extends StatelessWidget {
                         fit: BoxFit.cover,
                       )
                     : SizedBox(),
-                backgroundImage:
-                    (model.avatarId != null && model.avatarId == 'CUSTOM' &&  model.myUserDpUrl!.isNotEmpty) 
-                        ? CachedNetworkImageProvider(
-                            model.myUserDpUrl!,
-                          )
-                        : AssetImage(
-                            Assets.profilePic,
-                          ) as ImageProvider<Object>?,
+                backgroundImage: (model.avatarId != null &&
+                        model.avatarId == 'CUSTOM' &&
+                        model.myUserDpUrl!.isNotEmpty)
+                    ? CachedNetworkImageProvider(
+                        model.myUserDpUrl!,
+                      )
+                    : AssetImage(
+                        Assets.profilePic,
+                      ) as ImageProvider<Object>?,
               ),
             );
           },

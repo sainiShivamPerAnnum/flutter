@@ -1,6 +1,5 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/assets.dart';
-
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';

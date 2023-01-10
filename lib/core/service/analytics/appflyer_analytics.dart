@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/util/base_util.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 
 class AppFlyerAnalytics extends BaseAnalyticsService {

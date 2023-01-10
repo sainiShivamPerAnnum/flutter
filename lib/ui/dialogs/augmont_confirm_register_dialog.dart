@@ -1,7 +1,7 @@
 // import 'package:felloapp/base_util.dart';
 // import 'package:felloapp/navigator/app_state.dart';
 // import 'package:felloapp/ui/dialogs/default_dialog.dart';
-// import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
+// import 'package:felloapp/ui/elements/buttons/fello_button/large_button.dart';
 // import 'package:felloapp/util/logger.dart';
 // import 'package:felloapp/util/styles/size_config.dart';
 // import 'package:felloapp/util/styles/textStyles.dart';

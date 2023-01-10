@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:developer';
-
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/core/ops/base_remote_config.dart';
 
 class AppConfig {
   String message;

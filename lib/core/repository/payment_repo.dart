@@ -6,9 +6,9 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/app_exceptions.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/base_util.dart';
 
 class PaymentRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()

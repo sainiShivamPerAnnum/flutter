@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -8,11 +6,10 @@ import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/others/games/web/reward_leaderboard/components/leaderboard_shimmer.dart';
-import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/elements/default_avatar.dart';
+import 'package:felloapp/ui/pages/games/web/reward_leaderboard/components/leaderboard_shimmer.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
-import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';

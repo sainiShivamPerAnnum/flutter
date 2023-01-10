@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
@@ -10,7 +8,6 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/process_transaction_model.dart';
-import 'package:felloapp/core/model/paytm_models/txn_result_model.dart';
 import 'package:felloapp/core/model/paytm_models/validate_vpa_response_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -22,6 +19,7 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -416,7 +414,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       if (processTransactionApiResponse
               ?.model?.data?.body?.deepLinkInfo?.deepLink ==
           null) {
-        BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
+        BaseUtil.showNegativeAlert(
+            locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
         return null;
       }
       String url = processTransactionApiResponse
@@ -440,7 +439,8 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     required InvestmentType investmentType,
   }) async {
     if (url.isEmpty) {
-      BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
+      BaseUtil.showNegativeAlert(
+          locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
       return false;
     }
 
@@ -463,7 +463,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       if (response.status == UpiTransactionStatus.failure) {
         BaseUtil.showNegativeAlert(
           locale.txnFailed,
-      locale.txnFailedSubtitle,
+          locale.txnFailedSubtitle,
         );
         return false;
       } else if (response.status == UpiTransactionStatus.submitted ||

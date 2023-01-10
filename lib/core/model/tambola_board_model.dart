@@ -1,9 +1,9 @@
 import 'dart:collection';
 import 'dart:math' as math;
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 

@@ -1,7 +1,5 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
-import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -10,9 +8,9 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:provider/provider.dart';
 
 class AnalyticsProperties {
   //Required depedencies
