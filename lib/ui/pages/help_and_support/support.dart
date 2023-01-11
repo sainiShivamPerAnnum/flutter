@@ -17,6 +17,7 @@ import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 //Flutter Imports
@@ -60,6 +61,7 @@ class _SupportPageState extends State<SupportPage> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
@@ -77,7 +79,7 @@ class _SupportPageState extends State<SupportPage> {
             children: [
               FelloAppBar(
                 leading: FelloAppBarBackButton(),
-                title: "Help & Support",
+                title: locale.helpAndSupport,
               ),
               Expanded(
                 child: Container(
@@ -94,7 +96,7 @@ class _SupportPageState extends State<SupportPage> {
                     children: [
                       FelloBriefTile(
                         leadingAsset: Assets.hsCustomerService,
-                        title: "Contact Us",
+                        title: locale.contactUsTitle,
                         onTap: () {
                           Haptic.vibrate();
 
@@ -105,7 +107,7 @@ class _SupportPageState extends State<SupportPage> {
                       ),
                       FelloBriefTile(
                         leadingAsset: Assets.hsFaqs,
-                        title: "FAQs",
+                        title: locale.faqs,
                         onTap: () {
                           Haptic.vibrate();
                           appState.currentAction = PageAction(
@@ -187,6 +189,7 @@ class TermsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -194,7 +197,7 @@ class TermsRow extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
-              'Terms of Service',
+              locale.termsOfService,
               style: TextStyle(
                   fontSize: SizeConfig.smallTextSize! * 1.2,
                   color: Colors.grey,
@@ -217,7 +220,7 @@ class TermsRow extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
-              'Privacy Policy',
+              locale.privacyPolicy,
               style: TextStyle(
                   fontSize: SizeConfig.smallTextSize! * 1.2,
                   color: Colors.grey,
@@ -239,7 +242,7 @@ class TermsRow extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
-              'Referral Policy',
+              locale.refPolicy,
               style: TextStyle(
                   fontSize: SizeConfig.smallTextSize! * 1.2,
                   color: Colors.grey,

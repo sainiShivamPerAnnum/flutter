@@ -17,6 +17,8 @@ import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -28,6 +30,7 @@ class SaveAssetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = locator<S>();
     return Scaffold(
       backgroundColor: UiConstants.kDarkBackgroundColor,
       appBar: AppBar(
@@ -73,10 +76,10 @@ class SaveAssetView extends StatelessWidget {
                               height: SizeConfig.padding24,
                             ),
                             InfoComponent3(
-                              mainTitle: "What is Digital Gold?",
+                              mainTitle: locale.digitalGoldInfoTitle,
                               subTitle:
-                                  "Digital gold is the new way of saving in gold online. For every gram of gold you buy, actual 24k gold is stored in a locker backed by Augmont Gold and IDBI trust.",
-                              secondaryTitle: "Why to invest?",
+                                  locale.digitalGoldInfoSubTitle,
+                              secondaryTitle: locale.whyToInvest,
                               boxAssets: model.boxAssetsGold,
                               boxTitlles: model.boxTitllesGold,
                               isBoxOpen: model.getQuantity(model.userFundWallet,
@@ -113,7 +116,7 @@ class SaveAssetView extends StatelessWidget {
                     color: UiConstants.kBackgroundColor,
                     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     child: AppPositiveBtn(
-                      btnText: "SAVE",
+                      btnText: locale.btnSave.toUpperCase(),
                       width: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       onPressed: () => BaseUtil().openRechargeModalSheet(
@@ -135,6 +138,7 @@ class GoldAssetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       margin:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
@@ -168,9 +172,9 @@ class GoldAssetCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Digital Gold',
+                        Text(locale.digitalGoldText,
                             style: TextStyles.rajdhaniB.title2),
-                        Text('99.9% pure | 24K Gold | 100% secure',
+                        Text(locale.digitalGoldSubTitle,
                             style: TextStyles.sourceSans.body4),
                         SizedBox(
                           height: SizeConfig.padding20,
@@ -179,7 +183,7 @@ class GoldAssetCard extends StatelessWidget {
                           style: TextStyles.rajdhaniSB.title4,
                         ),
                         Text(
-                          'You own',
+                          locale.youOwn,
                           style: TextStyles.sourceSans.body3,
                         ),
                       ],

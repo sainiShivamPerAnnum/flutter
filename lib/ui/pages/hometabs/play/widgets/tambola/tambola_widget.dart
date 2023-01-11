@@ -9,6 +9,7 @@ import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -91,6 +92,7 @@ class _BannerWidget extends StatelessWidget {
   final void Function() onTap;
   @override
   Widget build(BuildContext context) {
+    S locale = locator<S>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -109,7 +111,7 @@ class _BannerWidget extends StatelessWidget {
                 onTap: onTap,
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
-                title: 'Start Playing',
+                title: locale.btnStartPlaying,
                 width: SizeConfig.screenWidth! * 0.40,
                 height: SizeConfig.screenWidth! * 0.10,
               ),
@@ -147,6 +149,7 @@ class _TambolaTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 4,
@@ -161,7 +164,7 @@ class _TambolaTimer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Today’s draw at 6 PM ',
+               locale.tDrawTime ,
                 style: TextStyles.sourceSans.body4,
               ),
               Text(
@@ -176,7 +179,7 @@ class _TambolaTimer extends StatelessWidget {
                 onTap: onTap,
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
-                title: 'Start Playing',
+                title: locale.btnStartPlaying,
                 width: SizeConfig.screenWidth! * 0.40,
                 height: SizeConfig.screenWidth! * 0.10,
               )
@@ -197,6 +200,7 @@ class _TicketWidget extends StatelessWidget {
   final void Function() onTap;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 4,
@@ -214,7 +218,7 @@ class _TicketWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Today’s draws ',
+            locale.tDrawTime,
                 style: TextStyles.sourceSans.body4,
               ),
               SizedBox(
@@ -234,7 +238,7 @@ class _TicketWidget extends StatelessWidget {
                 onTap: onTap,
                 border: Border.all(color: Color(0xff919193)),
                 color: Color(0xff232326),
-                title: 'Start Playing',
+                title: locale.btnStartPlaying,
                 width: SizeConfig.screenWidth! * 0.40,
                 height: SizeConfig.screenWidth! * 0.10,
               )
@@ -251,6 +255,7 @@ class _BannerTitle extends StatelessWidget {
   final double? space;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -260,7 +265,7 @@ class _BannerTitle extends StatelessWidget {
           height: space ?? 4,
         ),
         Text(
-          'Win ₹1 Crore!',
+          locale.win1Crore,
           style: TextStyles.sourceSansB.body1.colour(Color(0xffFFD979)),
         ),
       ],

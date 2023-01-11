@@ -44,13 +44,14 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_share_me/flutter_share_me.dart';
+// import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 // import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -74,6 +75,7 @@ class WinViewModel extends BaseViewModel {
   final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
   final UserRepository _userRepo = locator<UserRepository>();
   int _unscratchedGTCount = 0;
+  S locale = locator<S>();
 
   Timer? _timer;
   bool _showOldView = false;
@@ -200,7 +202,6 @@ class WinViewModel extends BaseViewModel {
   init() {
     // setupAutoEventScroll();
     _pageController = PageController(initialPage: 0);
-
     fetchReferralCode();
     fetchBasicConstantValues();
     // _baseUtil.fetchUserAugmontDetail();
@@ -239,17 +240,12 @@ class WinViewModel extends BaseViewModel {
     refresh();
 
     if (url == null) {
-      BaseUtil.showNegativeAlert(
-        'Generating link failed',
-        'Please try again in some time',
-      );
+      BaseUtil.showNegativeAlert(locale.generatingLinkFailed, locale.tryLater);
     } else {
       if (Platform.isIOS) {
         Share.share(_shareMsg + url);
       } else {
-        FlutterShareMe().shareToSystem(msg: _shareMsg + url).then((flag) {
-          _logger!.d(flag);
-        });
+        Share.share(_shareMsg + url);
       }
     }
 
@@ -294,48 +290,45 @@ class WinViewModel extends BaseViewModel {
     });
   }
 
-  Future<void> shareWhatsApp() async {
-    if (await BaseUtil.showNoInternetAlert()) return;
-    _fcmListener!.addSubscription(FcmTopic.REFERRER);
-    BaseAnalytics.analytics!.logShare(
-      contentType: 'referral',
-      itemId: _userService!.baseUser!.uid!,
-      method: 'whatsapp',
-    );
-    shareWhatsappInProgress = true;
-    refresh();
+  // Future<void> shareWhatsApp() async {
+  //   if (await BaseUtil.showNoInternetAlert()) return;
+  //   _fcmListener!.addSubscription(FcmTopic.REFERRER);
+  //   BaseAnalytics.analytics!.logShare(
+  //     contentType: 'referral',
+  //     itemId: _userService!.baseUser!.uid!,
+  //     method: 'whatsapp',
+  //   );
+  //   shareWhatsappInProgress = true;
+  //   refresh();
 
-    String? url = await this.generateLink();
-    shareWhatsappInProgress = false;
-    refresh();
+  //   String? url = await this.generateLink();
+  //   shareWhatsappInProgress = false;
+  //   refresh();
 
-    if (url == null) {
-      BaseUtil.showNegativeAlert(
-        'Generating link failed',
-        'Please try again in some time',
-      );
-      return;
-    } else
-      _logger!.d(url);
-    try {
-      _analyticsService.track(eventName: AnalyticsEvents.whatsappShare);
-      FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
-        if (flag == "false") {
-          FlutterShareMe()
-              .shareToWhatsApp4Biz(msg: _shareMsg + url)
-              .then((flag) {
-            _logger!.d(flag);
-            if (flag == "false") {
-              BaseUtil.showNegativeAlert(
-                  "Whatsapp not detected", "Please use other option to share.");
-            }
-          });
-        }
-      });
-    } catch (e) {
-      _logger!.d(e.toString());
-    }
-  }
+  //   if (url == null) {
+  //     BaseUtil.showNegativeAlert(locale.generatingLinkFailed, locale.tryLater);
+  //     return;
+  //   } else
+  //     _logger!.d(url);
+  //   try {
+  //     _analyticsService.track(eventName: AnalyticsEvents.whatsappShare);
+  //     FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
+  //       if (flag == "false") {
+  //         FlutterShareMe()
+  //             .shareToWhatsApp4Biz(msg: _shareMsg + url)
+  //             .then((flag) {
+  //           _logger!.d(flag);
+  //           if (flag == "false") {
+  //             BaseUtil.showNegativeAlert(
+  //                 locale.whatsappNotDetected, locale.otherShareOption);
+  //           }
+  //         });
+  //       }
+  //     });
+  //   } catch (e) {
+  //     _logger!.d(e.toString());
+  //   }
+  // }
 
   Future<String?> generateLink() async {
     if (_refUrl != "") return _refUrl;
@@ -410,9 +403,9 @@ class WinViewModel extends BaseViewModel {
 
   String getWinningsButtonText() {
     if (_userService!.userFundWallet!.isPrizeBalanceUnclaimed())
-      return "Redeem";
+      return locale.redeem;
     else
-      return "Share";
+      return locale.share;
   }
 
   // Future<PrizeClaimChoice> getClaimChoice() async {
@@ -453,12 +446,14 @@ class WinViewModel extends BaseViewModel {
         confirmAction: () async {
           await claim(choice, _userService!.userFundWallet!.unclaimedBalance);
         },
-        title: "Confirmation",
+        title: locale.confirmation,
         description: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
-            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)} as Digital Gold?",
-        buttonText: "Yes",
-        cancelBtnText: "No",
+            ? locale.redeemAmznGiftVchr(BaseUtil.digitPrecision(
+                _userService!.userFundWallet!.unclaimedBalance, 2, false))
+            : locale.redeemDigitalGold(BaseUtil.digitPrecision(
+                _userService!.userFundWallet!.unclaimedBalance, 2, false)),
+        buttonText: locale.btnYes,
+        cancelBtnText: locale.btnNo,
         cancelAction: AppState.backButtonDispatcher!.didPopRoute,
       ),
     );
@@ -506,7 +501,7 @@ class WinViewModel extends BaseViewModel {
             'Hey, I won ₹${prizeAmount.toInt()} on Fello! \nLet\'s save and play together: $url');
     } catch (e) {
       _logger!.e(e.toString());
-      BaseUtil.showNegativeAlert("An error occured!", "Please try again");
+      BaseUtil.showNegativeAlert(locale.errorOccured, locale.tryLater);
     }
     stopShareLoading();
   }
@@ -555,8 +550,8 @@ class WinViewModel extends BaseViewModel {
     } else {
       AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showNegativeAlert(
-        'Withdrawal Failed',
-        response.errorMessage ?? "Please try again after sometime",
+        locale.withDrawalFailed,
+        response.errorMessage ?? locale.tryLater,
       );
       return false;
     }
@@ -568,12 +563,12 @@ class WinViewModel extends BaseViewModel {
         textAlign: TextAlign.center,
         text: TextSpan(
           text: subtitle == "gold"
-              ? "The gold in grams shall be credited to your wallet in the next "
-              : "You will receive the gift card on your registered email and mobile in the next ",
+              ? locale.goldCreditedInWallet
+              : locale.giftCard,
           style: TextStyles.body3.colour(Colors.white),
           children: [
             TextSpan(
-              text: "1-2 business working days",
+              text: locale.businessDays,
               style: TextStyles.body3.colour(Colors.white),
             )
           ],
@@ -607,9 +602,7 @@ class WinViewModel extends BaseViewModel {
                 _logger!.e(onError);
               });
             } else {
-              FlutterShareMe()
-                  .shareToSystem(msg: shareMessage)
-                  .catchError((onError) {
+              Share.share(shareMessage).catchError((onError) {
                 if (_userService!.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
@@ -648,8 +641,7 @@ class WinViewModel extends BaseViewModel {
 
       AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
-      BaseUtil.showNegativeAlert(
-          "Task Failed", "Unable to capture the card at the moment");
+      BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }
     return null;
   }
@@ -706,7 +698,7 @@ class WinViewModel extends BaseViewModel {
       // backButtonDispatcher.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(
-          "Task Failed", "Unable to share the picture at the moment");
+          locale.taskFailed, locale.UnableToSharePicture);
     }
   }
 

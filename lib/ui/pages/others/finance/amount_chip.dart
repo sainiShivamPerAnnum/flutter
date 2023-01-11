@@ -1,3 +1,4 @@
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -20,6 +21,7 @@ class AmountChip extends StatelessWidget {
   final int index;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       height: SizeConfig.padding44,
       child: Stack(
@@ -66,7 +68,7 @@ class AmountChip extends StatelessWidget {
                   color: UiConstants.primaryColor,
                 ),
                 child: Text(
-                  "BEST",
+                 locale.best,
                   style: TextStyles.rajdhaniSB.body5,
                 ),
               ),

@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -29,6 +30,7 @@ class _SignInOptionsState extends State<SignInOptions> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
         AppState.backButtonDispatcher!.didPopRoute();
@@ -44,7 +46,7 @@ class _SignInOptionsState extends State<SignInOptions> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Choose an email option",
+                Text(locale.obChooseEmail,
                     style: TextStyles.rajdhaniB.title5),
                 Divider(
                     height: 32, thickness: 1, color: UiConstants.kTextColor2),
@@ -62,7 +64,7 @@ class _SignInOptionsState extends State<SignInOptions> {
                         )
                       : SizedBox(),
                   title: Text(
-                    "Continue with Google",
+                    locale.obChooseGoogle,
                     style: TextStyles.sourceSans.body2,
                   ),
                   onTap: () async {
@@ -79,7 +81,7 @@ class _SignInOptionsState extends State<SignInOptions> {
                       Icons.alternate_email,
                       color: UiConstants.primaryColor,
                     ),
-                    title: Text("Use another email",
+                    title: Text(locale.obUseAnotherEmail,
                         style: TextStyles.sourceSans.body2),
                     onTap: () {
                       if (!isGoogleSigningInProgress) {

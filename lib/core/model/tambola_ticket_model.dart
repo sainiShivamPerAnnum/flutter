@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:flutter/foundation.dart';
@@ -27,8 +28,8 @@ class TambolaModel {
     int? matchCount,
     String? val,
     int? weekCode,
-    List<String> ?matches,
-    TimestampModel ?assignedTime,
+    List<String>? matches,
+    TimestampModel? assignedTime,
   }) {
     return TambolaModel(
       id: id ?? this.id,
@@ -41,10 +42,11 @@ class TambolaModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'val': val,
-      'weekCode': weekCode,
-      'assignedTime': assignedTime!.toMap(),
+      'tid': id,
+      'tval': val,
+      'week_code': weekCode,
+      'createdOn': assignedTime!.toMap(),
+      'board': TambolaBoard(assignedTime!, val, id, weekCode).toMap()
     };
   }
 
@@ -53,9 +55,18 @@ class TambolaModel {
       id: map['tid'] ?? 0 as String,
       val: map['tval'] ?? '',
       weekCode: map['week_code'] ?? 0,
-      assignedTime: TimestampModel.fromMap(map['createdOn']) ,
+      assignedTime: TimestampModel.fromMap(map['createdOn']),
       board: TambolaBoard.fromMap(map),
     );
+  }
+
+  factory TambolaModel.none() {
+    return TambolaModel(
+        id: '',
+        val: '',
+        weekCode: 0,
+        assignedTime: TimestampModel.none(),
+        board: TambolaBoard.none());
   }
 
   String toJson() => json.encode(toMap());

@@ -12,6 +12,7 @@ import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -44,6 +45,7 @@ class WinnerboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return PropertyChangeConsumer<WinnerService, WinnerServiceProperties>(
         properties: [WinnerServiceProperties.winLeaderboard],
         builder: (context, model, properties) {
@@ -90,7 +92,7 @@ class WinnerboardView extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Game Winners",
+                                    locale.gameWinners,
                                       style: TextStyles.rajdhaniSB.body0.colour(
                                           UiConstants
                                               .kSecondaryLeaderBoardTextColor),
@@ -127,7 +129,7 @@ class WinnerboardView extends StatelessWidget {
                                           padding: EdgeInsets.only(
                                             top: SizeConfig.padding2,
                                           ),
-                                          child: Text('See All',
+                                          child: Text(locale.btnSeeAll,
                                               style:
                                                   TextStyles.rajdhaniSB.body2),
                                         ),
@@ -170,7 +172,7 @@ class WinnerboardView extends StatelessWidget {
                                             topPadding: false,
                                             assetSvg: Assets.noWinnersAsset,
                                             text:
-                                                "Leaderboard will be updated soon",
+                                                locale.leaderBoardUpdate,
                                           ),
                                         )
                                       : Column(
@@ -201,7 +203,7 @@ class WinnerboardView extends StatelessWidget {
                                                         MainAxisAlignment
                                                             .center,
                                                     children: [
-                                                      Text("Names",
+                                                      Text(locale.names,
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
@@ -212,8 +214,7 @@ class WinnerboardView extends StatelessWidget {
                                                     ],
                                                   ),
                                                 ),
-                                                Text(
-                                                  "Cashprize",
+                                                Text(locale.cashPrize,
                                                   style: TextStyles
                                                       .sourceSans.body3
                                                       .colour(UiConstants

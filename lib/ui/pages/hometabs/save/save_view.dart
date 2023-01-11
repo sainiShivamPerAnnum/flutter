@@ -6,6 +6,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -25,6 +26,7 @@ class Save extends StatelessWidget {
       builder: (ctx, model, child) {
         log("ROOT: Save view baseview build called");
         return Scaffold(
+          key: ValueKey(Constants.SAVE_SCREEN_TAG),
           backgroundColor: Colors.transparent,
           appBar: FAppBar(
             type: FaqsType.savings,

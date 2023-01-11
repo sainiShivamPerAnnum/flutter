@@ -10,6 +10,7 @@ import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,7 @@ class BankDetailsViewModel extends BaseViewModel {
   final BaseAnalyticsService? _analyticsService = locator<AnalyticsService>();
   final BankAndPanService? _sellService = locator<BankAndPanService>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
+  S locale = locator<S>();
   final formKey = GlobalKey<FormState>();
   bool _isDetailsUpdating = false;
   bool _inEditMode = false;
@@ -62,7 +64,7 @@ class BankDetailsViewModel extends BaseViewModel {
     await _sellService!.checkForUserBankAccountDetails();
     // augmontDetails = _userService.userAugmontDetails;
     activeBankDetails = _sellService!.activeBankAccountDetails;
-    if (hasPastBankDetails()) {
+    if (activeBankDetails != null) {
       bankHolderNameController!.text = activeBankDetails!.name!;
       bankAccNoController!.text = activeBankDetails!.account!;
       bankAccNoConfirmController!.text = activeBankDetails!.account!;
@@ -80,11 +82,11 @@ class BankDetailsViewModel extends BaseViewModel {
   updateBankDetails() async {
     if (checkIfDetailsAreSame())
       return BaseUtil.showNegativeAlert(
-          "No changes detected", "Please make some changes to update details");
+          locale.noChangesDetected, locale.makeSomeChanges);
     setUpDataValues();
     if (!confirmBankAccountNumber())
       return BaseUtil.showNegativeAlert(
-          'Fields mismatch', 'Bank account numbers do not match');
+          locale.feildsMismatch, locale.bankAccDidNotMatch);
     isDetailsUpdating = true;
 
     final ApiResponse<bool> response = await _paymentRepo!.addBankDetails(
@@ -97,13 +99,14 @@ class BankDetailsViewModel extends BaseViewModel {
       _sellService!.isBankDetailsAdded = true;
       _analyticsService!.track(eventName: AnalyticsEvents.bankDetailsUpdated);
 
-      BaseUtil.showPositiveAlert('Bank details successfully updated ✅',
-          'Your bank details have been updated successfully');
+      BaseUtil.showPositiveAlert(
+          locale.bankDetailsUpdatedTitle, locale.bankDetailsUpdatedSubTitle);
       // AppState.backButtonDispatcher!.didPopRoute();
+      inEditMode = false;
       isDetailsUpdating = false;
     } else {
-      BaseUtil.showNegativeAlert(
-          response.errorMessage ?? "Update failed", "Please try again");
+      BaseUtil.showNegativeAlert(response.errorMessage ?? locale.updateFailed,
+          locale.obPleaseTryAgain);
       isDetailsUpdating = false;
     }
   }
@@ -125,6 +128,4 @@ class BankDetailsViewModel extends BaseViewModel {
     log("Bank acc no: $bankAccNo || Bank confirm acc no: $cnfBankAccNo");
     return bankAccNo == cnfBankAccNo;
   }
-
-  bool hasPastBankDetails() => activeBankDetails != null;
 }

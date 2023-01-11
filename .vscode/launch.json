@@ -10,8 +10,8 @@
             "source.organizeImports": true,
             "source.fixAll": true
         }
-    },
-    "configurations": [
+    }, 
+    "configurations": [     
         {
             "name": "felloapp-dev",
             "request": "launch",
@@ -21,7 +21,6 @@
                 "--flavor",
                 "dev",
                 "--debug",
-                "--no-sound-null-safety"
                 
             ]
         },

@@ -1,3 +1,4 @@
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ class NetworkBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return AnimatedContainer(
       duration: Duration(seconds: 2),
       height: SizeConfig.screenHeight! * 0.04,
@@ -16,7 +18,7 @@ class NetworkBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Offline',
+            locale.offline,
             style: TextStyle(
               color: textColor ?? Colors.white,
               fontWeight: FontWeight.bold,

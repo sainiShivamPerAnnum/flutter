@@ -3,6 +3,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/faq_card/faq_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -19,6 +20,7 @@ class FAQCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<FAQCardViewModel>(
         onModelReady: (model) => model.init(category),
         builder: (ctx, model, child) {
@@ -35,7 +37,7 @@ class FAQCardView extends StatelessWidget {
                 Text(
                   (catTitle != null && catTitle == true)
                       ? category.replaceAll("_", " ").toUpperCase()
-                      : "FAQs",
+                      : locale.faqs,
                   style: TextStyles.title3.semiBold.colour(Colors.white),
                 ),
                 SizedBox(height: 10),
@@ -53,7 +55,7 @@ class FAQCardView extends StatelessWidget {
                                 Lottie.asset(Assets.noData,
                                     height: SizeConfig.screenHeight! * 0.2),
                                 Text(
-                                  "No FAQs available at the moment",
+                                locale.faqEmpty,
                                   style: TextStyles.body2.colour(Colors.white),
                                 ),
                                 SizedBox(height: SizeConfig.padding16)

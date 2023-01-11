@@ -12,7 +12,6 @@ import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
-import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
@@ -20,11 +19,11 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -42,7 +41,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   final GoldenTicketService _gtService = locator<GoldenTicketService>();
   final GoldenTicketRepository _gtRepo = locator<GoldenTicketRepository>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
-
+  final S locale = locator<S>();
   //Local Variables
   List<JourneyLevel>? _levels = [];
   static bool isAvatarAnimationInProgress = false;
@@ -313,8 +312,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     if (!userIsAtJourneyScreen())
       BaseUtil.showPositiveAlert(
-          'Congratulations, you have completed a new milestone! 🎉',
-          "Go to your journey to find out what you've won",
+          locale.newMileStoneAlert1, locale.newMileStoneAlert2,
           seconds: 2);
     checkAndAnimateAvatar();
   }
@@ -721,8 +719,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       baseGlow = 1;
       Future.delayed(Duration(milliseconds: 500),
           () => isAvatarAnimationInProgress = false);
-      _gtService.showInstantGoldenTicketView(
-          title: 'Congratulations!', source: GTSOURCE.newuser, onJourney: true);
+      // _gtService.showInstantGoldenTicketView(
+      //     title: 'Congratulations!', source: GTSOURCE.newuser, onJourney: true);
     });
   }
 

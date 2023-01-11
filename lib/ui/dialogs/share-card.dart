@@ -1,5 +1,6 @@
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -44,6 +45,7 @@ class ShareCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(

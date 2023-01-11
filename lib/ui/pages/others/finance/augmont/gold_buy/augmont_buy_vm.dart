@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -11,6 +9,7 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
@@ -24,15 +23,16 @@ import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/finance/amount_chip.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:http/http.dart';
 import 'package:upi_pay/upi_pay.dart';
 
@@ -51,6 +51,7 @@ class GoldBuyViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final CouponRepository? _couponRepo = locator<CouponRepository>();
   final PaytmService? _paytmService = locator<PaytmService>();
+  S locale = locator<S>();
   AssetOptionsModel? assetOptionsModel;
   double? incomingAmount;
   List<ApplicationMeta> appMetaList = [];
@@ -64,6 +65,9 @@ class GoldBuyViewModel extends BaseViewModel {
   bool _showMinCapText = false;
   bool _isGoldRateFetching = false;
   bool _isGoldBuyInProgress = false;
+  bool _addSpecialCoupon = false;
+  bool isSpecialCoupon = true;
+
   bool _skipMl = false;
   double _fieldWidth = 0.0;
   AnimationController? animationController;
@@ -189,6 +193,13 @@ class GoldBuyViewModel extends BaseViewModel {
     this._skipMl = value;
   }
 
+  get addSpecialCoupon => this._addSpecialCoupon;
+
+  set addSpecialCoupon(value) {
+    this._addSpecialCoupon = value;
+    notifyListeners();
+  }
+
   bool readOnly = true;
 
   init(int? amount, bool isSkipMilestone, TickerProvider vsync) async {
@@ -297,12 +308,12 @@ class GoldBuyViewModel extends BaseViewModel {
 
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
-          'Loading Gold Rates', 'Please wait while the Gold rates load');
+         locale.loadingGoldRates,locale.loadingGoldRates1);
 
       return false;
     }
     if (goldBuyAmount == null) {
-      BaseUtil.showNegativeAlert('No amount entered', 'Please enter an amount');
+      BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
       return false;
     }
     if (goldBuyAmount! < 10) {
@@ -325,8 +336,8 @@ class GoldBuyViewModel extends BaseViewModel {
     if (_disabled != null && _disabled) {
       isGoldBuyInProgress = false;
       BaseUtil.showNegativeAlert(
-        'Purchase Failed',
-        'Gold buying is currently on hold. Please try again after sometime.',
+        locale.purchaseFailed,
+        locale.goldBuyHold,
       );
       trackCheckOOutEvent(
           "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
@@ -378,6 +389,7 @@ class GoldBuyViewModel extends BaseViewModel {
         _augTxnService.isGoldBuyInProgress) return;
     showMaxCapText = false;
     showMinCapText = false;
+    addSpecialCoupon = false;
     Haptic.vibrate();
     lastTappedChipIndex = index;
     // buyFieldNode.unfocus();
@@ -393,10 +405,10 @@ class GoldBuyViewModel extends BaseViewModel {
         .track(eventName: AnalyticsEvents.suggestedAmountTapped, properties: {
       'order': index,
       'Amount': assetOptionsModel?.data.userOptions[index].value,
-      'Best flag': assetOptionsModel?.data.userOptions.firstWhere(
-        (element) => element.best,
-        orElse: () => UserOption(order: 0, value: 0, best: false),
-      )
+      'Best flag': assetOptionsModel?.data.userOptions
+          .firstWhere((element) => element.best,
+              orElse: () => UserOption(order: 0, value: 0, best: false))
+          .value
     });
     notifyListeners();
   }
@@ -470,8 +482,8 @@ class GoldBuyViewModel extends BaseViewModel {
     updateGoldAmount();
     if (goldRates == null)
       BaseUtil.showNegativeAlert(
-        'Portal unavailable',
-        'The current rates couldn\'t be loaded. Please try again',
+       locale.portalUnavailable,
+        locale.currentRatesNotLoadedText1,
       );
     isGoldRateFetching = false;
   }
@@ -480,6 +492,7 @@ class GoldBuyViewModel extends BaseViewModel {
     _logger!.d("Value: $val");
     if (showMaxCapText) showMaxCapText = false;
     if (showMinCapText) showMinCapText = false;
+    addSpecialCoupon = false;
     if (val != null && val.isNotEmpty) {
       if (double.tryParse(val.trim())! > 50000.0) {
         goldBuyAmount = 50000;
@@ -586,9 +599,11 @@ class GoldBuyViewModel extends BaseViewModel {
     int order = -1;
     int? minTransaction = -1;
     int counter = 0;
+    isSpecialCoupon = true;
     for (CouponModel c in couponList!) {
       if (c.code == couponCode) {
         order = counter;
+        isSpecialCoupon = false;
         minTransaction = c.minPurchase;
         break;
       }
@@ -617,23 +632,26 @@ class GoldBuyViewModel extends BaseViewModel {
               response.model!.minAmountRequired!.toInt().toString();
           goldBuyAmount = response.model!.minAmountRequired;
           updateGoldAmount();
+          showMaxCapText = false;
+          showMinCapText = false;
           animationController?.forward();
         }
+        checkForSpecialCoupon(response.model!);
 
         appliedCoupon = response.model;
 
         BaseUtil.showPositiveAlert(
-            "Coupon Applied Successfully", response?.model?.message);
+            locale.couponAppliedSucc, response?.model?.message);
       } else {
         BaseUtil.showNegativeAlert(
-            "Coupon cannot be applied", response?.model?.message);
+            locale.couponCannotBeApplied, response?.model?.message);
       }
     } else if (response.code == 400) {
-      BaseUtil.showNegativeAlert("Coupon not applied",
-          response?.errorMessage ?? "Please try another coupon");
+      BaseUtil.showNegativeAlert(locale.couponNotApplied,
+          response?.errorMessage ?? locale.anotherCoupon);
     } else {
       BaseUtil.showNegativeAlert(
-          "Coupon not applied", "Please try another coupon");
+          locale.couponNotApplied, locale.anotherCoupon);
     }
     _analyticsService!
         .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
@@ -645,10 +663,33 @@ class GoldBuyViewModel extends BaseViewModel {
       "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
     });
   }
+
+  void checkForSpecialCoupon(EligibleCouponResponseModel model) {
+    if (couponList!.firstWhere((coupon) => coupon.code == model.code,
+            orElse: () => CouponModel.none()) ==
+        CouponModel.none()) {
+      showCoupons = false;
+      couponList!.insert(
+          0,
+          CouponModel(
+              code: model.code,
+              createdOn: TimestampModel.currentTimeStamp(),
+              description: model.message,
+              expiresOn: TimestampModel.currentTimeStamp(),
+              highlight: '',
+              maxUse: 0,
+              minPurchase: model.minAmountRequired?.toInt(),
+              priority: 0,
+              id: ''));
+      addSpecialCoupon = true;
+      showCoupons = true;
+    }
+  }
 }
 
 class PendingDialog extends StatelessWidget {
   final String title, subtitle, duration;
+  S locale = locator<S>();
 
   PendingDialog(
       {required this.title, required this.subtitle, required this.duration});
@@ -657,8 +698,8 @@ class PendingDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppNegativeDialog(
       btnAction: () {},
-      btnText: "OK",
-      title: "We're still Processing",
+      btnText: locale.btnOk.toUpperCase(),
+      title:locale.processing,
       subtitle: subtitle + duration,
     );
   }

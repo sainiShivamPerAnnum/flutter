@@ -7,6 +7,7 @@ import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/draw_time_util.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -43,28 +44,21 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
 
   @override
   Widget buildBody(BuildContext context) {
+    S locale = S.of(context);
     return GestureDetector(
       onTap: () {
-        locator<BaseUtil>().openDepositOptionsModalSheet();
-        locator<MixpanelAnalytics>().track(
-                            eventName: "Happy Hour CTA Tapped ",
-                            properties: {
-                              "Reward": {
-                                "asset": locator<HappyHourCampign>()
-                                        .data
-                                        ?.rewards
-                                        ?.first
-                                        .type ??
-                                    "",
-                                "amount": locator<HappyHourCampign>()
-                                        .data
-                                        ?.rewards
-                                        ?.first
-                                        .value ??
-                                    "",
-                                "timer": "$inHours:$inMinutes:$inSeconds"
-                              }
-                            });
+        locator<BaseUtil>().showHappyHourDialog(widget.model);
+        locator<MixpanelAnalytics>()
+            .track(eventName: "Happy Hour Strip Tapped ", properties: {
+          "Reward": {
+            "asset":
+                locator<HappyHourCampign>().data?.rewards?.first.type ?? "",
+            "amount":
+                locator<HappyHourCampign>().data?.rewards?.first.value ?? "",
+            "timer": "$inHours:$inMinutes:$inSeconds"
+          },
+          "location":"Purple Strip"
+        });
       },
       child: SizedBox(
         height: SizeConfig.screenHeight! * 0.07,
@@ -86,7 +80,7 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
               ),
               RichText(
                 text: TextSpan(
-                  text: "Happy Hour ending in ",
+                  text: locale.happyHoursEndingin,
                   style: TextStyles.sourceSans.body3.colour(Colors.white),
                   children: [
                     TextSpan(
@@ -98,7 +92,8 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
               ),
               Spacer(),
               GestureDetector(
-                onTap: () => locator<BaseUtil>().openDepositOptionsModalSheet(),
+                onTap: () =>
+                    locator<BaseUtil>().showHappyHourDialog(widget.model),
                 child: Icon(
                   Icons.keyboard_arrow_right_outlined,
                   color: Colors.white,

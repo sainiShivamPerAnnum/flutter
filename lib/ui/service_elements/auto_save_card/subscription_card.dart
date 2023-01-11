@@ -8,6 +8,7 @@ import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -90,6 +91,7 @@ class InitAutosaveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -135,7 +137,7 @@ class InitAutosaveCard extends StatelessWidget {
                           constraints: BoxConstraints(
                             maxWidth: SizeConfig.screenWidth! * 0.5,
                           ),
-                          child: Text('Setup Fello Autosave today',
+                          child: Text(locale.saveAutoSaveTitle,
                               style: TextStyles.sourceSans.bold.body1),
                         ),
                         SizedBox(
@@ -153,7 +155,7 @@ class InitAutosaveCard extends StatelessWidget {
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 ),
-                                child: Text('START',
+                                child: Text(locale.btnStart.toUpperCase(),
                                     style: TextStyles.rajdhaniSB.body3)),
                             SizedBox(
                               height: SizeConfig.padding4,

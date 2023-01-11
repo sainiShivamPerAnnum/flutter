@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_vm.
 import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -31,6 +32,7 @@ class LendboxBuyInputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     if (model.state == ViewState.Busy) return Center(child: FullScreenLoader());
 
@@ -64,9 +66,9 @@ class LendboxBuyInputView extends StatelessWidget {
               chipAmounts: model.assetOptionsModel!.data.userOptions,
               isEnabled: !model.isBuyInProgress,
               maxAmount: model.maxAmount,
-              maxAmountMsg: "Up to ₹50,000 can be invested at one go.",
+              maxAmountMsg:locale.upto50000,
               minAmount: model.minAmount,
-              minAmountMsg: "Minimum purchase amount is ₹100",
+              minAmountMsg:locale.minPurchaseText1,
               notice: model.buyNotice,
               onAmountChange: (int amount) {},
               bestChipIndex: 2,
@@ -84,7 +86,7 @@ class LendboxBuyInputView extends StatelessWidget {
               ],
               builder: (ctx, service, child) {
                 return (!service!.isKYCVerified)
-                    ? _kycWidget(model)
+                    ? _kycWidget(model,context)
                     : model.isBuyInProgress
                         ? Container(
                             height: SizeConfig.screenWidth! * 0.1556,
@@ -96,7 +98,7 @@ class LendboxBuyInputView extends StatelessWidget {
                             ),
                           )
                         : AppPositiveBtn(
-                            btnText: 'Save',
+                            btnText: locale.btnSave,
                             onPressed: () async {
                               if (!model.isBuyInProgress) {
                                 FocusScope.of(context).unfocus();
@@ -119,7 +121,8 @@ class LendboxBuyInputView extends StatelessWidget {
     );
   }
 
-  Widget _kycWidget(LendboxBuyViewModel model) {
+  Widget _kycWidget(LendboxBuyViewModel model,BuildContext context) {
+    S locale = S.of(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
       child: Column(
@@ -127,7 +130,7 @@ class LendboxBuyInputView extends StatelessWidget {
         children: [
           Flexible(
             child: Text(
-              'You need to complete your KYC before you can invest',
+        locale.kycIncomplete,
               style: TextStyles.sourceSans.body3.colour(
                 UiConstants.kTextColor,
               ),
@@ -137,7 +140,7 @@ class LendboxBuyInputView extends StatelessWidget {
             height: SizeConfig.padding8,
           ),
           AppNegativeBtn(
-            btnText: 'Complete KYC',
+            btnText: locale.completeKYCText,
             onPressed: model.navigateToKycScreen,
             width: SizeConfig.screenWidth,
           ),

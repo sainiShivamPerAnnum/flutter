@@ -2,6 +2,7 @@ import 'package:felloapp/ui/pages/others/profile/userProfile/components/user_bri
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,6 +19,7 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       margin: EdgeInsets.only(
         bottom: SizeConfig.padding40,
@@ -50,7 +52,7 @@ class ProfileHeader extends StatelessWidget {
             ),
           if (model.isNewUser)
             Text(
-              "Change your avatar",
+              locale.obChangeAvatar,
               style:
                   TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
             ),

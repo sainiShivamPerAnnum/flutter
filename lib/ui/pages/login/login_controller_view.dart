@@ -135,8 +135,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               ))
                           : Text(
                               model.currentPage == LoginNameInputView.index
-                                  ? 'FINISH'
-                                  : 'NEXT',
+                                  ? locale.obFinish
+                                  : locale.obNext,
                               style: TextStyles.rajdhaniB.body1
                                   .colour(UiConstants.primaryColor),
                             ),
@@ -155,7 +155,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                 size: SizeConfig.screenWidth! * 0.3),
                             SizedBox(height: SizeConfig.padding12),
                             Text(
-                              "Loading...",
+                              locale.obLoading,
                               style: TextStyles.rajdhani.body0
                                   .colour(UiConstants.primaryColor),
                             )
@@ -195,7 +195,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                                 width: SizeConfig.padding14,
                               ),
                               Text(
-                                'Join over 5 Lakh users who save and win with us!',
+                                locale.obJoinUsBottomTitle,
                                 style: TextStyles.sourceSans.body4,
                               )
                             ],
@@ -208,12 +208,12 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                             text: new TextSpan(
                               children: [
                                 new TextSpan(
-                                  text: 'By continuing, you agree to our ',
+                                  text: locale.obAgreeText,
                                   style: TextStyles.sourceSans.body3
                                       .colour(UiConstants.kTextColor2),
                                 ),
                                 new TextSpan(
-                                  text: 'Terms of Service',
+                                  text: locale.obTermsofService,
                                   style: TextStyles.sourceSans.body3.underline
                                       .colour(UiConstants.kTextColor),
                                   recognizer: new TapGestureRecognizer()
@@ -249,7 +249,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Logging in with",
+                                locale.obLoggingInWith,
                                 style: TextStyles.body3.bold
                                     .colour(Color(0xff1180FF)),
                               ),

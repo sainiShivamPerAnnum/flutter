@@ -4,6 +4,7 @@ import 'package:felloapp/ui/pages/others/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -19,6 +20,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Stack(
       children: [
         Column(
@@ -30,7 +32,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
             LendboxAppBar(isEnabled: !model.inProgress),
             SizedBox(height: SizeConfig.padding32),
             if (model.state == ViewState.Idle &&
-                model.withdrawableQuantity!.lockedAmount > 0)
+                (model.withdrawableQuantity?.lockedAmount ?? 0) > 0)
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
                 child: SellCardInfoStrips(
@@ -46,55 +48,81 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               readOnly: model.readOnly,
               onTap: () => model.readOnly = false,
               maxAmount: model!.withdrawableQuantity?.amount ?? 2,
-              maxAmountMsg: "You can't withdraw more than available balance",
+              maxAmountMsg: locale.txnWithDrawLimit,
               minAmount: model!.minAmount,
-              minAmountMsg: "how are you gonna withdraw less than 1?",
+              minAmountMsg: locale.txnWithDrawMin,
               notice: model!.buyNotice,
               bestChipIndex: 1,
               onAmountChange: (int amount) {},
             ),
             Spacer(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding38),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Withdrawable Balance',
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTextColor2),
-                  ),
-                  Text(
-                    '₹ ${model!.withdrawableQuantity?.amount?.toStringAsFixed(2) ?? 0}',
-                    style: TextStyles.sourceSansSB.body0.colour(
-                      UiConstants.kTextColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding32,
-            ),
-            model!.state == ViewState.Busy || model!.inProgress
+            model.withdrawableResponseMessage.isNotEmpty
                 ? Container(
-                    height: SizeConfig.screenWidth! * 0.1556,
-                    alignment: Alignment.center,
-                    width: SizeConfig.screenWidth! * 0.7,
-                    child: LinearProgressIndicator(
-                      color: UiConstants.primaryColor,
-                      backgroundColor: UiConstants.kDarkBackgroundColor,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                        vertical: SizeConfig.padding10),
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness24),
+                      border: Border.all(color: Colors.white, width: 1),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding16,
+                      vertical: SizeConfig.padding24,
+                    ),
+                    child: Text(
+                      model.withdrawableResponseMessage,
+                      style: TextStyles.body2.colour(Colors.white),
+                      textAlign: TextAlign.center,
                     ),
                   )
-                : AppPositiveBtn(
-                    btnText: 'WITHDRAW',
-                    onPressed: () async {
-                      if (!model!.inProgress) {
-                        FocusScope.of(context).unfocus();
-                        model!.initiateWithdraw();
-                      }
-                    },
-                    width: SizeConfig.screenWidth! * 0.813,
+                : Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding38),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              locale.txnWithdrawablebalance,
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                            ),
+                            Text(
+                              '₹ ${model!.withdrawableQuantity?.amount?.toStringAsFixed(2) ?? 0}',
+                              style: TextStyles.sourceSansSB.body0.colour(
+                                UiConstants.kTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding32,
+                      ),
+                      model!.state == ViewState.Busy || model!.inProgress
+                          ? Container(
+                              height: SizeConfig.screenWidth! * 0.1556,
+                              alignment: Alignment.center,
+                              width: SizeConfig.screenWidth! * 0.7,
+                              child: LinearProgressIndicator(
+                                color: UiConstants.primaryColor,
+                                backgroundColor:
+                                    UiConstants.kDarkBackgroundColor,
+                              ),
+                            )
+                          : AppPositiveBtn(
+                              btnText: locale.btnWithDraw.toUpperCase(),
+                              onPressed: () async {
+                                if (!model!.inProgress) {
+                                  FocusScope.of(context).unfocus();
+                                  model!.initiateWithdraw();
+                                }
+                              },
+                              width: SizeConfig.screenWidth! * 0.813,
+                            ),
+                    ],
                   ),
             SizedBox(
               height: SizeConfig.padding32,

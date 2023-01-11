@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -49,14 +50,6 @@ class _HelpFabState extends State<HelpFab> {
     super.initState();
   }
 
-  clearCache() {
-    PreferenceHelper.remove(
-        PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE);
-    PreferenceHelper.remove(
-        PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP);
-    BaseUtil.showNegativeAlert("Cache Cleared", "Restart to see changes");
-  }
-
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -66,6 +59,13 @@ class _HelpFabState extends State<HelpFab> {
       right: SizeConfig.padding16,
       child: InkWell(
         onTap: () {
+          if (FlavorConfig.isDevelopment()) {
+            PreferenceHelper.setInt(
+                PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
+                DateTime.now().subtract(Duration(days: 1)).day);
+            BaseUtil.showPositiveAlert("DAILY APP BONUS",
+                "Now, Claimed cached day is ${DateTime.now().subtract(Duration(days: 1)).day}");
+          }
           // clearCache();
           trackHelpTappedEvent();
           AppState.delegate!

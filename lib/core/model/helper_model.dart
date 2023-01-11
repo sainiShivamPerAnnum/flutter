@@ -4,7 +4,7 @@ class HelperModel<T> {
 
   List<T> fromMapArray(dynamic map) {
     List<T> list = [];
-
+    if (map == null) return list;
     map.forEach((e) {
       list.add(fromMap(e));
     });

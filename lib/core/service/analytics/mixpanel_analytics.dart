@@ -17,7 +17,7 @@ class MixpanelAnalytics extends BaseAnalyticsService {
     try {
       _mixpanel = await Mixpanel.init(
         FlavorConfig.instance!.values.mixpanelToken,
-        optOutTrackingDefault: false,
+        optOutTrackingDefault: false, trackAutomaticEvents: false,
       );
 
       if (isOnBoarded != null && isOnBoarded && baseUser != null) {

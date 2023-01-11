@@ -20,7 +20,9 @@ import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allPa
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -49,10 +51,11 @@ class SudoAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class WebHomeView extends StatelessWidget {
-  const WebHomeView({Key? key, required this.game}) : super(key: key);
+   WebHomeView({Key? key, required this.game}) : super(key: key);
   final String game;
 
   @override
+    S locale = locator<S>();
   Widget build(BuildContext context) {
     ScrollController _controller = ScrollController();
 
@@ -69,6 +72,7 @@ class WebHomeView extends StatelessWidget {
           backgroundColor: Colors.black,
           onRefresh: () => model.refreshLeaderboard(),
           child: Scaffold(
+            key:ValueKey(Constants.Game_WEB_VIEW_HOME),
             appBar: Platform.isIOS
                 ? AppBar(
                     backgroundColor: model.currentGameModel!.shadowColor,
@@ -304,14 +308,14 @@ class WebHomeView extends StatelessWidget {
                                     GameInfoBlock(
                                       coin:
                                           '${NumberFormat.compact().format(model.currentGameModel!.prizeAmount)}',
-                                      coinText: 'Win upto',
+                                      coinText: locale.gameWinUptoTitle,
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.rewardGameAsset,
                                     ),
                                     GameInfoBlock(
                                       coin:
                                           '${model.currentGameModel!.playCost}',
-                                      coinText: 'Per Game',
+                                      coinText: locale.perGame,
                                       assetHeight: SizeConfig.padding20,
                                       assetUrl: Assets.token,
                                     ),
@@ -378,7 +382,7 @@ class WebHomeView extends StatelessWidget {
                                   left: SizeConfig.padding16,
                                   top: SizeConfig.pageHorizontalMargins),
                               child: Text(
-                                "Past Week Winners",
+                                locale.pastWeekWinners,
                                 style: TextStyles.rajdhaniSB.title3,
                               )),
                           SizedBox(
@@ -404,7 +408,7 @@ class WebHomeView extends StatelessWidget {
                           horizontal: SizeConfig.padding24,
                           vertical: SizeConfig.padding16),
                       child: ReactivePositiveAppButton(
-                        btnText: 'Play',
+                        btnText: locale.btnPlay,
                         onPressed: () async {
                           Haptic.vibrate();
                           if (await model.setupGame()) model.launchGame();
@@ -430,9 +434,10 @@ class WebHomeView extends StatelessWidget {
 class RechargeOptions extends StatelessWidget {
   final WebHomeViewModel model;
   const RechargeOptions({Key? key, required this.model}) : super(key: key);
-
+ 
   @override
   Widget build(BuildContext context) {
+    S locale = locator<S>();
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -441,7 +446,7 @@ class RechargeOptions extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
           child: Text(
-            'Get More Tokens',
+            locale.getMoreTokens,
             style: TextStyles.sourceSansSB.title5,
           ),
         ),
@@ -552,6 +557,7 @@ class StreamView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return StreamBuilder(
       initialData: null,
       stream: model.getRealTimePlayingStream(game),
@@ -559,7 +565,7 @@ class StreamView extends StatelessWidget {
         if (!snapshot.hasData) {
           return GameInfoBlock(
             coin: "-",
-            coinText: 'Playing',
+            coinText: locale.playing,
             assetHeight: SizeConfig.padding16,
             isDot: true,
           );
@@ -592,7 +598,7 @@ class StreamView extends StatelessWidget {
             child: GameInfoBlock(
               coin:
                   "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
-              coinText: 'Playing',
+              coinText: locale.playing,
               assetHeight: SizeConfig.padding16,
               isDot: true,
               key: ValueKey<String>(requiredTimeData['value'].toString()),
@@ -601,7 +607,7 @@ class StreamView extends StatelessWidget {
         } else {
           return GameInfoBlock(
             coin: "50+",
-            coinText: 'Playing',
+            coinText: locale.playing,
             assetHeight: SizeConfig.padding16,
             isDot: true,
           );
@@ -747,6 +753,7 @@ class PastWeekWinners extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -812,7 +819,7 @@ class PastWeekWinners extends StatelessWidget {
                                   child: NoRecordDisplayWidget(
                                     topPadding: false,
                                     assetSvg: Assets.noWinnersAsset,
-                                    text: " Leaderboard will be updated soon",
+                                    text: locale.leaderboardUpdateSoon,
                                   ),
                                 )
                               : Column(
@@ -835,7 +842,7 @@ class PastWeekWinners extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Text("Names",
+                                              Text(locale.names,
                                                   style: TextStyles
                                                       .sourceSans.body3
                                                       .colour(UiConstants
@@ -846,7 +853,7 @@ class PastWeekWinners extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          "Points",
+                                          locale.points,
                                           style: TextStyles.sourceSans.body3
                                               .colour(UiConstants.kTextColor2),
                                         )
@@ -1003,7 +1010,7 @@ class PastWeekWinners extends StatelessWidget {
                                                 AllParticipantsWinnersTopReferrers(
                                               isForTopReferrers: true,
                                               showPoints: true,
-                                              appBarTitle: "Past Week Winners",
+                                              appBarTitle: locale.pastWeekWinners,
                                               referralLeaderBoard:
                                                   model.pastWeekParticipants,
                                             ),
@@ -1019,7 +1026,7 @@ class PastWeekWinners extends StatelessWidget {
                                               padding: EdgeInsets.only(
                                                 top: SizeConfig.padding2,
                                               ),
-                                              child: Text('See All',
+                                              child: Text(locale.btnSeeAll,
                                                   style: TextStyles
                                                       .sourceSans.body2),
                                             ),

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -25,10 +23,10 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -45,6 +43,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   final GameRepo? _gamesRepo = locator<GameRepo>();
   final WinnerService? _winnerService = locator<WinnerService>();
   final DBModel? _dbModel = locator<DBModel>();
+  final S locale = locator<S>();
   final TambolaService? tambolaService = locator<TambolaService>();
   final UserCoinService? _coinService = locator<UserCoinService>();
   final TambolaRepo? _tambolaRepo = locator<TambolaRepo>();
@@ -202,7 +201,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   init() async {
     setState(ViewState.Busy);
     await getGameDetails();
-    getLeaderboard();
+    // getLeaderboard();
     if (tambolaWidgetController == null) {
       tambolaWidgetController = TambolaWidgetController();
     }
@@ -268,31 +267,30 @@ class TambolaHomeViewModel extends BaseViewModel {
     return await _dbModel!.getUserDP(uid);
   }
 
-  Future<void> getLeaderboard() async {
-    isLeaderboardLoading = true;
-    notifyListeners();
+  // Future<void> getLeaderboard() async {
+  //   isLeaderboardLoading = true;
+  //   notifyListeners();
 
-    log("GM_TAMBOLA2020");
-    ApiResponse temp = await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
-      type: "GM_TAMBOLA2020",
-      freq: "weekly",
-    );
-    if (temp.isSuccess()) {
-      _logger!.d(temp.code);
-      if (temp.model != null && temp.model.isNotEmpty)
-        _tLeaderBoard = temp.model;
-      isLeaderboardLoading = false;
-      notifyListeners();
-    }
-  }
+  //   log("GM_TAMBOLA2020");
+  //   ApiResponse temp = await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
+  //     type: "GM_TAMBOLA2020",
+  //     freq: "weekly",
+  //   );
+  //   if (temp.isSuccess()) {
+  //     _logger!.d(temp.code);
+  //     if (temp.model != null && temp.model.isNotEmpty)
+  //       _tLeaderBoard = LeaderboardModel.fromMap(temp.model);
+  //     isLeaderboardLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
 
   Future<void> getPrizes() async {
     isPrizesLoading = true;
     notifyListeners();
     await _prizeService!.fetchPrizeByGameType(Constants.GAME_TYPE_TAMBOLA);
     if (tPrizes == null)
-      BaseUtil.showNegativeAlert("This week's prizes could not be fetched",
-          "Please try again in sometime");
+      BaseUtil.showNegativeAlert(locale.prizeFetchFailed, locale.tryLater);
     isPrizesLoading = false;
     notifyListeners();
   }
@@ -304,6 +302,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   // }
 
   getGameDetails() async {
+    if (game != null) return;
     final response =
         await _gamesRepo!.getGameByCode(gameCode: Constants.GAME_TYPE_TAMBOLA);
     if (response.isSuccess()) {
@@ -337,8 +336,8 @@ class TambolaHomeViewModel extends BaseViewModel {
     if (buyTicketCount < 30)
       buyTicketCount += 1;
     else
-      BaseUtil.showNegativeAlert("Maximum tickets exceeded",
-          "You can purchase upto 30 tambola tickets at once");
+      BaseUtil.showNegativeAlert(
+          locale.ticketsExceeded, locale.tktsPurchaseLimit);
     ticketCountController!.text = buyTicketCount.toString();
     updateTicketSavedAmount(buyTicketCount);
 
@@ -547,8 +546,8 @@ class TambolaHomeViewModel extends BaseViewModel {
 
     if (ticketCodeWinIndex.length > 0) {
       BaseUtil.showPositiveAlert(
-        'Congratulations 🎉',
-        'Your tickets have been submitted for processing your prizes!',
+        locale.tambolaTicketWinAlert1,
+        locale.tambolaTicketWinAlert2,
       );
     }
 

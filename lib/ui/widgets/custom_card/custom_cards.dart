@@ -114,7 +114,7 @@ class SaveCustomCard extends StatelessWidget {
                                     Row(
                                       children: [
                                         Text(
-                                          subtitle ?? "Balance",
+                                          subtitle ?? locale.balanceText,
                                           style: TextStyles.sourceSansM.body4,
                                         ),
                                         SizedBox(width: SizeConfig.padding4),
@@ -132,7 +132,7 @@ class SaveCustomCard extends StatelessWidget {
                                 ),
                                 CustomSaveButton(
                                   onTap: onTap,
-                                  title: 'SAVE',
+                                  title: locale.btnSave.toUpperCase(),
                                   width: SizeConfig.screenWidth! * 0.2,
                                   height: SizeConfig.screenWidth! * 0.11,
                                 )

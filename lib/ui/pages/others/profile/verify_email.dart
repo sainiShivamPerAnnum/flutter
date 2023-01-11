@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -35,6 +36,7 @@ class VerifyEmail extends StatefulWidget {
 }
 
 class VerifyEmailState extends State<VerifyEmail> {
+  S locale = locator<S>();
   TextEditingController email = new TextEditingController();
   TextEditingController otp = new TextEditingController();
   final UserService? _userService = locator<UserService>();
@@ -122,8 +124,8 @@ class VerifyEmailState extends State<VerifyEmail> {
         _isProcessing = false;
       });
       BaseUtil.showNegativeAlert(
-        "Email already registered",
-        "Please try with another email",
+        locale.emailAlreadyRegistered,
+          locale.anotherEmail
       );
 
       return;
@@ -143,8 +145,8 @@ class VerifyEmailState extends State<VerifyEmail> {
             _isProcessing = false;
           });
           BaseUtil.showNegativeAlert(
-            "Verification failed",
-            "Email cannot be verified at the moment, please try again in sometime.",
+        locale.verificationFailed ,
+            locale.emailVerifyFailed,
           );
         }
       });
@@ -181,11 +183,11 @@ class VerifyEmailState extends State<VerifyEmail> {
         while (AppState.screenStack.length > 1)
           AppState.backButtonDispatcher!.didPopRoute();
         BaseUtil.showPositiveAlert(
-            "Email verified", "Thank you for verifying your email");
+            locale.emailVerified, locale.emailVerified1);
       } else {
         BaseUtil.showNegativeAlert(
-          "Email verification failed",
-          "Please try again in sometime",
+          locale.verificationFailed,
+          locale.tryLater,
         );
       }
     } else {
@@ -234,26 +236,26 @@ class VerifyEmailState extends State<VerifyEmail> {
           });
           Navigator.pop(context);
           AppState.backButtonDispatcher!.didPopRoute();
-          BaseUtil.showPositiveAlert("Success", "Email Verified successfully");
+          BaseUtil.showPositiveAlert(locale.success, locale.emailVerified);
         } else {
           baseProvider.isGoogleSignInProgress = false;
           BaseUtil.showNegativeAlert(
-            "Email verification failed",
-            "Your email could not be verified at the moment",
+            locale.verificationFailed,
+           locale.emailVerifyFailed,
           );
         }
       } else {
         baseProvider.isGoogleSignInProgress = false;
         BaseUtil.showNegativeAlert(
-          "Email already registered",
-          "Please try with another email",
+          locale.emailAlreadyRegistered,
+       locale.anotherEmail
         );
       }
     } else {
       baseProvider.isGoogleSignInProgress = false;
       BaseUtil.showNegativeAlert(
-        "No account selected",
-        "Please choose an account from the list",
+        locale.noAccSelected,
+        locale.chooseAnAcc,
       );
     }
     setState(() {});
@@ -270,6 +272,7 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Scaffold(
@@ -279,7 +282,7 @@ class VerifyEmailState extends State<VerifyEmail> {
         children: [
           FAppBar(
             type: FaqsType.yourAccount,
-            title: "Verify Email",
+            title: locale.obVerifyEmail,
             showAvatar: false,
             showCoinBar: false,
             showHelpButton: false,
@@ -300,7 +303,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                       vertical: SizeConfig.pageHorizontalMargins),
                   children: [
                     Text(
-                      "Please enter the email where you would like to receive all transaction and support related updates",
+                      locale.obEmailSub,
                       style: TextStyles.sourceSans.body3,
                     ),
                     Form(
@@ -316,11 +319,11 @@ class VerifyEmailState extends State<VerifyEmail> {
                             if (val == "")
                               return null;
                             else if (val == null)
-                              return "Please enter an email";
+                              return locale.obEmailHint;
                             else if (!RegExp(
                                     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
                                 .hasMatch(val)) {
-                              return "Enter a valid email";
+                              return locale.obValidEmail;
                             }
                             return null;
                           },
@@ -332,8 +335,8 @@ class VerifyEmailState extends State<VerifyEmail> {
                           EdgeInsets.symmetric(vertical: SizeConfig.padding16),
                       child: Text(
                         (!_isOtpSent)
-                            ? "We will send you a 6 digit code on this email."
-                            : "Please check your promotions or spam folders if you can't find the email",
+                            ? locale.ob6DigitEmailCode
+                            : locale.obCheckSpamFolder,
                         style: TextStyles.sourceSans.body4
                             .colour(UiConstants.kTextColor2),
                       ),
@@ -354,7 +357,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                                   height: 8,
                                 ),
                                 Text(
-                                  "Sending OTP",
+                                  locale.obSendingOtp,
                                   style: TextStyles.rajdhani.body3
                                       .colour(UiConstants.primaryColor),
                                 )
@@ -368,7 +371,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Enter the OTP",
+                                  locale.obEnterOTP,
                                   style: TextStyles.rajdhaniSB.title2,
                                 ),
                                 Padding(
@@ -408,7 +411,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                                 Row(
                                   children: [
                                     Text(
-                                      "OTP is only valid for ",
+                                      locale.obOTPValidFor,
                                       style: TextStyles.sourceSans.body3,
                                     ),
                                     TweenAnimationBuilder<Duration>(
@@ -419,8 +422,8 @@ class VerifyEmailState extends State<VerifyEmail> {
                                         onEnd: () {
                                           print('Timer ended');
                                           BaseUtil.showNegativeAlert(
-                                            "Session Expired!",
-                                            "Please try again",
+                                            locale.obSessionExpired,
+                                            locale.obPleaseTryAgain,
                                           );
                                           AppState.backButtonDispatcher!
                                               .didPopRoute();
@@ -445,7 +448,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                                     //   ),
                                     // ),
                                     Text(
-                                      "  minutes.",
+                                     locale.obMinutes,
                                       style: TextStyles.sourceSans.body3,
                                     )
                                   ],
@@ -461,7 +464,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "OTP is incorrect,please try again",
+                                  locale.obIncorrectOTP,
                                   style: TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.w700,
@@ -493,7 +496,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                                 size: 18.0,
                               )
                             : Text(
-                                _isOtpSent ? "VERIFY" : "SEND OTP",
+                                _isOtpSent ? locale.obVerify.toUpperCase(): locale.obSendOTP.toUpperCase(),
                                 style: TextStyles.rajdhaniB.body0.bold
                                     .colour(Colors.white),
                               ),

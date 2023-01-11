@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -33,6 +34,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: UiConstants.kBackgroundColor,
@@ -57,7 +59,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
             ),
             Center(
               child: Text(
-                "How it works?",
+               locale.howItworks,
                 style: TextStyles.rajdhaniSB.title4,
               ),
             ),
@@ -70,12 +72,12 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
                 height: SizeConfig.screenWidth! * 0.0667,
                 width: SizeConfig.screenWidth! * 0.0667,
               ),
-              title: "Enter UPI ID",
+              title: locale.txnEnterUPI,
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Make sure your bank supports autopay.",
+                    locale.autopayBankSupport,
                     style: TextStyles.sourceSans.body4.colour(
                       UiConstants.kTextColor2,
                     ),
@@ -88,7 +90,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
                       );
                     },
                     child: Text(
-                      "Check here",
+                      locale.btnCheckHere,
                       style: TextStyles.sourceSans.body4.colour(
                         UiConstants.kTabBorderColor,
                       ),
@@ -103,24 +105,24 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
                 color: UiConstants.primaryColor,
                 size: SizeConfig.screenWidth! * 0.112,
               ),
-              title: "Approve Request on UPI app",
+              title: locale.txnApproveUPIReq,
               subtitle: RichText(
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "Check your ",
+                      text:locale.checkYour,
                       style: TextStyles.sourceSans.body4.colour(
                         UiConstants.kTextColor2,
                       ),
                     ),
                     TextSpan(
-                      text: "Pending UPI transactions",
+                      text: locale.txnsPendingUPI,
                       style: TextStyles.sourceSansSB.body4.colour(
                         UiConstants.kTextColor2,
                       ),
                     ),
                     TextSpan(
-                      text: " for the request.",
+                      text: locale.forTheRequest,
                       style: TextStyles.sourceSans.body4.colour(
                         UiConstants.kTextColor2,
                       ),
@@ -135,9 +137,9 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
                 height: SizeConfig.screenWidth! * 0.064,
                 width: SizeConfig.screenWidth! * 0.064,
               ),
-              title: "Set an amount you want to invest",
+              title: locale.setAutoPayAmount,
               subtitle: Text(
-                "You can change the amount anytime. ",
+                locale.amountChangeTxt,
                 style: TextStyles.sourceSans.body4.colour(
                   UiConstants.kTextColor2,
                 ),
@@ -145,7 +147,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
             ),
             Spacer(),
             AppPositiveBtn(
-              btnText: 'Get Started',
+              btnText: locale.btnGetStarted,
               onPressed: () {
                 Haptic.vibrate();
                 _analyticsService!.track(

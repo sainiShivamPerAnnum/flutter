@@ -1,4 +1,5 @@
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -16,6 +17,7 @@ class AmountChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: InkWell(
@@ -63,7 +65,7 @@ class AmountChips extends StatelessWidget {
                       horizontal: SizeConfig.padding6,
                       vertical: SizeConfig.padding4),
                   child: Text(
-                    'BEST',
+                    locale.best,
                     style: TextStyles.rajdhaniB.body4
                         .colour(Colors.white)
                         .letterSpace(SizeConfig.padding2),

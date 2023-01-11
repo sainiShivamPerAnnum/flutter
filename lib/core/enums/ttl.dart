@@ -6,4 +6,5 @@ class TTL {
   static const FIFTEEN_MIN = 15;
   static const FIVE_MIN = 5;
   static const FOUR_MIN = 4;
+  static const ONE_MIN = 1;
 }

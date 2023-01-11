@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class LoginMobileViewModel extends BaseViewModel {
   TextEditingController get mobileController => _mobileController;
   get truecallerMobileController => _mobileController;
   get referralCodeController => _referralCodeController;
+  S locale = locator<S>();
 
   // set validate(bool val) {
   //   _validate = val;
@@ -68,13 +70,13 @@ class LoginMobileViewModel extends BaseViewModel {
     RegExp regex = new RegExp(pattern as String);
     if (!regex.hasMatch(_mobileController.text) ||
         _mobileController.text.length != 10)
-      return "Enter a valid mobile number";
+      return locale.validMobileNumber;
 
     if (!(_mobileController.text.startsWith("6") ||
         _mobileController.text.startsWith("7") ||
         _mobileController.text.startsWith("8") ||
         _mobileController.text.startsWith("9")))
-      return "Enter a valid mobile number";
+      return locale.validMobileNumber;
     else
       return null;
   }

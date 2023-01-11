@@ -12,6 +12,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:io';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LendboxBuyView extends StatefulWidget {
@@ -31,6 +34,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
       locator<LendboxTransactionService>();
   AppLifecycleState? appLifecycleState;
 
+  final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
   @override
   void initState() {
     super.initState();
@@ -100,6 +104,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                     widget.skipMl,
                   ),
                   builder: (ctx, model, child) {
+                    _secureScreenshots(lboxTxnService);
                     return _getView(
                       lboxTxnService,
                       model,
@@ -112,6 +117,23 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
         );
       },
     );
+  }
+
+  _secureScreenshots(LendboxTransactionService txnService) async {
+    if (Platform.isAndroid) {
+      if (txnService.currentTransactionState == TransactionState.ongoing) {
+        await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+      } else {
+        await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+      }
+    }
+    if (Platform.isIOS) {
+      if (txnService.currentTransactionState == TransactionState.ongoing) {
+        iosScreenShotChannel.invokeMethod('secureiOS');
+      } else {
+        iosScreenShotChannel.invokeMethod("unSecureiOS");
+      }
+    }
   }
 
   Widget _getView(

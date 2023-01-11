@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart
 import 'package:felloapp/core/service/notifier_services/prize_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class RewardLeaderboardViewModel extends BaseViewModel {
 
   //Getters
   final PrizeService _prizeService = locator<PrizeService>();
+  S locale = locator<S>();
   final LeaderboardService? _lbService = locator<LeaderboardService>();
   String? get currentGame => this._currentGame;
   bool get isPrizesLoading => this._isPrizesLoading;
@@ -90,8 +92,8 @@ class RewardLeaderboardViewModel extends BaseViewModel {
     isPrizesLoading = false;
     if (prizes == null)
       BaseUtil.showNegativeAlert(
-        "Unable to fetch prizes at the moment",
-        "Please try again after sometime",
+        locale.unableToFetchPrizes,
+        locale.tryLater,
       );
   }
 

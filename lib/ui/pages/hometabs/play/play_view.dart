@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,7 @@ class Play extends StatelessWidget {
       builder: (ctx, model, child) {
         log("ROOT: Play view baseView build called");
         return Scaffold(
+          key: ValueKey(Constants.PLAY_SCREEN_TAG),
           backgroundColor: Colors.transparent,
           appBar: FAppBar(
               type: FaqsType.play,

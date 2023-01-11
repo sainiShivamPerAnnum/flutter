@@ -26,7 +26,7 @@ class NotficationsPage extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: AppBar(
           title: Text(
-            'Notifications',
+            locale.notifications,
             maxLines: 1,
             overflow: TextOverflow.clip,
             style: TextStyles.title4.bold.colour(Colors.white),
@@ -120,7 +120,7 @@ class NotficationsPage extends StatelessWidget {
                                                   child: Text(
                                                     model.notifications![index]
                                                             .title ??
-                                                        "Title",
+                                                     locale.title,
                                                     maxLines: 2,
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -157,7 +157,7 @@ class NotficationsPage extends StatelessWidget {
                                               child: Text(
                                                 model.notifications![index]
                                                         .subtitle ??
-                                                    "Subtitle",
+                                           locale.subTitle,
                                                 style: TextStyles.body4
                                                     .colour(Colors.white),
                                               ),
@@ -197,7 +197,7 @@ class NotficationsPage extends StatelessWidget {
                     ),
                     SizedBox(height: SizeConfig.padding4),
                     Text(
-                      "Looking for more alerts, please wait ...",
+                      locale.moreAlerts,
                       style: TextStyles.body4.colour(Colors.grey),
                     )
                   ],

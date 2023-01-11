@@ -4,6 +4,8 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +13,12 @@ import 'package:flutter/material.dart';
 class ScoreRejectedDialog extends StatelessWidget {
   final String? contentText;
   ScoreRejectedDialog({required this.contentText});
+  S locale = locator<S>();
   @override
   Widget build(BuildContext context) {
     return MoreInfoDialog(
-      title: "Game Over",
-      text: contentText ?? "Game Over",
+      title: locale.gameOver,
+      text: contentText ?? locale.gameOver,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -10,6 +11,7 @@ class EventInstructionsModal extends StatelessWidget {
   EventInstructionsModal({required this.instructions});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Wrap(
       children: [
         Container(
@@ -24,7 +26,7 @@ class EventInstructionsModal extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      "How to participate",
+                      locale.howToParticipate,
                       style: TextStyle(
                         color: Colors.black54,
                         fontWeight: FontWeight.w700,

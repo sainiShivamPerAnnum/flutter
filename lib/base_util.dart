@@ -44,13 +44,14 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BaseUtil extends ChangeNotifier {
@@ -62,6 +63,7 @@ class BaseUtil extends ChangeNotifier {
   final UserRepository? _userRepo = locator<UserRepository>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  S locale = locator<S>();
   static Flushbar? flushbar;
   BaseUser? _myUser;
   UserFundWallet? _userFundWallet;
@@ -319,16 +321,15 @@ class BaseUtil extends ChangeNotifier {
           isAugDepositBanned != null &&
           isAugDepositBanned) {
         return BaseUtil.showNegativeAlert(
-            augDepositBanNotice ?? "Asset not available at the moment",
-            "Please try after some time");
+            augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
       }
 
       if (investmentType == InvestmentType.LENDBOXP2P &&
           islBoxlDepositBanned != null &&
           islBoxlDepositBanned) {
         return BaseUtil.showNegativeAlert(
-          lBoxDepositBanNotice ?? "Asset not available at the moment",
-          "Please try after some time",
+          lBoxDepositBanNotice ?? locale.assetNotAvailable,
+          locale.tryLater,
         );
       }
 
@@ -366,15 +367,13 @@ class BaseUtil extends ChangeNotifier {
           isAugSellLocked != null &&
           isAugSellLocked) {
         return BaseUtil.showNegativeAlert(
-            augSellBanNotice ?? "Asset not available at the moment",
-            "Please try after some time");
+            augSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
       }
       if (investmentType == InvestmentType.LENDBOXP2P &&
           islBoxSellBanned != null &&
           islBoxSellBanned) {
         return BaseUtil.showNegativeAlert(
-            lBoxSellBanNotice ?? "Asset not available at the moment",
-            "Please try after some time");
+            lBoxSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
       }
       _analyticsService!.track(
           eventName: investmentType == InvestmentType.AUGGOLD99
@@ -572,7 +571,7 @@ class BaseUtil extends ChangeNotifier {
       launch(url);
     } else {
       BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
-          "Please try again after sometime");
+          "Please try after some time");
     }
   }
 
@@ -908,17 +907,17 @@ class CompleteProfileDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
         AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: MoreInfoDialog(
-        title: title ?? 'Complete Profile',
-        text: subtitle ??
-            'Please complete your profile to win your first reward and to start saving',
+        title: title ?? locale.obCompleteProfile,
+        text: subtitle ?? locale.obCompleteProfileSubTitle,
         imagePath: Assets.completeProfile,
-        btnText: "COMPLETE",
+        btnText: locale.btnComplete.toUpperCase(),
         onPressed: () {
           while (AppState.screenStack.length > 1)
             AppState.backButtonDispatcher!.didPopRoute();

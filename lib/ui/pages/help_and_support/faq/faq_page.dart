@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/help_and_support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +27,11 @@ class FAQPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return new Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       appBar: FAppBar(
-          title: 'FAQs',
+          title: locale.faqs,
           showAvatar: false,
           showCoinBar: false,
           showHelpButton: false,
@@ -44,7 +46,7 @@ class FAQPage extends StatelessWidget {
                 color: UiConstants.kBackgroundColor),
             child: TextButton(
               child: Text(
-                "Need more help?",
+               locale.needHelp,
                 style: TextStyles.sourceSans.body3,
               ),
               onPressed: () {

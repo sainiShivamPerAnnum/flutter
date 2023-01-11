@@ -28,6 +28,7 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/repository/user_repo.dart';
@@ -89,7 +90,7 @@ class LauncherViewModel extends BaseViewModel {
   }
 
   fetchUserBootUpDetails() async {
-    await _userService!.userBootUpEE();
+    await _userService.userBootUpEE();
   }
 
   exit() {
@@ -138,12 +139,21 @@ class LauncherViewModel extends BaseViewModel {
 
       _baseUtil.init();
 
+      // if (AppConfig.getValue<bool>(AppConfigKey.changeAppIcon)) {
+      //   if (await FlutterDynamicIcon.supportsAlternateIcons) {
+      //     final str = await FlutterDynamicIcon.getAlternateIconName();
+      //     if (str == null) {
+      //       FlutterDynamicIcon.setAlternateIconName('ch');
+      //     }
+      //   }
+      // }
+
       _fcmListener.setupFcm();
 
       if (userService.isUserOnboarded)
         userService.firebaseUser?.getIdToken().then(
               (token) =>
-                  _userRepo.updateUserAppFlyer(userService!.baseUser!, token),
+                  _userRepo.updateUserAppFlyer(userService.baseUser!, token),
             );
 
       if (userService.baseUser != null) {

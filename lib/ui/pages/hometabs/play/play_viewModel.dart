@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controll
 import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,17 @@ import 'package:felloapp/base_util.dart';
 import '../../../../util/assets.dart';
 
 class PlayViewModel extends BaseViewModel {
+  S? locale;
+  PlayViewModel({this.locale}) {
+    locale = locator<S>();
+    boxHeading = locale!.howGamesWork;
+    boxTitles.addAll([
+      locale!.boxPlayTitle1,
+      locale!.boxPlayTitle2,
+      locale!.boxPlayTitle3,
+      locale!.boxPlayTitle4,
+    ]);
+  }
   final GetterRepository? _getterRepo = locator<GetterRepository>();
   final UserService? _userService = locator<UserService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
@@ -36,7 +49,6 @@ class PlayViewModel extends BaseViewModel {
   final WinnerService _winnerService = locator<WinnerService>();
   bool _showSecurityMessageAtTop = true;
   final TambolaWidgetController _tambolaController = TambolaWidgetController();
-
   String? _message;
   String? _sessionId;
   bool _isOfferListLoading = true;
@@ -49,19 +61,14 @@ class PlayViewModel extends BaseViewModel {
   late List<GameModel> moreGamesListData;
 
   //Related to the info box/////////////////
-  String boxHeading = "How Fello games work?";
+  String boxHeading = '';
   List<String> boxAssets = [
     Assets.ludoGameAsset,
     Assets.token,
     Assets.leaderboardGameAsset,
     Assets.gift,
   ];
-  List<String> boxTitles = [
-    'Earn tokens by saving & completing milestones',
-    'Use tokens to play different games',
-    'Get listed on the game leaderboard',
-    'Win rewards every sunday midnight',
-  ];
+  List<String> boxTitles = [];
   ////////////////////////////////////////////
 
   List<GameModel>? get gamesListData => _gamesListData;

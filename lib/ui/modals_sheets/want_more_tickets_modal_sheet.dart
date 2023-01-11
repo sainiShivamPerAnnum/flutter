@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
 import 'package:felloapp/ui/service_elements/user_coin_service/coin_balance_text.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -31,6 +32,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     if (isInsufficientBalance)
       _analyticsService!.track(eventName: AnalyticsEvents.flcTokensExhasuted);
 
@@ -60,7 +62,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   vertical: SizeConfig.padding12,
                 ),
                 child: Row(children: [
-                  Text("Current Tokens:", style: TextStyles.rajdhani.body1),
+                  Text(locale.currentTokens, style: TextStyles.rajdhani.body1),
                   Spacer(),
                   SvgPicture.asset(
                     Assets.token,
@@ -91,7 +93,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                         // color: Colors.red.withOpacity(0.05),
                       ),
                       child: Text(
-                        "You ran out of Fello tokens, here are some ways to get back on the track:",
+                        locale.ranOutOfTokens,
                         style: TextStyles.body2.colour(Colors.redAccent).italic,
                         textAlign: TextAlign.start,
                       ),
@@ -99,8 +101,8 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   : SizedBox(height: SizeConfig.padding12),
               FelloTile(
                 leadingAsset: Assets.wmtsaveMoney,
-                title: "Save More Money",
-                subtitle: "Get 1 token for every Rupee saved",
+                title: locale.saveMoney,
+                subtitle: locale.get1Token,
                 trailingIcon: Icons.arrow_forward_ios_rounded,
                 onTap: () {
                   _analyticsService!.track(
@@ -113,8 +115,8 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               SizedBox(height: SizeConfig.padding16),
               FelloTile(
                 leadingAsset: Assets.wmtShare,
-                title: "Refer your friends",
-                subtitle: "Earn Golden Tickets for every referral",
+                title: locale.referFriends,
+                subtitle: locale.getGoldenTickets,
                 trailingIcon: Icons.arrow_forward_ios_rounded,
                 onTap: () {
                   _analyticsService!.track(
@@ -129,8 +131,8 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               if (AppConfig.getValue(AppConfigKey.autosaveActive) as bool)
                 FelloTile(
                   leadingAsset: Assets.repeat,
-                  title: "Set up Autosave",
-                  subtitle: "Set up Autosave & earn daily tokens ",
+                  title: locale.saveAutoSaveTitle,
+                  subtitle: locale.saveAutoSaveSubTitle,
                   trailingIcon: Icons.arrow_forward_ios_rounded,
                   onTap: () {
                     _analyticsService!.track(

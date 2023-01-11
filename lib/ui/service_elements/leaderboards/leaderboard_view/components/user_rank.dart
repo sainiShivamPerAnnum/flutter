@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -16,6 +17,7 @@ class UserRank extends StatelessWidget {
   final int currentUserRank;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
@@ -53,7 +55,7 @@ class UserRank extends StatelessWidget {
                   width: SizeConfig.padding12,
                 ),
                 Text(
-                  "YOU",
+                  locale.you,
                   style: TextStyles.rajdhaniSB.body2,
                 )
               ],
@@ -62,11 +64,11 @@ class UserRank extends StatelessWidget {
               text: TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                    text: 'Best : ',
+                    text: locale.bestPoints,
                     style: TextStyles.rajdhani.body3,
                   ),
                   TextSpan(
-                    text: "${currentUserScore.score!.toInt()} points",
+                    text: "${currentUserScore.score!.toInt()} "+ locale.points,
                     style: TextStyles.rajdhaniSB.body3,
                   ),
                 ],

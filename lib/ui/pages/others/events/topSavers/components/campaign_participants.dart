@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/widgets/helpers/height_adaptive_pageview.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,6 +19,7 @@ class CampaignParticipantsWidget extends StatelessWidget {
   CampaignParticipantsWidget({required this.model});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return SliverToBoxAdapter(
         child: model.state == ViewState.Idle
             ? Container(
@@ -30,7 +32,7 @@ class CampaignParticipantsWidget extends StatelessWidget {
                           child: TextButton(
                             onPressed: () => model.switchTab(0),
                             child: Text(
-                              'Leaderboard',
+                       locale.leaderBoard,
                               style: model.tabNo == 0
                                   ? selectedTextStyle
                                   : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
@@ -41,7 +43,7 @@ class CampaignParticipantsWidget extends StatelessWidget {
                           child: TextButton(
                             onPressed: () => model.switchTab(1),
                             child: Text(
-                              'Past Winners',
+                              locale.pastWinners,
                               style: model.tabNo == 1
                                   ? selectedTextStyle
                                   : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,

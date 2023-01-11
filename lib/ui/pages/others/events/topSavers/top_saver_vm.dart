@@ -16,6 +16,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -31,6 +32,7 @@ class TopSaverViewModel extends BaseViewModel {
   final GetterRepository? _getterRepo = locator<GetterRepository>();
   final WinnerService? _winnerService = locator<WinnerService>();
   final CampaignRepo? _campaignRepo = locator<CampaignRepo>();
+  S locale = locator<S>();
 
   // final eventService = EventService();
   //Local variables
@@ -266,7 +268,7 @@ class TopSaverViewModel extends BaseViewModel {
       });
     } else
       BaseUtil.showNegativeAlert(
-          response.errorMessage, "Please try again in sometime");
+          response.errorMessage, locale.tryLater);
     _logger!.d(event.toString());
     return event;
   }

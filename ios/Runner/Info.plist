@@ -18,6 +18,18 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>AppIcon</string>
+			</array>
+			<key>UIPrerenderedIcon</key>
+			<false/>
+		</dict>
+	</dict>
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>en_US</string>
@@ -93,8 +105,6 @@
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>itms-beta</string>
-		<string>itms</string>
 		<string>phonepe</string>
 		<string>tez</string>
 		<string>paytm</string>
@@ -108,6 +118,8 @@
 	<string>Can I use the camera please?</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Why is my app authenticating using face id?</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location helps us to verify you kYC details</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app needs access to location when in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -116,8 +128,6 @@
 	<string>Can I use the mic please?</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access to photos is requested. This is only required for choosing your profile picture and completing KYC Verification.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Your location helps us to verify you kYC details</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

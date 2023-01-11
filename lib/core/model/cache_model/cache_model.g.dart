@@ -1,102 +1,102 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'cache_model.dart';
+
 // **************************************************************************
 // IsarCollectionGenerator
 // **************************************************************************
 
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, unused_local_variable
-
-part of 'cache_model.dart';
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
 
 extension GetCacheModelCollection on Isar {
-  IsarCollection<CacheModel> get cacheModels => getCollection();
+  IsarCollection<CacheModel> get cacheModels => this.collection();
 }
 
 const CacheModelSchema = CollectionSchema(
-  name: 'CacheModel',
-  schema:
-      '{"name":"CacheModel","idName":"id","properties":[{"name":"data","type":"String"},{"name":"expireAfterTimestamp","type":"Long"},{"name":"hashCode","type":"Long"},{"name":"key","type":"String"},{"name":"ttl","type":"Long"}],"indexes":[],"links":[]}',
-  idName: 'id',
-  propertyIds: {
-    'data': 0,
-    'expireAfterTimestamp': 1,
-    'hashCode': 2,
-    'key': 3,
-    'ttl': 4
+  name: r'CacheModel',
+  id: -4435749714086930208,
+  properties: {
+    r'data': PropertySchema(
+      id: 0,
+      name: r'data',
+      type: IsarType.string,
+    ),
+    r'expireAfterTimestamp': PropertySchema(
+      id: 1,
+      name: r'expireAfterTimestamp',
+      type: IsarType.long,
+    ),
+    r'hashCode': PropertySchema(
+      id: 2,
+      name: r'hashCode',
+      type: IsarType.long,
+    ),
+    r'key': PropertySchema(
+      id: 3,
+      name: r'key',
+      type: IsarType.string,
+    ),
+    r'ttl': PropertySchema(
+      id: 4,
+      name: r'ttl',
+      type: IsarType.long,
+    )
   },
-  listProperties: {},
-  indexIds: {},
-  indexValueTypes: {},
-  linkIds: {},
-  backlinkLinkNames: {},
+  estimateSize: _cacheModelEstimateSize,
+  serialize: _cacheModelSerialize,
+  deserialize: _cacheModelDeserialize,
+  deserializeProp: _cacheModelDeserializeProp,
+  idName: r'id',
+  indexes: {},
+  links: {},
+  embeddedSchemas: {},
   getId: _cacheModelGetId,
-  setId: _cacheModelSetId,
   getLinks: _cacheModelGetLinks,
-  attachLinks: _cacheModelAttachLinks,
-  serializeNative: _cacheModelSerializeNative,
-  deserializeNative: _cacheModelDeserializeNative,
-  deserializePropNative: _cacheModelDeserializePropNative,
-  serializeWeb: _cacheModelSerializeWeb,
-  deserializeWeb: _cacheModelDeserializeWeb,
-  deserializePropWeb: _cacheModelDeserializePropWeb,
-  version: 3,
+  attach: _cacheModelAttach,
+  version: '3.0.5',
 );
 
-int? _cacheModelGetId(CacheModel object) {
-  if (object.id == Isar.autoIncrement) {
-    return null;
-  } else {
-    return object.id;
+int _cacheModelEstimateSize(
+  CacheModel object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final value = object.data;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
   }
-}
-
-void _cacheModelSetId(CacheModel object, int id) {
-  object.id = id;
-}
-
-List<IsarLinkBase> _cacheModelGetLinks(CacheModel object) {
-  return [];
-}
-
-void _cacheModelSerializeNative(
-    IsarCollection<CacheModel> collection,
-    IsarRawObject rawObj,
-    CacheModel object,
-    int staticSize,
-    List<int> offsets,
-    AdapterAlloc alloc) {
-  var dynamicSize = 0;
-  final value0 = object.data;
-  IsarUint8List? _data;
-  if (value0 != null) {
-    _data = IsarBinaryWriter.utf8Encoder.convert(value0);
+  {
+    final value = object.key;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
   }
-  dynamicSize += (_data?.length ?? 0) as int;
-  final value1 = object.expireAfterTimestamp;
-  final _expireAfterTimestamp = value1;
-  final value2 = object.hashCode;
-  final _hashCode = value2;
-  final value3 = object.key;
-  IsarUint8List? _key;
-  if (value3 != null) {
-    _key = IsarBinaryWriter.utf8Encoder.convert(value3);
-  }
-  dynamicSize += (_key?.length ?? 0) as int;
-  final value4 = object.ttl;
-  final _ttl = value4;
-  final size = staticSize + dynamicSize;
-
-  rawObj.buffer = alloc(size);
-  rawObj.buffer_length = size;
-  final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
-  final writer = IsarBinaryWriter(buffer, staticSize);
-  writer.writeBytes(offsets[0], _data);
-  writer.writeLong(offsets[1], _expireAfterTimestamp);
-  writer.writeLong(offsets[2], _hashCode);
-  writer.writeBytes(offsets[3], _key);
-  writer.writeLong(offsets[4], _ttl);
+  return bytesCount;
 }
 
-CacheModel _cacheModelDeserializeNative(IsarCollection<CacheModel> collection,
-    int id, IsarBinaryReader reader, List<int> offsets) {
+void _cacheModelSerialize(
+  CacheModel object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.data);
+  writer.writeLong(offsets[1], object.expireAfterTimestamp);
+  writer.writeLong(offsets[2], object.hashCode);
+  writer.writeString(offsets[3], object.key);
+  writer.writeLong(offsets[4], object.ttl);
+}
+
+CacheModel _cacheModelDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
   final object = CacheModel(
     data: reader.readStringOrNull(offsets[0]),
     expireAfterTimestamp: reader.readLongOrNull(offsets[1]),
@@ -107,11 +107,13 @@ CacheModel _cacheModelDeserializeNative(IsarCollection<CacheModel> collection,
   return object;
 }
 
-P _cacheModelDeserializePropNative<P>(
-    int id, IsarBinaryReader reader, int propertyIndex, int offset) {
-  switch (propertyIndex) {
-    case -1:
-      return id as P;
+P _cacheModelDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
@@ -123,249 +125,273 @@ P _cacheModelDeserializePropNative<P>(
     case 4:
       return (reader.readLongOrNull(offset)) as P;
     default:
-      throw 'Illegal propertyIndex';
+      throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-dynamic _cacheModelSerializeWeb(
-    IsarCollection<CacheModel> collection, CacheModel object) {
-  final jsObj = IsarNative.newJsObject();
-  IsarNative.jsObjectSet(jsObj, 'data', object.data);
-  IsarNative.jsObjectSet(
-      jsObj, 'expireAfterTimestamp', object.expireAfterTimestamp);
-  IsarNative.jsObjectSet(jsObj, 'hashCode', object.hashCode);
-  IsarNative.jsObjectSet(jsObj, 'id', object.id);
-  IsarNative.jsObjectSet(jsObj, 'key', object.key);
-  IsarNative.jsObjectSet(jsObj, 'ttl', object.ttl);
-  return jsObj;
+Id _cacheModelGetId(CacheModel object) {
+  return object.id;
 }
 
-CacheModel _cacheModelDeserializeWeb(
-    IsarCollection<CacheModel> collection, dynamic jsObj) {
-  final object = CacheModel(
-    data: IsarNative.jsObjectGet(jsObj, 'data'),
-    expireAfterTimestamp: IsarNative.jsObjectGet(jsObj, 'expireAfterTimestamp'),
-    key: IsarNative.jsObjectGet(jsObj, 'key'),
-    ttl: IsarNative.jsObjectGet(jsObj, 'ttl'),
-  );
-  object.id = IsarNative.jsObjectGet(jsObj, 'id');
-  return object;
+List<IsarLinkBase<dynamic>> _cacheModelGetLinks(CacheModel object) {
+  return [];
 }
 
-P _cacheModelDeserializePropWeb<P>(Object jsObj, String propertyName) {
-  switch (propertyName) {
-    case 'data':
-      return (IsarNative.jsObjectGet(jsObj, 'data')) as P;
-    case 'expireAfterTimestamp':
-      return (IsarNative.jsObjectGet(jsObj, 'expireAfterTimestamp')) as P;
-    case 'hashCode':
-      return (IsarNative.jsObjectGet(jsObj, 'hashCode') ??
-          double.negativeInfinity) as P;
-    case 'id':
-      return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
-    case 'key':
-      return (IsarNative.jsObjectGet(jsObj, 'key')) as P;
-    case 'ttl':
-      return (IsarNative.jsObjectGet(jsObj, 'ttl')) as P;
-    default:
-      throw 'Illegal propertyName';
-  }
+void _cacheModelAttach(IsarCollection<dynamic> col, Id id, CacheModel object) {
+  object.id = id;
 }
-
-void _cacheModelAttachLinks(IsarCollection col, int id, CacheModel object) {}
 
 extension CacheModelQueryWhereSort
     on QueryBuilder<CacheModel, CacheModel, QWhere> {
   QueryBuilder<CacheModel, CacheModel, QAfterWhere> anyId() {
-    return addWhereClauseInternal(const IdWhereClause.any());
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(const IdWhereClause.any());
+    });
   }
 }
 
 extension CacheModelQueryWhere
     on QueryBuilder<CacheModel, CacheModel, QWhereClause> {
-  QueryBuilder<CacheModel, CacheModel, QAfterWhereClause> idEqualTo(int id) {
-    return addWhereClauseInternal(IdWhereClause.between(
-      lower: id,
-      includeLower: true,
-      upper: id,
-      includeUpper: true,
-    ));
+  QueryBuilder<CacheModel, CacheModel, QAfterWhereClause> idEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
+    });
   }
 
-  QueryBuilder<CacheModel, CacheModel, QAfterWhereClause> idNotEqualTo(int id) {
-    if (whereSortInternal == Sort.asc) {
-      return addWhereClauseInternal(
-        IdWhereClause.lessThan(upper: id, includeUpper: false),
-      ).addWhereClauseInternal(
-        IdWhereClause.greaterThan(lower: id, includeLower: false),
-      );
-    } else {
-      return addWhereClauseInternal(
-        IdWhereClause.greaterThan(lower: id, includeLower: false),
-      ).addWhereClauseInternal(
-        IdWhereClause.lessThan(upper: id, includeUpper: false),
-      );
-    }
+  QueryBuilder<CacheModel, CacheModel, QAfterWhereClause> idNotEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            )
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            )
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            );
+      }
+    });
   }
 
-  QueryBuilder<CacheModel, CacheModel, QAfterWhereClause> idGreaterThan(int id,
+  QueryBuilder<CacheModel, CacheModel, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
-    return addWhereClauseInternal(
-      IdWhereClause.greaterThan(lower: id, includeLower: include),
-    );
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
+      );
+    });
   }
 
-  QueryBuilder<CacheModel, CacheModel, QAfterWhereClause> idLessThan(int id,
+  QueryBuilder<CacheModel, CacheModel, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
-    return addWhereClauseInternal(
-      IdWhereClause.lessThan(upper: id, includeUpper: include),
-    );
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
+      );
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterWhereClause> idBetween(
-    int lowerId,
-    int upperId, {
+    Id lowerId,
+    Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
-    return addWhereClauseInternal(IdWhereClause.between(
-      lower: lowerId,
-      includeLower: includeLower,
-      upper: upperId,
-      includeUpper: includeUpper,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
   }
 }
 
 extension CacheModelQueryFilter
     on QueryBuilder<CacheModel, CacheModel, QFilterCondition> {
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataIsNull() {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.isNull,
-      property: 'data',
-      value: null,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'data',
+      ));
+    });
+  }
+
+  QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'data',
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.eq,
-      property: 'data',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'data',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.gt,
-      include: include,
-      property: 'data',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'data',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.lt,
-      include: include,
-      property: 'data',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'data',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition.between(
-      property: 'data',
-      lower: lower,
-      includeLower: includeLower,
-      upper: upper,
-      includeUpper: includeUpper,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'data',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.startsWith,
-      property: 'data',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'data',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.endsWith,
-      property: 'data',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'data',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataContains(
       String value,
       {bool caseSensitive = true}) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.contains,
-      property: 'data',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'data',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataMatches(
       String pattern,
       {bool caseSensitive = true}) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.matches,
-      property: 'data',
-      value: pattern,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'data',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'data',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> dataIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'data',
+        value: '',
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
       expireAfterTimestampIsNull() {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.isNull,
-      property: 'expireAfterTimestamp',
-      value: null,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'expireAfterTimestamp',
+      ));
+    });
+  }
+
+  QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
+      expireAfterTimestampIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'expireAfterTimestamp',
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
       expireAfterTimestampEqualTo(int? value) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.eq,
-      property: 'expireAfterTimestamp',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'expireAfterTimestamp',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
@@ -373,12 +399,13 @@ extension CacheModelQueryFilter
     int? value, {
     bool include = false,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.gt,
-      include: include,
-      property: 'expireAfterTimestamp',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'expireAfterTimestamp',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
@@ -386,12 +413,13 @@ extension CacheModelQueryFilter
     int? value, {
     bool include = false,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.lt,
-      include: include,
-      property: 'expireAfterTimestamp',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'expireAfterTimestamp',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
@@ -401,22 +429,25 @@ extension CacheModelQueryFilter
     bool includeLower = true,
     bool includeUpper = true,
   }) {
-    return addFilterConditionInternal(FilterCondition.between(
-      property: 'expireAfterTimestamp',
-      lower: lower,
-      includeLower: includeLower,
-      upper: upper,
-      includeUpper: includeUpper,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'expireAfterTimestamp',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> hashCodeEqualTo(
       int value) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.eq,
-      property: 'hashCode',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hashCode',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition>
@@ -424,24 +455,26 @@ extension CacheModelQueryFilter
     int value, {
     bool include = false,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.gt,
-      include: include,
-      property: 'hashCode',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> hashCodeLessThan(
     int value, {
     bool include = false,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.lt,
-      include: include,
-      property: 'hashCode',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hashCode',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> hashCodeBetween(
@@ -450,221 +483,266 @@ extension CacheModelQueryFilter
     bool includeLower = true,
     bool includeUpper = true,
   }) {
-    return addFilterConditionInternal(FilterCondition.between(
-      property: 'hashCode',
-      lower: lower,
-      includeLower: includeLower,
-      upper: upper,
-      includeUpper: includeUpper,
-    ));
-  }
-
-  QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> idIsNull() {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.isNull,
-      property: 'id',
-      value: null,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> idEqualTo(
-      int? value) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.eq,
-      property: 'id',
-      value: value,
-    ));
+      Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> idGreaterThan(
-    int? value, {
+    Id value, {
     bool include = false,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.gt,
-      include: include,
-      property: 'id',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> idLessThan(
-    int? value, {
+    Id value, {
     bool include = false,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.lt,
-      include: include,
-      property: 'id',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> idBetween(
-    int? lower,
-    int? upper, {
+    Id lower,
+    Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
-    return addFilterConditionInternal(FilterCondition.between(
-      property: 'id',
-      lower: lower,
-      includeLower: includeLower,
-      upper: upper,
-      includeUpper: includeUpper,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyIsNull() {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.isNull,
-      property: 'key',
-      value: null,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'key',
+      ));
+    });
+  }
+
+  QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'key',
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.eq,
-      property: 'key',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'key',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyGreaterThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.gt,
-      include: include,
-      property: 'key',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'key',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyLessThan(
     String? value, {
-    bool caseSensitive = true,
     bool include = false,
+    bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.lt,
-      include: include,
-      property: 'key',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'key',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyBetween(
     String? lower,
     String? upper, {
-    bool caseSensitive = true,
     bool includeLower = true,
     bool includeUpper = true,
+    bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition.between(
-      property: 'key',
-      lower: lower,
-      includeLower: includeLower,
-      upper: upper,
-      includeUpper: includeUpper,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'key',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.startsWith,
-      property: 'key',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'key',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.endsWith,
-      property: 'key',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'key',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyContains(
       String value,
       {bool caseSensitive = true}) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.contains,
-      property: 'key',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'key',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyMatches(
       String pattern,
       {bool caseSensitive = true}) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.matches,
-      property: 'key',
-      value: pattern,
-      caseSensitive: caseSensitive,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'key',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'key',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> keyIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'key',
+        value: '',
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> ttlIsNull() {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.isNull,
-      property: 'ttl',
-      value: null,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'ttl',
+      ));
+    });
+  }
+
+  QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> ttlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'ttl',
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> ttlEqualTo(
       int? value) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.eq,
-      property: 'ttl',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'ttl',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> ttlGreaterThan(
     int? value, {
     bool include = false,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.gt,
-      include: include,
-      property: 'ttl',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'ttl',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> ttlLessThan(
     int? value, {
     bool include = false,
   }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.lt,
-      include: include,
-      property: 'ttl',
-      value: value,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'ttl',
+        value: value,
+      ));
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterFilterCondition> ttlBetween(
@@ -673,122 +751,163 @@ extension CacheModelQueryFilter
     bool includeLower = true,
     bool includeUpper = true,
   }) {
-    return addFilterConditionInternal(FilterCondition.between(
-      property: 'ttl',
-      lower: lower,
-      includeLower: includeLower,
-      upper: upper,
-      includeUpper: includeUpper,
-    ));
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'ttl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
   }
 }
+
+extension CacheModelQueryObject
+    on QueryBuilder<CacheModel, CacheModel, QFilterCondition> {}
 
 extension CacheModelQueryLinks
     on QueryBuilder<CacheModel, CacheModel, QFilterCondition> {}
 
-extension CacheModelQueryWhereSortBy
+extension CacheModelQuerySortBy
     on QueryBuilder<CacheModel, CacheModel, QSortBy> {
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> sortByData() {
-    return addSortByInternal('data', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'data', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> sortByDataDesc() {
-    return addSortByInternal('data', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'data', Sort.desc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy>
       sortByExpireAfterTimestamp() {
-    return addSortByInternal('expireAfterTimestamp', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'expireAfterTimestamp', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy>
       sortByExpireAfterTimestampDesc() {
-    return addSortByInternal('expireAfterTimestamp', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'expireAfterTimestamp', Sort.desc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> sortByHashCode() {
-    return addSortByInternal('hashCode', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> sortByHashCodeDesc() {
-    return addSortByInternal('hashCode', Sort.desc);
-  }
-
-  QueryBuilder<CacheModel, CacheModel, QAfterSortBy> sortById() {
-    return addSortByInternal('id', Sort.asc);
-  }
-
-  QueryBuilder<CacheModel, CacheModel, QAfterSortBy> sortByIdDesc() {
-    return addSortByInternal('id', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> sortByKey() {
-    return addSortByInternal('key', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'key', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> sortByKeyDesc() {
-    return addSortByInternal('key', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'key', Sort.desc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> sortByTtl() {
-    return addSortByInternal('ttl', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ttl', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> sortByTtlDesc() {
-    return addSortByInternal('ttl', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ttl', Sort.desc);
+    });
   }
 }
 
-extension CacheModelQueryWhereSortThenBy
+extension CacheModelQuerySortThenBy
     on QueryBuilder<CacheModel, CacheModel, QSortThenBy> {
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> thenByData() {
-    return addSortByInternal('data', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'data', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> thenByDataDesc() {
-    return addSortByInternal('data', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'data', Sort.desc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy>
       thenByExpireAfterTimestamp() {
-    return addSortByInternal('expireAfterTimestamp', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'expireAfterTimestamp', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy>
       thenByExpireAfterTimestampDesc() {
-    return addSortByInternal('expireAfterTimestamp', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'expireAfterTimestamp', Sort.desc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> thenByHashCode() {
-    return addSortByInternal('hashCode', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> thenByHashCodeDesc() {
-    return addSortByInternal('hashCode', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hashCode', Sort.desc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> thenById() {
-    return addSortByInternal('id', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> thenByIdDesc() {
-    return addSortByInternal('id', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> thenByKey() {
-    return addSortByInternal('key', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'key', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> thenByKeyDesc() {
-    return addSortByInternal('key', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'key', Sort.desc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> thenByTtl() {
-    return addSortByInternal('ttl', Sort.asc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ttl', Sort.asc);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QAfterSortBy> thenByTtlDesc() {
-    return addSortByInternal('ttl', Sort.desc);
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'ttl', Sort.desc);
+    });
   }
 }
 
@@ -796,56 +915,74 @@ extension CacheModelQueryWhereDistinct
     on QueryBuilder<CacheModel, CacheModel, QDistinct> {
   QueryBuilder<CacheModel, CacheModel, QDistinct> distinctByData(
       {bool caseSensitive = true}) {
-    return addDistinctByInternal('data', caseSensitive: caseSensitive);
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'data', caseSensitive: caseSensitive);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QDistinct>
       distinctByExpireAfterTimestamp() {
-    return addDistinctByInternal('expireAfterTimestamp');
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'expireAfterTimestamp');
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QDistinct> distinctByHashCode() {
-    return addDistinctByInternal('hashCode');
-  }
-
-  QueryBuilder<CacheModel, CacheModel, QDistinct> distinctById() {
-    return addDistinctByInternal('id');
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hashCode');
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QDistinct> distinctByKey(
       {bool caseSensitive = true}) {
-    return addDistinctByInternal('key', caseSensitive: caseSensitive);
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'key', caseSensitive: caseSensitive);
+    });
   }
 
   QueryBuilder<CacheModel, CacheModel, QDistinct> distinctByTtl() {
-    return addDistinctByInternal('ttl');
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'ttl');
+    });
   }
 }
 
 extension CacheModelQueryProperty
     on QueryBuilder<CacheModel, CacheModel, QQueryProperty> {
+  QueryBuilder<CacheModel, int, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
+    });
+  }
+
   QueryBuilder<CacheModel, String?, QQueryOperations> dataProperty() {
-    return addPropertyNameInternal('data');
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'data');
+    });
   }
 
   QueryBuilder<CacheModel, int?, QQueryOperations>
       expireAfterTimestampProperty() {
-    return addPropertyNameInternal('expireAfterTimestamp');
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'expireAfterTimestamp');
+    });
   }
 
   QueryBuilder<CacheModel, int, QQueryOperations> hashCodeProperty() {
-    return addPropertyNameInternal('hashCode');
-  }
-
-  QueryBuilder<CacheModel, int?, QQueryOperations> idProperty() {
-    return addPropertyNameInternal('id');
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hashCode');
+    });
   }
 
   QueryBuilder<CacheModel, String?, QQueryOperations> keyProperty() {
-    return addPropertyNameInternal('key');
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'key');
+    });
   }
 
   QueryBuilder<CacheModel, int?, QQueryOperations> ttlProperty() {
-    return addPropertyNameInternal('ttl');
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ttl');
+    });
   }
 }
