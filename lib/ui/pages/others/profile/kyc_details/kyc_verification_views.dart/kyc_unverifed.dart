@@ -10,7 +10,6 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -30,7 +29,8 @@ class KycUnVerifiedView extends StatelessWidget {
                 label: locale.kycPanUpload,
                 title: model.capturedImage!.name,
                 model: model,
-                subtitle: "${model.fileSize.toString()}"+ locale.mb.toUpperCase(),
+                subtitle:
+                    "${model.fileSize.toString()}" + locale.mb.toUpperCase(),
                 trailing: Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
@@ -68,6 +68,7 @@ class KycUnVerifiedView extends StatelessWidget {
                               Log(model.capturedImage!.path);
                             }
                           } catch (e) {
+                            print(e.toString());
                             model.permissionFailureCount += 1;
                             print(e.runtimeType);
                             final Permission camera_permission =
@@ -81,8 +82,7 @@ class KycUnVerifiedView extends StatelessWidget {
                                 hapticVibrate: true,
                                 content: MoreInfoDialog(
                                   title: locale.btnAlert,
-                                  text:
-                                      locale.kycGrantPermissionText,
+                                  text: locale.kycGrantPermissionText,
                                   btnText: locale.btnGrantPermission,
                                   onPressed: () async {
                                     await openAppSettings();
@@ -99,8 +99,7 @@ class KycUnVerifiedView extends StatelessWidget {
                                 hapticVibrate: true,
                                 content: MoreInfoDialog(
                                   title: locale.btnAlert,
-                                  text:
-                                      locale.kycGrantPermissionText,
+                                  text: locale.kycGrantPermissionText,
                                 ),
                               );
                             }
@@ -170,8 +169,7 @@ class KycUnVerifiedView extends StatelessWidget {
                   SizedBox(width: SizeConfig.padding16),
                   Expanded(
                     child: Text(
-                      model.kycErrorMessage ??
-                          locale.someThingWentWrongError,
+                      model.kycErrorMessage ?? locale.someThingWentWrongError,
                       maxLines: 2,
                       style: TextStyles.body3.colour(Colors.red),
                     ),

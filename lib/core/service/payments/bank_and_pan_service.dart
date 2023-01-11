@@ -61,8 +61,8 @@ class BankAndPanService
   bool get isKYCVerified => _isKYCVerified;
   bool get isBankDetailsAdded => _isBankDetailsAdded;
   bool get isSellButtonVisible => _isSellButtonVisible;
-  get sellNotice => this._sellNotice;
-  get isSellLocked => this._isSellLocked;
+  String? get sellNotice => this._sellNotice;
+  bool get isSellLocked => this._isSellLocked;
 
   set isKYCVerified(bool val) {
     _isKYCVerified = val;
@@ -171,7 +171,6 @@ class BankAndPanService
   bool getButtonAvailibility() {
     if (isKYCVerified &&
         isBankDetailsAdded &&
-        !isSellLocked &&
         userKycData != null &&
         activeBankAccountDetails != null) return true;
     return false;

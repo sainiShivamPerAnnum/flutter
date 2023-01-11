@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
 import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -92,9 +91,7 @@ class BankDetailsView extends StatelessWidget {
                               },
                             ),
                             SizedBox(height: SizeConfig.padding16),
-                            AppTextFieldLabel(
-                             locale.confirmAccNo
-                            ),
+                            AppTextFieldLabel(locale.confirmAccNo),
                             AppTextField(
                               isEnabled: model.inEditMode,
                               textEditingController:
@@ -138,7 +135,7 @@ class BankDetailsView extends StatelessWidget {
                                   return locale.validIFSC;
                                 else if (value.trim().length < 6 ||
                                     value.trim().length > 25)
-                                  return  locale.validIFSC;
+                                  return locale.validIFSC;
                                 return null;
                               },
                             ),
@@ -173,8 +170,7 @@ class BankDetailsView extends StatelessWidget {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                  locale.txnWithdrawAccountText,
+                              Text(locale.txnWithdrawAccountText,
                                   style: TextStyles.sourceSans.body3
                                       .colour(UiConstants.kTextColor2))
                             ],
@@ -191,7 +187,7 @@ class BankDetailsView extends StatelessWidget {
                           width: SizeConfig.navBarWidth,
                           child: model.inEditMode
                               ? ReactivePositiveAppButton(
-                                  btnText: model.hasPastBankDetails()
+                                  btnText: model.activeBankDetails != null
                                       ? locale.btnUpdate
                                       : locale.btnAdd,
                                   onPressed: () async {
