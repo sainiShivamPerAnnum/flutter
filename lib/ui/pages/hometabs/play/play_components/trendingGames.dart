@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/pages/static/sticky_widget.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -36,11 +37,38 @@ class TrendingGamesSection extends StatelessWidget {
           title: locale.allgames,
         ),
         SizedBox(
-          height: 12,
+          height: SizeConfig.padding12,
         ),
-        Center(child: PlayViewStickyNote()),
+        Center(
+          child: StickyNote(
+            trailingWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: SizeConfig.padding16,
+                ),
+                SvgPicture.asset(
+                  Assets.token,
+                  height: 15,
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Text("1", style: TextStyles.sourceSansB.title3),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "Gaming Token",
+                  style: TextStyles.sourceSansSB.body4,
+                )
+              ],
+            ),
+            amount: "1",
+          ),
+        ),
         SizedBox(
-          height: 12,
+          height: SizeConfig.padding12,
         ),
         Container(
           width: SizeConfig.screenWidth,
@@ -224,88 +252,6 @@ class TrendingGamesShimmer extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class PlayViewStickyNote extends StatelessWidget {
-  const PlayViewStickyNote({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenHeight! * 0.08,
-      margin: EdgeInsets.symmetric(horizontal: 24),
-      decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff627F8E)),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          tileMode: TileMode.mirror,
-          end: Alignment.centerRight,
-          stops: [0, 0.5, 0.5, 1],
-          colors: [
-            Color(
-              0xff627F8E,
-            ).withOpacity(0.2),
-            Color(
-              0xff627F8E,
-            ).withOpacity(0.2),
-            Colors.transparent,
-            Colors.transparent
-          ],
-        ),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: SizeConfig.screenWidth! * 0.41,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "₹1",
-                  style: TextStyles.sourceSansB.title3,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "invested",
-                  style: TextStyles.sourceSansSB.body3,
-                )
-              ],
-            ),
-          ),
-          Text('=', style: TextStyles.sourceSansB.title1),
-          SizedBox(
-            width: SizeConfig.screenWidth! * 0.41,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 16,
-                ),
-                SvgPicture.asset(
-                  Assets.token,
-                  height: 15,
-                ),
-                SizedBox(
-                  width: 4,
-                ),
-                Text("1", style: TextStyles.sourceSansB.title3),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Gaming Token",
-                  style: TextStyles.sourceSansSB.body4,
-                )
-              ],
-            ),
-          )
-        ],
       ),
     );
   }

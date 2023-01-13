@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/pages/static/sticky_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -107,7 +108,28 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                 SizedBox(
                   height: 16,
                 ),
-                TambolaStickyNote(),
+                StickyNote(
+                  trailingWidget: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 16,
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Text("1", style: TextStyles.sourceSansB.title3),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        "ticket every week",
+                        style: TextStyles.sourceSansSB.body4,
+                      )
+                    ],
+                  ),
+                  amount: "500",
+                ),
                 if (widget.model.userWeeklyBoards != null) ...[
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -238,90 +260,6 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class TambolaStickyNote extends StatelessWidget {
-  const TambolaStickyNote({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenHeight! * 0.08,
-      margin: EdgeInsets.symmetric(horizontal: 24),
-      decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff627F8E)),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          tileMode: TileMode.mirror,
-          end: Alignment.centerRight,
-          stops: [0, 0.5, 0.5, 1],
-          colors: [
-            Color(
-              0xff627F8E,
-            ).withOpacity(0.2),
-            Color(
-              0xff627F8E,
-            ).withOpacity(0.2),
-            Colors.transparent,
-            Colors.transparent
-          ],
-        ),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: SizeConfig.screenWidth! * 0.41,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "₹" +
-                      (AppConfig.getValue(AppConfigKey.tambola_cost)
-                              .toString()
-                              .isEmpty
-                          ? '500'
-                          : AppConfig.getValue<int>(AppConfigKey.tambola_cost)
-                              .toString()),
-                  style: TextStyles.sourceSansB.title3,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "invested",
-                  style: TextStyles.sourceSansSB.body3,
-                )
-              ],
-            ),
-          ),
-          Text('=', style: TextStyles.sourceSansB.title1),
-          SizedBox(
-            width: SizeConfig.screenWidth! * 0.41,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 16,
-                ),
-                SizedBox(
-                  width: 4,
-                ),
-                Text("1", style: TextStyles.sourceSansB.title3),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "ticket every week",
-                  style: TextStyles.sourceSansSB.body4,
-                )
-              ],
-            ),
-          )
         ],
       ),
     );
