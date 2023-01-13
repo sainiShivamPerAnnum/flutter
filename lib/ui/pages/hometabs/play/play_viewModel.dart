@@ -60,7 +60,7 @@ class PlayViewModel extends BaseViewModel {
   bool _isOfferListLoading = true;
   bool _isGamesListDataLoading = true;
 
-  GameStats? gameStats;
+  GameStats? get gameStats => _userStatsRepo.gameStats;
 
   List<PromoCardModel>? _offerList;
   List<GameModel>? _gamesListData;
@@ -117,17 +117,9 @@ class PlayViewModel extends BaseViewModel {
     _baseUtil!.openProfileDetailsScreen();
   }
 
-  setGameStats() async {
-    gameStats = await locator<UserStatsRepo>().completer.future;
-  }
-
   init() async {
     isGamesListDataLoading = true;
-    gameStats = await locator<UserStatsRepo>().completer.future;
-
-    locator<UserStatsRepo>().addListener(() async {
-      setGameStats();
-    });
+    locator<UserStatsRepo>().getGameStats();
 
     final response = await gamesRepo!.getGames();
     _winnerService.fetchWinnersForAllGames();
