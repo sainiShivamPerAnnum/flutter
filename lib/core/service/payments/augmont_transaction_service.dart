@@ -234,28 +234,14 @@ class AugmontTransactionService extends BaseTransactionService {
     }
   }
 
-  transactionResponseUpdate({String? gtId}) async {
+  transactionResponseUpdate({String? gtId, List<String>? gtIds}) async {
     _logger!.d("Polling response processing");
     try {
-      if (gtId != null) {
-        print("Hey a new fcm recived with gtId: $gtId");
-        if (ScratchCardService.lastScratchCardId != null) {
-          if (ScratchCardService.lastScratchCardId == gtId) {
-            return;
-          } else {
-            ScratchCardService.lastScratchCardId = gtId;
-          }
-        } else {
-          ScratchCardService.lastScratchCardId = gtId;
-        }
-      }
-
-      //add this to augmontBuyVM
       _userCoinService!.getUserCoinBalance();
       _userService!.getUserFundWalletData();
-      print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
         ScratchCardService.scratchCardId = gtId;
+        ScratchCardService.scratchCardsList = gtIds;
         await _gtService.fetchAndVerifyScratchCardByID();
         await _userService!.getUserJourneyStats();
         AppState.unblockNavigation();
@@ -273,6 +259,7 @@ class AugmontTransactionService extends BaseTransactionService {
   Future<void> processPolling(Timer? timer) async {
     final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
+      log("Transaction response: ${res.model.toString()}");
       TransactionResponseModel txnStatus = res.model!;
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
@@ -287,8 +274,8 @@ class AugmontTransactionService extends BaseTransactionService {
               currentTxnGms = res.model!.data!.goldInTxnBought;
             timer!.cancel();
             return transactionResponseUpdate(
-              gtId: transactionResponseModel?.data?.gtId ?? "",
-            );
+                gtId: transactionResponseModel?.data?.gtId ?? "",
+                gtIds: transactionResponseModel?.data?.gtIds ?? []);
           }
           break;
         case Constants.TXN_STATUS_RESPONSE_PENDING:

@@ -8,7 +8,7 @@ import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/service_elements/events/daily_app_bonus_modalsheet.dart';
 import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';

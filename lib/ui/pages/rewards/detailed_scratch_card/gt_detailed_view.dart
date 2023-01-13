@@ -4,7 +4,7 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/rewards/golden_scratch_card/gt_detailed_vm.dart';
+import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_utils.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';

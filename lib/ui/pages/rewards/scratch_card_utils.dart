@@ -54,7 +54,7 @@ class ScratchCardGridItemCard extends StatelessWidget {
               ticket.redeemedTimestamp ==
                   TimestampModel(seconds: 0, nanoseconds: 0)
           ? UnRedeemedGoldenScratchCard(
-              ticket: ticket,
+              isLevelChange: ticket.isLevelChange ?? false,
               width: width,
             )
           : RedeemedGoldenScratchCard(
@@ -66,9 +66,10 @@ class ScratchCardGridItemCard extends StatelessWidget {
 }
 
 class UnRedeemedGoldenScratchCard extends StatelessWidget {
-  final ScratchCard ticket;
+  final bool isLevelChange;
   final double width;
-  UnRedeemedGoldenScratchCard({required this.ticket, required this.width});
+  UnRedeemedGoldenScratchCard(
+      {required this.isLevelChange, required this.width});
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -77,7 +78,7 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
       height: width,
       width: width,
       child: SvgPicture.asset(
-        ticket.isLevelChange!
+        isLevelChange
             ? Assets.levelUpUnRedeemedScratchCardBG
             : Assets.unredemmedScratchCardBG,
         width: double.maxFinite,

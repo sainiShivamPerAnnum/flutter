@@ -19,7 +19,8 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_view.dart';
-import 'package:felloapp/ui/pages/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratch_cards_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
@@ -83,6 +84,7 @@ class ScratchCardService
   static String? scratchCardId;
   static String? gameEndMsgText;
   static ScratchCard? currentGT;
+  static List<String>? scratchCardsList;
   static String? lastScratchCardId;
   static String previousPrizeSubtype = '';
 
@@ -135,10 +137,26 @@ class ScratchCardService
     return false;
   }
 
+  Future<ScratchCard?> getScratchCardById(String? id) async {
+    if (id != null && id.isNotEmpty) {
+      ApiResponse<ScratchCard> ticketResponse =
+          await _gtRepo.getScratchCardById(
+        scratchCardId: id,
+      );
+
+      if (ticketResponse.code == 200 && isGTValid(ticketResponse.model!)) {
+        return ticketResponse.model;
+      } else {
+        return null;
+      }
+    }
+    return null;
+  }
+
   Future<bool> fetchAndVerifyScratchCardByPrizeSubtype() async {
     if (previousPrizeSubtype != null && previousPrizeSubtype.isNotEmpty) {
       ApiResponse<ScratchCard> ticketResponse =
-          await _gtRepo!.getGTByPrizeSubtype(
+          await _gtRepo.getGTByPrizeSubtype(
         previousPrizeSubtype,
       );
 
@@ -160,6 +178,11 @@ class ScratchCardService
       bool onJourney = false,
       bool showAutoSavePrompt = false}) {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
+    if (scratchCardsList != null &&
+        scratchCardsList!.isNotEmpty &&
+        scratchCardsList!.length > 1) {
+      return showMultipleScratchCardsView();
+    }
     if (currentGT != null) {
       log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${ScratchCardService.currentGT!.prizeSubtype} ");
       if (previousPrizeSubtype == ScratchCardService.currentGT!.prizeSubtype &&
@@ -180,6 +203,23 @@ class ScratchCardService
         );
       });
     }
+  }
+
+  showMultipleScratchCardsView() {
+    AppState.screenStack.add(ScreenItem.dialog);
+    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) =>
+            MultipleScratchCardsView(scratchCardIdList: //scratchCardsList ??
+                [
+          "Acd92NN53WWpJZbxZ4UW",
+          "Bv8CzzI40pfwLpbuPM6Z",
+          "M83UzvsZGzMJlEcVezsj",
+          "WrffUHSSJ95hqxO5iv73"
+        ]),
+      ),
+    );
   }
 
   Future<void> updateUnscratchedGTCount() async {

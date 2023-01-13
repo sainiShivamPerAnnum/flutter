@@ -1,6 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/rewards/scratch_cards/scratch_cards_view.dart';
+import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_cards_view.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';

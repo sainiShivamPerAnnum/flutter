@@ -1,8 +1,8 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -57,9 +57,10 @@ class _HelpFabState extends State<HelpFab> {
       child: InkWell(
         onTap: () {
           // clearCache();
-          trackHelpTappedEvent();
-          AppState.delegate!
-              .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
+          locator<ScratchCardService>().showMultipleScratchCardsView();
+          // trackHelpTappedEvent();
+          // AppState.delegate!
+          //     .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
         child: AnimatedContainer(
             duration: Duration(seconds: 1),

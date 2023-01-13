@@ -256,7 +256,7 @@ class BaseUtil extends ChangeNotifier {
     bool? isSkipMl,
     required InvestmentType investmentType,
   }) {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final bool? isAugDepositBanned = _userService
           ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
       final String? augDepositBanNotice = _userService
@@ -302,7 +302,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void openSellModalSheet({required InvestmentType investmentType}) {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final bool? isAugSellLocked = _userService?.userBootUp?.data!.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
       final String? augSellBanNotice = _userService

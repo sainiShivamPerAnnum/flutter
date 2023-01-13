@@ -6,7 +6,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
-import 'package:felloapp/ui/pages/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';

@@ -5,8 +5,8 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
-import 'package:felloapp/ui/pages/rewards/golden_scratch_card/gt_detailed_view.dart';
-import 'package:felloapp/ui/pages/rewards/golden_scratch_dialog/gt_instant_vm.dart';
+import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_view.dart';
+import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_utils.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
@@ -247,37 +247,13 @@ class _GTInstantViewState extends State<GTInstantView>
                                         italicStyle: TextStyles.sourceSans.body3
                                             .colour(UiConstants.kTextColor2)
                                             .italic,
-                                        alignment: TextAlign.center)
-                                // Text(
-                                //     model.scratchCard!.note ?? locale.wonGT,
-                                //     style: TextStyles.sourceSans.body3
-                                //         .colour(Colors.grey),
-                                //     textAlign: TextAlign.center),
-                                ),
+                                        alignment: TextAlign.center)),
                             Container(
                               margin: EdgeInsets.symmetric(
                                   vertical: SizeConfig.padding64,
                                   horizontal: SizeConfig.pageHorizontalMargins),
                               child: Column(
                                 children: [
-                                  // AnimatedOpacity(
-                                  //   duration: Duration(milliseconds: 300),
-                                  //   curve: Curves.easeInCirc,
-                                  //   opacity: model.buttonOpacity,
-                                  //   child: AppPositiveBtn(
-                                  //     width: SizeConfig.screenWidth / 2,
-                                  //     btnText:
-                                  //         getButtonText(model, widget.source) ??
-                                  //             "Continue",
-                                  //     onPressed: getButtonAction(
-                                  //             model, widget.source) ??
-                                  //         () {
-                                  //           if (!model.isCardScratched) return;
-                                  //           AppState.backButtonDispatcher
-                                  //               .didPopRoute();
-                                  //         },
-                                  //   ),
-                                  // ),
                                   SizedBox(height: 12),
                                   TextButton(
                                     onPressed: () {

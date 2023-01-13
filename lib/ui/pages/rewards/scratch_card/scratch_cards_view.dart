@@ -3,7 +3,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/hero_router.dart';
-import 'package:felloapp/ui/pages/rewards/golden_scratch_card/gt_detailed_view.dart';
+import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_utils.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';

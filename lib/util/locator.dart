@@ -79,8 +79,9 @@ import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
-import 'package:felloapp/ui/pages/rewards/golden_scratch_card/gt_detailed_vm.dart';
-import 'package:felloapp/ui/pages/rewards/golden_scratch_dialog/gt_instant_vm.dart';
+import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
+import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
+import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratch_cards_vm.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page_vm.dart';
@@ -191,7 +192,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => GoldBuyViewModel());
   locator.registerFactory(() => GoldSellViewModel());
   locator.registerFactory(() => TambolaHomeViewModel());
-  // locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => WebHomeViewModel());
   locator.registerFactory(() => RewardLeaderboardViewModel());
   locator.registerFactory(() => WebGameViewModel());
@@ -201,6 +201,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => NotificationsViewModel());
   locator.registerFactory(() => GTDetailedViewModel());
   locator.registerFactory(() => GTInstantViewModel());
+  locator.registerFactory(() => MultipleScratchCardsViewModel());
   locator.registerFactory(() => TopSaverViewModel());
   locator.registerFactory(() => AutosaveProcessViewModel());
   locator.registerFactory(() => UserAutosaveDetailsViewModel());
@@ -220,6 +221,5 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => SourceAdaptiveAssetViewModel());
   locator.registerFactory(() => SubscriptionCardViewModel());
   locator.registerFactory(() => TambolaCardModel());
-  // locator.registerFactory<UsernameInputViewModel>(() => UsernameInputViewModel());
   await locator.allReady();
 }
