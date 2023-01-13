@@ -12,6 +12,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -24,7 +25,7 @@ class FcmListener {
   final FcmHandler _handler;
   final UserService? _userService = locator<UserService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-
+  S locale = locator<S>();
   FirebaseMessaging? _fcm;
   bool isTambolaNotificationLoading = false;
 
@@ -62,7 +63,7 @@ class FcmListener {
 
       final data = PreferenceHelper.getString("fcmData");
 
-      if (AppState.startupNotifMessage == null) {
+      if (AppState.startupNotifMessage == null && data.isNotEmpty) {
         AppState.startupNotifMessage = jsonDecode(data);
         PreferenceHelper.remove("fcmData");
       }
@@ -222,7 +223,8 @@ class FcmListener {
         _internalOpsService!.logFailure(_userService!.baseUser!.uid,
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
-      BaseUtil.showNegativeAlert("Something went wrong!", "Please try again");
+      BaseUtil.showNegativeAlert(
+          locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
       return false;
     }
   }

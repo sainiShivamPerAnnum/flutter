@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -12,6 +13,7 @@ class FelloButtonLg extends StatelessWidget {
   FelloButtonLg({this.child, this.onPressed, this.color, this.height});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(SizeConfig.roundness5),
       child: FelloButton(
@@ -41,7 +43,7 @@ class FelloButtonLg extends StatelessWidget {
           ),
           alignment: Alignment.center,
           child: Text(
-            "Offline",
+           locale.offline,
             style: TextStyles.body2.bold,
           ),
         ),

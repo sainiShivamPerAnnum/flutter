@@ -3,6 +3,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -22,7 +23,7 @@ class GenerateInvoiceModalSheet extends StatefulWidget {
 
 class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
   final TextEditingController _trandIdController = TextEditingController();
-
+  S locale = locator<S>();
   final TextEditingController _uidController = TextEditingController();
   final AugmontService? _augmontModel = locator<AugmontService>();
   final DBModel? _dbModel = locator<DBModel>();
@@ -59,13 +60,13 @@ class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
             OpenFilex.open(generatedPdfFilePath);
           } else {
             BaseUtil.showNegativeAlert(
-                'Invoice could not be loaded', 'Please try again in some time');
+                locale.invoiceLoadFailed, locale.tryLater);
           }
         });
     } catch (e) {
       isLoading = false;
       BaseUtil.showNegativeAlert(
-          "Something went wrong!", "please try again BP");
+         locale.obSomeThingWentWrong, locale.tryLater);
     }
   }
 

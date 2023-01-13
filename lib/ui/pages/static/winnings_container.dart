@@ -58,7 +58,7 @@ class WinningsContainer extends StatelessWidget {
                   if (shadow)
                     BoxShadow(
                       blurRadius: 30,
-                      color: color!.withOpacity(0.5) ??
+                      color: color?.withOpacity(0.5) ??
                           UiConstants.primaryColor.withOpacity(0.5),
                       offset: Offset(
                         0,
@@ -76,7 +76,7 @@ class WinningsContainer extends StatelessWidget {
                   if (shadow)
                     BoxShadow(
                       blurRadius: 30,
-                      color: color!.withOpacity(0.5) ??
+                      color: color?.withOpacity(0.5) ??
                           UiConstants.primaryColor.withOpacity(0.5),
                       offset: Offset(
                         0,
@@ -109,7 +109,7 @@ class WinningsContainer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          locale!.saveWinningsLabel,
+                          locale.saveWinningsLabel,
                           style: TextStyles.title5.colour(Colors.white),
                         ),
                         UserWinningsSE(

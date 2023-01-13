@@ -9,6 +9,8 @@ import 'package:felloapp/ui/pages/others/rewards/golden_ticket_utils.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -108,7 +110,7 @@ class GTDetailedView extends StatelessWidget {
                   duration: Duration(seconds: 1),
                   curve: Curves.easeIn,
                   width: SizeConfig.screenWidth,
-                  child: setModalContent(model))
+                  child: setModalContent(model, context))
             ],
           ),
         );
@@ -116,14 +118,17 @@ class GTDetailedView extends StatelessWidget {
     );
   }
 
-  Widget setTicketHeader(GTDetailedViewModel model) {
+  Widget setTicketHeader(
+    GTDetailedViewModel model,
+  ) {
+    S locale = locator<S>();
     if (ticket.redeemedTimestamp != null &&
         ticket.redeemedTimestamp !=
             TimestampModel(seconds: 0, nanoseconds: 0)) {
       //redeemed ticket -> just show the details
       return Column(
         children: [
-          Text("Congratulations!",
+          Text(locale.btnCongratulations,
               style: TextStyles.rajdhaniB.title2.colour(Colors.white)),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
@@ -143,12 +148,12 @@ class GTDetailedView extends StatelessWidget {
             ticket.rewardArr!.isEmpty)
           return Column(
             children: [
-              Text("No Rewards won",
+              Text(locale.rewardsEmpty,
                   style: TextStyles.rajdhaniB.title2.colour(Colors.white)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
                 child: Text(
-                  "Keep investing, keep playing and win big!",
+                  locale.keepInvestingText,
                   style: TextStyles.sourceSans.body4
                       .colour(UiConstants.kTextColor3),
                   textAlign: TextAlign.center,
@@ -162,7 +167,7 @@ class GTDetailedView extends StatelessWidget {
           } else {
             return Column(
               children: [
-                Text("Congratulations!",
+                Text(locale.btnCongratulations,
                     style: TextStyles.rajdhaniB.title2.colour(Colors.white)),
                 Padding(
                   padding:
@@ -181,12 +186,12 @@ class GTDetailedView extends StatelessWidget {
       } else {
         return Column(
           children: [
-            Text("Hurray!",
+            Text(locale.hurray,
                 style: TextStyles.rajdhaniB.title2.colour(Colors.white)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
               child: Text(
-                "You’ve earned a golden ticket.",
+                locale.earnedGTText,
                 style: TextStyles.sourceSans.body4.colour(Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -194,7 +199,7 @@ class GTDetailedView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
               child: Text(
-                "Scratch and win exciting rewards.",
+                locale.scratchAndWin,
                 style:
                     TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
                 textAlign: TextAlign.center,
@@ -206,7 +211,8 @@ class GTDetailedView extends StatelessWidget {
     }
   }
 
-  Widget setModalContent(GTDetailedViewModel model) {
+  Widget setModalContent(GTDetailedViewModel model, BuildContext context) {
+    S locale = S.of(context);
     if (ticket.redeemedTimestamp != null &&
         ticket.redeemedTimestamp !=
             TimestampModel(seconds: 0, nanoseconds: 0)) {
@@ -218,14 +224,14 @@ class GTDetailedView extends StatelessWidget {
         ),
         padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          bulletTiles("Rewards have been credited to your wallet"),
+          bulletTiles(locale.rewardsCredited),
           (ticket.redeemedTimestamp != null &&
                   ticket.redeemedTimestamp !=
                       TimestampModel(seconds: 0, nanoseconds: 0))
-              ? bulletTiles(
-                  "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
-              : bulletTiles(
-                  "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
+              ? bulletTiles(locale.redeemedOn +
+                  "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
+              : bulletTiles(locale.receivedOn +
+                  "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
         ]),
       );
     } else {
@@ -253,7 +259,7 @@ class GTDetailedView extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.padding12),
                   Text(
-                    "Adding prize to your wallet",
+                    locale.addingPrize,
                     style: TextStyles.body2.bold.colour(Colors.white),
                   ),
                 ],
@@ -269,14 +275,14 @@ class GTDetailedView extends StatelessWidget {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    bulletTiles("Rewards have been credited to your wallet"),
+                    bulletTiles(locale.rewardsCredited),
                     (ticket.redeemedTimestamp != null &&
                             ticket.redeemedTimestamp !=
                                 TimestampModel(seconds: 0, nanoseconds: 0))
-                        ? bulletTiles(
-                            "Redeemed on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
-                        : bulletTiles(
-                            "Received on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
+                        ? bulletTiles(locale.redeemedOn +
+                            "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
+                        : bulletTiles(locale.receivedOn +
+                            "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
                   ]),
             );
           }

@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -11,11 +12,11 @@ class SellText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     final title = investmentType == InvestmentType.AUGGOLD99
-        ? 'Sell your Digital Gold \nat current market rate'
-        : 'Withdraw from Flo';
-    final subTitle =
-        "With every withdrawal, some tokens and tambola tickets will be deducted.";
+        ? locale.sellCardTitle1
+        : locale.sellCardTitle2;
+    final subTitle =locale.sellCardSubTitle1;
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,6 +49,7 @@ class SellButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return GestureDetector(
       onTap: isActive ? onTap as void Function()? : () {},
       child: Container(
@@ -63,7 +65,7 @@ class SellButton extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            'SELL',
+            locale.saveSellButton,
             style: TextStyles.rajdhaniSB.body0.colour(
               isActive ? UiConstants.kTextColor : UiConstants.kTextColor2,
             ),

@@ -10,6 +10,8 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -50,6 +52,7 @@ class GTInstantView extends StatefulWidget {
 class _GTInstantViewState extends State<GTInstantView>
     with TickerProviderStateMixin {
   late AnimationController _controller;
+  S locale = locator<S>();
 
   @override
   void initState() {
@@ -75,6 +78,7 @@ class _GTInstantViewState extends State<GTInstantView>
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<GTInstantViewModel>(
       onModelReady: (model) {
         model.lottieAnimationController = AnimationController(vsync: this);
@@ -237,7 +241,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                       SizeConfig.pageHorizontalMargins * 2),
                               child: Text(
                                   model.goldenTicket!.note ??
-                                      "You won a golden ticket",
+                                      locale.wonGT,
                                   style: TextStyles.sourceSans.body3
                                       .colour(Colors.grey),
                                   textAlign: TextAlign.center),
@@ -281,7 +285,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                               page: MyWinningsPageConfig);
                                     },
                                     child: Text(
-                                      'My Winnings',
+                                     locale.winMyWinnings,
                                       style: TextStyles.body3
                                           .colour(Colors.white)
                                           .underline,
@@ -335,12 +339,12 @@ class _GTInstantViewState extends State<GTInstantView>
 
   getGTTitle() {
     if (widget.source == GTSOURCE.deposit)
-      return "Hurray!";
+      return locale.hurray;
     else {
       if (widget.title != null && widget.title!.isNotEmpty)
         return widget.title;
       else
-        return "Hurray!";
+        return locale.hurray;
     }
   }
 
@@ -366,11 +370,11 @@ class _GTInstantViewState extends State<GTInstantView>
     String title;
     if (source == GTSOURCE.deposit || source == GTSOURCE.autosave) {
       if (widget.showAutosavePrompt != null && !model.isAutosaveAlreadySetup)
-        title = "Continue";
+        title = locale.btnContinue;
       else
-        title = "Start playing";
+        title = locale.btnStartPlaying;
     } else {
-      title = "Continue";
+      title = locale.btnContinue;
     }
     return title;
   }

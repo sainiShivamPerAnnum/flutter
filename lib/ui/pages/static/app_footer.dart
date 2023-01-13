@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -13,6 +14,7 @@ class AppFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       width: SizeConfig.screenWidth,
       alignment: Alignment.center,
@@ -41,7 +43,7 @@ class AppFooter extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Made with ',
+                    text: locale.madeWith,
                     style: TextStyles.body4.colour(UiConstants.kTextColor2),
                   ),
                   WidgetSpan(
@@ -54,7 +56,7 @@ class AppFooter extends StatelessWidget {
                     ),
                   )),
                   TextSpan(
-                    text: ' in India',
+                    text: locale.inIndia,
                     style: TextStyles.body4.colour(UiConstants.kTextColor2),
                   ),
                 ],

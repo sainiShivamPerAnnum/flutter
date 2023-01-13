@@ -1,8 +1,8 @@
 //Project Imports
 import 'dart:developer';
 
+import 'package:apxor_flutter/observer.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -90,9 +90,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   @override
   Widget build(BuildContext context) {
     return Navigator(
+      observers: [ApxNavigationObserver()],
       key: navigatorKey,
       onPopPage: _onPopPage,
       pages: buildPages(),
+      // transitionDelegate: const MyTransitionDelegate(),
     );
   }
 
@@ -868,8 +870,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         AppState.backButtonDispatcher!.didPopRoute();
         break;
       case 'autosaveDetails':
-        if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool))
-          break;
+        if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
       case 'userAutosaveDetails':

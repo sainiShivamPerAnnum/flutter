@@ -61,8 +61,8 @@ class BankAndPanService
   bool get isKYCVerified => _isKYCVerified;
   bool get isBankDetailsAdded => _isBankDetailsAdded;
   bool get isSellButtonVisible => _isSellButtonVisible;
-  get sellNotice => this._sellNotice;
-  get isSellLocked => this._isSellLocked;
+  String? get sellNotice => this._sellNotice;
+  bool get isSellLocked => this._isSellLocked;
 
   set isKYCVerified(bool val) {
     _isKYCVerified = val;
@@ -136,8 +136,10 @@ class BankAndPanService
   checkForUserBankAccountDetails() async {
     if (activeBankAccountDetails != null) return;
     final res = await _paymentRepo!.getActiveBankAccountDetails();
-    if (res.isSuccess()) activeBankAccountDetails = res.model;
-    isBankDetailsAdded = true;
+    if (res.isSuccess()) {
+      activeBankAccountDetails = res.model;
+      isBankDetailsAdded = true;
+    }
   }
 
   verifyBankDetails() async {
@@ -169,7 +171,6 @@ class BankAndPanService
   bool getButtonAvailibility() {
     if (isKYCVerified &&
         isBankDetailsAdded &&
-        !isSellLocked &&
         userKycData != null &&
         activeBankAccountDetails != null) return true;
     return false;

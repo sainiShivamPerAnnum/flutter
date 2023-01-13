@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
@@ -10,6 +9,7 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/upi_intent_view.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +19,7 @@ import 'package:upi_pay/upi_pay.dart';
 abstract class BaseTransactionService
     extends PropertyChangeNotifier<TransactionServiceProperties> {
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  S locale = locator<S>();
 
   TransactionState _currentTransactionState = TransactionState.idle;
   TransactionState get currentTransactionState => _currentTransactionState;
@@ -48,7 +49,7 @@ abstract class BaseTransactionService
   Future<void> processPolling(Timer timer);
 
   String getPaymentMode() {
-    String paymentMode = "PAYTM-PG";
+    String paymentMode = "RZP-PG";
 
     paymentMode = Platform.isAndroid
         ? AppConfig.getValue(AppConfigKey.active_pg_android)
@@ -92,13 +93,14 @@ abstract class BaseTransactionService
           appMetaList.add(element);
         }
         if (element.upiApplication.appName == "Google Pay" &&
-            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps).contains('G')) {
+            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                .contains('G')) {
           appMetaList.add(element);
         }
       });
     } catch (e) {
       BaseUtil.showNegativeAlert(
-          "Unable to get Upi apps", "Please try again in sometime");
+          locale.unableToGetUpi, locale.tryLater);
     }
   }
 
@@ -115,7 +117,7 @@ abstract class BaseTransactionService
         amount: this.currentTxnAmount,
         showAutoSavePrompt: true,
         title:
-            "You have successfully saved ₹${this.getAmount(this.currentTxnAmount!)}",
+          locale.youSaved +"₹${this.getAmount(this.currentTxnAmount!)}",
         source: GTSOURCE.deposit,
       );
     });

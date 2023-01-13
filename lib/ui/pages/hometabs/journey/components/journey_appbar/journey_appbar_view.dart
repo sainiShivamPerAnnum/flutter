@@ -12,6 +12,7 @@ import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -22,6 +23,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class JourneyAppBar extends StatelessWidget {
   JourneyAppBar({Key? key}) : super(key: key);
   final BaseUtil? _baseUtil = locator<BaseUtil>();
+  S locale = locator<S>();
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
@@ -79,7 +81,7 @@ class JourneyAppBar extends StatelessWidget {
                                     onTap: () =>
                                         _baseUtil!.openProfileDetailsScreen(),
                                     child: Text(
-                                      "Level ${model!.userJourneyStats?.level}",
+                                      locale.jLevel+" ${model!.userJourneyStats?.level}",
                                       style: TextStyles.rajdhaniSB.title5
                                           .colour(UiConstants.kTextColor),
                                     ),
@@ -93,7 +95,7 @@ class JourneyAppBar extends StatelessWidget {
                             //           .parseRoute(Uri.parse('/augSell'));
                             //     },
                             //     icon: Icon(Icons.navigation)),
-                            FelloCoinBar(key: ValueKey(Constants.FELLO_COIN_BAR),),
+                            FelloCoinBar(key: ValueKey(Constants.FELLO_COIN_BAR_JAPPBAR),),
                             NotificationButton()
                           ],
                         ),
@@ -110,7 +112,7 @@ class JourneyAppBar extends StatelessWidget {
                           JourneyAppBarAssetDetailsTile(
                             key: ValueKey(Constants.TOTAL_SAVINGS_JAPPBAR),
                             actionUri: '/save',
-                            title: "Total Savings",
+                            title: locale.totalSavings,
                             value: NetWorthValue(
                               style: TextStyles.rajdhaniSB.body0
                                   .colour(Colors.white),
@@ -123,7 +125,7 @@ class JourneyAppBar extends StatelessWidget {
                           JourneyAppBarAssetDetailsTile(
                             key: ValueKey(Constants.TOTAL_WINNINGS_JAPPBAR),
                             actionUri: '/win',
-                            title: "Total Winnings",
+                            title: locale.totalWinnings,
                             value: LifeTimeWin(
                               style: TextStyles.rajdhaniSB.body0
                                   .colour(Colors.white),

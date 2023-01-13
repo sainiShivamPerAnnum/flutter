@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
@@ -13,6 +14,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class GoldBuyView extends StatefulWidget {
@@ -30,7 +33,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
   final AugmontTransactionService _txnService =
       locator<AugmontTransactionService>();
   AppLifecycleState? appLifecycleState;
-
+ final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
   @override
   void initState() {
     super.initState();
@@ -104,6 +107,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
                   builder: (ctx, model, child) {
                     if (model.state == ViewState.Busy)
                       return Center(child: FullScreenLoader());
+                    _secureScreenshots(txnService);
                     return _getView(txnService, model);
                   },
                 ),
@@ -129,6 +133,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
     } else if (txnService.currentTransactionState == TransactionState.success) {
       return GoldBuySuccessView();
     }
+
     return GoldBuyLoadingView(model: model);
   }
 
@@ -141,6 +146,23 @@ class _GoldBuyViewState extends State<GoldBuyView>
       return SizeConfig.screenHeight;
     }
     return 0;
+  }
+
+  _secureScreenshots(AugmontTransactionService txnService) async {
+    if (Platform.isAndroid) {
+      if (txnService.currentTransactionState == TransactionState.ongoing) {
+        await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+      } else {
+        await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+      }
+    }
+    if (Platform.isIOS) {
+      if (txnService.currentTransactionState == TransactionState.ongoing) {
+        iosScreenShotChannel.invokeMethod('secureiOS');
+      } else {
+        iosScreenShotChannel.invokeMethod("unSecureiOS");
+      }
+    }
   }
 
   _getBackground(AugmontTransactionService txnService) {

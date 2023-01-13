@@ -20,7 +20,7 @@ class BankDetailsCard extends StatelessWidget {
             BankAndPanServiceProperties>(
         properties: [BankAndPanServiceProperties.bankDetailsVerified],
         builder: (context, model, property) => model!.isBankDetailsAdded &&
-                model.activeBankAccountDetails != null
+                model.activeBankAccountDetails != null 
             ? Container(
                 margin: EdgeInsets.only(
                     top: SizeConfig.pageHorizontalMargins * 2,
@@ -44,10 +44,10 @@ class BankDetailsCard extends StatelessWidget {
                       height: SizeConfig.padding24,
                     ),
                   ),
-                  title: Text(model.activeBankAccountDetails!.account!,
+                  title: Text(model.activeBankAccountDetails?.account ?? "",
                       style: TextStyles.sourceSansB.body2),
                   subtitle: Text(
-                    model.activeBankAccountDetails!.name!,
+                    model.activeBankAccountDetails?.name ?? "",
                     style: TextStyles.sourceSans.body3
                         .colour(UiConstants.kTextColor2),
                   ),

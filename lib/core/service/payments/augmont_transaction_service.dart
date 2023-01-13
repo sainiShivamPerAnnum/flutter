@@ -34,6 +34,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 
 class AugmontTransactionService extends BaseTransactionService {
@@ -49,7 +50,7 @@ class AugmontTransactionService extends BaseTransactionService {
   final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
   final TambolaService? _tambolaService = locator<TambolaService>();
-
+  S locale = locator<S>();
   double? currentTxnGms = 0.0;
   DepositFcmResponseModel? depositFcmResponseModel;
   bool _isGoldBuyInProgress = false;
@@ -93,6 +94,8 @@ class AugmontTransactionService extends BaseTransactionService {
       case "RZP-PG":
         return processRazorpayTransaction();
         break;
+      default:
+        return processRazorpayTransaction();
     }
 
     return null;
@@ -101,6 +104,7 @@ class AugmontTransactionService extends BaseTransactionService {
   //6 -- UPI
   Future<void> processUpiTransaction() async {
     isGoldBuyInProgress = true;
+    // currentTransactionState = TransactionState.ongoing;
     AppState.blockNavigation();
     CreatePaytmTransactionModel? createdPaytmTransactionData =
         await this.createPaytmTransaction(
@@ -123,7 +127,11 @@ class AugmontTransactionService extends BaseTransactionService {
           url: deepUri,
           investmentType: InvestmentType.AUGGOLD99,
         );
-        if (res && Platform.isAndroid) initiatePolling();
+        if (res && Platform.isAndroid) {
+          currentTransactionState = TransactionState.ongoing;
+          initiatePolling();
+        }
+        
         // resetBuyOptions();
         isGoldBuyInProgress = false;
         AppState.unblockNavigation();
@@ -131,15 +139,16 @@ class AugmontTransactionService extends BaseTransactionService {
         isGoldBuyInProgress = false;
         AppState.unblockNavigation();
 
-        BaseUtil.showNegativeAlert(
-            'Failed to connect to upi app', 'Please try after sometime');
+        BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
       }
     } else {
       isGoldBuyInProgress = false;
+      currentTransactionState = TransactionState.idle;
+
       AppState.unblockNavigation();
 
       return BaseUtil.showNegativeAlert(
-          'Failed to create transaction', 'Please try after sometime');
+          locale.failedToCreateTxn, locale.tryLater);
     }
   }
 
@@ -212,8 +221,8 @@ class AugmontTransactionService extends BaseTransactionService {
         }
         AppState.unblockNavigation();
         BaseUtil.showNegativeAlert(
-          'Transaction failed',
-          'Your transaction was unsuccessful. Please try again',
+          locale.txnFailed,
+          locale.txnFailedSubtitle,
         );
       }
       AppState.unblockNavigation();
@@ -223,7 +232,7 @@ class AugmontTransactionService extends BaseTransactionService {
       isGoldBuyInProgress = false;
       AppState.unblockNavigation();
       return BaseUtil.showNegativeAlert(
-          'Failed to create transaction', 'Please try after sometime');
+          locale.failedToCreateTxn, locale.tryLater);
     }
   }
 
@@ -280,7 +289,7 @@ class AugmontTransactionService extends BaseTransactionService {
               currentTxnGms = res.model!.data!.goldInTxnBought;
             timer!.cancel();
             return transactionResponseUpdate(
-              gtId: currentTxnOrderId,
+              gtId: transactionResponseModel?.data?.gtId ?? "",
             );
           }
           break;

@@ -101,11 +101,11 @@ class _LauncherViewState extends State<LauncherView>
                       visible: model.isSlowConnection,
                       child: connectivityStatus == ConnectivityStatus.Offline
                           ? Text(
-                              locale!.splashNoInternet,
+                              locale.splashNoInternet,
                               style: TextStyles.body3.bold,
                             )
                           : BreathingText(
-                              alertText: locale!.splashSlowConnection,
+                              alertText: locale.splashSlowConnection,
                               textStyle: TextStyles.sourceSans.body2,
                             ),
                     ),

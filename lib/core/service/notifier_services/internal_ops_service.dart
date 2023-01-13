@@ -57,7 +57,7 @@ class InternalOpsService extends ChangeNotifier {
           AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
           phoneModel = androidDeviceInfo.model;
           softwareVersion = androidDeviceInfo.version.sdkInt.toString();
-          _deviceId = androidDeviceInfo.androidId;
+          _deviceId = androidDeviceInfo.id;
           brand = androidDeviceInfo.brand;
           isPhysicalDevice = androidDeviceInfo.isPhysicalDevice;
           _platform = "android";

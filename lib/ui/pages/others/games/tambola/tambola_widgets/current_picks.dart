@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_view.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -19,6 +20,7 @@ class CurrentPicks extends StatelessWidget {
   int renderedTimes = 0;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -34,8 +36,8 @@ class CurrentPicks extends StatelessWidget {
                   top: SizeConfig.padding24, bottom: SizeConfig.padding16),
               child: Text(
                 todaysPicks == [-1, -1, -1]
-                    ? "Will be drawn at 6pm"
-                    : "Drawn at 6pm",
+                    ? locale.tDrawnAtText1
+                    : locale.tDrawnAtText2,
                 style: TextStyles.sourceSansSB.body4,
               ),
             )

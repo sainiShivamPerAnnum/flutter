@@ -8,6 +8,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -38,6 +39,7 @@ class OnboardingViewModel extends BaseViewModel {
   }
 
   PageController? get pageController => _pageController;
+  S locale = locator<S>();
 
   int get currentPage => _currentPage;
 
@@ -83,16 +85,16 @@ class OnboardingViewModel extends BaseViewModel {
     currentPage = 0;
     onboardingData = [
       [
-        'Earn 10% returns',
-        'by saving in safe and secure assets like Digital Gold and 10% fund Fello Flo',
+        locale.onboardingTitle1,
+        locale.onboardingSubTitle1,
       ],
       [
-        'Play fun games',
-        'Earn tambola tickets and Fello tokens for your savings and play weekly games'
+        locale.onboardingTitle2,
+        locale.onboardingSubTitle2,
       ],
       [
-        'Win Rs.1 Crore!',
-        'Win the daily and weekly games and earn upto Rs 1 Crore in rewards',
+        locale.onboardingTitle3,
+        locale.onboardingSubTitle3,
       ],
     ];
   }

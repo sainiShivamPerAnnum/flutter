@@ -1,6 +1,7 @@
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -17,6 +18,7 @@ class CouponWidget extends StatelessWidget {
   final GoldBuyViewModel model;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return coupon == null
         ? SizedBox()
         : SizedBox(
@@ -27,9 +29,22 @@ class CouponWidget extends StatelessWidget {
                 Padding(
                   padding:
                       EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
-                  child: Text(
-                    'Apply Coupon',
-                    style: TextStyles.sourceSansSB.body1,
+                  child: Row(
+                    children: [
+                      Text(
+                        locale.btnApplyCoupon,
+                        style: TextStyles.sourceSansSB.body1,
+                      ),
+                      SizedBox(width: SizeConfig.padding10),
+                      if (model.couponApplyInProgress && model.isSpecialCoupon)
+                        SizedBox(
+                            width: SizeConfig.padding16,
+                            height: SizeConfig.padding16,
+                            child: CircularProgressIndicator(
+                              color: UiConstants.primaryColor,
+                              strokeWidth: 2,
+                            )),
+                    ],
                   ),
                 ),
                 SizedBox(
@@ -70,11 +85,11 @@ class CouponWidget extends StatelessWidget {
                       EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
                   child: RichText(
                     text: TextSpan(
-                      text: 'Have a different coupon code? ',
+                      text: locale.txnHavDiffCoupunCode,
                       style: TextStyles.sourceSans.body4,
                       children: [
                         TextSpan(
-                            text: 'Enter here',
+                            text: locale.txnEnterHereText,
                             style: TextStyles.sourceSans.body4
                                 .copyWith(decoration: TextDecoration.underline),
                             recognizer: TapGestureRecognizer()
@@ -104,6 +119,7 @@ class _CouponView extends StatelessWidget {
   final GoldBuyViewModel goldBuyViewModel;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return GestureDetector(
       onTap: () {
         if (goldBuyViewModel.appliedCoupon == null ||
@@ -159,7 +175,7 @@ class _CouponView extends StatelessWidget {
                               color: UiConstants.primaryColor,
                             )
                           : Text(
-                              "APPLY",
+                              locale.txnApply.toUpperCase(),
                               style: TextStyles.sourceSansSB.body3
                                   .colour(Color(0xff1ADAB7)),
                             )

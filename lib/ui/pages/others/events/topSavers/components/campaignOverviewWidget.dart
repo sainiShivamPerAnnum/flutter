@@ -1,6 +1,7 @@
 import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -12,6 +13,7 @@ class CampaignOverviewWidget extends StatelessWidget {
   CampaignOverviewWidget({required this.model});
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return SliverToBoxAdapter(
       child: Container(
         padding:
@@ -21,7 +23,7 @@ class CampaignOverviewWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "DAY ${model.weekDay.toString().padLeft(2, '0')}",
+              locale.day.toUpperCase()+"${model.weekDay.toString().padLeft(2, '0')}",
                 style: TextStyles.rajdhaniB.title5.colour(Colors.white),
               ),
               const SizedBox(
@@ -52,7 +54,7 @@ class CampaignOverviewWidget extends StatelessWidget {
                           height: 10,
                         ),
                         Text(
-                          "Your Savings",
+                          locale.yourSavings,
                           style: TextStyles.body3.colour(Colors.white),
                         ),
                         const SizedBox(
@@ -98,7 +100,7 @@ class CampaignOverviewWidget extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "Highest\nSaving",
+                                    locale.highestSaving,
                                     style:
                                         TextStyles.body3.colour(Colors.white),
                                   ),
@@ -144,7 +146,7 @@ class CampaignOverviewWidget extends StatelessWidget {
                                         width: 5,
                                       ),
                                       Text(
-                                        "Rank",
+                                        locale.rank,
                                         style: TextStyles.body3
                                             .colour(Colors.white),
                                       ),
@@ -153,7 +155,7 @@ class CampaignOverviewWidget extends StatelessWidget {
                                   Flexible(
                                     child: Text(
                                       model.userRank == 0
-                                          ? 'N/A'
+                                          ? locale.na
                                           : model.userRank
                                               .toString()
                                               .padLeft(2, '0'),

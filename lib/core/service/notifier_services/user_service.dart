@@ -29,6 +29,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -43,7 +44,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/error_codes.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,6 +57,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
   final GetterRepository _gettersRepo = locator<GetterRepository>();
+  S locale = locator<S>();
 
   User? _firebaseUser;
   BaseUser? _baseUser;
@@ -533,10 +535,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         packageName: 'in.fello.felloapp',
         minimumVersion: 0,
       ),
-      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
-        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-      ),
-      iosParameters: IosParameters(
+      // dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+      //   shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+      // ),
+      iosParameters: IOSParameters(
         bundleId: 'in.fello.felloappiOS',
         minimumVersion: '0',
         appStoreId: '1558445254',
@@ -545,10 +547,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
     Uri url;
     if (short) {
-      final ShortDynamicLink shortLink = await parameters.buildShortLink();
+      final ShortDynamicLink shortLink = await FirebaseDynamicLinksPlatform
+          .instance
+          .buildShortLink(parameters);
       url = shortLink.shortUrl;
     } else {
-      url = await parameters.buildUrl();
+      url = parameters.link;
     }
 
     return url.toString();
@@ -716,7 +720,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               _logger.d("Auth: Maximum no of tries exceeded");
             } else {
               return BaseUtil.showNegativeAlert(
-                  'Authentication Failed', 'Please restart and try again');
+                  locale.authFailed, locale.restartAndTry);
             }
           }
         } else {
@@ -731,7 +735,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
     } catch (e) {
       return BaseUtil.showNegativeAlert(
-          'Authentication Failed', 'Please restart and try again');
+          locale.authFailed, locale.restartAndTry);
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -12,6 +13,7 @@ class SafetyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -36,12 +38,12 @@ class SafetyWidget extends StatelessWidget {
                 children: [
                   FittedBox(
                     child: Text(
-                      "Games are played with Fello tokens",
+                      locale.gamesSafetyTitle,
                       style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
                     ),
                   ),
                   Text(
-                    "Fello games do not use any money from your savings or investments",
+                    locale.gamesSafetySubTitle,
                     style: TextStyles.sourceSans.body3
                         .colour(UiConstants.kTextColor2),
                   )

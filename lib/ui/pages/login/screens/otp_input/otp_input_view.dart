@@ -11,6 +11,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:provider/provider.dart';
 
 class LoginOtpView extends StatefulWidget {
@@ -48,6 +49,10 @@ class LoginOtpViewState extends State<LoginOtpView> {
         model.parentModelInstance = widget.loginModel;
         model.init(context);
       },
+      onModelDispose: (model) {
+        this.model = model;
+        model.exit();
+      },
       builder: (ctx, model, child) {
         return ListView(
           shrinkWrap: true,
@@ -57,7 +62,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
             Align(
               alignment: Alignment.center,
               child: Text(
-                'Verify OTP',
+                locale.obOtpLabel,
                 style: TextStyles.rajdhaniB.title2,
               ),
             ),
@@ -104,7 +109,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Didn\’t receive?',
+                    locale.obDidntGetOtp,
                     style: TextStyles.sourceSans.body3.colour(
                       UiConstants.kTextFieldTextColor,
                     ),
@@ -129,13 +134,13 @@ class LoginOtpViewState extends State<LoginOtpView> {
                         baseProvider.isOtpResendCount++;
                         logger!.d(baseProvider.isOtpResendCount);
                         BaseUtil.showPositiveAlert(
-                          "OTP resent successfully",
-                          "Please wait for the new otp",
+                          locale.otpSentSuccess,
+                          locale.waitForNewOTP,
                         );
                       }
                     },
                     child: Text(
-                      'RESEND',
+                      locale.obResend,
                       style: TextStyles.sourceSans.body2.colour(
                         Color(0xFF34C3A7),
                       ),
@@ -145,7 +150,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
               ),
             if (model.isTriesExceeded)
               Text(
-                locale!.obOtpTryExceed,
+                locale.obOtpTryExceed,
                 textAlign: TextAlign.center,
                 style: TextStyles.body2.colour(
                   Colors.red[400],
@@ -156,7 +161,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Didn't get an OTP? Request in ",
+                    locale.obOtpRequest,
                     style: TextStyles.sourceSans.body3.colour(
                       UiConstants.kTextFieldTextColor,
                     ),

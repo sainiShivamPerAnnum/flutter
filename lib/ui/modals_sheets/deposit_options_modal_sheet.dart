@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -14,6 +15,7 @@ class DepositOptionModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
         AppState.backButtonDispatcher!.didPopRoute();
@@ -27,11 +29,11 @@ class DepositOptionModalSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Choose your asset", style: TextStyles.rajdhaniSB.title5),
+              Text(locale.chooseYourAsset, style: TextStyles.rajdhaniSB.title5),
               Padding(
                 padding: EdgeInsets.only(top: SizeConfig.padding4),
                 child: Text(
-                  "Earn 1 Token for every ₹1 you invest",
+                  locale.earnOneToken,
                   style: TextStyles.sourceSans.body4.colour(
                     UiConstants.kTextColor2,
                   ),
@@ -47,10 +49,10 @@ class DepositOptionModalSheet extends StatelessWidget {
                 padding: EdgeInsets.all(SizeConfig.padding12),
                 child: ListTile(
                     leading: Image.asset(Assets.digitalGoldBar),
-                    title: Text("Digital Gold",
+                    title: Text(locale.digitalGoldText,
                         style: TextStyles.rajdhaniB.title4),
                     subtitle: Text(
-                      "Buy 24K pure Digital Gold",
+                    locale.buyGold,
                       style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kTextColor2),
                     ),
@@ -76,9 +78,9 @@ class DepositOptionModalSheet extends StatelessWidget {
                 child: ListTile(
                     leading: Image.asset(Assets.felloFlo),
                     title:
-                        Text("Fello Flo", style: TextStyles.rajdhaniB.title4),
+                        Text(locale.felloFloText, style: TextStyles.rajdhaniB.title4),
                     subtitle: Text(
-                      "Enjoy stable returns of 10%",
+                      locale.felloFloEarnTxt,
                       style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kTextColor2),
                     ),

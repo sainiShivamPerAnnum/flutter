@@ -6,7 +6,6 @@ import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
@@ -25,7 +24,7 @@ class CampaignRepo extends BaseRepo {
       final _token = await getBearerToken();
       final _queryParams = {"uid": _uid};
 
-      return (await (_cacheService.cachedApi(
+      return (await _cacheService.cachedApi(
         CacheKeys.CAMPAIGNS,
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
@@ -45,7 +44,7 @@ class CampaignRepo extends BaseRepo {
           print(responseData["campaigns"]);
           return ApiResponse<List<EventModel>>(model: events, code: 200);
         },
-      ))) as ApiResponse<List<EventModel>>;
+      ));
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(

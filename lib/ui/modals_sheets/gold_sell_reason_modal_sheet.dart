@@ -3,31 +3,46 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
-import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
-class SellingReasonBottomSheet extends StatelessWidget {
+class SellingReasonBottomSheet extends StatefulWidget {
   final InvestmentType investmentType;
-
-  final List<String> _sellingReasons = [
-    'Not interested in the asset',
-    'Returns are not good enough',
-    'Require immediate funds',
-    'Others'
-  ];
-
-  String selectedReasonForSelling = '';
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
 
   SellingReasonBottomSheet({Key? key, required this.investmentType})
       : super(key: key);
 
   @override
+  State<SellingReasonBottomSheet> createState() =>
+      _SellingReasonBottomSheetState();
+}
+
+class _SellingReasonBottomSheetState extends State<SellingReasonBottomSheet> {
+  S locale = locator<S>();
+
+  List<String> _sellingReasons = [];
+
+  @override
+  void initState() {
+    _sellingReasons.addAll([
+      locale.sellingReasons1,
+      locale.sellingReasons2,
+      locale.sellingReasons3,
+      locale.sellingReasons4,
+    ]);
+    super.initState();
+  }
+
+  String selectedReasonForSelling = '';
+
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+
+  @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
         AppState.screenStack.removeLast();
@@ -42,7 +57,7 @@ class SellingReasonBottomSheet extends StatelessWidget {
               height: SizeConfig.padding40,
             ),
             Text(
-              'What makes you want to sell?',
+              locale.goldSellReason,
               style: TextStyles.rajdhaniSB.body1,
             ),
             SizedBox(
@@ -63,8 +78,8 @@ class SellingReasonBottomSheet extends StatelessWidget {
                             eventName: AnalyticsEvents.sellReason,
                             properties: {"Reason": selectedReasonForSelling});
                         AppState.backButtonDispatcher!.didPopRoute();
-                        BaseUtil()
-                            .openSellModalSheet(investmentType: investmentType);
+                        BaseUtil().openSellModalSheet(
+                            investmentType: widget.investmentType);
                       },
                       title: Text(
                         x,

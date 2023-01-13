@@ -25,7 +25,9 @@ import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -62,6 +64,7 @@ class _JourneyViewState extends State<JourneyView>
         log("ROOT: Journey view baseview build called");
 
         return Scaffold(
+          key: ValueKey(Constants.JOURNEY_SCREEN_TAG),
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.black,
           body: model.isLoading && model.pages == null
@@ -97,7 +100,7 @@ class _JourneyViewState extends State<JourneyView>
                         ),
                       ),
                     ),
-                    HelpFab(),
+                     HelpFab(),
                     JourneyAppBar(),
                     JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),
@@ -119,6 +122,7 @@ class JourneyErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       width: SizeConfig.screenWidth,
       height: SizeConfig.screenHeight,
@@ -141,12 +145,12 @@ class JourneyErrorScreen extends StatelessWidget {
               height: SizeConfig.screenWidth! / 2),
           SizedBox(height: 20),
           Text(
-            'Journey failed to load',
+            locale.jFailed,
             style: TextStyles.rajdhaniEB.title2,
           ),
           SizedBox(height: 20),
           AppNegativeBtn(
-              btnText: 'Retry',
+              btnText: locale.btnRetry,
               onPressed: () {
                 AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll,
@@ -231,6 +235,7 @@ class JPageLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return AnimatedPositioned(
       top: (model.isLoading && model.isLoaderRequired)
           ? SizeConfig.pageHorizontalMargins
@@ -256,11 +261,11 @@ class JPageLoader extends StatelessWidget {
               ),
             ),
             title: Text(
-              "Loading",
+              locale.btnLoading,
               style: TextStyles.rajdhaniB.title3.colour(Colors.white),
             ),
             subtitle: Text(
-              "Loading more levels for you,please wait",
+              locale.jLoadinglevels,
               style: TextStyles.sourceSans.body3.colour(Colors.white),
             ),
           ),
@@ -273,6 +278,7 @@ class JPageLoader extends StatelessWidget {
 class LevelBlurView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
       properties: [JourneyServiceProperties.Pages],
       builder: (context, jModel, properties) {
@@ -325,7 +331,7 @@ class LevelBlurView extends StatelessWidget {
                                     horizontal: SizeConfig.padding10),
                                 child: Row(
                                   children: [
-                                    Text("Level ${levelData.level! + 1} ",
+                                    Text(locale.jLevel+"${levelData.level! + 1} ",
                                         style: TextStyles.rajdhaniB.body1
                                             .colour(Colors.black)),
                                     Icon(Icons.lock,

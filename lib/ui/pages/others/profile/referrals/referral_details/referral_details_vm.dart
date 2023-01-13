@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
@@ -9,23 +10,22 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
-import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+// import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_share_me/flutter_share_me.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -39,6 +39,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   final UserRepository? _userRepo = locator<UserRepository>();
   final ReferralRepo? _refRepo = locator<ReferralRepo>();
   final DBModel? _dbModel = locator<DBModel>();
+  S locale = locator<S>();
 
   PageController? _pageController;
   int _tabNo = 0;
@@ -72,7 +73,8 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   String appShareMessage =
       AppConfig.getValue<String>(AppConfigKey.appShareMessage);
-  String unlockReferralBonus = AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
+  String unlockReferralBonus =
+      AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
 
   String? _refUrl = "";
   String? _refCode = "";
@@ -225,17 +227,12 @@ class ReferralDetailsViewModel extends BaseViewModel {
     refresh();
 
     if (url == null) {
-      BaseUtil.showNegativeAlert(
-        'Generating link failed',
-        'Please try again in some time',
-      );
+      BaseUtil.showNegativeAlert(locale.generatingLinkFailed, locale.tryLater);
     } else {
       if (Platform.isIOS) {
         Share.share(_shareMsg + url);
       } else {
-        FlutterShareMe().shareToSystem(msg: _shareMsg + url).then((flag) {
-          _logger!.d(flag);
-        });
+        Share.share(_shareMsg + url);
       }
     }
 
@@ -265,46 +262,46 @@ class ReferralDetailsViewModel extends BaseViewModel {
     return false;
   }
 
-  Future<void> shareWhatsApp() async {
-    if (await BaseUtil.showNoInternetAlert()) return;
-    _fcmListener!.addSubscription(FcmTopic.REFERRER);
-    BaseAnalytics.analytics!.logShare(
-      contentType: 'referral',
-      itemId: _userService!.baseUser!.uid!,
-      method: 'whatsapp',
-    );
-    shareWhatsappInProgress = true;
-    refresh();
+  // Future<void> shareWhatsApp() async {
+  //   if (await BaseUtil.showNoInternetAlert()) return;
+  //   _fcmListener!.addSubscription(FcmTopic.REFERRER);
+  //   BaseAnalytics.analytics!.logShare(
+  //     contentType: 'referral',
+  //     itemId: _userService!.baseUser!.uid!,
+  //     method: 'whatsapp',
+  //   );
+  //   shareWhatsappInProgress = true;
+  //   refresh();
 
-    String? url = await this.generateLink();
-    shareWhatsappInProgress = false;
-    refresh();
+  //   String? url = await this.generateLink();
+  //   shareWhatsappInProgress = false;
+  //   refresh();
 
-    if (url == null) {
-      BaseUtil.showNegativeAlert(
-        'Generating link failed',
-        'Please try again in some time',
-      );
-      return;
-    } else
-      _logger!.d(url);
-    try {
-      _analyticsService!.track(eventName: AnalyticsEvents.whatsappShare);
-      FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
-        if (flag == "false") {
-          FlutterShareMe()
-              .shareToWhatsApp4Biz(msg: _shareMsg + url)
-              .then((flag) {
-            _logger!.d(flag);
-            if (flag == "false") {
-              BaseUtil.showNegativeAlert(
-                  "Whatsapp not detected", "Please use other option to share.");
-            }
-          });
-        }
-      });
-    } catch (e) {
-      _logger!.d(e.toString());
-    }
-  }
+  //   if (url == null) {
+  //     BaseUtil.showNegativeAlert(
+  //       locale.generatingLinkFailed,
+  //       locale.tryLater
+  //     );
+  //     return;
+  //   } else
+  //     _logger!.d(url);
+  //   try {
+  //     _analyticsService!.track(eventName: AnalyticsEvents.whatsappShare);
+  //     FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
+  //       if (flag == "false") {
+  //         FlutterShareMe()
+  //             .shareToWhatsApp4Biz(msg: _shareMsg + url)
+  //             .then((flag) {
+  //           _logger!.d(flag);
+  //           if (flag == "false") {
+  //             BaseUtil.showNegativeAlert(
+  //                locale.whatsappNotDetected, locale.otherShareOption);
+  //           }
+  //         });
+  //       }
+  //     });
+  //   } catch (e) {
+  //     _logger!.d(e.toString());
+  //   }
+  // }
 }

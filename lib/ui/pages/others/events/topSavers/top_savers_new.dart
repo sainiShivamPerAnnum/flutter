@@ -16,6 +16,8 @@ import 'package:felloapp/ui/pages/others/events/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -53,6 +55,7 @@ class CampaignView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return BaseView<TopSaverViewModel>(
       onModelReady: (model) {
         model.init(eventType, isGameRedirected);
@@ -122,7 +125,8 @@ class CampaignView extends StatelessWidget {
                                             padding: EdgeInsets.only(
                                               top: SizeConfig.padding10,
                                             ),
-                                            child: _realtimeView(model),
+                                            child:
+                                                _realtimeView(model),
                                           ),
                                           isLoading: model.event == null,
                                           topPadding: 90,
@@ -180,7 +184,7 @@ class CampaignView extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(SizeConfig.padding34),
                   child: ReactivePositiveAppButton(
-                    btnText: 'Start Saving',
+                    btnText: locale.startSaving,
                     onPressed: () {
                       BaseUtil().openDepositOptionsModalSheet();
                     },
@@ -194,7 +198,10 @@ class CampaignView extends StatelessWidget {
     );
   }
 
-  Row _realtimeView(TopSaverViewModel model) {
+  Row _realtimeView(
+    TopSaverViewModel model,
+  ) {
+    S locale = locator<S>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -212,14 +219,16 @@ class CampaignView extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text(
-                "${model.getDeafultRealTimeStat(eventType)} Participants",
+                "${model.getDeafultRealTimeStat(eventType)} " +
+                    locale.participants,
                 style: TextStyles.body3.colour(Colors.white),
               );
             }
 
             if (!snapshot.hasData) {
               return Text(
-                "${model.getDeafultRealTimeStat(eventType)} Participants",
+                "${model.getDeafultRealTimeStat(eventType)} " +
+                    locale.participants,
                 style: TextStyles.body3.colour(Colors.white),
               );
             }
@@ -238,14 +247,16 @@ class CampaignView extends StatelessWidget {
                   return ScaleTransition(scale: animation, child: child);
                 },
                 child: Text(
-                  "${model.sortPlayerNumbers(sortedData['value'].toString())}+  Participants",
+                  "${model.sortPlayerNumbers(sortedData['value'].toString())} " +
+                      locale.participants,
                   style: TextStyles.body3.colour(Colors.white),
                   key: ValueKey<String>(sortedData['value'].toString()),
                 ),
               );
             } else {
               return Text(
-                "${model.getDeafultRealTimeStat(eventType)} Participants",
+                "${model.getDeafultRealTimeStat(eventType)} " +
+                    locale.participants,
                 style: TextStyles.body3.colour(Colors.white),
               );
             }
@@ -264,6 +275,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
   bool isInteger(num value) => value is int || value == value.roundToDouble();
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       decoration: BoxDecoration(
         color: UiConstants.kDarkBoxColor.withOpacity(0.7),
@@ -397,7 +409,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              'See All',
+                                              locale.btnSeeAll,
                                               style:
                                                   TextStyles.rajdhaniSB.body2,
                                             ),
@@ -428,7 +440,7 @@ class CurrentParticipantsLeaderBoard extends StatelessWidget {
                           opacity: 0.3,
                           child: NoRecordDisplayWidget(
                             assetSvg: Assets.noWinnersAsset,
-                            text: "Leaderboard will be updated soon",
+                            text: locale.leaderboardUpdateSoon,
                             topPadding: false,
                             bottomPadding: true,
                           ),
@@ -452,6 +464,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
   bool isInteger(num value) => value is int || value == value.roundToDouble();
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       decoration: BoxDecoration(
         color: UiConstants.kDarkBoxColor.withOpacity(0.7),
@@ -582,7 +595,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              'See All',
+                                              locale.btnSeeAll,
                                               style:
                                                   TextStyles.rajdhaniSB.body2,
                                             ),
@@ -613,7 +626,7 @@ class PastWinnersLeaderBoard extends StatelessWidget {
                           opacity: 0.3,
                           child: NoRecordDisplayWidget(
                             assetSvg: Assets.noWinnersAsset,
-                            text: "Leaderboard will be updated soon",
+                            text: locale.leaderboardUpdateSoon,
                             topPadding: false,
                             bottomPadding: true,
                           ),

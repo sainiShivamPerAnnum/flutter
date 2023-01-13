@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
@@ -34,12 +35,14 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RootViewModel extends BaseViewModel {
@@ -54,6 +57,7 @@ class RootViewModel extends BaseViewModel {
   final TambolaService? _tambolaService = locator<TambolaService>();
   final GoldenTicketService? _gtService = locator<GoldenTicketService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
+  final S locale = locator<S>();
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
@@ -163,6 +167,8 @@ class RootViewModel extends BaseViewModel {
     if (_fcmListener != null && _baseUtil != null) {
       _fcmListener!.addIncomingMessageListener((valueMap) {
         if (valueMap['title'] != null && valueMap['body'] != null) {
+          if (AppState.screenStack.last == ScreenItem.dialog ||
+              AppState.screenStack.last == ScreenItem.modalsheet) return;
           BaseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
               seconds: 5);
         }
@@ -415,17 +421,15 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<dynamic> _initDynamicLinks(BuildContext? context) async {
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData? dynamicLink) async {
-      final Uri? deepLink = dynamicLink?.link;
+    FirebaseDynamicLinks.instance.onLink.distinct().listen((event) {
+      final Uri? deepLink = event.link;
       if (deepLink == null) return null;
       _logger!.d('Received deep link. Process the referral');
       return _processDynamicLink(
           _userService!.baseUser!.uid, deepLink, context);
-    }, onError: (OnLinkErrorException e) async {
-      _logger!.e('Error in fetching deeplink');
-      _logger!.e(e);
-      return null;
+    }).onError((e) {
+      _logger!.d('Error');
+      _logger!.d(e.toString());
     });
 
     final PendingDynamicLinkData? data =

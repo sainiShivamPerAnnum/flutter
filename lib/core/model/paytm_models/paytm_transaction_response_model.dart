@@ -66,12 +66,15 @@ class Data {
   int? tickets;
   double? goldInTxnBought;
   String? txnDisplayMsg;
-  Data(
-      {@required this.status,
-      @required this.isUpdating,
-      @required this.tickets,
-      this.txnDisplayMsg,
-      this.goldInTxnBought});
+  String? gtId;
+  Data({
+    @required this.status,
+    @required this.isUpdating,
+    @required this.tickets,
+    this.txnDisplayMsg,
+    this.goldInTxnBought,
+    this.gtId,
+  });
 
   // Data copyWith(
   //     {bool? status, bool? isUpdating, int? tickets, double? goldInTxnBought}) {
@@ -97,7 +100,9 @@ class Data {
         isUpdating: map['isUpdating'] as bool? ?? true,
         tickets: map['tickets'] as int? ?? 0,
         goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble(),
-        txnDisplayMsg: map['displayMessage']);
+        txnDisplayMsg: map['displayMessage'],
+        gtId: map['gtId'] ?? ""
+        ); 
   }
 
   Data.base() {

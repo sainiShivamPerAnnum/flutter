@@ -4,6 +4,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -21,6 +22,7 @@ class GoldSellSuccessView extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: SizeConfig.padding32),
       child: Column(
@@ -49,12 +51,12 @@ class GoldSellSuccessView extends StatelessWidget {
             ),
           ),
           Text(
-            "Congratulations!",
+            locale.btnCongratulations,
             style: TextStyles.rajdhaniB.title2,
           ),
           SizedBox(height: SizeConfig.padding12),
           Text(
-            "Your withdrawal was successfully processed",
+          locale.txnWithDrawalSuccess,
             style: TextStyles.sourceSans.body2.setOpecity(0.7),
           ),
           Container(
@@ -73,7 +75,7 @@ class GoldSellSuccessView extends StatelessWidget {
               vertical: SizeConfig.padding12,
             ),
             child: Row(children: [
-              Text("Tokens Deducted", style: TextStyles.rajdhani.body1),
+              Text(locale.tokensDeducted, style: TextStyles.rajdhani.body1),
               Spacer(),
               SvgPicture.asset(
                 Assets.token,
@@ -104,7 +106,7 @@ class GoldSellSuccessView extends StatelessWidget {
                 vertical: SizeConfig.padding12,
               ),
               child: Row(children: [
-                Text("Tambola Tickets Deducted",
+                Text(locale.tTicketsDeducted,
                     style: TextStyles.rajdhani.body1),
                 Spacer(),
                 SvgPicture.asset(
@@ -142,9 +144,9 @@ class GoldSellSuccessView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Sold", style: TextStyles.sourceSans.body2),
+                          Text(locale.sold, style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${augTxnservice.currentTxnGms} gm",
+                          Text("${augTxnservice.currentTxnGms}"+ locale.gm,
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -162,7 +164,7 @@ class GoldSellSuccessView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Received", style: TextStyles.sourceSans.body2),
+                          Text(locale.received, style: TextStyles.sourceSans.body2),
                           SizedBox(height: SizeConfig.padding16),
                           Text(
                               "₹ ${BaseUtil.digitPrecision(augTxnservice.currentTxnAmount!, 2)}",
@@ -193,7 +195,7 @@ class GoldSellSuccessView extends StatelessWidget {
               vertical: SizeConfig.padding12,
             ),
             child: Row(children: [
-              Text("Gold Balance",
+              Text(locale.saveGoldBalancelabel,
                   style: TextStyles.rajdhani.body3
                       .colour(UiConstants.kBackgroundColor)),
               Spacer(),
@@ -208,7 +210,7 @@ class GoldSellSuccessView extends StatelessWidget {
               AppState.backButtonDispatcher!.didPopRoute();
             },
             child: Text(
-              "DONE",
+              locale.obDone,
               style:
                   TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),

@@ -26,6 +26,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,6 +53,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
   final CustomLogger? _logger = locator<CustomLogger>();
   final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
   final GetterRepository? _getterRepo = locator<GetterRepository>();
+  S locale = locator<S>();
 
   // final String devMid = "qpHRfp13374268724583";
   // final String prodMid = "CMTNKX90967647249644";
@@ -347,7 +349,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       return response.model;
     else {
       BaseUtil.showNegativeAlert(
-          response.errorMessage ?? "Unable to pause subscription", '');
+          response.errorMessage ?? locale.unableToPauseSub, '');
       return false;
     }
   }
@@ -414,7 +416,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       if (processTransactionApiResponse
               ?.model?.data?.body?.deepLinkInfo?.deepLink ==
           null) {
-        BaseUtil.showNegativeAlert("Something went wrong", "Please try again");
+        BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
         return null;
       }
       String url = processTransactionApiResponse
@@ -438,7 +440,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
     required InvestmentType investmentType,
   }) async {
     if (url.isEmpty) {
-      BaseUtil.showNegativeAlert("Something went wrong", "Please try again");
+      BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
       return false;
     }
 
@@ -453,15 +455,15 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       } catch (e) {
         print(e);
         BaseUtil.showNegativeAlert(
-          'Transaction failed',
-          'Your transaction was unsuccessful. Please try again',
+          locale.txnFailed,
+          locale.txnFailedSubtitle,
         );
         return false;
       }
       if (response.status == UpiTransactionStatus.failure) {
         BaseUtil.showNegativeAlert(
-          'Transaction failed',
-          'Your transaction was unsuccessful. Please try again',
+          locale.txnFailed,
+      locale.txnFailedSubtitle,
         );
         return false;
       } else if (response.status == UpiTransactionStatus.submitted ||

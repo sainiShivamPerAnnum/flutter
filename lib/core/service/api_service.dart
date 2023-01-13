@@ -4,12 +4,11 @@ import 'dart:io';
 
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:firebase_performance/firebase_performance.dart';
 import 'package:http/http.dart' as http;
-import 'package:package_info/package_info.dart';
-import 'package:felloapp/util/custom_logger.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 abstract class API {
   void setBaseUrl(String url);
@@ -69,7 +68,7 @@ class APIService implements API {
         'version':
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.firebaseUser?.uid ?? '',
-        if(headers!=null)...headers
+        if (headers != null) ...headers
       });
       log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       logger!.d("response from $finalPath");

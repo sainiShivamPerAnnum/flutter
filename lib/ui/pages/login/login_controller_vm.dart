@@ -33,10 +33,12 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
 
@@ -58,6 +60,7 @@ class LoginControllerViewModel extends BaseViewModel {
   final UserRepository? _userRepo = locator<UserRepository>();
   final JourneyService? _journeyService = locator<JourneyService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
+  S locale = locator<S>();
 
   // static LocalDBModel? lclDbProvider = locator<LocalDBModel>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
@@ -144,8 +147,8 @@ class LoginControllerViewModel extends BaseViewModel {
             ///disable regular numbers for QA
             if (FlavorConfig.isQA() &&
                 !this.userMobile!.startsWith('999990000')) {
-              BaseUtil.showNegativeAlert('Mobile number not allowed',
-                  'Only dummy numbers are allowed in QA mode');
+              BaseUtil.showNegativeAlert(
+                  locale.mbNoNotAllowed, locale.dummyNoAlert);
               break;
             }
             _analyticsService!.track(
@@ -160,6 +163,7 @@ class LoginControllerViewModel extends BaseViewModel {
         }
       case LoginOtpView.index:
         {
+          
           String otp = _otpScreenKey.currentState!.model!.otp;
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             logger!.d("OTP is $otp");
@@ -180,16 +184,15 @@ class LoginControllerViewModel extends BaseViewModel {
                 print(e.toString());
                 setState(ViewState.Idle);
                 _otpScreenKey.currentState!.model!.otpFieldEnabled = true;
-                BaseUtil.showNegativeAlert(
-                    "Authentication failed", "Please try again after sometime");
+                BaseUtil.showNegativeAlert(locale.authFailed, locale.tryLater);
               });
             } else {
               _otpScreenKey.currentState!.model!.pinEditingController.clear();
               _otpScreenKey.currentState!.model!.otpFieldEnabled = true;
               _otpScreenKey.currentState!.model!.otpFocusNode.requestFocus();
               BaseUtil.showNegativeAlert(
-                  verifyOtp.errorMessage ?? 'Invalid Otp',
-                  'Please enter a valid otp or try again after sometime');
+                  verifyOtp.errorMessage ?? locale.obInValidOTP,
+                  locale.obEnterValidOTP);
 
               // FocusScope.of(_otpScreenKey.currentContext).unfocus();
               setState(ViewState.Idle);
@@ -197,8 +200,7 @@ class LoginControllerViewModel extends BaseViewModel {
           } else {
             _otpScreenKey.currentState!.model!.otpFieldEnabled = true;
 
-            BaseUtil.showNegativeAlert(
-                'Enter OTP', 'Please enter a valid one time password');
+            BaseUtil.showNegativeAlert(locale.obEnterOTP, locale.obOneTimePass);
           }
           break;
         }
@@ -274,7 +276,7 @@ class LoginControllerViewModel extends BaseViewModel {
               _onSignUpComplete();
             } else {
               BaseUtil.showNegativeAlert(
-                'Update failed',
+                locale.updateFailed,
                 message,
               );
               _nameKey.currentState!.model.enabled = true;
@@ -298,8 +300,8 @@ class LoginControllerViewModel extends BaseViewModel {
         await _userRepo!.getUserById(id: userService.firebaseUser!.uid);
     logger!.d("User data found: ${user.model}");
     if (user.code == 400) {
-      BaseUtil.showNegativeAlert('Your account is under maintenance',
-          'Please reach out to customer support');
+      BaseUtil.showNegativeAlert(
+          locale.accountMaintenance, locale.customerSupportText);
       setState(ViewState.Idle);
       _controller!.animateToPage(LoginMobileView.index,
           duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
@@ -457,11 +459,10 @@ class LoginControllerViewModel extends BaseViewModel {
         _otpScreenKey.currentState!.model!.onOtpResendConfirmed(true);
       }
     } else {
-      String exceptionMessage =
-          'Please check your network or number and try again';
+      String exceptionMessage = locale.checkNetwork;
 
       BaseUtil.showNegativeAlert(
-        'Sending OTP failed',
+        locale.sendingOtpFailed,
         exceptionMessage,
       );
       // _otpScreenKey.currentState.model.otpFieldEnabled = true;
@@ -541,8 +542,8 @@ class LoginControllerViewModel extends BaseViewModel {
     } else {
       _otpScreenKey.currentState!.model!.onOtpResendConfirmed(false);
       BaseUtil.showNegativeAlert(
-        'Sign In Failed',
-        "You have exceeded the number of allowed OTP attempts. Please try again in sometime",
+      locale.signInFailedText,
+        locale.exceededOTPs
       );
     }
   }
@@ -600,7 +601,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
     if (tokenRes.code == 400) {
       BaseUtil.showNegativeAlert(
-          "Authentication failed", tokenRes.errorMessage);
+          locale.authFailed, tokenRes.errorMessage);
     }
 
     final String token = tokenRes.model!;
@@ -615,8 +616,8 @@ class LoginControllerViewModel extends BaseViewModel {
       _onSignInSuccess(LoginSource.TRUECALLER);
     }).catchError((e) {
       logger!.e(e);
-      BaseUtil.showNegativeAlert("Authentication failed",
-          "Please enter your mobile number to authenticate.");
+      BaseUtil.showNegativeAlert(locale.authFailed,
+         locale.authenticateNumber);
       loginUsingTrueCaller = false;
     });
   }
@@ -626,6 +627,8 @@ class LoginControllerViewModel extends BaseViewModel {
     BaseUtil.launchUrl('https://fello.in/policy/tnc');
     _analyticsService!.track(eventName: AnalyticsEvents.termsAndConditions);
   }
+
+  
 
   exit() {
     _controller!.removeListener(_pageListener);

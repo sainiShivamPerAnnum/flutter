@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -16,6 +17,7 @@ class GameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       margin: EdgeInsets.only(
         left: index == 0 ? SizeConfig.pageHorizontalMargins : 0,
@@ -66,7 +68,7 @@ class GameCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text("Win: ₹ ${gameData!.prizeAmount ?? 0}  ",
+                      Text(locale.win+": ₹ "+"${gameData!.prizeAmount ?? 0}  ",
                           style: TextStyles.body1.bold),
                       CircleAvatar(
                         radius: SizeConfig.screenWidth! * 0.029,
@@ -82,7 +84,7 @@ class GameCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Entry: ${gameData!.playCost ?? 0} ",
+                        locale.entry+":"+"${gameData!.playCost ?? 0} ",
                         style: TextStyles.body3.colour(Colors.black),
                       ),
                       CircleAvatar(

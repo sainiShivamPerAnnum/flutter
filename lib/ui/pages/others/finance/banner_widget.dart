@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/asset_options_model.dart' as I;
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/draw_time_util.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -10,6 +11,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../core/service/analytics/mixpanel_analytics.dart';
 
 class BannerWidget extends StatefulWidget {
   BannerWidget({Key? key, required this.model, required this.happyHourCampign})
@@ -52,11 +55,24 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
 
   @override
   Widget buildBody(BuildContext context) {
+    S locale = S.of(context);
     return GestureDetector(
       onTap: () {
-        if (showHappyHour)
+        if (showHappyHour) {
           locator<BaseUtil>().showHappyHourDialog(locator<HappyHourCampign>(),
               isComingFromSave: true);
+          locator<MixpanelAnalytics>()
+              .track(eventName: "Happy Hour Strip Tapped ", properties: {
+            "Reward": {
+              "asset":
+                  locator<HappyHourCampign>().data?.rewards?.first.type ?? "",
+              "amount":
+                  locator<HappyHourCampign>().data?.rewards?.first.value ?? "",
+              "timer": "$inHours:$inMinutes:$inSeconds"
+            },
+            "location": "Inside Save Strip"
+          });
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -94,7 +110,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
                         text: TextSpan(
                             style: TextStyles.rajdhaniSB.body3
                                 .colour(Color(0XFFB5CDCB)),
-                            text: "Happy Hour ends in ",
+                            text:locale.happyHoursEndsIn ,
                             children: [
                               TextSpan(
                                   text: getString(),

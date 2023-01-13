@@ -12,6 +12,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,6 +21,7 @@ enum KycVerificationStatus { UNVERIFIED, FAILED, VERIFIED, NONE }
 
 class KYCDetailsViewModel extends BaseViewModel {
   final _bankAndPanService = locator<BankAndPanService>();
+  S locale = locator<S>();
   TextEditingController? nameController, panController;
   bool inEditMode = true;
   bool _isUpdatingKycDetails = false;
@@ -121,9 +123,9 @@ class KYCDetailsViewModel extends BaseViewModel {
             isBarrierDismissible: false,
             hapticVibrate: true,
             content: MoreInfoDialog(
-                title: 'Invalid File',
+                title: locale.invalidFile,
                 text:
-                    'Selected file size is very large. Please select an image of size less than 5 MB.'));
+                    locale.invalidFileSubtitle));
       } else
         return;
     } else {
@@ -133,9 +135,9 @@ class KYCDetailsViewModel extends BaseViewModel {
           isBarrierDismissible: false,
           hapticVibrate: true,
           content: MoreInfoDialog(
-              title: 'Invalid File',
+              title: locale.invalidFile,
               text:
-                  'Selected file is invalid. Please select a valid PNG, JPEG or JPG image.'));
+                  locale.invalidFileSubtitle));
     }
   }
 
@@ -169,7 +171,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     kycErrorMessage = null;
     if (capturedImage == null)
       return BaseUtil.showNegativeAlert(
-          "No file selected", "Please select a valid PAN image");
+          locale.noFileSelected, locale.selectValidPan);
     if (isUpdatingKycDetails) return;
     isUpdatingKycDetails = true;
     AppState.blockNavigation();
@@ -191,31 +193,31 @@ class KYCDetailsViewModel extends BaseViewModel {
 
           _bankAndPanService.checkForUserBankAccountDetails();
           AppState.backButtonDispatcher!.didPopRoute();
-          BaseUtil.showPositiveAlert("KYC successfully completed ✅",
-              "Your KYC verification has been successfully completed");
+          BaseUtil.showPositiveAlert(locale.kycSuccessTitle,
+              locale.kycSuccessSubTitle);
         } else {
           capturedImage = null;
           kycErrorMessage = forgeryUploadRes.errorMessage;
           kycVerificationStatus = KycVerificationStatus.FAILED;
           BaseUtil.showNegativeAlert(
-              forgeryUploadRes.errorMessage ?? "PAN verification failed",
-              "Please upload a valid PAN image and try again");
+              forgeryUploadRes.errorMessage ?? locale.panVerifyFailed,
+              locale.selectValidPan);
         }
       } else {
         capturedImage = null;
         kycErrorMessage = imageUploadRes.errorMessage;
         kycVerificationStatus = KycVerificationStatus.FAILED;
         BaseUtil.showNegativeAlert(
-            imageUploadRes.errorMessage ?? "Failed to upload your PAN image",
-            "Please try again after sometime");
+            imageUploadRes.errorMessage ?? locale.failedToUploadPAN,
+            locale.tryLater);
       }
     } else {
       capturedImage = null;
       kycErrorMessage = res.errorMessage;
       kycVerificationStatus = KycVerificationStatus.FAILED;
       BaseUtil.showNegativeAlert(
-          res.errorMessage ?? "Failed to upload your PAN image",
-          "Please try again after sometime");
+          res.errorMessage ?? locale.failedToUploadPAN,
+          locale.tryLater);
     }
     isUpdatingKycDetails = false;
     AppState.unblockNavigation();

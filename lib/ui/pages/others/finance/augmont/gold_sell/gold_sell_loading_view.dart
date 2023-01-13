@@ -11,6 +11,7 @@ import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_vm.dart';
 
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -26,22 +27,24 @@ class GoldSellLoadingView extends StatelessWidget {
       locator<AugmontTransactionService>();
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
+      S locale = locator<S>();
   final int waitTimeInSec = 45;
 
   GoldSellLoadingView({Key? key, required this.model}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: SizeConfig.padding32),
-        Text('Digital Gold', style: TextStyles.rajdhaniSB.body2),
+        Text(locale.digitalGoldText, style: TextStyles.rajdhaniSB.body2),
         SizedBox(
           height: SizeConfig.padding12,
           width: SizeConfig.screenWidth,
         ),
         Text(
-          "Safest Digital Investment",
+          locale.safestDigitalInvestment,
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
         Expanded(
@@ -51,7 +54,7 @@ class GoldSellLoadingView extends StatelessWidget {
         Column(
           children: [
             Text(
-              "Your withdrawal is in progress",
+              locale.txnWithDrawalProgress,
               style:
                   TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
             ),

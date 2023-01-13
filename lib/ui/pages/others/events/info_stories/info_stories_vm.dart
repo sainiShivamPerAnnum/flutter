@@ -25,6 +25,7 @@ class InfoStoriesViewModel extends BaseViewModel {
   List<StoryItemModel>? storyItemData;
   late List<StoryItem> storyItems;
 
+
   _loadAssetsAndData(String topic) async {
     setState(ViewState.Busy);
     final response = await _getterRepo!.getStory(topic: topic ?? 'onboarding');

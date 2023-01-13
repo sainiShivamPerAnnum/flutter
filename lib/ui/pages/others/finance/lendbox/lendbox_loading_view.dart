@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart'
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -25,17 +26,18 @@ class LendboxLoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: SizeConfig.padding32),
-        Text('Fello Flo', style: TextStyles.rajdhaniSB.body2),
+        Text(locale.felloFloText, style: TextStyles.rajdhaniSB.body2),
         SizedBox(
           height: SizeConfig.padding12,
           width: SizeConfig.screenWidth,
         ),
         Text(
-          "Earn 10% returns",
+          locale.floEarn10Percent,
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
         Expanded(
@@ -45,7 +47,7 @@ class LendboxLoadingView extends StatelessWidget {
         Column(
           children: [
             Text(
-              "Your transaction is in progress",
+             locale.transactionProgress,
               style:
                   TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
             ),
