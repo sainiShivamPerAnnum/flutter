@@ -218,10 +218,10 @@ class RootViewModel extends BaseViewModel {
         _rootController.navItems
             .putIfAbsent(Save(), () => RootController.saveNavBarItem);
         break;
-      // case "TM":
-      //   _rootController.navItems
-      //       .putIfAbsent(TambolaWrapper(), () => RootController.tambolaNavBar);
-      //   break;
+      case "TM":
+        _rootController.navItems
+            .putIfAbsent(TambolaWrapper(), () => RootController.tambolaNavBar);
+        break;
 
       case "WN":
       case "AC":
