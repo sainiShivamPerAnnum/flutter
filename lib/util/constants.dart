@@ -13,6 +13,8 @@ class Constants {
   static const String GAME_TYPE_POOLCLUB = "GM_POOL_CLUB";
   static const String GAME_TYPE_BOTTLEFLIP = "GM_BOTTLE_FLIP";
   static const String GAME_TYPE_BOWLING = "GM_BOWLING";
+  static const String GAME_TYPE_ROLLYVORTEX = "GM_ROLLY_VORTEX";
+  static const String GAME_TYPE_KNIFEHIT = "GM_KNIFE_HIT";
   static const String GAME_TYPE_HIGHEST_SAVER = "HIGHEST_SAVER_V2";
   static const String GAME_TYPE_FPL = "FPL";
 

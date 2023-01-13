@@ -164,9 +164,9 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
               // notifyListeners();
             },
           );
-          _performPostScratchProcessing(index);
         },
       );
+      _performPostScratchProcessing(index);
       _journeyService.updateRewardStatus(scratchCardList[index].prizeSubtype!);
     } catch (e) {
       AppState.isInstantGtViewInView = false;

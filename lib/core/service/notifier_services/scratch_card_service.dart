@@ -206,20 +206,27 @@ class ScratchCardService
   }
 
   showMultipleScratchCardsView() {
-    AppState.screenStack.add(ScreenItem.dialog);
-    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
-      PageRouteBuilder(
-        opaque: false,
-        pageBuilder: (BuildContext context, _, __) =>
-            MultipleScratchCardsView(scratchCardIdList: //scratchCardsList ??
-                [
-          "Acd92NN53WWpJZbxZ4UW",
-          "Bv8CzzI40pfwLpbuPM6Z",
-          "M83UzvsZGzMJlEcVezsj",
-          "WrffUHSSJ95hqxO5iv73"
-        ]),
-      ),
-    );
+    if (scratchCardsList != null) {
+      if (scratchCardsList!.length == 1) {
+        return showInstantScratchCardView(source: GTSOURCE.prize);
+      } else {
+        AppState.screenStack.add(ScreenItem.dialog);
+        Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+          PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (BuildContext context, _, __) =>
+                MultipleScratchCardsView(
+                    scratchCardIdList: //scratchCardsList ??
+                        [
+                  "Acd92NN53WWpJZbxZ4UW",
+                  "Bv8CzzI40pfwLpbuPM6Z",
+                  "M83UzvsZGzMJlEcVezsj",
+                  "WrffUHSSJ95hqxO5iv73"
+                ]),
+          ),
+        );
+      }
+    }
   }
 
   Future<void> updateUnscratchedGTCount() async {

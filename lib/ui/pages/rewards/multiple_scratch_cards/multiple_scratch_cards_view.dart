@@ -97,76 +97,83 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                                   return Transform.scale(
                                     scale: lerpDouble(1.2, 0.8, factorChange),
                                     child: Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal:
-                                              SizeConfig.pageHorizontalMargins),
-                                      width: SizeConfig.screenWidth,
-                                      height: SizeConfig.screenWidth! * 0.7,
-                                      child: model.scratchCardList[i].gtId
-                                                  ?.isEmpty ??
-                                              true
-                                          ? UnRedeemedGoldenScratchCard(
-                                              isLevelChange: false,
-                                              width: SizeConfig.screenWidth!,
-                                            )
-                                          : Scratcher(
-                                              color: Colors.transparent,
-                                              accuracy: ScratchAccuracy.low,
-                                              brushSize: 50,
-                                              // enabled: model.state == ViewState.Idle
-                                              //     ? true
-                                              //     : false,
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: SizeConfig
+                                                .pageHorizontalMargins),
+                                        width: SizeConfig.screenWidth,
+                                        height: SizeConfig.screenWidth! * 0.7,
+                                        child: AnimatedSwitcher(
+                                          duration: Duration(milliseconds: 500),
+                                          child: model.scratchCardList[i].gtId
+                                                      ?.isEmpty ??
+                                                  true
+                                              ? UnRedeemedGoldenScratchCard(
+                                                  isLevelChange: false,
+                                                  width:
+                                                      SizeConfig.screenWidth!,
+                                                )
+                                              : Scratcher(
+                                                  color: Colors.transparent,
+                                                  accuracy: ScratchAccuracy.low,
+                                                  brushSize: 50,
+                                                  // enabled: model.state == ViewState.Idle
+                                                  //     ? true
+                                                  //     : false,
 
-                                              threshold: 20,
-                                              key: model.scratchStateKeys[i],
-                                              onScratchStart: () {
-                                                // model.isCardScratchStarted = true;
-                                                model.showScratchGuideLabel =
-                                                    false;
-                                              },
-                                              onChange: ((value) => model
-                                                      .currentCardScratchPercentage =
-                                                  value),
-                                              onThreshold: () {
-                                                // if (model
-                                                //     .scratchCardList[i].isRewarding!) {
-                                                // model.isShimmerEnabled = true;
+                                                  threshold: 20,
+                                                  key:
+                                                      model.scratchStateKeys[i],
+                                                  onScratchStart: () {
+                                                    // model.isCardScratchStarted = true;
+                                                    model.showScratchGuideLabel =
+                                                        false;
+                                                  },
+                                                  onChange: ((value) => model
+                                                          .currentCardScratchPercentage =
+                                                      value),
+                                                  onThreshold: () {
+                                                    // if (model
+                                                    //     .scratchCardList[i].isRewarding!) {
+                                                    // model.isShimmerEnabled = true;
 
-                                                // Future.delayed(
-                                                //     Duration(
-                                                //       seconds: 3,
-                                                //     ), () {
-                                                //   model.isShimmerEnabled = false;
-                                                // });
-                                                // _controller.forward().then(
-                                                //     (value) =>
-                                                //         _controller.reverse());
-                                                // }
+                                                    // Future.delayed(
+                                                    //     Duration(
+                                                    //       seconds: 3,
+                                                    //     ), () {
+                                                    //   model.isShimmerEnabled = false;
+                                                    // });
+                                                    // _controller.forward().then(
+                                                    //     (value) =>
+                                                    //         _controller.reverse());
+                                                    // }
 
-                                                model.redeemScratchCard(i);
-                                              },
-                                              image: Image.asset(
-                                                model.scratchCardList[i]
-                                                        .isLevelChange!
-                                                    ? Assets
-                                                        .levelUpUnredeemedScratchCardBGPNG
-                                                    : Assets
-                                                        .unredeemedScratchCardBG_png,
-                                                fit: BoxFit.contain,
-                                                height:
-                                                    SizeConfig.screenWidth! *
+                                                    model.redeemScratchCard(i);
+                                                  },
+                                                  image: Image.asset(
+                                                    model.scratchCardList[i]
+                                                            .isLevelChange!
+                                                        ? Assets
+                                                            .levelUpUnredeemedScratchCardBGPNG
+                                                        : Assets
+                                                            .unredeemedScratchCardBG_png,
+                                                    fit: BoxFit.contain,
+                                                    height: SizeConfig
+                                                            .screenWidth! *
                                                         0.6,
-                                                width: SizeConfig.screenWidth! *
-                                                    0.6,
-                                              ),
-                                              child: RedeemedGoldenScratchCard(
-                                                ticket:
-                                                    model.scratchCardList[i],
-                                                width: SizeConfig.screenWidth! *
-                                                    0.6,
-                                              ),
-                                            ),
-                                    ),
+                                                    width: SizeConfig
+                                                            .screenWidth! *
+                                                        0.6,
+                                                  ),
+                                                  child:
+                                                      RedeemedGoldenScratchCard(
+                                                    ticket: model
+                                                        .scratchCardList[i],
+                                                    width: SizeConfig
+                                                            .screenWidth! *
+                                                        0.6,
+                                                  ),
+                                                ),
+                                        )),
                                   );
                                 });
                           },
@@ -190,21 +197,29 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                                 textAlign: TextAlign.center),
                           ),
                           Container(
-                              decoration: BoxDecoration(),
-                              width: SizeConfig.screenWidth,
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.symmetric(
-                                  horizontal:
-                                      SizeConfig.pageHorizontalMargins * 2),
-                              child: (locale.wonGT).beautify(
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor2),
-                                  boldStyle: TextStyles.sourceSansB.body3
-                                      .colour(UiConstants.kTextColor),
-                                  italicStyle: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor2)
-                                      .italic,
-                                  alignment: TextAlign.center)),
+                            width: SizeConfig.screenWidth,
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(
+                                horizontal:
+                                    SizeConfig.pageHorizontalMargins * 2),
+                            child: AnimatedSwitcher(
+                              duration: Duration(seconds: 1),
+                              child: (model
+                                          .scratchCardList[
+                                              model.pageNotifier!.value.toInt()]
+                                          .note ??
+                                      locale.wonGT)
+                                  .beautify(
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(UiConstants.kTextColor2),
+                                      boldStyle: TextStyles.sourceSansB.body3
+                                          .colour(UiConstants.kTextColor),
+                                      italicStyle: TextStyles.sourceSans.body3
+                                          .colour(UiConstants.kTextColor2)
+                                          .italic,
+                                      alignment: TextAlign.center),
+                            ),
+                          ),
                         ]),
                       ),
                     ],
