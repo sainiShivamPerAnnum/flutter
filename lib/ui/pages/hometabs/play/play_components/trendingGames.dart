@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
@@ -52,8 +53,8 @@ class TrendingGamesSection extends StatelessWidget {
                   ? TrendingGamesShimmer()
                   : TrendingGames(
                       game: model.trendingGamesListData[index],
-                      key: ValueKey(Constants.ALL_GAMES),
-                    );
+                      model: model,
+                      key: ValueKey(model.trendingGamesListData[index].code));
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
@@ -69,10 +70,39 @@ class TrendingGamesSection extends StatelessWidget {
 
 class TrendingGames extends StatelessWidget {
   final GameModel? game;
+  final PlayViewModel model;
   const TrendingGames({
     this.game,
+    required this.model,
     Key? key,
-  }) : super(key: key);
+  });
+
+  Gm? getGameInfo(String gameCode) {
+    switch (gameCode) {
+      case "GM_CRICKET_HERO":
+        return model.gameStats?.data?.gmCricketHero;
+
+      case "GM_FOOTBALL_KICKOFF":
+        return model.gameStats?.data?.gmFootballKickoff;
+
+      case "GM_CANDY_FIESTA":
+        return model.gameStats?.data?.gmCandyFiesta;
+
+      // case "GM_ROLLY_VORTEX":
+      // model.gameStats?.data?.
+      case "GM_POOL_CLUB":
+        return model.gameStats?.data?.gmPoolClub;
+      // case "GM_KNIFE_HIT"
+      //   return model.gameStats?.data?.GM_KNIFE_HIT,
+      case "GM_BOWLING":
+        return model.gameStats?.data?.gmBowling;
+      case "GM_BOTTLE_FLIP":
+        return model.gameStats?.data?.gmBottleFlip;
+
+      default:
+        return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +127,9 @@ class TrendingGames extends StatelessWidget {
         // AppState.delegate!.parseRoute(
         //   Uri.parse(game!.route!),
         // );
-        BaseUtil.openGameModalSheet(game!.gameCode!);
+
+        BaseUtil.openGameModalSheet(
+            game!.gameCode!, getGameInfo(game!.gameCode!));
       },
       child: Container(
         decoration: BoxDecoration(

@@ -4,6 +4,8 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/date_helper.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -14,6 +16,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class NotificationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return BaseView<NotificationsViewModel>(onModelReady: (model) {
       model.init();
     }, builder: (ctx, model, child) {
@@ -115,7 +118,7 @@ class NotificationsPage extends StatelessWidget {
                                                   child: Text(
                                                     model.notifications![index]
                                                             .title ??
-                                                     locale.title,
+                                                        locale.title,
                                                     maxLines: 2,
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -151,7 +154,7 @@ class NotificationsPage extends StatelessWidget {
                                               child: Text(
                                                 model.notifications![index]
                                                         .subtitle ??
-                                           locale.subTitle,
+                                                    locale.subTitle,
                                                 style: TextStyles.body4
                                                     .colour(Colors.white),
                                               ),

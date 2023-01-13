@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
+import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -59,7 +60,6 @@ class LauncherViewModel extends BaseViewModel {
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   // final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final UserService _userService = locator<UserService>();
-
   FirebasePerformance _performance = FirebasePerformance.instance;
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -123,6 +123,7 @@ class LauncherViewModel extends BaseViewModel {
       if (userService.isUserOnboarded) {
         await _journeyRepo.init();
         await _journeyService.init();
+        
       }
 
       // check if cache invalidation required

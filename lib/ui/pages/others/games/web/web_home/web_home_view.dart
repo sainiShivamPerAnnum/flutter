@@ -505,7 +505,7 @@ class PlayButtonOverlapper extends StatelessWidget {
               );
             },
             child: Container(
-              height: SizeConfig.navBarHeight + SizeConfig.padding64,
+              height: SizeConfig.navBarHeight + SizeConfig.padding32 + 28,
               width: double.infinity,
               decoration: BoxDecoration(
                   color: UiConstants.kBackgroundColor.withOpacity(0.5),

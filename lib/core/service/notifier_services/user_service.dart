@@ -503,12 +503,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   setPageConfigs(DynamicUI dynamicUi) {
+    
     DynamicUiUtils.playViewOrder = dynamicUi.play;
     DynamicUiUtils.saveViewOrder = [
       dynamicUi.save.assets,
       dynamicUi.save.sections
     ];
     DynamicUiUtils.helpFab = dynamicUi.journeyFab;
+    DynamicUiUtils.navBar = dynamicUi.navBar;
   }
 
   diplayUsername(String username) {

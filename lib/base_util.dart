@@ -12,6 +12,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
@@ -297,13 +298,15 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static openGameModalSheet(String game) {
+  static openGameModalSheet(String game, Gm? gameModel) {
     return openModalBottomSheet(
       isScrollControlled: true,
+      enableDrag: true,
       isBarrierDismissible: true,
       addToScreenStack: true,
       content: WebGameModalSheet(
         game: game,
+        gameInfo: gameModel,
       ),
       backgroundColor: Color(0xff39393C),
       hapticVibrate: true,
@@ -315,7 +318,7 @@ class BaseUtil extends ChangeNotifier {
     bool? isSkipMl,
     required InvestmentType investmentType,
   }) {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // if (_userService!.userJourneyStats?.mlIndex == 1)
       //   return BaseUtil.openDialog(
       //     addToScreenStack: true,

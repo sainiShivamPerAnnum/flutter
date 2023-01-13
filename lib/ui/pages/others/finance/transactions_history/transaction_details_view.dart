@@ -100,7 +100,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
               ),
               Center(
                 child: Text(
-                  "₹" + widget.txn.amount.toString(),
+                  _txnHistoryService!.getFormattedTxnAmount(widget.txn.amount),
                   style: TextStyles.rajdhaniSB.title50,
                 ),
               ),
@@ -177,7 +177,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                             ),
                             Text(
                                 "₹" +
-                                    widget.txn.augmnt!["aLockPrice"]
+                                    (widget.txn.augmnt?["aLockPrice"] ?? 0)
                                         .toString() +
                                     " /gm",
                                 style: TextStyles.sourceSans.body3)
@@ -210,52 +210,54 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                       ),
                       if (widget.txn.couponCode != null ||
                           widget.txn.couponCode!.isEmpty) ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 2, vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  SvgPicture.asset(Assets.couponsAsset),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
+                        if (_showAppliedCoupon) ...[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 2, vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(Assets.couponsAsset),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      widget.txn.couponCode ?? "",
+                                      style: TextStyles.sourceSansSB.body3
+                                          .colour(Color(0xffA5FCE7)),
+                                    ),
+                                    Text(
+                                      " coupon applied",
+                                      style: TextStyles.sourceSansL.body3
+                                          .colour(Color(0xffA5FCE7)),
+                                    ),
+                                  ],
+                                ),
+                                if (widget.txn.couponMap
+                                        ?.containsKey("goldQty") ??
+                                    false)
                                   Text(
-                                    widget.txn.couponCode ?? "",
-                                    style: TextStyles.sourceSansSB.body3
-                                        .colour(Color(0xffA5FCE7)),
-                                  ),
-                                  Text(
-                                    " coupon applied",
-                                    style: TextStyles.sourceSansL.body3
-                                        .colour(Color(0xffA5FCE7)),
-                                  ),
-                                ],
-                              ),
-                              if (widget.txn.couponMap
-                                      ?.containsKey("goldQty") ??
-                                  false)
-                                Text(
-                                    "+ " +
-                                        (widget.txn.couponMap?["goldQty"]
-                                                .toString() ??
-                                            "") +
-                                        " gms",
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(Color(0xffA5FCE7))),
-                              if (widget.txn.couponMap?.containsKey("gtId") ??
-                                  false)
-                                Text("+ 1 Tambola Ticket",
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(Color(0xffA5FCE7)))
-                            ],
+                                      "+ " +
+                                          (widget.txn.couponMap?["goldQty"]
+                                                  .toString() ??
+                                              "") +
+                                          " gms",
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Color(0xffA5FCE7))),
+                                if (widget.txn.couponMap?.containsKey("gtId") ??
+                                    false)
+                                  Text("+ 1 Tambola Ticket",
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Color(0xffA5FCE7)))
+                              ],
+                            ),
                           ),
-                        ),
-                        Divider(
-                          color: Color(0xff3E3E3E),
-                        ),
+                          Divider(
+                            color: Color(0xff3E3E3E),
+                          ),
+                        ],
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 2, vertical: 8),
@@ -436,6 +438,18 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                   ],
                 ),
               Spacer(),
+              if (widget.txn.misMap?.containsKey("happyHourGtId") ?? false) ...[
+                SizedBox(height: SizeConfig.padding12),
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 4, bottom: 8),
+                    child: Text(locale.txnHappyHours,
+                        textAlign: TextAlign.center,
+                        style: TextStyles.sourceSans.body2
+                            .colour(Color(0xffB5CDCB))),
+                  ),
+                ),
+              ],
               if (_showInvoiceButton)
                 Center(
                   child: AppPositiveCustomChildBtn(

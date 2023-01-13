@@ -20,6 +20,7 @@ import 'package:felloapp/core/service/notifier_services/connectivity_service.dar
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -33,6 +34,7 @@ import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -122,12 +124,15 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
           ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
           ChangeNotifierProvider(create: (_) => locator<JourneyService>()),
+
           ChangeNotifierProvider(
               create: (_) => locator<AugmontTransactionService>()),
           ChangeNotifierProvider(create: (_) => locator<RazorpayService>()),
           ChangeNotifierProvider<ConnectivityService>(
               create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => appState),
+
+          ChangeNotifierProvider(create: (_) => locator<TambolaService>()),
         ],
         child: PropertyChangeProvider<JourneyService, JourneyServiceProperties>(
           value: locator<JourneyService>(),

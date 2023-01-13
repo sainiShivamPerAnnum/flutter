@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -12,7 +13,9 @@ import '../../../widgets/appbar/appbar.dart';
 
 class Play extends StatelessWidget {
   final ScrollController _controller = ScrollController();
+  final RootViewModel rootVm;
 
+   Play({Key? key, required this.rootVm}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     log("ROOT: Play view build called");
@@ -36,7 +39,7 @@ class Play extends StatelessWidget {
             physics: BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: model.getOrderedPlayViewItems(model),
+              children: model.getOrderedPlayViewItems(model,rootVm),
             ),
           ),
         );

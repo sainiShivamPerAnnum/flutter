@@ -79,6 +79,7 @@ class _TransactionDetailsBottomSheetState
     S locale = S.of(context);
     final isGold = widget.transaction!.subType ==
         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD;
+        
     return WillPopScope(
       onWillPop: () async {
         AppState.screenStack.removeLast();

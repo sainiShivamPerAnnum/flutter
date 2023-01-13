@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
@@ -13,9 +14,11 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WebGameModalSheet extends StatelessWidget {
-  const WebGameModalSheet({Key? key, required this.game}) : super(key: key);
+  const WebGameModalSheet(
+      {Key? key, required this.game, required this.gameInfo})
+      : super(key: key);
   final String game;
-
+  final Gm? gameInfo;
   @override
   Widget build(BuildContext context) {
     return BaseView<WebHomeViewModel>(onModelReady: (model) {
@@ -114,7 +117,7 @@ class WebGameModalSheet extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "540 PTS",
+                                "${gameInfo?.netScore ?? "-"}",
                                 style: TextStyles.rajdhaniSB.title5,
                               )
                             ],
@@ -147,7 +150,7 @@ class WebGameModalSheet extends StatelessWidget {
                                           .colour(Color(0xffBDBDBE)),
                                     ),
                                     Text(
-                                      "230 pt",
+                                      "${gameInfo?.topScore ?? "-"}",
                                       style: TextStyles.rajdhaniSB.body1.colour(
                                         Color(0xffBDBDBE),
                                       ),
@@ -174,12 +177,12 @@ class WebGameModalSheet extends StatelessWidget {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     Text(
-                                      "Your best",
+                                      "Total won\nfrom Game",
                                       style: TextStyles.sourceSans.body3
                                           .colour(Color(0xffBDBDBE)),
                                     ),
                                     Text(
-                                      "230 pt",
+                                      "₹${gameInfo?.netScore ?? " -"}",
                                       style: TextStyles.rajdhaniSB.body1.colour(
                                         Color(0xffBDBDBE),
                                       ),
@@ -207,19 +210,26 @@ class WebGameModalSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "PLAY FOR",
+                        "PLAY FOR ",
                         style: TextStyles.rajdhaniB.body1,
                       ),
-                      SvgPicture.asset(
-                        Assets.token,
-                        height: 20,
-                        width: 20,
+                      ClipOval(
+                        child: Container(
+                          color: Colors.black,
+                          child: SvgPicture.asset(
+                            Assets.token,
+                            height: 20,
+                            width: 20,
+                          ),
+                        ),
                       ),
                       Text(model.currentGameModel!.playCost.toString(),
                           style: TextStyles.rajdhaniB.body1)
                     ],
                   ),
-                  onPressed: () {}),
+                  onPressed: () async {
+                    model.launchGame();
+                  }),
             ),
             SizedBox(
               height: 28,

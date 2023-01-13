@@ -11,6 +11,7 @@ class ApiPath {
   get kAddBankAccount => "/bank";
   static String kGetBankAccountDetails(String? uid) => '/$uid/bank';
   get kVerifyPan => "/verify/pan";
+  static getGameStats(String uid) => "/user/$uid/game/stats";
   static String kGetSignedImageUrl(String uid) => "/upload/$uid/image";
   static String kForgeryUpload(String uid) => "/forgery/$uid/image";
   static String kGetPan(String uid) => "/$uid/pan";

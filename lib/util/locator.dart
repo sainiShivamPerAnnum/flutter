@@ -21,6 +21,7 @@ import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
@@ -167,16 +168,15 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => SaveRepo());
   locator.registerLazySingleton(() => LendboxRepo());
   locator.registerLazySingleton(() => PrizingRepo());
-
+  locator.registerLazySingleton(() => UserStatsRepo());
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
-
+  locator.registerFactory(() => RootViewModel());
   // Hometabs
-  locator.registerFactory(() => PlayViewModel());
+  locator.registerFactory(() => PlayViewModel(model: locator()));
   locator.registerFactory(() => SaveViewModel());
   locator.registerFactory(() => WinViewModel());
   locator.registerFactory(() => JourneyPageViewModel());
-  locator.registerFactory(() => RootViewModel());
 
   // VIEW MODELS
   locator.registerFactory(() => TransactionsHistoryViewModel());

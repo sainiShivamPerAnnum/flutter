@@ -7,19 +7,27 @@ class DynamicUI {
   List<String> play;
   SaveUi save;
   SingleInfo journeyFab;
-  DynamicUI({required this.play, required this.save, required this.journeyFab});
+  List<String> navBar;
+  DynamicUI(
+      {required this.play,
+      required this.save,
+      required this.journeyFab,
+      required this.navBar});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'play': play,
       'save': save.toMap(),
-      'journeyFab': journeyFab.toMap()
+      'journeyFab': journeyFab.toMap(),
+      'navBar': navBar
     };
   }
 
   factory DynamicUI.fromMap(Map<String, dynamic> map) {
     return DynamicUI(
         play: List<String>.from((map['play'].cast<String>() as List<String>)),
+        navBar:
+            List<String>.from((map['navbar'].cast<String>() as List<String>)),
         save: SaveUi.fromMap(map['save'] as Map<String, dynamic>),
         journeyFab: SingleInfo.fromMap(map['journeyFab']));
   }

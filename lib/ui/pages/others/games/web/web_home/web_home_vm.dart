@@ -259,6 +259,7 @@ class WebHomeViewModel extends BaseViewModel {
     trackGameStart();
     String initialUrl = generateGameUrl();
     _logger!.d("Game Url: $initialUrl");
+    AppState.backButtonDispatcher!.didPopRoute();
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: WebGameViewPageConfig,

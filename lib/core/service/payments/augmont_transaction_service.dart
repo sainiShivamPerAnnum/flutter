@@ -88,7 +88,7 @@ class AugmontTransactionService extends BaseTransactionService {
       case "PAYTM-PG":
         return processPaytmTransaction();
         break;
-      case "RZP-PG":
+      case "PAYTM":
         return getUserUpiAppChoice(this);
         break;
       case "RZP-PG":

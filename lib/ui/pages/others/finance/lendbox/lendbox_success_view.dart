@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_success_view.dart';
@@ -131,7 +132,7 @@ class LendboxSuccessView extends StatelessWidget {
               )
             else
               Text(
-              locale.txnInvestmentSuccess,
+                locale.txnInvestmentSuccess,
                 textAlign: TextAlign.center,
                 style: TextStyles.sourceSans.body2.setOpecity(0.7),
               ),
@@ -195,7 +196,7 @@ class LendboxSuccessView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                             locale.totalBalance,
+                              locale.totalBalance,
                               style: TextStyles.sourceSans.body2
                                   .colour(UiConstants.kTextColor2),
                             ),
@@ -242,7 +243,7 @@ class LendboxSuccessView extends StatelessWidget {
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
                     WinningChips(
                       title: locale.tTicket,
-                      tooltip:locale.winChipsTitle3,
+                      tooltip: locale.winChipsTitle3,
                       asset: Assets.singleTmbolaTicket,
                       qty: _txnService!.currentTxnTambolaTicketsCount.toInt(),
                     )
@@ -253,6 +254,8 @@ class LendboxSuccessView extends StatelessWidget {
               onPressed: () {
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.delegate!.appState.setCurrentTabIndex = 1;
+                Provider.of<TambolaService>(context, listen: false)
+                    .fetchTambolaBoard();
                 this.showGtIfAvailable();
               },
               child: Text(

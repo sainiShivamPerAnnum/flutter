@@ -14,6 +14,7 @@ import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -206,8 +207,9 @@ class TicketsView extends StatelessWidget {
                         Text(
                           locale.tgenerated +
                               " ${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount} " +
-                              locale.tgeneratedCount(
-                                  model!.tambolaService!.ticketGenerateCount.toString()),
+                              locale.tgeneratedCount(model!
+                                  .tambolaService!.ticketGenerateCount
+                                  .toString()),
                           style: TextStyles.rajdhani.body2.colour(Colors.white),
                         ),
                       ],
@@ -701,12 +703,11 @@ class ButTicketsComponent extends StatelessWidget {
                     ),
                     Text(
                       locale.get1Ticket(
-                        (AppConfig.getValue(AppConfigKey.tambola_cost)
-                                .toString()
-                                .isEmpty
-                            ? '500'
-                            : AppConfig.getValue(AppConfigKey.tambola_cost))
-                      ),
+                          (AppConfig.getValue(AppConfigKey.tambola_cost)
+                                  .toString()
+                                  .isEmpty
+                              ? '500'
+                              : AppConfig.getValue(AppConfigKey.tambola_cost))),
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kTextColor2),
                     ),
@@ -1029,7 +1030,7 @@ class TambolaLeaderBoard extends StatelessWidget {
             height: SizeConfig.pageHorizontalMargins + SizeConfig.padding12,
           ),
           Text(
-           locale.lastWeekWinners,
+            locale.lastWeekWinners,
             style: TextStyles.rajdhaniSB.body0,
           ),
           SizedBox(
@@ -1241,7 +1242,7 @@ class TambolaPrize extends StatelessWidget {
                 child: Text(
                   AppConfig.getValue<String?>(
                           AppConfigKey.game_tambola_announcement) ??
-                    locale.tWin1Crore,
+                      locale.tWin1Crore,
                   textAlign: TextAlign.center,
                   style: TextStyles.sourceSans.body4.colour(
                     Colors.white.withOpacity(0.5),
@@ -1299,7 +1300,9 @@ class TambolaPrize extends StatelessWidget {
                                           .colour(Colors.white),
                                     ),
                                     Text(
-                                    locale.tCompleteToGet(model.tPrizes!.prizesA![index].displayName.toString()),
+                                      locale.tCompleteToGet(model
+                                          .tPrizes!.prizesA![index].displayName
+                                          .toString()),
                                       style: TextStyles.sourceSans.body4.colour(
                                           Colors.white.withOpacity(0.5)),
                                     )

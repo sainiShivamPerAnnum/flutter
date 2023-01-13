@@ -163,7 +163,6 @@ class LoginControllerViewModel extends BaseViewModel {
         }
       case LoginOtpView.index:
         {
-          
           String otp = _otpScreenKey.currentState!.model!.otp;
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             logger!.d("OTP is $otp");
@@ -384,7 +383,7 @@ class LoginControllerViewModel extends BaseViewModel {
     AnalyticsProperties().init();
     userService.userBootUpEE();
     if (userService.isUserOnboarded) await _journeyService!.init();
-    if (userService.isUserOnboarded) await _journeyRepo!.init();
+
     fcmListener!.setupFcm();
     logger!.i("Calling analytics init for new onboarded user");
     await _analyticsService!.login(
@@ -541,10 +540,7 @@ class LoginControllerViewModel extends BaseViewModel {
           properties: {'mobile': this.userMobile});
     } else {
       _otpScreenKey.currentState!.model!.onOtpResendConfirmed(false);
-      BaseUtil.showNegativeAlert(
-      locale.signInFailedText,
-        locale.exceededOTPs
-      );
+      BaseUtil.showNegativeAlert(locale.signInFailedText, locale.exceededOTPs);
     }
   }
 
@@ -600,8 +596,7 @@ class LoginControllerViewModel extends BaseViewModel {
         await _userRepo!.getCustomUserToken(phno);
 
     if (tokenRes.code == 400) {
-      BaseUtil.showNegativeAlert(
-          locale.authFailed, tokenRes.errorMessage);
+      BaseUtil.showNegativeAlert(locale.authFailed, tokenRes.errorMessage);
     }
 
     final String token = tokenRes.model!;
@@ -616,8 +611,7 @@ class LoginControllerViewModel extends BaseViewModel {
       _onSignInSuccess(LoginSource.TRUECALLER);
     }).catchError((e) {
       logger!.e(e);
-      BaseUtil.showNegativeAlert(locale.authFailed,
-         locale.authenticateNumber);
+      BaseUtil.showNegativeAlert(locale.authFailed, locale.authenticateNumber);
       loginUsingTrueCaller = false;
     });
   }
@@ -627,8 +621,6 @@ class LoginControllerViewModel extends BaseViewModel {
     BaseUtil.launchUrl('https://fello.in/policy/tnc');
     _analyticsService!.track(eventName: AnalyticsEvents.termsAndConditions);
   }
-
-  
 
   exit() {
     _controller!.removeListener(_pageListener);

@@ -38,7 +38,7 @@ class GoldBuyInputView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-S locale = locator<S>();
+    S locale = locator<S>();
     return Stack(
       children: [
         Column(
@@ -97,7 +97,9 @@ S locale = locator<S>();
                     ),
                   )
                 : AppPositiveBtn(
-                    btnText: model.status == 2 ? locale.btnSave : locale.unavailable.toUpperCase(),
+                    btnText: model.status == 2
+                        ? locale.btnSave
+                        : locale.unavailable.toUpperCase(),
                     onPressed: () async {
                       if (!augTxnService.isGoldBuyInProgress) {
                         FocusScope.of(context).unfocus();
@@ -345,7 +347,7 @@ class EnterAmountView extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
                     child: Text(
-                      "${model.goldAmountInGrams}"+ locale.gms,
+                      "${model.goldAmountInGrams}" + locale.gms,
                       style: TextStyles.sourceSansSB.body1,
                     ),
                   ),

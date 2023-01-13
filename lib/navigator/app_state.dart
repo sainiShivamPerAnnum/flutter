@@ -52,7 +52,8 @@ class AppState extends ChangeNotifier {
   static bool isWinOpened = false;
   static bool isRootAvailableForIncomingTaskExecution = true;
   static bool isInstantGtViewInView = false;
-
+  static int ticketCount = 0;
+  
   static List<ScreenItem> screenStack = [];
   static FelloRouterDelegate? delegate;
   static FelloBackButtonDispatcher? backButtonDispatcher;
@@ -116,22 +117,21 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
-      switch (index) {
-        case 0:
-          _analyticsService!.trackScreen(screen: 'Journey',properties: {});
-          break;
-        case 1:
-          _analyticsService!.trackScreen(screen: 'Save',properties: {});
-          break;
-        case 2:
-          _analyticsService!.trackScreen(screen: 'Play',properties: {});
-          break;
-        case 3:
-          _analyticsService!.trackScreen(screen: 'Win',properties: {});
-          break;
-        default:
-      }
-  
+    switch (index) {
+      case 0:
+        _analyticsService!.trackScreen(screen: 'Journey', properties: {});
+        break;
+      case 1:
+        _analyticsService!.trackScreen(screen: 'Save', properties: {});
+        break;
+      case 2:
+        _analyticsService!.trackScreen(screen: 'Play', properties: {});
+        break;
+      case 3:
+        _analyticsService!.trackScreen(screen: 'Win', properties: {});
+        break;
+      default:
+    }
 
     // homeTabPageController.jumpToPage(_rootIndex);
     if (index == 2 && isWinOpened == false) {

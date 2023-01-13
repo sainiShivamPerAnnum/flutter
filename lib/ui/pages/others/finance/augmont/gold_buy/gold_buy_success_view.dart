@@ -1,9 +1,11 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
@@ -266,6 +268,9 @@ class GoldBuySuccessView extends StatelessWidget {
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
               AppState.delegate!.appState.setCurrentTabIndex = 1;
+              Provider.of<TambolaService>(context, listen: false)
+                  .fetchTambolaBoard();
+
               Future.delayed(Duration(milliseconds: 500), () {
                 _gtService!.showInstantGoldenTicketView(
                   amount: _augTxnService!.currentTxnAmount,

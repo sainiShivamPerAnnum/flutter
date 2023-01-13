@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -14,6 +15,7 @@ import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -39,9 +41,11 @@ import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
+import 'package:felloapp/ui/pages/others/games/tambola/tambola_instant_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -96,26 +100,20 @@ class RootViewModel extends BaseViewModel {
     await _journeyService.getUnscratchedGT();
   }
 
-
-
-  
-
-
   onInit() {
-    navBarItems.addAll({
-      JourneyView():
-          NavBarItemModel(locale.navBarJourney, Assets.navJourneyLottie),
-      Save(): NavBarItemModel(locale.navBarSave, Assets.navSaveLottie),
-      Play(): NavBarItemModel(locale.navBarPlay, Assets.navPlayLottie),
-      Win(): NavBarItemModel(locale.navBarWin, Assets.navWinLottie),
-      TambolaWrapper(): NavBarItemModel("Tambola", Assets.navTambolaLottie)
-    });
+    DynamicUiUtils.navBar.forEach(getNavItems);
+
+    locator<UserStatsRepo>().getGameStats();
     AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
     _referralService.verifyReferral();
     _referralService.initDynamicLinks();
+
     initialize();
   }
+
+  final NavBarItemModel tambolaNavBar =
+      NavBarItemModel("Tambola", Assets.navTambolaLottie);
 
   initialize() async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
@@ -189,6 +187,85 @@ class RootViewModel extends BaseViewModel {
     Haptic.vibrate();
     if (AppState.delegate!.appState.getCurrentTabIndex == 0)
       _journeyService.checkForMilestoneLevelChange();
+    _tambolaService!.completer.future.then((value) {
+      if (navBarItems.values.toList()[index] == tambolaNavBar) {
+        if ((_tambolaService!.initialTicketCount ?? -1) == 0) {
+          if (_tambolaService!.userWeeklyBoards!.length > 0) {
+            _tambolaService!.initialTicketCount =
+                _tambolaService!.userWeeklyBoards!.length;
+            WidgetsBinding.instance.addPostFrameCallback(
+              (timeStamp) {
+                _showTambolaTicketDialog(
+                    _tambolaService!.userWeeklyBoards!.length);
+              },
+            );
+          }
+        }
+      }
+    });
+  }
+
+  // navBarItems.addAll({
+  //     JourneyView():
+  //         NavBarItemModel(locale.navBarJourney, Assets.navJourneyLottie),
+  //     Save(): NavBarItemModel(locale.navBarSave, Assets.navSaveLottie),
+  //     TambolaWrapper(
+  //       vm: this,
+  //     ): tambolaNavBar,
+  //     Play(
+  //       rootVm: this,
+  //     ): NavBarItemModel(locale.navBarPlay, Assets.navPlayLottie),
+  //     Win(): NavBarItemModel(locale.navBarWin, Assets.navWinLottie),
+  //   });
+
+  void getNavItems(String navItem) {
+    switch (navItem) {
+      case "JN":
+        navBarItems.putIfAbsent(
+            JourneyView(),
+            () =>
+                NavBarItemModel(locale.navBarJourney, Assets.navJourneyLottie));
+
+        break;
+
+      case "SV":
+        navBarItems.putIfAbsent(Save(),
+            () => NavBarItemModel(locale.navBarSave, Assets.navSaveLottie));
+        break;
+      case "TM":
+        navBarItems.putIfAbsent(
+            TambolaWrapper(
+              vm: this,
+            ),
+            () => tambolaNavBar);
+        break;
+
+      case "WN":
+      case "AC":
+        navBarItems.putIfAbsent(Win(),
+            () => NavBarItemModel(locale.navBarWin, Assets.navWinLottie));
+        break;
+      case "PL":
+        navBarItems.putIfAbsent(
+            Play(
+              rootVm: this,
+            ),
+            () => NavBarItemModel(locale.navBarPlay, Assets.navPlayLottie));
+        break;
+
+      default:
+    }
+  }
+
+  _showTambolaTicketDialog(int ticketCount) {
+    AppState.screenStack.add(ScreenItem.dialog);
+    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+      PageRouteBuilder(
+          opaque: false,
+          pageBuilder: (BuildContext context, _, __) => TambolaInstantView(
+                ticketCount: ticketCount,
+              )),
+    );
   }
 
   _initAdhocNotifications() {
