@@ -1,4 +1,6 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -23,6 +25,33 @@ class GOWCard extends StatelessWidget {
     required this.model,
     Key? key,
   }) : super(key: key);
+
+  Gm? getGameInfo(String gameCode) {
+    switch (gameCode) {
+      case "GM_CRICKET_HERO":
+        return model.gameStats?.data?.gmCricketHero;
+
+      case "GM_FOOTBALL_KICKOFF":
+        return model.gameStats?.data?.gmFootballKickoff;
+
+      case "GM_CANDY_FIESTA":
+        return model.gameStats?.data?.gmCandyFiesta;
+
+      case "GM_ROLLY_VORTEX":
+        return model.gameStats?.data?.gmRallyVertex;
+      case "GM_POOL_CLUB":
+        return model.gameStats?.data?.gmPoolClub;
+      case "GM_KNIFE_HIT":
+        return model.gameStats?.data?.gmKnifeHit;
+      case "GM_BOWLING":
+        return model.gameStats?.data?.gmBowling;
+      case "GM_BOTTLE_FLIP":
+        return model.gameStats?.data?.gmBottleFlip;
+
+      default:
+        return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +83,11 @@ class GOWCard extends StatelessWidget {
                                 AnalyticsProperties.getTambolaTicketCount(),
                             "location": "Game of the Week"
                           }));
-                      AppState.delegate!.parseRoute(
-                        Uri.parse(model.gow!.route!),
-                      );
+                      // AppState.delegate!.parseRoute(
+                      //   Uri.parse(model.gow!.route!),
+                      // );
+                      BaseUtil.openGameModalSheet(model.gow!.gameCode!,
+                          getGameInfo(model.gow!.gameCode!));
                     },
                     child: Container(
                       decoration: BoxDecoration(

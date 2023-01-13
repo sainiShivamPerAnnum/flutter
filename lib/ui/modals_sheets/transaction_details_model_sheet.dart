@@ -79,7 +79,7 @@ class _TransactionDetailsBottomSheetState
     S locale = S.of(context);
     final isGold = widget.transaction!.subType ==
         UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD;
-        
+
     return WillPopScope(
       onWillPop: () async {
         AppState.screenStack.removeLast();
@@ -534,8 +534,8 @@ class TransactionSummary extends StatelessWidget {
     String? subtitle;
     if (isTBD) {
       mainWidget = Container(
-        height: SizeConfig.padding20,
-        width: SizeConfig.padding20,
+        height: SizeConfig.padding32,
+        width: SizeConfig.padding32,
         padding: EdgeInsets.all(SizeConfig.padding8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -546,15 +546,15 @@ class TransactionSummary extends StatelessWidget {
       leadColor = UiConstants.gameCardColor;
     } else if (summary![index].timestamp != null) {
       mainWidget = Container(
-        height: SizeConfig.padding20,
-        width: SizeConfig.padding20,
+        height: SizeConfig.padding32,
+        width: SizeConfig.padding32,
         // padding: EdgeInsets.all(SizeConfig.padding8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(width: 1, color: UiConstants.primaryColor),
         ),
         child: Icon(Icons.check_rounded,
-            color: UiConstants.primaryColor, size: SizeConfig.padding12),
+            color: UiConstants.primaryColor, size: SizeConfig.padding20),
       );
 
       leadColor = UiConstants.primaryColor;
@@ -564,8 +564,8 @@ class TransactionSummary extends StatelessWidget {
       showThread = false;
     } else if (summary[index].value == "TBD") {
       mainWidget = Container(
-        height: SizeConfig.padding20,
-        width: SizeConfig.padding20,
+        height: SizeConfig.padding32,
+        width: SizeConfig.padding32,
         padding: EdgeInsets.all(SizeConfig.padding4),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -584,8 +584,8 @@ class TransactionSummary extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: SizeConfig.padding40,
-          height: SizeConfig.padding54,
+          width: SizeConfig.padding44,
+          height: SizeConfig.padding64,
           alignment: Alignment.topCenter,
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             Expanded(
@@ -615,7 +615,7 @@ class TransactionSummary extends StatelessWidget {
                   Text(
                     summary![index].title!,
                     style:
-                        TextStyles.sourceSans.body4.colour(Color(0XFFA9C6D6)),
+                        TextStyles.sourceSans.body3.colour(Color(0XFFA9C6D6)),
                   ),
                   Text(
                     subtitle ??
@@ -623,7 +623,7 @@ class TransactionSummary extends StatelessWidget {
                             ? "${_txnHistoryService!.getFormattedDateAndTime(summary[index].timestamp!)}"
                             : summary[index].value!),
                     style:
-                        TextStyles.sourceSans.body5.colour(Color(0xffA0A0A0)),
+                        TextStyles.sourceSans.body4.colour(Color(0xffA0A0A0)),
                   ),
                 ],
               ),

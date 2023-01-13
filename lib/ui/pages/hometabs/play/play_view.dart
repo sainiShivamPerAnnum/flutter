@@ -13,9 +13,8 @@ import '../../../widgets/appbar/appbar.dart';
 
 class Play extends StatelessWidget {
   final ScrollController _controller = ScrollController();
-  final RootViewModel rootVm;
 
-   Play({Key? key, required this.rootVm}) : super(key: key);
+  Play({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     log("ROOT: Play view build called");
@@ -39,7 +38,7 @@ class Play extends StatelessWidget {
             physics: BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: model.getOrderedPlayViewItems(model,rootVm),
+              children: model.getOrderedPlayViewItems(model),
             ),
           ),
         );

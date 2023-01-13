@@ -123,6 +123,9 @@ class TambolaService extends ChangeNotifier {
     }
   }
 
+  
+
+
   set weeklyDrawFetched(value) {
     _weeklyDrawFetched = value;
   }

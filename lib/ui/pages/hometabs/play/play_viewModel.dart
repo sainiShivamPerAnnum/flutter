@@ -22,6 +22,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.da
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_view.dart';
@@ -119,7 +120,7 @@ class PlayViewModel extends BaseViewModel {
 
   init() async {
     isGamesListDataLoading = true;
-    locator<UserStatsRepo>().getGameStats();
+    await locator<UserStatsRepo>().getGameStats();
 
     final response = await gamesRepo!.getGames();
     _winnerService.fetchWinnersForAllGames();
@@ -134,13 +135,16 @@ class PlayViewModel extends BaseViewModel {
     }
   }
 
-  getOrderedPlayViewItems(PlayViewModel model, RootViewModel rootVm) {
+  getOrderedPlayViewItems(PlayViewModel model) {
     List<Widget> playViewChildren = [];
 
     DynamicUiUtils.playViewOrder.forEach((key) {
+      bool val = locator<RootController>()
+          .navItems
+          .containsValue(RootController.tambolaNavBar);
       switch (key) {
-        case 'TM':
-          if (!rootVm.navBarItems.values.contains(rootVm.tambolaNavBar)) {
+        case 'TA':
+          if (!val) {
             playViewChildren.add(TambolaCard(
               tambolaController: _tambolaController,
             ));

@@ -12,6 +12,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_existing_user_page.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -55,10 +56,9 @@ class TambolaWrapper extends StatelessWidget {
                   )
                 : TambolaNewUserPage(
                     model: model,
-                    isFromNavigation: vm != null
-                        ? vm!.navBarItems.containsValue(vm!.tambolaNavBar)
-                        : false,
-                  ),
+                    isFromNavigation: locator<RootController>()
+                        .navItems
+                        .containsValue(RootController.tambolaNavBar)),
           ),
         );
       },

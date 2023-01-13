@@ -27,7 +27,7 @@ class DynamicUI {
     return DynamicUI(
         play: List<String>.from((map['play'].cast<String>() as List<String>)),
         navBar:
-            List<String>.from((map['navbar'].cast<String>() as List<String>)),
+            List<String>.from((map['navBar'].cast<String>() as List<String>)),
         save: SaveUi.fromMap(map['save'] as Map<String, dynamic>),
         journeyFab: SingleInfo.fromMap(map['journeyFab']));
   }

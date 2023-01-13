@@ -42,6 +42,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_instant_view.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -87,7 +88,7 @@ class RootViewModel extends BaseViewModel {
   final ReferralService _referralService = locator<ReferralService>();
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
-
+  final RootController _rootController = locator<RootController>();
   Future<void> refresh() async {
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
@@ -112,14 +113,6 @@ class RootViewModel extends BaseViewModel {
     initialize();
   }
 
-  final tambolaNavBar = NavBarItemModel("Tambola", Assets.navTambolaLottie);
-  final journeyNavBarItem = NavBarItemModel("Journey", Assets.navJourneyLottie);
-
-  final playNavBarItem = NavBarItemModel("Play", Assets.navPlayLottie);
-
-  final winNavBarItem = NavBarItemModel("Win", Assets.navWinLottie);
-  final saveNavBarItem = NavBarItemModel("Save", Assets.navSaveLottie);
-
   initialize() async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       await verifyUserBootupDetails();
@@ -138,12 +131,13 @@ class RootViewModel extends BaseViewModel {
     });
   }
 
+  Map<Widget, NavBarItemModel> get navBarItems =>
+      locator<RootController>().navItems;
+
   onDispose() {
     AppState.isUserSignedIn = false;
     _fcmListener!.addIncomingMessageListener(null);
   }
-
-  Map<Widget, NavBarItemModel> navBarItems = {};
 
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;
@@ -189,11 +183,13 @@ class RootViewModel extends BaseViewModel {
       default:
     }
     AppState.delegate!.appState.setCurrentTabIndex = index;
+    _rootController.onChange(_rootController.navItems.values.toList()[index]);
     Haptic.vibrate();
     if (AppState.delegate!.appState.getCurrentTabIndex == 0)
       _journeyService.checkForMilestoneLevelChange();
     _tambolaService!.completer.future.then((value) {
-      if (navBarItems.values.toList()[index] == tambolaNavBar) {
+      if (_rootController.currentNavBarItemModel ==
+          RootController.tambolaNavBar) {
         if ((_tambolaService!.initialTicketCount ?? -1) == 0) {
           if (_tambolaService!.userWeeklyBoards!.length > 0) {
             _tambolaService!.initialTicketCount =
@@ -210,47 +206,31 @@ class RootViewModel extends BaseViewModel {
     });
   }
 
-  // navBarItems.addAll({
-  //     JourneyView():
-  //         NavBarItemModel(locale.navBarJourney, Assets.navJourneyLottie),
-  //     Save(): NavBarItemModel(locale.navBarSave, Assets.navSaveLottie),
-  //     TambolaWrapper(
-  //       vm: this,
-  //     ): tambolaNavBar,
-  //     Play(
-  //       rootVm: this,
-  //     ): NavBarItemModel(locale.navBarPlay, Assets.navPlayLottie),
-  //     Win(): NavBarItemModel(locale.navBarWin, Assets.navWinLottie),
-  //   });
-
   void getNavItems(String navItem) {
     switch (navItem) {
       case "JN":
-        navBarItems.putIfAbsent(JourneyView(), () => journeyNavBarItem);
+        _rootController.navItems
+            .putIfAbsent(JourneyView(), () => RootController.journeyNavBarItem);
 
         break;
 
       case "SV":
-        navBarItems.putIfAbsent(Save(), () => saveNavBarItem);
+        _rootController.navItems
+            .putIfAbsent(Save(), () => RootController.saveNavBarItem);
         break;
-      case "TM":
-        navBarItems.putIfAbsent(
-            TambolaWrapper(
-              vm: this,
-            ),
-            () => tambolaNavBar);
-        break;
+      // case "TM":
+      //   _rootController.navItems
+      //       .putIfAbsent(TambolaWrapper(), () => RootController.tambolaNavBar);
+      //   break;
 
       case "WN":
       case "AC":
-        navBarItems.putIfAbsent(Win(), () => winNavBarItem);
+        _rootController.navItems
+            .putIfAbsent(Win(), () => RootController.winNavBarItem);
         break;
       case "PL":
-        navBarItems.putIfAbsent(
-            Play(
-              rootVm: this,
-            ),
-            () => playNavBarItem);
+        _rootController.navItems
+            .putIfAbsent(Play(), () => RootController.playNavBarItem);
         break;
 
       default:

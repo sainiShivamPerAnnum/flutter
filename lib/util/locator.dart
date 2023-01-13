@@ -87,6 +87,7 @@ import 'package:felloapp/ui/pages/others/profile/settings/settings_vm.dart';
 import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_vm.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
@@ -169,6 +170,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => LendboxRepo());
   locator.registerLazySingleton(() => PrizingRepo());
   locator.registerLazySingleton(() => UserStatsRepo());
+  locator.registerLazySingleton(() => RootController());
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
   locator.registerFactory(() => RootViewModel());

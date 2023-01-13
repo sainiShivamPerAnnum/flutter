@@ -30,8 +30,6 @@ class UserStatsRepo extends BaseRepo with ChangeNotifier {
       final res = await APIService.instance.getData(ApiPath.getGameStats(uid),
           token: 'Bearer $token', cBaseUrl: _baseUrl);
       gameStats = GameStats.fromJson(res['data']);
-
-      notifyListeners();
     } catch (e) {
       log(e.toString());
     }
