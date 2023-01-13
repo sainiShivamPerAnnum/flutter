@@ -228,7 +228,7 @@ class WebGameModalSheet extends StatelessWidget {
                     ],
                   ),
                   onPressed: () async {
-                    model.launchGame();
+                    if (await model.setupGame()) model.launchGame();
                   }),
             ),
             SizedBox(

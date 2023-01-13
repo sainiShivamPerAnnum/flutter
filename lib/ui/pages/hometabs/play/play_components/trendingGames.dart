@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/pages/static/sticky_widget.dart';
 import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -36,6 +37,40 @@ class TrendingGamesSection extends StatelessWidget {
       children: [
         TitleSubtitleContainer(
           title: locale.allgames,
+        ),
+        SizedBox(
+          height: SizeConfig.padding12,
+        ),
+        Center(
+          child: StickyNote(
+            trailingWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: SizeConfig.padding16,
+                ),
+                SvgPicture.asset(
+                  Assets.token,
+                  height: SizeConfig.padding16,
+                ),
+                SizedBox(
+                  width: SizeConfig.padding4,
+                ),
+                Text("1", style: TextStyles.sourceSansB.title3),
+                SizedBox(
+                  width: SizeConfig.padding8,
+                ),
+                Text(
+                  "Gaming Token",
+                  style: TextStyles.sourceSansSB.body4,
+                )
+              ],
+            ),
+            amount: "1",
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.padding12,
         ),
         Container(
           width: SizeConfig.screenWidth,
@@ -88,12 +123,12 @@ class TrendingGames extends StatelessWidget {
       case "GM_CANDY_FIESTA":
         return model.gameStats?.data?.gmCandyFiesta;
 
-      // case "GM_ROLLY_VORTEX":
-      // model.gameStats?.data?.
+      case "GM_ROLLY_VORTEX":
+        return model.gameStats?.data?.gmRallyVertex;
       case "GM_POOL_CLUB":
         return model.gameStats?.data?.gmPoolClub;
-      // case "GM_KNIFE_HIT"
-      //   return model.gameStats?.data?.GM_KNIFE_HIT,
+      case "GM_KNIFE_HIT":
+        return model.gameStats?.data?.gmKnifeHit;
       case "GM_BOWLING":
         return model.gameStats?.data?.gmBowling;
       case "GM_BOTTLE_FLIP":
@@ -124,9 +159,7 @@ class TrendingGames extends StatelessWidget {
               "location": "Trending games"
             }));
         Haptic.vibrate();
-        // AppState.delegate!.parseRoute(
-        //   Uri.parse(game!.route!),
-        // );
+       
 
         BaseUtil.openGameModalSheet(
             game!.gameCode!, getGameInfo(game!.gameCode!));
@@ -182,7 +215,7 @@ class TrendingGames extends StatelessWidget {
                     height: SizeConfig.padding12,
                     width: SizeConfig.padding12,
                   ),
-                  // SizedBox(width: SizeConfig.padding4),
+                 
                   Text(game!.playCost.toString(),
                       style: TextStyles.sourceSans.body3),
                 ],

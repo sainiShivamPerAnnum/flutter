@@ -40,6 +40,8 @@ class Data {
     required this.gmBottleFlip,
     required this.gmBowling,
     required this.gmTambola2020,
+    required this.gmKnifeHit,
+    required this.gmRallyVertex,
   });
 
   final UpdatedOn? updatedOn;
@@ -49,31 +51,38 @@ class Data {
   final Gm? gmCandyFiesta;
   final Gm? gmBottleFlip;
   final Gm? gmBowling;
+  final Gm? gmKnifeHit;
+  final Gm? gmRallyVertex;
   final GmTambola2020? gmTambola2020;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        updatedOn: UpdatedOn.fromJson(json["updatedOn"]),
-        gmPoolClub: json["GM_POOL_CLUB"] != null
-            ? Gm.fromJson(json["GM_POOL_CLUB"])
-            : null,
-        gmFootballKickoff: json["GM_FOOTBALL_KICKOFF"] != null
-            ? Gm.fromJson(json["GM_FOOTBALL_KICKOFF"])
-            : null,
-        gmCricketHero: json["GM_CRICKET_HERO"] != null
-            ? Gm.fromJson(json["GM_CRICKET_HERO"])
-            : null,
-        gmCandyFiesta: json["GM_CANDY_FIESTA"] != null
-            ? Gm.fromJson(json["GM_CANDY_FIESTA"])
-            : null,
-        gmBottleFlip: json["GM_BOTTLE_FLIP"] != null
-            ? Gm.fromJson(json["GM_BOTTLE_FLIP"])
-            : null,
-        gmBowling:
-            json["GM_BOWLING"] != null ? Gm.fromJson(json["GM_BOWLING"]) : null,
-        gmTambola2020: json["GM_TAMBOLA2020"] != null
-            ? GmTambola2020.fromJson(json["GM_TAMBOLA2020"])
-            : null,
-      );
+      updatedOn: UpdatedOn.fromJson(json["updatedOn"]),
+      gmPoolClub: json["GM_POOL_CLUB"] != null
+          ? Gm.fromJson(json["GM_POOL_CLUB"])
+          : null,
+      gmFootballKickoff: json["GM_FOOTBALL_KICKOFF"] != null
+          ? Gm.fromJson(json["GM_FOOTBALL_KICKOFF"])
+          : null,
+      gmCricketHero: json["GM_CRICKET_HERO"] != null
+          ? Gm.fromJson(json["GM_CRICKET_HERO"])
+          : null,
+      gmCandyFiesta: json["GM_CANDY_FIESTA"] != null
+          ? Gm.fromJson(json["GM_CANDY_FIESTA"])
+          : null,
+      gmBottleFlip: json["GM_BOTTLE_FLIP"] != null
+          ? Gm.fromJson(json["GM_BOTTLE_FLIP"])
+          : null,
+      gmBowling:
+          json["GM_BOWLING"] != null ? Gm.fromJson(json["GM_BOWLING"]) : null,
+      gmTambola2020: json["GM_TAMBOLA2020"] != null
+          ? GmTambola2020.fromJson(json["GM_TAMBOLA2020"])
+          : null,
+      gmRallyVertex: json["GM_ROLLY_VORTEX"] != null
+          ? Gm.fromJson(json["GM_ROLLY_VORTEX"])
+          : null,
+      gmKnifeHit: json["GM_KNIFE_HIT"] != null
+          ? Gm.fromJson(json["GM_KNIFE_HIT"])
+          : null);
 
   Map<String, dynamic> toJson() => {
         "updatedOn": updatedOn!.toJson(),

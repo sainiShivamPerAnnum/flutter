@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -10,6 +12,7 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home
 import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/pages/static/sticky_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -17,6 +20,9 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../../../util/assets.dart';
 
 class TambolaExistingUserPage extends StatefulWidget {
   TambolaExistingUserPage({Key? key, required this.model}) : super(key: key);
@@ -98,6 +104,31 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
               children: [
                 TodayWeeklyPicksCard(
                   model: widget.model,
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                StickyNote(
+                  trailingWidget: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 16,
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Text("1", style: TextStyles.sourceSansB.title3),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        "ticket every week",
+                        style: TextStyles.sourceSansSB.body4,
+                      )
+                    ],
+                  ),
+                  amount: "500",
                 ),
                 if (widget.model.userWeeklyBoards != null) ...[
                   Padding(
