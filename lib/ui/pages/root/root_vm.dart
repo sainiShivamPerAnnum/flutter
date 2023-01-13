@@ -112,8 +112,13 @@ class RootViewModel extends BaseViewModel {
     initialize();
   }
 
-  final NavBarItemModel tambolaNavBar =
-      NavBarItemModel("Tambola", Assets.navTambolaLottie);
+  final tambolaNavBar = NavBarItemModel("Tambola", Assets.navTambolaLottie);
+  final journeyNavBarItem = NavBarItemModel("Journey", Assets.navJourneyLottie);
+
+  final playNavBarItem = NavBarItemModel("Play", Assets.navPlayLottie);
+
+  final winNavBarItem = NavBarItemModel("Win", Assets.navWinLottie);
+  final saveNavBarItem = NavBarItemModel("Save", Assets.navSaveLottie);
 
   initialize() async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
@@ -221,16 +226,12 @@ class RootViewModel extends BaseViewModel {
   void getNavItems(String navItem) {
     switch (navItem) {
       case "JN":
-        navBarItems.putIfAbsent(
-            JourneyView(),
-            () =>
-                NavBarItemModel(locale.navBarJourney, Assets.navJourneyLottie));
+        navBarItems.putIfAbsent(JourneyView(), () => journeyNavBarItem);
 
         break;
 
       case "SV":
-        navBarItems.putIfAbsent(Save(),
-            () => NavBarItemModel(locale.navBarSave, Assets.navSaveLottie));
+        navBarItems.putIfAbsent(Save(), () => saveNavBarItem);
         break;
       case "TM":
         navBarItems.putIfAbsent(
@@ -242,15 +243,14 @@ class RootViewModel extends BaseViewModel {
 
       case "WN":
       case "AC":
-        navBarItems.putIfAbsent(Win(),
-            () => NavBarItemModel(locale.navBarWin, Assets.navWinLottie));
+        navBarItems.putIfAbsent(Win(), () => winNavBarItem);
         break;
       case "PL":
         navBarItems.putIfAbsent(
             Play(
               rootVm: this,
             ),
-            () => NavBarItemModel(locale.navBarPlay, Assets.navPlayLottie));
+            () => playNavBarItem);
         break;
 
       default:

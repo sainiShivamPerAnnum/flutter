@@ -1,5 +1,4 @@
 import 'package:felloapp/core/model/page_config_model.dart';
-
 class DynamicUiUtils {
   static List<List<String>> saveViewOrder = [
     ['AG', 'LB'],
@@ -13,7 +12,4 @@ class DynamicUiUtils {
       actionUri: '/story-onboarding',
       title: 'Help',
       isCollapse: true);
-
-
-
 }
