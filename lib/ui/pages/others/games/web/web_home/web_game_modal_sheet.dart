@@ -87,11 +87,10 @@ class WebGameModalSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: SizedBox(
                 height: SizeConfig.screenHeight! * 0.15,
-                child: Expanded(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
                         child: Container(
                           decoration: BoxDecoration(
                             color: Color(0xff050505).withOpacity(0.2),
@@ -105,6 +104,7 @@ class WebGameModalSheet extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
                             children: [
                               SvgPicture.asset(Assets.flyingGhost),
                               SizedBox(
@@ -124,13 +124,15 @@ class WebGameModalSheet extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Expanded(
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Color(0xff050505).withOpacity(0.2),
@@ -141,6 +143,7 @@ class WebGameModalSheet extends StatelessWidget {
                                 ),
                                 padding: EdgeInsets.all(8),
                                 child: Row(
+                                  mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
@@ -159,10 +162,12 @@ class WebGameModalSheet extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Expanded(
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Expanded(
+                            child: SizedBox(
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Color(0xff050505).withOpacity(0.2),
@@ -191,11 +196,11 @@ class WebGameModalSheet extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
