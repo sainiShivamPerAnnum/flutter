@@ -27,7 +27,9 @@ import 'package:felloapp/ui/pages/others/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
+import 'package:felloapp/ui/widgets/helpers/tnc_text.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -192,8 +194,14 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     });
-    saveViewItems.add(
-        AppFooter(bottomPad: SizeConfig.padding80 + SizeConfig.navBarHeight));
+    saveViewItems.add(AppFooter(bottomPad: 0));
+    saveViewItems.add(Padding(
+      padding: EdgeInsets.only(
+        bottom: SizeConfig.padding80 + SizeConfig.navBarHeight,
+      ),
+      child: TermsAndConditions(url: Constants.savingstnc),
+    ));
+
     return saveViewItems;
   }
 

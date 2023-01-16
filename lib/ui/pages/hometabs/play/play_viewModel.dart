@@ -25,7 +25,9 @@ import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
+import 'package:felloapp/ui/widgets/helpers/tnc_text.dart';
 import 'package:felloapp/ui/widgets/tambola_card/tambola_card_view.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -36,7 +38,7 @@ import '../../../../util/assets.dart';
 
 class PlayViewModel extends BaseViewModel {
   S? locale;
-  
+
   PlayViewModel({this.locale}) {
     locale = locator<S>();
     boxHeading = locale!.howGamesWork;
@@ -177,8 +179,12 @@ class PlayViewModel extends BaseViewModel {
           break;
       }
     });
-    playViewChildren.add(
-        AppFooter(bottomPad: SizeConfig.navBarHeight + SizeConfig.padding80));
+    playViewChildren.add(AppFooter(bottomPad: 0));
+    playViewChildren.add(Padding(
+      padding: EdgeInsets.only(
+          bottom: SizeConfig.navBarHeight + SizeConfig.padding80),
+      child: TermsAndConditions(url: Constants.gamingtnc),
+    ));
     return playViewChildren;
   }
 

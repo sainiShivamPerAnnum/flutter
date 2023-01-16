@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/sticky_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/ui/widgets/helpers/tnc_text.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -254,6 +255,10 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                     model: widget.model,
                   ),
                 ),
+                SizedBox(
+                  height: SizeConfig.padding4,
+                ),
+                TermsAndConditions(url: Constants.tambolatnc),
                 SizedBox(
                   height: SizeConfig.navBarHeight + SizeConfig.padding16,
                 ),

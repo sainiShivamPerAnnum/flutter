@@ -17,7 +17,9 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/widgets/appbar/appbar.dart';
+import 'package:felloapp/ui/widgets/helpers/tnc_text.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -58,7 +60,8 @@ class TambolaWrapper extends StatelessWidget {
                     model: model,
                     isFromNavigation: locator<RootController>()
                         .navItems
-                        .containsValue(RootController.tambolaNavBar)),
+                        .containsValue(RootController.tambolaNavBar),
+                  ),
           ),
         );
       },
@@ -298,6 +301,10 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                               amount: widget.model.ticketSavedAmount);
                         }),
                   ),
+                  SizedBox(
+                    height: SizeConfig.padding4,
+                  ),
+                  TermsAndConditions(url: Constants.tambolatnc),
                   SizedBox(
                     height: SizeConfig.navBarHeight,
                   )
