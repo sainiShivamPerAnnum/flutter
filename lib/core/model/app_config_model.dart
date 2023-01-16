@@ -9,8 +9,11 @@ class AppConfig {
   String message;
   Map<AppConfigKey, Object?> data = {};
   static Map<String, AppConfig> _instances = {};
-  factory AppConfig.instance(Map<String, dynamic> json) =>
-      _instances.putIfAbsent('instance', () => AppConfig._fromJson(json));
+  factory AppConfig.instance(Map<String, dynamic> json) {
+    _instances['instance'] = AppConfig._fromJson(json);
+    return AppConfig._fromJson(json);
+  }
+  // _instances.putIfAbsent('instance', () => AppConfig._fromJson(json));
 
   AppConfig({required this.message, required this.data});
 
