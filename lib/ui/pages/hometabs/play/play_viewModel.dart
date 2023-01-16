@@ -36,8 +36,8 @@ import '../../../../util/assets.dart';
 
 class PlayViewModel extends BaseViewModel {
   S? locale;
-  RootViewModel model;
-  PlayViewModel({this.locale, required this.model}) {
+  
+  PlayViewModel({this.locale}) {
     locale = locator<S>();
     boxHeading = locale!.howGamesWork;
     boxTitles.addAll([

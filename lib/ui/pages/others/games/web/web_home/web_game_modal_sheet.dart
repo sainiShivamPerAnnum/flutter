@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
@@ -46,7 +47,7 @@ class WebGameModalSheet extends StatelessWidget {
             SizedBox(
               height: 24,
             ),
-            SvgPicture.network(model.currentGameModel!.thumbnailUri!),
+            SvgPicture.network(model.currentGameModel!.icon!),
             StreamView(model: model, game: game),
             SizedBox(
               height: SizeConfig.padding10,
@@ -137,7 +138,7 @@ class WebGameModalSheet extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: Color(0xff050505).withOpacity(0.2),
                                   border: Border.all(
-                                    color: Color(0xff919193),
+                                    color: UiConstants.kTextColor2,
                                   ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -149,13 +150,13 @@ class WebGameModalSheet extends StatelessWidget {
                                   children: [
                                     Text(
                                       "Your best",
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(Color(0xffBDBDBE)),
+                                      style: TextStyles.sourceSans.body3.colour(
+                                          UiConstants.kTextFieldTextColor),
                                     ),
                                     Text(
                                       "${gameInfo?.topScore ?? "-"}",
                                       style: TextStyles.rajdhaniSB.body1.colour(
-                                        Color(0xffBDBDBE),
+                                        UiConstants.kTextFieldTextColor,
                                       ),
                                     )
                                   ],
@@ -164,7 +165,7 @@ class WebGameModalSheet extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            height: 4,
+                            height: SizeConfig.padding4,
                           ),
                           Expanded(
                             child: SizedBox(
@@ -174,9 +175,10 @@ class WebGameModalSheet extends StatelessWidget {
                                   border: Border.all(
                                     color: Color(0xff919193),
                                   ),
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.padding8),
                                 ),
-                                padding: EdgeInsets.all(8),
+                                padding: EdgeInsets.all(SizeConfig.padding8),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
@@ -205,10 +207,10 @@ class WebGameModalSheet extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 24,
+              height: SizeConfig.padding24,
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 28),
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
               child: AppPositiveBtn(
                   btnText: "Play",
                   widget: Row(
@@ -223,8 +225,8 @@ class WebGameModalSheet extends StatelessWidget {
                           color: Colors.black,
                           child: SvgPicture.asset(
                             Assets.token,
-                            height: 20,
-                            width: 20,
+                            height: SizeConfig.padding20,
+                            width: SizeConfig.padding20,
                           ),
                         ),
                       ),

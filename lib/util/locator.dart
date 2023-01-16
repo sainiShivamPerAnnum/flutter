@@ -175,7 +175,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => LauncherViewModel());
   locator.registerFactory(() => RootViewModel());
   // Hometabs
-  locator.registerFactory(() => PlayViewModel(model: locator()));
+  locator.registerFactory(() => PlayViewModel());
   locator.registerFactory(() => SaveViewModel());
   locator.registerFactory(() => WinViewModel());
   locator.registerFactory(() => JourneyPageViewModel());

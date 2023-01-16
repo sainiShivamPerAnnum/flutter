@@ -115,24 +115,24 @@ class TrendingGames extends StatelessWidget {
   Gm? getGameInfo(String gameCode) {
     switch (gameCode) {
       case "GM_CRICKET_HERO":
-        return model.gameStats?.data?.gmCricketHero;
+        return model.gameStats.data?.gmCricketHero;
 
       case "GM_FOOTBALL_KICKOFF":
-        return model.gameStats?.data?.gmFootballKickoff;
+        return model.gameStats.data?.gmFootballKickoff;
 
       case "GM_CANDY_FIESTA":
-        return model.gameStats?.data?.gmCandyFiesta;
+        return model.gameStats.data?.gmCandyFiesta;
 
       case "GM_ROLLY_VORTEX":
-        return model.gameStats?.data?.gmRallyVertex;
+        return model.gameStats.data?.gmRallyVertex;
       case "GM_POOL_CLUB":
-        return model.gameStats?.data?.gmPoolClub;
+        return model.gameStats.data?.gmPoolClub;
       case "GM_KNIFE_HIT":
-        return model.gameStats?.data?.gmKnifeHit;
+        return model.gameStats.data?.gmKnifeHit;
       case "GM_BOWLING":
-        return model.gameStats?.data?.gmBowling;
+        return model.gameStats.data?.gmBowling;
       case "GM_BOTTLE_FLIP":
-        return model.gameStats?.data?.gmBottleFlip;
+        return model.gameStats.data?.gmBottleFlip;
 
       default:
         return null;
@@ -159,7 +159,6 @@ class TrendingGames extends StatelessWidget {
               "location": "Trending games"
             }));
         Haptic.vibrate();
-       
 
         BaseUtil.openGameModalSheet(
             game!.gameCode!, getGameInfo(game!.gameCode!));
@@ -199,9 +198,9 @@ class TrendingGames extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
               decoration: BoxDecoration(
-                color: Color(0xff232326),
-                border: Border.all(color: Color(0xff919193)),
-                borderRadius: BorderRadius.circular(8),
+                color: UiConstants.kBackgroundColor,
+                border: Border.all(color: UiConstants.kTextColor2),
+                borderRadius: BorderRadius.circular(SizeConfig.padding8),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -215,7 +214,6 @@ class TrendingGames extends StatelessWidget {
                     height: SizeConfig.padding12,
                     width: SizeConfig.padding12,
                   ),
-                 
                   Text(game!.playCost.toString(),
                       style: TextStyles.sourceSans.body3),
                 ],

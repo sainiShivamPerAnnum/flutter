@@ -277,7 +277,7 @@ class TransactionHistoryService
         type == UserTransaction.TRAN_STATUS_FAILED) {
       return Colors.redAccent;
     } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-      return Color(0xff62E3C4);
+      return UiConstants.kTabBorderColor;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
       return Colors.amber;
     } else if (type == UserTransaction.TRAN_STATUS_PROCESSING) {

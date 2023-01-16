@@ -274,7 +274,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                         horizontal: SizeConfig.padding24,
                         vertical: SizeConfig.padding12),
                     child: AppPositiveBtn(
-                        btnText: "GET YOUR FIRST TICKET",
+                        btnText: locator<S>().tgetFirstTkt,
                         onPressed: () {
                           locator<AnalyticsService>().track(
                               eventName: (widget.model.activeTambolaCardCount ??
