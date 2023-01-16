@@ -13,6 +13,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class GoldBuySuccessView extends StatelessWidget {
   final AugmontTransactionService? _augTxnService =
@@ -255,9 +256,12 @@ class GoldBuySuccessView extends StatelessWidget {
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
               AppState.delegate!.appState.setCurrentTabIndex = 1;
-              final _tambolaService = locator<TambolaService>();
-              _tambolaService.weeklyTicksFetched = false;
-              _tambolaService.fetchWeeklyPicks();
+
+              if (_augTxnService!.currentTxnTambolaTicketsCount > 0) {
+                final _tambolaService = Provider.of<TambolaService>(context);
+                _tambolaService.weeklyTicksFetched = false;
+                _tambolaService.fetchWeeklyPicks();
+              }
               _augTxnService!.showGtIfAvailable();
             },
             child: Text(

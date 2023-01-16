@@ -584,8 +584,8 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static void launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      launchUrl(url);
     } else {
       BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
           "Please try after some time");
