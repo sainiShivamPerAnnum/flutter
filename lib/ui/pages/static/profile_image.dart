@@ -1,5 +1,3 @@
-import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -108,7 +106,8 @@ class NewProfileImage extends StatelessWidget {
                         color: Colors.white.withOpacity(0.9),
                         size: SizeConfig.padding80,
                       ),
-                      onPressed: updateProfilePicture as void Function()? ?? () {},
+                      onPressed:
+                          updateProfilePicture as void Function()? ?? () {},
                     ),
                   ),
                 )

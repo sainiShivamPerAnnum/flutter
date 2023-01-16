@@ -13,6 +13,8 @@ class Constants {
   static const String GAME_TYPE_POOLCLUB = "GM_POOL_CLUB";
   static const String GAME_TYPE_BOTTLEFLIP = "GM_BOTTLE_FLIP";
   static const String GAME_TYPE_BOWLING = "GM_BOWLING";
+  static const String GAME_TYPE_ROLLYVORTEX = "GM_ROLLY_VORTEX";
+  static const String GAME_TYPE_KNIFEHIT = "GM_KNIFE_HIT";
   static const String GAME_TYPE_HIGHEST_SAVER = "HIGHEST_SAVER_V2";
   static const String GAME_TYPE_FPL = "FPL";
 
@@ -114,7 +116,7 @@ class Constants {
   static const SUBSCRIPTION_CANCELLED = "CANCELLED";
 
   //Notification Titles Startings
-  static const GOLDEN_TICKET_NOTIFICATION = "You won a new golden ticket";
+  static const GOLDEN_TICKET_NOTIFICATION = "You won a new scratch card";
   static const COUPONS_APPLIED_NOTIFICATION = "Coupon Applied";
 
   static const DEPOSIT_COMPLETE_NOTIFICATION = "Deposit Complete";
@@ -148,7 +150,7 @@ class Constants {
   static const TOTAL_SAVINGS = "totalSavings";
   static const CURRENT_WINNINGS = "currentWinnings";
   static const CURRENT_WINNING_AMOUNT = "currentWinningsAmount";
-  static const GOLDENTICKET = "goldenTicket";
+  static const GOLDENTICKET = "scratchCard";
   static const TAMBOLA = "tambola";
   static const ALL_GAMES = "allGames";
   static const ALL_GAMES_TITLE = "allGamesTitle";
@@ -160,5 +162,5 @@ class Constants {
   static const TAMBOLA_HOME_SCREEN = "tambolaHomeScreenTag";
   static const REWARDS = "rewards";
   static const LEADERBOARD = "leaderBoard";
-  static const GET_TAMBOLA_TICKETS="getTambolaTickets";
+  static const GET_TAMBOLA_TICKETS = "getTambolaTickets";
 }

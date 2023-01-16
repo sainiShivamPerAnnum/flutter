@@ -17,9 +17,9 @@ import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -34,7 +34,6 @@ import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -164,9 +163,9 @@ class _MyAppState extends State<MyApp> {
                               LendboxTransactionService,
                               TransactionServiceProperties>(
                             value: locator<LendboxTransactionService>(),
-                            child: PropertyChangeProvider<GoldenTicketService,
-                                GoldenTicketServiceProperties>(
-                              value: locator<GoldenTicketService>(),
+                            child: PropertyChangeProvider<ScratchCardService,
+                                ScratchCardServiceProperties>(
+                              value: locator<ScratchCardService>(),
                               child: PropertyChangeProvider<
                                   MarketingEventHandlerService,
                                   MarketingEventsHandlerProperties>(

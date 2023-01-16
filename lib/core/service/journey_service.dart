@@ -5,22 +5,21 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
-import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
+import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -40,8 +39,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
-  final GoldenTicketService _gtService = locator<GoldenTicketService>();
-  final GoldenTicketRepository _gtRepo = locator<GoldenTicketRepository>();
+  final ScratchCardService _gtService = locator<ScratchCardService>();
+  final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   final S locale = locator<S>();
   //Local Variables
@@ -63,7 +62,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   List<JourneyPathModel> journeyPathItemsList = [];
   List<AvatarPathModel> customPathDataList = [];
   List<MilestoneModel> completedMilestoneList = [];
-  List<GoldenTicket> completedMilestonesPrizeList = [];
+  List<ScratchCard> completedMilestonesPrizeList = [];
   Path? _avatarPath;
   Offset? _avatarPosition;
   List<JourneyPage>? _pages;
@@ -75,7 +74,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   bool _showLevelUpAnimation = false;
   bool _isUserJourneyOnboarded = false;
   get isUserJourneyOnboarded => this._isUserJourneyOnboarded;
-  List<GoldenTicket>? _unscratchedGTList;
+  List<ScratchCard>? _unscratchedGTList;
 
   get unscratchedGTList => this._unscratchedGTList;
 
@@ -285,8 +284,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   getUnscratchedGT() async {
-    final ApiResponse<List<GoldenTicket>> res =
-        await _gtRepo.getUnscratchedGoldenTickets();
+    final ApiResponse<List<ScratchCard>> res =
+        await _gtRepo.getUnscratchedScratchCards();
     if (res.isSuccess()) {
       unscratchedGTList = res.model;
     }
@@ -310,12 +309,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   fcmHandleJourneyUpdateStats(Map<String, dynamic> data) {
     _logger.d("fcm journey update called: $data");
     avatarRemoteMlIndex = int.tryParse(data["mlIndex"]);
-    GoldenTicketService.goldenTicketId = data["gtId"];
+    ScratchCardService.scratchCardId = data["gtId"];
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
     if (!userIsAtJourneyScreen())
       BaseUtil.showPositiveAlert(
-          locale.newMileStoneAlert1,
-          locale.newMileStoneAlert2,
+          locale.newMileStoneAlert1, locale.newMileStoneAlert2,
           seconds: 2);
     checkAndAnimateAvatar();
   }
@@ -324,7 +322,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //** if there is a difference between cached and remote mlIndex
   //** if user is at journey screen
   //locks the screen and animate avatar
-  //if any Golden Ticket is present at the moment, pops up after animation
+  //if any Scratch Card is present at the moment, pops up after animation
   checkAndAnimateAvatar() {
     // Future.delayed(Duration(seconds: 2), () {
     if (avatarCachedMlIndex == avatarRemoteMlIndex) {
@@ -473,7 +471,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     completedMilestoneList?.forEach((MilestoneModel milestone) {
       var matchTicket = unscratchedGTList!.firstWhere(
           (ticket) => ticket.prizeSubtype == milestone.prizeSubType,
-          orElse: () => GoldenTicket.none());
+          orElse: () => ScratchCard.none());
       completedMilestonesPrizeList!.add(matchTicket);
     });
 
@@ -485,11 +483,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   void updateRewardStatus(String prizeSubtype) {
     int activeRewardIndex = completedMilestonesPrizeList!.indexWhere((reward) =>
-        reward != GoldenTicket.none() && reward.prizeSubtype == prizeSubtype);
+        reward != ScratchCard.none() && reward.prizeSubtype == prizeSubtype);
     if (unscratchedGTList != null)
       unscratchedGTList!.removeWhere((gt) => gt.prizeSubtype == prizeSubtype);
     if (activeRewardIndex != -1) {
-      completedMilestonesPrizeList![activeRewardIndex] = GoldenTicket.none();
+      completedMilestonesPrizeList![activeRewardIndex] = ScratchCard.none();
       notifyListeners(JourneyServiceProperties.Prizes);
       _logger.d("Prizes List Updated for prize ;$prizeSubtype ");
     }
@@ -709,7 +707,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     }
     controller?.reset();
     await scrollPageToAvatarPosition();
-    await _gtService.fetchAndVerifyGoldenTicketByPrizeSubtype();
+    await _gtService.fetchAndVerifyScratchCardByPrizeSubtype();
     controller!.forward().whenComplete(() async {
       log("Animation Complete");
       // int gameLevelChangeResult = checkForGameLevelChange();
@@ -722,7 +720,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       baseGlow = 1;
       Future.delayed(Duration(milliseconds: 500),
           () => isAvatarAnimationInProgress = false);
-      _gtService.showInstantGoldenTicketView(
+      _gtService.showInstantScratchCardView(
           title: 'Congratulations!', source: GTSOURCE.newuser, onJourney: true);
     });
   }

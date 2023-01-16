@@ -2,7 +2,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -24,7 +24,6 @@ class CouponModalSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     final _analyticsService = locator<AnalyticsService>();
-
 
     List<String?> taggedCoupons = [];
     for (CouponModel cm in model!.couponList!) {
@@ -115,8 +114,7 @@ class CouponModalSheet extends StatelessWidget {
                   minWidth: 40,
                 ),
                 validator: (val) {
-                  if (val!.trim().length == 0)
-                    return locale.txnEnterCode;
+                  if (val!.trim().length == 0) return locale.txnEnterCode;
                   if (val.trim().length < 3 || val.trim().length > 10)
                     return locale.txnInvalidCouponCode;
                   return null;
@@ -169,11 +167,10 @@ class CouponModalSheet extends StatelessWidget {
   }
 
   Widget _buildCoupenListTile(
-    
       {required String couponCode,
       required String desc,
       required Function onTap}) {
-        S locale = locator<S>();
+    S locale = locator<S>();
     return Container(
       margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),

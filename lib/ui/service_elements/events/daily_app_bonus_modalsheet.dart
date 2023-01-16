@@ -1,7 +1,7 @@
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
+import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -83,7 +83,8 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                           height: SizeConfig.screenWidth! * 0.3),
                       SizedBox(height: SizeConfig.padding10),
                       Text(
-                        model.dailyAppCheckInEventData?.title ?? locale.dailyBonusText,
+                        model.dailyAppCheckInEventData?.title ??
+                            locale.dailyBonusText,
                         //model!.dailyAppCheckInEventData!.title
                         style:
                             TextStyles.sourceSansB.title3.colour(Colors.white),
@@ -200,7 +201,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                                 style: TextStyles.body1.colour(Colors.white),
                                 children: [
                                   TextSpan(
-                                      text: locale.goldenTicket,
+                                      text: locale.scratchCard,
                                       style: TextStyles.sourceSansB.body1
                                           .colour(Colors.white))
                                 ],

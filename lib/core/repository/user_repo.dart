@@ -15,17 +15,16 @@ import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/material.dart';
 
 import 'base_repo.dart';
 
-class UserRepository extends BaseRepo{
+class UserRepository extends BaseRepo {
   final AppFlyerAnalytics? _appsFlyerService = locator<AppFlyerAnalytics>();
   final _cacheService = new CacheService();
 
@@ -378,7 +377,7 @@ class UserRepository extends BaseRepo{
       logger!.d("Update user data: ${res['data']}");
       final resData = res['data'];
       if (resData != null && resData['gtId'] != null) {
-        GoldenTicketService.goldenTicketId = resData['gtId'];
+        ScratchCardService.scratchCardId = resData['gtId'];
       }
       // clear cache
       await CacheService.invalidateByKey(CacheKeys.USER);

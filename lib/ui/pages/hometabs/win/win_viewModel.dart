@@ -17,10 +17,10 @@ import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
-import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
+import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -37,7 +37,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
-import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -72,7 +72,7 @@ class WinViewModel extends BaseViewModel {
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
   final CampaignRepo? _campaignRepo = locator<CampaignRepo>();
-  final GoldenTicketRepository? _gtRepo = locator<GoldenTicketRepository>();
+  final ScratchCardRepository? _gtRepo = locator<ScratchCardRepository>();
   final UserRepository _userRepo = locator<UserRepository>();
   int _unscratchedGTCount = 0;
   S locale = locator<S>();
@@ -213,7 +213,7 @@ class WinViewModel extends BaseViewModel {
     _isShareAlreadyClicked = true;
     notifyListeners();
 
-    // _getterrepo.getGoldenTickets(); //TR
+    // _getterrepo.getScratchCards(); //TR
 
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;

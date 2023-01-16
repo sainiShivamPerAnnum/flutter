@@ -2,14 +2,11 @@ import 'dart:developer';
 
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
-import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-
-import '../../../widgets/appbar/appbar.dart';
 
 class Play extends StatelessWidget {
   final ScrollController _controller = ScrollController();

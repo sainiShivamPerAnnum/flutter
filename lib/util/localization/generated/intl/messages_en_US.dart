@@ -336,7 +336,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Earn 1 Token for every ₹1 you invest"),
         "earnUpto": MessageLookupByLibrary.simpleMessage("Earn upto "),
         "earnedGTText": MessageLookupByLibrary.simpleMessage(
-            "You’ve earned a golden ticket."),
+            "You’ve earned a scratch card."),
         "emailAlreadyRegistered":
             MessageLookupByLibrary.simpleMessage("Email already registered"),
         "emailVerified":
@@ -439,14 +439,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "get1Ticket": m5,
         "get1Token": MessageLookupByLibrary.simpleMessage(
             "Get 1 token for every Rupee saved"),
-        "getGoldenTickets": MessageLookupByLibrary.simpleMessage(
-            "Earn Golden Tickets for every referral"),
         "getHappyHourNotified": MessageLookupByLibrary.simpleMessage(
             "Get notified when the next happy hour is live"),
         "getMoreTokens":
             MessageLookupByLibrary.simpleMessage("Get More Tokens"),
         "getRedeemErrorSubtitle": MessageLookupByLibrary.simpleMessage(
             "Please try again in your winnings section"),
+        "getScratchCards": MessageLookupByLibrary.simpleMessage(
+            "Earn Golden Tickets for every referral"),
         "getStartedWithSIP": MessageLookupByLibrary.simpleMessage(
             "Get started with a weekly/ daily SIP"),
         "getTickets": MessageLookupByLibrary.simpleMessage("Get Tickets"),
@@ -467,13 +467,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "goldSellingCapacity": MessageLookupByLibrary.simpleMessage(
             "Upto ₹ 50,000 can be sold at one go."),
         "goldSold": MessageLookupByLibrary.simpleMessage("Gold Sold:"),
-        "goldenTicket": MessageLookupByLibrary.simpleMessage("Golden Ticket"),
-        "goldenTicketText":
-            MessageLookupByLibrary.simpleMessage("Golden Tickets"),
         "gotIt": MessageLookupByLibrary.simpleMessage("Got it"),
         "govtAcc": MessageLookupByLibrary.simpleMessage("Govt. Accredited"),
         "gtRedeemErrorTitle": MessageLookupByLibrary.simpleMessage(
-            "An error occured while redeeming your golden ticket"),
+            "An error occured while redeeming your scratch card"),
         "happyHourIsOver":
             MessageLookupByLibrary.simpleMessage("Happy Hour is over"),
         "happyHourNotificationSetPrimary": MessageLookupByLibrary.simpleMessage(
@@ -795,7 +792,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingTitle3":
             MessageLookupByLibrary.simpleMessage("Win Rs.1 Crore!"),
         "onboradButton": MessageLookupByLibrary.simpleMessage("GET STARTED"),
-        "oneGoldenTicket":
+        "oneScratchCard":
             MessageLookupByLibrary.simpleMessage("1 Golden\nTicket"),
         "operationCannotBeCompleted": MessageLookupByLibrary.simpleMessage(
             "Operation cannot be completed at the moment"),
@@ -958,6 +955,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Now you can save in Digital Gold automatically without opening the app. Setup Fello autosave now!"),
         "scratchAndWin": MessageLookupByLibrary.simpleMessage(
             "Scratch and win exciting rewards."),
+        "scratchCard": MessageLookupByLibrary.simpleMessage("Scratch Card"),
+        "scratchCardText":
+            MessageLookupByLibrary.simpleMessage("Golden Tickets"),
         "secureFelloTitle":
             MessageLookupByLibrary.simpleMessage("Secure Fello"),
         "selectRating":
@@ -1312,7 +1312,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "winGrandRewards": MessageLookupByLibrary.simpleMessage(
             "Win grand rewards\nas digital gold."),
         "winIpadFromGT": MessageLookupByLibrary.simpleMessage(
-            " from every Golden Ticket. Highest referrer wins iPad every month"),
+            " from every Scratch Card. Highest referrer wins iPad every month"),
         "winIphoneBigText":
             MessageLookupByLibrary.simpleMessage("and win iPad Air"),
         "winIphoneSmallText":
@@ -1326,7 +1326,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Winnings can be redeemed as "),
         "winRewardsTitle": MessageLookupByLibrary.simpleMessage("My Rewards"),
         "winipadText": MessageLookupByLibrary.simpleMessage(
-            " from every Golden Ticket. Highest referrer wins an iPad every month."),
+            " from every Scratch Card. Highest referrer wins an iPad every month."),
         "winningsRedeem": m22,
         "withDrawalFailed":
             MessageLookupByLibrary.simpleMessage("Withdrawal Failed"),
@@ -1335,8 +1335,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "withdrawGoldBalance":
             MessageLookupByLibrary.simpleMessage("Withdrawable Gold Balance"),
         "withdrawal": MessageLookupByLibrary.simpleMessage("Withdrawal"),
-        "wonGT":
-            MessageLookupByLibrary.simpleMessage("You won a golden ticket"),
+        "wonGT": MessageLookupByLibrary.simpleMessage("You won a scratch card"),
         "worthOfGold": MessageLookupByLibrary.simpleMessage("worth of gold"),
         "worthsOfGold": MessageLookupByLibrary.simpleMessage("worths of Gold"),
         "you": MessageLookupByLibrary.simpleMessage("YOU"),

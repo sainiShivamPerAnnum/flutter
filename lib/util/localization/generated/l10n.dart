@@ -1952,10 +1952,10 @@ class S {
     );
   }
 
-  /// ` from every Golden Ticket. Highest referrer wins iPad every month`
+  /// ` from every Scratch Card. Highest referrer wins iPad every month`
   String get winIpadFromGT {
     return Intl.message(
-      ' from every Golden Ticket. Highest referrer wins iPad every month',
+      ' from every Scratch Card. Highest referrer wins iPad every month',
       name: 'winIpadFromGT',
       desc: '',
       args: [],
@@ -2003,10 +2003,10 @@ class S {
   }
 
   /// `Golden Tickets`
-  String get goldenTicketText {
+  String get scratchCardText {
     return Intl.message(
       'Golden Tickets',
-      name: 'goldenTicketText',
+      name: 'scratchCardText',
       desc: '',
       args: [],
     );
@@ -2032,10 +2032,10 @@ class S {
     );
   }
 
-  /// ` from every Golden Ticket. Highest referrer wins an iPad every month.`
+  /// ` from every Scratch Card. Highest referrer wins an iPad every month.`
   String get winipadText {
     return Intl.message(
-      ' from every Golden Ticket. Highest referrer wins an iPad every month.',
+      ' from every Scratch Card. Highest referrer wins an iPad every month.',
       name: 'winipadText',
       desc: '',
       args: [],
@@ -2162,11 +2162,11 @@ class S {
     );
   }
 
-  /// `Golden Ticket`
-  String get goldenTicket {
+  /// `Scratch Card`
+  String get scratchCard {
     return Intl.message(
-      'Golden Ticket',
-      name: 'goldenTicket',
+      'Scratch Card',
+      name: 'scratchCard',
       desc: '',
       args: [],
     );
@@ -2302,10 +2302,10 @@ class S {
     );
   }
 
-  /// `You’ve earned a golden ticket.`
+  /// `You’ve earned a scratch card.`
   String get earnedGTText {
     return Intl.message(
-      'You’ve earned a golden ticket.',
+      'You’ve earned a scratch card.',
       name: 'earnedGTText',
       desc: '',
       args: [],
@@ -2362,10 +2362,10 @@ class S {
     );
   }
 
-  /// `You won a golden ticket`
+  /// `You won a scratch card`
   String get wonGT {
     return Intl.message(
-      'You won a golden ticket',
+      'You won a scratch card',
       name: 'wonGT',
       desc: '',
       args: [],
@@ -2871,10 +2871,10 @@ class S {
   }
 
   /// `Earn Golden Tickets for every referral`
-  String get getGoldenTickets {
+  String get getScratchCards {
     return Intl.message(
       'Earn Golden Tickets for every referral',
-      name: 'getGoldenTickets',
+      name: 'getScratchCards',
       desc: '',
       args: [],
     );
@@ -2911,10 +2911,10 @@ class S {
   }
 
   /// `1 Golden\nTicket`
-  String get oneGoldenTicket {
+  String get oneScratchCard {
     return Intl.message(
       '1 Golden\nTicket',
-      name: 'oneGoldenTicket',
+      name: 'oneScratchCard',
       desc: '',
       args: [],
     );
@@ -7886,10 +7886,10 @@ class S {
     );
   }
 
-  /// `An error occured while redeeming your golden ticket`
+  /// `An error occured while redeeming your scratch card`
   String get gtRedeemErrorTitle {
     return Intl.message(
-      'An error occured while redeeming your golden ticket',
+      'An error occured while redeeming your scratch card',
       name: 'gtRedeemErrorTitle',
       desc: '',
       args: [],

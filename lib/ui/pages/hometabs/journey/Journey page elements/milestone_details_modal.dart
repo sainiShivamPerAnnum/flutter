@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -41,12 +41,12 @@ class _JourneyMilestoneDetailsModalSheetState
     extends State<JourneyMilestoneDetailsModalSheet> {
   final double scaleFactor = 2.5;
   final double pageHeight = SizeConfig.screenWidth! * 2.165;
-  final GoldenTicketRepository? _gtService = locator<GoldenTicketRepository>();
+  final ScratchCardRepository? _gtService = locator<ScratchCardRepository>();
   final JourneyService? _journeyService = locator<JourneyService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   S locale = locator<S>();
   bool _isLoading = false;
-  GoldenTicket? ticket;
+  ScratchCard? ticket;
 
   get isLoading => this._isLoading;
 
@@ -182,7 +182,8 @@ class _JourneyMilestoneDetailsModalSheetState
                         ),
                         SizedBox(height: SizeConfig.padding24),
                         Text(
-                         locale.winATicket(getTicketType(widget.milestone.index)),
+                          locale.winATicket(
+                              getTicketType(widget.milestone.index)),
                           style: TextStyles.sourceSans.body3
                               .colour(UiConstants.primaryColor),
                         )
@@ -198,8 +199,8 @@ class _JourneyMilestoneDetailsModalSheetState
                                     ticket!.redeemedTimestamp ==
                                         TimestampModel(
                                             seconds: 0, nanoseconds: 0)))
-                            ? goldenTicketWidget(ticket!.isLevelChange!)
-                            : rewardWidget(ticket!.rewardArr,context),
+                            ? scratchCardWidget(ticket!.isLevelChange!)
+                            : rewardWidget(ticket!.rewardArr, context),
               SizedBox(height: SizeConfig.padding24),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
                   ? SizedBox()
@@ -271,7 +272,7 @@ class _JourneyMilestoneDetailsModalSheetState
     );
   }
 
-  Widget goldenTicketWidget(bool isLevelChange) {
+  Widget scratchCardWidget(bool isLevelChange) {
     return Container(
       margin: EdgeInsets.only(
           right: SizeConfig.padding12, top: SizeConfig.padding16),
@@ -284,8 +285,8 @@ class _JourneyMilestoneDetailsModalSheetState
             },
             child: SvgPicture.asset(
               isLevelChange
-                  ? Assets.levelUpUnRedeemedGoldenTicketBG
-                  : Assets.unredemmedGoldenTicketBG,
+                  ? Assets.levelUpUnRedeemedScratchCardBG
+                  : Assets.unredemmedScratchCardBG,
               height: SizeConfig.padding40,
               width: SizeConfig.padding40,
             ),
@@ -296,7 +297,7 @@ class _JourneyMilestoneDetailsModalSheetState
   }
 
   Widget rewardWidget(List<Reward>? rewards, BuildContext context) {
-     S locale = S.of(context);  
+    S locale = S.of(context);
     return (rewards == null || rewards.isEmpty)
         ? SizedBox()
         : Column(
@@ -364,18 +365,20 @@ class _JourneyMilestoneDetailsModalSheetState
     }
   }
 
-  getSuffix(String? type, ) {
+  getSuffix(
+    String? type,
+  ) {
     switch (type) {
       case Constants.GT_REWARD_FLC:
-        return " "+locale.tokens.toLowerCase();
+        return " " + locale.tokens.toLowerCase();
       case Constants.GT_REWARD_AMT:
         return "";
       case Constants.GT_REWARD_RUPEE:
         return "";
       case Constants.GT_REWARD_GOLD:
-        return " "+locale.worthOfGold;
+        return " " + locale.worthOfGold;
       case Constants.GT_REWARD_TAMBOLA_TICKET:
-        return " "+locale.tTicket;
+        return " " + locale.tTicket;
       default:
         return "";
     }

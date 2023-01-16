@@ -17,8 +17,8 @@ import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
@@ -184,14 +184,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   set userJourneyStats(UserJourneyStatsModel? stats) {
     if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype ?? '' as bool)
-      GoldenTicketService.previousPrizeSubtype =
+      ScratchCardService.previousPrizeSubtype =
           _userJourneyStats?.prizeSubtype ?? '';
     _userJourneyStats = stats;
     notifyListeners(UserServiceProperties.myJourneyStats);
     _logger!
         .d("Journey Stats updated in userservice, property listeners notified");
     _logger!.d(
-        "Previous PrizeSubtype : ${GoldenTicketService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats?.prizeSubtype} ");
+        "Previous PrizeSubtype : ${ScratchCardService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats?.prizeSubtype} ");
   }
 
   set augGoldPrinciple(double principle) {
@@ -503,7 +503,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   setPageConfigs(DynamicUI dynamicUi) {
-    
     DynamicUiUtils.playViewOrder = dynamicUi.play;
     DynamicUiUtils.saveViewOrder = [
       dynamicUi.save.assets,

@@ -1,0 +1,42 @@
+import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/material.dart';
+
+class AllTambolaTickets extends StatelessWidget {
+  const AllTambolaTickets({Key? key, required this.ticketList})
+      : super(key: key);
+
+  final List<Widget> ticketList;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: UiConstants.kArrowButtonBackgroundColor,
+      appBar: FAppBar(
+        type: FaqsType.play,
+        showAvatar: false,
+        showCoinBar: false,
+        showHelpButton: false,
+        title: "Tickets",
+        backgroundColor: UiConstants.kArrowButtonBackgroundColor,
+      ),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          itemCount: ticketList.length,
+          itemBuilder: (ctx, index) {
+            return Container(
+                margin: EdgeInsets.symmetric(
+                    vertical: SizeConfig.pageHorizontalMargins),
+                child: ticketList[index]);
+          },
+        ),
+      ),
+    );
+  }
+}

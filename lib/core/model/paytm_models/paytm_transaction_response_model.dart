@@ -1,9 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'package:felloapp/util/constants.dart';
+import 'package:flutter/material.dart';
 
 class TransactionResponseModel {
   String? message;
@@ -47,7 +46,7 @@ class TransactionResponseModel {
 
   @override
   String toString() =>
-      'TransactionResponseModel(message: $message, data: $data)';
+      'TransactionResponseModel(message: $message, data: ${data.toString()})';
 
   @override
   bool operator ==(covariant TransactionResponseModel other) {
@@ -67,6 +66,7 @@ class Data {
   double? goldInTxnBought;
   String? txnDisplayMsg;
   String? gtId;
+  List<String>? gtIds;
   Data({
     @required this.status,
     @required this.isUpdating,
@@ -74,6 +74,7 @@ class Data {
     this.txnDisplayMsg,
     this.goldInTxnBought,
     this.gtId,
+    this.gtIds,
   });
 
   // Data copyWith(
@@ -89,7 +90,8 @@ class Data {
     return <String, dynamic>{
       'status': status,
       'isUpdating': isUpdating,
-      'tickets': tickets
+      'tickets': tickets,
+      'gtIds': gtIds
     };
   }
 
@@ -101,8 +103,9 @@ class Data {
         tickets: map['tickets'] as int? ?? 0,
         goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble(),
         txnDisplayMsg: map['displayMessage'],
-        gtId: map['gtId'] ?? ""
-        ); 
+        gtId: map['gtId'] ?? "",
+        gtIds:
+            List<String>.from((map['gtIds'].cast<String>() as List<String>)));
   }
 
   Data.base() {
@@ -118,7 +121,7 @@ class Data {
 
   @override
   String toString() =>
-      'Data(status: $status, isUpdating: $isUpdating, tickets: $tickets)';
+      'Data(status: $status, isUpdating: $isUpdating, tickets: $tickets, gtId: $gtId, gtIds: $gtIds)';
 
   @override
   bool operator ==(covariant Data other) {

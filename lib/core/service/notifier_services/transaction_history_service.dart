@@ -245,7 +245,7 @@ class TransactionHistoryService
     } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
       return locale.rewardsRedemeed;
     } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK)
-      return locale.goldenTicket;
+      return locale.scratchCard;
     return locale.felloRewards;
   }
 

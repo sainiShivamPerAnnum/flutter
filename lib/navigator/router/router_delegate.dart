@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:apxor_flutter/observer.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -12,9 +11,20 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/pages/help_and_support/freshdesk_help.dart';
-import 'package:felloapp/ui/pages/help_and_support/referral_policy_page.dart';
-import 'package:felloapp/ui/pages/help_and_support/support.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_rating_dialog.dart';
+import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
+import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
+import 'package:felloapp/ui/pages/finance/augmont/augmont_gold_details/save_assets_view.dart';
+import 'package:felloapp/ui/pages/finance/autopay/autopay_details_view.dart';
+import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_view.dart';
+import 'package:felloapp/ui/pages/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
+import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
+import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
+import 'package:felloapp/ui/pages/games/tambola/show_all_tickets.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
+import 'package:felloapp/ui/pages/games/tambola/weekly_results/weekly_result.dart';
+import 'package:felloapp/ui/pages/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
@@ -22,33 +32,21 @@ import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
-import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/transactions_history/transaction_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/transactions_history/transactions_history_view.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
-import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
-import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
-import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
-import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
-import 'package:felloapp/ui/pages/others/profile/settings/settings_view.dart';
-import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
-import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
+import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
+import 'package:felloapp/ui/pages/support/freshdesk_help.dart';
+import 'package:felloapp/ui/pages/support/referral_policy_page.dart';
+import 'package:felloapp/ui/pages/support/support.dart';
+import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_view.dart';
+import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
+import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
+import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
+import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -285,8 +283,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
           break;
 
-        case Pages.GoldenTicketsView:
-          _addPageData(GoldenTicketsView(), GoldenTicketsViewPageConfig);
+        case Pages.ScratchCardsView:
+          _addPageData(ScratchCardsView(), ScratchCardsViewPageConfig);
           break;
         case Pages.AutosaveDetailsView:
           _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
@@ -521,11 +519,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.FreshDeskHelp:
         FreshDeskHelpPageConfig.currentPageAction = action;
         break;
-      case Pages.GoldenTicketView:
-        GoldenTicketViewPageConfig.currentPageAction = action;
+      case Pages.ScratchCardView:
+        ScratchCardViewPageConfig.currentPageAction = action;
         break;
-      case Pages.GoldenTicketsView:
-        GoldenTicketsViewPageConfig.currentPageAction = action;
+      case Pages.ScratchCardsView:
+        ScratchCardsViewPageConfig.currentPageAction = action;
         break;
       case Pages.GoldenMilestonesView:
         GoldenMilestonesViewPageConfig.currentPageAction = action;

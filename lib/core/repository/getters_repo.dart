@@ -9,7 +9,6 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
@@ -20,7 +19,6 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:flutter/cupertino.dart';
 
 class GetterRepository extends BaseRepo {
   final _cacheService = CacheService();
@@ -280,11 +278,11 @@ class GetterRepository extends BaseRepo {
 
   //TODO: Not working
   //Triggered on: Share button click on win view
-  // Future<ApiResponse<List<GoldenTicket>>> getGoldenTickets() async {
+  // Future<ApiResponse<List<ScratchCard>>> getScratchCards() async {
   //   try {
   //     // final token = await getBearerToken();
   //     final response = await APIService.instance.getData(
-  //       ApiPath.goldenTickets(userService.baseUser.uid),
+  //       ApiPath.scratchCards(userService.baseUser.uid),
   //       cBaseUrl: "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev",
   //       queryParams: {},
   //     );
@@ -298,9 +296,9 @@ class GetterRepository extends BaseRepo {
   //     final responseData = response["data"]["gts"];
 
   //     print("Test123 ${response.toString()}");
-  //     // final goldenTickets = GoldenTicket.fromJson(json, docId);
+  //     // final scratchCards = ScratchCard.fromJson(json, docId);
 
-  //     // return ApiResponse<List<GoldenTicket>>(model: events, code: 200);
+  //     // return ApiResponse<List<ScratchCard>>(model: events, code: 200);
   //   } catch (e) {
   //     logger.e(e.toString());
   //     print("Test123 ${e.toString()}");

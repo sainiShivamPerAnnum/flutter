@@ -1,15 +1,15 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/ui/elements/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:open_filex/open_filex.dart';
 
@@ -65,8 +65,7 @@ class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
         });
     } catch (e) {
       isLoading = false;
-      BaseUtil.showNegativeAlert(
-         locale.obSomeThingWentWrong, locale.tryLater);
+      BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.tryLater);
     }
   }
 

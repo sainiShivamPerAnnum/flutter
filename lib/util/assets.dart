@@ -209,7 +209,7 @@ class Assets {
   static const String howToPlayAsset3Tambola = "assets/svg/tambola_inst_3.svg";
 
   //Notificatiion alert screen
-  static final String goldenTicketAsset =
+  static final String scratchCardAsset =
       "assets/vectors/icons/golden_ticket.svg";
 
   static final String depositCompleteAsset =
@@ -220,12 +220,12 @@ class Assets {
   static final String chevRonRightArrow =
       "assets/vectors/icons/chevron_right_arrow.svg";
   //Golden Tickeets screen
-  static final String unredemmedGoldenTicketBG = "assets/svg/unredeemed_gt.svg";
-  static final String levelUpUnRedeemedGoldenTicketBG =
+  static final String unredemmedScratchCardBG = "assets/svg/unredeemed_gt.svg";
+  static final String levelUpUnRedeemedScratchCardBG =
       "assets/svg/levelupTicket.svg";
-  static final String unredeemedGoldenTicketBG_png =
+  static final String unredeemedScratchCardBG_png =
       "assets/images/gt_unredeemed.png"; //for scractcher
-  static final String levelUpUnredeemedGoldenTicketBGPNG =
+  static final String levelUpUnredeemedScratchCardBGPNG =
       "assets/images/levelupTicketpng.png";
   static final String gt_token = "assets/svg/gt_token.svg";
   static final String gt_cashback = "assets/svg/gt_cashback.svg";
@@ -300,7 +300,7 @@ class Assets {
       "assets/lotties/floating_token.json";
   static const String floatingTambolaTicketIslandLottie =
       "assets/lotties/floating_tambola_ticket.json";
-  static const String floatingGoldenTicketIslandLottie =
+  static const String floatingScratchCardIslandLottie =
       "assets/lotties/floating_golden_ticket.json";
   static const String jarLottie = "assets/lotties/jarLottie.json";
 

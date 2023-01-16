@@ -1,0 +1,308 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/daily_bonus_event_model.dart';
+import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/repository/base_repo.dart';
+import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/preference_helper.dart';
+
+class ScratchCardRepository extends BaseRepo {
+  final _baseUrl = FlavorConfig.isDevelopment()
+      ? 'https://3yoxli7gxc.execute-api.ap-south-1.amazonaws.com/dev'
+      : 'https://bdqsoy9h84.execute-api.ap-south-1.amazonaws.com/prod';
+
+  Future<ApiResponse<ScratchCard>> getScratchCardById({
+    String? scratchCardId,
+  }) async {
+    try {
+      final token = await getBearerToken();
+      final scratchCardRespone = await APIService.instance.getData(
+        ApiPath.getScratchCardById(
+          this.userService!.baseUser!.uid,
+          scratchCardId,
+        ),
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      final ticket =
+          ScratchCard.fromJson(scratchCardRespone['data'], scratchCardId!);
+      return ApiResponse<ScratchCard>(model: ticket, code: 200);
+    } catch (e) {
+      logger!.e(e.toString());
+      return ApiResponse.withError("Unable to fetch ticket", 400);
+    }
+  }
+
+  Future<ApiResponse<PrizesModel>> getPrizesPerGamePerFreq(
+      String gameCode, String freq) async {
+    try {
+      final token = await getBearerToken();
+      final milestoneRespone = await APIService.instance.getData(
+        ApiPath.prizes,
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          'game': gameCode,
+          'freq': freq,
+        },
+        token: token,
+      );
+
+      final prizesModel = PrizesModel.fromJson(milestoneRespone["data"]);
+      return ApiResponse<PrizesModel>(model: prizesModel, code: 200);
+    } catch (e) {
+      logger!.e(e.toString());
+      return ApiResponse.withError("Unable to fetch ticket", 400);
+    }
+  }
+
+  //Skip milestone
+  Future<ApiResponse<bool>> skipMilestone() async {
+    try {
+      final Map<String, int?> _body = {
+        "mlIndex": userService!.userJourneyStats!.mlIndex
+      };
+      final queryParams = {"uid": userService!.baseUser!.uid};
+      final token = await getBearerToken();
+      final response = await APIService.instance.postData(
+        ApiPath.kSkipMilestone(userService!.baseUser!.uid),
+        token: token,
+        cBaseUrl: _baseUrl,
+        body: _body,
+        queryParams: queryParams,
+      );
+      if (response != null) {
+        final responseData = response["data"];
+        logger!.d("Response from skip milestone API: $responseData");
+        return ApiResponse(model: true, code: 200);
+      } else
+        return ApiResponse(model: false, code: 400);
+    } catch (e) {
+      logger!.e(e.toString());
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to skip milestone", 400);
+    }
+  }
+
+  Future<ApiResponse<ScratchCard>> getGTByPrizeSubtype(
+      String? prizeSubtype) async {
+    try {
+      final token = await getBearerToken();
+      final prizeResponse = await APIService.instance.getData(
+        ApiPath.prizeBySubtype(userService!.baseUser!.uid),
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          'subType': prizeSubtype,
+        },
+        token: token,
+      );
+
+      final scratchCard = ScratchCard.fromJson(prizeResponse["data"], "");
+      return ApiResponse<ScratchCard>(model: scratchCard, code: 200);
+    } catch (e) {
+      logger!.e(e.toString());
+      return ApiResponse.withError(
+          e.toString() ?? "Unable to fetch ticket", 400);
+    }
+  }
+
+  Future<ApiResponse<List<ScratchCard>>> getUnscratchedScratchCards() async {
+    final List<ScratchCard> unscratchedScratchCards = [];
+    try {
+      final token = await getBearerToken();
+      final prizeResponse = await APIService.instance.getData(
+        ApiPath.getScratchCard(userService!.baseUser!.uid),
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          'type': 'UNSCRATCHED',
+        },
+        token: token,
+      );
+      final Map<String, dynamic>? responseData = prizeResponse["data"];
+      if (responseData != null && responseData.isNotEmpty) {
+        responseData["gts"].forEach((gt) {
+          unscratchedScratchCards.add(ScratchCard.fromJson(gt, ""));
+        });
+      }
+
+      return ApiResponse<List<ScratchCard>>(
+          model: unscratchedScratchCards, code: 200);
+    } catch (e) {
+      logger!.e(e.toString());
+      return ApiResponse.withError(
+          e.toString() ?? "Unable to fetch ticket", 400);
+    }
+  }
+
+  Future<ApiResponse<Map<String, dynamic>>> getScratchCards(
+      {String? start}) async {
+    final List<ScratchCard> scratchCardsList = [];
+    try {
+      final token = await getBearerToken();
+      final prizeResponse = await APIService.instance.getData(
+        ApiPath.getScratchCard(userService.baseUser!.uid),
+        cBaseUrl: _baseUrl,
+        queryParams: {if (start != null) 'start': start},
+        token: token,
+      );
+      final Map<String, dynamic>? responseData = prizeResponse["data"];
+      if (responseData != null && responseData.isNotEmpty) {
+        responseData["gts"].forEach((gt) {
+          scratchCardsList.add(ScratchCard.fromJson(gt, ""));
+        });
+      }
+
+      return ApiResponse(model: {
+        "tickets": scratchCardsList,
+        "isLastPage": responseData!["isLastPage"]
+      }, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<List<ScratchCard>>> getGTByPrizeType(String type) async {
+    List<ScratchCard> tickets = [];
+    try {
+      final token = await getBearerToken();
+      final prizeResponse = await APIService.instance.getData(
+        ApiPath.scratchCards(userService!.baseUser!.uid),
+        cBaseUrl: _baseUrl,
+        queryParams: {
+          'type': type,
+        },
+        token: token,
+      );
+      List ticketsData = prizeResponse["data"]['gts'];
+      ticketsData.forEach((ticket) {
+        tickets.add(ScratchCard.fromJson(ticket, ""));
+      });
+
+      return ApiResponse<List<ScratchCard>>(model: tickets, code: 200);
+    } catch (e) {
+      logger!.e(e.toString());
+      return ApiResponse.withError(
+          e.toString() ?? "Unable to fetch ticket", 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> redeemReward(
+    String? gtId,
+  ) async {
+    try {
+      final uid = userService.baseUser!.uid;
+      final String bearer = await getBearerToken();
+
+      Map<String, dynamic> body = {"uid": uid, "gtId": gtId};
+      log("GT Redeem id: $body");
+      final response = await APIService.instance.postData(
+        ApiPath.kRedeemGtReward,
+        body: body,
+        token: bearer,
+        cBaseUrl: _baseUrl,
+      );
+
+      final data = response['data'];
+      this.logger.d(data.toString());
+      return ApiResponse(model: true, code: 200);
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<DailyAppCheckInEventModel>>
+      getDailyBonusEventDetails() async {
+    try {
+      //LOCAL CHECK IF EVENT IS AVAILABLE FOR THS USER
+
+      if (PreferenceHelper.getBool(
+              PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE,
+              def: true) ==
+          false) return ApiResponse.withError("Event over for this user", 400);
+
+      //LOCAL CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
+
+      if (PreferenceHelper.getString(PreferenceHelper
+                  .CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP)
+              .isNotEmpty &&
+          TimestampModel.fromIsoString(PreferenceHelper.getString(
+                      PreferenceHelper
+                          .CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP))
+                  .toDate()
+                  .day ==
+              DateTime.now().day)
+        return ApiResponse.withError("Reward Claimed for today", 400);
+
+      //FETCH EVENT DETAILS
+
+      final String bearer = await getBearerToken();
+      final response = await APIService.instance.getData(
+          ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
+          token: bearer,
+          cBaseUrl: _baseUrl);
+      logger.d("DAILY APP : $response");
+      final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);
+
+      //NETWORK CHECK IF EVENT OVER FOR THIS USER
+
+      if (responseData.currentDay == 7) {
+        PreferenceHelper.setBool(
+            PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE, false);
+        return ApiResponse.withError("Event over for this user", 400);
+      }
+
+      //NETWORK CHECK IF REWARD FOR TODAY IS ALREADY CLAIMED
+
+      if (responseData.streakEnd.toDate().day == DateTime.now().day) {
+        PreferenceHelper.setString(
+            PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP,
+            DateTime.now().toIso8601String());
+        return ApiResponse.withError("Reward claimed for today", 400);
+      }
+      //CHECK IF STREAK IS RESET
+      int streakBreakDaysCount = TimestampModel.daysBetween(
+          responseData.streakEnd.toDate(),
+          TimestampModel.currentTimeStamp().toDate());
+      if (streakBreakDaysCount > 1 && streakBreakDaysCount < 360)
+        responseData.showStreakBreakMessage = true;
+
+      //ALL GOOD, USER ELIGIBLE FOR DAILY APP REWARDS
+
+      return ApiResponse(model: responseData, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<DailyAppBonusClaimRewardModel>>
+      claimDailyBonusEventDetails() async {
+    try {
+      final String bearer = await getBearerToken();
+      final response = await APIService.instance.postData(
+          ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
+          token: bearer,
+          cBaseUrl: _baseUrl);
+      final responseData =
+          DailyAppBonusClaimRewardModel.fromMap(response['data']);
+      logger.d(response.toString());
+      return ApiResponse(model: responseData, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+}
+
+//TEST CASES
+//NEW USER -> Signup -> first claim
+//EXISTING USER -> Signin -> first claim
+

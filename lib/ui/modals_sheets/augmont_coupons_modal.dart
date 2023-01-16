@@ -1,5 +1,5 @@
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -32,7 +32,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
           Row(
             children: [
               Text(
-               locale.txnApplyCoupon ,
+                locale.txnApplyCoupon,
                 style: TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w700,
@@ -103,7 +103,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding24),
           Text(
-           locale.txnActiveCoupon,
+            locale.txnActiveCoupon,
             style: TextStyles.body2.light,
           ),
           Expanded(

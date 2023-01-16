@@ -4,18 +4,17 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
-import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -25,7 +24,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:upi_pay/upi_pay.dart';
 
 import '../../../../core/enums/app_config_keys.dart';
 
@@ -36,8 +34,6 @@ List<Color> randomColors = [
 ];
 
 class Win extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -101,11 +97,11 @@ class Win extends StatelessWidget {
                                             Constants.CURRENT_WINNINGS),
                                       ),
                                       Text(
-                                        '₹ ${currentWinning.truncate() ?? '-'}',
-                                        style: TextStyles.title1.extraBold
-                                            .colour(Colors.white),
-                                            key:ValueKey(Constants.CURRENT_WINNING_AMOUNT)
-                                      ),
+                                          '₹ ${currentWinning.truncate() ?? '-'}',
+                                          style: TextStyles.title1.extraBold
+                                              .colour(Colors.white),
+                                          key: ValueKey(Constants
+                                              .CURRENT_WINNING_AMOUNT)),
                                       SizedBox(
                                         height: SizeConfig.padding32,
                                       ),
@@ -133,23 +129,25 @@ class Win extends StatelessWidget {
                                                     text: TextSpan(
                                                       children: [
                                                         TextSpan(
-                                                          text:
-                                                              locale.winRedeemText,
+                                                          text: locale
+                                                              .winRedeemText,
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
                                                                   .kTextColor2),
                                                         ),
                                                         TextSpan(
-                                                          text: locale.digitalGoldText,
+                                                          text: locale
+                                                              .digitalGoldText,
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
                                                                   .kTextColor2),
                                                         ),
                                                         TextSpan(
-                                                          text:
-                                                              locale.onReaching+" ₹${model.minWithdrawPrize}",
+                                                          text: locale
+                                                                  .onReaching +
+                                                              " ₹${model.minWithdrawPrize}",
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
@@ -191,18 +189,17 @@ class Win extends StatelessWidget {
                                     Row(
                                       children: [
                                         SvgPicture.asset(
-                                            Assets.unredemmedGoldenTicketBG,
+                                            Assets.unredemmedScratchCardBG,
                                             height: SizeConfig.padding32),
                                         SizedBox(
                                           width: SizeConfig.padding8,
                                         ),
                                         Text(
-                                          locale.goldenTicketText,
+                                          locale.scratchCardText,
                                           style: TextStyles.sourceSans.body2
                                               .colour(Colors.white),
-                                              key: ValueKey(Constants.GOLDENTICKET),
+                                          key: ValueKey(Constants.GOLDENTICKET),
                                         ),
-
                                       ],
                                     ),
                                     Row(
@@ -269,7 +266,8 @@ class Win extends StatelessWidget {
                                                           .kTextColor3)),
                                               TextSpan(
                                                   text:
-                                                      '₹${AppConfig.getValue(AppConfigKey.referralBonus)} '+locale.and,
+                                                      '₹${AppConfig.getValue(AppConfigKey.referralBonus)} ' +
+                                                          locale.and,
                                                   style: TextStyles
                                                       .sourceSansB.body3
                                                       .colour(UiConstants
@@ -293,8 +291,7 @@ class Win extends StatelessWidget {
                                                       .colour(UiConstants
                                                           .kTextColor)),
                                               TextSpan(
-                                                  text:
-                                                      locale.winipadText,
+                                                  text: locale.winipadText,
                                                   style: TextStyles
                                                       .sourceSans.body3
                                                       .colour(UiConstants
@@ -632,7 +629,7 @@ class FelloNewsComponent extends StatelessWidget {
 //                         )),
 //                         TextSpan(
 //                             text:
-//                                 '200 from every Golden Ticket. Win an iPad every month.',
+//                                 '200 from every Scratch Card. Win an iPad every month.',
 //                             style: TextStyles.sourceSans.body3
 //                                 .colour(UiConstants.kTextColor3)),
 //                       ],

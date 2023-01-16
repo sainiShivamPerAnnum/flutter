@@ -1,1 +1,1 @@
-enum GoldenTicketServiceProperties { UnscratchedCount, AllGoldenTickets }
+enum ScratchCardServiceProperties { UnscratchedCount, AllScratchCards }

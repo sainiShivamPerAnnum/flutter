@@ -1,8 +1,8 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
-import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -43,7 +43,8 @@ class UsernameInputView extends StatelessWidget {
                                 style: TextStyles.rajdhaniB.title3,
                               ),
                               SizedBox(height: SizeConfig.padding6),
-                              Text(locale.obuniqueNameText,
+                              Text(
+                                locale.obuniqueNameText,
                                 style: TextStyles.sourceSans.body3
                                     .colour(UiConstants.kTextColor2),
                               )
@@ -127,7 +128,8 @@ class ModalSheetAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return ListTile(
-      title: Text(title ?? locale.digitalGoldText, style: TextStyles.rajdhaniSB.body2),
+      title: Text(title ?? locale.digitalGoldText,
+          style: TextStyles.rajdhaniSB.body2),
       subtitle: Text(
         subtitle ?? locale.safestDigitalInvestment,
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),

@@ -1,12 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:felloapp/core/model/journey_models/milestone_shadow_model.dart';
-import 'package:flutter/foundation.dart';
-
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_description.dart';
+import 'package:felloapp/core/model/journey_models/milestone_shadow_model.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
+import 'package:flutter/foundation.dart';
 
 class MilestoneModel {
   final String? id;

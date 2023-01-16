@@ -1,5 +1,4 @@
-import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
-import 'package:flutter/material.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_ticket.dart';
 
 class BestTambolaTicketsSumm {
   final List<Ticket> boards;
