@@ -67,6 +67,13 @@ class _HelpFabState extends State<HelpFab> {
       child: InkWell(
         onTap: () {
           // clearCache();
+          // ScratchCardService.scratchCardsList = [
+          //   "Acd92NN53WWpJZbxZ4UW",
+          //   "Bv8CzzI40pfwLpbuPM6Z",
+          //   "M83UzvsZGzMJlEcVezsj",
+          //   "WrffUHSSJ95hqxO5iv73"
+          // ];
+          // locator<ScratchCardService>().showMultipleScratchCardsView();
           trackHelpTappedEvent();
           AppState.delegate!
               .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));

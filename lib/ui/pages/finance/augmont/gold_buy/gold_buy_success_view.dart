@@ -257,7 +257,7 @@ class GoldBuySuccessView extends StatelessWidget {
               AppState.backButtonDispatcher!.didPopRoute();
               AppState.delegate!.appState.setCurrentTabIndex = 1;
 
-              final _tambolaService = Provider.of<TambolaService>(context,listen: false);
+              final _tambolaService = locator<TambolaService>();
               _tambolaService.weeklyTicksFetched = false;
               _tambolaService.fetchTambolaBoard();
 

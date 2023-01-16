@@ -281,6 +281,7 @@ class AugmontTransactionService extends BaseTransactionService {
               currentTxnGms = res.model!.data!.goldInTxnBought;
             timer!.cancel();
             return transactionResponseUpdate(
+                // gtId: transactionResponseModel?.data?.gtId ?? "",
                 gtIds: transactionResponseModel?.data?.gtIds ?? []);
           }
           break;

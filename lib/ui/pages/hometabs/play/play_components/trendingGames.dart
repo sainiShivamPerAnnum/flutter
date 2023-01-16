@@ -158,9 +158,7 @@ class TrendingGames extends StatelessWidget {
               "location": "Trending games"
             }));
         Haptic.vibrate();
-        // AppState.delegate!.parseRoute(
-        //   Uri.parse(game!.gameCode!),
-        // );
+
         BaseUtil.openGameModalSheet(
             game!.gameCode!, getGameInfo(game!.gameCode!));
       },
