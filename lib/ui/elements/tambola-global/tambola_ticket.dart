@@ -84,7 +84,7 @@ class Ticket extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     if (ticketNumbers.isEmpty) generateNumberList();
-    print(calledDigits);
+
     return Container(
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
@@ -206,7 +206,8 @@ class Ticket extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(SizeConfig.padding6),
             child: Text(
-              locale.tGeneratedOn+"${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).year}",
+              locale.tGeneratedOn +
+                  "${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).year}",
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: SizeConfig.smallTextSize,

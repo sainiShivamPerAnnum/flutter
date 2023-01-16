@@ -59,10 +59,11 @@ class Root extends StatelessWidget {
               if (model.showHappyHourBanner)
                 Consumer<AppState>(
                   builder: (ctx, m, child) => AnimatedPositioned(
-                    bottom: locator<RootController>().currentNavBarItemModel ==
-                                RootController.saveNavBarItem ||
+                    bottom: !(locator<RootController>()
+                                    .currentNavBarItemModel ==
+                                RootController.tambolaNavBar ||
                             locator<RootController>().currentNavBarItemModel ==
-                                RootController.tambolaNavBar
+                                RootController.journeyNavBarItem)
                         ? SizeConfig.navBarHeight
                         : -50,
                     duration: Duration(milliseconds: 400),

@@ -104,8 +104,9 @@ class RootViewModel extends BaseViewModel {
   onInit() {
     _rootController.navItems.clear();
     DynamicUiUtils.navBar.forEach(getNavItems);
+    _rootController.currentNavBarItemModel =
+        _rootController.navItems.values.first;
 
-    locator<UserStatsRepo>().getGameStats();
     AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
     _referralService.verifyReferral();

@@ -97,15 +97,15 @@ class Data {
 }
 
 class Gm {
-  Gm({
-    required this.plays,
-    required this.netScore,
-    required this.topScore,
-    required this.totalSeconds,
-    required this.firstPlay,
-    required this.streakIntervalStart,
-    required this.streakIntervalEnd,
-  });
+  Gm(
+      {required this.plays,
+      required this.netScore,
+      required this.topScore,
+      required this.totalSeconds,
+      required this.firstPlay,
+      required this.streakIntervalStart,
+      required this.streakIntervalEnd,
+      required this.rewards});
 
   final int? plays;
   final int? netScore;
@@ -114,16 +114,18 @@ class Gm {
   final UpdatedOn? firstPlay;
   final UpdatedOn? streakIntervalStart;
   final UpdatedOn? streakIntervalEnd;
+  final Rewards? rewards;
 
   factory Gm.fromJson(Map<String, dynamic> json) => Gm(
-        plays: json["plays"],
-        netScore: json["netScore"],
-        topScore: json["topScore"],
-        totalSeconds: json["totalSeconds"],
-        firstPlay: UpdatedOn.fromJson(json["firstPlay"]),
-        streakIntervalStart: UpdatedOn.fromJson(json["streakIntervalStart"]),
-        streakIntervalEnd: UpdatedOn.fromJson(json["streakIntervalEnd"]),
-      );
+      plays: json["plays"],
+      netScore: json["netScore"],
+      topScore: json["topScore"],
+      totalSeconds: json["totalSeconds"],
+      firstPlay: UpdatedOn.fromJson(json["firstPlay"]),
+      streakIntervalStart: UpdatedOn.fromJson(json["streakIntervalStart"]),
+      streakIntervalEnd: UpdatedOn.fromJson(json["streakIntervalEnd"]),
+      rewards:
+          json["totalRewards"] != null ? Rewards.fomJson(json["totalRewards"]) : null);
 
   Map<String, dynamic> toJson() => {
         "plays": plays,
@@ -134,6 +136,13 @@ class Gm {
         "streakIntervalStart": streakIntervalStart!.toJson(),
         "streakIntervalEnd": streakIntervalEnd!.toJson(),
       };
+}
+
+class Rewards {
+  final int? amt;
+  Rewards(this.amt);
+  factory Rewards.fomJson(Map<String, dynamic> json) =>
+      Rewards(json["amt"] ?? null);
 }
 
 class UpdatedOn {

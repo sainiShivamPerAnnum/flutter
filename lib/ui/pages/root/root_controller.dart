@@ -10,7 +10,7 @@ class RootController {
 
   static final playNavBarItem = NavBarItemModel("Play", Assets.navPlayLottie);
 
-  static final winNavBarItem = NavBarItemModel("Win", Assets.navWinLottie);
+  static final winNavBarItem = NavBarItemModel("Account", Assets.navWinLottie);
   static final saveNavBarItem = NavBarItemModel("Save", Assets.navSaveLottie);
 
   late NavBarItemModel currentNavBarItemModel;

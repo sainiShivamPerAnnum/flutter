@@ -189,7 +189,7 @@ class WebGameModalSheet extends StatelessWidget {
                                           .colour(Color(0xffBDBDBE)),
                                     ),
                                     Text(
-                                      "₹${gameInfo?.netScore ?? " -"}",
+                                      "₹ ${gameInfo?.rewards?.amt ?? " -"}",
                                       style: TextStyles.rajdhaniSB.body1.colour(
                                         Color(0xffBDBDBE),
                                       ),
