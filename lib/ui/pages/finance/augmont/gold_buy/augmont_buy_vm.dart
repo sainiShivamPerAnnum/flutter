@@ -22,7 +22,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
-import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
+import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -32,8 +32,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:http/http.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 //TODO : add location for save checkout [ journey, save, asset details, challenges,promos]
@@ -308,7 +306,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
-         locale.loadingGoldRates,locale.loadingGoldRates1);
+          locale.loadingGoldRates, locale.loadingGoldRates1);
 
       return false;
     }
@@ -482,7 +480,7 @@ class GoldBuyViewModel extends BaseViewModel {
     updateGoldAmount();
     if (goldRates == null)
       BaseUtil.showNegativeAlert(
-       locale.portalUnavailable,
+        locale.portalUnavailable,
         locale.currentRatesNotLoadedText1,
       );
     isGoldRateFetching = false;
@@ -650,8 +648,7 @@ class GoldBuyViewModel extends BaseViewModel {
       BaseUtil.showNegativeAlert(locale.couponNotApplied,
           response?.errorMessage ?? locale.anotherCoupon);
     } else {
-      BaseUtil.showNegativeAlert(
-          locale.couponNotApplied, locale.anotherCoupon);
+      BaseUtil.showNegativeAlert(locale.couponNotApplied, locale.anotherCoupon);
     }
     _analyticsService!
         .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
@@ -699,7 +696,7 @@ class PendingDialog extends StatelessWidget {
     return AppNegativeDialog(
       btnAction: () {},
       btnText: locale.btnOk.toUpperCase(),
-      title:locale.processing,
+      title: locale.processing,
       subtitle: subtitle + duration,
     );
   }

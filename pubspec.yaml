@@ -36,10 +36,6 @@ dependencies:
   firebase_storage: ^11.0.8
   flutter:
     sdk: flutter
-  flutter_dynamic_icon:
-    git:
-      url: https://github.com/tastelessjolt/flutter_dynamic_icon.git
-      ref: GioPan04-android-support
   flutter_facebook_sdk:
     path: packages/flutter_facebook_sdk/
   flutter_html: ^3.0.0-alpha.5

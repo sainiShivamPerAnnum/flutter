@@ -32,8 +32,8 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/modals_sheets/deposit_options_modal_sheet.dart';
-import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
+import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
+import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
