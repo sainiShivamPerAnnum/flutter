@@ -201,19 +201,16 @@ class ScratchCardService
   }
 
   showMultipleScratchCardsView() {
-    if (scratchCardsList != null && scratchCardsList!.isNotEmpty) {
+    if (scratchCardsList != null) {
       if (scratchCardsList!.length == 1) {
-        scratchCardId = scratchCardsList![0];
-        return fetchAndVerifyScratchCardByID()
-            .then((_) => showInstantScratchCardView(source: GTSOURCE.prize));
+        return showInstantScratchCardView(source: GTSOURCE.prize);
       } else {
         AppState.screenStack.add(ScreenItem.dialog);
         Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
           PageRouteBuilder(
-            opaque: false,
-            pageBuilder: (BuildContext context, _, __) =>
-                MultipleScratchCardsView(),
-          ),
+              opaque: false,
+              pageBuilder: (BuildContext context, _, __) =>
+                  MultipleScratchCardsView()),
         );
       }
     }
