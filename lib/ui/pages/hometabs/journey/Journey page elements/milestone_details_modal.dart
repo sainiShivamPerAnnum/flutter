@@ -71,10 +71,19 @@ class _JourneyMilestoneDetailsModalSheetState
   String getTicketType(mlIndex) {
     for (int i = 0; i < _journeyService!.levels!.length; i++) {
       if (_journeyService!.levels![i].end == mlIndex) {
-        return "Green";
+        return "Green Scratch";
       }
     }
-    return "Golden";
+    return "Scratch";
+  }
+
+  String getTicketAsset(mlIndex) {
+    for (int i = 0; i < _journeyService!.levels!.length; i++) {
+      if (_journeyService!.levels![i].end == mlIndex) {
+        return Assets.levelUpUnRedeemedScratchCardBG;
+      }
+    }
+    return Assets.unredemmedScratchCardBG;
   }
 
   Color getTicketColor(mlIndex) {
@@ -181,12 +190,29 @@ class _JourneyMilestoneDetailsModalSheetState
                               TextStyles.body3.colour(UiConstants.kTextColor3),
                         ),
                         SizedBox(height: SizeConfig.padding24),
-                        Text(
-                          locale.winATicket(
-                              getTicketType(widget.milestone.index)),
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.primaryColor),
-                        )
+                        RichText(
+                          text: TextSpan(
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.primaryColor),
+                              children: [
+                                WidgetSpan(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: SizeConfig.padding3),
+                                    child: SvgPicture.asset(
+                                      getTicketAsset(widget.milestone.index),
+                                      height: SizeConfig.body4,
+                                    ),
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: " " +
+                                      locale.winATicket(
+                                        getTicketType(widget.milestone.index),
+                                      ),
+                                )
+                              ]),
+                        ),
                       ],
                     ),
               if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)

@@ -2002,10 +2002,10 @@ class S {
     );
   }
 
-  /// `Golden Tickets`
+  /// `Scratch Cards`
   String get scratchCardText {
     return Intl.message(
-      'Golden Tickets',
+      'Scratch Cards',
       name: 'scratchCardText',
       desc: '',
       args: [],
@@ -2870,10 +2870,10 @@ class S {
     );
   }
 
-  /// `Earn Golden Tickets for every referral`
+  /// `Earn Scratch Cards for every referral`
   String get getScratchCards {
     return Intl.message(
-      'Earn Golden Tickets for every referral',
+      'Earn Scratch Cards for every referral',
       name: 'getScratchCards',
       desc: '',
       args: [],
@@ -2910,10 +2910,10 @@ class S {
     );
   }
 
-  /// `1 Golden\nTicket`
+  /// `1 Scratch\nCard`
   String get oneScratchCard {
     return Intl.message(
-      '1 Golden\nTicket',
+      '1 Scratch\nCard',
       name: 'oneScratchCard',
       desc: '',
       args: [],

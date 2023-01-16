@@ -446,7 +446,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "getRedeemErrorSubtitle": MessageLookupByLibrary.simpleMessage(
             "Please try again in your winnings section"),
         "getScratchCards": MessageLookupByLibrary.simpleMessage(
-            "Earn Golden Tickets for every referral"),
+            "Earn Scratch Cards for every referral"),
         "getStartedWithSIP": MessageLookupByLibrary.simpleMessage(
             "Get started with a weekly/ daily SIP"),
         "getTickets": MessageLookupByLibrary.simpleMessage("Get Tickets"),
@@ -793,7 +793,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Win Rs.1 Crore!"),
         "onboradButton": MessageLookupByLibrary.simpleMessage("GET STARTED"),
         "oneScratchCard":
-            MessageLookupByLibrary.simpleMessage("1 Golden\nTicket"),
+            MessageLookupByLibrary.simpleMessage("1 Scratch\nCard"),
         "operationCannotBeCompleted": MessageLookupByLibrary.simpleMessage(
             "Operation cannot be completed at the moment"),
         "orderSummary": MessageLookupByLibrary.simpleMessage("Order Summary"),
@@ -957,7 +957,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Scratch and win exciting rewards."),
         "scratchCard": MessageLookupByLibrary.simpleMessage("Scratch Card"),
         "scratchCardText":
-            MessageLookupByLibrary.simpleMessage("Golden Tickets"),
+            MessageLookupByLibrary.simpleMessage("Scratch Cards"),
         "secureFelloTitle":
             MessageLookupByLibrary.simpleMessage("Secure Fello"),
         "selectRating":

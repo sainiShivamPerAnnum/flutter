@@ -274,7 +274,7 @@ class AugmontTransactionService extends BaseTransactionService {
             transactionResponseModel = res.model;
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
-
+            currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
             if (res.model!.data != null &&
                 res.model!.data!.goldInTxnBought != null &&
                 res.model!.data!.goldInTxnBought! > 0)

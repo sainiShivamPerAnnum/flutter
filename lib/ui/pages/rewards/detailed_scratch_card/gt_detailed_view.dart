@@ -7,6 +7,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_utils.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -296,6 +297,7 @@ class GTDetailedView extends StatelessWidget {
       padding: EdgeInsets.only(bottom: SizeConfig.padding8),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Icon(
             Icons.brightness_1,
@@ -303,10 +305,12 @@ class GTDetailedView extends StatelessWidget {
             color: UiConstants.kTextColor2,
           ),
           SizedBox(width: 10),
-          Text(
-            title,
-            style: TextStyles.body3.colour(UiConstants.kTextColor2),
-          ),
+          title.beautify(
+              style: TextStyles.body3.colour(UiConstants.kTextColor2),
+              boldStyle:
+                  TextStyles.sourceSansB.body3.colour(UiConstants.kTextColor),
+              italicStyle:
+                  TextStyles.body3.colour(UiConstants.kTextColor).italic),
         ],
       ),
     );

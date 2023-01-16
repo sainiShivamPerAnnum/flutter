@@ -42,6 +42,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
       _txnService.currentTxnGms = 0.0;
       _txnService.currentTxnAmount = 0.0;
       _txnService.currentTxnOrderId = '';
+      _txnService.currentTxnScratchCardCount = 0;
       _txnService.currentTxnTambolaTicketsCount = 0;
       _txnService.currentTransactionState = TransactionState.idle;
     });

@@ -36,6 +36,7 @@ abstract class BaseTransactionService
   String? currentTxnOrderId;
   int currentTxnTambolaTicketsCount = 0;
   bool isIOSTxnInProgress = false;
+  int currentTxnScratchCardCount = 0;
   Map<String, dynamic>? currentTransactionAnalyticsDetails;
 
   Future<void> initiatePolling() async {

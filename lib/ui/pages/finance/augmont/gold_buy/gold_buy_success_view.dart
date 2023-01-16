@@ -13,7 +13,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 class GoldBuySuccessView extends StatelessWidget {
   final AugmontTransactionService? _augTxnService =
@@ -71,7 +70,7 @@ class GoldBuySuccessView extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (ScratchCardService.currentGT != null)
+                if (_augTxnService!.currentTxnScratchCardCount > 0)
                   Align(
                     alignment: Alignment.centerRight,
                     child: Container(
@@ -233,14 +232,14 @@ class GoldBuySuccessView extends StatelessWidget {
                     tooltip: locale.winChipsTitle1,
                     asset: Assets.token,
                     qty: _augTxnService!.currentTxnAmount!.toInt()),
-                if (ScratchCardService.currentGT != null)
+                if (_augTxnService!.currentTxnScratchCardCount > 0)
                   SizedBox(width: SizeConfig.padding12),
-                if (ScratchCardService.currentGT != null)
+                if (_augTxnService!.currentTxnScratchCardCount > 0)
                   WinningChips(
                       title: locale.scratchCard,
                       tooltip: locale.winChipsTitle2,
                       asset: Assets.unredemmedScratchCardBG,
-                      qty: 1),
+                      qty: _augTxnService!.currentTxnScratchCardCount),
                 if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
                   SizedBox(width: SizeConfig.padding12),
                 if (_augTxnService!.currentTxnTambolaTicketsCount > 0)

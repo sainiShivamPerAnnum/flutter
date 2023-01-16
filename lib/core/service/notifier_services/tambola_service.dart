@@ -1,15 +1,12 @@
 import 'dart:async';
 
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/model/tambola_ticket_model.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -150,12 +147,16 @@ class TambolaService extends ChangeNotifier {
     _atomicTicketGenerationLeftCount = 0;
     _atomicTicketDeletionLeftCount = 0;
     setUpDailyPicksCount();
-    fetchTambolaBoard();
-    completer.future.then((value) {
-      if (value != null) {
-        initialTicketCount = value.length;
-      }
-    });
+    if (locator<RootController>()
+        .navItems
+        .containsKey(RootController.tambolaNavBar)) {
+      fetchTambolaBoard();
+      completer.future.then((value) {
+        if (value != null) {
+          initialTicketCount = value.length;
+        }
+      });
+    }
   }
 
   // Future<void> getTicketCount() async {

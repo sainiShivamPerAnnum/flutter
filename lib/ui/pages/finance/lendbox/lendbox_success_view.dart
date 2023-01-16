@@ -1,6 +1,5 @@
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
-import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -14,7 +13,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 class LendboxSuccessView extends StatelessWidget {
   final TransactionType transactionType;
@@ -83,7 +81,7 @@ class LendboxSuccessView extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (ScratchCardService.currentGT != null)
+                  if (_txnService!.currentTxnScratchCardCount > 0)
                     Align(
                       alignment: Alignment.centerRight,
                       child: Container(
@@ -228,14 +226,14 @@ class LendboxSuccessView extends StatelessWidget {
                       tooltip: locale.winChipsTitle1,
                       asset: Assets.token,
                       qty: _txnService!.currentTxnAmount!.toInt()),
-                  if (ScratchCardService.currentGT != null)
+                  if (_txnService!.currentTxnScratchCardCount > 0)
                     SizedBox(width: SizeConfig.padding12),
-                  if (ScratchCardService.currentGT != null)
+                  if (_txnService!.currentTxnScratchCardCount > 0)
                     WinningChips(
                         title: locale.scratchCard,
                         tooltip: locale.winChipsTitle2,
                         asset: Assets.unredemmedScratchCardBG,
-                        qty: 1),
+                        qty: _txnService!.currentTxnScratchCardCount),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
                     SizedBox(width: SizeConfig.padding12),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
