@@ -60,8 +60,7 @@ class PlayViewModel extends BaseViewModel {
   String? _sessionId;
   bool _isOfferListLoading = true;
   bool _isGamesListDataLoading = true;
-
-  GameStats? get gameStats => _userStatsRepo.gameStats;
+  late GameStats gameStats;
 
   List<PromoCardModel>? _offerList;
   List<GameModel>? _gamesListData;
@@ -118,13 +117,20 @@ class PlayViewModel extends BaseViewModel {
     _baseUtil!.openProfileDetailsScreen();
   }
 
+  Future<void> setGameStatus() async {
+    gameStats = await _userStatsRepo.completer.future;
+    notifyListeners();
+  }
+
   init() async {
     isGamesListDataLoading = true;
-    await locator<UserStatsRepo>().getGameStats();
-
+    locator<UserStatsRepo>().getGameStats();
+    gameStats = await _userStatsRepo.completer.future;
     final response = await gamesRepo!.getGames();
     _winnerService.fetchWinnersForAllGames();
-
+    _userStatsRepo.addListener(() {
+      setGameStatus();
+    });
     showSecurityMessageAtTop =
         _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
     if (response.isSuccess()) {
@@ -139,12 +145,11 @@ class PlayViewModel extends BaseViewModel {
     List<Widget> playViewChildren = [];
 
     DynamicUiUtils.playViewOrder.forEach((key) {
-      bool val = locator<RootController>()
-          .navItems
-          .containsValue(RootController.tambolaNavBar);
       switch (key) {
-        case 'TA':
-          if (!val) {
+        case 'TM':
+          if (!locator<RootController>()
+              .navItems
+              .containsValue(RootController.tambolaNavBar)) {
             playViewChildren.add(TambolaCard(
               tambolaController: _tambolaController,
             ));

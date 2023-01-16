@@ -102,6 +102,7 @@ class RootViewModel extends BaseViewModel {
   }
 
   onInit() {
+    _rootController.navItems.clear();
     DynamicUiUtils.navBar.forEach(getNavItems);
 
     locator<UserStatsRepo>().getGameStats();

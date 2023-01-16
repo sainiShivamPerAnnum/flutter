@@ -21,15 +21,18 @@ class UserStatsRepo extends BaseRepo with ChangeNotifier {
   final Api _api = locator<Api>();
   final ApiPath _apiPaths = locator<ApiPath>();
   final _userService = locator<UserService>();
-  late GameStats gameStats;
 
+  late Completer<GameStats> completer;
   Future<void> getGameStats() async {
+    completer = Completer();
     final token = await getBearerToken();
     try {
       final uid = _userService.baseUser?.uid ?? "";
       final res = await APIService.instance.getData(ApiPath.getGameStats(uid),
           token: 'Bearer $token', cBaseUrl: _baseUrl);
-      gameStats = GameStats.fromJson(res['data']);
+
+      completer.complete(GameStats.fromJson(res['data']));
+      notifyListeners();
     } catch (e) {
       log(e.toString());
     }

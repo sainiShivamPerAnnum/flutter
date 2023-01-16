@@ -254,8 +254,10 @@ class LendboxSuccessView extends StatelessWidget {
               onPressed: () {
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.delegate!.appState.setCurrentTabIndex = 1;
-                Provider.of<TambolaService>(context, listen: false)
-                    .fetchTambolaBoard();
+                final _tambolaService =
+                    Provider.of<TambolaService>(context, listen: false);
+                _tambolaService.weeklyTicksFetched = false;
+                _tambolaService.fetchWeeklyPicks();
                 this.showGtIfAvailable();
               },
               child: Text(
