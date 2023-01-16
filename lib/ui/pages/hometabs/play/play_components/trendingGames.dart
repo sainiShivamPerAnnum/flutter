@@ -162,7 +162,7 @@ class TrendingGames extends StatelessWidget {
         //   Uri.parse(game!.gameCode!),
         // );
         BaseUtil.openGameModalSheet(
-            model.gow!.gameCode!, getGameInfo(model.gow!.gameCode!));
+            game!.gameCode!, getGameInfo(game!.gameCode!));
       },
       child: Container(
         decoration: BoxDecoration(

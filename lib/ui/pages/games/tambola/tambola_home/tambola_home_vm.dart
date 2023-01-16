@@ -227,7 +227,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     await fetchTambola();
 
     tambolaService!.addListener(() {
-      fetchTambola();
+      refreshTambolaTickets();
     });
 
     ///check whether to show summary cards or not

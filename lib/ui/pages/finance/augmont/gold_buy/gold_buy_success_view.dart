@@ -257,11 +257,10 @@ class GoldBuySuccessView extends StatelessWidget {
               AppState.backButtonDispatcher!.didPopRoute();
               AppState.delegate!.appState.setCurrentTabIndex = 1;
 
-              if (_augTxnService!.currentTxnTambolaTicketsCount > 0) {
-                final _tambolaService = Provider.of<TambolaService>(context);
-                _tambolaService.weeklyTicksFetched = false;
-                _tambolaService.fetchWeeklyPicks();
-              }
+              final _tambolaService = Provider.of<TambolaService>(context,listen: false);
+              _tambolaService.weeklyTicksFetched = false;
+              _tambolaService.fetchTambolaBoard();
+
               _augTxnService!.showGtIfAvailable();
             },
             child: Text(
