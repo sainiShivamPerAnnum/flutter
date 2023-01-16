@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_stats_model.dart';
@@ -157,9 +158,11 @@ class TrendingGames extends StatelessWidget {
               "location": "Trending games"
             }));
         Haptic.vibrate();
-        AppState.delegate!.parseRoute(
-          Uri.parse(game!.gameCode!),
-        );
+        // AppState.delegate!.parseRoute(
+        //   Uri.parse(game!.gameCode!),
+        // );
+        BaseUtil.openGameModalSheet(
+            model.gow!.gameCode!, getGameInfo(model.gow!.gameCode!));
       },
       child: Container(
         decoration: BoxDecoration(
