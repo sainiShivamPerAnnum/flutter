@@ -33,6 +33,7 @@ import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
@@ -765,17 +766,36 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     PageConfiguration? pageConfiguration;
     switch (screenKey) {
       case 'journey':
-        appState.setCurrentTabIndex = 0;
+        appState.setCurrentTabIndex = appState.setCurrentTabIndex =
+            locator<RootController>()
+                .navItems
+                .values
+                .toList()
+                .indexOf(RootController.journeyNavBarItem);
         break;
       case 'save':
-        appState.setCurrentTabIndex = 1;
+        appState.setCurrentTabIndex = locator<RootController>()
+            .navItems
+            .values
+            .toList()
+            .indexOf(RootController.saveNavBarItem);
         break;
       case 'play':
-        appState.setCurrentTabIndex = 2;
+        appState.setCurrentTabIndex = appState.setCurrentTabIndex =
+            locator<RootController>()
+                .navItems
+                .values
+                .toList()
+                .indexOf(RootController.playNavBarItem);
         break;
       case 'win':
-        appState.setCurrentTabIndex = 3;
+        appState.setCurrentTabIndex = locator<RootController>()
+            .navItems
+            .values
+            .toList()
+            .indexOf(RootController.winNavBarItem);
         break;
+
       case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
@@ -819,6 +839,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
+        if (locator<RootController>()
+            .navItems
+            .containsValue(RootController.tambolaNavBar)) {
+          appState.setCurrentTabIndex = locator<RootController>()
+              .navItems
+              .values
+              .toList()
+              .indexOf(RootController.tambolaNavBar);
+          break;
+        }
         pageConfiguration = THomePageConfig;
         break;
       case 'myWinnings':
