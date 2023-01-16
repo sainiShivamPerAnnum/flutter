@@ -12,14 +12,18 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_leader_model.dart';
 import 'package:felloapp/core/model/settings_items_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -27,14 +31,17 @@ import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
-import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/modals_sheets/deposit_options_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
+import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -51,6 +58,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
+  final DBModel? _dbModel = locator<DBModel>();
+  // final LocalDBModel? _lModel = locator<LocalDBModel>();
   final AppState? _appState = locator<AppState>();
   final UserService? _userService = locator<UserService>();
   final UserRepository? _userRepo = locator<UserRepository>();
@@ -73,6 +82,7 @@ class BaseUtil extends ChangeNotifier {
   UserTransaction? _currentICICINonInstantWthrlTxn;
 
   ///Augmont global objects
+  UserAugmontDetail? _augmontDetail;
   AugmontRates? augmontGoldRates;
 
   ///KYC global object
@@ -217,8 +227,39 @@ class BaseUtil extends ChangeNotifier {
     packageInfo = await PackageInfo.fromPlatform();
   }
 
+  Future<void> refreshFunds() async {
+    //TODO: ADD LOADER
+    print("-----------------> I got called");
+    return _userRepo!.getFundBalance().then((aValue) {
+      if (aValue.code == 200) {
+        userFundWallet = aValue.model;
+        if (userFundWallet!.augGoldQuantity > 0)
+          _updateAugmontBalance(); //setstate call in method
+
+      }
+      notifyListeners();
+    });
+  }
+
   openProfileDetailsScreen() {
+    // if (JourneyService.isAvatarAnimationInProgress) return;
+    // if (_userService!.userJourneyStats!.mlIndex! > 1)
     AppState.delegate!.parseRoute(Uri.parse("profile"));
+    // else {
+    // print("Reachng");
+
+    // print(
+    //     "Testing 123  ${AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+    //       "Test": "test"
+    //     })}");
+
+    // AppState.delegate!.appState.currentAction = PageAction(
+    //   page: UserProfileDetailsConfig,
+    //   state: PageState.addWidget,
+    //   widget: UserProfileDetails(isNewUser: true),
+    // );
+    // }
+
     _analyticsService!.track(
         eventName: AnalyticsEvents.profileClicked,
         properties: AnalyticsProperties.getDefaultPropertiesMap(
@@ -227,17 +268,23 @@ class BaseUtil extends ChangeNotifier {
 
   getLocationForCurrentTab() {
     int tab = AppState.delegate!.appState.getCurrentTabIndex;
+
     switch (tab) {
       case 0:
         return "Journey View, top Left Corner";
+        break;
       case 1:
         return "Save Section, top Left Corner";
+        break;
       case 2:
         return "Play Section, top Left Corner";
+        break;
       case 3:
         return "Win Section, top Left Corner";
+        break;
       default:
         return "";
+        break;
     }
   }
 
@@ -251,12 +298,34 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
+  static openGameModalSheet(String game, Gm? gameModel) {
+    return openModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: true,
+      isBarrierDismissible: true,
+      addToScreenStack: true,
+      content: WebGameModalSheet(
+        game: game,
+        gameInfo: gameModel,
+      ),
+      backgroundColor: Color(0xff39393C),
+      hapticVibrate: true,
+    );
+  }
+
   openRechargeModalSheet({
     int? amt,
     bool? isSkipMl,
     required InvestmentType investmentType,
   }) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      // if (_userService!.userJourneyStats?.mlIndex == 1)
+      //   return BaseUtil.openDialog(
+      //     addToScreenStack: true,
+      //     isBarrierDismissible: true,
+      //     hapticVibrate: false,
+      //     content: CompleteProfileDialog(),
+      //   );
       final bool? isAugDepositBanned = _userService
           ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
       final String? augDepositBanNotice = _userService
@@ -302,7 +371,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void openSellModalSheet({required InvestmentType investmentType}) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       final bool? isAugSellLocked = _userService?.userBootUp?.data!.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
       final String? augSellBanNotice = _userService
@@ -343,6 +412,12 @@ class BaseUtil extends ChangeNotifier {
   }
 
   openDepositOptionsModalSheet({int? amount, bool isSkipMl = false}) {
+    // if (_userService!.userJourneyStats!.mlIndex == 1)
+    //   return BaseUtil.openDialog(
+    //       addToScreenStack: true,
+    //       isBarrierDismissible: true,
+    //       hapticVibrate: false,
+    //       content: CompleteProfileDialog());
     _analyticsService!
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
     return BaseUtil.openModalBottomSheet(
@@ -374,6 +449,14 @@ class BaseUtil extends ChangeNotifier {
   static showNoInternetAlert() {
     return AppToasts.showNoInternetToast();
   }
+
+  // Future<bool> getDrawStatus() async {
+  //   if (DateTime.now().weekday != await _lModel!.getDailyPickAnimLastDay() &&
+  //       DateTime.now().hour >= 18 &&
+  //       DateTime.now().hour < 24) return true;
+
+  //   return false;
+  // }
 
   static void openDialog({
     Widget? content,
@@ -428,19 +511,18 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  Future showHappyHourDialog(HappyHourCampign model,
-      {bool afterHappyHour = false, bool isComingFromSave = false}) async {
-    return openModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      addToScreenStack: true,
-      hapticVibrate: true,
-      content: HappyHourModel(
-        model: model,
-        isAfterHappyHour: afterHappyHour,
-        isComingFromSave: isComingFromSave,
-      ),
-      isBarrierDismissible: true,
-    );
+  Future<bool> authenticateUser(AuthCredential credential) {
+    logger.d("Verification credetials: " + credential.toString());
+    // FirebaseAuth.instance.signInWithCustomToken(token)
+    return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
+      this.firebaseUser = res.user;
+      logger.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
+      return true;
+    }).catchError((e) {
+      logger.e(
+          "User Authentication failed with credential: Error: " + e.toString());
+      return false;
+    });
   }
 
   Future<bool> signOut() async {
@@ -473,6 +555,7 @@ class BaseUtil extends ChangeNotifier {
       _currentICICITxn = null;
       _currentICICINonInstantWthrlTxn = null;
 
+      _augmontDetail = null;
       augmontGoldRates = null;
       prizeLeaders = [];
       referralLeaders = [];
@@ -501,19 +584,66 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static void launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      launchUrl(url);
     } else {
       BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
           "Please try after some time");
     }
   }
 
+  // void openTambolaGame() async {
+  //   if (await getDrawStatus()) {
+  //     await _lModel!.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
+  //           (value) =>
+  //               print("Daily Picks Draw Animation Save Status Code: $value"),
+  //         );
+  //     AppState.delegate!.appState.currentAction =
+  //         PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
+  //   } else
+  //     AppState.delegate!.appState.currentAction =
+  //         PageAction(state: PageState.addPage, page: TGamePageConfig);
+  // }
+
   bool isOldCustomer() {
     //all users before april 2021 are marked old
     if (userCreationTimestamp == null) return false;
     return (userCreationTimestamp!.isBefore(Constants.VERSION_2_RELEASE_DATE));
   }
+
+  static int getWeekNumber({DateTime? currentDate}) {
+    DateTime tdt = (currentDate != null) ? currentDate : new DateTime.now();
+    int dayn = tdt.weekday;
+    //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
+    //tdt.setDate(tdt.getDate() - dayn + 3);
+    DateTime firstThursday =
+        new DateTime(tdt.year, tdt.month, tdt.day - dayn + 3);
+    tdt = new DateTime(tdt.year, 1, 1);
+    if (tdt.weekday != DateTime.friday) {
+      //tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
+      int x = tdt.weekday;
+      x = (tdt.weekday == 7) ? 0 : tdt.weekday;
+      tdt = new DateTime(tdt.year, 1, 1 + ((5 - x) + 7) % 7);
+    }
+    int n = 1 +
+        ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) /
+                604800000)
+            .ceil();
+    return n;
+  }
+
+  double getUpdatedWithdrawalClosingBalance(double investment) =>
+      (toDouble(_userFundWallet!.iciciBalance) +
+          toDouble(_userFundWallet!.augGoldBalance) +
+          toDouble(_userFundWallet!.prizeBalance) +
+          toDouble(_userFundWallet!.lockedPrizeBalance) -
+          investment);
+
+  double getCurrentTotalClosingBalance() =>
+      (toDouble(_userFundWallet!.iciciBalance) +
+          toDouble(_userFundWallet!.augGoldBalance) +
+          toDouble(_userFundWallet!.prizeBalance) +
+          toDouble(_userFundWallet!.lockedPrizeBalance));
 
   static T? _cast<T>(x) => x is T ? x : null;
 
@@ -563,6 +693,26 @@ class BaseUtil extends ChangeNotifier {
   int getTicketCountForTransaction(double investment) =>
       (investment / Constants.INVESTMENT_AMOUNT_FOR_TICKET).floor();
 
+  void setDisplayPictureUrl(String url) {
+    myUserDpUrl = url;
+    notifyListeners();
+  }
+
+  void setName(String newName) {
+    myUser!.name = newName;
+    notifyListeners();
+  }
+
+  void setKycVerified(bool val) {
+    myUser!.isSimpleKycVerified = val;
+    notifyListeners();
+  }
+
+  void setUsername(String userName) {
+    myUser!.username = userName;
+    notifyListeners();
+  }
+
   void setEmailVerified() {
     myUser!.isEmailVerified = true;
     notifyListeners();
@@ -571,6 +721,113 @@ class BaseUtil extends ChangeNotifier {
   void setEmail(String email) {
     myUser!.email = email;
     notifyListeners();
+  }
+
+  void refreshAugmontBalance() async {
+    _userRepo!.getFundBalance().then((aValue) {
+      if (aValue.code == 200) {
+        userFundWallet = aValue.model;
+        if (userFundWallet!.augGoldQuantity > 0) _updateAugmontBalance();
+      }
+    });
+  }
+
+  // Future<void> fetchUserAugmontDetail() async {
+  //   if (augmontDetail == null) {
+  //     ApiResponse<UserAugmontDetail> augmontDetailResponse =
+  //         await _userRepo.getUserAugmontDetails();
+  //     if (augmontDetailResponse.code == 200)
+  //       augmontDetail = augmontDetailResponse.model;
+  //   }
+  // }
+
+  Future<void> _updateAugmontBalance() async {
+    if (augmontDetail == null ||
+        (userFundWallet!.augGoldQuantity == 0 &&
+            userFundWallet!.augGoldBalance == 0)) return;
+    AugmontService().getRates().then((currRates) {
+      if (currRates == null ||
+          currRates.goldSellPrice == null ||
+          userFundWallet!.augGoldQuantity == 0) return;
+
+      augmontGoldRates = currRates;
+      double gSellRate = augmontGoldRates!.goldSellPrice!;
+      userFundWallet!.augGoldBalance =
+          BaseUtil.digitPrecision(userFundWallet!.augGoldQuantity * gSellRate);
+      notifyListeners(); //might cause ui error if screen no longer active
+    }).catchError((err) {
+      if (_myUser!.uid != null) {
+        var errorDetails = {'error_msg': err.toString()};
+        _internalOpsService!.logFailure(_myUser!.uid,
+            FailType.UserAugmontBalanceUpdateFailed, errorDetails);
+      }
+      print('$err');
+    });
+  }
+
+  void updateAugmontDetails(
+      String holderName, String accountNumber, String ifscode) {
+    _augmontDetail!.bankHolderName = holderName;
+    _augmontDetail!.bankAccNo = accountNumber;
+    _augmontDetail!.ifsc = ifscode;
+    notifyListeners();
+  }
+
+  void updateAugmontOnboarded(bool newValue) {
+    _myUser!.isAugmontOnboarded = newValue;
+    notifyListeners();
+  }
+
+  void flipSecurityValue(bool value) {
+    _myUser!.userPreferences
+        .setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
+    notifyListeners();
+  }
+
+  static String getMonthName({required int monthNum, bool trim = true}) {
+    String res = "January";
+    switch (monthNum) {
+      case 1:
+        res = "January";
+        break;
+      case 2:
+        res = "February";
+        break;
+      case 3:
+        res = "March";
+        break;
+      case 4:
+        res = "April";
+        break;
+      case 5:
+        res = "May";
+        break;
+      case 6:
+        res = "June";
+        break;
+      case 7:
+        res = "July";
+        break;
+      case 8:
+        res = "August";
+        break;
+      case 9:
+        res = "September";
+        break;
+      case 10:
+        res = "October";
+        break;
+      case 11:
+        res = "November";
+        break;
+      case 12:
+        res = "December";
+        break;
+      default:
+        res = "Janurary";
+    }
+    if (trim) return res.substring(0, 3);
+    return res;
   }
 
   BaseUser? get myUser => _myUser;
@@ -602,6 +859,13 @@ class BaseUtil extends ChangeNotifier {
 
   set currentICICINonInstantWthrlTxn(UserTransaction? value) {
     _currentICICINonInstantWthrlTxn = value;
+  }
+
+  UserAugmontDetail? get augmontDetail => _augmontDetail;
+
+  set augmontDetail(UserAugmontDetail? value) {
+    _augmontDetail = value;
+    notifyListeners();
   }
 
   bool isSignedIn() => (firebaseUser != null && firebaseUser!.uid != null);
@@ -636,5 +900,47 @@ class BaseUtil extends ChangeNotifier {
   set isUpiInfoMissing(bool? value) {
     this._isUpiInfoMissing = value;
     notifyListeners();
+  }
+
+  Future showHappyHourDialog(HappyHourCampign model,
+      {bool afterHappyHour = false, bool isComingFromSave = false}) async {
+    return openModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      addToScreenStack: true,
+      hapticVibrate: true,
+      content: HappyHourModel(
+        model: model,
+        isAfterHappyHour: afterHappyHour,
+        isComingFromSave: isComingFromSave,
+      ),
+      isBarrierDismissible: true,
+    );
+  }
+}
+
+class CompleteProfileDialog extends StatelessWidget {
+  final String? title, subtitle;
+  CompleteProfileDialog({this.title, this.subtitle});
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = S.of(context);
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.backButtonDispatcher!.didPopRoute();
+        return Future.value(true);
+      },
+      child: MoreInfoDialog(
+        title: title ?? locale.obCompleteProfile,
+        text: subtitle ?? locale.obCompleteProfileSubTitle,
+        imagePath: Assets.completeProfile,
+        btnText: locale.btnComplete.toUpperCase(),
+        onPressed: () {
+          while (AppState.screenStack.length > 1)
+            AppState.backButtonDispatcher!.didPopRoute();
+          AppState.delegate!.appState.setCurrentTabIndex = 0;
+        },
+      ),
+    );
   }
 }

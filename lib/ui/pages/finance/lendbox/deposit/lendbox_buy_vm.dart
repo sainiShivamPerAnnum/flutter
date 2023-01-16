@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -11,12 +12,11 @@ import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart'
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/repository/getters_repo.dart';
+import '../../../../../core/repository/getters_repo.dart';
 
 class LendboxBuyViewModel extends BaseViewModel {
   final LendboxTransactionService? _txnService =

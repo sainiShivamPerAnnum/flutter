@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -23,7 +24,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
@@ -509,6 +509,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       dynamicUi.save.sections
     ];
     DynamicUiUtils.helpFab = dynamicUi.journeyFab;
+    DynamicUiUtils.navBar = dynamicUi.navBar;
   }
 
   diplayUsername(String username) {

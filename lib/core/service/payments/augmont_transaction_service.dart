@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/payment_mode_enum.dart';
@@ -26,7 +27,6 @@ import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -237,6 +237,7 @@ class AugmontTransactionService extends BaseTransactionService {
   transactionResponseUpdate({List<String>? gtIds}) async {
     _logger!.d("Polling response processing");
     try {
+      //add this to augmontBuyVM
       _userCoinService!.getUserCoinBalance();
       _userService!.getUserFundWalletData();
       if (currentTransactionState == TransactionState.ongoing) {
@@ -266,7 +267,6 @@ class AugmontTransactionService extends BaseTransactionService {
   Future<void> processPolling(Timer? timer) async {
     final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
-      log("Transaction response: ${res.model.toString()}");
       TransactionResponseModel txnStatus = res.model!;
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:

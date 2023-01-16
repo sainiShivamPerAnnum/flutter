@@ -1,9 +1,10 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class GoldBuySuccessView extends StatelessWidget {
   final AugmontTransactionService? _augTxnService =
@@ -254,6 +256,11 @@ class GoldBuySuccessView extends StatelessWidget {
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
               AppState.delegate!.appState.setCurrentTabIndex = 1;
+
+              final _tambolaService = locator<TambolaService>();
+              _tambolaService.weeklyTicksFetched = false;
+              _tambolaService.fetchTambolaBoard();
+
               _augTxnService!.showGtIfAvailable();
             },
             child: Text(
@@ -274,6 +281,8 @@ class WinningChips extends StatelessWidget {
   final int qty;
   final String tooltip;
   final EdgeInsets? margin;
+  final Color? color;
+  final Widget? widget;
 
   const WinningChips(
       {Key? key,
@@ -281,6 +290,8 @@ class WinningChips extends StatelessWidget {
       required this.asset,
       required this.qty,
       required this.tooltip,
+      this.widget,
+      this.color,
       this.margin})
       : super(key: key);
 
@@ -295,7 +306,7 @@ class WinningChips extends StatelessWidget {
                 // height: SizeConfig.padding80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  color: UiConstants.darkPrimaryColor2,
+                  color: color ?? UiConstants.darkPrimaryColor2,
                 ),
                 padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins,
@@ -310,11 +321,12 @@ class WinningChips extends StatelessWidget {
                           SizedBox(height: SizeConfig.padding6),
                           Row(
                             children: [
-                              SvgPicture.asset(
-                                asset,
-                                width: SizeConfig.padding20,
-                                height: SizeConfig.padding20,
-                              ),
+                              widget ??
+                                  SvgPicture.asset(
+                                    asset,
+                                    width: SizeConfig.padding20,
+                                    height: SizeConfig.padding20,
+                                  ),
                               SizedBox(
                                 width: SizeConfig.padding6,
                               ),

@@ -1,4 +1,3 @@
-import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';

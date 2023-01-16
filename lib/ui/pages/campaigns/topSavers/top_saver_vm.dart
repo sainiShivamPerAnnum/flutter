@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/leaderboard_model.dart';
@@ -11,7 +12,6 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -21,8 +21,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../core/service/api.dart';
-import '../../../../../util/assets.dart';
+import '../../../../core/service/api.dart';
+import '../../../../util/assets.dart';
 
 class TopSaverViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();

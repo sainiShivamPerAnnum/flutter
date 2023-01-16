@@ -46,11 +46,10 @@ ios/fastlane/metadata/trade_representative_contact_information
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-.packages/
+.packages
 .pub-cache/
 .pub/
 /build/
-/packages/
 
 .gradle/
 
@@ -70,4 +69,3 @@ app.*.map.json
 # "JSON to Dart Model" generator tracker files locations.
 /.json_models/
 models.jsonc
-

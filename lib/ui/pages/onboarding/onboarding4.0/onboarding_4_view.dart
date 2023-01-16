@@ -61,7 +61,6 @@ class _OnBoardingViewState extends State<OnBoardingView>
         return Scaffold(
           backgroundColor: Color(0xFF032A2E),
           floatingActionButton: FloatingActionButton(
-            key: Key('OnboardingCta'),
             backgroundColor: Color(0xff0B867C),
             onPressed: () {
               if (model.currentPage == 2)

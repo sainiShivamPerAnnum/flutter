@@ -5,6 +5,7 @@ import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
@@ -252,7 +253,11 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                   ),
                 ),
                 SizedBox(
-                  height: 52,
+                  height: SizeConfig.padding4,
+                ),
+                TermsAndConditions(url: Constants.tambolatnc),
+                SizedBox(
+                  height: SizeConfig.navBarHeight + SizeConfig.padding16,
                 ),
               ],
             ),

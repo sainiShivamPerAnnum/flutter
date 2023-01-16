@@ -4,7 +4,7 @@
 // import 'package:felloapp/core/enums/page_state_enum.dart';
 // import 'package:felloapp/navigator/app_state.dart';
 // import 'package:felloapp/navigator/router/ui_pages.dart';
-// import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
+// import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 // import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 // import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
 // import 'package:felloapp/util/assets.dart';

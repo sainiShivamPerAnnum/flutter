@@ -1,5 +1,5 @@
-// import 'package:felloapp/ui/pages/profile/kyc_details/kyc_details_view.dart';
-// import 'package:felloapp/ui/pages/profile/kyc_details/kyc_details_vm.dart';
+// import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
+// import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_vm.dart';
 // import 'package:felloapp/util/assets.dart';
 // import 'package:felloapp/util/styles/size_config.dart';
 // import 'package:felloapp/util/styles/textStyles.dart';

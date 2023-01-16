@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -19,11 +20,10 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -198,7 +198,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init() async {
+  Future<void> init() async {
     setState(ViewState.Busy);
     await getGameDetails();
     // getLeaderboard();
@@ -224,27 +224,11 @@ class TambolaHomeViewModel extends BaseViewModel {
       weeklyDrawFetched = true;
 
     ///next get the tambola tickets of this week
-    if (!tambolaService!.weeklyTicksFetched) {
-      _logger!.d("Fetching Tambola tickets");
-      ticketsLoaded = false;
-      final tickets = await _tambolaRepo!.getTickets();
-      if (tickets.code == 200) {
-        List<TambolaBoard?>? boards =
-            tickets.model!.map((e) => e.board).toList();
-        tambolaService!.weeklyTicksFetched = true;
-        tambolaService!.userWeeklyBoards = boards;
-        _logger!.d(boards.length);
-        TambolaService.ticketCount = boards.length;
-        _currentBoard = null;
-        _currentBoardView = null;
-      } else {
-        _logger!.d(tickets.errorMessage);
-      }
+    await fetchTambola();
 
-      _examineTicketsForWins();
-
-      notifyListeners();
-    }
+    tambolaService!.addListener(() {
+      refreshTambolaTickets();
+    });
 
     ///check whether to show summary cards or not
     DateTime today = DateTime.now();
@@ -254,6 +238,22 @@ class TambolaHomeViewModel extends BaseViewModel {
     }
 
     setState(ViewState.Idle);
+  }
+
+  Future<void> fetchTambola() async {
+    _logger!.d("Fetching Tambola tickets");
+    ticketsLoaded = false;
+    if (!tambolaService!.weeklyTicksFetched)
+      tambolaService!.fetchTambolaBoard();
+
+    await tambolaService!.completer.future;
+
+    _currentBoard = null;
+    _currentBoardView = null;
+
+    _examineTicketsForWins();
+
+    notifyListeners();
   }
 
   fetchWinners() async {
@@ -316,7 +316,9 @@ class TambolaHomeViewModel extends BaseViewModel {
     _logger!.i('Refreshing..');
     _topFiveTambolaBoards = [];
     ticketsBeingGenerated = true;
+
     tambolaService!.weeklyTicksFetched = false;
+    tambolaService!.fetchTambolaBoard();
     init();
     notifyListeners();
   }

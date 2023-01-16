@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -17,6 +18,7 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/pages/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
@@ -26,7 +28,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -191,8 +193,14 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     });
-    saveViewItems.add(
-        AppFooter(bottomPad: SizeConfig.padding80 + SizeConfig.navBarHeight));
+    saveViewItems.add(AppFooter(bottomPad: 0));
+    saveViewItems.add(Padding(
+      padding: EdgeInsets.only(
+        bottom: SizeConfig.padding80 + SizeConfig.navBarHeight,
+      ),
+      child: TermsAndConditions(url: Constants.savingstnc),
+    ));
+
     return saveViewItems;
   }
 

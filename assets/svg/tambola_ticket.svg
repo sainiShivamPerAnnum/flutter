@@ -1,0 +1,13 @@
+<svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="27.2" height="15.6923" rx="2.53747" fill="white"/>
+<rect x="6.03278" y="5.66406" width="7.29667" height="4.60437" fill="#FFD979"/>
+<rect x="13.4048" y="10.2188" width="7.29667" height="4.60437" fill="#3D3D3D"/>
+<path d="M1.00311 2.82685C1.00311 1.70573 1.91196 0.796875 3.03309 0.796875H6.13886V5.75439H1.00311V2.82685Z" fill="#3D3D3D"/>
+<path d="M26.1395 12.9622C26.1395 14.0833 25.2306 14.9922 24.1095 14.9922H20.7486V10.2616H26.1395V12.9622Z" fill="#FFD979"/>
+<rect x="1.01274" y="0.835858" width="25.1746" height="14.0236" rx="1.9031" stroke="#1A1A1A" stroke-width="0.253747"/>
+<path d="M6.10919 0.889648V14.853" stroke="#1A1A1A" stroke-width="0.253747"/>
+<path d="M13.42 0.889648V14.853" stroke="#1A1A1A" stroke-width="0.253747"/>
+<path d="M20.7307 0.889648V14.853" stroke="#1A1A1A" stroke-width="0.253747"/>
+<path d="M26.2537 5.70215L1.08829 5.70215" stroke="#1A1A1A" stroke-width="0.253747"/>
+<path d="M26.2537 10.2803L1.08829 10.2803" stroke="#1A1A1A" stroke-width="0.253747"/>
+</svg>

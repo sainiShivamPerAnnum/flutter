@@ -1,7 +1,7 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/asset_options_model.dart' as I;
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -11,7 +11,7 @@ import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../core/service/analytics/mixpanel_analytics.dart';
+import '../../../core/service/analytics/mixpanel_analytics.dart';
 
 class BannerWidget extends StatefulWidget {
   BannerWidget({Key? key, required this.model, required this.happyHourCampign})

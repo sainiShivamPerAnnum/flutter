@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 class Play extends StatelessWidget {
   final ScrollController _controller = ScrollController();
 
+  Play({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     log("ROOT: Play view build called");

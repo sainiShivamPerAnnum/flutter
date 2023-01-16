@@ -105,6 +105,10 @@ class Constants {
   static final String GAME_CRICKET_URI =
       'https://prod.freakx.in/fello/cricket-2021-V2/';
 
+  static const gamingtnc = "https://fello.in/policy/gaming";
+  static const tambolatnc = "https://fello.in/policy/gaming";
+  static const savingstnc = "https://fello.in/policy/gaming";
+
   static const INSTALL_TRACKING = 'FELLO_INSTALL';
   static const SIGNUP_TRACKING = 'FELLO_SIGNUP';
 
@@ -116,7 +120,7 @@ class Constants {
   static const SUBSCRIPTION_CANCELLED = "CANCELLED";
 
   //Notification Titles Startings
-  static const SCRATCH_CARD_NOTIFICATION = "You won a new scratch card";
+  static const GOLDEN_TICKET_NOTIFICATION = "You won a new scratch card";
   static const COUPONS_APPLIED_NOTIFICATION = "Coupon Applied";
 
   static const DEPOSIT_COMPLETE_NOTIFICATION = "Deposit Complete";
@@ -150,7 +154,7 @@ class Constants {
   static const TOTAL_SAVINGS = "totalSavings";
   static const CURRENT_WINNINGS = "currentWinnings";
   static const CURRENT_WINNING_AMOUNT = "currentWinningsAmount";
-  static const SCRATCHCARD = "scratchCard";
+  static const GOLDENTICKET = "scratchCard";
   static const TAMBOLA = "tambola";
   static const ALL_GAMES = "allGames";
   static const ALL_GAMES_TITLE = "allGamesTitle";

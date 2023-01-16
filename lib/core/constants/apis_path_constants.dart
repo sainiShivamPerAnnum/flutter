@@ -11,6 +11,7 @@ class ApiPath {
   get kAddBankAccount => "/bank";
   static String kGetBankAccountDetails(String? uid) => '/$uid/bank';
   get kVerifyPan => "/verify/pan";
+  static getGameStats(String uid) => "/user/$uid/game/stats";
   static String kGetSignedImageUrl(String uid) => "/upload/$uid/image";
   static String kForgeryUpload(String uid) => "/forgery/$uid/image";
   static String kGetPan(String uid) => "/$uid/pan";
@@ -36,7 +37,6 @@ class ApiPath {
   static String logOut(String? uid) => "/user/$uid/logout";
   static String userBootUp(String? uid) => "/user/$uid/bootup/alerts";
   static String scratchCards(uid) => '/user/$uid/golden_tickets';
-  // '/user/$uid/scratch_cards';
   static String isEmailRegistered(uid) => '/user/$uid/email/registered';
   static String get dynamicUi => '/ui/dynamic';
 
@@ -74,8 +74,7 @@ class ApiPath {
       "/user/$uid/gt/$scratchCardId";
   static String getMilestone(String uid) => "/user/$uid/milestones";
   static prizeBySubtype(String? uid) => '/user/$uid/gt';
-  static getScratchCard(String? uid) =>
-      '/user/$uid/golden_tickets'; // '/user/$uid/scratch_cards';
+  static getScratchCard(String? uid) => '/user/$uid/golden_tickets';
 
   // Payment Apis
   static String get validateVPA => "/vpa";

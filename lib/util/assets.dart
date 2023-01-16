@@ -39,6 +39,7 @@ class Assets {
   static final String navPlayLottie = "assets/lotties/nav/play.json";
   static final String navSaveLottie = "assets/lotties/nav/save.json";
   static final String navWinLottie = "assets/lotties/nav/win.json";
+  static final String navTambolaLottie = "assets/lotties/nav/tambola.json";
 
   static final String prizeRankOne = "assets/vectors/rank_first.svg";
   static final String prizeRankTwo = "assets/vectors/rank_second.svg";
@@ -67,13 +68,18 @@ class Assets {
   // PLAY
 
   static final String scoreIcon = "assets/vectors/icons/score.svg";
+
+  static final String tambolaTicketPL = "assets/svg/tambola_ticket_pl.svg";
   static final String completeCheck =
       'assets/images/congratulation_dialog_logo.png';
   static final String tambola_1cr = 'assets/svg/1_cr_tambola.svg';
+  static final String cr1_Tambola = 'assets/svg/1cr_tambola.svg';
   static final String tambola_1cr_ = 'assets/svg/1_cr_ticket.svg';
   static final String tambola_title = 'assets/svg/tambola_title.svg';
   static final String securityCheck = "assets/svg/safety_asset.svg";
   static final String sparklingStar = "assets/svg/sparkling_star.svg";
+  static final String tambola_instant_view =
+      "assets/svg/tambola_instant_view.svg";
   static final String tambola_space = "assets/svg/tambola_space.svg";
   // SAVE
   static final String whiteRays = "assets/images/white_rays.png";
@@ -98,6 +104,10 @@ class Assets {
   static final String lendboxLogo = 'assets/svg/lendbox-white.svg';
   static final String idbiTrustee = 'assets/svg/idbi-trustee.svg';
   static final String rbiLogo = "assets/vectors/icons/rbilogo.svg";
+  static final String digitalGold = "assets/svg/digitalgold.svg";
+  static final String flyingGhost = "assets/svg/flying_ghost.svg";
+  static final String tambolaTicket = "assets/svg/tambola_ticket.svg";
+  static final String scratchCard = "assets/svg/scratch_card.svg";
 
   // WIN
 
@@ -200,7 +210,7 @@ class Assets {
 
   //Notificatiion alert screen
   static final String scratchCardAsset =
-      "assets/vectors/icons/scratch_card.svg";
+      "assets/vectors/icons/golden_ticket.svg";
 
   static final String depositCompleteAsset =
       "assets/vectors/icons/deposit_complete.svg";
@@ -291,7 +301,7 @@ class Assets {
   static const String floatingTambolaTicketIslandLottie =
       "assets/lotties/floating_tambola_ticket.json";
   static const String floatingScratchCardIslandLottie =
-      "assets/lotties/floating_scratch_card.json";
+      "assets/lotties/floating_golden_ticket.json";
   static const String jarLottie = "assets/lotties/jarLottie.json";
 
   static const String levelUpLottie = "assets/lotties/levelup.json";

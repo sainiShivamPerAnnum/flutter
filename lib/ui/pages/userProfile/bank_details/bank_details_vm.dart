@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
@@ -9,7 +10,6 @@ import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -99,13 +99,13 @@ class BankDetailsViewModel extends BaseViewModel {
       _sellService!.isBankDetailsAdded = true;
       _analyticsService!.track(eventName: AnalyticsEvents.bankDetailsUpdated);
 
-      BaseUtil.showPositiveAlert(
-          locale.bankDetailsUpdatedTitle, locale.bankDetailsUpdatedSubTitle);
+      BaseUtil.showPositiveAlert(locale.bankDetailsUpdatedTitle,
+          locale.bankDetailsUpdatedSubTitle);
       // AppState.backButtonDispatcher!.didPopRoute();
       isDetailsUpdating = false;
     } else {
-      BaseUtil.showNegativeAlert(response.errorMessage ?? locale.updateFailed,
-          locale.obPleaseTryAgain);
+      BaseUtil.showNegativeAlert(
+          response.errorMessage ?? locale.updateFailed, locale.obPleaseTryAgain);
       isDetailsUpdating = false;
     }
   }

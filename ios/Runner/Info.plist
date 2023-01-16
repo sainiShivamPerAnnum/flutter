@@ -113,7 +113,6 @@
 		<string>https://fello.in/download/app</string>
 		<string>https://fello.in/app/referral</string>
 		<string>https://fello.in/claim/goldenticket</string>
-		<string>https://fello.in/claim/scratchcard</string>
 	</array>
 	<key>FlutterDeepLinkingEnabled</key>
 	<true/>

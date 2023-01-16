@@ -2002,10 +2002,10 @@ class S {
     );
   }
 
-  /// `Scratch Cards`
+  /// `Golden Tickets`
   String get scratchCardText {
     return Intl.message(
-      'Scratch Cards',
+      'Golden Tickets',
       name: 'scratchCardText',
       desc: '',
       args: [],
@@ -2870,10 +2870,10 @@ class S {
     );
   }
 
-  /// `Earn Scratch Cards for every referral`
+  /// `Earn Golden Tickets for every referral`
   String get getScratchCards {
     return Intl.message(
-      'Earn Scratch Cards for every referral',
+      'Earn Golden Tickets for every referral',
       name: 'getScratchCards',
       desc: '',
       args: [],
@@ -2910,10 +2910,10 @@ class S {
     );
   }
 
-  /// `1 Scratch\nCard`
+  /// `1 Golden\nTicket`
   String get oneScratchCard {
     return Intl.message(
-      '1 Scratch\nCard',
+      '1 Golden\nTicket',
       name: 'oneScratchCard',
       desc: '',
       args: [],
@@ -5802,10 +5802,10 @@ class S {
     );
   }
 
-  /// `Win a {ticketType} card`
+  /// `Win a {ticketType} ticket`
   String winATicket(Object ticketType) {
     return Intl.message(
-      'Win a $ticketType card',
+      'Win a $ticketType ticket',
       name: 'winATicket',
       desc: '',
       args: [ticketType],

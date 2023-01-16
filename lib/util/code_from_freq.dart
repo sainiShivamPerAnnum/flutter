@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:intl/intl.dart';
 
 class CodeFromFreq {
@@ -10,7 +11,7 @@ class CodeFromFreq {
     String response = monthlyFormat.format(_currentTime);
 
     if (freq == 'weekly' || freq == 'daily') {
-      int weekcode = getWeekNumber(currentDate: _currentTime);
+      int weekcode = BaseUtil.getWeekNumber(currentDate: _currentTime);
       response += "-$weekcode";
       if (freq == 'daily') {
         final dailyFormat = new DateFormat('dd');
@@ -23,7 +24,7 @@ class CodeFromFreq {
   static int getYearWeekCode() {
     final DateTime _currentTime = getCorrectedMondayDate();
     final int currentYear = _currentTime.year;
-    final int weekcode = getWeekNumber(currentDate: _currentTime);
+    final int weekcode = BaseUtil.getWeekNumber(currentDate: _currentTime);
 
     final response = currentYear * 100 + weekcode;
     return response;
@@ -46,10 +47,13 @@ class CodeFromFreq {
     switch (freq) {
       case "daily":
         return getPastDayCode();
+        break;
       case "weekly":
         return getPastWeekCode();
+        break;
       case "monthly":
         return getPastMonthCode();
+        break;
     }
   }
 
@@ -60,7 +64,7 @@ class CodeFromFreq {
     final monthFormat = new DateFormat('MM');
     final dayFormat = new DateFormat('dd');
 
-    int weekcode = getWeekNumber(currentDate: _currentTime);
+    int weekcode = BaseUtil.getWeekNumber(currentDate: _currentTime);
 
     return "${yearFormat.format(_currentTime)}-${monthFormat.format(_currentTime)}-$weekcode-${dayFormat.format(_currentTime)}";
   }
@@ -71,7 +75,7 @@ class CodeFromFreq {
 
     final yearFormat = new DateFormat('yyyy');
     final monthFormat = new DateFormat('MM');
-    int weekcode = getWeekNumber(currentDate: _currentTime);
+    int weekcode = BaseUtil.getWeekNumber(currentDate: _currentTime);
 
     return "${yearFormat.format(_currentTime)}-${monthFormat.format(_currentTime)}-$weekcode";
   }
@@ -117,8 +121,7 @@ class CodeFromFreq {
     return DateFormat.yMMM().format(dateTime);
   }
 
-  static DateTime getDateByWeekNumber(
-      {required int weeknumber, required int year, required bool start}) {
+  static DateTime getDateByWeekNumber({required int weeknumber, required int year, required bool start}) {
     //check if start == true retrun start date of week
     //else return end date
     var days = weeknumber * 7;
@@ -130,26 +133,5 @@ class CodeFromFreq {
     }
     final correctedDate = start ? tempDate : tempDate.add(Duration(days: 6));
     return correctedDate;
-  }
-
-  static int getWeekNumber({DateTime? currentDate}) {
-    DateTime tdt = (currentDate != null) ? currentDate : new DateTime.now();
-    int dayn = tdt.weekday;
-    //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
-    //tdt.setDate(tdt.getDate() - dayn + 3);
-    DateTime firstThursday =
-        new DateTime(tdt.year, tdt.month, tdt.day - dayn + 3);
-    tdt = new DateTime(tdt.year, 1, 1);
-    if (tdt.weekday != DateTime.friday) {
-      //tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
-      int x = tdt.weekday;
-      x = (tdt.weekday == 7) ? 0 : tdt.weekday;
-      tdt = new DateTime(tdt.year, 1, 1 + ((5 - x) + 7) % 7);
-    }
-    int n = 1 +
-        ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) /
-                604800000)
-            .ceil();
-    return n;
   }
 }

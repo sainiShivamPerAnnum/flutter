@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -20,6 +21,7 @@ import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
@@ -81,7 +83,7 @@ import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
-import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratch_cards_vm.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page_vm.dart';
@@ -92,7 +94,6 @@ import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referra
 import 'package:felloapp/ui/pages/userProfile/settings/settings_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
@@ -168,16 +169,16 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => SaveRepo());
   locator.registerLazySingleton(() => LendboxRepo());
   locator.registerLazySingleton(() => PrizingRepo());
-
+  locator.registerLazySingleton(() => UserStatsRepo());
+  locator.registerLazySingleton(() => RootController());
   // SPLASH
   locator.registerFactory(() => LauncherViewModel());
-
+  locator.registerFactory(() => RootViewModel());
   // Hometabs
   locator.registerFactory(() => PlayViewModel());
   locator.registerFactory(() => SaveViewModel());
   locator.registerFactory(() => WinViewModel());
   locator.registerFactory(() => JourneyPageViewModel());
-  locator.registerFactory(() => RootViewModel());
 
   // VIEW MODELS
   locator.registerFactory(() => TransactionsHistoryViewModel());
@@ -192,6 +193,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => GoldBuyViewModel());
   locator.registerFactory(() => GoldSellViewModel());
   locator.registerFactory(() => TambolaHomeViewModel());
+  // locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => WebHomeViewModel());
   locator.registerFactory(() => RewardLeaderboardViewModel());
   locator.registerFactory(() => WebGameViewModel());
@@ -201,7 +203,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => NotificationsViewModel());
   locator.registerFactory(() => GTDetailedViewModel());
   locator.registerFactory(() => GTInstantViewModel());
-  locator.registerFactory(() => MultipleScratchCardsViewModel());
   locator.registerFactory(() => TopSaverViewModel());
   locator.registerFactory(() => AutosaveProcessViewModel());
   locator.registerFactory(() => UserAutosaveDetailsViewModel());
@@ -221,5 +222,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => SourceAdaptiveAssetViewModel());
   locator.registerFactory(() => SubscriptionCardViewModel());
   locator.registerFactory(() => TambolaCardModel());
+  // locator.registerFactory<UsernameInputViewModel>(() => UsernameInputViewModel());
   await locator.allReady();
 }

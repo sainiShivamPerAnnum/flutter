@@ -1,5 +1,8 @@
 //Project Imports
+import 'dart:async';
+
 import 'package:another_flushbar/flushbar.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -10,13 +13,14 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
+
+import '../../core/repository/user_stats_repo.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate? _routerDelegate;
@@ -106,6 +110,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           didPopRoute();
           _webGameViewModel!
               .handleGameSessionEnd(duration: Duration(milliseconds: 500));
+          locator<UserStatsRepo>().getGameStats();
         },
         false,
       );

@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/ops/base_remote_config.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
+import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -20,7 +22,6 @@ import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -28,7 +29,7 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
+import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/repository/user_repo.dart';
@@ -59,7 +60,6 @@ class LauncherViewModel extends BaseViewModel {
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   // final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final UserService _userService = locator<UserService>();
-
   FirebasePerformance _performance = FirebasePerformance.instance;
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -123,6 +123,7 @@ class LauncherViewModel extends BaseViewModel {
       if (userService.isUserOnboarded) {
         await _journeyRepo.init();
         await _journeyService.init();
+        
       }
 
       // check if cache invalidation required
@@ -139,14 +140,14 @@ class LauncherViewModel extends BaseViewModel {
 
       _baseUtil.init();
 
-      // if (AppConfig.getValue<bool>(AppConfigKey.changeAppIcon)) {
-      //   if (await FlutterDynamicIcon.supportsAlternateIcons) {
-      //     final str = await FlutterDynamicIcon.getAlternateIconName();
-      //     if (str == null) {
-      //       FlutterDynamicIcon.setAlternateIconName('ch');
-      //     }
-      //   }
-      // }
+      if (AppConfig.getValue<bool>(AppConfigKey.changeAppIcon)) {
+        if (await FlutterDynamicIcon.supportsAlternateIcons) {
+          final str = await FlutterDynamicIcon.getAlternateIconName();
+          if (str == null) {
+            FlutterDynamicIcon.setAlternateIconName('ch');
+          }
+        }
+      }
 
       _fcmListener.setupFcm();
 

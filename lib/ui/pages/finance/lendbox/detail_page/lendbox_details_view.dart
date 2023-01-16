@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -14,7 +15,6 @@ import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart'
 import 'package:felloapp/ui/service_elements/user_service/lendbox_principle_value.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';

@@ -1,7 +1,7 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -52,7 +52,7 @@ class DepositOptionModalSheet extends StatelessWidget {
                     title: Text(locale.digitalGoldText,
                         style: TextStyles.rajdhaniB.title4),
                     subtitle: Text(
-                      locale.buyGold,
+                    locale.buyGold,
                       style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kTextColor2),
                     ),
@@ -77,8 +77,8 @@ class DepositOptionModalSheet extends StatelessWidget {
                 padding: EdgeInsets.all(SizeConfig.padding12),
                 child: ListTile(
                     leading: Image.asset(Assets.felloFlo),
-                    title: Text(locale.felloFloText,
-                        style: TextStyles.rajdhaniB.title4),
+                    title:
+                        Text(locale.felloFloText, style: TextStyles.rajdhaniB.title4),
                     subtitle: Text(
                       locale.felloFloEarnTxt,
                       style: TextStyles.sourceSans.body3

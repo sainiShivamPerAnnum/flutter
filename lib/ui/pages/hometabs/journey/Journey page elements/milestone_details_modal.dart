@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
@@ -14,7 +15,6 @@ import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/ski
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -71,19 +71,10 @@ class _JourneyMilestoneDetailsModalSheetState
   String getTicketType(mlIndex) {
     for (int i = 0; i < _journeyService!.levels!.length; i++) {
       if (_journeyService!.levels![i].end == mlIndex) {
-        return "green";
+        return "Green";
       }
     }
-    return "scratch";
-  }
-
-  String getTicketAsset(mlIndex) {
-    for (int i = 0; i < _journeyService!.levels!.length; i++) {
-      if (_journeyService!.levels![i].end == mlIndex) {
-        return Assets.levelUpUnRedeemedScratchCardBG;
-      }
-    }
-    return Assets.unredemmedScratchCardBG;
+    return "Golden";
   }
 
   Color getTicketColor(mlIndex) {
@@ -190,29 +181,12 @@ class _JourneyMilestoneDetailsModalSheetState
                               TextStyles.body3.colour(UiConstants.kTextColor3),
                         ),
                         SizedBox(height: SizeConfig.padding24),
-                        RichText(
-                          text: TextSpan(
-                              style: TextStyles.sourceSans.body3
-                                  .colour(UiConstants.primaryColor),
-                              children: [
-                                WidgetSpan(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: SizeConfig.padding3),
-                                    child: SvgPicture.asset(
-                                      getTicketAsset(widget.milestone.index),
-                                      height: SizeConfig.body4,
-                                    ),
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: " " +
-                                      locale.winATicket(
-                                        getTicketType(widget.milestone.index),
-                                      ),
-                                )
-                              ]),
-                        ),
+                        Text(
+                          locale.winATicket(
+                              getTicketType(widget.milestone.index)),
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.primaryColor),
+                        )
                       ],
                     ),
               if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)

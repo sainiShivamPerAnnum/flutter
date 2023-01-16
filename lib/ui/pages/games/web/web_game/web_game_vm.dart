@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
@@ -13,9 +14,8 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/score_reject_dialog.dart';
-import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -118,7 +118,7 @@ class WebGameViewModel extends BaseViewModel {
 
   handleGameSessionEnd({Duration? duration}) {
     updateFlcBalance();
-    _logger!.d("Checking for scratch cards");
+    _logger!.d("Checking for golden tickets");
     if (ScratchCardService.gameEndMsgText != null &&
         ScratchCardService.gameEndMsgText!.isNotEmpty) {
       _logger!.d("Showing game end message");

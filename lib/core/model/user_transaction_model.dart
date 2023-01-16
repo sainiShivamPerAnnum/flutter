@@ -1,11 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:felloapp/util/base_util.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/util/logger.dart';
 
 parseTimeStamp(dynamic data) {
   if (data != null) {
@@ -61,6 +63,7 @@ class UserTransaction {
   Map<String, dynamic>? misMap;
   Timestamp? _timestamp;
   Timestamp? _updatedTime;
+  Map<String, dynamic>? couponMap;
   List<TransactionStatusMapItemModel>? transactionUpdatesMap;
 
   static final String fldAmount = 'tAmount';
@@ -164,8 +167,11 @@ class UserTransaction {
     this._timestamp,
     this._paytmMap,
     this._updatedTime,
+    
     this.transactionUpdatesMap,
     this.misMap,
+    this.couponMap,
+    
   );
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
@@ -189,6 +195,7 @@ class UserTransaction {
           parseTimeStamp(data[fldUpdatedTime]) ?? Timestamp(0, 0),
           parseTransactionStatusSummary(data[fldtransactionUpdatesMap]) ?? '',
           data['miscMap'] ?? {},
+          data["coupon"] ?? {},
         );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
@@ -212,6 +219,7 @@ class UserTransaction {
           Timestamp(0, 0),
           data[fldtransactionUpdatesMap],
           data['miscMap'],
+          data["coupon"],
         );
 
   //Augmont gold investment initiated by investor

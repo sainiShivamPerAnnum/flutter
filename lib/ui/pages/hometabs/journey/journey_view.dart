@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
@@ -24,7 +25,6 @@ import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -100,7 +100,7 @@ class _JourneyViewState extends State<JourneyView>
                         ),
                       ),
                     ),
-                    HelpFab(),
+                     HelpFab(),
                     JourneyAppBar(),
                     JourneyBannersView(),
                     if (model.isRefreshing) JRefreshIndicator(model: model),
@@ -322,49 +322,21 @@ class LevelBlurView extends StatelessWidget {
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white,
                                   borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness40),
+                                      SizeConfig.roundness24),
                                 ),
                                 padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding16,
-                                    horizontal: SizeConfig.padding24),
-                                child: Column(
+                                    vertical: SizeConfig.padding6,
+                                    horizontal: SizeConfig.padding10),
+                                child: Row(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Icon(Icons.lock,
-                                            size: SizeConfig.iconSize1,
-                                            color: Colors.black),
-                                        Text(
-                                            " " +
-                                                locale.jLevel +
-                                                " ${levelData.level! + 1}",
-                                            style: TextStyles.rajdhaniB.body1
-                                                .colour(Colors.black)),
-                                      ],
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                          style: TextStyles.body4
-                                              .colour(Colors.black),
-                                          children: [
-                                            TextSpan(text: "Unlock to win a "),
-                                            // WidgetSpan(
-                                            //   child: Padding(
-                                            //     padding: EdgeInsets.only(
-                                            //         bottom:
-                                            //             SizeConfig.padding3),
-                                            //     child: SvgPicture.asset(
-                                            //       Assets
-                                            //           .levelUpUnRedeemedScratchCardBG,
-                                            //       height: SizeConfig.body5,
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                            TextSpan(text: " scratch card ")
-                                          ]),
-                                    )
+                                    Text(locale.jLevel+"${levelData.level! + 1} ",
+                                        style: TextStyles.rajdhaniB.body1
+                                            .colour(Colors.black)),
+                                    Icon(Icons.lock,
+                                        size: SizeConfig.iconSize1,
+                                        color: Colors.black),
                                   ],
                                 ),
                               ),

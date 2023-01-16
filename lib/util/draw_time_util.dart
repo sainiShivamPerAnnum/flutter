@@ -1,6 +1,10 @@
 import 'dart:async';
 
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
+
+
+  
 
 mixin DrawTimeUtil<T extends StatefulWidget> on State<T> {
   late Duration _timeRemaining;
@@ -16,7 +20,7 @@ mixin DrawTimeUtil<T extends StatefulWidget> on State<T> {
   void init() {
     _timeRemaining = _timeRemainingForDraw();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       _timer = Timer.periodic(Duration(seconds: 1), (_) {
         _timeRemaining = _timeRemainingForDraw();
         setState(() {});

@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:apxor_flutter/observer.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -31,7 +32,8 @@ import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
-import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_cards_view.dart';
+import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
@@ -47,7 +49,6 @@ import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart'
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -264,7 +265,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;
         case Pages.Notifications:
-          _addPageData(NotficationsPage(), NotificationsConfig);
+          _addPageData(NotificationsPage(), NotificationsConfig);
           break;
         case Pages.LendboxDetails:
           _addPageData(LendboxDetailsView(), LendboxDetailsPageConfig);
@@ -319,6 +320,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.SettingsView:
           _addPageData(SettingsView(), SettingsViewPageConfig);
           break;
+        // case Pages.TransactionDetailsPage:
+        //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);
+        //   break;
         default:
           break;
       }
@@ -580,6 +584,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.SellConfirmationView:
         SellConfirmationViewConfig.currentPageAction = action;
         break;
+      case Pages.TransactionDetailsPage:
+        TransactionDetailsPageConfig.currentPageAction = action;
+        break;
       case Pages.ViewAllBlogsView:
         ViewAllBlogsViewConfig.currentPageAction = action;
         break;
@@ -759,17 +766,36 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     PageConfiguration? pageConfiguration;
     switch (screenKey) {
       case 'journey':
-        appState.setCurrentTabIndex = 0;
+        appState.setCurrentTabIndex = appState.setCurrentTabIndex =
+            locator<RootController>()
+                .navItems
+                .values
+                .toList()
+                .indexOf(RootController.journeyNavBarItem);
         break;
       case 'save':
-        appState.setCurrentTabIndex = 1;
+        appState.setCurrentTabIndex = locator<RootController>()
+            .navItems
+            .values
+            .toList()
+            .indexOf(RootController.saveNavBarItem);
         break;
       case 'play':
-        appState.setCurrentTabIndex = 2;
+        appState.setCurrentTabIndex = appState.setCurrentTabIndex =
+            locator<RootController>()
+                .navItems
+                .values
+                .toList()
+                .indexOf(RootController.playNavBarItem);
         break;
       case 'win':
-        appState.setCurrentTabIndex = 3;
+        appState.setCurrentTabIndex = locator<RootController>()
+            .navItems
+            .values
+            .toList()
+            .indexOf(RootController.winNavBarItem);
         break;
+
       case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
@@ -813,6 +839,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
+        if (locator<RootController>()
+            .navItems
+            .containsValue(RootController.tambolaNavBar)) {
+          appState.setCurrentTabIndex = locator<RootController>()
+              .navItems
+              .values
+              .toList()
+              .indexOf(RootController.tambolaNavBar);
+          break;
+        }
         pageConfiguration = THomePageConfig;
         break;
       case 'myWinnings':

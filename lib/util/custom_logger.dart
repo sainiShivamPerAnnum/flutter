@@ -6,7 +6,9 @@ class CustomLogger {
 
   ///Encryption Utils
 
-  static bool isEnc = FlavorConfig.isProduction();
+  static bool isEnc =
+      //FlavorConfig.isProduction() ??
+      false;
 
   final LogFilter _filter;
   final LogPrinter _printer;
@@ -18,7 +20,7 @@ class CustomLogger {
         _printer = PrettyPrinter(),
         _output = ConsoleOutput() {
     _filter.init();
-    _filter.level = level;
+    _filter.level = level ?? Logger.level;
     _printer.init();
     _output.init();
 

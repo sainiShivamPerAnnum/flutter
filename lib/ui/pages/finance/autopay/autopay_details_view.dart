@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -6,7 +7,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -27,8 +27,8 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   @override
   void initState() {
-    _analyticsService!
-        .track(eventName: AnalyticsEvents.autosaveDetailsScreenView);
+    _analyticsService!.track(
+        eventName: AnalyticsEvents.autosaveDetailsScreenView);
     super.initState();
   }
 
@@ -59,7 +59,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
             ),
             Center(
               child: Text(
-                locale.howItworks,
+               locale.howItworks,
                 style: TextStyles.rajdhaniSB.title4,
               ),
             ),
@@ -110,7 +110,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: locale.checkYour,
+                      text:locale.checkYour,
                       style: TextStyles.sourceSans.body4.colour(
                         UiConstants.kTextColor2,
                       ),

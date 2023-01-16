@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -19,10 +20,9 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_view.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -126,7 +126,7 @@ class WebHomeViewModel extends BaseViewModel {
     isLoading = true;
     currentCoinValue = _coinService!.flcBalance;
     await setGameDetails(game);
-    fetchTopSaversPastWeek(game);
+    // fetchTopSaversPastWeek(game);
     isLoading = false;
   }
 
@@ -259,6 +259,7 @@ class WebHomeViewModel extends BaseViewModel {
     trackGameStart();
     String initialUrl = generateGameUrl();
     _logger!.d("Game Url: $initialUrl");
+    AppState.backButtonDispatcher!.didPopRoute();
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: WebGameViewPageConfig,

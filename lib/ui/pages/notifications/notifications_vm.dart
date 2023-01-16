@@ -110,7 +110,7 @@ class NotificationsViewModel extends BaseViewModel {
   }
 
   String getNotificationAsset(String title) {
-    if (title.startsWith(Constants.SCRATCH_CARD_NOTIFICATION)) {
+    if (title.startsWith(Constants.GOLDEN_TICKET_NOTIFICATION)) {
       return Assets.scratchCardAsset;
     } else if (title.startsWith(Constants.COUPONS_APPLIED_NOTIFICATION)) {
       return Assets.couponsAsset;

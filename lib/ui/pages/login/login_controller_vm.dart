@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -29,7 +30,6 @@ import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.d
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -382,7 +382,7 @@ class LoginControllerViewModel extends BaseViewModel {
     AnalyticsProperties().init();
     userService.userBootUpEE();
     if (userService.isUserOnboarded) await _journeyService!.init();
-    if (userService.isUserOnboarded) await _journeyRepo!.init();
+
     fcmListener!.setupFcm();
     logger!.i("Calling analytics init for new onboarded user");
     await _analyticsService!.login(

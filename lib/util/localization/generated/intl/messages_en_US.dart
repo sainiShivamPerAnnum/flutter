@@ -71,7 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m20(username) =>
       "Your username ${username} has been successfully registered!";
 
-  static String m21(ticketType) => "Win a ${ticketType} card";
+  static String m21(ticketType) => "Win a ${ticketType} ticket";
 
   static String m22(prize) => "Winnings can be redeemed on reaching ₹${prize}";
 
@@ -446,7 +446,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "getRedeemErrorSubtitle": MessageLookupByLibrary.simpleMessage(
             "Please try again in your winnings section"),
         "getScratchCards": MessageLookupByLibrary.simpleMessage(
-            "Earn Scratch Cards for every referral"),
+            "Earn Golden Tickets for every referral"),
         "getStartedWithSIP": MessageLookupByLibrary.simpleMessage(
             "Get started with a weekly/ daily SIP"),
         "getTickets": MessageLookupByLibrary.simpleMessage("Get Tickets"),
@@ -793,7 +793,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Win Rs.1 Crore!"),
         "onboradButton": MessageLookupByLibrary.simpleMessage("GET STARTED"),
         "oneScratchCard":
-            MessageLookupByLibrary.simpleMessage("1 Scratch\nCard"),
+            MessageLookupByLibrary.simpleMessage("1 Golden\nTicket"),
         "operationCannotBeCompleted": MessageLookupByLibrary.simpleMessage(
             "Operation cannot be completed at the moment"),
         "orderSummary": MessageLookupByLibrary.simpleMessage("Order Summary"),
@@ -957,7 +957,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Scratch and win exciting rewards."),
         "scratchCard": MessageLookupByLibrary.simpleMessage("Scratch Card"),
         "scratchCardText":
-            MessageLookupByLibrary.simpleMessage("Scratch Cards"),
+            MessageLookupByLibrary.simpleMessage("Golden Tickets"),
         "secureFelloTitle":
             MessageLookupByLibrary.simpleMessage("Secure Fello"),
         "selectRating":

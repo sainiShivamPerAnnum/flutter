@@ -1,6 +1,6 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -46,7 +46,8 @@ class _SignInOptionsState extends State<SignInOptions> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(locale.obChooseEmail, style: TextStyles.rajdhaniB.title5),
+                Text(locale.obChooseEmail,
+                    style: TextStyles.rajdhaniB.title5),
                 Divider(
                     height: 32, thickness: 1, color: UiConstants.kTextColor2),
                 ListTile(

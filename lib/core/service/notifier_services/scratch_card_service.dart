@@ -3,9 +3,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/scratch_card_service_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
@@ -24,7 +25,6 @@ import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratc
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -84,8 +84,8 @@ class ScratchCardService
   static String? scratchCardId;
   static String? gameEndMsgText;
   static ScratchCard? currentGT;
-  static List<String>? scratchCardsList;
   static String? lastScratchCardId;
+  static List<String>? scratchCardsList;
   static String previousPrizeSubtype = '';
 
   static dump() {
@@ -156,7 +156,7 @@ class ScratchCardService
   Future<bool> fetchAndVerifyScratchCardByPrizeSubtype() async {
     if (previousPrizeSubtype != null && previousPrizeSubtype.isNotEmpty) {
       ApiResponse<ScratchCard> ticketResponse =
-          await _gtRepo.getGTByPrizeSubtype(
+          await _gtRepo!.getGTByPrizeSubtype(
         previousPrizeSubtype,
       );
 

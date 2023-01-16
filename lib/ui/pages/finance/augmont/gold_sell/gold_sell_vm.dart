@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -21,7 +22,6 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -40,8 +40,7 @@ class GoldSellViewModel extends BaseViewModel {
       locator<AugmontTransactionService>();
   BankAndPanService? _sellService = locator<BankAndPanService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final TransactionHistoryService? _transactionHistoryService =
-      locator<TransactionHistoryService>();
+  final TransactionHistoryService? _transactionHistoryService = locator<TransactionHistoryService>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   bool isGoldRateFetching = false;
@@ -105,8 +104,7 @@ class GoldSellViewModel extends BaseViewModel {
   TextEditingController? goldAmountController;
   List<double> chipAmountList = [25, 50, 100];
 
-  double? get goldSellPrice =>
-      goldRates != null ? goldRates!.goldSellPrice : 0.0;
+  double? get goldSellPrice => goldRates != null ? goldRates!.goldSellPrice : 0.0;
 
   UserFundWallet? get userFundWallet => _userService!.userFundWallet;
 
@@ -240,14 +238,15 @@ class GoldSellViewModel extends BaseViewModel {
     double? sellGramAmount = double.tryParse(goldAmountController!.text.trim());
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
-        locale.portalUnavailable,
+       locale.portalUnavailable,
         locale.currentRatesNotLoadedText1,
       );
       return false;
     }
 
     if (sellGramAmount == null) {
-      BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
+      BaseUtil.showNegativeAlert(
+          locale.noAmountEntered, locale.enterAmount);
       return false;
     }
     // if (!_userService.baseUser.isAugmontOnboarded) {
@@ -258,24 +257,29 @@ class GoldSellViewModel extends BaseViewModel {
     //   return false;
     // }
     if (sellGramAmount < 0.0001) {
-      BaseUtil.showNegativeAlert(locale.amountLow, locale.amountLowSubTitle);
+      BaseUtil.showNegativeAlert(
+          locale.amountLow, locale.amountLowSubTitle);
       return false;
     }
 
     if (sellGramAmount > withdrawableQnt!) {
-      BaseUtil.showNegativeAlert(locale.tryLowerAmount, locale.goldLocked);
+      BaseUtil.showNegativeAlert(
+          locale.tryLowerAmount, locale.goldLocked);
       return false;
     }
     if (goldAmountFromGrams > 50000) {
-      BaseUtil.showNegativeAlert(locale.enterLowQuantity, locale.max8gms);
+      BaseUtil.showNegativeAlert(locale.enterLowQuantity,
+          locale.max8gms);
       return false;
     }
     if (goldAmountFromGrams < 10) {
-      BaseUtil.showNegativeAlert(locale.enterHigherQuant, locale.min10rs);
+      BaseUtil.showNegativeAlert(locale.enterHigherQuant,
+      locale.min10rs);
       return false;
     }
     if (sellGramAmount > userFundWallet!.augGoldQuantity) {
-      BaseUtil.showNegativeAlert(locale.inSufficientBal, locale.tryLowerAmount);
+      BaseUtil.showNegativeAlert(
+          locale.inSufficientBal,locale.tryLowerAmount);
       return false;
     }
     // if (sellGramAmount > withdrawableQnt) {
@@ -371,7 +375,8 @@ class GoldSellViewModel extends BaseViewModel {
           AppState.backButtonDispatcher!.didPopRoute();
           BaseUtil.showNegativeAlert(
             locale.sellInCompleteTitle,
-            response["message"] ?? locale.sellInCompleteSubTitle,
+            response["message"] ??
+                locale.sellInCompleteSubTitle,
           );
         }
       }
@@ -384,8 +389,9 @@ class GoldSellViewModel extends BaseViewModel {
             response["message"], locale.checkTransactions);
       } else {
         BaseUtil.showNegativeAlert(
-          locale.sellInCompleteTitle,
-          response["message"] ?? locale.sellInCompleteSubTitle,
+         locale.sellInCompleteTitle,
+          response["message"] ??
+              locale.sellInCompleteSubTitle,
         );
       }
     }

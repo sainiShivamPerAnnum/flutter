@@ -1,14 +1,12 @@
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -28,7 +26,6 @@ class SaveNetWorthSection extends StatelessWidget {
 
   getAssetsOrder() {
     S locale = locator<S>();
-    final _analyticsService = locator<AnalyticsService>();
     List<Widget> orderedAssets = [];
     DynamicUiUtils.saveViewOrder[0].forEach((key) {
       switch (key) {
@@ -42,8 +39,6 @@ class SaveNetWorthSection extends StatelessWidget {
               cardAssetName: Assets.felloFlo,
               investmentType: InvestmentType.LENDBOXP2P,
               onCardTap: () {
-                _analyticsService.track(
-                    eventName: AnalyticsEvents.assetBannerTapped);
                 saveViewModel.navigateToSaveAssetView(
                   InvestmentType.LENDBOXP2P,
                 );
@@ -67,9 +62,6 @@ class SaveNetWorthSection extends StatelessWidget {
               cardAssetName: Assets.digitalGoldBar,
               investmentType: InvestmentType.AUGGOLD99,
               onCardTap: () {
-                _analyticsService.track(
-                    eventName: AnalyticsEvents.assetBannerTapped);
-
                 saveViewModel.navigateToSaveAssetView(
                   InvestmentType.AUGGOLD99,
                 );

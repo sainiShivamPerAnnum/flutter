@@ -1,6 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/coupon_modal_sheet.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';

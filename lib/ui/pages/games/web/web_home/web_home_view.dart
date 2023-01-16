@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -10,7 +11,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
-import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/games/web/reward_leaderboard/reward_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -19,7 +20,6 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/allParticipants_referal_winners.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -505,7 +505,7 @@ class PlayButtonOverlapper extends StatelessWidget {
               );
             },
             child: Container(
-              height: SizeConfig.navBarHeight + SizeConfig.padding64,
+              height: SizeConfig.navBarHeight + SizeConfig.padding32 + 28,
               width: double.infinity,
               decoration: BoxDecoration(
                   color: UiConstants.kBackgroundColor.withOpacity(0.5),
@@ -563,11 +563,23 @@ class StreamView extends StatelessWidget {
       stream: model.getRealTimePlayingStream(game),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return GameInfoBlock(
-            coin: "-",
-            coinText: locale.playing,
-            assetHeight: SizeConfig.padding16,
-            isDot: true,
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                  backgroundColor: UiConstants.primaryColor,
+                  radius: SizeConfig.padding4),
+              SizedBox(
+                width: SizeConfig.padding8,
+              ),
+              Text(
+                "_",
+                style: TextStyles.sourceSans.body2.colour(
+                  Color(0xffE0E0E0),
+                ),
+              )
+            ],
           );
         }
 
@@ -595,21 +607,53 @@ class StreamView extends StatelessWidget {
             transitionBuilder: (Widget child, Animation<double> animation) {
               return ScaleTransition(scale: animation, child: child);
             },
-            child: GameInfoBlock(
-              coin:
-                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
-              coinText: locale.playing,
-              assetHeight: SizeConfig.padding16,
-              isDot: true,
-              key: ValueKey<String>(requiredTimeData['value'].toString()),
+
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                    backgroundColor: UiConstants.primaryColor,
+                    radius: SizeConfig.padding4),
+                SizedBox(
+                  width: SizeConfig.padding8,
+                ),
+                Text(
+                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())}+ Playing",
+                  style: TextStyles.sourceSans.body2.colour(
+                    Color(0xffE0E0E0),
+                  ),
+                )
+              ],
             ),
+
+            // child: GameInfoBlock(
+            //   coin:
+            //       "${model.sortPlayerNumbers(requiredTimeData['value'].toString())} +",
+            //   coinText: locale.playing,
+            //   assetHeight: SizeConfig.padding16,
+            //   isDot: true,
+            //   key: ValueKey<String>(requiredTimeData['value'].toString()),
+            // ),
           );
         } else {
-          return GameInfoBlock(
-            coin: "50+",
-            coinText: locale.playing,
-            assetHeight: SizeConfig.padding16,
-            isDot: true,
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                  backgroundColor: UiConstants.primaryColor,
+                  radius: SizeConfig.padding4),
+              SizedBox(
+                width: SizeConfig.padding8,
+              ),
+              Text(
+                "50+ Playing",
+                style: TextStyles.sourceSans.body2.colour(
+                  Color(0xffE0E0E0),
+                ),
+              ),
+            ],
           );
         }
       },

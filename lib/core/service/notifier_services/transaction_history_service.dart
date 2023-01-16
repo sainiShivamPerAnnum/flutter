@@ -4,13 +4,14 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
-import 'package:felloapp/util/base_util.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class TransactionHistoryService
@@ -276,7 +277,7 @@ class TransactionHistoryService
         type == UserTransaction.TRAN_STATUS_FAILED) {
       return Colors.redAccent;
     } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-      return UiConstants.primaryColor;
+      return UiConstants.kTabBorderColor;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
       return Colors.amber;
     } else if (type == UserTransaction.TRAN_STATUS_PROCESSING) {

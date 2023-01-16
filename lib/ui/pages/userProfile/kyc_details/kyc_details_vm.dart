@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_kyc_data_model.dart';
@@ -10,7 +11,6 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -123,7 +123,9 @@ class KYCDetailsViewModel extends BaseViewModel {
             isBarrierDismissible: false,
             hapticVibrate: true,
             content: MoreInfoDialog(
-                title: locale.invalidFile, text: locale.invalidFileSubtitle));
+                title: locale.invalidFile,
+                text:
+                    locale.invalidFileSubtitle));
       } else
         return;
     } else {
@@ -133,7 +135,9 @@ class KYCDetailsViewModel extends BaseViewModel {
           isBarrierDismissible: false,
           hapticVibrate: true,
           content: MoreInfoDialog(
-              title: locale.invalidFile, text: locale.invalidFileSubtitle));
+              title: locale.invalidFile,
+              text:
+                  locale.invalidFileSubtitle));
     }
   }
 
@@ -189,8 +193,8 @@ class KYCDetailsViewModel extends BaseViewModel {
 
           _bankAndPanService.checkForUserBankAccountDetails();
           AppState.backButtonDispatcher!.didPopRoute();
-          BaseUtil.showPositiveAlert(
-              locale.kycSuccessTitle, locale.kycSuccessSubTitle);
+          BaseUtil.showPositiveAlert(locale.kycSuccessTitle,
+              locale.kycSuccessSubTitle);
         } else {
           capturedImage = null;
           kycErrorMessage = forgeryUploadRes.errorMessage;
@@ -212,7 +216,8 @@ class KYCDetailsViewModel extends BaseViewModel {
       kycErrorMessage = res.errorMessage;
       kycVerificationStatus = KycVerificationStatus.FAILED;
       BaseUtil.showNegativeAlert(
-          res.errorMessage ?? locale.failedToUploadPAN, locale.tryLater);
+          res.errorMessage ?? locale.failedToUploadPAN,
+          locale.tryLater);
     }
     isUpdatingKycDetails = false;
     AppState.unblockNavigation();

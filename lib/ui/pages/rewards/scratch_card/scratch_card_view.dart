@@ -1,4 +1,4 @@
-import 'package:felloapp/core/enums/scratch_card_service_enum.dart';
+import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -42,7 +42,7 @@ class ScratchCardsView extends StatelessWidget {
                       children: [
                         NoRecordDisplayWidget(
                           assetSvg: Assets.noTickets,
-                          text: "No Scratch Cards won",
+                          text: "No Golden Tickets won",
                         )
                       ],
                     )

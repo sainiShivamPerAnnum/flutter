@@ -198,7 +198,7 @@ class Win extends StatelessWidget {
                                           locale.scratchCardText,
                                           style: TextStyles.sourceSans.body2
                                               .colour(Colors.white),
-                                          key: ValueKey(Constants.SCRATCHCARD),
+                                          key: ValueKey(Constants.GOLDENTICKET),
                                         ),
                                       ],
                                     ),

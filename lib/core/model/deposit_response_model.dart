@@ -1,5 +1,5 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/util/base_util.dart';
 
 class DepositResponseModel {
   Response? response;

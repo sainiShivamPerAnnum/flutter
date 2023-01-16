@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
@@ -13,6 +14,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class LendboxSuccessView extends StatelessWidget {
   final TransactionType transactionType;
@@ -250,6 +252,11 @@ class LendboxSuccessView extends StatelessWidget {
               onPressed: () {
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.delegate!.appState.setCurrentTabIndex = 1;
+
+                final _tambolaService = locator<TambolaService>();
+                _tambolaService.weeklyTicksFetched = false;
+                _tambolaService.fetchTambolaBoard();
+
                 this.showGtIfAvailable();
               },
               child: Text(

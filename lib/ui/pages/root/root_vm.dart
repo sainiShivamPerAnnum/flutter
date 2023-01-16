@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -29,10 +31,17 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
-import 'package:felloapp/util/base_util.dart';
+import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_instant_view.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -42,10 +51,13 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RootViewModel extends BaseViewModel {
+  RootViewModel({S? l})
+      : locale = l ?? locator<S>(),
+        super();
+
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final FcmHandler? _fcmListener = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
@@ -57,7 +69,7 @@ class RootViewModel extends BaseViewModel {
   final TambolaService? _tambolaService = locator<TambolaService>();
   final ScratchCardService? _gtService = locator<ScratchCardService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
-  final S locale = locator<S>();
+  final S locale;
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
@@ -70,7 +82,7 @@ class RootViewModel extends BaseViewModel {
   final ReferralService _referralService = locator<ReferralService>();
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
-
+  final RootController _rootController = locator<RootController>();
   Future<void> refresh() async {
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
@@ -84,10 +96,16 @@ class RootViewModel extends BaseViewModel {
   }
 
   onInit() {
+    _rootController.navItems.clear();
+    DynamicUiUtils.navBar.forEach(getNavItems);
+    _rootController.currentNavBarItemModel =
+        _rootController.navItems.values.first;
+
     AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
     _referralService.verifyReferral();
     _referralService.initDynamicLinks();
+
     initialize();
   }
 
@@ -108,6 +126,9 @@ class RootViewModel extends BaseViewModel {
       });
     });
   }
+
+  Map<Widget, NavBarItemModel> get navBarItems =>
+      locator<RootController>().navItems;
 
   onDispose() {
     AppState.isUserSignedIn = false;
@@ -158,9 +179,69 @@ class RootViewModel extends BaseViewModel {
       default:
     }
     AppState.delegate!.appState.setCurrentTabIndex = index;
+    _rootController.onChange(_rootController.navItems.values.toList()[index]);
     Haptic.vibrate();
     if (AppState.delegate!.appState.getCurrentTabIndex == 0)
       _journeyService.checkForMilestoneLevelChange();
+    _tambolaService!.completer.future.then((value) {
+      if (_rootController.currentNavBarItemModel ==
+          RootController.tambolaNavBar) {
+        if ((_tambolaService!.initialTicketCount ?? -1) == 0) {
+          if (_tambolaService!.userWeeklyBoards!.length > 0) {
+            _tambolaService!.initialTicketCount =
+                _tambolaService!.userWeeklyBoards!.length;
+            WidgetsBinding.instance.addPostFrameCallback(
+              (timeStamp) {
+                _showTambolaTicketDialog(
+                    _tambolaService!.userWeeklyBoards!.length);
+              },
+            );
+          }
+        }
+      }
+    });
+  }
+
+  void getNavItems(String navItem) {
+    switch (navItem) {
+      case "JN":
+        _rootController.navItems
+            .putIfAbsent(JourneyView(), () => RootController.journeyNavBarItem);
+
+        break;
+
+      case "SV":
+        _rootController.navItems
+            .putIfAbsent(Save(), () => RootController.saveNavBarItem);
+        break;
+      case "TM":
+        _rootController.navItems
+            .putIfAbsent(TambolaWrapper(), () => RootController.tambolaNavBar);
+        break;
+
+      case "WN":
+      case "AC":
+        _rootController.navItems
+            .putIfAbsent(Win(), () => RootController.winNavBarItem);
+        break;
+      case "PL":
+        _rootController.navItems
+            .putIfAbsent(Play(), () => RootController.playNavBarItem);
+        break;
+
+      default:
+    }
+  }
+
+  _showTambolaTicketDialog(int ticketCount) {
+    AppState.screenStack.add(ScreenItem.dialog);
+    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+      PageRouteBuilder(
+          opaque: false,
+          pageBuilder: (BuildContext context, _, __) => TambolaInstantView(
+                ticketCount: ticketCount,
+              )),
+    );
   }
 
   _initAdhocNotifications() {

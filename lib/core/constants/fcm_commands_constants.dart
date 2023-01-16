@@ -7,7 +7,7 @@ class FcmCommands {
   static const COMMAND_POOL_CLUB_GAME_END = 'poolClubEnd';
   static const COMMAND_FOOT_BALL_GAME_END = 'footballKickoffEnd';
   static const COMMAND_CANDY_FIESTA_GAME_END = 'candyFiestaEnd';
-  static const COMMAND_SCRATCH_CARD_WIN = 'scratchCardWin';
+  static const COMMAND_GOLDEN_TICKET_WIN = 'scratchCardWin';
   static const COMMAND_LOW_BALANCE_ALERT = 'lowBalanceAlert';
   static const DEPOSIT_TRANSACTION_RESPONSE = 'depositTransactionResponse';
   static const COMMAND_SUBSCRIPTION_RESPONSE = 'subscriptionStatusResponse';

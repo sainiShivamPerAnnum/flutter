@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
@@ -7,13 +8,16 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_existing_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/base_util.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -25,8 +29,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:video_player/video_player.dart';
 
 class TambolaWrapper extends StatelessWidget {
-  const TambolaWrapper({Key? key}) : super(key: key);
-
+  const TambolaWrapper({Key? key, this.vm}) : super(key: key);
+  final RootViewModel? vm;
   @override
   Widget build(BuildContext context) {
     return BaseView<TambolaHomeViewModel>(
@@ -37,13 +41,6 @@ class TambolaWrapper extends StatelessWidget {
         if (model.state == ViewState.Busy) {
           return Scaffold(
             body: Center(child: FullScreenLoader()),
-            appBar: FAppBar(
-              showAvatar: false,
-              showCoinBar: false,
-              showHelpButton: false,
-              title: "Tambola",
-              backgroundColor: UiConstants.kArrowButtonBackgroundColor,
-            ),
             backgroundColor: UiConstants.kBackgroundColor,
           );
         }
@@ -58,6 +55,9 @@ class TambolaWrapper extends StatelessWidget {
                   )
                 : TambolaNewUserPage(
                     model: model,
+                    isFromNavigation: locator<RootController>()
+                        .navItems
+                        .containsValue(RootController.tambolaNavBar),
                   ),
           ),
         );
@@ -68,17 +68,21 @@ class TambolaWrapper extends StatelessWidget {
 
 class TambolaNewUserPage extends StatefulWidget {
   const TambolaNewUserPage(
-      {Key? key, required this.model, this.showPrizeSection = false})
+      {Key? key,
+      required this.model,
+      this.showPrizeSection = false,
+      this.isFromNavigation = false})
       : super(key: key);
   final TambolaHomeViewModel model;
   final bool showPrizeSection;
+  final bool isFromNavigation;
   @override
   State<TambolaNewUserPage> createState() => _TambolaNewUserPageState();
 }
 
 class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
   ScrollController? _scrollController;
-
+  bool isFromNavigation = false;
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -99,24 +103,80 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
+
+    isFromNavigation = widget.isFromNavigation;
     return Scaffold(
-      appBar: FAppBar(
-        showAvatar: false,
-        showCoinBar: false,
-        showHelpButton: false,
-        title: locale.tTicket,
-        type: FaqsType.play,
-        backgroundColor: UiConstants.kArrowButtonBackgroundColor,
-      ),
+      appBar: isFromNavigation
+          ? null
+          : FAppBar(
+              showAvatar: false,
+              showCoinBar: false,
+              showHelpButton: false,
+              title: locale.tTicket,
+              type: FaqsType.play,
+              backgroundColor: UiConstants.kArrowButtonBackgroundColor,
+            ),
       backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(
+        alignment: Alignment.topCenter,
         children: [
           SingleChildScrollView(
             controller: _scrollController,
             child: Column(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TambolaHeader(
-                  model: widget.model,
+                Container(
+                  padding: isFromNavigation
+                      ? EdgeInsets.only(top: MediaQuery.of(context).padding.top)
+                      : null,
+                  decoration: BoxDecoration(
+                      color: Color(0XFF141414),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(18),
+                          bottomRight: Radius.circular(18))),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          margin: EdgeInsets.only(right: 16, top: 14),
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                Assets.tambolaTicketPL,
+                                height: SizeConfig.padding20,
+                                width: SizeConfig.padding20,
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Text(
+                                "0",
+                                style: TextStyles.rajdhaniB.body1,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(Assets.cr1_Tambola),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      TambolaHeader(
+                        model: widget.model,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
@@ -142,64 +202,112 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding:
-                  EdgeInsets.only(top: 14, bottom: 24, left: 32, right: 32),
-              width: double.infinity,
-              color: UiConstants.kBackgroundColor,
-              // height: SizeConfig.screenHeight! * 0.17,
+          if (!isFromNavigation)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding:
+                    EdgeInsets.only(top: 14, bottom: 24, left: 32, right: 32),
+                width: double.infinity,
+                color: UiConstants.kBackgroundColor,
+                // height: SizeConfig.screenHeight! * 0.17,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: SizeConfig.padding12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(Assets.sparklingStar),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Text(
+                            widget.model.game?.highLight ?? '',
+                            style: TextStyles.sourceSans.body4
+                                .colour(Color(0xffA7A7A8)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    AppPositiveBtn(
+                      btnText: (widget.model.activeTambolaCardCount ?? 0) >= 1
+                          ? locale.getTickets
+                          : locale.tgetFirstTkt,
+                      onPressed: () {
+                        locator<AnalyticsService>().track(
+                            eventName:
+                                (widget.model.activeTambolaCardCount ?? 0) >= 1
+                                    ? AnalyticsEvents.tambolaSaveTapped
+                                    : AnalyticsEvents
+                                        .tambolaGetFirstTicketTapped,
+                            properties: AnalyticsProperties
+                                .getDefaultPropertiesMap(extraValuesMap: {
+                              "Time left for draw Tambola (mins)":
+                                  AnalyticsProperties
+                                      .getTimeLeftForTambolaDraw(),
+                              "Tambola Tickets Owned":
+                                  AnalyticsProperties.getTambolaTicketCount(),
+                              "Number of Tickets":
+                                  widget.model.activeTambolaCardCount ?? 0,
+                              "Amount": widget.model.ticketSavedAmount,
+                            }));
+                        widget.model.updateTicketSavedAmount(1);
+                        BaseUtil().openDepositOptionsModalSheet(
+                            amount: widget.model.ticketSavedAmount);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          if (isFromNavigation)
+            Align(
+              alignment: Alignment.bottomCenter,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: SizeConfig.padding12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(Assets.sparklingStar),
-                        SizedBox(
-                          width: 4,
-                        ),
-                        Text(
-                          widget.model.game?.highLight ?? '',
-                          style: TextStyles.sourceSans.body4
-                              .colour(Color(0xffA7A7A8)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  AppPositiveBtn(
-                    btnText: (widget.model.activeTambolaCardCount ?? 0) >= 1
-                        ? locale.getTickets
-                        : locale.tgetFirstTkt,
-                    onPressed: () {
-                      locator<AnalyticsService>().track(
-                          eventName:
-                              (widget.model.activeTambolaCardCount ?? 0) >= 1
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding24,
+                        vertical: SizeConfig.padding12),
+                    child: AppPositiveBtn(
+                        btnText: locator<S>().tgetFirstTkt,
+                        onPressed: () {
+                          locator<AnalyticsService>().track(
+                              eventName: (widget.model.activeTambolaCardCount ??
+                                          0) >=
+                                      1
                                   ? AnalyticsEvents.tambolaSaveTapped
                                   : AnalyticsEvents.tambolaGetFirstTicketTapped,
-                          properties: AnalyticsProperties
-                              .getDefaultPropertiesMap(extraValuesMap: {
-                            "Time left for draw Tambola (mins)":
-                                AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                            "Tambola Tickets Owned":
-                                AnalyticsProperties.getTambolaTicketCount(),
-                            "Number of Tickets":
-                                widget.model.activeTambolaCardCount ?? 0,
-                            "Amount": widget.model.ticketSavedAmount,
-                          }));
-                      widget.model.updateTicketSavedAmount(1);
-                      BaseUtil().openDepositOptionsModalSheet(
-                          amount: widget.model.ticketSavedAmount);
-                    },
+                              properties: AnalyticsProperties
+                                  .getDefaultPropertiesMap(extraValuesMap: {
+                                "Time left for draw Tambola (mins)":
+                                    AnalyticsProperties
+                                        .getTimeLeftForTambolaDraw(),
+                                "Tambola Tickets Owned":
+                                    AnalyticsProperties.getTambolaTicketCount(),
+                                "Number of Tickets":
+                                    widget.model.activeTambolaCardCount ?? 0,
+                                "Amount": widget.model.ticketSavedAmount,
+                              }));
+                          widget.model.updateTicketSavedAmount(1);
+                          BaseUtil().openDepositOptionsModalSheet(
+                              amount: widget.model.ticketSavedAmount);
+                        }),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding4,
+                  ),
+                  TermsAndConditions(url: Constants.tambolatnc),
+                  SizedBox(
+                    height: SizeConfig.navBarHeight,
                   )
                 ],
               ),
             ),
-          )
         ],
       ),
     );

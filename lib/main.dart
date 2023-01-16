@@ -1,10 +1,11 @@
 // import 'package:device_preview/device_preview.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
+import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/leaderboard_service_enum.dart';
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
-import 'package:felloapp/core/enums/scratch_card_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/user_coin_service_enum.dart';
@@ -19,6 +20,7 @@ import 'package:felloapp/core/service/notifier_services/connectivity_service.dar
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -32,7 +34,6 @@ import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -122,12 +123,15 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
           ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
           ChangeNotifierProvider(create: (_) => locator<JourneyService>()),
+
           ChangeNotifierProvider(
               create: (_) => locator<AugmontTransactionService>()),
           ChangeNotifierProvider(create: (_) => locator<RazorpayService>()),
           ChangeNotifierProvider<ConnectivityService>(
               create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => appState),
+
+          ChangeNotifierProvider(create: (_) => locator<TambolaService>()),
         ],
         child: PropertyChangeProvider<JourneyService, JourneyServiceProperties>(
           value: locator<JourneyService>(),
