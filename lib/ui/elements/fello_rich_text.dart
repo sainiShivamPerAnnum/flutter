@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 class FelloRichText extends RichText {
   final String paragraph;
+  final TextStyle? style;
 
-  FelloRichText({Key? key, required this.paragraph})
+  FelloRichText({Key? key, required this.paragraph, this.style})
       : super(
           key: key,
           text: renderedWidget(paragraph),
@@ -18,7 +19,8 @@ class FelloRichText extends RichText {
           (!paragraph.contains("*") && !paragraph.contains("_"))) {
         return new TextSpan(
             text: paragraph,
-            style: TextStyles.sourceSans.body1.colour(UiConstants.kTextColor));
+            style:  
+                TextStyles.sourceSans.body1.colour(UiConstants.kTextColor));
       }
 
       String snip = '';

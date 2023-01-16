@@ -14,6 +14,7 @@ import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/more_games_section.dart';
@@ -23,6 +24,8 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.da
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
+
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -174,8 +177,12 @@ class PlayViewModel extends BaseViewModel {
           break;
       }
     });
-    playViewChildren.add(
-        AppFooter(bottomPad: SizeConfig.navBarHeight + SizeConfig.padding80));
+    playViewChildren.add(AppFooter(bottomPad: 0));
+    playViewChildren.add(Padding(
+      padding: EdgeInsets.only(
+          bottom: SizeConfig.navBarHeight + SizeConfig.padding80),
+      child: TermsAndConditions(url: Constants.gamingtnc),
+    ));
     return playViewChildren;
   }
 

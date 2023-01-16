@@ -45,7 +45,11 @@ class WebGameModalSheet extends StatelessWidget {
             SizedBox(
               height: 24,
             ),
-            SvgPicture.network(model.currentGameModel!.icon!),
+            SvgPicture.network(
+              model.currentGameModel!.icon!,
+              height: SizeConfig.screenHeight! * 0.1,
+              width: SizeConfig.screenHeight! * 0.15,
+            ),
             StreamView(model: model, game: game),
             SizedBox(
               height: SizeConfig.padding10,
@@ -65,13 +69,14 @@ class WebGameModalSheet extends StatelessWidget {
                 style: TextStyles.sourceSans.body3.colour(Color(0xffBDBDBE)),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 24, left: 14, right: 14, bottom: 0),
-              child: RewardCriteria(
-                htmlData: "",
+            if (model.currentGameModel?.rewardCriteria?.isNotEmpty ?? false)
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: 24, left: 14, right: 14, bottom: 0),
+                child: RewardCriteria(
+                  htmlData: model.currentGameModel?.rewardCriteria ?? "",
+                ),
               ),
-            ),
             SizedBox(
               height: SizeConfig.padding24,
             ),
@@ -264,17 +269,7 @@ class RewardCriteria extends StatelessWidget {
               "Reward Criteria",
               style: TextStyles.sourceSansSB.colour(Colors.white).body1,
             ),
-            Html(data: '''<ul>
-<li>
-<span style="color: #ffffff;">Score min&nbsp;<strong>250</strong>&nbsp;Points and get an assured Scratch card</span>
-</li>
-<li>
-<span style="color: #ffffff;">Score min&nbsp;<strong>250</strong>&nbsp;Points and get an assured Scratch card</span>
-</li>
-<li>
-<span style="color: #ffffff;">Score min&nbsp;<strong>250</strong>&nbsp;Points and get an assured Scratch card</span>
-</li>
-</ul>''')
+            Html(data: htmlData)
           ],
         ),
       ),
