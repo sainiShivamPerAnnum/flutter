@@ -165,7 +165,7 @@ class LendboxTransactionService extends BaseTransactionService {
             timer!.cancel();
             return transactionResponseUpdate(
               amount: this.currentTxnAmount,
-              gtId: transactionReponseModel?.data?.gtId ?? "",
+              gtIds: transactionReponseModel?.data?.gtIds ?? [],
             );
           }
           break;
@@ -184,22 +184,10 @@ class LendboxTransactionService extends BaseTransactionService {
     }
   }
 
-  Future<void> transactionResponseUpdate({String? gtId, double? amount}) async {
+  Future<void> transactionResponseUpdate(
+      {List<String>? gtIds, double? amount}) async {
     _logger!.d("Polling response processing");
     try {
-      if (gtId != null) {
-        print("Hey a new fcm recived with gtId: $gtId");
-        if (ScratchCardService.lastScratchCardId != null) {
-          if (ScratchCardService.lastScratchCardId == gtId) {
-            return;
-          } else {
-            ScratchCardService.lastScratchCardId = gtId;
-          }
-        } else {
-          ScratchCardService.lastScratchCardId = gtId;
-        }
-      }
-
       //add this to augmontBuyVM
       _userCoinService!.getUserCoinBalance();
       double newFlcBalance = amount ?? 0;
@@ -208,10 +196,9 @@ class LendboxTransactionService extends BaseTransactionService {
             (_userCoinService!.flcBalance! + newFlcBalance).toInt());
       }
       _userService!.getUserFundWalletData();
-      print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
-        ScratchCardService.scratchCardId = gtId;
-        await _gtService.fetchAndVerifyScratchCardByID();
+        ScratchCardService.scratchCardsList = gtIds;
+        // await _gtService.fetchAndVerifyScratchCardByID();
         await _userService!.getUserJourneyStats();
 
         AppState.unblockNavigation();

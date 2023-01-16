@@ -178,11 +178,6 @@ class ScratchCardService
       bool onJourney = false,
       bool showAutoSavePrompt = false}) {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
-    if (scratchCardsList != null &&
-        scratchCardsList!.isNotEmpty &&
-        scratchCardsList!.length > 1) {
-      return showMultipleScratchCardsView();
-    }
     if (currentGT != null) {
       log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${ScratchCardService.currentGT!.prizeSubtype} ");
       if (previousPrizeSubtype == ScratchCardService.currentGT!.prizeSubtype &&
@@ -206,23 +201,18 @@ class ScratchCardService
   }
 
   showMultipleScratchCardsView() {
-    if (scratchCardsList != null) {
+    if (scratchCardsList != null && scratchCardsList!.isNotEmpty) {
       if (scratchCardsList!.length == 1) {
-        return showInstantScratchCardView(source: GTSOURCE.prize);
+        scratchCardId = scratchCardsList![0];
+        return fetchAndVerifyScratchCardByID()
+            .then((_) => showInstantScratchCardView(source: GTSOURCE.prize));
       } else {
         AppState.screenStack.add(ScreenItem.dialog);
         Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
           PageRouteBuilder(
             opaque: false,
             pageBuilder: (BuildContext context, _, __) =>
-                MultipleScratchCardsView(
-                    scratchCardIdList: //scratchCardsList ??
-                        [
-                  "Acd92NN53WWpJZbxZ4UW",
-                  "Bv8CzzI40pfwLpbuPM6Z",
-                  "M83UzvsZGzMJlEcVezsj",
-                  "WrffUHSSJ95hqxO5iv73"
-                ]),
+                MultipleScratchCardsView(),
           ),
         );
       }
@@ -230,7 +220,7 @@ class ScratchCardService
   }
 
   Future<void> updateUnscratchedGTCount() async {
-    final res = await _gtRepo!.getGTByPrizeType("UNSCRATCHED");
+    final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
     if (res.isSuccess())
       unscratchedTicketsCount = res.model!.length;
     else

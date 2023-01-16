@@ -77,22 +77,23 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final S locale = locator<S>();
 
-  init(List<String> items) {
+  init() {
     //Clearing global variable every time this screen comes in view so that no old data is represented
     //Initializing view required variables
     pageController = PageController(viewportFraction: 0.65);
     pageController!.addListener(_pageListener);
     pageNotifier = ValueNotifier(0.0);
     //Assigning items to the local variable of this viewModel
-    scratchCardIdsList = items;
+    scratchCardIdsList = ScratchCardService.scratchCardsList;
     //Creating an List of equal length of items and assigning every item as an empty scratch card to avoid null errors
-    scratchCardList =
-        List.generate(items.length, (index) => ScratchCard.none());
-    isScratchCardRedeemed = List.generate(items.length, (i) => false);
+    scratchCardList = List.generate(ScratchCardService.scratchCardsList!.length,
+        (index) => ScratchCard.none());
+    isScratchCardRedeemed = List.generate(
+        ScratchCardService.scratchCardsList!.length, (i) => false);
     currentTokens = _userCoinService.flcBalance ?? 0;
     _generateKeysForTickets();
     _performPreScratchProcessing(0).then((value) {
-      ScratchCardService.scratchCardsList?.clear();
+      // ScratchCardService.scratchCardsList?.clear();
       Future.delayed(Duration(seconds: 2), () {
         if (currentCardScratchPercentage == 0) showScratchGuideLabel = true;
       });

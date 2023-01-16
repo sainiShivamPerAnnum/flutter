@@ -18,10 +18,6 @@ import 'package:lottie/lottie.dart';
 import 'package:scratcher/widgets.dart';
 
 class MultipleScratchCardsView extends StatefulWidget {
-  final List<String> scratchCardIdList;
-  MultipleScratchCardsView({Key? key, required this.scratchCardIdList})
-      : super(key: key);
-
   @override
   State<MultipleScratchCardsView> createState() =>
       _MultipleScratchCardsViewState();
@@ -40,7 +36,7 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
   @override
   Widget build(BuildContext context) {
     return BaseView<MultipleScratchCardsViewModel>(
-      onModelReady: (model) => model.init(widget.scratchCardIdList),
+      onModelReady: (model) => model.init(),
       onModelDispose: (model) => model.dump(),
       builder: (context, model, child) => Scaffold(
         backgroundColor: Colors.black.withOpacity(0.75),

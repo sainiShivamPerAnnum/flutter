@@ -179,6 +179,41 @@
 			remoteGlobalIDString = 6020B2FAA3BAD0D421FDCF328153612A;
 			remoteInfo = flutter_facebook_sdk;
 		};
+		450C46B7296468E100E1AD0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81418C93A311F0492F62A8F88C3BD66B;
+			remoteInfo = FirebaseAppCheckInterop;
+		};
+		450C46B9296468E100E1AD0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 09D8B108F8926BC5DC78684FF235123E;
+			remoteInfo = FirebaseAuthInterop;
+		};
+		450C46BB296468E100E1AD0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AEF1DC80F0EB62580B81D18786BAF924;
+			remoteInfo = FirebaseCoreExtension;
+		};
+		450C46BD296468E100E1AD0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 148D0F9E8C7373FEAF40D800FC5F1BAA;
+			remoteInfo = FirebaseCoreInternal;
+		};
+		450C46BF296468E100E1AD0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6020B2FAA3BAD0D421FDCF328153612A;
+			remoteInfo = flutter_facebook_sdk;
+		};
 		45CBA6FE29531C420071BB0B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -1022,6 +1057,46 @@
 			name = flutter_facebook_sdk;
 			path = flutter_facebook_sdk.framework;
 			remoteRef = 38CC6DB02966B1E60002C0B9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		450C46B8296468E100E1AD0D /* FirebaseAppCheckInterop */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FirebaseAppCheckInterop;
+			path = FirebaseAppCheckInterop.framework;
+			remoteRef = 450C46B7296468E100E1AD0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		450C46BA296468E100E1AD0D /* FirebaseAuthInterop */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FirebaseAuthInterop;
+			path = FirebaseAuthInterop.framework;
+			remoteRef = 450C46B9296468E100E1AD0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		450C46BC296468E100E1AD0D /* FirebaseCoreExtension */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FirebaseCoreExtension;
+			path = FirebaseCoreExtension.framework;
+			remoteRef = 450C46BB296468E100E1AD0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		450C46BE296468E100E1AD0D /* FirebaseCoreInternal */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = FirebaseCoreInternal;
+			path = FirebaseCoreInternal.framework;
+			remoteRef = 450C46BD296468E100E1AD0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		450C46C0296468E100E1AD0D /* flutter_facebook_sdk */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = flutter_facebook_sdk;
+			path = flutter_facebook_sdk.framework;
+			remoteRef = 450C46BF296468E100E1AD0D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		45CBA6FF29531C420071BB0B /* flutter_dynamic_icon */ = {

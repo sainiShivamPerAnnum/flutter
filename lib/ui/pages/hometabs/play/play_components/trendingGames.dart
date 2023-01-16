@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/pages/static/sticky_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -34,6 +35,40 @@ class TrendingGamesSection extends StatelessWidget {
       children: [
         TitleSubtitleContainer(
           title: locale.allgames,
+        ),
+        SizedBox(
+          height: SizeConfig.padding12,
+        ),
+        Center(
+          child: StickyNote(
+            trailingWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: SizeConfig.padding16,
+                ),
+                SvgPicture.asset(
+                  Assets.token,
+                  height: SizeConfig.padding16,
+                ),
+                SizedBox(
+                  width: SizeConfig.padding4,
+                ),
+                Text("1", style: TextStyles.sourceSansB.title3),
+                SizedBox(
+                  width: SizeConfig.padding8,
+                ),
+                Text(
+                  "Gaming Token",
+                  style: TextStyles.sourceSansSB.body4,
+                )
+              ],
+            ),
+            amount: "1",
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.padding12,
         ),
         Container(
           width: SizeConfig.screenWidth,
@@ -94,7 +129,7 @@ class TrendingGames extends StatelessWidget {
             }));
         Haptic.vibrate();
         AppState.delegate!.parseRoute(
-          Uri.parse(game!.route!),
+          Uri.parse(game!.gameCode!),
         );
       },
       child: Container(

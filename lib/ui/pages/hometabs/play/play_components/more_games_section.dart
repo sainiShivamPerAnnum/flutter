@@ -72,7 +72,7 @@ class MoreGames extends StatelessWidget {
       onTap: () {
         Haptic.vibrate();
         AppState.delegate!.parseRoute(
-          Uri.parse(game!.route!),
+          Uri.parse(game!.gameCode!),
         );
         _analyticsService.track(
             eventName: AnalyticsEvents.gameTapped,
@@ -159,7 +159,7 @@ class MoreGames extends StatelessWidget {
                               onTap: () {
                                 Haptic.vibrate();
                                 AppState.delegate!.parseRoute(
-                                  Uri.parse(game!.route!),
+                                  Uri.parse(game!.gameCode!),
                                 );
                               },
                               child: Container(

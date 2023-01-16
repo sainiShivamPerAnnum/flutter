@@ -7,7 +7,6 @@ import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/upi_intent_view.dart';
-import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/util/base_util.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -112,12 +111,13 @@ abstract class BaseTransactionService
 
   void showGtIfAvailable() {
     Future.delayed(Duration(milliseconds: 500), () {
-      _gtService!.showInstantScratchCardView(
-        amount: this.currentTxnAmount,
-        showAutoSavePrompt: true,
-        title: locale.youSaved + "₹${this.getAmount(this.currentTxnAmount!)}",
-        source: GTSOURCE.deposit,
-      );
+      _gtService!.showMultipleScratchCardsView();
+      // _gtService!.showInstantScratchCardView(
+      //   amount: this.currentTxnAmount,
+      //   showAutoSavePrompt: true,
+      //   title: locale.youSaved + "₹${this.getAmount(this.currentTxnAmount!)}",
+      //   source: GTSOURCE.deposit,
+      // );
     });
   }
 }

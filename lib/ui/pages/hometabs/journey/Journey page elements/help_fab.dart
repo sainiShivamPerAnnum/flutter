@@ -1,8 +1,8 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -57,10 +57,16 @@ class _HelpFabState extends State<HelpFab> {
       child: InkWell(
         onTap: () {
           // clearCache();
-          locator<ScratchCardService>().showMultipleScratchCardsView();
-          // trackHelpTappedEvent();
-          // AppState.delegate!
-          //     .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
+          // ScratchCardService.scratchCardsList = [
+          //   "Acd92NN53WWpJZbxZ4UW",
+          //   "Bv8CzzI40pfwLpbuPM6Z",
+          //   "M83UzvsZGzMJlEcVezsj",
+          //   "WrffUHSSJ95hqxO5iv73"
+          // ];
+          // locator<ScratchCardService>().showMultipleScratchCardsView();
+          trackHelpTappedEvent();
+          AppState.delegate!
+              .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
         child: AnimatedContainer(
             duration: Duration(seconds: 1),

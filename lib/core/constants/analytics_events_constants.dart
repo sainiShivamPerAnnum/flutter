@@ -159,4 +159,8 @@ class AnalyticsEvents {
 
   static const dailyAppBonusClaimed = "Tapped on Daily App Bonus";
   static const dailyAppBonusGotItTapped = "Daily App Open Got It Tapped";
+
+  //Transaction Events
+  static const transactionCompleted = "Razorpay Transaction Completed";
+  static const transactionFailed = "Razorpay Transaction Failed";
 }

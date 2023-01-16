@@ -11,6 +11,7 @@ import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dar
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/pages/static/sticky_widget.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -99,10 +100,37 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                 TodayWeeklyPicksCard(
                   model: widget.model,
                 ),
+                SizedBox(
+                  height: SizeConfig.padding16,
+                ),
+                StickyNote(
+                  trailingWidget: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: SizeConfig.padding16,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding4,
+                      ),
+                      Text("1", style: TextStyles.sourceSansB.title3),
+                      SizedBox(
+                        width: SizeConfig.padding8,
+                      ),
+                      Text(
+                        "ticket every week",
+                        style: TextStyles.sourceSansSB.body4,
+                      )
+                    ],
+                  ),
+                  amount: "500",
+                ),
                 if (widget.model.userWeeklyBoards != null) ...[
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 26, vertical: 16),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding26,
+                      vertical: SizeConfig.padding16,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

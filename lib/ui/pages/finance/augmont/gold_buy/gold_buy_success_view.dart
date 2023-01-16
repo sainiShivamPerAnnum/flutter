@@ -1,7 +1,6 @@
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/base_util.dart';
@@ -36,14 +35,7 @@ class GoldBuySuccessView extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
-                    Future.delayed(Duration(milliseconds: 500), () {
-                      _gtService!.showInstantScratchCardView(
-                        amount: _augTxnService!.currentTxnAmount,
-                        title: locale.successfullySavedText +
-                            "₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
-                        source: GTSOURCE.deposit,
-                      );
-                    });
+                    _augTxnService!.showGtIfAvailable();
                   },
                   icon: Icon(
                     Icons.close,
@@ -262,15 +254,7 @@ class GoldBuySuccessView extends StatelessWidget {
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
               AppState.delegate!.appState.setCurrentTabIndex = 1;
-              Future.delayed(Duration(milliseconds: 500), () {
-                _gtService!.showInstantScratchCardView(
-                  amount: _augTxnService!.currentTxnAmount,
-                  showAutoSavePrompt: true,
-                  title: locale.successfullySavedText +
-                      "₹${_augTxnService!.getAmount(_augTxnService!.currentTxnAmount!)}",
-                  source: GTSOURCE.deposit,
-                );
-              });
+              _augTxnService!.showGtIfAvailable();
             },
             child: Text(
               locale.obDone,

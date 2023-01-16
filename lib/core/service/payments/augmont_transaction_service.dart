@@ -234,15 +234,22 @@ class AugmontTransactionService extends BaseTransactionService {
     }
   }
 
-  transactionResponseUpdate({String? gtId, List<String>? gtIds}) async {
+  transactionResponseUpdate({List<String>? gtIds}) async {
     _logger!.d("Polling response processing");
     try {
       _userCoinService!.getUserCoinBalance();
       _userService!.getUserFundWalletData();
       if (currentTransactionState == TransactionState.ongoing) {
-        ScratchCardService.scratchCardId = gtId;
+        // ScratchCardService.scratchCardId = gtId;
         ScratchCardService.scratchCardsList = gtIds;
-        await _gtService.fetchAndVerifyScratchCardByID();
+        //TESTING MULTIPLE SCRATCH CARD VIEW
+        // ScratchCardService.scratchCardsList!.addAll([
+        //   "Acd92NN53WWpJZbxZ4UW",
+        //   "Bv8CzzI40pfwLpbuPM6Z",
+        //   "M83UzvsZGzMJlEcVezsj",
+        //   "WrffUHSSJ95hqxO5iv73"
+        // ]);
+        // await _gtService.fetchAndVerifyScratchCardByID();
         await _userService!.getUserJourneyStats();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
@@ -274,7 +281,7 @@ class AugmontTransactionService extends BaseTransactionService {
               currentTxnGms = res.model!.data!.goldInTxnBought;
             timer!.cancel();
             return transactionResponseUpdate(
-                gtId: transactionResponseModel?.data?.gtId ?? "",
+                // gtId: transactionResponseModel?.data?.gtId ?? "",
                 gtIds: transactionResponseModel?.data?.gtIds ?? []);
           }
           break;
