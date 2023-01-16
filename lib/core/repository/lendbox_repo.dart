@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/lendbox_withdrawable_quantity.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
@@ -54,6 +55,8 @@ class LendboxRepo extends BaseRepo {
           model: LendboxWithdrawableQuantity.fromMap(data), code: 200);
     } catch (e) {
       logger!.e(e);
+      BaseUtil.showNegativeAlert(
+          e.toString(), "Please try again after sometime");
       return ApiResponse.withError(e.toString(), 400);
     }
   }

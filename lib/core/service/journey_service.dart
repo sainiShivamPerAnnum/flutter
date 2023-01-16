@@ -19,7 +19,6 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -720,8 +719,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       baseGlow = 1;
       Future.delayed(Duration(milliseconds: 500),
           () => isAvatarAnimationInProgress = false);
-      _gtService.showInstantScratchCardView(
-          title: 'Congratulations!', source: GTSOURCE.newuser, onJourney: true);
+      // _gtService.showInstantGoldenTicketView(
+      //     title: 'Congratulations!', source: GTSOURCE.newuser, onJourney: true);
     });
   }
 

@@ -217,7 +217,7 @@ class BaseRemoteConfig {
   static Map<String, String> _RZP_PROD_MID = {
     'rzpMid': FlavorConfig.isDevelopment()
         ? 'rzp_test_UqHw6vJBbC8dR8'
-        : 'rzp_live_RlTp4Aso51l5Fu'
+        : 'rzp_live_RaxovywGPsLp2I'
   };
 
   static const Map<String, String> _RZP_DEV_MID = {'rzp_dev_mid': 'rdm'};

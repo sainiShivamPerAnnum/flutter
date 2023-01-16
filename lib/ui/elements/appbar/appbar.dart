@@ -17,6 +17,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   final Color? backgroundColor;
   final Widget? action;
   final double? leftPad;
+  // final bool hasBackButton;
 
   const FAppBar({
     Key? key,
@@ -28,6 +29,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     this.backgroundColor,
     this.action,
     this.leftPad,
+    // this.hasBackButton = true
   }) : super(key: key);
 
   @override
@@ -35,6 +37,11 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      // leading: hasBackButton
+      //     ? IconButton(
+      //         icon: Icon(Icons.adaptive.arrow_back_rounded),
+      //         onPressed: () => AppState.backButtonDispatcher!.didPopRoute())
+      //     : SizedBox(),
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

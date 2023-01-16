@@ -28,6 +28,7 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/repository/user_repo.dart';
@@ -136,6 +137,15 @@ class LauncherViewModel extends BaseViewModel {
       if (userService.isUserOnboarded) _userCoinService.init();
 
       _baseUtil.init();
+
+      // if (AppConfig.getValue<bool>(AppConfigKey.changeAppIcon)) {
+      //   if (await FlutterDynamicIcon.supportsAlternateIcons) {
+      //     final str = await FlutterDynamicIcon.getAlternateIconName();
+      //     if (str == null) {
+      //       FlutterDynamicIcon.setAlternateIconName('ch');
+      //     }
+      //   }
+      // }
 
       _fcmListener.setupFcm();
 

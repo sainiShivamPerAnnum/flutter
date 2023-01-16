@@ -64,7 +64,7 @@ class BankDetailsViewModel extends BaseViewModel {
     await _sellService!.checkForUserBankAccountDetails();
     // augmontDetails = _userService.userAugmontDetails;
     activeBankDetails = _sellService!.activeBankAccountDetails;
-    if (hasPastBankDetails()) {
+    if (activeBankDetails != null) {
       bankHolderNameController!.text = activeBankDetails!.name!;
       bankAccNoController!.text = activeBankDetails!.account!;
       bankAccNoConfirmController!.text = activeBankDetails!.account!;
@@ -99,13 +99,14 @@ class BankDetailsViewModel extends BaseViewModel {
       _sellService!.isBankDetailsAdded = true;
       _analyticsService!.track(eventName: AnalyticsEvents.bankDetailsUpdated);
 
-      BaseUtil.showPositiveAlert(locale.bankDetailsUpdatedTitle,
-          locale.bankDetailsUpdatedSubTitle);
+      BaseUtil.showPositiveAlert(
+          locale.bankDetailsUpdatedTitle, locale.bankDetailsUpdatedSubTitle);
       // AppState.backButtonDispatcher!.didPopRoute();
+      inEditMode = false;
       isDetailsUpdating = false;
     } else {
-      BaseUtil.showNegativeAlert(
-          response.errorMessage ?? locale.updateFailed, locale.obPleaseTryAgain);
+      BaseUtil.showNegativeAlert(response.errorMessage ?? locale.updateFailed,
+          locale.obPleaseTryAgain);
       isDetailsUpdating = false;
     }
   }
@@ -127,6 +128,4 @@ class BankDetailsViewModel extends BaseViewModel {
     log("Bank acc no: $bankAccNo || Bank confirm acc no: $cnfBankAccNo");
     return bankAccNo == cnfBankAccNo;
   }
-
-  bool hasPastBankDetails() => activeBankDetails != null;
 }

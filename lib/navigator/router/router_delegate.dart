@@ -95,6 +95,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       key: navigatorKey,
       onPopPage: _onPopPage,
       pages: buildPages(),
+      // transitionDelegate: const MyTransitionDelegate(),
     );
   }
 

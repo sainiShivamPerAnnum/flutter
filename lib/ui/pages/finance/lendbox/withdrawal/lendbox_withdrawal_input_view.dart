@@ -56,47 +56,73 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               onAmountChange: (int amount) {},
             ),
             Spacer(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding38),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    locale.txnWithdrawablebalance,
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTextColor2),
-                  ),
-                  Text(
-                    '₹ ${model!.withdrawableQuantity?.amount?.toStringAsFixed(2) ?? 0}',
-                    style: TextStyles.sourceSansSB.body0.colour(
-                      UiConstants.kTextColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding32,
-            ),
-            model!.state == ViewState.Busy || model!.inProgress
+            model.withdrawableResponseMessage.isNotEmpty
                 ? Container(
-                    height: SizeConfig.screenWidth! * 0.1556,
-                    alignment: Alignment.center,
-                    width: SizeConfig.screenWidth! * 0.7,
-                    child: LinearProgressIndicator(
-                      color: UiConstants.primaryColor,
-                      backgroundColor: UiConstants.kDarkBackgroundColor,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                        vertical: SizeConfig.padding10),
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness24),
+                      border: Border.all(color: Colors.white, width: 1),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding16,
+                      vertical: SizeConfig.padding24,
+                    ),
+                    child: Text(
+                      model.withdrawableResponseMessage,
+                      style: TextStyles.body2.colour(Colors.white),
+                      textAlign: TextAlign.center,
                     ),
                   )
-                : AppPositiveBtn(
-                    btnText: locale.btnWithDraw.toUpperCase(),
-                    onPressed: () async {
-                      if (!model!.inProgress) {
-                        FocusScope.of(context).unfocus();
-                        model!.initiateWithdraw();
-                      }
-                    },
-                    width: SizeConfig.screenWidth! * 0.813,
+                : Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding38),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              locale.txnWithdrawablebalance,
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                            ),
+                            Text(
+                              '₹ ${model!.withdrawableQuantity?.amount?.toStringAsFixed(2) ?? 0}',
+                              style: TextStyles.sourceSansSB.body0.colour(
+                                UiConstants.kTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding32,
+                      ),
+                      model!.state == ViewState.Busy || model!.inProgress
+                          ? Container(
+                              height: SizeConfig.screenWidth! * 0.1556,
+                              alignment: Alignment.center,
+                              width: SizeConfig.screenWidth! * 0.7,
+                              child: LinearProgressIndicator(
+                                color: UiConstants.primaryColor,
+                                backgroundColor:
+                                    UiConstants.kDarkBackgroundColor,
+                              ),
+                            )
+                          : AppPositiveBtn(
+                              btnText: locale.btnWithDraw.toUpperCase(),
+                              onPressed: () async {
+                                if (!model!.inProgress) {
+                                  FocusScope.of(context).unfocus();
+                                  model!.initiateWithdraw();
+                                }
+                              },
+                              width: SizeConfig.screenWidth! * 0.813,
+                            ),
+                    ],
                   ),
             SizedBox(
               height: SizeConfig.padding32,

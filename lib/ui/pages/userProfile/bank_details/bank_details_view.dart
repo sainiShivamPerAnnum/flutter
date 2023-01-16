@@ -187,7 +187,7 @@ class BankDetailsView extends StatelessWidget {
                           width: SizeConfig.navBarWidth,
                           child: model.inEditMode
                               ? ReactivePositiveAppButton(
-                                  btnText: model.hasPastBankDetails()
+                                  btnText: model.activeBankDetails != null
                                       ? locale.btnUpdate
                                       : locale.btnAdd,
                                   onPressed: () async {

@@ -72,32 +72,33 @@ class MainActivity : FlutterFragmentActivity()  {
         }
 
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(data==null){
-            return;
-        }
-        if(res!=null) {
-
-
-            if (requestCode == successRequestCode) {
-
-                returnResult(data?.getStringExtra("response") as Object?)
-
-            }
-            else {
-                if(!isAlreadyReturend){
-                    isAlreadyReturend=true
-                    res?.error("400", "user_cancelled", "Something went wrong")
-                }
+    // TODO: IMAGE PICKER PICKING UP THIS CODE AND NOT WORKING PROPERLY.
+    // TO BE FIXED IN NEXT SPRINT
+    // override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    //     // if(data==null){
+    //     //     return;
+    //     // }
+    //     // if(res!=null) {
 
 
-            }
-        }
+    //     //     if (requestCode == successRequestCode) {
+
+    //     //         returnResult(data?.getStringExtra("response") as Object?)
+
+    //     //     }
+    //     //     else {
+    //     //         if(!isAlreadyReturend){
+    //     //             isAlreadyReturend=true
+    //     //             res?.error("400", "user_cancelled", "Something went wrong")
+    //     //         }
 
 
-        super.onActivityResult(requestCode, resultCode, data)
-    }
+    //     //     }
+    //     // }
+
+
+    //     super.onActivityResult(requestCode, resultCode, data)
+    // }
 
 
     @SuppressLint("SuspiciousIndentation")

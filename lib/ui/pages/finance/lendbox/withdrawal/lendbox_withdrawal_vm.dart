@@ -31,6 +31,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
   final UserService? _userService = locator<UserService>();
   S locale = locator<S>();
+  String withdrawableResponseMessage = "";
 
   List<ApplicationMeta> appMetaList = [];
   UpiApplication? upiApplication;
@@ -67,6 +68,8 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     final response = await _lendboxRepo!.getWithdrawableQuantity();
     if (response.isSuccess()) {
       withdrawableQuantity = response.model;
+    } else {
+      withdrawableResponseMessage = response.errorMessage ?? '';
     }
 
     setState(ViewState.Idle);
