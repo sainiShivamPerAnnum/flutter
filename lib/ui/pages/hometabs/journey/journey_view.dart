@@ -368,7 +368,9 @@ class LevelBlurView extends StatelessWidget {
                                             //     ),
                                             //   ),
                                             // ),
-                                            TextSpan(text: " scratch card ")
+                                            TextSpan(
+                                                text:
+                                                    " Scratch Card upto ₹${getAmount((levelData.level ?? 0) + 1)}")
                                           ]),
                                     )
                                   ],
@@ -390,6 +392,19 @@ class LevelBlurView extends StatelessWidget {
         );
       },
     );
+  }
+
+  getAmount(int level) {
+    switch (level) {
+      case 2:
+        return "100";
+      case 3:
+        return "200";
+      case 4:
+        return "500";
+      default:
+        return "100";
+    }
   }
 }
 

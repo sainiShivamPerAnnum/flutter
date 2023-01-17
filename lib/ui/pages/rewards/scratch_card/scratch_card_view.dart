@@ -15,76 +15,68 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ScratchCardsView extends StatelessWidget {
   final bool openFirst;
+
   ScratchCardsView({
     this.openFirst = false,
   });
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<ScratchCardService,
         ScratchCardServiceProperties>(
       properties: [ScratchCardServiceProperties.AllScratchCards],
       builder: (context, model, properties) {
-        return NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollInfo) {
-            if (scrollInfo.metrics.maxScrollExtent ==
-                scrollInfo.metrics.pixels) {
-              model!.fetchAllScratchCards();
-            }
-
-            return true;
-          },
-          child: model!.isFetchingScratchCards
-              ? Center(child: FullScreenLoader())
-              : model.allScratchCards.isEmpty
-                  ? ListView(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: [
-                        NoRecordDisplayWidget(
-                          assetSvg: Assets.noTickets,
-                          text: "No Golden Tickets won",
-                        )
-                      ],
-                    )
-                  : GridView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: model.allScratchCards.length,
-                      shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisSpacing: SizeConfig.padding8,
-                          childAspectRatio: 1 / 0.84,
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 0),
-                      padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding16,
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      itemBuilder: (ctx, i) {
-                        return InkWell(
-                          onTap: () {
-                            AppState.screenStack.add(ScreenItem.dialog);
-                            Navigator.of(AppState
-                                    .delegate!.navigatorKey.currentContext!)
-                                .push(
-                              HeroDialogRoute(
-                                builder: (context) {
-                                  return GTDetailedView(
-                                    ticket: model.allScratchCards[i],
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                          child: ScratchCardGridItemCard(
-                            ticket: model.allScratchCards[i],
-                            titleStyle: TextStyles.body2,
-                            titleStyle2: TextStyles.body3,
-                            width: SizeConfig.screenWidth! * 0.36,
-                            subtitleStyle: TextStyles.body4,
-                          ),
-                        );
-                      },
-                    ),
-        );
+        return model!.isFetchingScratchCards && model.allScratchCards.isEmpty
+            ? Center(child: FullScreenLoader())
+            : model.allScratchCards.isEmpty
+                ? ListView(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    children: [
+                      NoRecordDisplayWidget(
+                        assetSvg: Assets.noTickets,
+                        text: "No Golden Tickets won",
+                      )
+                    ],
+                  )
+                : GridView.builder(
+                    physics: ClampingScrollPhysics(),
+                    itemCount: model.allScratchCards.length,
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisSpacing: SizeConfig.padding8,
+                        childAspectRatio: 1 / 0.84,
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 0),
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding16,
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    itemBuilder: (ctx, i) {
+                      return InkWell(
+                        onTap: () {
+                          AppState.screenStack.add(ScreenItem.dialog);
+                          Navigator.of(AppState
+                                  .delegate!.navigatorKey.currentContext!)
+                              .push(
+                            HeroDialogRoute(
+                              builder: (context) {
+                                return GTDetailedView(
+                                  ticket: model.allScratchCards[i],
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: ScratchCardGridItemCard(
+                          ticket: model.allScratchCards[i],
+                          titleStyle: TextStyles.body2,
+                          titleStyle2: TextStyles.body3,
+                          width: SizeConfig.screenWidth! * 0.36,
+                          subtitleStyle: TextStyles.body4,
+                        ),
+                      );
+                    },
+                  );
       },
     );
   }

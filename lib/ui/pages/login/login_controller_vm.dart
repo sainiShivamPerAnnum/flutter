@@ -401,7 +401,7 @@ class LoginControllerViewModel extends BaseViewModel {
       final String? brand = response["brand"];
       final bool? isPhysicalDevice = response["isPhysicalDevice"];
       final String? version = response["version"];
-      _userRepo!.setNewDeviceId(
+      await _userRepo!.setNewDeviceId(
         uid: userService.baseUser!.uid,
         deviceId: deviceId,
         platform: platform,

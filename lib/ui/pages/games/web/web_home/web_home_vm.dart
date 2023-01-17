@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
@@ -145,7 +146,11 @@ class WebHomeViewModel extends BaseViewModel {
         }));
   }
 
-  clear() {}
+  clear() {
+    if (AppState.screenStack.last == ScreenItem.modalsheet)
+      AppState.screenStack.removeLast();
+    print(AppState.screenStack.toString());
+  }
 
   Future<bool> setupGame() async {
     if (_userService.baseUser!.username!.isEmpty) {

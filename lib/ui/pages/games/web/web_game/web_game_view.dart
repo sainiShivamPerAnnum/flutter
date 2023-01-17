@@ -1,10 +1,14 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -62,7 +66,7 @@ class WebGameView extends StatelessWidget {
 class GameView extends StatelessWidget {
   final bool inLandscapeMode;
   final String initialUrl;
-
+  int exitCounter = 0;
   GameView({required this.inLandscapeMode, required this.initialUrl});
   @override
   Widget build(BuildContext context) {
@@ -76,6 +80,45 @@ class GameView extends StatelessWidget {
             child: WebView(
               initialUrl: initialUrl,
               javascriptMode: JavascriptMode.unrestricted,
+              javascriptChannels: Set.from(
+                [
+                  JavascriptChannel(
+                    name: 'Print',
+                    onMessageReceived: (JavascriptMessage message) {
+                      log(message.message);
+                      exitCounter++;
+                      if (message.message == 'insufficient tokens' &&
+                          exitCounter == 1) {
+                        log("Close the game view and open save view");
+                        AppState.isWebGameLInProgress = false;
+                        AppState.isWebGamePInProgress = false;
+                        AppState.backButtonDispatcher!.didPopRoute();
+                        Future.delayed(
+                          Duration(milliseconds: 500),
+                          () {
+                            BaseUtil.openModalBottomSheet(
+                              addToScreenStack: true,
+                              backgroundColor: UiConstants.gameCardColor,
+                              content: WantMoreTicketsModalSheet(
+                                isInsufficientBalance: true,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft:
+                                    Radius.circular(SizeConfig.roundness24),
+                                topRight:
+                                    Radius.circular(SizeConfig.roundness24),
+                              ),
+                              hapticVibrate: true,
+                              isScrollControlled: true,
+                              isBarrierDismissible: true,
+                            );
+                          },
+                        );
+                      }
+                    },
+                  )
+                ],
+              ),
             ),
           ),
           // inLandscapeMode

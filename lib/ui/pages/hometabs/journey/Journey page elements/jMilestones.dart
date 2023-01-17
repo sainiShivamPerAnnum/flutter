@@ -323,7 +323,7 @@ class StaticMilestone extends StatelessWidget {
                                       Text("${milestone.tooltip}",
                                           style: TextStyles.sourceSansSB.body3),
                                       Text(
-                                        "Win scratch card worth upto ₹${BaseUtil.getRandomRewardAmount(0)}",
+                                        "Win scratch card worth upto ₹${BaseUtil.getRandomRewardAmount(milestone.index)}",
                                         style: TextStyles.sourceSansSB.body5
                                             .colour(UiConstants.kTextColor3),
                                       ),

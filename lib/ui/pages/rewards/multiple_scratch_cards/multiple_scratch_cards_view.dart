@@ -6,6 +6,7 @@ import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/texts/breathing_text_widget.dart';
 import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratch_cards_vm.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_utils.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -97,7 +98,7 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                                       final factorChange = (value - i).abs();
                                       return Transform.scale(
                                         scale:
-                                            lerpDouble(1.2, 0.8, factorChange),
+                                            lerpDouble(1.1, 0.8, factorChange),
                                         child: Container(
                                             margin: EdgeInsets.symmetric(
                                                 horizontal: SizeConfig
@@ -121,10 +122,6 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                                                       accuracy:
                                                           ScratchAccuracy.low,
                                                       brushSize: 50,
-                                                      // enabled: model.state == ViewState.Idle
-                                                      //     ? true
-                                                      //     : false,
-
                                                       threshold: 20,
                                                       key: model
                                                           .scratchStateKeys[i],
@@ -137,21 +134,6 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                                                           model.currentCardScratchPercentage =
                                                               value),
                                                       onThreshold: () {
-                                                        // if (model
-                                                        //     .scratchCardList[i].isRewarding!) {
-                                                        // model.isShimmerEnabled = true;
-
-                                                        // Future.delayed(
-                                                        //     Duration(
-                                                        //       seconds: 3,
-                                                        //     ), () {
-                                                        //   model.isShimmerEnabled = false;
-                                                        // });
-                                                        // _controller.forward().then(
-                                                        //     (value) =>
-                                                        //         _controller.reverse());
-                                                        // }
-
                                                         model.redeemScratchCard(
                                                             i);
                                                       },
@@ -285,39 +267,20 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                     ignoring: true,
                     child: Column(
                       children: [
-                        Transform.scale(
-                          scale: 2,
-                          child: Lottie.asset(
-                            Assets.multiReward,
-                            width: SizeConfig.screenWidth,
-                          ),
+                        FullScreenLoader(
+                          size: SizeConfig.screenWidth! * 0.4,
                         ),
+                        SizedBox(height: SizeConfig.padding10),
+                        Text("Fetching rewards",
+                            style: TextStyles.rajdhaniB.title2
+                                .colour(Colors.white),
+                            textAlign: TextAlign.center),
+                        Text(
+                          "Please wait...",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        )
                       ],
-                    ),
-                  ),
-                ),
-              if (model.showRewardLottie)
-                Align(
-                  alignment: Alignment.center,
-                  child: IgnorePointer(
-                    ignoring: true,
-                    child: Container(
-                      margin:
-                          EdgeInsets.only(top: SizeConfig.screenWidth! * 0.3),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text("Fetching rewards",
-                              style: TextStyles.rajdhaniB.title2
-                                  .colour(Colors.white),
-                              textAlign: TextAlign.center),
-                          Text(
-                            "Please wait...",
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTextColor2),
-                          )
-                        ],
-                      ),
                     ),
                   ),
                 ),

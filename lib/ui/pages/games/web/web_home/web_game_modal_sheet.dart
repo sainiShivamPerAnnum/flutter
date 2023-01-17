@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/model/game_stats_model.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_vm.dart';
@@ -36,6 +33,12 @@ class WebGameModalSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Container(
+              width: SizeConfig.screenWidth! * 0.3,
+              height: SizeConfig.padding4,
+              color: Colors.grey,
+              margin: EdgeInsets.only(top: SizeConfig.padding16),
+            ),
             SizedBox(
               height: SizeConfig.screenHeight! * 0.01,
             ),

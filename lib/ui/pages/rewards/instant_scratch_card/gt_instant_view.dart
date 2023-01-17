@@ -1,7 +1,5 @@
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
@@ -241,54 +239,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                       .colour(Colors.grey),
                                   textAlign: TextAlign.center),
                             ),
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding64,
-                                  horizontal: SizeConfig.pageHorizontalMargins),
-                              child: Column(
-                                children: [
-                                  // AnimatedOpacity(
-                                  //   duration: Duration(milliseconds: 300),
-                                  //   curve: Curves.easeInCirc,
-                                  //   opacity: model.buttonOpacity,
-                                  //   child: AppPositiveBtn(
-                                  //     width: SizeConfig.screenWidth / 2,
-                                  //     btnText:
-                                  //         getButtonText(model, widget.source) ??
-                                  //             "Continue",
-                                  //     onPressed: getButtonAction(
-                                  //             model, widget.source) ??
-                                  //         () {
-                                  //           if (!model.isCardScratched) return;
-                                  //           AppState.backButtonDispatcher
-                                  //               .didPopRoute();
-                                  //         },
-                                  //   ),
-                                  // ),
-                                  SizedBox(height: 12),
-                                  TextButton(
-                                    onPressed: () {
-                                      while (AppState.screenStack.length > 1) {
-                                        AppState.backButtonDispatcher!
-                                            .didPopRoute();
-                                      }
-
-                                      AppState.delegate!.appState
-                                              .currentAction =
-                                          PageAction(
-                                              state: PageState.addPage,
-                                              page: MyWinningsPageConfig);
-                                    },
-                                    child: Text(
-                                      locale.winMyWinnings,
-                                      style: TextStyles.body3
-                                          .colour(Colors.white)
-                                          .underline,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            SizedBox(height: SizeConfig.padding24),
                           ],
                         ),
                       ),

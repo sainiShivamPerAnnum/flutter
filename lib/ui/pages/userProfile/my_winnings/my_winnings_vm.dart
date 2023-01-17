@@ -66,19 +66,23 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
   init() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _gtService.isLastPageForScratchCards = false;
       _gtService.scratchCardsListLastTicketId = null;
-      _gtService.fetchAllScratchCards();
+      _gtService.fetchScratchCards();
     });
+  }
+
+  fetchMoreCards() {
+    _gtService.fetchScratchCards(more: true);
   }
 
   trackScratchCardsOpen() {
     _analyticsService!
         .track(eventName: AnalyticsEvents.scratchCardSectionOpen, properties: {
-      "Unscratched tickets count": _gtService!.unscratchedTicketsCount,
-      "Scratched tickets count": _gtService!.activeScratchCards.length,
-      "total prize won": _userService!.userFundWallet!.prizeLifetimeWin,
+      "Unscratched tickets count": _gtService.unscratchedTicketsCount,
+      "Scratched tickets count": _gtService.activeScratchCards.length,
+      "total prize won": _userService.userFundWallet!.prizeLifetimeWin,
       "Referred count (total)": AnalyticsProperties.getTotalReferralCount(),
       "Referred count success": AnalyticsProperties.getSuccessReferralCount(),
     });

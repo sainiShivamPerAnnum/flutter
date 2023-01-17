@@ -414,10 +414,10 @@ class ScratchCardService
     }
   }
 
-  Future<void> fetchAllScratchCards() async {
+  Future<void> fetchScratchCards({bool more = false}) async {
     if (isLastPageForScratchCards) return;
     if (isFetchingScratchCards) return;
-    allScratchCards.clear();
+    if (!more) allScratchCards.clear();
     isFetchingScratchCards = true;
     final res =
         await _gtRepo.getScratchCards(start: scratchCardsListLastTicketId);
@@ -432,6 +432,7 @@ class ScratchCardService
       }
     }
     allScratchCards = arrangeScratchCards();
+    scratchCardsListLastTicketId = allScratchCards.last.gtId;
     isFetchingScratchCards = false;
   }
 

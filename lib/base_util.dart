@@ -299,11 +299,12 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static openGameModalSheet(String game, Gm? gameModel) {
+    AppState.screenStack.add(ScreenItem.modalsheet);
     return openModalBottomSheet(
       isScrollControlled: true,
       enableDrag: true,
       isBarrierDismissible: true,
-      addToScreenStack: true,
+      addToScreenStack: false,
       content: WebGameModalSheet(
         game: game,
         gameInfo: gameModel,
@@ -606,8 +607,18 @@ class BaseUtil extends ChangeNotifier {
   // }
 
   static int getRandomRewardAmount(index) {
-    List rewardList = [50, 100, 150, 200, 250, 500];
-    return rewardList[Random().nextInt(rewardList.length)];
+    if (index < 5)
+      return 50;
+    else if (index < 10)
+      return 100;
+    else if (index < 15)
+      return 150;
+    else if (index < 20)
+      return 200;
+    else if (index < 50)
+      return 500;
+    else
+      return 100;
   }
 
   bool isOldCustomer() {
