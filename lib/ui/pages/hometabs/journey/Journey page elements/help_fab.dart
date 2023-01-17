@@ -1,13 +1,10 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -67,24 +64,24 @@ class _HelpFabState extends State<HelpFab> {
       right: SizeConfig.padding16,
       child: InkWell(
         onTap: () {
-          if (FlavorConfig.isDevelopment()) {
-            PreferenceHelper.setInt(
-                PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
-                DateTime.now().subtract(Duration(days: 1)).day);
-            BaseUtil.showPositiveAlert("DAILY APP BONUS",
-                "Now, Claimed cached day is ${DateTime.now().subtract(Duration(days: 1)).day}");
-          }
+          // if (FlavorConfig.isDevelopment()) {
+          //   PreferenceHelper.setInt(
+          //       PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
+          //       DateTime.now().subtract(Duration(days: 1)).day);
+          //   BaseUtil.showPositiveAlert("DAILY APP BONUS",
+          //       "Now, Claimed cached day is ${DateTime.now().subtract(Duration(days: 1)).day}");
+          // }
           // clearCache();
-          // ScratchCardService.scratchCardsList = [
-          //   "Acd92NN53WWpJZbxZ4UW",
-          //   "Bv8CzzI40pfwLpbuPM6Z",
-          //   "M83UzvsZGzMJlEcVezsj",
-          //   "WrffUHSSJ95hqxO5iv73"
-          // ];
-          // locator<ScratchCardService>().showMultipleScratchCardsView();
-          trackHelpTappedEvent();
-          AppState.delegate!
-              .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
+          ScratchCardService.scratchCardsList = [
+            "9miii7TX9Jb5EKyVPskH",
+            "BLCAvoIWaaVlprHVRdIE",
+            "f6lwyjqs8qBzkTHvtmnq",
+            "jQhLdgrm3hnxR0QOrTI6"
+          ];
+          locator<ScratchCardService>().showMultipleScratchCardsView();
+          // trackHelpTappedEvent();
+          // AppState.delegate!
+          //     .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
         child: AnimatedContainer(
             duration: Duration(seconds: 1),

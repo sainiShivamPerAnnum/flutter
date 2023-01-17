@@ -190,28 +190,35 @@ class _JourneyMilestoneDetailsModalSheetState
                               TextStyles.body3.colour(UiConstants.kTextColor3),
                         ),
                         SizedBox(height: SizeConfig.padding24),
-                        RichText(
-                          text: TextSpan(
-                              style: TextStyles.sourceSans.body3
-                                  .colour(UiConstants.primaryColor),
-                              children: [
-                                WidgetSpan(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: SizeConfig.padding3),
-                                    child: SvgPicture.asset(
-                                      getTicketAsset(widget.milestone.index),
-                                      height: SizeConfig.body4,
-                                    ),
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: " " +
-                                      locale.winATicket(
-                                        getTicketType(widget.milestone.index),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                  style: TextStyles.sourceSans.body3,
+                                  children: [
+                                    WidgetSpan(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: SizeConfig.padding3),
+                                        child: SvgPicture.asset(
+                                          getTicketAsset(
+                                              widget.milestone.index),
+                                          height: SizeConfig.body3,
+                                        ),
                                       ),
-                                )
-                              ]),
+                                    ),
+                                    TextSpan(
+                                      text: " " +
+                                          locale.winATicket(
+                                              getTicketType(
+                                                  widget.milestone.index),
+                                              BaseUtil.getRandomRewardAmount(
+                                                  widget.milestone.index)),
+                                    )
+                                  ]),
+                            ),
+                          ],
                         ),
                       ],
                     ),

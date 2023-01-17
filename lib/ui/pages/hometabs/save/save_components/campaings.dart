@@ -26,8 +26,8 @@ class Campaigns extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleSubtitleContainer(
-          title: locale.challenges,
-          subTitle: locale.contestTitle,
+          title: locale.offers,
+          // subTitle: locale.contestTitle,
         ),
         CampaignCardSection(saveVm: model),
       ],

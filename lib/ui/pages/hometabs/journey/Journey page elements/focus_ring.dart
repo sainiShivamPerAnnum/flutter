@@ -62,14 +62,6 @@ class _FocusRingState extends State<FocusRing>
       Future.delayed(Duration(seconds: 2), () {
         _animationController!.forward().then((value) {
           showButton = true;
-          // _gtService.fetchAndVerifyGoldenTicketByID().then(
-          //   (value) {
-          //     if (value) {
-          //       _gtService.showInstantGoldenTicketView(
-          //           source: GTSOURCE.newuser, onJourney: true);
-          //     }
-          //   },
-          // );
         });
       });
     });
@@ -95,7 +87,7 @@ class _FocusRingState extends State<FocusRing>
         builder: (context, m, properties) {
           log("Focus Ring build called");
 
-          return m!.avatarRemoteMlIndex == 1
+          return m!.avatarRemoteMlIndex == 1 && m.showFocusRing
               ? Positioned(
                   bottom: m.pageHeight! * 0.22,
                   left: SizeConfig.screenWidth! * 0.4,

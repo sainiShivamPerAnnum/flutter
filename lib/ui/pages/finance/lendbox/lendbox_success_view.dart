@@ -230,7 +230,9 @@ class LendboxSuccessView extends StatelessWidget {
                     SizedBox(width: SizeConfig.padding12),
                   if (_txnService!.currentTxnScratchCardCount > 0)
                     WinningChips(
-                        title: locale.scratchCard,
+                        title: _txnService!.currentTxnScratchCardCount > 1
+                            ? locale.scratchCards
+                            : locale.scratchCard,
                         tooltip: locale.winChipsTitle2,
                         asset: Assets.unredemmedScratchCardBG,
                         qty: _txnService!.currentTxnScratchCardCount),

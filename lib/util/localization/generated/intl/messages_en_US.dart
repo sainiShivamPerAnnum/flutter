@@ -71,7 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m20(username) =>
       "Your username ${username} has been successfully registered!";
 
-  static String m21(ticketType) => "Win a ${ticketType} ticket";
+  static String m21(ticketType, rewardAmount) =>
+      "Win a ${ticketType} Card worth upto ₹${rewardAmount}";
 
   static String m22(prize) => "Winnings can be redeemed on reaching ₹${prize}";
 
@@ -776,9 +777,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "obVerifyEmail": MessageLookupByLibrary.simpleMessage("verify Email"),
         "obuniqueNameText": MessageLookupByLibrary.simpleMessage(
             "This will be your unique name across our games and challenges leaderboard"),
+        "offers": MessageLookupByLibrary.simpleMessage("Offers"),
         "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ohNo": MessageLookupByLibrary.simpleMessage("Oh no.."),
-        "onReaching": MessageLookupByLibrary.simpleMessage("on reaching "),
+        "onReaching": MessageLookupByLibrary.simpleMessage(" on reaching "),
         "onboardingSubTitle1": MessageLookupByLibrary.simpleMessage(
             "By saving in safe and secure assets like Digital Gold and 10% fund Fello Flo"),
         "onboardingSubTitle2": MessageLookupByLibrary.simpleMessage(
@@ -958,6 +960,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "scratchCard": MessageLookupByLibrary.simpleMessage("Scratch Card"),
         "scratchCardText":
             MessageLookupByLibrary.simpleMessage("Scratch Cards"),
+        "scratchCards": MessageLookupByLibrary.simpleMessage("Scratch Cards"),
         "secureFelloTitle":
             MessageLookupByLibrary.simpleMessage("Secure Fello"),
         "selectRating":

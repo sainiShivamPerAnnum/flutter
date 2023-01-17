@@ -22,6 +22,7 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -57,6 +58,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
   final GetterRepository _gettersRepo = locator<GetterRepository>();
+  final AppState _appState = locator<AppState>();
+  final RootController _rootController = locator<RootController>();
   S locale = locator<S>();
 
   User? _firebaseUser;
@@ -337,7 +340,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       if (baseUser != null) {
         await getUserJourneyStats();
         final res = await _gettersRepo.getPageConfigs();
-        if (res.isSuccess()) setPageConfigs(res.model!);
+        if (res.isSuccess()) {
+          setPageConfigs(res.model!);
+          _appState.setCurrentTabIndex = 0;
+        }
       }
     } catch (e) {
       _logger!.e(e.toString());
@@ -510,6 +516,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     ];
     DynamicUiUtils.helpFab = dynamicUi.journeyFab;
     DynamicUiUtils.navBar = dynamicUi.navBar;
+    DynamicUiUtils.navBar.forEach(_rootController.getNavItems);
   }
 
   diplayUsername(String username) {

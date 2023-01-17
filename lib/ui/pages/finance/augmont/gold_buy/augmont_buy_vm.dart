@@ -221,7 +221,7 @@ class GoldBuyViewModel extends BaseViewModel {
     if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value)
       lastTappedChipIndex = -1;
     fetchGoldRates();
-    await fetchNotices();
+    // await fetchNotices();
     status = checkAugmontStatus();
     // _paytmService!.getActiveSubscriptionDetails();
     getAvailableCoupons();
@@ -264,9 +264,9 @@ class GoldBuyViewModel extends BaseViewModel {
   //   }
   // }
 
-  fetchNotices() async {
-    buyNotice = await _dbModel!.showAugmontBuyNotice();
-  }
+  // fetchNotices() async {
+  //   buyNotice = await _dbModel!.showAugmontBuyNotice();
+  // }
 
   resetBuyOptions() {
     goldBuyAmount = assetOptionsModel?.data.userOptions[1].value.toDouble();

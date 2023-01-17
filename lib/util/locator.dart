@@ -83,6 +83,7 @@ import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
+import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratch_cards_vm.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
@@ -203,6 +204,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => NotificationsViewModel());
   locator.registerFactory(() => GTDetailedViewModel());
   locator.registerFactory(() => GTInstantViewModel());
+  locator.registerFactory(() => MultipleScratchCardsViewModel());
   locator.registerFactory(() => TopSaverViewModel());
   locator.registerFactory(() => AutosaveProcessViewModel());
   locator.registerFactory(() => UserAutosaveDetailsViewModel());
