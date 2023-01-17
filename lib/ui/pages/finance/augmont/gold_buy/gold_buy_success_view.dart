@@ -236,7 +236,9 @@ class GoldBuySuccessView extends StatelessWidget {
                   SizedBox(width: SizeConfig.padding12),
                 if (_augTxnService!.currentTxnScratchCardCount > 0)
                   WinningChips(
-                      title: locale.scratchCard,
+                      title: _augTxnService!.currentTxnScratchCardCount > 1
+                          ? locale.scratchCards
+                          : locale.scratchCard,
                       tooltip: locale.winChipsTitle2,
                       asset: Assets.unredemmedScratchCardBG,
                       qty: _augTxnService!.currentTxnScratchCardCount),

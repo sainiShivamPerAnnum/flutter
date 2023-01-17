@@ -19,6 +19,7 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -41,6 +42,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   final ScratchCardService _gtService = locator<ScratchCardService>();
   final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final RootController _rootController = locator<RootController>();
   final S locale = locator<S>();
   //Local Variables
   List<JourneyLevel>? _levels = [];
@@ -72,6 +74,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   bool _journeyBuildFailure = false;
   bool _showLevelUpAnimation = false;
   bool _isUserJourneyOnboarded = false;
+  bool _showFocusRing = false;
+  get showFocusRing => this._showFocusRing;
+
+  set showFocusRing(value) {
+    this._showFocusRing = value;
+    notifyListeners(JourneyServiceProperties.Onboarding);
+  }
+
   get isUserJourneyOnboarded => this._isUserJourneyOnboarded;
   List<ScratchCard>? _unscratchedGTList;
 
@@ -86,6 +96,31 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     this._isUserJourneyOnboarded = value;
     notifyListeners(JourneyServiceProperties.Onboarding);
     _logger.d("User Journey Onboarded");
+  }
+
+  bool _isRefreshing = false;
+  bool get isRefreshing => this._isRefreshing;
+
+  set isRefreshing(bool value) {
+    this._isRefreshing = value;
+    notifyListeners();
+  }
+
+  bool _isLoading = false;
+  bool get isLoading => this._isLoading;
+
+  set isLoading(bool value) {
+    this._isLoading = value;
+    notifyListeners();
+  }
+
+  bool _isLoaderRequired = false;
+
+  get isLoaderRequired => this._isLoaderRequired;
+
+  set isLoaderRequired(value) {
+    this._isLoaderRequired = value;
+    notifyListeners();
   }
 
   bool isJourneyOnboardingInView = false;
@@ -213,6 +248,71 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     vsync = null;
     pages!.clear();
     log("Journey Service dumped");
+  }
+
+  void buildJourney() async {
+    _logger.d("BUILD JOURNEY CALLED");
+    getAvatarCachedMilestoneIndex();
+    await updateUserJourneyStats();
+    if (isThereAnyMilestoneLevelChange()!) {
+      createPathForAvatarAnimation(avatarCachedMlIndex, avatarRemoteMlIndex);
+      createAvatarAnimationObject();
+    } else {
+      placeAvatarAtTheCurrentMileStone();
+    }
+    isLoading = false;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (avatarRemoteMlIndex < 3) {
+        await mainController!.animateTo(
+          0,
+          duration: const Duration(seconds: 2),
+          curve: Curves.easeOutCubic,
+        );
+      } else
+        await scrollPageToAvatarPosition();
+      showFocusRing = true;
+      await animateAvatar();
+      updateRewardSTooltips();
+      mainController!.addListener(() {
+        if (mainController!.offset > mainController!.position.maxScrollExtent) {
+          if (!canMorePagesBeFetched())
+            return updatingJourneyView();
+          else
+            return addPageToTop();
+        }
+      });
+    });
+  }
+
+  updatingJourneyView() async {
+    if (isRefreshing) return;
+    _logger.d("Refreshing Journey Stats");
+    isRefreshing = true;
+    await checkForMilestoneLevelChange();
+    isRefreshing = false;
+  }
+
+  canMorePagesBeFetched() => getJourneyLevelBlurData() == null ? true : false;
+
+  addPageToTop() async {
+    if (isLoading) return;
+    _logger.d("Adding page to top");
+    if (!canMorePagesBeFetched()) return;
+    isLoading = true;
+    isLoaderRequired = true;
+    final prevPageslength = pages!.length;
+    await fetchMoreNetworkPages();
+    _logger.d("Total Pages length: ${pages!.length}");
+    if (prevPageslength < pages!.length)
+      await mainController!.animateTo(
+        mainController!.offset + 100,
+        curve: Curves.easeOutCubic,
+        duration: Duration(seconds: 1),
+      );
+    placeAvatarAtTheCurrentMileStone();
+    // _journeyService.refreshJourneyPath();
+    isLoaderRequired = false;
+    isLoading = false;
   }
 
   //Fetching journeypages from Journey Repository
@@ -494,8 +594,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
 //-------------------------------|-HELPER METHODS-START-|---------------------------------
 
-  userIsAtJourneyScreen() => (AppState.screenStack.length == 1 &&
-      AppState.delegate!.appState.getCurrentTabIndex == 0);
+  userIsAtJourneyScreen() {
+    return (AppState.screenStack.length == 1 &&
+        _rootController.currentNavBarItemModel ==
+            RootController.journeyNavBarItem);
+  }
 
   setAvatarPostion() => avatarPosition = calculatePosition(0);
 

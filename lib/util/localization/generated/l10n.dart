@@ -1992,10 +1992,10 @@ class S {
     );
   }
 
-  /// `on reaching `
+  /// ` on reaching `
   String get onReaching {
     return Intl.message(
-      'on reaching ',
+      ' on reaching ',
       name: 'onReaching',
       desc: '',
       args: [],
@@ -2167,6 +2167,16 @@ class S {
     return Intl.message(
       'Scratch Card',
       name: 'scratchCard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scratch Cards`
+  String get scratchCards {
+    return Intl.message(
+      'Scratch Cards',
+      name: 'scratchCards',
       desc: '',
       args: [],
     );
@@ -5802,13 +5812,13 @@ class S {
     );
   }
 
-  /// `Win a {ticketType} ticket`
-  String winATicket(Object ticketType) {
+  /// `Win a {ticketType} Card worth upto ₹{rewardAmount}`
+  String winATicket(Object ticketType, Object rewardAmount) {
     return Intl.message(
-      'Win a $ticketType ticket',
+      'Win a $ticketType Card worth upto ₹$rewardAmount',
       name: 'winATicket',
       desc: '',
-      args: [ticketType],
+      args: [ticketType, rewardAmount],
     );
   }
 
@@ -6359,6 +6369,16 @@ class S {
     return Intl.message(
       'Challenges',
       name: 'challenges',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Offers`
+  String get offers {
+    return Intl.message(
+      'Offers',
+      name: 'offers',
       desc: '',
       args: [],
     );

@@ -380,7 +380,6 @@ class LoginControllerViewModel extends BaseViewModel {
     _userCoinService!.init();
     baseProvider!.init();
     AnalyticsProperties().init();
-    userService.userBootUpEE();
     if (userService.isUserOnboarded) await _journeyService!.init();
 
     fcmListener!.setupFcm();
@@ -412,6 +411,7 @@ class LoginControllerViewModel extends BaseViewModel {
         isPhysicalDevice: isPhysicalDevice,
       );
     }
+    userService.userBootUpEE();
 
     setState(ViewState.Idle);
 

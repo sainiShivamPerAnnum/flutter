@@ -55,50 +55,43 @@ class RazorpayService extends ChangeNotifier {
   }
 
   void handlePaymentSuccess(PaymentSuccessResponse response) async {
-    try {
-      String paymentId = response.paymentId!;
-      String checkoutOrderId = response.orderId!;
-      String paySignature = response.signature!;
-      _txnService!.currentTransactionState = TransactionState.ongoing;
-      _txnService!.initiatePolling();
-
-      _analyticsService!.track(
-          eventName: AnalyticsEvents.transactionCompleted,
-          properties: _txnService!.currentTransactionAnalyticsDetails);
-      log.debug(
-          "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
-      _currentTxn?.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
-      if (_currentTxn?.rzp![UserTransaction.subFldRzpOrderId] !=
-          checkoutOrderId) {
-        _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
-            UserTransaction.RZP_TRAN_STATUS_COMPLETE;
-        if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
-        cleanListeners();
-        return;
-      }
-    } catch (e) {}
+    String paymentId = response.paymentId!;
+    String checkoutOrderId = response.orderId!;
+    String paySignature = response.signature!;
+    _txnService!.currentTransactionState = TransactionState.ongoing;
+    _txnService!.initiatePolling();
+    log.debug(
+        "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
+    _currentTxn!.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
+    if (_currentTxn!.rzp![UserTransaction.subFldRzpOrderId] !=
+        checkoutOrderId) {
+      _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
+          UserTransaction.RZP_TRAN_STATUS_COMPLETE;
+      if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
+      cleanListeners();
+      return;
+    }
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
-    try {
-      _txnService!.currentTransactionState = TransactionState.idle;
-      AppState.unblockNavigation();
-      BaseUtil.showNegativeAlert(locale.txnFailed, locale.txnFailedSubtitle);
-      log.debug(
-          "ERROR: " + response.code.toString() + " - " + response.message!);
-      _analyticsService!.track(
-          eventName: AnalyticsEvents.paymentCancelled,
-          properties: _txnService?.currentTransactionAnalyticsDetails);
+    _txnService!.currentTransactionState = TransactionState.idle;
+    AppState.unblockNavigation();
+    BaseUtil.showNegativeAlert(locale.txnFailed, locale.txnFailedSubtitle);
+    log.debug("ERROR: " + response.code.toString() + " - " + response.message!);
+    Map<String, dynamic>? currentTxnDetails =
+        _augTxnService?.currentTransactionAnalyticsDetails;
 
-      _currentTxn?.rzp?[UserTransaction.subFldRzpStatus] =
-          UserTransaction.RZP_TRAN_STATUS_FAILED;
-      if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
+    currentTxnDetails?["Error message"] = response.message;
+    _analyticsService!.track(
+        eventName: AnalyticsEvents.paymentCancelled,
+        properties: currentTxnDetails);
 
-      cleanListeners();
-      return;
-    } catch (e) {
-      log.debug("ERROR: " + e.toString() + " - " + response.message!);
-    }
+    _currentTxn!.rzp?[UserTransaction.subFldRzpStatus] =
+        UserTransaction.RZP_TRAN_STATUS_FAILED;
+    if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
+
+    cleanListeners();
+    return;
   }
 
   void handleExternalWallet(ExternalWalletResponse response) {

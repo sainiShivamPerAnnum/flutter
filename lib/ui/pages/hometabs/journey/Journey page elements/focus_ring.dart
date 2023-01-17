@@ -62,14 +62,6 @@ class _FocusRingState extends State<FocusRing>
       Future.delayed(Duration(seconds: 2), () {
         _animationController!.forward().then((value) {
           showButton = true;
-          // _gtService.fetchAndVerifyGoldenTicketByID().then(
-          //   (value) {
-          //     if (value) {
-          //       _gtService.showInstantGoldenTicketView(
-          //           source: GTSOURCE.newuser, onJourney: true);
-          //     }
-          //   },
-          // );
         });
       });
     });

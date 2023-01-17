@@ -70,7 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m20(username) =>
       "आपका उपयोगकर्ता नाम ${username} सफलतापूर्वक पंजीकृत हो गया है!";
 
-  static String m21(ticketType) => "एक ${ticketType} टिकट जीतें";
+  static String m21(ticketType, rewardAmount) => "एक ${ticketType} टिकट जीतें";
 
   static String m22(prize) =>
       "जीत को ₹${prize} तक पहुंचने पर रिडीम किया जा सकता है";

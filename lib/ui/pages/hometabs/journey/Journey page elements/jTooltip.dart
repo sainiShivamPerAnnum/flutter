@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
@@ -55,7 +56,7 @@ class MilestoneTooltip extends StatelessWidget {
                               ],
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(16.0),
+                              padding: EdgeInsets.all(SizeConfig.padding12),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -68,10 +69,10 @@ class MilestoneTooltip extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text("${milestone.tooltip}",
-                                          style: TextStyles.sourceSansSB.body2),
+                                          style: TextStyles.sourceSansSB.body3),
                                       Text(
-                                        "Win scratch card",
-                                        style: TextStyles.sourceSansSB.body4
+                                        "Win scratch card worth upto ₹${BaseUtil.getRandomRewardAmount(0)}",
+                                        style: TextStyles.sourceSansSB.body5
                                             .colour(UiConstants.kTextColor3),
                                       ),
                                     ],

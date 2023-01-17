@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
@@ -69,6 +71,23 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool _showRewardLottie = false;
+
+  get showRewardLottie => this._showRewardLottie;
+
+  set showRewardLottie(value) {
+    this._showRewardLottie = value;
+    notifyListeners();
+  }
+
+  double _cardScale = 0.8;
+  double get cardScale => this._cardScale;
+
+  set cardScale(double value) {
+    this._cardScale = value;
+    notifyListeners();
+  }
+
   final ScratchCardService _scService = locator<ScratchCardService>();
   final ScratchCardRepository _scRepo = locator<ScratchCardRepository>();
   final UserService _userService = locator<UserService>();
@@ -80,6 +99,9 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
   init() {
     //Clearing global variable every time this screen comes in view so that no old data is represented
     //Initializing view required variables
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      showRewardLottie = true;
+    });
     pageController = PageController(viewportFraction: 0.65);
     pageController!.addListener(_pageListener);
     pageNotifier = ValueNotifier(0.0);
@@ -94,6 +116,10 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
     _generateKeysForTickets();
     _performPreScratchProcessing(0).then((value) {
       // ScratchCardService.scratchCardsList?.clear();
+      showRewardLottie = false;
+      Future.delayed(Duration(milliseconds: 50), () {
+        cardScale = 1;
+      });
       Future.delayed(Duration(seconds: 2), () {
         if (currentCardScratchPercentage == 0) showScratchGuideLabel = true;
       });
@@ -129,6 +155,13 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
       pageController!.animateToPage(nextPageIndex,
           duration: Duration(seconds: 1), curve: Curves.easeInCubic);
       _performPreScratchProcessing(nextPageIndex);
+    } else {
+      log("Last scratch card, exiting view");
+      AppState.isInstantGtViewInView = true;
+      Future.delayed(Duration(seconds: 2), () {
+        AppState.isInstantGtViewInView = false;
+        AppState.backButtonDispatcher!.didPopRoute();
+      });
     }
   }
 

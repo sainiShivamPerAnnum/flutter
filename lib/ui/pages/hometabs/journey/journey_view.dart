@@ -37,6 +37,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 final avatarKey = GlobalKey();
 
@@ -62,53 +63,55 @@ class _JourneyViewState extends State<JourneyView>
       },
       builder: (ctx, model, child) {
         log("ROOT: Journey view baseview build called");
-
-        return Scaffold(
-          key: ValueKey(Constants.JOURNEY_SCREEN_TAG),
-          resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.black,
-          body: model.isLoading && model.pages == null
-              ? JourneyErrorScreen()
-              : Stack(
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.screenHeight,
-                      width: SizeConfig.screenWidth,
-                      child: SingleChildScrollView(
-                        controller: model.mainController,
-                        physics: const BouncingScrollPhysics(),
-                        reverse: true,
-                        child: Container(
-                          height: model.currentFullViewHeight,
-                          width: SizeConfig.screenWidth,
-                          child: Stack(
-                            children: [
-                              Background(model: model),
-                              ActiveMilestoneBackgroundGlow(),
-                              JourneyAssetPath(model: model),
-                              if (model.avatarPath != null)
-                                AvatarPathPainter(model: model),
-                              ActiveMilestoneBaseGlow(),
-                              Milestones(model: model),
-                              FocusRing(),
-                              LevelBlurView(),
-                              PrizeToolTips(model: model),
-                              MilestoneTooltip(model: model),
-                              Avatar(model: model),
-                            ],
+        return Consumer<JourneyService>(
+          builder: (context, service, child) => Scaffold(
+            key: ValueKey(Constants.JOURNEY_SCREEN_TAG),
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.black,
+            body: service.isLoading && model.pages == null
+                ? JourneyErrorScreen()
+                : Stack(
+                    children: [
+                      SizedBox(
+                        height: SizeConfig.screenHeight,
+                        width: SizeConfig.screenWidth,
+                        child: SingleChildScrollView(
+                          controller: model.mainController,
+                          physics: const BouncingScrollPhysics(),
+                          reverse: true,
+                          child: Container(
+                            height: model.currentFullViewHeight,
+                            width: SizeConfig.screenWidth,
+                            child: Stack(
+                              children: [
+                                Background(model: model),
+                                ActiveMilestoneBackgroundGlow(),
+                                JourneyAssetPath(model: model),
+                                if (model.avatarPath != null)
+                                  AvatarPathPainter(model: model),
+                                ActiveMilestoneBaseGlow(),
+                                Milestones(model: model),
+                                if (service.showFocusRing) FocusRing(),
+                                LevelBlurView(),
+                                PrizeToolTips(model: model),
+                                MilestoneTooltip(model: model),
+                                Avatar(model: model),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                     HelpFab(),
-                    JourneyAppBar(),
-                    JourneyBannersView(),
-                    if (model.isRefreshing) JRefreshIndicator(model: model),
-                    JPageLoader(model: model),
-                    LevelUpAnimation(),
-                    if (FlavorConfig.isDevelopment()) CacheClearWidget(),
-                  ],
-                ),
+                      HelpFab(),
+                      JourneyAppBar(),
+                      JourneyBannersView(),
+                      if (model.isRefreshing || service.isRefreshing)
+                        JRefreshIndicator(model: model),
+                      JPageLoader(model: model),
+                      LevelUpAnimation(),
+                      if (FlavorConfig.isDevelopment()) CacheClearWidget(),
+                    ],
+                  ),
+          ),
         );
       },
     );
@@ -236,37 +239,40 @@ class JPageLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return AnimatedPositioned(
-      top: (model.isLoading && model.isLoaderRequired)
-          ? SizeConfig.pageHorizontalMargins
-          : -400,
-      duration: Duration(seconds: 1),
-      curve: Curves.decelerate,
-      left: SizeConfig.pageHorizontalMargins,
-      child: SafeArea(
-        child: Container(
-          width: SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
-          height: SizeConfig.padding80,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-            color: Colors.black54,
-          ),
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.black,
-              radius: SizeConfig.avatarRadius * 2,
-              child: SpinKitCircle(
-                color: UiConstants.primaryColor,
-                size: SizeConfig.avatarRadius * 1.5,
+    return Consumer<JourneyService>(
+      builder: (context, service, child) => AnimatedPositioned(
+        top: (service.isLoading && service.isLoaderRequired)
+            ? SizeConfig.pageHorizontalMargins
+            : -400,
+        duration: Duration(seconds: 1),
+        curve: Curves.decelerate,
+        left: SizeConfig.pageHorizontalMargins,
+        child: SafeArea(
+          child: Container(
+            width:
+                SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
+            height: SizeConfig.padding80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              color: Colors.black54,
+            ),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.black,
+                radius: SizeConfig.avatarRadius * 2,
+                child: SpinKitCircle(
+                  color: UiConstants.primaryColor,
+                  size: SizeConfig.avatarRadius * 1.5,
+                ),
               ),
-            ),
-            title: Text(
-              locale.btnLoading,
-              style: TextStyles.rajdhaniB.title3.colour(Colors.white),
-            ),
-            subtitle: Text(
-              locale.jLoadinglevels,
-              style: TextStyles.sourceSans.body3.colour(Colors.white),
+              title: Text(
+                locale.btnLoading,
+                style: TextStyles.rajdhaniB.title3.colour(Colors.white),
+              ),
+              subtitle: Text(
+                locale.jLoadinglevels,
+                style: TextStyles.sourceSans.body3.colour(Colors.white),
+              ),
             ),
           ),
         ),
@@ -322,21 +328,49 @@ class LevelBlurView extends StatelessWidget {
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Colors.white.withOpacity(0.9),
                                   borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness24),
+                                      SizeConfig.roundness40),
                                 ),
                                 padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding6,
-                                    horizontal: SizeConfig.padding10),
-                                child: Row(
+                                    vertical: SizeConfig.padding16,
+                                    horizontal: SizeConfig.padding24),
+                                child: Column(
                                   children: [
-                                    Text(locale.jLevel+"${levelData.level! + 1} ",
-                                        style: TextStyles.rajdhaniB.body1
-                                            .colour(Colors.black)),
-                                    Icon(Icons.lock,
-                                        size: SizeConfig.iconSize1,
-                                        color: Colors.black),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.lock,
+                                            size: SizeConfig.iconSize1,
+                                            color: Colors.black),
+                                        Text(
+                                            " " +
+                                                locale.jLevel +
+                                                " ${levelData.level! + 1}",
+                                            style: TextStyles.rajdhaniB.body1
+                                                .colour(Colors.black)),
+                                      ],
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                          style: TextStyles.body4
+                                              .colour(Colors.black),
+                                          children: [
+                                            TextSpan(text: "Unlock to win a "),
+                                            // WidgetSpan(
+                                            //   child: Padding(
+                                            //     padding: EdgeInsets.only(
+                                            //         bottom:
+                                            //             SizeConfig.padding3),
+                                            //     child: SvgPicture.asset(
+                                            //       Assets
+                                            //           .levelUpUnRedeemedGoldenTicketBG,
+                                            //       height: SizeConfig.body5,
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                            TextSpan(text: " scratch card ")
+                                          ]),
+                                    )
                                   ],
                                 ),
                               ),

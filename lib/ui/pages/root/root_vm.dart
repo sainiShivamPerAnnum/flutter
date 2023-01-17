@@ -32,16 +32,10 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_instant_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -97,8 +91,6 @@ class RootViewModel extends BaseViewModel {
   }
 
   onInit() {
-    _rootController.navItems.clear();
-    DynamicUiUtils.navBar.forEach(getNavItems);
     _rootController.currentNavBarItemModel =
         _rootController.navItems.values.first;
 
@@ -132,6 +124,7 @@ class RootViewModel extends BaseViewModel {
       locator<RootController>().navItems;
 
   onDispose() {
+    _rootController.navItems.clear();
     AppState.isUserSignedIn = false;
     _fcmListener!.addIncomingMessageListener(null);
   }
@@ -182,7 +175,8 @@ class RootViewModel extends BaseViewModel {
     AppState.delegate!.appState.setCurrentTabIndex = index;
     _rootController.onChange(_rootController.navItems.values.toList()[index]);
     Haptic.vibrate();
-    if (AppState.delegate!.appState.getCurrentTabIndex == 0)
+    if (_rootController.currentNavBarItemModel ==
+        RootController.journeyNavBarItem)
       _journeyService.checkForMilestoneLevelChange();
     if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
@@ -200,37 +194,6 @@ class RootViewModel extends BaseViewModel {
           }
         }
       });
-    }
-  }
-
-  void getNavItems(String navItem) {
-    switch (navItem) {
-      case "JN":
-        _rootController.navItems
-            .putIfAbsent(JourneyView(), () => RootController.journeyNavBarItem);
-
-        break;
-
-      case "SV":
-        _rootController.navItems
-            .putIfAbsent(Save(), () => RootController.saveNavBarItem);
-        break;
-      case "TM":
-        _rootController.navItems
-            .putIfAbsent(TambolaWrapper(), () => RootController.tambolaNavBar);
-        break;
-
-      case "WN":
-      case "AC":
-        _rootController.navItems
-            .putIfAbsent(Win(), () => RootController.winNavBarItem);
-        break;
-      case "PL":
-        _rootController.navItems
-            .putIfAbsent(Play(), () => RootController.playNavBarItem);
-        break;
-
-      default:
     }
   }
 

@@ -605,6 +605,11 @@ class BaseUtil extends ChangeNotifier {
   //         PageAction(state: PageState.addPage, page: TGamePageConfig);
   // }
 
+  static int getRandomRewardAmount(index) {
+    List rewardList = [50, 100, 150, 200, 250, 500];
+    return rewardList[Random().nextInt(rewardList.length)];
+  }
+
   bool isOldCustomer() {
     //all users before april 2021 are marked old
     if (userCreationTimestamp == null) return false;

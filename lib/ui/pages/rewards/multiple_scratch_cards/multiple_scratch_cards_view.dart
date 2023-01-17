@@ -76,150 +76,171 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                     ),
                   ),
                   //Scratch Card Pageview
-                  Column(
-                    children: [
-                      Container(
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.screenWidth! * 0.5,
-                        child: PageView.builder(
-                          controller: model.pageController,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: model.scratchCardList.length,
-                          itemBuilder: (ctx, i) {
-                            return ValueListenableBuilder(
-                                valueListenable: model.pageNotifier!,
-                                builder: (ctx, double value, _) {
-                                  final factorChange = (value - i).abs();
-                                  return Transform.scale(
-                                    scale: lerpDouble(1.2, 0.8, factorChange),
-                                    child: Container(
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig
-                                                .pageHorizontalMargins),
-                                        width: SizeConfig.screenWidth,
-                                        height: SizeConfig.screenWidth! * 0.7,
-                                        child: AnimatedSwitcher(
-                                          duration: Duration(milliseconds: 500),
-                                          child: model.scratchCardList[i].gtId
-                                                      ?.isEmpty ??
-                                                  true
-                                              ? UnRedeemedGoldenScratchCard(
-                                                  isLevelChange: false,
-                                                  width:
-                                                      SizeConfig.screenWidth!,
-                                                )
-                                              : Scratcher(
-                                                  color: Colors.transparent,
-                                                  accuracy: ScratchAccuracy.low,
-                                                  brushSize: 50,
-                                                  // enabled: model.state == ViewState.Idle
-                                                  //     ? true
-                                                  //     : false,
-
-                                                  threshold: 20,
-                                                  key:
-                                                      model.scratchStateKeys[i],
-                                                  onScratchStart: () {
-                                                    // model.isCardScratchStarted = true;
-                                                    model.showScratchGuideLabel =
-                                                        false;
-                                                  },
-                                                  onChange: ((value) => model
-                                                          .currentCardScratchPercentage =
-                                                      value),
-                                                  onThreshold: () {
-                                                    // if (model
-                                                    //     .scratchCardList[i].isRewarding!) {
-                                                    // model.isShimmerEnabled = true;
-
-                                                    // Future.delayed(
-                                                    //     Duration(
-                                                    //       seconds: 3,
-                                                    //     ), () {
-                                                    //   model.isShimmerEnabled = false;
-                                                    // });
-                                                    // _controller.forward().then(
-                                                    //     (value) =>
-                                                    //         _controller.reverse());
-                                                    // }
-
-                                                    model.redeemScratchCard(i);
-                                                  },
-                                                  image: Image.asset(
-                                                    model.scratchCardList[i]
-                                                            .isLevelChange!
-                                                        ? Assets
-                                                            .levelUpUnredeemedScratchCardBGPNG
-                                                        : Assets
-                                                            .unredeemedScratchCardBG_png,
-                                                    fit: BoxFit.contain,
-                                                    height: SizeConfig
-                                                            .screenWidth! *
-                                                        0.6,
-                                                    width: SizeConfig
-                                                            .screenWidth! *
-                                                        0.6,
-                                                  ),
-                                                  child:
-                                                      RedeemedGoldenScratchCard(
-                                                    ticket: model
-                                                        .scratchCardList[i],
-                                                    width: SizeConfig
-                                                            .screenWidth! *
-                                                        0.6,
-                                                  ),
-                                                ),
-                                        )),
-                                  );
-                                });
-                          },
-                        ),
-                      ),
-                      //Currently viewing scratch card description (iff card is scratched)
-                      Container(
-                        child: Column(children: [
-                          SizedBox(height: SizeConfig.padding24),
-                          AnimatedContainer(
-                            decoration: BoxDecoration(),
-                            duration: Duration(seconds: 1),
-                            curve: Curves.easeIn,
-                            width: SizeConfig.screenWidth,
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins),
-                            child: Text(locale.btnCongratulations,
-                                style: TextStyles.rajdhaniB.title2
-                                    .colour(Colors.white),
-                                textAlign: TextAlign.center),
-                          ),
+                  if (!model.showRewardLottie)
+                    AnimatedScale(
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeInCubic,
+                      scale: model.cardScale,
+                      child: Column(
+                        children: [
                           Container(
                             width: SizeConfig.screenWidth,
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(
-                                horizontal:
-                                    SizeConfig.pageHorizontalMargins * 2),
-                            child: AnimatedSwitcher(
-                              duration: Duration(seconds: 1),
-                              child: (model
-                                          .scratchCardList[
-                                              model.pageNotifier!.value.toInt()]
-                                          .note ??
-                                      locale.wonGT)
-                                  .beautify(
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(UiConstants.kTextColor2),
-                                      boldStyle: TextStyles.sourceSansB.body3
-                                          .colour(UiConstants.kTextColor),
-                                      italicStyle: TextStyles.sourceSans.body3
-                                          .colour(UiConstants.kTextColor2)
-                                          .italic,
-                                      alignment: TextAlign.center),
+                            height: SizeConfig.screenWidth! * 0.5,
+                            child: PageView.builder(
+                              controller: model.pageController,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: model.scratchCardList.length,
+                              itemBuilder: (ctx, i) {
+                                return ValueListenableBuilder(
+                                    valueListenable: model.pageNotifier!,
+                                    builder: (ctx, double value, _) {
+                                      final factorChange = (value - i).abs();
+                                      return Transform.scale(
+                                        scale:
+                                            lerpDouble(1.2, 0.8, factorChange),
+                                        child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: SizeConfig
+                                                    .pageHorizontalMargins),
+                                            width: SizeConfig.screenWidth,
+                                            height:
+                                                SizeConfig.screenWidth! * 0.7,
+                                            child: AnimatedSwitcher(
+                                              duration:
+                                                  Duration(milliseconds: 500),
+                                              child: model.scratchCardList[i]
+                                                          .gtId?.isEmpty ??
+                                                      true
+                                                  ? UnRedeemedGoldenScratchCard(
+                                                      isLevelChange: false,
+                                                      width: SizeConfig
+                                                          .screenWidth!,
+                                                    )
+                                                  : Scratcher(
+                                                      color: Colors.transparent,
+                                                      accuracy:
+                                                          ScratchAccuracy.low,
+                                                      brushSize: 50,
+                                                      // enabled: model.state == ViewState.Idle
+                                                      //     ? true
+                                                      //     : false,
+
+                                                      threshold: 20,
+                                                      key: model
+                                                          .scratchStateKeys[i],
+                                                      onScratchStart: () {
+                                                        // model.isCardScratchStarted = true;
+                                                        model.showScratchGuideLabel =
+                                                            false;
+                                                      },
+                                                      onChange: ((value) =>
+                                                          model.currentCardScratchPercentage =
+                                                              value),
+                                                      onThreshold: () {
+                                                        // if (model
+                                                        //     .scratchCardList[i].isRewarding!) {
+                                                        // model.isShimmerEnabled = true;
+
+                                                        // Future.delayed(
+                                                        //     Duration(
+                                                        //       seconds: 3,
+                                                        //     ), () {
+                                                        //   model.isShimmerEnabled = false;
+                                                        // });
+                                                        // _controller.forward().then(
+                                                        //     (value) =>
+                                                        //         _controller.reverse());
+                                                        // }
+
+                                                        model.redeemScratchCard(
+                                                            i);
+                                                      },
+                                                      image: Image.asset(
+                                                        model.scratchCardList[i]
+                                                                .isLevelChange!
+                                                            ? Assets
+                                                                .levelUpUnredeemedScratchCardBGPNG
+                                                            : Assets
+                                                                .unredeemedScratchCardBG_png,
+                                                        fit: BoxFit.contain,
+                                                        height: SizeConfig
+                                                                .screenWidth! *
+                                                            0.6,
+                                                        width: SizeConfig
+                                                                .screenWidth! *
+                                                            0.6,
+                                                      ),
+                                                      child:
+                                                          RedeemedGoldenScratchCard(
+                                                        ticket: model
+                                                            .scratchCardList[i],
+                                                        width: SizeConfig
+                                                                .screenWidth! *
+                                                            0.6,
+                                                      ),
+                                                    ),
+                                            )),
+                                      );
+                                    });
+                              },
                             ),
                           ),
-                        ]),
+                          //Currently viewing scratch card description (iff card is scratched)
+                          Container(
+                            child: Column(children: [
+                              SizedBox(height: SizeConfig.padding24),
+                              AnimatedContainer(
+                                decoration: BoxDecoration(),
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeIn,
+                                width: SizeConfig.screenWidth,
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: Text(locale.btnCongratulations,
+                                    style: TextStyles.rajdhaniB.title2
+                                        .colour(Colors.white),
+                                    textAlign: TextAlign.center),
+                              ),
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins * 2),
+                                child: AnimatedSwitcher(
+                                  duration: Duration(seconds: 1),
+                                  child:
+                                      (model
+                                                  .scratchCardList[model
+                                                      .pageNotifier!.value
+                                                      .toInt()]
+                                                  .note ??
+                                              locale.wonGT)
+                                          .beautify(
+                                              style: TextStyles
+                                                  .sourceSans.body3
+                                                  .colour(
+                                                      UiConstants.kTextColor2),
+                                              boldStyle: TextStyles
+                                                  .sourceSansB.body3
+                                                  .colour(UiConstants
+                                                      .kTextColor),
+                                              italicStyle:
+                                                  TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor2)
+                                                      .italic,
+                                              alignment: TextAlign.center),
+                                ),
+                              ),
+                            ]),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
                   Container(
                       height: kToolbarHeight + SizeConfig.viewInsets.bottom),
                 ],
@@ -238,7 +259,7 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                     ),
                   ),
                 ),
-              if (model.showScratchGuideLabel)
+              if (model.showScratchGuideLabel && !model.showRewardLottie)
                 Align(
                   alignment: Alignment.center,
                   child: IgnorePointer(
@@ -247,12 +268,55 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                       margin: EdgeInsets.only(
                           bottom: SizeConfig.screenWidth! * 0.1),
                       width: SizeConfig.screenWidth! * 0.53,
-                      color: Colors.amber,
+                      color: UiConstants.kScratchHereStripColor,
                       alignment: Alignment.center,
                       height: SizeConfig.screenWidth! * 0.1,
                       child: BreathingText(
                         alertText: "Scratch Here",
                         textStyle: TextStyles.sourceSansSB.body1,
+                      ),
+                    ),
+                  ),
+                ),
+              if (model.showRewardLottie)
+                Align(
+                  alignment: Alignment.center,
+                  child: IgnorePointer(
+                    ignoring: true,
+                    child: Column(
+                      children: [
+                        Transform.scale(
+                          scale: 2,
+                          child: Lottie.asset(
+                            Assets.multiReward,
+                            width: SizeConfig.screenWidth,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              if (model.showRewardLottie)
+                Align(
+                  alignment: Alignment.center,
+                  child: IgnorePointer(
+                    ignoring: true,
+                    child: Container(
+                      margin:
+                          EdgeInsets.only(top: SizeConfig.screenWidth! * 0.3),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Fetching rewards",
+                              style: TextStyles.rajdhaniB.title2
+                                  .colour(Colors.white),
+                              textAlign: TextAlign.center),
+                          Text(
+                            "Please wait...",
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor2),
+                          )
+                        ],
                       ),
                     ),
                   ),
