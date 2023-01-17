@@ -91,7 +91,7 @@ class _JourneyViewState extends State<JourneyView>
                                   AvatarPathPainter(model: model),
                                 ActiveMilestoneBaseGlow(),
                                 Milestones(model: model),
-                                FocusRing(),
+                                if (service.showFocusRing) FocusRing(),
                                 LevelBlurView(),
                                 PrizeToolTips(model: model),
                                 MilestoneTooltip(model: model),

@@ -171,6 +171,8 @@ class AppState extends ChangeNotifier {
 
   static dump() {
     isRootAvailableForIncomingTaskExecution = true;
+    isFirstTimeJourneyOpened = false;
+    isJourneyFirstTab = false;
     isFirstTime = false;
   }
   // setLastTapIndex() {
