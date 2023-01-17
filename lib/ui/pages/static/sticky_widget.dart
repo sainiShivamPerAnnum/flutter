@@ -48,7 +48,7 @@ class StickyNote extends StatelessWidget {
                   width: 8,
                 ),
                 Text(
-                  "invested",
+                  "Saving",
                   style: TextStyles.sourceSansSB.body3,
                 )
               ],

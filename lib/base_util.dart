@@ -301,7 +301,7 @@ class BaseUtil extends ChangeNotifier {
   static openGameModalSheet(String game, Gm? gameModel) {
     return openModalBottomSheet(
       isScrollControlled: true,
-      enableDrag: true,
+      enableDrag: false,
       isBarrierDismissible: true,
       addToScreenStack: true,
       content: WebGameModalSheet(

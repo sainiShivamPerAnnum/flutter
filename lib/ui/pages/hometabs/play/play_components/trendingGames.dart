@@ -50,7 +50,7 @@ class TrendingGamesSection extends StatelessWidget {
                 ),
                 SvgPicture.asset(
                   Assets.token,
-                  height: SizeConfig.padding16,
+                  height: SizeConfig.padding20,
                 ),
                 SizedBox(
                   width: SizeConfig.padding4,
@@ -159,8 +159,8 @@ class TrendingGames extends StatelessWidget {
             }));
         Haptic.vibrate();
 
-        BaseUtil.openGameModalSheet(game!.gameCode!,
-            getGameInfo(game!.gameCode!));
+        BaseUtil.openGameModalSheet(
+            game!.gameCode!, getGameInfo(game!.gameCode!));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -195,7 +195,8 @@ class TrendingGames extends StatelessWidget {
             // SizedBox(height: SizeConfig.padding10),
             Spacer(),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding10, vertical: 4),
               decoration: BoxDecoration(
                 color: UiConstants.kBackgroundColor,
                 border: Border.all(color: UiConstants.kTextColor2),
