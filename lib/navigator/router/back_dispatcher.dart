@@ -110,7 +110,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           didPopRoute();
           _webGameViewModel!
               .handleGameSessionEnd(duration: Duration(milliseconds: 500));
-          locator<UserStatsRepo>().getGameStats();
         },
         false,
       );

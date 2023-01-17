@@ -343,7 +343,7 @@ class TransactionTile extends StatelessWidget {
           dense: true,
           title: Text(
               txnHistoryService.getTileSubtitle(
-                txn.type.toString(),
+                txn.type!.toUpperCase().toString(),
               ),
               style:
                   TextStyles.sourceSans.body3.colour(UiConstants.kTextColor)),

@@ -496,7 +496,7 @@ class UserRepository extends BaseRepo {
 
       final respone = await APIService.instance.getData(
         ApiPath.userBootUp(
-          userService!.baseUser!.uid,
+          userService.baseUser?.uid,
         ),
         token: token,
         queryParams: queryParameters,

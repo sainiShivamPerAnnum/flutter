@@ -158,7 +158,8 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                                 width: 12,
                               ),
                               Text(
-                                "0",
+                                (widget.model.activeTambolaCardCount ?? 0)
+                                    .toString(),
                                 style: TextStyles.rajdhaniB.body1,
                               )
                             ],
@@ -196,8 +197,9 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                 TambolaLeaderBoard(
                   model: widget.model,
                 ),
+                TermsAndConditions(url: Constants.tambolatnc),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.17,
+                  height: SizeConfig.screenHeight! * 0.18,
                 )
               ],
             ),
@@ -259,6 +261,10 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                             amount: widget.model.ticketSavedAmount);
                       },
                     ),
+                    if (isFromNavigation)
+                      SizedBox(
+                        height: SizeConfig.navBarHeight,
+                      )
                   ],
                 ),
               ),
@@ -301,7 +307,6 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                   SizedBox(
                     height: SizeConfig.padding4,
                   ),
-                  TermsAndConditions(url: Constants.tambolatnc),
                   SizedBox(
                     height: SizeConfig.navBarHeight,
                   )

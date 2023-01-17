@@ -14,7 +14,7 @@ class StickyNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenHeight! * 0.08,
+      height: SizeConfig.screenHeight! * 0.07,
       margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
       decoration: BoxDecoration(
         border:
