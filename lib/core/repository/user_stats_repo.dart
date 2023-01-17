@@ -22,6 +22,7 @@ class UserStatsRepo extends BaseRepo with ChangeNotifier {
 
   late Completer<GameStats> completer;
   Future<void> getGameStats() async {
+    
     completer = Completer();
     final token = await getBearerToken();
     try {
@@ -32,7 +33,7 @@ class UserStatsRepo extends BaseRepo with ChangeNotifier {
       completer.complete(GameStats.fromJson(res['data']));
       notifyListeners();
     } catch (e) {
-      log(e.toString());
+      completer.completeError(e.toString());
     }
   }
 }

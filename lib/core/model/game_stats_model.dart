@@ -105,6 +105,7 @@ class Gm {
       required this.firstPlay,
       required this.streakIntervalStart,
       required this.streakIntervalEnd,
+      required this.lastScore,
       required this.rewards});
 
   final int? plays;
@@ -115,17 +116,20 @@ class Gm {
   final UpdatedOn? streakIntervalStart;
   final UpdatedOn? streakIntervalEnd;
   final Rewards? rewards;
+  final int? lastScore;
 
   factory Gm.fromJson(Map<String, dynamic> json) => Gm(
       plays: json["plays"],
       netScore: json["netScore"],
       topScore: json["topScore"],
       totalSeconds: json["totalSeconds"],
+      lastScore: json['lastScore'],
       firstPlay: UpdatedOn.fromJson(json["firstPlay"]),
       streakIntervalStart: UpdatedOn.fromJson(json["streakIntervalStart"]),
       streakIntervalEnd: UpdatedOn.fromJson(json["streakIntervalEnd"]),
-      rewards:
-          json["totalRewards"] != null ? Rewards.fomJson(json["totalRewards"]) : null);
+      rewards: json["totalRewards"] != null
+          ? Rewards.fomJson(json["totalRewards"])
+          : null);
 
   Map<String, dynamic> toJson() => {
         "plays": plays,

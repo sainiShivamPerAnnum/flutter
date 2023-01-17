@@ -3965,7 +3965,7 @@ class S {
   /// ` Ticket`
   String get tOneTicket {
     return Intl.message(
-      ' Ticket',
+      '1 Ticket',
       name: 'tOneTicket',
       desc: '',
       args: [],

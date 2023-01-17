@@ -227,7 +227,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     await fetchTambola();
 
     tambolaService!.addListener(() {
-      refreshTambolaTickets();
+      if (tambolaService!.isTambolaBoardGettingUpdated) refreshTambolaTickets();
     });
 
     ///check whether to show summary cards or not
@@ -318,7 +318,6 @@ class TambolaHomeViewModel extends BaseViewModel {
     ticketsBeingGenerated = true;
 
     tambolaService!.weeklyTicksFetched = false;
-    tambolaService!.fetchTambolaBoard();
     init();
     notifyListeners();
   }

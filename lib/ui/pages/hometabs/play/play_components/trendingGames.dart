@@ -159,8 +159,8 @@ class TrendingGames extends StatelessWidget {
             }));
         Haptic.vibrate();
 
-        BaseUtil.openGameModalSheet(
-            game!.gameCode!, getGameInfo(game!.gameCode!));
+        BaseUtil.openGameModalSheet(game!.gameCode!,
+            getGameInfo(game!.gameCode!));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -213,7 +213,7 @@ class TrendingGames extends StatelessWidget {
                     height: SizeConfig.padding12,
                     width: SizeConfig.padding12,
                   ),
-                  Text(game!.playCost.toString(),
+                  Text(" " + game!.playCost.toString(),
                       style: TextStyles.sourceSans.body3),
                 ],
               ),

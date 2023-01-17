@@ -118,19 +118,24 @@ class PlayViewModel extends BaseViewModel {
   }
 
   Future<void> setGameStatus() async {
-    gameStats = await _userStatsRepo.completer.future;
-    notifyListeners();
+    final data = await _userStatsRepo.completer.future;
+    if (data.data?.updatedOn?.seconds != gameStats.data?.updatedOn?.seconds) {
+      gameStats = data;
+
+      notifyListeners();
+    }
   }
 
   init() async {
     isGamesListDataLoading = true;
-    locator<UserStatsRepo>().getGameStats();
-    gameStats = await _userStatsRepo.completer.future;
+
     final response = await gamesRepo!.getGames();
-    _winnerService.fetchWinnersForAllGames();
-    _userStatsRepo.addListener(() {
-      setGameStatus();
+
+    locator<UserStatsRepo>().getGameStats();
+    gameStats = await _userStatsRepo.completer.future.catchError((_) {
+      BaseUtil.showNegativeAlert("", "Something went wrong please try again");
     });
+
     showSecurityMessageAtTop =
         _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
     if (response.isSuccess()) {
@@ -139,6 +144,9 @@ class PlayViewModel extends BaseViewModel {
     } else {
       BaseUtil.showNegativeAlert("", response.errorMessage);
     }
+    _userStatsRepo.addListener(() {
+      setGameStatus();
+    });
   }
 
   getOrderedPlayViewItems(PlayViewModel model) {

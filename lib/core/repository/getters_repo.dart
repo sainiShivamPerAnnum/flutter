@@ -269,7 +269,7 @@ class GetterRepository extends BaseRepo {
           logger.d("Page Config: $responseData");
           return ApiResponse<DynamicUI>(model: pageConfig, code: 200);
         },
-      )) as ApiResponse<DynamicUI>;
+      ));
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);

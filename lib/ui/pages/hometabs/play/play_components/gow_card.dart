@@ -85,8 +85,10 @@ class GOWCard extends StatelessWidget {
                       // AppState.delegate!.parseRoute(
                       //   Uri.parse(model.gow!.route!),
                       // );
-                      BaseUtil.openGameModalSheet(model.gow!.gameCode!,
-                          getGameInfo(model.gow!.gameCode!));
+                      BaseUtil.openGameModalSheet(
+                        model.gow!.gameCode!,
+                        getGameInfo(model.gow!.gameCode!),
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(

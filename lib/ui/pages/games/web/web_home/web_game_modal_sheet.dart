@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/model/game_stats_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -35,24 +39,13 @@ class WebGameModalSheet extends StatelessWidget {
             SizedBox(
               height: SizeConfig.screenHeight! * 0.01,
             ),
-            Container(
-              height: 4,
-              width: SizeConfig.screenWidth! * 0.3,
-              decoration: BoxDecoration(
-                  color: Color(0xffD9D9D9).withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(8)),
-            ),
-            SizedBox(
-              height: 24,
-            ),
             SvgPicture.network(
               model.currentGameModel!.icon!,
-              height: SizeConfig.screenHeight! * 0.1,
-              width: SizeConfig.screenHeight! * 0.15,
+              height: SizeConfig.screenHeight! * 0.13,
             ),
             StreamView(model: model, game: game),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: SizeConfig.padding12,
             ),
             Text(
               model.currentGameModel!.gameName!,
@@ -88,7 +81,7 @@ class WebGameModalSheet extends StatelessWidget {
               height: SizeConfig.padding10,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               child: SizedBox(
                 height: SizeConfig.screenHeight! * 0.15,
                 child: Row(
@@ -110,7 +103,7 @@ class WebGameModalSheet extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              SvgPicture.asset(Assets.flyingGhost),
+                              ProfileImageSE(),
                               SizedBox(
                                 height: 8,
                               ),
@@ -121,7 +114,7 @@ class WebGameModalSheet extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "${gameInfo?.netScore ?? "-"}",
+                                "${gameInfo?.lastScore ?? "-"}",
                                 style: TextStyles.rajdhaniSB.title5,
                               )
                             ],
@@ -213,7 +206,7 @@ class WebGameModalSheet extends StatelessWidget {
               height: SizeConfig.padding24,
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
+              padding: EdgeInsets.symmetric(horizontal: 14),
               child: AppPositiveBtn(
                   btnText: "Play",
                   widget: Row(
@@ -233,7 +226,7 @@ class WebGameModalSheet extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(model.currentGameModel!.playCost.toString(),
+                      Text(" " + model.currentGameModel!.playCost.toString(),
                           style: TextStyles.rajdhaniB.body1)
                     ],
                   ),
@@ -264,12 +257,15 @@ class RewardCriteria extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
               "Reward Criteria",
               style: TextStyles.sourceSansSB.colour(Colors.white).body1,
             ),
-            Html(data: htmlData)
+            Html(
+              data: htmlData,
+            )
           ],
         ),
       ),

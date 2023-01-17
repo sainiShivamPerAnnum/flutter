@@ -152,8 +152,7 @@ class WebHomeViewModel extends BaseViewModel {
       BaseUtil.showUsernameInputModalSheet();
       return false;
     }
-    if (checkIfUserIsBannedFromThisGame() &&
-        await checkIfDeviceIsNotAnEmulator()) {
+    if (checkIfUserIsBannedFromThisGame()) {
       return _checkIfUserHasEnoughTokens();
     }
     return false;

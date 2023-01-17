@@ -5,6 +5,7 @@ import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -98,8 +99,13 @@ class WebGameViewModel extends BaseViewModel {
   handleGameRoundEnd(Map<String, dynamic> data) {
     _logger!.d(
         "round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
+
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
       _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
+
+      BaseUtil.showPositiveAlert(
+          "Scratch Card Won!", "You can claim it in the Win section");
+
       ScratchCardService.scratchCardId = data['gt_id'];
     }
     if (data['mlIndex'] != null)
@@ -118,6 +124,9 @@ class WebGameViewModel extends BaseViewModel {
 
   handleGameSessionEnd({Duration? duration}) {
     updateFlcBalance();
+
+    locator<UserStatsRepo>().getGameStats();
+
     _logger!.d("Checking for golden tickets");
     if (ScratchCardService.gameEndMsgText != null &&
         ScratchCardService.gameEndMsgText!.isNotEmpty) {

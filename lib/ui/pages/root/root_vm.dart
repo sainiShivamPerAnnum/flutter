@@ -184,9 +184,9 @@ class RootViewModel extends BaseViewModel {
     Haptic.vibrate();
     if (AppState.delegate!.appState.getCurrentTabIndex == 0)
       _journeyService.checkForMilestoneLevelChange();
-    _tambolaService!.completer.future.then((value) {
-      if (_rootController.currentNavBarItemModel ==
-          RootController.tambolaNavBar) {
+    if (_rootController.currentNavBarItemModel ==
+        RootController.tambolaNavBar) {
+      _tambolaService!.completer.future.then((value) {
         if ((_tambolaService!.initialTicketCount ?? -1) == 0) {
           if (_tambolaService!.userWeeklyBoards!.length > 0) {
             _tambolaService!.initialTicketCount =
@@ -199,8 +199,8 @@ class RootViewModel extends BaseViewModel {
             );
           }
         }
-      }
-    });
+      });
+    }
   }
 
   void getNavItems(String navItem) {
