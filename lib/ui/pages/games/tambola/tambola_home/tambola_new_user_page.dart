@@ -153,8 +153,12 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                     ],
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+                  child: TambolaTicketInfo(),
+                ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+                  margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
                   width: SizeConfig.screenWidth! * 0.9,
                   child: Text(
                     widget.model.game!.description!,
@@ -163,7 +167,6 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                         .colour(Color(0xffD9D9D9).withOpacity(0.41)),
                   ),
                 ),
-                TambolaTicketInfo(),
                 SizedBox(height: SizeConfig.padding20),
                 TambolaPrize(
                   model: widget.model,
