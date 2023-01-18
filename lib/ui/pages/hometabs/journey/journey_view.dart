@@ -370,7 +370,7 @@ class LevelBlurView extends StatelessWidget {
                                             // ),
                                             TextSpan(
                                                 text:
-                                                    " Scratch Card upto ₹${getAmount((levelData.level ?? 0) + 1)}")
+                                                    "Scratch Card upto ₹${getAmount((levelData.level ?? 0) + 1)}")
                                           ]),
                                     )
                                   ],

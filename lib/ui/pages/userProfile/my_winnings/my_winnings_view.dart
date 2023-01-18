@@ -27,45 +27,45 @@ class MyWinningsView extends StatelessWidget {
         model.init();
       },
       builder: (ctx, model, child) {
-        return RefreshIndicator(
-          backgroundColor: Colors.black,
-          onRefresh: () async {
-            await model.init();
-            return Future.value();
-          },
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text(
-                locale.winRewardsTitle,
-                maxLines: 1,
-                overflow: TextOverflow.clip,
-                style: TextStyles.title4.bold.colour(Colors.white),
-              ),
-              elevation: 0.0,
-              backgroundColor: UiConstants.kBackgroundColor,
-              leading: IconButton(
-                onPressed: () {
-                  AppState.backButtonDispatcher!.didPopRoute();
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                ),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              locale.winRewardsTitle,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+              style: TextStyles.title4.bold.colour(Colors.white),
+            ),
+            elevation: 0.0,
+            backgroundColor: UiConstants.kBackgroundColor,
+            leading: IconButton(
+              onPressed: () {
+                AppState.backButtonDispatcher!.didPopRoute();
+              },
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
               ),
             ),
-            backgroundColor: UiConstants.kBackgroundColor,
-            body: Stack(
-              children: [
-                NewSquareBackground(),
-                NotificationListener<ScrollEndNotification>(
-                  onNotification: (ScrollNotification scrollInfo) {
-                    if (scrollInfo.metrics.pixels >=
-                        scrollInfo.metrics.maxScrollExtent) {
-                      print("Max extent reached");
-                      model.fetchMoreCards();
-                    }
+          ),
+          backgroundColor: UiConstants.kBackgroundColor,
+          body: Stack(
+            children: [
+              NewSquareBackground(),
+              NotificationListener<ScrollEndNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels >=
+                      scrollInfo.metrics.maxScrollExtent) {
+                    print("Max extent reached");
+                    model.fetchMoreCards();
+                  }
 
-                    return true;
+                  return true;
+                },
+                child: RefreshIndicator(
+                  backgroundColor: Colors.black,
+                  onRefresh: () async {
+                    await model.init();
+                    return Future.value(true);
                   },
                   child: ListView(
                     shrinkWrap: true,
@@ -75,41 +75,38 @@ class MyWinningsView extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  child: PropertyChangeConsumer<ScratchCardService,
-                          ScratchCardServiceProperties>(
-                      properties: [
-                        ScratchCardServiceProperties.AllScratchCards
-                      ],
-                      builder: (context, service, properties) {
-                        return service!.isFetchingScratchCards &&
-                                service.allScratchCards.isNotEmpty
-                            ? Container(
-                                color: UiConstants.kBackgroundColor3,
-                                width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.all(SizeConfig.padding12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SpinKitWave(
-                                      color: UiConstants.primaryColor,
-                                      size: SizeConfig.padding16,
-                                    ),
-                                    SizedBox(height: SizeConfig.padding4),
-                                    Text(
-                                      "Loading more tickets",
-                                      style:
-                                          TextStyles.body4.colour(Colors.grey),
-                                    )
-                                  ],
-                                ),
-                              )
-                            : SizedBox();
-                      }),
-                )
-              ],
-            ),
+              ),
+              Positioned(
+                bottom: 0,
+                child: PropertyChangeConsumer<ScratchCardService,
+                        ScratchCardServiceProperties>(
+                    properties: [ScratchCardServiceProperties.AllScratchCards],
+                    builder: (context, service, properties) {
+                      return service!.isFetchingScratchCards &&
+                              service.allScratchCards.isNotEmpty
+                          ? Container(
+                              color: UiConstants.kBackgroundColor3,
+                              width: SizeConfig.screenWidth,
+                              padding: EdgeInsets.all(SizeConfig.padding12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SpinKitWave(
+                                    color: UiConstants.primaryColor,
+                                    size: SizeConfig.padding16,
+                                  ),
+                                  SizedBox(height: SizeConfig.padding4),
+                                  Text(
+                                    "Loading more tickets",
+                                    style: TextStyles.body4.colour(Colors.grey),
+                                  )
+                                ],
+                              ),
+                            )
+                          : SizedBox();
+                    }),
+              )
+            ],
           ),
         );
       },

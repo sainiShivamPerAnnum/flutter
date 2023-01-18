@@ -3,6 +3,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
+import 'package:felloapp/ui/elements/texts/breathing_text_widget.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_utils.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scratcher/scratcher.dart';
@@ -103,26 +105,31 @@ class _GTInstantViewState extends State<GTInstantView>
                     ),
                   ),
                 ),
-                Column(
-                  children: [
-                    SafeArea(
-                        child: Container(
-                      height: kToolbarHeight,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: SizeConfig.pageHorizontalMargins,
-                          ),
-                          FelloAppBarBackButton(),
-                          Spacer(),
-                          FelloCoinBar(),
-                          SizedBox(width: SizeConfig.padding20)
-                        ],
-                      ),
-                    )),
-                    //if (model.showMainContent)
-                    Expanded(
-                      child: AnimatedOpacity(
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: SafeArea(
+                      child: Container(
+                    height: kToolbarHeight,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: SizeConfig.pageHorizontalMargins,
+                        ),
+                        FelloAppBarBackButton(),
+                        Spacer(),
+                        FelloCoinBar(),
+                        SizedBox(width: SizeConfig.padding20)
+                      ],
+                    ),
+                  )),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      //if (model.showMainContent)
+                      AnimatedOpacity(
                         opacity: model.showMainContent ? 1 : 0,
                         duration: Duration(milliseconds: 100),
                         curve: Curves.easeInCubic,
@@ -242,9 +249,9 @@ class _GTInstantViewState extends State<GTInstantView>
                             SizedBox(height: SizeConfig.padding24),
                           ],
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
                 if (model.isCardScratched && model.isShimmerEnabled)
                   Align(
@@ -267,11 +274,15 @@ class _GTInstantViewState extends State<GTInstantView>
                       ignoring: true,
                       child: Container(
                         margin: EdgeInsets.only(
-                            bottom: SizeConfig.screenHeight! * 0.14),
-                        child: Lottie.asset(Assets.gtScratch,
-                            fit: BoxFit.contain,
-                            height: SizeConfig.screenWidth,
-                            width: SizeConfig.screenWidth),
+                            bottom: SizeConfig.screenWidth! * 0.1),
+                        width: SizeConfig.screenWidth! * 0.53,
+                        color: UiConstants.kScratchHereStripColor,
+                        alignment: Alignment.center,
+                        height: SizeConfig.screenWidth! * 0.1,
+                        child: BreathingText(
+                          alertText: "Scratch Here",
+                          textStyle: TextStyles.sourceSansSB.body1,
+                        ),
                       ),
                     ),
                   ),
