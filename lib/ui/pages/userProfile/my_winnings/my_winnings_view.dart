@@ -30,7 +30,7 @@ class MyWinningsView extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              locale.winRewardsTitle,
+              "Scratch Card",
               maxLines: 1,
               overflow: TextOverflow.clip,
               style: TextStyles.title4.bold.colour(Colors.white),
