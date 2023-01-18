@@ -1,8 +1,8 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -83,20 +83,20 @@ class _HelpFabState extends State<HelpFab> {
           // locator<ScratchCardService>()
           //     .showInstantScratchCardView(source: GTSOURCE.prize);
 
-          locator<UserRepository>()
-              .getUserById(id: '8NGDOhOuriReoaLpszCc')
-              .then((value) {
-            if (value.isSuccess()) {
-              print(value.model.toString());
-            } else {
-              print(value.errorMessage);
-            }
-          });
+          // locator<UserRepository>()
+          //     .getUserById(id: '8NGDOhOuriReoaLpszCc')
+          //     .then((value) {
+          //   if (value.isSuccess()) {
+          //     print(value.model.toString());
+          //   } else {
+          //     print(value.errorMessage);
+          //   }
+          // });
 
 //Actual Code
-          // trackHelpTappedEvent();
-          // AppState.delegate!
-          //     .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
+          trackHelpTappedEvent();
+          AppState.delegate!
+              .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
         child: AnimatedContainer(
             duration: Duration(seconds: 1),

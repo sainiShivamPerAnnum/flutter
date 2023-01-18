@@ -3975,7 +3975,7 @@ class S {
   /// ` Ticket`
   String get tOneTicket {
     return Intl.message(
-      '1 Ticket',
+      ' Ticket',
       name: 'tOneTicket',
       desc: '',
       args: [],
@@ -6379,6 +6379,16 @@ class S {
     return Intl.message(
       'Offers',
       name: 'offers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personalized offers, just for you`
+  String get offersSubtitle {
+    return Intl.message(
+      'Personalized offers, just for you',
+      name: 'offersSubtitle',
       desc: '',
       args: [],
     );

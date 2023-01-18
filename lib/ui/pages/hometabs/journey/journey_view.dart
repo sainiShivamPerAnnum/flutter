@@ -26,7 +26,6 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -108,7 +107,6 @@ class _JourneyViewState extends State<JourneyView>
                         JRefreshIndicator(model: model),
                       JPageLoader(model: model),
                       LevelUpAnimation(),
-                      if (FlavorConfig.isDevelopment()) CacheClearWidget(),
                     ],
                   ),
           ),
@@ -333,7 +331,7 @@ class LevelBlurView extends StatelessWidget {
                                       SizeConfig.roundness40),
                                 ),
                                 padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding16,
+                                    vertical: SizeConfig.padding8,
                                     horizontal: SizeConfig.padding24),
                                 child: Column(
                                   children: [
@@ -355,22 +353,10 @@ class LevelBlurView extends StatelessWidget {
                                           style: TextStyles.body4
                                               .colour(Colors.black),
                                           children: [
-                                            TextSpan(text: "Unlock to win a "),
-                                            // WidgetSpan(
-                                            //   child: Padding(
-                                            //     padding: EdgeInsets.only(
-                                            //         bottom:
-                                            //             SizeConfig.padding3),
-                                            //     child: SvgPicture.asset(
-                                            //       Assets
-                                            //           .levelUpUnRedeemedGoldenTicketBG,
-                                            //       height: SizeConfig.body5,
-                                            //     ),
-                                            //   ),
-                                            // ),
+                                            TextSpan(text: "Unlock a "),
                                             TextSpan(
                                                 text:
-                                                    "Scratch Card upto ₹${getAmount((levelData.level ?? 0) + 1)}")
+                                                    "Scratch Card worth ₹${getAmount((levelData.level ?? 0) + 1)}")
                                           ]),
                                     )
                                   ],
@@ -553,10 +539,9 @@ class CacheClearWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      left: SizeConfig.pageHorizontalMargins / 2,
-      bottom: SizeConfig.navBarHeight + kBottomNavigationBarHeight,
-      child: Column(
+    return Container(
+      margin: EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
