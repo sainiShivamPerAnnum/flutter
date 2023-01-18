@@ -253,9 +253,9 @@ class TransactionHistoryService
     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
       return locale.btnDeposit.toUpperCase();
     } else if (type == UserTransaction.TRAN_TYPE_PRIZE) {
-      return locale.prizeText;
+      return locale.prizeText.toUpperCase();
     } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-      return locale.withdrawal;
+      return locale.withdrawal.toUpperCase();
     }
     return locale.autoSipText;
   }

@@ -497,7 +497,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                                 width: SizeConfig.padding4,
                                               ),
                                               Text(
-                                                "${(widget.txn.misMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.couponMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.misMap!.containsKey("gtIds") ? widget.txn.misMap!["gtIds"].length : 0 + (widget.txn.misMap?.containsKey("happyHourGtId") ?? false ? 1 : 0))}",
+                                                "${(widget.txn.misMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.couponMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.misMap!.containsKey("gtIds") ? widget.txn.misMap!["gtIds"].length : 0) + (widget.txn.misMap!.containsKey("happyHourGtId") ? 1 : 0)}",
                                                 style:
                                                     TextStyles.rajdhaniSB.body2,
                                               ),
