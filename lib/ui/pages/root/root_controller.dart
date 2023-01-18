@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 class RootController {
   static final tambolaNavBar =
       NavBarItemModel("Tambola", Assets.navTambolaLottie);
-  static final journeyNavBarItem =
+  static final  journeyNavBarItem =
       NavBarItemModel("Journey", Assets.navJourneyLottie);
 
   static final playNavBarItem = NavBarItemModel("Play", Assets.navPlayLottie);

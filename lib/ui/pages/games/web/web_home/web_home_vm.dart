@@ -131,7 +131,7 @@ class WebHomeViewModel extends BaseViewModel {
     isLoading = false;
   }
 
-  trackGameStart() {
+  trackGameStart(int lastScore,int bestScore) {
     _analyticsService.track(
         eventName: AnalyticsEvents.playGameTapped,
         properties:
@@ -139,7 +139,8 @@ class WebHomeViewModel extends BaseViewModel {
           //TODO : add location [Trending, gow,others, etc]
           'Game name': _currentGameModel!.gameName,
           "Entry fee": _currentGameModel!.playCost,
-          "Win upto": _currentGameModel!.prizeAmount,
+          "Last Score":lastScore,
+          "best score":bestScore,
           "Time left for draw Tambola (mins)":
               AnalyticsProperties.getTimeLeftForTambolaDraw(),
           "Tambola Tickets Owned": AnalyticsProperties.getTambolaTicketCount(),
@@ -259,8 +260,8 @@ class WebHomeViewModel extends BaseViewModel {
     return true;
   }
 
-  launchGame() {
-    trackGameStart();
+  launchGame(int lastScore,int bestScore) {
+    trackGameStart(lastScore,bestScore);
     String initialUrl = generateGameUrl();
     _logger!.d("Game Url: $initialUrl");
     AppState.backButtonDispatcher!.didPopRoute();

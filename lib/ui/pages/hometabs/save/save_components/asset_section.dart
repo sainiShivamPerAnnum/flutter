@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -45,6 +46,16 @@ class SaveNetWorthSection extends StatelessWidget {
               },
               onTap: () {
                 Haptic.vibrate();
+
+                locator<AnalyticsService>()
+                    .track(eventName: "Save on Asset Banner", properties: {
+                  "asset name": "LENDBOX",
+                  "balance in gold":
+                      locator<UserService>().userFundWallet?.augGoldBalance ??
+                          0,
+                  "balance in flo":
+                      locator<UserService>().userFundWallet?.wLbBalance ?? 0,
+                });
                 return BaseUtil().openRechargeModalSheet(
                   investmentType: InvestmentType.LENDBOXP2P,
                 );
@@ -68,6 +79,15 @@ class SaveNetWorthSection extends StatelessWidget {
               },
               onTap: () {
                 Haptic.vibrate();
+                locator<AnalyticsService>()
+                    .track(eventName: "Save on Asset Banner", properties: {
+                  "asset name": "LENDBOX",
+                  "balance in gold":
+                      locator<UserService>().userFundWallet?.augGoldBalance ??
+                          0,
+                  "balance in flo":
+                      locator<UserService>().userFundWallet?.wLbBalance ?? 0,
+                });
                 return BaseUtil().openRechargeModalSheet(
                   investmentType: InvestmentType.AUGGOLD99,
                 );

@@ -48,6 +48,8 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum NavBarItem { Journey, Save, Account, Play, Tambola }
+
 class RootViewModel extends BaseViewModel {
   RootViewModel({S? l})
       : locale = l ?? locator<S>(),
@@ -131,53 +133,15 @@ class RootViewModel extends BaseViewModel {
 
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;
-    switch (index) {
-      case 0:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.journeySection,
-            properties: AnalyticsProperties.getDefaultPropertiesMap());
-        break;
-      case 1:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.saveSection,
-            properties: AnalyticsProperties.getDefaultPropertiesMap());
-        break;
-      case 2:
-        {
-          _analyticsService.track(
-              eventName: AnalyticsEvents.playSection,
-              properties:
-                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-                "Time left for draw Tambola (mins)":
-                    AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                "Tambola Tickets Owned":
-                    AnalyticsProperties.getTambolaTicketCount(),
-              }));
-        }
-        break;
-      case 3:
-        {
-          _analyticsService.track(
-              eventName: AnalyticsEvents.winSection,
-              properties:
-                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-                "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
-                "Unscratched Ticket Count": _gtService?.unscratchedTicketsCount,
-                "Scratched Ticket Count":
-                    (_gtService!.activeScratchCards.length) -
-                        _gtService!.unscratchedTicketsCount,
-              }));
-        }
-        break;
-
-      default:
-    }
-    AppState.delegate!.appState.setCurrentTabIndex = index;
     _rootController.onChange(_rootController.navItems.values.toList()[index]);
+
+    AppState.delegate!.appState.setCurrentTabIndex = index;
+    trackEvent(index);
     Haptic.vibrate();
     if (_rootController.currentNavBarItemModel ==
         RootController.journeyNavBarItem)
       _journeyService.checkForMilestoneLevelChange();
+
     if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
       _tambolaService!.completer.future.then((value) {
@@ -310,6 +274,48 @@ class RootViewModel extends BaseViewModel {
           },
         ),
       );
+    }
+  }
+
+  void trackEvent(int index) {
+    if (_rootController.currentNavBarItemModel ==
+        RootController.journeyNavBarItem) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.journeySection,
+          properties: AnalyticsProperties.getDefaultPropertiesMap());
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.saveNavBarItem) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.saveSection,
+          properties: AnalyticsProperties.getDefaultPropertiesMap());
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.playNavBarItem) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.playSection,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Time left for draw Tambola (mins)":
+                AnalyticsProperties.getTimeLeftForTambolaDraw(),
+            "Tambola Tickets Owned":
+                AnalyticsProperties.getTambolaTicketCount(),
+          }));
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.winNavBarItem) {
+      _analyticsService.track(
+          eventName: "Account section tapped",
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
+            "Unscratched Ticket Count": _gtService?.unscratchedTicketsCount,
+            "Scratched Ticket Count": (_gtService!.activeScratchCards.length) -
+                _gtService!.unscratchedTicketsCount,
+          }));
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.tambolaNavBar) {
+      _analyticsService.track(eventName: "Tambola tab tapped", properties: {
+        "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
+        "index": index
+      });
     }
   }
 
