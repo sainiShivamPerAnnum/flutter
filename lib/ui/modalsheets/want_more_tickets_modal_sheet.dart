@@ -129,7 +129,8 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 onTap: () {
                   _analyticsService!
                       .track(eventName: AnalyticsEvents.earnMoreRefer);
-                  AppState.backButtonDispatcher!.didPopRoute();
+                  while (AppState.screenStack.length > 1)
+                    AppState.backButtonDispatcher!.didPopRoute();
                   AppState.delegate!.appState.currentAction = PageAction(
                       state: PageState.addPage,
                       page: ReferralDetailsPageConfig);
@@ -137,19 +138,20 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               ),
               SizedBox(height: SizeConfig.padding16),
               if (AppConfig.getValue(AppConfigKey.autosaveActive) as bool)
-                // FelloTile(
-                //   leadingAsset: Assets.repeat,
-                //   title: locale.saveAutoSaveTitle,
-                //   subtitle: locale.saveAutoSaveSubTitle,
-                //   trailingIcon: Icons.arrow_forward_ios_rounded,
-                //   onTap: () {
-                //     _analyticsService!
-                //         .track(eventName: AnalyticsEvents.earnMoreRefer);
-                //     AppState.backButtonDispatcher!.didPopRoute();
-                //     AppState.delegate!.parseRoute(Uri.parse("augDetails"));
-                //   },
-                // ),
-                SizedBox(height: SizeConfig.padding24),
+                FelloTile(
+                  leadingAsset: Assets.repeat,
+                  title: locale.saveAutoSaveTitle,
+                  subtitle: locale.saveAutoSaveSubTitle,
+                  trailingIcon: Icons.arrow_forward_ios_rounded,
+                  onTap: () {
+                    _analyticsService!
+                        .track(eventName: AnalyticsEvents.earnMoreRefer);
+                    while (AppState.screenStack.length > 1)
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.delegate!.parseRoute(Uri.parse("augDetails"));
+                  },
+                ),
+              SizedBox(height: SizeConfig.padding24),
             ]),
           ),
 

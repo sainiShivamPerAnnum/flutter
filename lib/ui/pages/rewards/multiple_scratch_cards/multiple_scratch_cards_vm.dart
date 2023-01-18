@@ -152,9 +152,11 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
   Future<void> _performPostScratchProcessing(int index) async {
     if (index < scratchCardList.length - 1) {
       int nextPageIndex = index + 1;
-      pageController!.animateToPage(nextPageIndex,
-          duration: Duration(seconds: 1), curve: Curves.easeInCubic);
-      _performPreScratchProcessing(nextPageIndex);
+      Future.delayed(Duration(milliseconds: 500), () {
+        pageController!.animateToPage(nextPageIndex,
+            duration: Duration(seconds: 1), curve: Curves.easeInCubic);
+        _performPreScratchProcessing(nextPageIndex);
+      });
     } else {
       log("Last scratch card, exiting view");
       AppState.isInstantGtViewInView = true;

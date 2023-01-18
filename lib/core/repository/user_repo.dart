@@ -269,7 +269,7 @@ class UserRepository extends BaseRepo {
         token: token,
       );
 
-      logger!.d("Device added");
+      logger!.d("Device added: $_body");
     } catch (e) {
       logger!.e(e);
     }

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -100,31 +99,21 @@ class GameView extends StatelessWidget {
                       if (message.message == 'insufficient tokens' &&
                           exitCounter == 1) {
                         model.updateFlcBalance();
-                        log("Close the game view and open save view");
-                        AppState.isWebGameLInProgress = false;
-                        AppState.isWebGamePInProgress = false;
-                        AppState.backButtonDispatcher!.didPopRoute();
-                        Future.delayed(
-                          Duration(milliseconds: 500),
-                          () {
-                            locator<UserStatsRepo>().getGameStats();
-                            BaseUtil.openModalBottomSheet(
-                              addToScreenStack: true,
-                              backgroundColor: UiConstants.gameCardColor,
-                              content: WantMoreTicketsModalSheet(
-                                isInsufficientBalance: true,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft:
-                                    Radius.circular(SizeConfig.roundness24),
-                                topRight:
-                                    Radius.circular(SizeConfig.roundness24),
-                              ),
-                              hapticVibrate: true,
-                              isScrollControlled: true,
-                              isBarrierDismissible: true,
-                            );
-                          },
+
+                        locator<UserStatsRepo>().getGameStats();
+                        BaseUtil.openModalBottomSheet(
+                          addToScreenStack: true,
+                          backgroundColor: UiConstants.gameCardColor,
+                          content: WantMoreTicketsModalSheet(
+                            isInsufficientBalance: true,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness24),
+                            topRight: Radius.circular(SizeConfig.roundness24),
+                          ),
+                          hapticVibrate: true,
+                          isScrollControlled: true,
+                          isBarrierDismissible: true,
                         );
                       }
                     },

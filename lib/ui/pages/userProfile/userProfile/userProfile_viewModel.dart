@@ -72,6 +72,7 @@ class UserProfileVM extends BaseViewModel {
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
   S locale = locator<S>();
+  final AppState _appstate = locator<AppState>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final PaytmService? _paytmService = locator<PaytmService>();
@@ -535,7 +536,7 @@ class UserProfileVM extends BaseViewModel {
                 _bankAndKycService!.dump();
                 ScratchCardService.dump();
                 _tambolaRepo.dump();
-                AppState.dump();
+                _appstate.dump();
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);

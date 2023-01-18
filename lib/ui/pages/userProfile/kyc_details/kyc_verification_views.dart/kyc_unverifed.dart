@@ -1,12 +1,16 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -68,6 +72,18 @@ class KycUnVerifiedView extends StatelessWidget {
                               Log(model.capturedImage!.path);
                             }
                           } catch (e) {
+                            final _internalOpsService =
+                                locator<InternalOpsService>();
+                            final _userService = locator<UserService>();
+                            _internalOpsService.logFailure(
+                              _userService.baseUser?.uid ?? '',
+                              FailType.KycImageCaptureFailed,
+                              {
+                                'message': "Kyc image caputre failed",
+                                'reason': e.toString()
+                              },
+                            );
+
                             model.permissionFailureCount += 1;
                             print(e.runtimeType);
                             final Permission camera_permission =

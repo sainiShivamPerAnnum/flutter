@@ -26,6 +26,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -100,7 +101,9 @@ class _JourneyViewState extends State<JourneyView>
                           ),
                         ),
                       ),
-                      HelpFab(),
+                      if (DynamicUiUtils.helpFab.actionUri != null &&
+                          DynamicUiUtils.helpFab.actionUri.isNotEmpty)
+                        HelpFab(),
                       JourneyAppBar(),
                       JourneyBannersView(),
                       if (model.isRefreshing || service.isRefreshing)
@@ -353,10 +356,9 @@ class LevelBlurView extends StatelessWidget {
                                           style: TextStyles.body4
                                               .colour(Colors.black),
                                           children: [
-                                            TextSpan(text: "Unlock a "),
                                             TextSpan(
                                                 text:
-                                                    "Scratch Card worth ₹${getAmount((levelData.level ?? 0) + 1)}")
+                                                    "Win Scratch Card upto ₹${getAmount((levelData.level ?? 0) + 1)}")
                                           ]),
                                     )
                                   ],

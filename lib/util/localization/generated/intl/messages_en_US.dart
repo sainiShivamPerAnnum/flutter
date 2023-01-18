@@ -177,7 +177,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Better Luck Next Time"),
         "blogs": MessageLookupByLibrary.simpleMessage("Blogs"),
         "blogsSubTitle": MessageLookupByLibrary.simpleMessage(
-            "Read about the world of games and finance"),
+            "Read about the world of finance"),
         "blogsTitle": MessageLookupByLibrary.simpleMessage("Fin-gyan"),
         "bought": MessageLookupByLibrary.simpleMessage("Bought"),
         "boxFloTitles1":
