@@ -16,6 +16,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/score_reject_dialog.dart';
 import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -103,8 +104,8 @@ class WebGameViewModel extends BaseViewModel {
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
       _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
 
-      BaseUtil.showPositiveAlert(
-          "Scratch Card Won!", "You can claim it in the Win section");
+      BaseUtil.showPositiveAlert("You have won a Scratch Card!",
+          "Scratch card has been added in the Account Section");
 
       ScratchCardService.scratchCardId = data['gt_id'];
     }
@@ -143,7 +144,11 @@ class WebGameViewModel extends BaseViewModel {
       });
       return;
     }
-    _gtService!.fetchAndVerifyScratchCardByID();
+    _gtService!.fetchAndVerifyScratchCardByID().then((value) {
+      if (value) {
+        _gtService!.showInstantScratchCardView(source: GTSOURCE.game);
+      }
+    });
   }
 
   //helper

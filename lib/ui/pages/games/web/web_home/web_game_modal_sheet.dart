@@ -111,13 +111,13 @@ class WebGameModalSheet extends StatelessWidget {
                                 height: 8,
                               ),
                               Text(
-                                "Last Score",
+                                "Your best",
                                 style: TextStyles.sourceSans.body3.colour(
                                   Color(0xffFFD979),
                                 ),
                               ),
                               Text(
-                                "${gameInfo?.lastScore ?? "-"}",
+                                "${gameInfo?.topScore ?? "-"}",
                                 style: TextStyles.rajdhaniSB.title5,
                               )
                             ],
@@ -148,12 +148,12 @@ class WebGameModalSheet extends StatelessWidget {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     Text(
-                                      "Your best",
+                                      "Last Score",
                                       style: TextStyles.sourceSans.body3.colour(
                                           UiConstants.kTextFieldTextColor),
                                     ),
                                     Text(
-                                      "${gameInfo?.topScore ?? "-"}",
+                                      "${gameInfo?.lastScore ?? "-"}",
                                       style: TextStyles.rajdhaniSB.body1.colour(
                                         UiConstants.kTextFieldTextColor,
                                       ),
@@ -216,7 +216,7 @@ class WebGameModalSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "PLAY FOR ",
+                        "PLAY WITH ",
                         style: TextStyles.rajdhaniB.body1,
                       ),
                       ClipOval(
@@ -252,26 +252,8 @@ class RewardCriteria extends StatelessWidget {
   final String htmlData;
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Color(0xff49494C).withOpacity(0.8),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              "Reward Criteria",
-              style: TextStyles.sourceSansSB.colour(Colors.white).body1,
-            ),
-            Html(
-              data: htmlData,
-            )
-          ],
-        ),
-      ),
+    return Html(
+      data: htmlData,
     );
   }
 }

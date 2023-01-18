@@ -18,9 +18,7 @@ class TermsAndConditions extends StatelessWidget {
       child: Center(
         child: GestureDetector(
           onTap: () async {
-            if (await canLaunchUrl(Uri.parse(url))) {
-              launchUrl(Uri.parse(url));
-            }
+            AppState.delegate!.parseRoute(Uri.parse(url));
           },
           child: Text(
             "Terms and Conditions",

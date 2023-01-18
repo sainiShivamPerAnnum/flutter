@@ -339,19 +339,18 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     .colour(Color(0XFF9AB5C4)),
                               ),
                             ),
-                            if (widget.txn.type ==
-                                UserTransaction.TRAN_TYPE_WITHDRAW)
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: SizedBox(
-                                  width: SizeConfig.screenWidth! * 0.7,
-                                  child: Text(
-                                    "Tokens and Tambola Tickets will be deducted whenever you withdraw",
-                                    style: TextStyles.sourceSans
-                                        .colour(Color(0xffA0A0A0)),
-                                  ),
+                            // if (widget.txn.type ==
+                            //     UserTransaction.TRAN_TYPE_WITHDRAW)
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: SizedBox(
+                                child: Text(
+                                  "Tokens and Tambola Tickets are deducted for withdrawals",
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(Color(0xffA0A0A0)),
                                 ),
                               ),
+                            ),
                             SizedBox(
                               height: SizeConfig.padding12,
                             ),
@@ -467,10 +466,14 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                         false) ||
                                     ((widget.txn.misMap?.containsKey("gtIds") ??
                                             false) &&
-                                        widget.txn.misMap?["gtIds"].length >
+                                        widget
+                                                .txn.misMap?["gtIds"].length >
                                             0) ||
                                     (widget.txn.couponMap
                                             ?.containsKey("gtIds") ??
+                                        false) ||
+                                    (widget.txn.misMap
+                                            ?.containsKey("happyHourGtId") ??
                                         false))
                                   Expanded(
                                     child: Container(
@@ -494,7 +497,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                                 width: SizeConfig.padding4,
                                               ),
                                               Text(
-                                                "${(widget.txn.misMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.couponMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.misMap!.containsKey("gtIds") ? widget.txn.misMap!["gtIds"].length : 0)}",
+                                                "${(widget.txn.misMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.couponMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.misMap!.containsKey("gtIds") ? widget.txn.misMap!["gtIds"].length : 0 + (widget.txn.misMap?.containsKey("happyHourGtId") ?? false ? 1 : 0))}",
                                                 style:
                                                     TextStyles.rajdhaniSB.body2,
                                               ),
@@ -511,8 +514,6 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                       ),
                                     ),
                                   )
-                                else
-                                  Expanded(child: SizedBox())
                               ],
                             ),
                           ]

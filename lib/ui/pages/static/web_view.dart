@@ -50,7 +50,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ],
       ),
       body: WebView(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         initialUrl: widget.url,
         javascriptMode: JavascriptMode.unrestricted,
         onPageFinished: (_) => viewLoader = false,

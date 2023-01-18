@@ -92,12 +92,12 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isTambolaBoardGettingUpdated = false;
+  bool isTambolaBoardUpdated = false;
 
   Future<void> fetchTambolaBoard() async {
     completer = Completer();
     if (!_weeklyTicksFetched) {
-      isTambolaBoardGettingUpdated = true;
+      isTambolaBoardUpdated = true;
       _weeklyTicksFetched = true;
       _logger!.d("Fetching Tambola tickets");
       // ticketsLoaded = false;
@@ -110,9 +110,9 @@ class TambolaService extends ChangeNotifier {
             userWeeklyBoards!.length != boards.length) {
           notifyListeners();
         }
-        isTambolaBoardGettingUpdated = false;
+        isTambolaBoardUpdated = false;
         userWeeklyBoards = boards;
-        _logger!.d(boards.length);
+        
         TambolaService.ticketCount = boards.length;
         // _currentBoard = null;
         // _currentBoardView = null;
