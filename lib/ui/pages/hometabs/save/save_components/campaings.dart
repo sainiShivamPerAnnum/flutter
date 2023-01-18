@@ -27,7 +27,7 @@ class Campaigns extends StatelessWidget {
       children: [
         TitleSubtitleContainer(
           title: locale.offers,
-          // subTitle: locale.contestTitle,
+          subTitle: locale.offersSubtitle,
         ),
         CampaignCardSection(saveVm: model),
       ],

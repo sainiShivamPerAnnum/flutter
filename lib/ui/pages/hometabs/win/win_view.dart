@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -17,6 +18,7 @@ import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.da
 import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -436,6 +438,7 @@ class Win extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding44,
                       ),
+                      if (FlavorConfig.isDevelopment()) CacheClearWidget(),
 
                       //Leader Board
                       Padding(
@@ -454,7 +457,7 @@ class Win extends StatelessWidget {
                       ),
 
                       SizedBox(
-                        height: SizeConfig.navBarHeight,
+                        height: SizeConfig.navBarHeight * 2,
                       ),
                     ],
                   ),

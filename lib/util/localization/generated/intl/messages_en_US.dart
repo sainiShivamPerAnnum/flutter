@@ -778,6 +778,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "obuniqueNameText": MessageLookupByLibrary.simpleMessage(
             "This will be your unique name across our games and challenges leaderboard"),
         "offers": MessageLookupByLibrary.simpleMessage("Offers"),
+        "offersSubtitle": MessageLookupByLibrary.simpleMessage(
+            "Personalized offers, just for you"),
         "offline": MessageLookupByLibrary.simpleMessage("Offline"),
         "ohNo": MessageLookupByLibrary.simpleMessage("Oh no.."),
         "onReaching": MessageLookupByLibrary.simpleMessage(" on reaching "),

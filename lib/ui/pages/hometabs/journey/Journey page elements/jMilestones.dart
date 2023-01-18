@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -323,7 +322,7 @@ class StaticMilestone extends StatelessWidget {
                                       Text("${milestone.tooltip}",
                                           style: TextStyles.sourceSansSB.body3),
                                       Text(
-                                        "Win scratch card worth upto ₹${BaseUtil.getRandomRewardAmount(milestone.index)}",
+                                        "Win Scratch Card",
                                         style: TextStyles.sourceSansSB.body5
                                             .colour(UiConstants.kTextColor3),
                                       ),
