@@ -53,6 +53,7 @@ class ProfileHeader extends StatelessWidget {
           if (model.isNewUser)
             Text(
               locale.obChangeAvatar,
+              textAlign: TextAlign.center,
               style:
                   TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
             ),

@@ -1,5 +1,6 @@
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -22,6 +23,7 @@ class MilestoneTooltip extends StatelessWidget {
           JourneyServiceProperties.Pages,
         ],
         builder: (context, serviceModel, properties) {
+          List<int> levelChangePrev = [6, 10, 15, 20, 22];
           return SizedBox(
             width: model!.pageWidth,
             height: model!.currentFullViewHeight,
@@ -35,41 +37,101 @@ class MilestoneTooltip extends StatelessWidget {
                   final milestone = model!.currentMilestoneList[i];
                   bool isMilestoneOnLeft = (model!.pageWidth! * milestone.x!) <
                       model!.pageWidth! * 0.45;
-                  return Positioned(
-                    left: model!.pageWidth! *
-                        milestone.x! *
-                        (isMilestoneOnLeft ? 2 : 0.15),
-                    bottom: (model!.pageHeight! * (milestone.page - 1) +
-                            model!.pageHeight! * milestone.y!) +
-                        model!.pageHeight! * milestone.asset.height * 0.25,
-                    child: SafeArea(
-                      child: GestureDetector(
-                          onTap: () => model!.showMilestoneDetailsModalSheet(
-                              milestone, context),
-                          child: RotatedBox(
-                            quarterTurns: isMilestoneOnLeft ? 0 : 2,
-                            child: CustomPaint(
-                              //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                              painter: RPSCustomPainter(),
-                              child: Container(
-                                // decoration: ShapeDecoration(
-                                //   color: Colors.black,
-                                //   shape: TooltipShapeBorder(arrowArc: 0.5),
-                                //   shadows: [
-                                //     BoxShadow(
-                                //         color: Colors.black26,
-                                //         blurRadius: 4.0,
-                                //         offset: Offset(2, 2))
-                                //   ],
-                                // ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(SizeConfig.padding12),
-                                  child: RotatedBox(
-                                    quarterTurns: isMilestoneOnLeft ? 0 : 2,
+                  return levelChangePrev.contains(milestone.index)
+                      ? Positioned(
+                          left: model!.pageWidth! *
+                              milestone.x! *
+                              (isMilestoneOnLeft ? 2 : 0.15),
+                          bottom: (model!.pageHeight! * (milestone.page - 1) +
+                                  model!.pageHeight! * milestone.y!) +
+                              (model!.pageHeight! * milestone.asset.height) *
+                                  0.2,
+                          child: SafeArea(
+                            child: GestureDetector(
+                                onTap: () => model!
+                                    .showMilestoneDetailsModalSheet(
+                                        milestone, context),
+                                child: RotatedBox(
+                                  quarterTurns: isMilestoneOnLeft ? 0 : 2,
+                                  child: CustomPaint(
+                                    painter: RPSCustomPainter(),
+                                    child: Container(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(
+                                            SizeConfig.padding12),
+                                        child: RotatedBox(
+                                          quarterTurns:
+                                              isMilestoneOnLeft ? 0 : 2,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SizedBox(
+                                                  width: SizeConfig.padding10),
+                                              SvgPicture.asset(
+                                                  Assets
+                                                      .unredemmedScratchCardBG,
+                                                  height: SizeConfig.iconSize1),
+                                              SizedBox(
+                                                  width: SizeConfig.padding8),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text("${milestone.tooltip}",
+                                                      style: TextStyles
+                                                          .sourceSansSB.body3),
+                                                  Text(
+                                                    "Win a Scratch Card",
+                                                    style: TextStyles
+                                                        .sourceSansSB.body5
+                                                        .colour(UiConstants
+                                                            .kTextColor3),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                  width: SizeConfig.padding8),
+                                              Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: Colors.white,
+                                                  size: SizeConfig.iconSize2),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                          ),
+                        )
+                      : Positioned(
+                          left: model!.pageWidth! * milestone.x! * 0.6,
+                          bottom: (model!.pageHeight! * (milestone.page - 1) +
+                                  model!.pageHeight! * milestone.y!) +
+                              model!.pageHeight! * milestone.asset.height * 1.2,
+                          child: SafeArea(
+                            child: GestureDetector(
+                                onTap: () => model!
+                                    .showMilestoneDetailsModalSheet(
+                                        milestone, context),
+                                child: Container(
+                                  decoration: ShapeDecoration(
+                                    color: Colors.black,
+                                    shape: TooltipShapeBorder(arrowArc: 0.5),
+                                    shadows: [
+                                      BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 4.0,
+                                          offset: Offset(2, 2))
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.all(SizeConfig.padding12),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        SizedBox(width: SizeConfig.padding10),
                                         SvgPicture.asset(
                                             Assets.unredemmedScratchCardBG,
                                             height: SizeConfig.iconSize1),
@@ -90,19 +152,12 @@ class MilestoneTooltip extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        SizedBox(width: SizeConfig.padding8),
-                                        Icon(Icons.arrow_forward_ios_rounded,
-                                            color: Colors.white,
-                                            size: SizeConfig.iconSize2),
                                       ],
                                     ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          )),
-                    ),
-                  );
+                                )),
+                          ),
+                        );
                 } else
                   return SizedBox();
               }),
