@@ -90,7 +90,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
 
     if (widget.showPrizeSection) {
       Future.delayed(Duration(seconds: 1), () {
-        WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           _scrollController?.animateTo(SizeConfig.screenWidth! * 1.7,
               duration: Duration(milliseconds: 500),
               curve: Curves.fastLinearToSlowEaseIn);

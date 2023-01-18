@@ -117,7 +117,7 @@ class WebGameModalSheet extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "${gameInfo?.topScore ?? "-"}",
+                                "${gameInfo?.topScore ?? "0"}",
                                 style: TextStyles.rajdhaniSB.title5,
                               )
                             ],
@@ -153,7 +153,7 @@ class WebGameModalSheet extends StatelessWidget {
                                           UiConstants.kTextFieldTextColor),
                                     ),
                                     Text(
-                                      "${gameInfo?.lastScore ?? "-"}",
+                                      "${gameInfo?.lastScore ?? "0"}",
                                       style: TextStyles.rajdhaniSB.body1.colour(
                                         UiConstants.kTextFieldTextColor,
                                       ),
@@ -188,7 +188,7 @@ class WebGameModalSheet extends StatelessWidget {
                                           .colour(Color(0xffBDBDBE)),
                                     ),
                                     Text(
-                                      "₹ ${gameInfo?.rewards?.amt ?? " -"}",
+                                      "₹ ${gameInfo?.rewards?.amt ?? " 0"}",
                                       style: TextStyles.rajdhaniSB.body1.colour(
                                         Color(0xffBDBDBE),
                                       ),
@@ -247,13 +247,32 @@ class WebGameModalSheet extends StatelessWidget {
   }
 }
 
-class RewardCriteria extends StatelessWidget {
+class RewardCriteria extends StatefulWidget {
   const RewardCriteria({Key? key, required this.htmlData}) : super(key: key);
   final String htmlData;
+
+  @override
+  State<RewardCriteria> createState() => _RewardCriteriaState();
+}
+
+class _RewardCriteriaState extends State<RewardCriteria> {
+  bool isError = false;
+
   @override
   Widget build(BuildContext context) {
-    return Html(
-      data: htmlData,
-    );
+    return isError
+        ? SizedBox()
+        : Html(
+            onImageError: (exception, stackTrace) {
+              setState(() {
+                isError = true;
+              });
+            },
+            loadingBuilder: () {
+              return SizedBox();
+            },
+            shrinkWrap: true,
+            data: widget.htmlData,
+          );
   }
 }

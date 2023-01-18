@@ -105,7 +105,8 @@ class WebGameViewModel extends BaseViewModel {
       _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
 
       BaseUtil.showPositiveAlert("You have won a Scratch Card!",
-          "Scratch card has been added in the Account Section");
+          "Scratch card has been added in the Account Section",
+          seconds: 3);
 
       ScratchCardService.scratchCardId = data['gt_id'];
     }

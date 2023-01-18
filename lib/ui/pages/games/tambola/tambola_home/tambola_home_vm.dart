@@ -241,7 +241,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   Future<void> fetchTambola() async {
-    _logger!.d("Fetching Tambola tickets");
+    
     ticketsLoaded = false;
     if (!tambolaService!.weeklyTicksFetched)
       tambolaService!.fetchTambolaBoard();

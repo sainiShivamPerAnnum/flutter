@@ -38,7 +38,11 @@ dependencies:
     sdk: flutter
   flutter_facebook_sdk:
     path: packages/flutter_facebook_sdk/
-  flutter_html: ^3.0.0-alpha.5
+  flutter_html:
+    git:
+      url: https://github.com/sinexy/flutter_html.git
+      ref: fix_image_loading
+
   flutter_inset_box_shadow: ^1.0.8
   flutter_localizations:
     sdk: flutter

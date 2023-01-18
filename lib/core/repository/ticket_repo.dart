@@ -47,7 +47,7 @@ class TambolaRepo extends BaseRepo {
       //   );
       // });
       await preProcessTambolaTickets();
-
+        
       final response = await APIService.instance.getData(
         ApiPath.tambolaTickets(uid),
         token: token,

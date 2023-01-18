@@ -100,36 +100,8 @@ class UserRepository extends BaseRepo {
                 token: token,
               ), (dynamic res) {
         try {
-          //TEST
-          final data = {
-            'mMobile': '9464956756',
-            'mName': 'Pawan Kumar',
-            'mGender': 'M',
-            'mIsAugmontOnboarded': true,
-            'mIsSimpleKycVerified': false,
-            'mIsEmailVerified': false,
-            'mUserPrefs': {'tn': 1, 'al': 0},
-            'mAppFlyerId': '1673850672156-7376065999686439180',
-            'mPlatform': 'android',
-            'mIsLbOnboarded': false,
-            'mVersion': '163',
-            'mIp': '132.154.161.162',
-            'mAvatarId': 'AV1',
-            'mCreatedOn': {'_seconds': 1673850947, '_nanoseconds': 907000000},
-            'updatedOn': {'_seconds': 1673851559, '_nanoseconds': 375000000},
-            'mLastSignInAt': '2023-01-16T06:35:47.907Z',
-            'mLastActiveAt': '2023-01-16T06:45:59.375Z',
-            'mSegments': [
-              'NEW_USER',
-              'NO_SAVE',
-              'NO_PLAY',
-              'NO_TMB',
-              'NO_SAVE_AUG',
-              'NO_SAVE_LB'
-            ]
-          };
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
-            final _user = BaseUser.fromMap(data, id!);
+            final _user = BaseUser.fromMap(res['data'], id!);
             return ApiResponse<BaseUser>(model: _user, code: 200);
           } else
             return ApiResponse<BaseUser>(model: null, code: 200);
