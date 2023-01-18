@@ -266,6 +266,7 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                   child: IgnorePointer(
                     ignoring: true,
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         FullScreenLoader(
                           size: SizeConfig.screenWidth! * 0.4,

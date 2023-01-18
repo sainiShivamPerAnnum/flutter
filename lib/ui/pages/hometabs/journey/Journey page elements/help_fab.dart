@@ -1,7 +1,7 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
@@ -63,7 +63,7 @@ class _HelpFabState extends State<HelpFab> {
           SizeConfig.padding16,
       right: SizeConfig.padding16,
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           // if (FlavorConfig.isDevelopment()) {
           //   PreferenceHelper.setInt(
           //       PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
@@ -72,13 +72,28 @@ class _HelpFabState extends State<HelpFab> {
           //       "Now, Claimed cached day is ${DateTime.now().subtract(Duration(days: 1)).day}");
           // }
           // clearCache();
-          ScratchCardService.scratchCardsList = [
-            "9miii7TX9Jb5EKyVPskH",
-            "BLCAvoIWaaVlprHVRdIE",
-            "f6lwyjqs8qBzkTHvtmnq",
-            "jQhLdgrm3hnxR0QOrTI6"
-          ];
-          locator<ScratchCardService>().showMultipleScratchCardsView();
+          // ScratchCardService.scratchCardsList = [
+          //   "9miii7TX9Jb5EKyVPskH",
+          //   "BLCAvoIWaaVlprHVRdIE",
+          //   "f6lwyjqs8qBzkTHvtmnq",
+          //   "jQhLdgrm3hnxR0QOrTI6"
+          // ];
+          // ScratchCardService.scratchCardId = "NMNNp3NoTGh4dx8mTJzN";
+          // await locator<ScratchCardService>().fetchAndVerifyScratchCardByID();
+          // locator<ScratchCardService>()
+          //     .showInstantScratchCardView(source: GTSOURCE.prize);
+
+          locator<UserRepository>()
+              .getUserById(id: '8NGDOhOuriReoaLpszCc')
+              .then((value) {
+            if (value.isSuccess()) {
+              print(value.model.toString());
+            } else {
+              print(value.errorMessage);
+            }
+          });
+
+//Actual Code
           // trackHelpTappedEvent();
           // AppState.delegate!
           //     .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));

@@ -422,7 +422,6 @@ class ScratchCardService
     final res =
         await _gtRepo.getScratchCards(start: scratchCardsListLastTicketId);
     if (res.isSuccess()) {
-      allScratchCards.clear();
       if (allScratchCards.isEmpty) {
         allScratchCards = res.model?["tickets"];
         isLastPageForScratchCards = res.model?["isLastPage"];
