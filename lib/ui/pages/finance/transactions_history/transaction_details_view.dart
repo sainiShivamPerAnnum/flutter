@@ -339,18 +339,18 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     .colour(Color(0XFF9AB5C4)),
                               ),
                             ),
-                            // if (widget.txn.type ==
-                            //     UserTransaction.TRAN_TYPE_WITHDRAW)
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: SizedBox(
-                                child: Text(
-                                  "Tokens and Tambola Tickets are deducted for withdrawals",
-                                  style: TextStyles.sourceSans.body4
-                                      .colour(Color(0xffA0A0A0)),
+                            if (widget.txn.type ==
+                                UserTransaction.TRAN_TYPE_WITHDRAW)
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: SizedBox(
+                                  child: Text(
+                                    "Tokens and Tambola Tickets are deducted for withdrawals",
+                                    style: TextStyles.sourceSans.body4
+                                        .colour(Color(0xffA0A0A0)),
+                                  ),
                                 ),
                               ),
-                            ),
                             SizedBox(
                               height: SizeConfig.padding12,
                             ),

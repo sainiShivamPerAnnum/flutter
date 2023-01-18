@@ -48,7 +48,8 @@ class StickyNote extends StatelessWidget {
                   width: 8,
                 ),
                 Text(
-                  "Saving",
+                  "Saved",
+                  textAlign: TextAlign.center,
                   style: TextStyles.sourceSansSB.body3,
                 )
               ],

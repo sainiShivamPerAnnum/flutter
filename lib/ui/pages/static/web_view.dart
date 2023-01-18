@@ -6,7 +6,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
   final String url;
-  WebViewScreen({required this.url});
+  final String? title;
+  WebViewScreen({required this.url, this.title});
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -31,7 +32,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
         title: Text(
-          widget.url,
+          widget.title ?? widget.url,
           style: TextStyles.body2,
         ),
         actions: [

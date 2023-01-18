@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
@@ -55,13 +56,12 @@ class Root extends StatelessWidget {
               if (model.showHappyHourBanner)
                 Consumer<AppState>(
                   builder: (ctx, m, child) => AnimatedPositioned(
-                    bottom: !(locator<RootController>()
-                                    .currentNavBarItemModel ==
-                                RootController.tambolaNavBar ||
-                            locator<RootController>().currentNavBarItemModel ==
-                                RootController.journeyNavBarItem)
-                        ? SizeConfig.navBarHeight
-                        : -50,
+                    bottom:
+                        !(locator<RootController>().currentNavBarItemModel ==
+                                    RootController.journeyNavBarItem ||
+                                !_showHappyHour())
+                            ? SizeConfig.navBarHeight
+                            : -50,
                     duration: Duration(milliseconds: 400),
                     child: HappyHourBanner(model: model.happyHourCampaign),
                   ),
@@ -93,5 +93,13 @@ class Root extends StatelessWidget {
         );
       },
     );
+  }
+
+  bool _showHappyHour() {
+    if (locator<RootController>().currentNavBarItemModel ==
+        RootController.tambolaNavBar) {
+      return ((locator<TambolaService>().userWeeklyBoards?.length ?? 0) > 0);
+    }
+    return true;
   }
 }

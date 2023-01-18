@@ -71,7 +71,7 @@ class MilestoneTooltip extends StatelessWidget {
                                       Text("${milestone.tooltip}",
                                           style: TextStyles.sourceSansSB.body3),
                                       Text(
-                                        "Win scratch card worth upto ₹${BaseUtil.getRandomRewardAmount(milestone.index)}",
+                                        "Win a Scratch Card",
                                         style: TextStyles.sourceSansSB.body5
                                             .colour(UiConstants.kTextColor3),
                                       ),

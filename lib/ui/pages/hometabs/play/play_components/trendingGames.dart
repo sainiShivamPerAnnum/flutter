@@ -44,6 +44,7 @@ class TrendingGamesSection extends StatelessWidget {
           child: StickyNote(
             trailingWidget: Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
                   width: SizeConfig.padding16,

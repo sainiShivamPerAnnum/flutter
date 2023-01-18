@@ -3,10 +3,13 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/game_stats_model.dart';
+import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -51,9 +54,12 @@ class WebGameView extends StatelessWidget {
               backgroundColor: Colors.black,
               body: inLandscapeMode
                   ? GameView(
-                      inLandscapeMode: inLandscapeMode, initialUrl: initialUrl)
+                      model: model,
+                      inLandscapeMode: inLandscapeMode,
+                      initialUrl: initialUrl)
                   : SafeArea(
                       child: GameView(
+                          model: model,
                           inLandscapeMode: inLandscapeMode,
                           initialUrl: initialUrl),
                     )),
@@ -67,7 +73,11 @@ class GameView extends StatelessWidget {
   final bool inLandscapeMode;
   final String initialUrl;
   int exitCounter = 0;
-  GameView({required this.inLandscapeMode, required this.initialUrl});
+  WebGameViewModel model;
+  GameView(
+      {required this.inLandscapeMode,
+      required this.initialUrl,
+      required this.model});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -89,6 +99,7 @@ class GameView extends StatelessWidget {
                       exitCounter++;
                       if (message.message == 'insufficient tokens' &&
                           exitCounter == 1) {
+                        model.updateFlcBalance();
                         log("Close the game view and open save view");
                         AppState.isWebGameLInProgress = false;
                         AppState.isWebGamePInProgress = false;
@@ -96,6 +107,7 @@ class GameView extends StatelessWidget {
                         Future.delayed(
                           Duration(milliseconds: 500),
                           () {
+                            locator<UserStatsRepo>().getGameStats();
                             BaseUtil.openModalBottomSheet(
                               addToScreenStack: true,
                               backgroundColor: UiConstants.gameCardColor,

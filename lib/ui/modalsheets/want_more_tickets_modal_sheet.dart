@@ -50,7 +50,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(
                   top: SizeConfig.padding24,
-                  bottom: SizeConfig.padding12,
+                  bottom: SizeConfig.padding8,
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
@@ -85,16 +85,25 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                       width: SizeConfig.screenWidth,
                       padding: EdgeInsets.symmetric(
                           vertical: SizeConfig.padding12,
-                          horizontal: SizeConfig.padding32),
+                          horizontal: SizeConfig.padding16),
                       decoration: BoxDecoration(
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness12),
                         // color: Colors.red.withOpacity(0.05),
                       ),
-                      child: Text(
-                        locale.ranOutOfTokens,
-                        style: TextStyles.body2.colour(Colors.redAccent).italic,
-                        textAlign: TextAlign.start,
+                      child: Column(
+                        children: [
+                          Text("You ran out of Fello tokens.",
+                              style:
+                                  TextStyles.body2.colour(Colors.red.shade400),
+                              textAlign: TextAlign.center),
+                          Text(
+                            "Earn more by doing one of the below tasks:",
+                            style: TextStyles.body2
+                                .colour(Colors.white.withOpacity(0.8)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     )
                   : SizedBox(height: SizeConfig.padding12),
@@ -128,19 +137,19 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               ),
               SizedBox(height: SizeConfig.padding16),
               if (AppConfig.getValue(AppConfigKey.autosaveActive) as bool)
-                FelloTile(
-                  leadingAsset: Assets.repeat,
-                  title: locale.saveAutoSaveTitle,
-                  subtitle: locale.saveAutoSaveSubTitle,
-                  trailingIcon: Icons.arrow_forward_ios_rounded,
-                  onTap: () {
-                    _analyticsService!
-                        .track(eventName: AnalyticsEvents.earnMoreRefer);
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.delegate!.parseRoute(Uri.parse("augDetails"));
-                  },
-                ),
-              SizedBox(height: SizeConfig.padding24),
+                // FelloTile(
+                //   leadingAsset: Assets.repeat,
+                //   title: locale.saveAutoSaveTitle,
+                //   subtitle: locale.saveAutoSaveSubTitle,
+                //   trailingIcon: Icons.arrow_forward_ios_rounded,
+                //   onTap: () {
+                //     _analyticsService!
+                //         .track(eventName: AnalyticsEvents.earnMoreRefer);
+                //     AppState.backButtonDispatcher!.didPopRoute();
+                //     AppState.delegate!.parseRoute(Uri.parse("augDetails"));
+                //   },
+                // ),
+                SizedBox(height: SizeConfig.padding24),
             ]),
           ),
 

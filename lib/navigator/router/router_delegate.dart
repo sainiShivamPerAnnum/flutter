@@ -672,7 +672,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     return List.of(_pages);
   }
 
-  void parseRoute(Uri uri) {
+  void parseRoute(Uri uri, {String? title}) {
     _logger.d("Url: ${uri.toString()}");
     if (uri.scheme == "http" || uri.scheme == "https") {
       AppState.delegate!.appState.currentAction = PageAction(
@@ -680,6 +680,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         state: PageState.addWidget,
         widget: WebViewScreen(
           url: uri.toString(),
+          title: title,
         ),
       );
       return;

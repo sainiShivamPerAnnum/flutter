@@ -41,7 +41,7 @@ class BottomNavBar extends StatelessWidget {
                     horizontal: SizeConfig.pageHorizontalMargins / 2),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment:CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: List.generate(parentModel.navBarItems.values.length,
                       (index) {
                     final navbarItems =
