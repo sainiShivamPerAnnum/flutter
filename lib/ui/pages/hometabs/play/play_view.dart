@@ -26,16 +26,18 @@ class Play extends StatelessWidget {
           key: ValueKey(Constants.PLAY_SCREEN_TAG),
           backgroundColor: Colors.transparent,
           appBar: FAppBar(
-              type: FaqsType.play,
-              backgroundColor: Colors.transparent,
-              showAvatar: true,
-              leftPad: SizeConfig.padding10),
-          body: SingleChildScrollView(
-            controller: _controller,
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: model.getOrderedPlayViewItems(model),
+            type: FaqsType.play,
+            backgroundColor: Colors.transparent,
+            showAvatar: true,
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              controller: _controller,
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: model.getOrderedPlayViewItems(model),
+              ),
             ),
           ),
         );

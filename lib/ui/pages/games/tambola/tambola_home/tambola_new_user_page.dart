@@ -127,82 +127,31 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
               // mainAxisAlignment: MainAxisAlignment.start,
               // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Stack(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: SizeConfig.padding14),
-                      padding: isFromNavigation
-                          ? EdgeInsets.only(
-                              top: MediaQuery.of(context).padding.top)
-                          : null,
-                      decoration: BoxDecoration(
-                          color: Color(0XFF141414),
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(18),
-                              bottomRight: Radius.circular(18))),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(Assets.cr1_Tambola),
-                          SizedBox(
-                            height: SizeConfig.padding14,
-                          ),
-                          TambolaHeader(
-                            model: widget.model,
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding16,
-                          ),
-                        ],
+                Container(
+                  // margin: EdgeInsets.only(top: SizeConfig.padding14),
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).padding.top +
+                          SizeConfig.padding20),
+                  decoration: BoxDecoration(
+                      color: Color(0XFF141414),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(18),
+                          bottomRight: Radius.circular(18))),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(Assets.cr1_Tambola),
+                      SizedBox(
+                        height: SizeConfig.padding14,
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: SizeConfig.padding20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding24),
-                            child: ProfileImageSE(),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding24),
-                              decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        right: SizeConfig.padding4),
-                                    child: SvgPicture.asset(
-                                      Assets.tambolaTicketPL,
-                                      height: SizeConfig.padding20,
-                                      width: SizeConfig.padding20,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Text(
-                                    (widget.model.activeTambolaCardCount ?? 0)
-                                        .toString(),
-                                    style: TextStyles.rajdhaniB.body1,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                      TambolaHeader(
+                        model: widget.model,
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
@@ -224,7 +173,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                 ),
                 TermsAndConditions(url: Constants.tambolatnc),
                 SizedBox(
-                  height: SizeConfig.screenHeight! * 0.18,
+                  height: SizeConfig.screenHeight! * 0.25,
                 )
               ],
             ),
@@ -291,6 +240,58 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
               ),
             ),
           ),
+          if (isFromNavigation)
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding:
+                    EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding24),
+                      child: ProfileImageSE(),
+                    ),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        margin: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding24),
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(right: SizeConfig.padding4),
+                              child: SvgPicture.asset(
+                                Assets.tambolaTicketPL,
+                                height: SizeConfig.padding20,
+                                width: SizeConfig.padding20,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Text(
+                              (widget.model.activeTambolaCardCount ?? 0)
+                                  .toString(),
+                              style: TextStyles.rajdhaniB.body1,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );
