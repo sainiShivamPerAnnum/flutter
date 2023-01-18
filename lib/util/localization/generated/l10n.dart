@@ -1678,10 +1678,10 @@ class S {
     );
   }
 
-  /// `Fello Flo (10%)`
+  /// `Fello Flo`
   String get felloFloMainTitle {
     return Intl.message(
-      'Fello Flo (10%)',
+      'Fello Flo',
       name: 'felloFloMainTitle',
       desc: '',
       args: [],

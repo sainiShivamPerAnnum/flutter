@@ -127,7 +127,7 @@ class JourneyAppBar extends StatelessWidget {
                           ),
                           JourneyAppBarAssetDetailsTile(
                             key: ValueKey(Constants.TOTAL_WINNINGS_JAPPBAR),
-                            actionUri: '/win',
+                            actionUri: '/myWinnings',
                             title: locale.totalWinnings,
                             value: LifeTimeWin(
                               style: TextStyles.rajdhaniSB.body0

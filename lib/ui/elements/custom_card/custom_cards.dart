@@ -18,6 +18,7 @@ class SaveCustomCard extends StatelessWidget {
   final String? cardAssetName;
   final Function()? onTap;
   final InvestmentType investmentType;
+  final String chipText;
 
   const SaveCustomCard(
       {Key? key,
@@ -27,6 +28,7 @@ class SaveCustomCard extends StatelessWidget {
       this.subtitle,
       this.cardAssetName,
       this.onTap,
+      required this.chipText,
       required this.investmentType})
       : super(key: key);
   // final ValueKey? key;
@@ -97,10 +99,31 @@ class SaveCustomCard extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  color: Colors.white,
-                                  size: SizeConfig.padding16,
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          right: SizeConfig.padding2),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: SizeConfig.padding8,
+                                          vertical: SizeConfig.padding4),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.6),
+                                          borderRadius: BorderRadius.circular(
+                                              SizeConfig.roundness16)),
+                                      child: Text(
+                                        chipText,
+                                        style: TextStyles.sourceSansSB.body4
+                                            .colour(cardBgColor),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      color: Colors.white,
+                                      size: SizeConfig.padding16,
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -273,7 +296,7 @@ class CustomSaveButton extends StatelessWidget {
       this.title,
       this.width,
       this.border,
-      this.showBorder=true,
+      this.showBorder = true,
       this.color})
       : super(key: key);
 
@@ -285,7 +308,7 @@ class CustomSaveButton extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
           color: color ?? UiConstants.kBackgroundDividerColor,
-          border:showBorder? border ?? Border.all():null),
+          border: showBorder ? border ?? Border.all() : null),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness5),
         child: MaterialButton(
