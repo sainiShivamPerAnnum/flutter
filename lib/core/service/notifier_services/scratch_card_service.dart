@@ -415,24 +415,34 @@ class ScratchCardService
   }
 
   Future<void> fetchScratchCards({bool more = false}) async {
-    if (isLastPageForScratchCards) return;
-    if (isFetchingScratchCards) return;
-    if (!more) allScratchCards.clear();
-    isFetchingScratchCards = true;
-    final res =
-        await _gtRepo.getScratchCards(start: scratchCardsListLastTicketId);
-    if (res.isSuccess()) {
-      if (allScratchCards.isEmpty) {
-        allScratchCards = res.model?["tickets"];
-        isLastPageForScratchCards = res.model?["isLastPage"];
-      } else {
-        addScratchCards(res.model?["tickets"]);
-        isLastPageForScratchCards = res.model?["isLastPage"];
+    try {
+      if (isLastPageForScratchCards) return;
+      if (isFetchingScratchCards) return;
+      if (!more) allScratchCards.clear();
+      isFetchingScratchCards = true;
+      final res =
+          await _gtRepo.getScratchCards(start: scratchCardsListLastTicketId);
+      if (res.isSuccess()) {
+        if (allScratchCards.isEmpty) {
+          allScratchCards = res.model?["tickets"];
+          isLastPageForScratchCards = res.model?["isLastPage"];
+        } else {
+          addScratchCards(res.model?["tickets"]);
+          isLastPageForScratchCards = res.model?["isLastPage"];
+        }
       }
+      allScratchCards = arrangeScratchCards();
+      scratchCardsListLastTicketId = allScratchCards.last.gtId;
+      isFetchingScratchCards = false;
+    } catch (e) {
+      locator<InternalOpsService>().logFailure(
+        _userService!.baseUser!.uid,
+        FailType.ScratchCardListFailed,
+        {'message': "Scratch Card data fetch failed"},
+      );
+      allScratchCards = [];
+      isFetchingScratchCards = false;
     }
-    allScratchCards = arrangeScratchCards();
-    scratchCardsListLastTicketId = allScratchCards.last.gtId;
-    isFetchingScratchCards = false;
   }
 
   List<ScratchCard> arrangeScratchCards() {

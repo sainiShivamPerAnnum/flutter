@@ -106,7 +106,7 @@ class UserRepository extends BaseRepo {
           } else
             return ApiResponse<BaseUser>(model: null, code: 200);
         } catch (e) {
-          _internalOpsService!.logFailure(
+          locator<InternalOpsService>().logFailure(
             id,
             FailType.UserDataCorrupted,
             {'message': "User data corrupted"},
@@ -116,7 +116,7 @@ class UserRepository extends BaseRepo {
       }));
     } catch (e) {
       logger!.d(e.toString());
-      return ApiResponse.withError("Unable to get user", 400);
+      return ApiResponse.withError(e.toString() ?? "Unable to get user", 400);
     }
   }
 
@@ -164,6 +164,11 @@ class UserRepository extends BaseRepo {
       return ApiResponse(code: 200);
     } catch (e) {
       logger!.d(e);
+      locator<InternalOpsService>().logFailure(
+        mobile,
+        FailType.SendOtpFailed,
+        {'message': "Send otp failed"},
+      );
       return ApiResponse.withError("send OTP failed", 400);
     }
   }
@@ -184,6 +189,11 @@ class UserRepository extends BaseRepo {
       return ApiResponse(code: 200, model: res['data']['token']);
     } catch (e) {
       logger!.d(e);
+      locator<InternalOpsService>().logFailure(
+        mobile,
+        FailType.VerifyOtpFailed,
+        {'message': "Verify Otp failed"},
+      );
       return ApiResponse.withError(e.toString() ?? "send OTP failed", 400);
     }
   }
@@ -261,7 +271,7 @@ class UserRepository extends BaseRepo {
         "version": version ?? "",
         "isPhysicalDevice": isPhysicalDevice ?? true
       };
-
+      logger!.d("Device info: $_body");
       await APIService.instance.postData(
         ApiPath.kDeviceId,
         body: _body,
@@ -271,6 +281,11 @@ class UserRepository extends BaseRepo {
 
       logger!.d("Device added: $_body");
     } catch (e) {
+      locator<InternalOpsService>().logFailure(
+        uid,
+        FailType.DeviceIdUpdateFailed,
+        {'message': "Sending Device Id failed"},
+      );
       logger!.e(e);
     }
   }
@@ -385,6 +400,11 @@ class UserRepository extends BaseRepo {
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
       logger!.e(e);
+      locator<InternalOpsService>().logFailure(
+        uid,
+        FailType.UpdateUserFailed,
+        {'message': "Update user failed"},
+      );
       return ApiResponse.withError(
         e.toString() ?? "Unable to update user",
         400,
@@ -410,6 +430,11 @@ class UserRepository extends BaseRepo {
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
       logger!.e(e);
+      locator<InternalOpsService>().logFailure(
+        userService.baseUser?.uid ?? "",
+        FailType.UpdateUserFailed,
+        {'message': "Update fcm token failed"},
+      );
       return ApiResponse.withError(
         "Unable to update fcm",
         400,
@@ -467,6 +492,11 @@ class UserRepository extends BaseRepo {
       }
       return true;
     } catch (e) {
+      locator<InternalOpsService>().logFailure(
+        userService.baseUser?.uid ?? "",
+        FailType.UserRepoLogoutFailed,
+        {'message': "User Repo logout failed"},
+      );
       logger!.e(e);
       return false;
     }
@@ -508,24 +538,13 @@ class UserRepository extends BaseRepo {
       return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);
     } catch (e) {
       logger!.d("Unable to fetch user boot up ee ${e.toString()}");
+      locator<InternalOpsService>().logFailure(
+        userService.baseUser?.uid ?? "",
+        FailType.UserBootUpDetailsFetchFailed,
+        {'message': "User Bootup details fetch failed"},
+      );
       return ApiResponse.withError(
           e.toString() ?? "Unable to get user bootup details", 400);
-    }
-  }
-
-  Future<ApiResponse<String>> getUserPan() async {
-    try {
-      final String token = await getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath.kGetPan(userService.baseUser!.uid!),
-        token: token,
-        cBaseUrl: _baseUrl,
-      );
-      final String? pan = response["data"]["pan"];
-      return ApiResponse(model: pan ?? '', code: 200);
-    } catch (e) {
-      logger!.e(e.toString());
-      return ApiResponse.withError(e.toString() ?? 'Unable to fetch pan', 400);
     }
   }
 

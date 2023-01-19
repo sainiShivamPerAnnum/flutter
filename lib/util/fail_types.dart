@@ -57,7 +57,21 @@ enum FailType {
   HttpModelInitFailed,
   Splash,
   Journey,
-  KycImageCaptureFailed
+  KycImageCaptureFailed,
+  SendOtpFailed,
+  VerifyOtpFailed,
+  DeviceIdUpdateFailed,
+  UpdateUserFailed,
+  UpdateFcmTokenFailed,
+  RazorpayTransactionFailed,
+  GetDeviceInfoFailed,
+  UserRepoLogoutFailed,
+  UserBootUpDetailsFetchFailed,
+  VerifyPanFailed,
+  SignedImageUploadFailed,
+  PanImageUploadFailed,
+  PanInfoFetchFailed,
+  ScratchCardListFailed,
 }
 
 extension ParseToString on FailType {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -23,6 +24,8 @@ class CacheService {
         );
       }
     } catch (e) {
+      BaseUtil.showNegativeAlert("Isar initialization failed", e.toString(),
+          seconds: 20);
       log("ISAR:: Unable to initialize isar");
     }
   }
