@@ -115,6 +115,8 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 onTap: () {
                   _analyticsService!
                       .track(eventName: AnalyticsEvents.earnMoreSaveMoney);
+                  AppState.isWebGameLInProgress = false;
+                  AppState.isWebGamePInProgress = false;
                   while (AppState.screenStack.length > 1)
                     AppState.backButtonDispatcher!.didPopRoute();
                   AppState.delegate!.parseRoute(Uri.parse('save'));
@@ -146,6 +148,8 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                   onTap: () {
                     _analyticsService!
                         .track(eventName: AnalyticsEvents.earnMoreRefer);
+                    AppState.isWebGameLInProgress = false;
+                    AppState.isWebGamePInProgress = false;
                     while (AppState.screenStack.length > 1)
                       AppState.backButtonDispatcher!.didPopRoute();
                     AppState.delegate!.parseRoute(Uri.parse("augDetails"));
