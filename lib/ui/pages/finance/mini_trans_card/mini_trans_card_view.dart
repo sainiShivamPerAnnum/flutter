@@ -66,7 +66,8 @@ class MiniTransactionCard extends StatelessWidget {
                           ? SizedBox(height: SizeConfig.padding12)
                           : Padding(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding10),
+                                  horizontal: SizeConfig.padding10,
+                                  vertical: SizeConfig.padding10),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

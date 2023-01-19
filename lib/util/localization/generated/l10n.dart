@@ -1121,7 +1121,7 @@ class S {
   /// `Buy 24K pure DigitalYou own Gold`
   String get buyGold {
     return Intl.message(
-      'Buy 24K pure DigitalYou own Gold',
+      'Buy 24K pure Digital You own Gold',
       name: 'buyGold',
       desc: '',
       args: [],

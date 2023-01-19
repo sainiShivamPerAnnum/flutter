@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_stats_repo.dart';
@@ -17,10 +18,8 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WebGameModalSheet extends StatelessWidget {
-  const WebGameModalSheet({Key? key, required this.game})
-      : super(key: key);
+  const WebGameModalSheet({Key? key, required this.game}) : super(key: key);
   final String game;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +74,7 @@ class WebGameModalSheet extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     top: 24, left: 14, right: 14, bottom: 0),
                 child: RewardCriteria(
-                  htmlData: model.currentGameModel?.rewardCriteria ?? "",
+                  data: model.currentGameModel?.rewardCriteria ?? "",
                 ),
               ),
             SizedBox(
@@ -255,8 +254,8 @@ class WebGameModalSheet extends StatelessWidget {
 }
 
 class RewardCriteria extends StatefulWidget {
-  const RewardCriteria({Key? key, required this.htmlData}) : super(key: key);
-  final String htmlData;
+  const RewardCriteria({Key? key, required this.data}) : super(key: key);
+  final String data;
 
   @override
   State<RewardCriteria> createState() => _RewardCriteriaState();
@@ -269,17 +268,9 @@ class _RewardCriteriaState extends State<RewardCriteria> {
   Widget build(BuildContext context) {
     return isError
         ? SizedBox()
-        : Html(
-            onImageError: (exception, stackTrace) {
-              setState(() {
-                isError = true;
-              });
-            },
-            loadingBuilder: () {
-              return SizedBox();
-            },
-            shrinkWrap: true,
-            data: widget.htmlData,
+        : CachedNetworkImage(
+            imageUrl: widget.data,
+            errorWidget: (_, __, ___) => SizedBox(),
           );
   }
 }

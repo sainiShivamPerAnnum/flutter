@@ -254,7 +254,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "businessDays":
             MessageLookupByLibrary.simpleMessage("1-2 business working days"),
         "buyGold": MessageLookupByLibrary.simpleMessage(
-            "Buy 24K pure DigitalYou own Gold"),
+            "Buy 24K pure Digital You own Gold"),
         "by2030": MessageLookupByLibrary.simpleMessage("by 2030! 💸"),
         "cancelledUi": MessageLookupByLibrary.simpleMessage("cancelledUI"),
         "cashPrize": MessageLookupByLibrary.simpleMessage("Cashprize"),

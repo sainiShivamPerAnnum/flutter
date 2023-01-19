@@ -347,10 +347,12 @@ class WinViewModel extends BaseViewModel {
     return url;
   }
 
+  
   Future<void> fetchReferralCode() async {
-    final ApiResponse res = await _refRepo!.getReferralCode();
+    final ApiResponse<ReferralResponse> res = await _refRepo!.getReferralCode();
     if (res.code == 200) {
-      _refCode = res.model;
+      _refCode = res.model?.code;
+      appShareMessage = res.model?.message ?? '';
     }
     _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
         ? appShareMessage

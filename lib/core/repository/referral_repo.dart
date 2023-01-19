@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -12,13 +14,13 @@ class ReferralRepo extends BaseRepo {
       ? "https://2k3cus82jj.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://bt3lswjiw1.execute-api.ap-south-1.amazonaws.com/prod";
 
-  Future<ApiResponse<String>> getReferralCode() async {
+  Future<ApiResponse<ReferralResponse>> getReferralCode() async {
     try {
       final code = PreferenceHelper.getString(PreferenceHelper.REFERRAL_CODE);
 
-      if (code != null && code != '') {
-        return ApiResponse<String>(
-          model: code,
+      if (code != '') {
+        return ApiResponse<ReferralResponse>(
+          model: ReferralResponse.fromJson(jsonDecode(code)),
           code: 200,
         );
       }
@@ -30,10 +32,10 @@ class ReferralRepo extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
 
-      final data = response['data']['code'];
-      PreferenceHelper.setString(PreferenceHelper.REFERRAL_CODE, data);
-      return ApiResponse<String>(
-        model: data,
+      final data = response['data'];
+      PreferenceHelper.setString(PreferenceHelper.REFERRAL_CODE, jsonEncode(data));
+      return ApiResponse<ReferralResponse>(
+        model: ReferralResponse.fromJson(data),
         code: 200,
       );
     } catch (e) {
@@ -109,4 +111,13 @@ class ReferralRepo extends BaseRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+}
+
+class ReferralResponse {
+  final String code;
+  final String message;
+  ReferralResponse(this.code, this.message);
+
+  factory ReferralResponse.fromJson(Map<String, dynamic> data) =>
+      ReferralResponse(data['code'], data['referralMessage']);
 }

@@ -157,7 +157,8 @@ class WebHomeViewModel extends BaseViewModel {
       BaseUtil.showUsernameInputModalSheet();
       return false;
     }
-    if (checkIfUserIsBannedFromThisGame()) {
+    if (checkIfUserIsBannedFromThisGame() &&
+        await checkIfDeviceIsNotAnEmulator()) {
       return _checkIfUserHasEnoughTokens();
     }
     return false;
@@ -263,7 +264,7 @@ class WebHomeViewModel extends BaseViewModel {
     trackGameStart(lastScore, bestScore);
     String initialUrl = generateGameUrl();
     _logger!.d("Game Url: $initialUrl");
-    AppState.backButtonDispatcher!.didPopRoute();
+
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: WebGameViewPageConfig,
@@ -273,6 +274,7 @@ class WebHomeViewModel extends BaseViewModel {
           inLandscapeMode:
               currentGame == Constants.GAME_TYPE_POOLCLUB ? true : false),
     );
+    AppState.backButtonDispatcher!.didPopRoute();
   }
 
   Future<bool> _checkIfUserHasEnoughTokens() async {
