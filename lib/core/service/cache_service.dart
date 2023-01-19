@@ -34,10 +34,6 @@ class CacheService {
     final CustomLogger? _logger = locator<CustomLogger>();
 
     try {
-      if (_isar == null) {
-        log("ISAR:: invalidation failed, isar not initialized");
-        return;
-      }
       _logger!.d('cache: invalidate all');
       await _isar?.writeTxn(() async {
         await _isar?.clear();
@@ -58,7 +54,7 @@ class CacheService {
     if (cachedData != null && ttl != 0) {
       try {
         _logger!.d('cache: data read successfully');
-
+        log("APP CONFIG: ${cachedData.data!}");
         return parseData(json.decode(cachedData.data!));
       } catch (e) {
         _logger!.e(
@@ -86,10 +82,6 @@ class CacheService {
 
     final res = parseData(response);
     try {
-      if (_isar == null) {
-        log("ISAR:: invalidation failed, isar not initialized");
-        return res;
-      }
       if (response != null &&
           response['data'] != null &&
           response['data'].isNotEmpty &&
@@ -108,10 +100,6 @@ class CacheService {
 
   Future<bool> writeString(String key, int ttl, String data) async {
     try {
-      if (_isar == null) {
-        log("ISAR:: cache write failed, isar not initialized");
-        return false;
-      }
       final now = DateTime.now().millisecondsSinceEpoch;
       final cache = new CacheModel(
         key: key,
@@ -137,10 +125,6 @@ class CacheService {
 
     try {
       _logger!.d('cache: invalidating key $key');
-      if (_isar == null) {
-        log("ISAR:: invalidation failed, isar not initialized");
-        return false;
-      }
       await _isar!.writeTxn(() async {
         final List<CacheModel> data = await _isar!
             .collection<CacheModel>()
@@ -164,10 +148,6 @@ class CacheService {
 
   Future<bool> _invalidate(int id) async {
     try {
-      if (_isar == null) {
-        log("ISAR:: invalidation failed, isar not initialized");
-        return false;
-      }
       _logger!.d('cache: invalidating id $id');
       await _isar!.writeTxn(() async {
         return await _isar!.cacheModels.delete(id);
@@ -181,22 +161,23 @@ class CacheService {
   }
 
   Future<CacheModel?> getData(String key) async {
-    if (_isar == null) {
-      log("ISAR:: cache read failed, isar not initialized");
-      return null;
-    }
-    final data = await _isar!.cacheModels.filter().keyEqualTo(key).findFirst();
-    final now = DateTime.now().millisecondsSinceEpoch;
+    try {
+      final data =
+          await _isar!.cacheModels.filter().keyEqualTo(key).findFirst();
+      final now = DateTime.now().millisecondsSinceEpoch;
 
-    if (data != null) {
-      _logger!.d(
-          'cache: data read from cache ${data.id} ${data.key} ${data.expireAfterTimestamp} $now');
+      if (data != null) {
+        _logger!.d(
+            'cache: data read from cache ${data.id} ${data.key} ${data.expireAfterTimestamp} $now');
 
-      if (data.expireAfterTimestamp! > now) {
-        return data;
-      } else {
-        await invalidateByKey(key);
+        if (data.expireAfterTimestamp! > now) {
+          return data;
+        } else {
+          await invalidateByKey(key);
+        }
       }
+    } catch (e) {
+      return null;
     }
 
     return null;
@@ -269,11 +250,9 @@ class CacheService {
       final end = responseData["end"];
       List<dynamic>? items = responseData["items"];
 
-      if (_isar != null) {
-        for (int i = start; i <= end; i++) {
-          final key = '$keyPrefix/$i';
-          await writeMap(key, ttl, items![i - start as int]);
-        }
+      for (int i = start; i <= end; i++) {
+        final key = '$keyPrefix/$i';
+        await writeMap(key, ttl, items![i - start as int]);
       }
     }
 

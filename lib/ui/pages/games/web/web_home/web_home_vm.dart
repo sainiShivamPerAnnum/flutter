@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -204,52 +206,68 @@ class WebHomeViewModel extends BaseViewModel {
     String userBannedNotice = '';
     switch (currentGame) {
       case Constants.GAME_TYPE_CRICKET:
-        isUserBannedForThisGame = _userService!
+        isUserBannedForThisGame = _userService
                 .userBootUp?.data?.banMap?.games?.cricketMap?.isBanned ??
             false;
         userBannedNotice =
-            _userService!.userBootUp?.data?.banMap?.games?.cricketMap?.reason ??
+            _userService.userBootUp?.data?.banMap?.games?.cricketMap?.reason ??
                 '';
         break;
       case Constants.GAME_TYPE_CANDYFIESTA:
-        isUserBannedForThisGame = _userService!
+        isUserBannedForThisGame = _userService
                 .userBootUp?.data?.banMap?.games?.candyFiestaMap?.isBanned ??
             false;
-        userBannedNotice = _userService!
+        userBannedNotice = _userService
                 .userBootUp?.data?.banMap?.games?.candyFiestaMap?.reason ??
             '';
         break;
       case Constants.GAME_TYPE_FOOTBALL:
-        isUserBannedForThisGame = _userService!
+        isUserBannedForThisGame = _userService
                 .userBootUp?.data?.banMap?.games?.footballMap?.isBanned ??
             false;
-        userBannedNotice = _userService!
-                .userBootUp?.data?.banMap?.games?.footballMap?.reason ??
-            '';
+        userBannedNotice =
+            _userService.userBootUp?.data?.banMap?.games?.footballMap?.reason ??
+                '';
         break;
       case Constants.GAME_TYPE_POOLCLUB:
-        isUserBannedForThisGame = _userService!
+        isUserBannedForThisGame = _userService
                 .userBootUp?.data?.banMap?.games?.poolClubMap?.isBanned ??
             false;
-        userBannedNotice = _userService!
-                .userBootUp?.data?.banMap?.games?.poolClubMap?.reason ??
-            '';
+        userBannedNotice =
+            _userService.userBootUp?.data?.banMap?.games?.poolClubMap?.reason ??
+                '';
         break;
       case Constants.GAME_TYPE_BOWLING:
-        isUserBannedForThisGame = _userService!
+        isUserBannedForThisGame = _userService
                 .userBootUp?.data?.banMap?.games?.bowlingMap?.isBanned ??
             false;
         userBannedNotice =
-            _userService!.userBootUp?.data?.banMap?.games?.bowlingMap?.reason ??
+            _userService.userBootUp?.data?.banMap?.games?.bowlingMap?.reason ??
                 '';
         break;
       case Constants.GAME_TYPE_BOTTLEFLIP:
-        isUserBannedForThisGame = _userService!
+        isUserBannedForThisGame = _userService
                 .userBootUp?.data?.banMap?.games?.bottleFlipMap?.isBanned ??
             false;
-        userBannedNotice = _userService!
+        userBannedNotice = _userService
                 .userBootUp?.data?.banMap?.games?.bottleFlipMap?.reason ??
             '';
+        break;
+      case Constants.GAME_TYPE_ROLLYVORTEX:
+        isUserBannedForThisGame = _userService
+                .userBootUp?.data?.banMap?.games?.rollyVortex?.isBanned ??
+            false;
+        userBannedNotice =
+            _userService.userBootUp?.data?.banMap?.games?.rollyVortex?.reason ??
+                '';
+        break;
+      case Constants.GAME_TYPE_KNIFEHIT:
+        isUserBannedForThisGame =
+            _userService.userBootUp?.data?.banMap?.games?.knifeHit?.isBanned ??
+                false;
+        userBannedNotice =
+            _userService.userBootUp?.data?.banMap?.games?.knifeHit?.reason ??
+                '';
         break;
     }
     if (isUserBannedForThisGame != null && isUserBannedForThisGame) {
@@ -299,6 +317,7 @@ class WebHomeViewModel extends BaseViewModel {
     String _loadUri =
         "$_uri?user=${_userService.baseUser!.uid}&name=${_userService.baseUser!.username}&token=$gameToken";
     if (FlavorConfig.isDevelopment()) _loadUri = "$_loadUri&dev=true";
+    log("FULL GAME URI: $_loadUri");
     return _loadUri;
   }
 
