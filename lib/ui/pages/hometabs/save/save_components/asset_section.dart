@@ -35,7 +35,7 @@ class SaveNetWorthSection extends StatelessWidget {
             SaveCustomCard(
               title: locale.felloFloMainTitle,
               subtitle: locale.currentValue,
-              chipText: ["P2P Asset", "10% Returns", "Safe & Secure"],
+              chipText: ["P2P Asset", "Safe & Secure", "10% Returns"],
               key: Key(Constants.ASSET_TYPE_LENDBOX),
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,

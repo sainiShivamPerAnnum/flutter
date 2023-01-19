@@ -14,7 +14,6 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
-import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -106,7 +105,7 @@ class Win extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "My Profile",
+                                "Profile",
                                 style: TextStyles.sourceSans.body1
                                     .colour(Colors.white),
                               ),

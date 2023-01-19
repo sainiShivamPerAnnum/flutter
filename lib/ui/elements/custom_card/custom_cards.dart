@@ -109,31 +109,26 @@ class SaveCustomCard extends StatelessWidget {
                                       width: SizeConfig.screenWidth! * 0.26,
                                       height: SizeConfig.padding24,
                                       decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.6),
+                                          color: (key ==
+                                                  ValueKey(Constants
+                                                      .ASSET_TYPE_AUGMONT))
+                                              ? Color(0xff5567B7)
+                                              : Color(0xff326D71),
                                           borderRadius: BorderRadius.circular(
                                               SizeConfig.roundness16)),
                                       child: AnimatedTextKit(
-                                          repeatForever: true,
-                                          animatedTexts: List.generate(
-                                            chipText.length,
-                                            (index) => RotateAnimatedText(
-                                              chipText[index].toUpperCase(),
-                                              duration: Duration(seconds: 2),
-                                              textStyle: TextStyles
-                                                  .sourceSansSB.body4
-                                                  .colour(cardBgColor),
-                                            ),
-                                          )
-                                          // [
-                                          //   RotateAnimatedText('AWESOME'),
-                                          //   RotateAnimatedText('OPTIMISTIC'),
-                                          //   RotateAnimatedText('DIFFERENT'),
-                                          // ],
-                                          // onTap: () {
-                                          //   print("Tap Event");
-                                          // },
-
+                                        repeatForever: true,
+                                        animatedTexts: List.generate(
+                                          chipText.length,
+                                          (index) => RotateAnimatedText(
+                                            chipText[index].toUpperCase(),
+                                            duration: Duration(seconds: 2),
+                                            textStyle: TextStyles
+                                                .sourceSansSB.body4
+                                                .colour(Colors.white),
                                           ),
+                                        ),
+                                      ),
                                     ),
                                     Icon(
                                       Icons.arrow_forward_ios_rounded,
@@ -170,11 +165,28 @@ class SaveCustomCard extends StatelessWidget {
                                     )
                                   ],
                                 ),
-                                CustomSaveButton(
-                                  onTap: onTap,
-                                  title: locale.btnSave.toUpperCase(),
-                                  width: SizeConfig.screenWidth! * 0.2,
-                                  height: SizeConfig.screenWidth! * 0.11,
+                                Column(
+                                  children: [
+                                    // AnimatedTextKit(
+                                    //   repeatForever: true,
+                                    //   animatedTexts: List.generate(
+                                    //     chipText.length,
+                                    //     (index) => RotateAnimatedText(
+                                    //       chipText[index].toUpperCase(),
+                                    //       duration: Duration(seconds: 2),
+                                    //       textStyle: TextStyles
+                                    //           .sourceSansSB.body4
+                                    //           .colour(Colors.white),
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    CustomSaveButton(
+                                      onTap: onTap,
+                                      title: locale.btnSave.toUpperCase(),
+                                      width: SizeConfig.screenWidth! * 0.2,
+                                      height: SizeConfig.screenWidth! * 0.11,
+                                    ),
+                                  ],
                                 )
                               ],
                             )

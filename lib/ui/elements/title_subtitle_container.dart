@@ -6,14 +6,20 @@ import 'package:flutter/material.dart';
 class TitleSubtitleContainer extends StatelessWidget {
   final String title;
   final String? subTitle;
+  final bool leadingPadding;
 
-  const TitleSubtitleContainer({Key? key, required this.title, this.subTitle})
+  const TitleSubtitleContainer(
+      {Key? key,
+      required this.title,
+      this.subTitle,
+      this.leadingPadding = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: SizeConfig.padding24),
+      padding: EdgeInsets.only(
+          left: leadingPadding ? SizeConfig.padding24 : SizeConfig.padding14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

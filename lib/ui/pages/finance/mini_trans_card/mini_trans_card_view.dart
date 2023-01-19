@@ -47,7 +47,8 @@ class MiniTransactionCard extends StatelessWidget {
                   model.state == ViewState.Busy || m.txnList == null
                       ? SizedBox(
                           child: Row(children: [
-                            TitleSubtitleContainer(title: locale.txns),
+                            TitleSubtitleContainer(
+                                title: locale.txns, leadingPadding: false),
                             Spacer(),
                             Container(
                               width: SizeConfig.avatarRadius,
@@ -74,7 +75,8 @@ class MiniTransactionCard extends StatelessWidget {
                                   Row(
                                     children: [
                                       TitleSubtitleContainer(
-                                          title: locale.txns),
+                                          title: locale.txns,
+                                          leadingPadding: false),
                                       Spacer(),
                                       model.state == ViewState.Idle &&
                                               m.txnList != null &&

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/game_stats_model.dart';
@@ -28,7 +27,7 @@ class UserStatsRepo extends BaseRepo with ChangeNotifier {
       final uid = _userService.baseUser?.uid ?? "";
       final res = await APIService.instance
           .getData(ApiPath.getGameStats(uid), token: token, cBaseUrl: _baseUrl);
-      gameStats = GameStats.fromJson(res);
+      gameStats = GameStats.fromJson(res['data']);
       completer.complete(gameStats);
       notifyListeners();
     } catch (e) {

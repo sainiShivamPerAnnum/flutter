@@ -88,7 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "abCompleteYourProfile":
             MessageLookupByLibrary.simpleMessage("Complete your profile"),
         "abGamingName": MessageLookupByLibrary.simpleMessage("Pick a Username"),
-        "abMyProfile": MessageLookupByLibrary.simpleMessage("My Profile"),
+        "abMyProfile": MessageLookupByLibrary.simpleMessage("Profile"),
         "abNotifications": MessageLookupByLibrary.simpleMessage("Alerts"),
         "above18": MessageLookupByLibrary.simpleMessage(
             "You need to be above 18 to join"),
@@ -649,7 +649,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obAppUpdate":
             MessageLookupByLibrary.simpleMessage("App Update Required"),
         "obBankDetails":
-            MessageLookupByLibrary.simpleMessage("Your Bank Account Details"),
+            MessageLookupByLibrary.simpleMessage("Bank Account Details"),
         "obBlockedAb":
             MessageLookupByLibrary.simpleMessage("Account Information"),
         "obBlockedSubtitle1": MessageLookupByLibrary.simpleMessage(
@@ -715,7 +715,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obJoinUsBottomTitle": MessageLookupByLibrary.simpleMessage(
             "Join over 5 Lakh users who save and win with us!"),
         "obKYCDetailsLabel":
-            MessageLookupByLibrary.simpleMessage("Your KYC Details"),
+            MessageLookupByLibrary.simpleMessage("KYC Details"),
         "obLoading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "obLoggingInWith":
             MessageLookupByLibrary.simpleMessage("Logging in with"),

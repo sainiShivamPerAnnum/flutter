@@ -502,20 +502,20 @@ class S {
     );
   }
 
-  /// `Your KYC Details`
+  /// `KYC Details`
   String get obKYCDetailsLabel {
     return Intl.message(
-      'Your KYC Details',
+      'KYC Details',
       name: 'obKYCDetailsLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your Bank Account Details`
+  /// `Bank Account Details`
   String get obBankDetails {
     return Intl.message(
-      'Your Bank Account Details',
+      'Bank Account Details',
       name: 'obBankDetails',
       desc: '',
       args: [],
@@ -1118,7 +1118,7 @@ class S {
     );
   }
 
-  /// `Buy 24K pure DigitalYou own Gold`
+  /// `Buy 24K pure Digital You own Gold`
   String get buyGold {
     return Intl.message(
       'Buy 24K pure Digital You own Gold',
@@ -2604,10 +2604,10 @@ class S {
     );
   }
 
-  /// `My Profile`
+  /// `Profile`
   String get abMyProfile {
     return Intl.message(
-      'My Profile',
+      'Profile',
       name: 'abMyProfile',
       desc: '',
       args: [],
