@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/autosave_status_text.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
@@ -18,7 +19,7 @@ class SaveCustomCard extends StatelessWidget {
   final String? cardAssetName;
   final Function()? onTap;
   final InvestmentType investmentType;
-  final String chipText;
+  final List<String> chipText;
 
   const SaveCustomCard(
       {Key? key,
@@ -105,18 +106,34 @@ class SaveCustomCard extends StatelessWidget {
                                     Container(
                                       margin: EdgeInsets.only(
                                           right: SizeConfig.padding2),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding8,
-                                          vertical: SizeConfig.padding4),
+                                      width: SizeConfig.screenWidth! * 0.26,
+                                      height: SizeConfig.padding24,
                                       decoration: BoxDecoration(
                                           color: Colors.white.withOpacity(0.6),
                                           borderRadius: BorderRadius.circular(
                                               SizeConfig.roundness16)),
-                                      child: Text(
-                                        chipText,
-                                        style: TextStyles.sourceSansSB.body4
-                                            .colour(cardBgColor),
-                                      ),
+                                      child: AnimatedTextKit(
+                                          repeatForever: true,
+                                          animatedTexts: List.generate(
+                                            chipText.length,
+                                            (index) => RotateAnimatedText(
+                                              chipText[index].toUpperCase(),
+                                              duration: Duration(seconds: 2),
+                                              textStyle: TextStyles
+                                                  .sourceSansSB.body4
+                                                  .colour(cardBgColor),
+                                            ),
+                                          )
+                                          // [
+                                          //   RotateAnimatedText('AWESOME'),
+                                          //   RotateAnimatedText('OPTIMISTIC'),
+                                          //   RotateAnimatedText('DIFFERENT'),
+                                          // ],
+                                          // onTap: () {
+                                          //   print("Tap Event");
+                                          // },
+
+                                          ),
                                     ),
                                     Icon(
                                       Icons.arrow_forward_ios_rounded,

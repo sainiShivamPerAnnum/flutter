@@ -298,8 +298,8 @@ class LoginControllerViewModel extends BaseViewModel {
         await _userRepo!.getUserById(id: userService.firebaseUser!.uid);
     logger!.d("User data found: ${user.model}");
     if (user.code == 400) {
-      BaseUtil.showNegativeAlert(
-          locale.accountMaintenance, locale.customerSupportText);
+      BaseUtil.showNegativeAlert(user.errorMessage ?? locale.accountMaintenance,
+          locale.customerSupportText);
       setState(ViewState.Idle);
       _controller!.animateToPage(LoginMobileView.index,
           duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);

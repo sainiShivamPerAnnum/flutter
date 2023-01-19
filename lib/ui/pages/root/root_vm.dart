@@ -618,8 +618,8 @@ class RootViewModel extends BaseViewModel {
               AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(
-                'Signed out automatically.',
-                'Seems like some internal issues. Please sign in again.',
+                'Session timed out ⚠️',
+                'Please sign in again.',
               );
             }
           });
