@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -200,7 +202,10 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   Future<void> init() async {
     setState(ViewState.Busy);
+    final seconds = DateTime.now().second;
+    log("Get Game Details:Message:$seconds");
     await getGameDetails();
+    log("Get Game Details:${DateTime.now().second}");
     // getLeaderboard();
     if (tambolaWidgetController == null) {
       tambolaWidgetController = TambolaWidgetController();
@@ -224,11 +229,13 @@ class TambolaHomeViewModel extends BaseViewModel {
       weeklyDrawFetched = true;
 
     ///next get the tambola tickets of this week
-    await fetchTambola();
 
+    await fetchTambola();
+    log("Fetch Tambola:${DateTime.now().second}");
     tambolaService!.addListener(() {
-      if (tambolaService!.isTambolaBoardUpdated)
+      if (tambolaService!.isTambolaBoardUpdated) {
         refreshTambolaTickets(shouldRefresh: false);
+      }
     });
 
     ///check whether to show summary cards or not
@@ -252,7 +259,6 @@ class TambolaHomeViewModel extends BaseViewModel {
     _currentBoardView = null;
 
     _examineTicketsForWins();
-
   }
 
   fetchWinners() async {
@@ -311,12 +317,11 @@ class TambolaHomeViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> refreshTambolaTickets({bool shouldRefresh=true}) async {
+  Future<void> refreshTambolaTickets({bool shouldRefresh = true}) async {
     _logger!.i('Refreshing..');
     _topFiveTambolaBoards = [];
     ticketsBeingGenerated = true;
-    if(shouldRefresh)
-    tambolaService!.weeklyTicksFetched = false;
+    if (shouldRefresh) tambolaService!.weeklyTicksFetched = false;
     init();
     notifyListeners();
   }

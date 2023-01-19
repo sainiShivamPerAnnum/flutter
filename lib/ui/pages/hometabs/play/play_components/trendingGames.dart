@@ -160,8 +160,7 @@ class TrendingGames extends StatelessWidget {
             }));
         Haptic.vibrate();
 
-        BaseUtil.openGameModalSheet(
-            game!.gameCode!, getGameInfo(game!.gameCode!));
+        BaseUtil.openGameModalSheet(game!.gameCode!);
       },
       child: Container(
         decoration: BoxDecoration(

@@ -298,7 +298,7 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static openGameModalSheet(String game, Gm? gameModel) {
+  static openGameModalSheet(String game) {
     AppState.screenStack.add(ScreenItem.modalsheet);
     return openModalBottomSheet(
       isScrollControlled: true,
@@ -307,7 +307,7 @@ class BaseUtil extends ChangeNotifier {
       addToScreenStack: false,
       content: WebGameModalSheet(
         game: game,
-        gameInfo: gameModel,
+        
       ),
       backgroundColor: Color(0xff39393C),
       hapticVibrate: true,

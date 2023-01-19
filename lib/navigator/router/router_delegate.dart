@@ -694,7 +694,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         if (segment.startsWith('d-', 0)) {
           dialogCheck(segment.split('-').last);
         } else if (segment.startsWith('GM_')) {
-          openWebGame(segment);
+          openWebGame(segment,);
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else if (segment.startsWith('story-')) {
@@ -938,11 +938,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   openWebGame(String game) {
-    AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addWidget,
-      widget: WebHomeView(game: game),
-      page: WebHomeViewPageConfig,
-    );
+    // AppState.delegate!.appState.currentAction = PageAction(
+    //   state: PageState.addWidget,
+    //   widget: WebHomeView(game: game),
+    //   page: WebHomeViewPageConfig,
+    // );
+
+    BaseUtil.openGameModalSheet(game);
   }
 
   openAppWalkthrough() {

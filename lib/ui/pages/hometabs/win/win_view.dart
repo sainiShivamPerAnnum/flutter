@@ -18,6 +18,7 @@ import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.da
 import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -70,16 +71,23 @@ class Win extends StatelessWidget {
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.padding20,
                             vertical: SizeConfig.padding10),
-                        child: Text(
-                          "Hi " +
-                              (locator<UserService>()
-                                      .baseUser
-                                      ?.name!
-                                      .split(" ")
-                                      .first ??
-                                  ""),
-                          style:
-                              TextStyles.rajdhaniSB.title3.colour(Colors.white),
+                        child: PropertyChangeConsumer<UserService,
+                            UserServiceProperties>(
+                          properties: [UserServiceProperties.myName],
+                          builder: (context, state, c) {
+                            return Text(
+                              "Hi " +
+                                  (locator<UserService>()
+                                              .baseUser
+                                              ?.name!
+                                              .split(" ")
+                                              .first ??
+                                          "")
+                                      .capitalize(),
+                              style: TextStyles.rajdhaniSB.title3
+                                  .colour(Colors.white),
+                            );
+                          },
                         ),
                       ),
 
@@ -87,13 +95,13 @@ class Win extends StatelessWidget {
                       //   height: SizeConfig.padding24,
                       // ),
 
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding20,
-                            vertical: SizeConfig.padding16),
-                        child: GestureDetector(
-                          onTap: () => AppState.delegate!
-                              .parseRoute(Uri.parse("/profile")),
+                      InkWell(
+                        onTap: () => AppState.delegate!
+                            .parseRoute(Uri.parse("/profile")),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding20,
+                              vertical: SizeConfig.padding16),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -109,13 +117,13 @@ class Win extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding20,
-                            vertical: SizeConfig.padding16),
-                        child: GestureDetector(
-                          onTap: () => AppState.delegate!
-                              .parseRoute(Uri.parse("/kycVerify")),
+                      InkWell(
+                        onTap: () => AppState.delegate!
+                            .parseRoute(Uri.parse("/kycVerify")),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding20,
+                              vertical: SizeConfig.padding16),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -131,13 +139,13 @@ class Win extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding20,
-                            vertical: SizeConfig.padding16),
-                        child: GestureDetector(
-                          onTap: () => AppState.delegate!
-                              .parseRoute(Uri.parse("/bankDetails")),
+                      InkWell(
+                        onTap: () => AppState.delegate!
+                            .parseRoute(Uri.parse("/bankDetails")),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding20,
+                              vertical: SizeConfig.padding16),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -235,7 +243,7 @@ class Win extends StatelessWidget {
                             ),
                           ),
                           padding: EdgeInsets.fromLTRB(SizeConfig.padding24,
-                              SizeConfig.padding34, SizeConfig.padding24, 0.0),
+                              SizeConfig.padding12, SizeConfig.padding24, 0.0),
                           child: Column(
                             children: [
                               Row(
@@ -261,7 +269,7 @@ class Win extends StatelessWidget {
                                           key: ValueKey(Constants
                                               .CURRENT_WINNING_AMOUNT)),
                                       SizedBox(
-                                        height: SizeConfig.padding32,
+                                        height: SizeConfig.padding16,
                                       ),
                                       currentWinning >=
                                               model.minWithdrawPrizeAmt!
@@ -327,14 +335,14 @@ class Win extends StatelessWidget {
                                 ],
                               ),
                               SizedBox(
-                                height: SizeConfig.padding24,
+                                height: SizeConfig.padding8,
                               ),
                             ],
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: SizeConfig.padding24,
+                        height: SizeConfig.padding4,
                       ),
 
                       //Refer and Earn

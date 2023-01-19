@@ -21,6 +21,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 class TransactionsHistory extends StatelessWidget {
   final InvestmentType? investmentType;
@@ -311,6 +312,14 @@ class TransactionTile extends StatelessWidget {
     // @required this.model,
     required this.txn,
   });
+
+  String get getFormattedDate =>
+      DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(
+          txn.timestamp!.millisecondsSinceEpoch));
+
+  String get formattedTime =>
+      DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+          txn.timestamp!.millisecondsSinceEpoch));
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -348,7 +357,7 @@ class TransactionTile extends StatelessWidget {
               style:
                   TextStyles.sourceSans.body3.colour(UiConstants.kTextColor)),
           subtitle: Text(
-            txnHistoryService.getFormattedDate(txn.timestamp!),
+            getFormattedDate + " at " + formattedTime,
             style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
           ),
           trailing: Wrap(

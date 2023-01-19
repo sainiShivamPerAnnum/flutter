@@ -953,20 +953,6 @@ class ReferAndEarnAsset extends StatelessWidget {
     S locale = S.of(context);
     return Column(
       children: [
-        Container(
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Container(
-                child: SvgPicture.asset(Assets.refreAndEarnBackgroundAsset,
-                    width: SizeConfig.screenWidth! * 0.5),
-              ),
-              Image.asset(Assets.iPadPNG,
-                  fit: BoxFit.cover, width: SizeConfig.screenWidth! * 0.24)
-            ],
-          ),
-        ),
-        SizedBox(height: SizeConfig.padding6),
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
@@ -983,7 +969,21 @@ class ReferAndEarnAsset extends StatelessWidget {
                       UiConstants.kWinnerPlayerPrimaryColor)),
             ],
           ),
-        )
+        ),
+        SizedBox(height: SizeConfig.padding12),
+        Container(
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                child: SvgPicture.asset(Assets.refreAndEarnBackgroundAsset,
+                    width: SizeConfig.screenWidth! * 0.5),
+              ),
+              Image.asset(Assets.iPadPNG,
+                  fit: BoxFit.cover, width: SizeConfig.screenWidth! * 0.24)
+            ],
+          ),
+        ),
       ],
     );
   }

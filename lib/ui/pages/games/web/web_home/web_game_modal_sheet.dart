@@ -1,4 +1,6 @@
 import 'package:felloapp/core/model/game_stats_model.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_vm.dart';
@@ -6,6 +8,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -14,13 +17,15 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WebGameModalSheet extends StatelessWidget {
-  const WebGameModalSheet(
-      {Key? key, required this.game, required this.gameInfo})
+  const WebGameModalSheet({Key? key, required this.game})
       : super(key: key);
   final String game;
-  final Gm? gameInfo;
+  
+
   @override
   Widget build(BuildContext context) {
+    final gameInfo = locator<UserStatsRepo>().getGameInfo(game);
+
     return BaseView<WebHomeViewModel>(onModelReady: (model) {
       model.init(game);
     }, onModelDispose: (model) {

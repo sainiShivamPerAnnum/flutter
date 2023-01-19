@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -256,7 +257,9 @@ class GoldBuySuccessView extends StatelessWidget {
           TextButton(
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
-              AppState.delegate!.appState.setCurrentTabIndex = 1;
+              AppState.delegate!.appState.setCurrentTabIndex = DynamicUiUtils
+                  .navBar
+                  .indexWhere((element) => element == 'SV');
 
               final _tambolaService = locator<TambolaService>();
               _tambolaService.weeklyTicksFetched = false;

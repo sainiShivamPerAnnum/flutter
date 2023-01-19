@@ -43,8 +43,7 @@ class PlayViewModel extends BaseViewModel {
     boxTitles.addAll([
       locale!.boxPlayTitle1,
       locale!.boxPlayTitle2,
-      locale!.boxPlayTitle3,
-      locale!.boxPlayTitle4,
+      "Win scratch cards everytime you score",
     ]);
   }
   final GetterRepository? _getterRepo = locator<GetterRepository>();
@@ -73,7 +72,6 @@ class PlayViewModel extends BaseViewModel {
   List<String> boxAssets = [
     Assets.ludoGameAsset,
     Assets.token,
-    Assets.leaderboardGameAsset,
     Assets.gift,
   ];
   List<String> boxTitles = [];

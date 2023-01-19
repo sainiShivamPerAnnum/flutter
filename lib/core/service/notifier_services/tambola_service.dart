@@ -97,9 +97,8 @@ class TambolaService extends ChangeNotifier {
   Future<void> fetchTambolaBoard() async {
     completer = Completer();
     if (!_weeklyTicksFetched) {
-      isTambolaBoardUpdated = true;
       _weeklyTicksFetched = true;
-      _logger!.d("Fetching Tambola tickets");
+      _logger!.d("Fetching Tambola tickets ${DateTime.now().second}");
       // ticketsLoaded = false;
       final tickets = await _tambolaRepo!.getTickets();
       if (tickets.code == 200) {
@@ -108,15 +107,15 @@ class TambolaService extends ChangeNotifier {
 
         if (userWeeklyBoards != null &&
             userWeeklyBoards!.length != boards.length) {
+          isTambolaBoardUpdated = true;
           notifyListeners();
+          isTambolaBoardUpdated = false;
         }
-
+        _logger!.d("Fetched Tambola tickets ${DateTime.now().second}");
         userWeeklyBoards = boards;
-
-        ticketCount = boards.length;
         // _currentBoard = null;
         // _currentBoardView = null;
-        isTambolaBoardUpdated = false;
+        ticketCount = boards.length;
         completer.complete(boards);
       } else {
         completer.complete(null);
@@ -158,7 +157,7 @@ class TambolaService extends ChangeNotifier {
         .containsValue(RootController.tambolaNavBar)) {
       fetchTambolaBoard();
       completer.future.then((value) {
-        initialTicketCount = value?.length ?? 0;
+        initialTicketCount = value?.length;
       });
     }
   }

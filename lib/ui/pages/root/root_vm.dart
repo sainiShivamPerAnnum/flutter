@@ -81,6 +81,8 @@ class RootViewModel extends BaseViewModel {
       locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
   Future<void> refresh() async {
+    if (_rootController.currentNavBarItemModel == RootController.tambolaNavBar)
+      return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     _txnHistoryService.signOut();

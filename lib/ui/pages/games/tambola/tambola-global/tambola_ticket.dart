@@ -133,11 +133,6 @@ class Ticket extends StatelessWidget {
                         SizedBox(
                           width: SizeConfig.padding4,
                         ),
-                        Icon(
-                          Icons.info_outline,
-                          size: SizeConfig.padding16,
-                          color: Colors.white.withOpacity(0.7),
-                        )
                       ],
                     ),
                   ],

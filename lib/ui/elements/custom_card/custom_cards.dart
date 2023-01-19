@@ -40,7 +40,7 @@ class SaveCustomCard extends StatelessWidget {
       padding: EdgeInsets.only(
         right: SizeConfig.padding16,
         top: SizeConfig.padding20,
-        bottom: SizeConfig.padding20,
+        bottom: SizeConfig.padding12,
       ),
       child: GestureDetector(
         onTap: onCardTap,

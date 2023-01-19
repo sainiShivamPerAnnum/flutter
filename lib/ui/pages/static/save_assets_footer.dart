@@ -10,7 +10,7 @@ import 'package:flutter_svg/svg.dart';
 
 class SaveAssetsFooter extends StatelessWidget {
   const SaveAssetsFooter({Key? key}) : super(key: key);
- 
+
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
@@ -19,7 +19,7 @@ class SaveAssetsFooter extends StatelessWidget {
           left: SizeConfig.pageHorizontalMargins,
           right: SizeConfig.pageHorizontalMargins,
           top: SizeConfig.padding6,
-          bottom: SizeConfig.padding20),
+          bottom: SizeConfig.padding10),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

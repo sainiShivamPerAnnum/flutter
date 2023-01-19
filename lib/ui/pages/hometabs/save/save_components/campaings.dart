@@ -25,6 +25,7 @@ class Campaigns extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: SizeConfig.padding16),
         TitleSubtitleContainer(
           title: locale.offers,
           subTitle: locale.offersSubtitle,
@@ -45,7 +46,7 @@ class CampaignCardSection extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         left: SizeConfig.padding24,
-        top: SizeConfig.padding16,
+        top: SizeConfig.padding8,
         right: SizeConfig.padding16,
       ),
       child: Container(

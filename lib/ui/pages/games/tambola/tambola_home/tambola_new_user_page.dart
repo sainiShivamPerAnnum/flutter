@@ -108,9 +108,9 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
     isFromNavigation = widget.isFromNavigation;
     return Scaffold(
       appBar: FAppBar(
-        showAvatar: true,
+        showAvatar: isFromNavigation,
         showCoinBar: false,
-        showHelpButton: true,
+        showHelpButton: isFromNavigation,
         title: isFromNavigation ? null : locale.tTicket,
         type: FaqsType.play,
         backgroundColor: Color(0XFF141414),
