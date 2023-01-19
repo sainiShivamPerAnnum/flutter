@@ -20,6 +20,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -65,6 +66,161 @@ class Win extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //Current Winnings section
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20,
+                            vertical: SizeConfig.padding10),
+                        child: Text(
+                          "Hi " +
+                              (locator<UserService>()
+                                      .baseUser
+                                      ?.name!
+                                      .split(" ")
+                                      .first ??
+                                  ""),
+                          style:
+                              TextStyles.rajdhaniSB.title3.colour(Colors.white),
+                        ),
+                      ),
+
+                      // SizedBox(
+                      //   height: SizeConfig.padding24,
+                      // ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20,
+                            vertical: SizeConfig.padding16),
+                        child: GestureDetector(
+                          onTap: () => AppState.delegate!
+                              .parseRoute(Uri.parse("/profile")),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "My Profile",
+                                style: TextStyles.sourceSans.body1
+                                    .colour(Colors.white),
+                              ),
+                              Icon(Icons.arrow_forward_ios_rounded,
+                                  size: SizeConfig.iconSize2,
+                                  color: Colors.white),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20,
+                            vertical: SizeConfig.padding16),
+                        child: GestureDetector(
+                          onTap: () => AppState.delegate!
+                              .parseRoute(Uri.parse("/kycVerify")),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                locale.obKYCDetailsLabel,
+                                style: TextStyles.sourceSans.body1
+                                    .colour(Colors.white),
+                              ),
+                              Icon(Icons.arrow_forward_ios_rounded,
+                                  size: SizeConfig.iconSize2,
+                                  color: Colors.white),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20,
+                            vertical: SizeConfig.padding16),
+                        child: GestureDetector(
+                          onTap: () => AppState.delegate!
+                              .parseRoute(Uri.parse("/bankDetails")),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Bank Account Details",
+                                style: TextStyles.sourceSans.body1
+                                    .colour(Colors.white),
+                              ),
+                              Icon(Icons.arrow_forward_ios_rounded,
+                                  size: SizeConfig.iconSize2,
+                                  color: Colors.white),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20),
+                        child: Divider(
+                          color: Color(0xff9EA1A1),
+                          thickness: 0.3,
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding8,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding14),
+                        child: TextButton(
+                          onPressed: () {
+                            model.navigateToMyWinnings(model);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(
+                                      Assets.unredemmedScratchCardBG,
+                                      height: SizeConfig.padding24),
+                                  SizedBox(
+                                    width: SizeConfig.padding8,
+                                  ),
+                                  Text(
+                                    locale.scratchCardText,
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(Colors.white),
+                                    key: ValueKey(Constants.GOLDENTICKET),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  UnscratchedGTCountChip(),
+                                  SizedBox(
+                                    width: SizeConfig.padding10,
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.white,
+                                    size: SizeConfig.padding20,
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding8,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20),
+                        child: Divider(
+                          color: Color(0xff9EA1A1),
+                          thickness: 0.3,
+                        ),
+                      ),
                       GestureDetector(
                         onTap: () => AppState.delegate!
                             .parseRoute(Uri.parse('/myWinnings')),
@@ -173,53 +329,6 @@ class Win extends StatelessWidget {
                               SizedBox(
                                 height: SizeConfig.padding24,
                               ),
-                              Divider(
-                                color: Colors.white,
-                                thickness: 0.3,
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding16,
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  model.navigateToMyWinnings(model);
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                            Assets.unredemmedScratchCardBG,
-                                            height: SizeConfig.padding32),
-                                        SizedBox(
-                                          width: SizeConfig.padding8,
-                                        ),
-                                        Text(
-                                          locale.scratchCardText,
-                                          style: TextStyles.sourceSans.body2
-                                              .colour(Colors.white),
-                                          key: ValueKey(Constants.GOLDENTICKET),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        UnscratchedGTCountChip(),
-                                        SizedBox(
-                                          width: SizeConfig.padding10,
-                                        ),
-                                        Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.white,
-                                          size: SizeConfig.padding24,
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )
                             ],
                           ),
                         ),
@@ -441,20 +550,20 @@ class Win extends StatelessWidget {
                       if (FlavorConfig.isDevelopment()) CacheClearWidget(),
 
                       //Leader Board
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: SizeConfig.padding24,
-                        ),
-                        child: Text(
-                          locale.leaderBoard,
-                          style: TextStyles.sourceSans.semiBold
-                              .colour(Colors.white)
-                              .title3,
-                        ),
-                      ),
-                      WinnerboardView(
-                        count: 4,
-                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.only(
+                      //     left: SizeConfig.padding24,
+                      //   ),
+                      //   child: Text(
+                      //     locale.leaderBoard,
+                      //     style: TextStyles.sourceSans.semiBold
+                      //         .colour(Colors.white)
+                      //         .title3,
+                      //   ),
+                      // ),
+                      // WinnerboardView(
+                      //   count: 4,
+                      // ),
 
                       SizedBox(
                         height: SizeConfig.navBarHeight * 2,

@@ -28,7 +28,7 @@ class AnalyticsProperties {
 
   init() {
     _paytmService!.init();
-    _tambolaService!.init();
+    
     _txnHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
 
     if (!_baseUtil!.referralsFetched!) {

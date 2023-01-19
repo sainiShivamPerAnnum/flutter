@@ -104,8 +104,9 @@ class Data {
         goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble(),
         txnDisplayMsg: map['displayMessage'],
         gtId: map['gtId'] ?? "",
-        gtIds:
-            List<String>.from((map['gtIds'].cast<String>() as List<String>)));
+        gtIds: map['gtIds'] != null
+            ? List<String>.from((map['gtIds'].cast<String>() as List<String>))
+            : null);
   }
 
   Data.base() {

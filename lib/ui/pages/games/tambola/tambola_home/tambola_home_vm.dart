@@ -227,7 +227,8 @@ class TambolaHomeViewModel extends BaseViewModel {
     await fetchTambola();
 
     tambolaService!.addListener(() {
-      if (tambolaService!.isTambolaBoardUpdated) refreshTambolaTickets();
+      if (tambolaService!.isTambolaBoardUpdated)
+        refreshTambolaTickets(shouldRefresh: false);
     });
 
     ///check whether to show summary cards or not
@@ -241,7 +242,6 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   Future<void> fetchTambola() async {
-    
     ticketsLoaded = false;
     if (!tambolaService!.weeklyTicksFetched)
       tambolaService!.fetchTambolaBoard();
@@ -253,7 +253,6 @@ class TambolaHomeViewModel extends BaseViewModel {
 
     _examineTicketsForWins();
 
-    notifyListeners();
   }
 
   fetchWinners() async {
@@ -312,11 +311,11 @@ class TambolaHomeViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> refreshTambolaTickets() async {
+  Future<void> refreshTambolaTickets({bool shouldRefresh=true}) async {
     _logger!.i('Refreshing..');
     _topFiveTambolaBoards = [];
     ticketsBeingGenerated = true;
-
+    if(shouldRefresh)
     tambolaService!.weeklyTicksFetched = false;
     init();
     notifyListeners();

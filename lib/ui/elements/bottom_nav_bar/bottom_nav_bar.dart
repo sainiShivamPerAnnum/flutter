@@ -37,33 +37,40 @@ class BottomNavBar extends StatelessWidget {
                 color: Colors.black,
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins / 2),
+                padding: EdgeInsets.symmetric(horizontal: 0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(parentModel.navBarItems.values.length,
                       (index) {
                     final navbarItems =
                         parentModel.navBarItems.values.toList()[index];
                     return superModel.getCurrentTabIndex == index
-                        ? NavBarIcon(
-                            key: ValueKey(navbarItems.title),
-                            animate: true,
-                            item: navbarItems,
-                            style: TextStyles.rajdhaniSB
-                                .colour(UiConstants.kTextColor),
-                          )
-                        : GestureDetector(
-                            onTap: () {
-                              parentModel.onItemTapped(index);
-                            },
+                        ? Expanded(
                             child: NavBarIcon(
                               key: ValueKey(navbarItems.title),
-                              animate: false,
+                              animate: true,
                               item: navbarItems,
                               style: TextStyles.rajdhaniSB
-                                  .colour(UiConstants.kTextColor2),
+                                  .colour(UiConstants.kTextColor),
+                            ),
+                          )
+                        : Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: SizeConfig.screenWidth! * 0.2,
+                              child: GestureDetector(
+                                onTap: () {
+                                  parentModel.onItemTapped(index);
+                                },
+                                child: NavBarIcon(
+                                  key: ValueKey(navbarItems.title),
+                                  animate: false,
+                                  item: navbarItems,
+                                  style: TextStyles.rajdhaniSB
+                                      .colour(UiConstants.kTextColor2),
+                                ),
+                              ),
                             ),
                           );
                   }),

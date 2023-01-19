@@ -100,7 +100,6 @@ class RootViewModel extends BaseViewModel {
     AppState().setRootLoadValue = true;
     _referralService.verifyReferral();
     _referralService.initDynamicLinks();
-
     initialize();
   }
 
@@ -113,6 +112,7 @@ class RootViewModel extends BaseViewModel {
       _userService.getUserFundWalletData();
       _userService.checkForNewNotifications();
       _userService.getProfilePicture();
+      _tambolaService!.init();
       _initAdhocNotifications();
       Future.delayed(Duration(seconds: 3), () {
         _marketingService.checkUserDailyAppCheckInStatus().then((value) {
@@ -128,7 +128,7 @@ class RootViewModel extends BaseViewModel {
   onDispose() {
     _rootController.navItems.clear();
     AppState.isUserSignedIn = false;
-    _rootController.navItems.clear();
+
     _fcmListener!.addIncomingMessageListener(null);
   }
 

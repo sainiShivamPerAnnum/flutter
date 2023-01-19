@@ -110,13 +110,13 @@ class TambolaService extends ChangeNotifier {
             userWeeklyBoards!.length != boards.length) {
           notifyListeners();
         }
-        isTambolaBoardUpdated = false;
+
         userWeeklyBoards = boards;
-        
-        TambolaService.ticketCount = boards.length;
+
+        ticketCount = boards.length;
         // _currentBoard = null;
         // _currentBoardView = null;
-
+        isTambolaBoardUpdated = false;
         completer.complete(boards);
       } else {
         completer.complete(null);
@@ -151,15 +151,14 @@ class TambolaService extends ChangeNotifier {
   init() {
     _atomicTicketGenerationLeftCount = 0;
     _atomicTicketDeletionLeftCount = 0;
+
     setUpDailyPicksCount();
     if (locator<RootController>()
         .navItems
-        .containsKey(RootController.tambolaNavBar)) {
+        .containsValue(RootController.tambolaNavBar)) {
       fetchTambolaBoard();
       completer.future.then((value) {
-        if (value != null) {
-          initialTicketCount = value.length;
-        }
+        initialTicketCount = value?.length ?? 0;
       });
     }
   }

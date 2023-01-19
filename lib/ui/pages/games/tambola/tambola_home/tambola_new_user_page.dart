@@ -107,16 +107,14 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
 
     isFromNavigation = widget.isFromNavigation;
     return Scaffold(
-      appBar: isFromNavigation
-          ? null
-          : FAppBar(
-              showAvatar: false,
-              showCoinBar: false,
-              showHelpButton: false,
-              title: locale.tTicket,
-              type: FaqsType.play,
-              backgroundColor: UiConstants.kArrowButtonBackgroundColor,
-            ),
+      appBar: FAppBar(
+        showAvatar: true,
+        showCoinBar: false,
+        showHelpButton: true,
+        title: isFromNavigation ? null : locale.tTicket,
+        type: FaqsType.play,
+        backgroundColor: Color(0XFF141414),
+      ),
       backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(
         alignment: Alignment.topCenter,
@@ -129,9 +127,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
               children: [
                 Container(
                   // margin: EdgeInsets.only(top: SizeConfig.padding14),
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top +
-                          SizeConfig.padding20),
+                  padding: EdgeInsets.only(top: SizeConfig.padding20),
                   decoration: BoxDecoration(
                       color: Color(0XFF141414),
                       borderRadius: BorderRadius.only(
@@ -140,7 +136,10 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SvgPicture.asset(Assets.cr1_Tambola),
+                      SvgPicture.asset(
+                        Assets.cr1_Tambola,
+                        height: SizeConfig.screenHeight! * 0.2,
+                      ),
                       SizedBox(
                         height: SizeConfig.padding14,
                       ),
@@ -243,58 +242,6 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
               ),
             ),
           ),
-          if (isFromNavigation)
-            Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding:
-                    EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding24),
-                      child: ProfileImageSE(),
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding24),
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(right: SizeConfig.padding4),
-                              child: SvgPicture.asset(
-                                Assets.tambolaTicketPL,
-                                height: SizeConfig.padding20,
-                                width: SizeConfig.padding20,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            Text(
-                              (widget.model.activeTambolaCardCount ?? 0)
-                                  .toString(),
-                              style: TextStyles.rajdhaniB.body1,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
         ],
       ),
     );
