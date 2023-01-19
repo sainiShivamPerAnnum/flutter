@@ -59,7 +59,7 @@ class PlayViewModel extends BaseViewModel {
   String? _sessionId;
   bool _isOfferListLoading = true;
   bool _isGamesListDataLoading = true;
-  late GameStats gameStats;
+  late GameStats? gameStats;
 
   List<PromoCardModel>? _offerList;
   List<GameModel>? _gamesListData;
@@ -117,7 +117,7 @@ class PlayViewModel extends BaseViewModel {
 
   Future<void> setGameStatus() async {
     final data = await _userStatsRepo.completer.future;
-    if (data.data?.updatedOn?.seconds != gameStats.data?.updatedOn?.seconds) {
+    if (data?.data?.updatedOn?.seconds != gameStats?.data?.updatedOn?.seconds) {
       gameStats = data;
 
       notifyListeners();
@@ -130,9 +130,9 @@ class PlayViewModel extends BaseViewModel {
     final response = await gamesRepo!.getGames();
 
     locator<UserStatsRepo>().getGameStats();
-    gameStats = await _userStatsRepo.completer.future.catchError((_) {
-      BaseUtil.showNegativeAlert("", "Something went wrong please try again");
-    });
+    gameStats = await _userStatsRepo.completer.future.onError(
+        (error, stackTrace) => BaseUtil.showNegativeAlert(
+            "", "Something went wrong please try again"));
 
     showSecurityMessageAtTop =
         _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
