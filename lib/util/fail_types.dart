@@ -56,7 +56,8 @@ enum FailType {
   MixpanelServiceInitFailed,
   HttpModelInitFailed,
   Splash,
-  Journey
+  Journey,
+  KycImageCaptureFailed
 }
 
 extension ParseToString on FailType {

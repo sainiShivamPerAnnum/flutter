@@ -177,7 +177,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Better Luck Next Time"),
         "blogs": MessageLookupByLibrary.simpleMessage("Blogs"),
         "blogsSubTitle": MessageLookupByLibrary.simpleMessage(
-            "Read about the world of games and finance"),
+            "Read about the world of finance"),
         "blogsTitle": MessageLookupByLibrary.simpleMessage("Fin-gyan"),
         "bought": MessageLookupByLibrary.simpleMessage("Bought"),
         "boxFloTitles1":
@@ -393,8 +393,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "felloAutoSave": MessageLookupByLibrary.simpleMessage("Fello Autosave"),
         "felloFloEarnTxt":
             MessageLookupByLibrary.simpleMessage("Enjoy stable returns of 10%"),
-        "felloFloMainTitle":
-            MessageLookupByLibrary.simpleMessage("Fello Flo (10%)"),
+        "felloFloMainTitle": MessageLookupByLibrary.simpleMessage("Fello Flo"),
         "felloFloSubTitle": MessageLookupByLibrary.simpleMessage(
             "10% p.a. returns | RBI regulated | P2P asset"),
         "felloFloText": MessageLookupByLibrary.simpleMessage("Fello Flo"),

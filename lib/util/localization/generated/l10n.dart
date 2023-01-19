@@ -1678,10 +1678,10 @@ class S {
     );
   }
 
-  /// `Fello Flo (10%)`
+  /// `Fello Flo`
   String get felloFloMainTitle {
     return Intl.message(
-      'Fello Flo (10%)',
+      'Fello Flo',
       name: 'felloFloMainTitle',
       desc: '',
       args: [],
@@ -6352,10 +6352,10 @@ class S {
     );
   }
 
-  /// `Read about the world of games and finance`
+  /// `Read about the world of finance`
   String get blogsSubTitle {
     return Intl.message(
-      'Read about the world of games and finance',
+      'Read about the world of finance',
       name: 'blogsSubTitle',
       desc: '',
       args: [],

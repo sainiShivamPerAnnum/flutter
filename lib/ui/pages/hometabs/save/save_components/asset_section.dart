@@ -35,6 +35,7 @@ class SaveNetWorthSection extends StatelessWidget {
             SaveCustomCard(
               title: locale.felloFloMainTitle,
               subtitle: locale.currentValue,
+              chipText: "10% RETURNS",
               key: Key(Constants.ASSET_TYPE_LENDBOX),
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,
@@ -68,6 +69,7 @@ class SaveNetWorthSection extends StatelessWidget {
             SaveCustomCard(
               title: locale.digitalGoldMailTitle,
               subtitle: locale.youOwn,
+              chipText: "SAFE & SECURE",
               key: Key(Constants.ASSET_TYPE_AUGMONT),
               cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
               cardAssetName: Assets.digitalGoldBar,
@@ -145,10 +147,15 @@ class SaveNetWorthSection extends StatelessWidget {
                       ],
                     ),
                   )
-                : Container(),
-            SizedBox(
-              height: SizeConfig.padding10,
-            ),
+                : Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    child: Text(
+                      "Take your first step towards healthy Savings",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
+                    ),
+                  ),
             getAssetsOrder(),
             SaveAssetsFooter(),
           ],

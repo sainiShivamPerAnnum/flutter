@@ -128,7 +128,6 @@ class RootViewModel extends BaseViewModel {
   onDispose() {
     _rootController.navItems.clear();
     AppState.isUserSignedIn = false;
-
     _fcmListener!.addIncomingMessageListener(null);
   }
 

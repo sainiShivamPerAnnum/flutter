@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,18 +14,27 @@ class CacheService {
   final CustomLogger? _logger = locator<CustomLogger>();
 
   static Future<void> initialize() async {
-    if (_isar == null) {
-      final dir = await getApplicationSupportDirectory();
-      _isar = await Isar.open(
-        [CacheModelSchema],
-        directory: dir.path,
-      );
+    try {
+      if (_isar == null) {
+        final dir = await getApplicationSupportDirectory();
+        _isar = await Isar.open(
+          [CacheModelSchema],
+          directory: dir.path,
+        );
+      }
+    } catch (e) {
+      log("ISAR:: Unable to initialize isar");
     }
   }
 
   static Future<void> invalidateAll() async {
     final CustomLogger? _logger = locator<CustomLogger>();
+
     try {
+      if (_isar == null) {
+        log("ISAR:: invalidation failed, isar not initialized");
+        return;
+      }
       _logger!.d('cache: invalidate all');
       await _isar?.writeTxn(() async {
         await _isar?.clear();
@@ -72,11 +82,19 @@ class CacheService {
     final response = await apiReq();
 
     final res = parseData(response);
-
-    if (response != null &&
-        response['data'] != null &&
-        response['data'].isNotEmpty &&
-        ttl != 0) await writeMap(key, ttl, response);
+    try {
+      if (_isar == null) {
+        log("ISAR:: invalidation failed, isar not initialized");
+        return res;
+      }
+      if (response != null &&
+          response['data'] != null &&
+          response['data'].isNotEmpty &&
+          ttl != 0) await writeMap(key, ttl, response);
+    } catch (e) {
+      _logger!
+          .d("Writing to isar failed, returning data directly without caching");
+    }
 
     return res;
   }
@@ -87,6 +105,10 @@ class CacheService {
 
   Future<bool> writeString(String key, int ttl, String data) async {
     try {
+      if (_isar == null) {
+        log("ISAR:: cache write failed, isar not initialized");
+        return false;
+      }
       final now = DateTime.now().millisecondsSinceEpoch;
       final cache = new CacheModel(
         key: key,
@@ -109,9 +131,13 @@ class CacheService {
 
   static Future<bool> invalidateByKey(String key) async {
     final CustomLogger? _logger = locator<CustomLogger>();
+
     try {
       _logger!.d('cache: invalidating key $key');
-
+      if (_isar == null) {
+        log("ISAR:: invalidation failed, isar not initialized");
+        return false;
+      }
       await _isar!.writeTxn(() async {
         final List<CacheModel> data = await _isar!
             .collection<CacheModel>()
@@ -135,8 +161,11 @@ class CacheService {
 
   Future<bool> _invalidate(int id) async {
     try {
+      if (_isar == null) {
+        log("ISAR:: invalidation failed, isar not initialized");
+        return false;
+      }
       _logger!.d('cache: invalidating id $id');
-
       await _isar!.writeTxn(() async {
         return await _isar!.cacheModels.delete(id);
       });
@@ -149,6 +178,10 @@ class CacheService {
   }
 
   Future<CacheModel?> getData(String key) async {
+    if (_isar == null) {
+      log("ISAR:: cache read failed, isar not initialized");
+      return null;
+    }
     final data = await _isar!.cacheModels.filter().keyEqualTo(key).findFirst();
     final now = DateTime.now().millisecondsSinceEpoch;
 
@@ -233,9 +266,11 @@ class CacheService {
       final end = responseData["end"];
       List<dynamic>? items = responseData["items"];
 
-      for (int i = start; i <= end; i++) {
-        final key = '$keyPrefix/$i';
-        await writeMap(key, ttl, items![i - start as int]);
+      if (_isar != null) {
+        for (int i = start; i <= end; i++) {
+          final key = '$keyPrefix/$i';
+          await writeMap(key, ttl, items![i - start as int]);
+        }
       }
     }
 

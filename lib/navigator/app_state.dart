@@ -169,11 +169,12 @@ class AppState extends ChangeNotifier {
     });
   }
 
-  static dump() {
+  dump() {
     isRootAvailableForIncomingTaskExecution = true;
     isFirstTimeJourneyOpened = false;
     isJourneyFirstTab = false;
     isFirstTime = false;
+    _rootController.navItems.clear();
   }
   // setLastTapIndex() {
   //   SharedPreferences.getInstance().then((instance) {
