@@ -799,7 +799,7 @@
   "galleryAccess": "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
   "permissionUnavailable": "Permission Unavailable",
   "enablePermission": "Please enable permission from settings to continue",
-  "profileUpdateAlert": "Are you sure you want to update your profile picture",
+  "profileUpdateAlert": "Are you sure you want to update your profile picture?",
   "updatePicture": "Update Picture",
   "profileUpdated1": "Your profile picture has been updated",
   "failed": "Failed",

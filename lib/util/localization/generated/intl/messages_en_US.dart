@@ -843,7 +843,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "processing":
             MessageLookupByLibrary.simpleMessage("We\'re still Processing"),
         "profileUpdateAlert": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to update your profile picture"),
+            "Are you sure you want to update your profile picture?"),
         "profileUpdateFailed":
             MessageLookupByLibrary.simpleMessage("Profile Update failed"),
         "profileUpdateFailedSubtitle": MessageLookupByLibrary.simpleMessage(

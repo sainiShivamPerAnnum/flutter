@@ -7796,10 +7796,10 @@ class S {
     );
   }
 
-  /// `Are you sure you want to update your profile picture`
+  /// `Are you sure you want to update your profile picture?`
   String get profileUpdateAlert {
     return Intl.message(
-      'Are you sure you want to update your profile picture',
+      'Are you sure you want to update your profile picture?',
       name: 'profileUpdateAlert',
       desc: '',
       args: [],
