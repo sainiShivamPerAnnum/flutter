@@ -106,8 +106,8 @@ class Constants {
       'https://prod.freakx.in/fello/cricket-2021-V2/';
 
   static const gamingtnc = "https://fello.in/policy/gaming";
-  static const tambolatnc = "https://fello.in/policy/gaming";
-  static const savingstnc = "https://fello.in/policy/gaming";
+  static const tambolatnc = "https://fello.in/policy/tambola";
+  static const savingstnc = "https://fello.in/policy/savings";
 
   static const INSTALL_TRACKING = 'FELLO_INSTALL';
   static const SIGNUP_TRACKING = 'FELLO_SIGNUP';
