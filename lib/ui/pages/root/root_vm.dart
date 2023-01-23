@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -16,8 +17,8 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -30,7 +31,9 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
+import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_instant_view.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -45,7 +48,13 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum NavBarItem { Journey, Save, Account, Play, Tambola }
+
 class RootViewModel extends BaseViewModel {
+  RootViewModel({S? l})
+      : locale = l ?? locator<S>(),
+        super();
+
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final FcmHandler? _fcmListener = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
@@ -55,9 +64,9 @@ class RootViewModel extends BaseViewModel {
   final JourneyService _journeyService = locator<JourneyService>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final TambolaService? _tambolaService = locator<TambolaService>();
-  final GoldenTicketService? _gtService = locator<GoldenTicketService>();
+  final ScratchCardService? _gtService = locator<ScratchCardService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
-  final S locale = locator<S>();
+  final S locale;
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
@@ -70,8 +79,10 @@ class RootViewModel extends BaseViewModel {
   final ReferralService _referralService = locator<ReferralService>();
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
-
+  final RootController _rootController = locator<RootController>();
   Future<void> refresh() async {
+    if (_rootController.currentNavBarItemModel == RootController.tambolaNavBar)
+      return;
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     _txnHistoryService.signOut();
@@ -84,6 +95,9 @@ class RootViewModel extends BaseViewModel {
   }
 
   onInit() {
+    _rootController.currentNavBarItemModel =
+        _rootController.navItems.values.first;
+
     AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
     _referralService.verifyReferral();
@@ -100,6 +114,7 @@ class RootViewModel extends BaseViewModel {
       _userService.getUserFundWalletData();
       _userService.checkForNewNotifications();
       _userService.getProfilePicture();
+      _tambolaService!.init();
       _initAdhocNotifications();
       Future.delayed(Duration(seconds: 3), () {
         _marketingService.checkUserDailyAppCheckInStatus().then((value) {
@@ -109,58 +124,54 @@ class RootViewModel extends BaseViewModel {
     });
   }
 
+  Map<Widget, NavBarItemModel> get navBarItems =>
+      locator<RootController>().navItems;
+
   onDispose() {
+    _rootController.navItems.clear();
     AppState.isUserSignedIn = false;
     _fcmListener!.addIncomingMessageListener(null);
   }
 
   void onItemTapped(int index) {
     if (JourneyService.isAvatarAnimationInProgress) return;
-    switch (index) {
-      case 0:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.journeySection,
-            properties: AnalyticsProperties.getDefaultPropertiesMap());
-        break;
-      case 1:
-        _analyticsService.track(
-            eventName: AnalyticsEvents.saveSection,
-            properties: AnalyticsProperties.getDefaultPropertiesMap());
-        break;
-      case 2:
-        {
-          _analyticsService.track(
-              eventName: AnalyticsEvents.playSection,
-              properties:
-                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-                "Time left for draw Tambola (mins)":
-                    AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                "Tambola Tickets Owned":
-                    AnalyticsProperties.getTambolaTicketCount(),
-              }));
-        }
-        break;
-      case 3:
-        {
-          _analyticsService.track(
-              eventName: AnalyticsEvents.winSection,
-              properties:
-                  AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-                "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
-                "Unscratched Ticket Count": _gtService?.unscratchedTicketsCount,
-                "Scratched Ticket Count":
-                    (_gtService!.activeGoldenTickets.length) -
-                        _gtService!.unscratchedTicketsCount,
-              }));
-        }
-        break;
+    _rootController.onChange(_rootController.navItems.values.toList()[index]);
 
-      default:
-    }
     AppState.delegate!.appState.setCurrentTabIndex = index;
+    trackEvent(index);
     Haptic.vibrate();
-    if (AppState.delegate!.appState.getCurrentTabIndex == 0)
+    if (_rootController.currentNavBarItemModel ==
+        RootController.journeyNavBarItem)
       _journeyService.checkForMilestoneLevelChange();
+
+    if (_rootController.currentNavBarItemModel ==
+        RootController.tambolaNavBar) {
+      _tambolaService!.completer.future.then((value) {
+        if ((_tambolaService!.initialTicketCount ?? -1) == 0) {
+          if (_tambolaService!.userWeeklyBoards!.length > 0) {
+            _tambolaService!.initialTicketCount =
+                _tambolaService!.userWeeklyBoards!.length;
+            WidgetsBinding.instance.addPostFrameCallback(
+              (timeStamp) {
+                _showTambolaTicketDialog(
+                    _tambolaService!.userWeeklyBoards!.length);
+              },
+            );
+          }
+        }
+      });
+    }
+  }
+
+  _showTambolaTicketDialog(int ticketCount) {
+    AppState.screenStack.add(ScreenItem.dialog);
+    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+      PageRouteBuilder(
+          opaque: false,
+          pageBuilder: (BuildContext context, _, __) => TambolaInstantView(
+                ticketCount: ticketCount,
+              )),
+    );
   }
 
   _initAdhocNotifications() {
@@ -265,6 +276,48 @@ class RootViewModel extends BaseViewModel {
           },
         ),
       );
+    }
+  }
+
+  void trackEvent(int index) {
+    if (_rootController.currentNavBarItemModel ==
+        RootController.journeyNavBarItem) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.journeySection,
+          properties: AnalyticsProperties.getDefaultPropertiesMap());
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.saveNavBarItem) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.saveSection,
+          properties: AnalyticsProperties.getDefaultPropertiesMap());
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.playNavBarItem) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.playSection,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Time left for draw Tambola (mins)":
+                AnalyticsProperties.getTimeLeftForTambolaDraw(),
+            "Tambola Tickets Owned":
+                AnalyticsProperties.getTambolaTicketCount(),
+          }));
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.winNavBarItem) {
+      _analyticsService.track(
+          eventName: "Account section tapped",
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
+            "Unscratched Ticket Count": _gtService?.unscratchedTicketsCount,
+            "Scratched Ticket Count": (_gtService!.activeScratchCards.length) -
+                _gtService!.unscratchedTicketsCount,
+          }));
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.tambolaNavBar) {
+      _analyticsService.track(eventName: "Tambola tab tapped", properties: {
+        "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
+        "index": index
+      });
     }
   }
 
@@ -565,8 +618,8 @@ class RootViewModel extends BaseViewModel {
               AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(
-                'Signed out automatically.',
-                'Seems like some internal issues. Please sign in again.',
+                'Session timed out ⚠️',
+                'Please sign in again.',
               );
             }
           });

@@ -4,8 +4,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/payment_mode_enum.dart';
@@ -18,8 +16,8 @@ import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -42,7 +40,7 @@ class AugmontTransactionService extends BaseTransactionService {
   final CustomLogger? _logger = locator<CustomLogger>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
-  final _gtService = GoldenTicketService();
+  final _gtService = ScratchCardService();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final TransactionHistoryService? _txnHistoryService =
       locator<TransactionHistoryService>();
@@ -131,7 +129,7 @@ class AugmontTransactionService extends BaseTransactionService {
           currentTransactionState = TransactionState.ongoing;
           initiatePolling();
         }
-        
+
         // resetBuyOptions();
         isGoldBuyInProgress = false;
         AppState.unblockNavigation();
@@ -236,29 +234,23 @@ class AugmontTransactionService extends BaseTransactionService {
     }
   }
 
-  transactionResponseUpdate({String? gtId}) async {
+  transactionResponseUpdate({List<String>? gtIds}) async {
     _logger!.d("Polling response processing");
     try {
-      if (gtId != null) {
-        print("Hey a new fcm recived with gtId: $gtId");
-        if (GoldenTicketService.lastGoldenTicketId != null) {
-          if (GoldenTicketService.lastGoldenTicketId == gtId) {
-            return;
-          } else {
-            GoldenTicketService.lastGoldenTicketId = gtId;
-          }
-        } else {
-          GoldenTicketService.lastGoldenTicketId = gtId;
-        }
-      }
-
       //add this to augmontBuyVM
       _userCoinService!.getUserCoinBalance();
       _userService!.getUserFundWalletData();
-      print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
-        GoldenTicketService.goldenTicketId = gtId;
-        await _gtService.fetchAndVerifyGoldenTicketByID();
+        // ScratchCardService.scratchCardId = gtId;
+        ScratchCardService.scratchCardsList = gtIds;
+        //TESTING MULTIPLE SCRATCH CARD VIEW
+        // ScratchCardService.scratchCardsList!.addAll([
+        //   "Acd92NN53WWpJZbxZ4UW",
+        //   "Bv8CzzI40pfwLpbuPM6Z",
+        //   "M83UzvsZGzMJlEcVezsj",
+        //   "WrffUHSSJ95hqxO5iv73"
+        // ]);
+        // await _gtService.fetchAndVerifyScratchCardByID();
         await _userService!.getUserJourneyStats();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
@@ -282,15 +274,15 @@ class AugmontTransactionService extends BaseTransactionService {
             transactionResponseModel = res.model;
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
-
+            currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
             if (res.model!.data != null &&
                 res.model!.data!.goldInTxnBought != null &&
                 res.model!.data!.goldInTxnBought! > 0)
               currentTxnGms = res.model!.data!.goldInTxnBought;
             timer!.cancel();
             return transactionResponseUpdate(
-              gtId: transactionResponseModel?.data?.gtId ?? "",
-            );
+                // gtId: transactionResponseModel?.data?.gtId ?? "",
+                gtIds: transactionResponseModel?.data?.gtIds ?? []);
           }
           break;
         case Constants.TXN_STATUS_RESPONSE_PENDING:

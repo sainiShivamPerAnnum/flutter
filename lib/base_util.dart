@@ -12,6 +12,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
@@ -31,12 +32,13 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/modals_sheets/deposit_options_modal_sheet.dart';
-import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/gold_buy_view.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_sell/gold_sell_view.dart';
-import 'package:felloapp/ui/pages/others/finance/lendbox/deposit/lendbox_buy_view.dart';
-import 'package:felloapp/ui/pages/others/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
+import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
+import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
+import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/assets.dart';
@@ -296,12 +298,28 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
+  static openGameModalSheet(String game) {
+    AppState.screenStack.add(ScreenItem.modalsheet);
+    return openModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: true,
+      isBarrierDismissible: true,
+      addToScreenStack: false,
+      content: WebGameModalSheet(
+        game: game,
+        
+      ),
+      backgroundColor: Color(0xff39393C),
+      hapticVibrate: true,
+    );
+  }
+
   openRechargeModalSheet({
     int? amt,
     bool? isSkipMl,
     required InvestmentType investmentType,
   }) {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // if (_userService!.userJourneyStats?.mlIndex == 1)
       //   return BaseUtil.openDialog(
       //     addToScreenStack: true,
@@ -567,8 +585,8 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static void launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      launchUrl(url);
     } else {
       BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
           "Please try after some time");
@@ -587,6 +605,21 @@ class BaseUtil extends ChangeNotifier {
   //     AppState.delegate!.appState.currentAction =
   //         PageAction(state: PageState.addPage, page: TGamePageConfig);
   // }
+
+  static int getRandomRewardAmount(index) {
+    if (index < 5)
+      return 50;
+    else if (index < 10)
+      return 100;
+    else if (index < 15)
+      return 150;
+    else if (index < 20)
+      return 200;
+    else if (index < 50)
+      return 500;
+    else
+      return 100;
+  }
 
   bool isOldCustomer() {
     //all users before april 2021 are marked old

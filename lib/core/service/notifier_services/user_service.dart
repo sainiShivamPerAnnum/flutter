@@ -17,11 +17,12 @@ import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -57,6 +58,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
   final GetterRepository _gettersRepo = locator<GetterRepository>();
+  final AppState _appState = locator<AppState>();
+  final RootController _rootController = locator<RootController>();
   S locale = locator<S>();
 
   User? _firebaseUser;
@@ -184,14 +187,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   set userJourneyStats(UserJourneyStatsModel? stats) {
     if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype ?? '' as bool)
-      GoldenTicketService.previousPrizeSubtype =
+      ScratchCardService.previousPrizeSubtype =
           _userJourneyStats?.prizeSubtype ?? '';
     _userJourneyStats = stats;
     notifyListeners(UserServiceProperties.myJourneyStats);
     _logger!
         .d("Journey Stats updated in userservice, property listeners notified");
     _logger!.d(
-        "Previous PrizeSubtype : ${GoldenTicketService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats?.prizeSubtype} ");
+        "Previous PrizeSubtype : ${ScratchCardService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats?.prizeSubtype} ");
   }
 
   set augGoldPrinciple(double principle) {
@@ -337,7 +340,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       if (baseUser != null) {
         await getUserJourneyStats();
         final res = await _gettersRepo.getPageConfigs();
-        if (res.isSuccess()) setPageConfigs(res.model!);
+        if (res.isSuccess()) {
+          setPageConfigs(res.model!);
+          _appState.setCurrentTabIndex = 0;
+        }
       }
     } catch (e) {
       _logger!.e(e.toString());
@@ -509,6 +515,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       dynamicUi.save.sections
     ];
     DynamicUiUtils.helpFab = dynamicUi.journeyFab;
+    DynamicUiUtils.navBar = dynamicUi.navBar;
+    DynamicUiUtils.navBar.forEach(_rootController.getNavItems);
   }
 
   diplayUsername(String username) {

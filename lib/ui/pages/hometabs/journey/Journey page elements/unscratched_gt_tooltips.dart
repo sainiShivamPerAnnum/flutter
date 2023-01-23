@@ -1,10 +1,10 @@
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_scratch_dialog/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -14,7 +14,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class PrizeToolTips extends StatelessWidget {
   final JourneyPageViewModel model;
   PrizeToolTips({Key? key, required this.model}) : super(key: key);
-  final _gtService = locator<GoldenTicketService>();
+  final _gtService = locator<ScratchCardService>();
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
@@ -31,10 +31,10 @@ class PrizeToolTips extends StatelessWidget {
                     children:
                         List.generate(model.completedMilestoneList.length, (i) {
                       final milestone = model.completedMilestoneList[i];
-                      final goldenTicket = model.completedMilestonePrizeList[i];
-                      return (goldenTicket != null &&
-                              goldenTicket.isRewarding! &&
-                              goldenTicket.redeemedTimestamp ==
+                      final scratchCard = model.completedMilestonePrizeList[i];
+                      return (scratchCard != null &&
+                              scratchCard.isRewarding! &&
+                              scratchCard.redeemedTimestamp ==
                                   TimestampModel(seconds: 0, nanoseconds: 0))
                           ? Positioned(
                               left: model.pageWidth! * milestone.x! * 0.9,
@@ -47,9 +47,9 @@ class PrizeToolTips extends StatelessWidget {
                               child: SafeArea(
                                 child: GestureDetector(
                                     onTap: () async {
-                                      GoldenTicketService.currentGT =
-                                          goldenTicket;
-                                      _gtService.showInstantGoldenTicketView(
+                                      ScratchCardService.currentGT =
+                                          scratchCard;
+                                      _gtService.showInstantScratchCardView(
                                           source: GTSOURCE.prize,
                                           onJourney: true);
                                     },
@@ -68,11 +68,11 @@ class PrizeToolTips extends StatelessWidget {
                                       child: Padding(
                                           padding: EdgeInsets.all(16.0),
                                           child: Image.asset(
-                                            goldenTicket.isLevelChange!
+                                            scratchCard.isLevelChange!
                                                 ? Assets
-                                                    .levelUpUnredeemedGoldenTicketBGPNG
+                                                    .levelUpUnredeemedScratchCardBGPNG
                                                 : Assets
-                                                    .unredeemedGoldenTicketBG_png,
+                                                    .unredeemedScratchCardBG_png,
                                             width: SizeConfig.padding40,
                                           )),
                                     )),

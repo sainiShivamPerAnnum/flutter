@@ -4,28 +4,29 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
-import 'package:felloapp/ui/service_elements/leaderboards/winners_leaderboard.dart';
 import 'package:felloapp/ui/service_elements/new/unscratched_gt_count.dart';
-import 'package:felloapp/ui/widgets/appbar/appbar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:upi_pay/upi_pay.dart';
 
 import '../../../../core/enums/app_config_keys.dart';
 
@@ -36,8 +37,6 @@ List<Color> randomColors = [
 ];
 
 class Win extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -67,6 +66,168 @@ class Win extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //Current Winnings section
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20,
+                            vertical: SizeConfig.padding10),
+                        child: PropertyChangeConsumer<UserService,
+                            UserServiceProperties>(
+                          properties: [UserServiceProperties.myName],
+                          builder: (context, state, c) {
+                            return Text(
+                              "Hi " +
+                                  (locator<UserService>()
+                                              .baseUser
+                                              ?.name!
+                                              .split(" ")
+                                              .first ??
+                                          "")
+                                      .capitalize(),
+                              style: TextStyles.rajdhaniSB.title3
+                                  .colour(Colors.white),
+                            );
+                          },
+                        ),
+                      ),
+
+                      // SizedBox(
+                      //   height: SizeConfig.padding24,
+                      // ),
+
+                      InkWell(
+                        onTap: () => AppState.delegate!
+                            .parseRoute(Uri.parse("/profile")),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding20,
+                              vertical: SizeConfig.padding16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Profile",
+                                style: TextStyles.sourceSans.body1
+                                    .colour(Colors.white),
+                              ),
+                              Icon(Icons.arrow_forward_ios_rounded,
+                                  size: SizeConfig.iconSize2,
+                                  color: Colors.white),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => AppState.delegate!
+                            .parseRoute(Uri.parse("/kycVerify")),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding20,
+                              vertical: SizeConfig.padding16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                locale.obKYCDetailsLabel,
+                                style: TextStyles.sourceSans.body1
+                                    .colour(Colors.white),
+                              ),
+                              Icon(Icons.arrow_forward_ios_rounded,
+                                  size: SizeConfig.iconSize2,
+                                  color: Colors.white),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => AppState.delegate!
+                            .parseRoute(Uri.parse("/bankDetails")),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding20,
+                              vertical: SizeConfig.padding16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Bank Account Details",
+                                style: TextStyles.sourceSans.body1
+                                    .colour(Colors.white),
+                              ),
+                              Icon(Icons.arrow_forward_ios_rounded,
+                                  size: SizeConfig.iconSize2,
+                                  color: Colors.white),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20),
+                        child: Divider(
+                          color: Color(0xff9EA1A1),
+                          thickness: 0.3,
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding8,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding14),
+                        child: TextButton(
+                          onPressed: () {
+                            model.navigateToMyWinnings(model);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(
+                                      Assets.unredemmedScratchCardBG,
+                                      height: SizeConfig.padding24),
+                                  SizedBox(
+                                    width: SizeConfig.padding8,
+                                  ),
+                                  Text(
+                                    locale.scratchCardText,
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(Colors.white),
+                                    key: ValueKey(Constants.GOLDENTICKET),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  UnscratchedGTCountChip(),
+                                  SizedBox(
+                                    width: SizeConfig.padding10,
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.white,
+                                    size: SizeConfig.padding20,
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding8,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20),
+                        child: Divider(
+                          color: Color(0xff9EA1A1),
+                          thickness: 0.3,
+                        ),
+                      ),
                       GestureDetector(
                         onTap: () => AppState.delegate!
                             .parseRoute(Uri.parse('/myWinnings')),
@@ -81,7 +242,7 @@ class Win extends StatelessWidget {
                             ),
                           ),
                           padding: EdgeInsets.fromLTRB(SizeConfig.padding24,
-                              SizeConfig.padding34, SizeConfig.padding24, 0.0),
+                              SizeConfig.padding12, SizeConfig.padding24, 0.0),
                           child: Column(
                             children: [
                               Row(
@@ -101,13 +262,13 @@ class Win extends StatelessWidget {
                                             Constants.CURRENT_WINNINGS),
                                       ),
                                       Text(
-                                        '₹ ${currentWinning.truncate() ?? '-'}',
-                                        style: TextStyles.title1.extraBold
-                                            .colour(Colors.white),
-                                            key:ValueKey(Constants.CURRENT_WINNING_AMOUNT)
-                                      ),
+                                          '₹ ${currentWinning.truncate() ?? '-'}',
+                                          style: TextStyles.title1.extraBold
+                                              .colour(Colors.white),
+                                          key: ValueKey(Constants
+                                              .CURRENT_WINNING_AMOUNT)),
                                       SizedBox(
-                                        height: SizeConfig.padding32,
+                                        height: SizeConfig.padding16,
                                       ),
                                       currentWinning >=
                                               model.minWithdrawPrizeAmt!
@@ -133,23 +294,25 @@ class Win extends StatelessWidget {
                                                     text: TextSpan(
                                                       children: [
                                                         TextSpan(
-                                                          text:
-                                                              locale.winRedeemText,
+                                                          text: locale
+                                                              .winRedeemText,
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
                                                                   .kTextColor2),
                                                         ),
                                                         TextSpan(
-                                                          text: locale.digitalGoldText,
+                                                          text: locale
+                                                              .digitalGoldText,
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
                                                                   .kTextColor2),
                                                         ),
                                                         TextSpan(
-                                                          text:
-                                                              locale.onReaching+" ₹${model.minWithdrawPrize}",
+                                                          text: locale
+                                                                  .onReaching +
+                                                              " ₹${model.minWithdrawPrize}",
                                                           style: TextStyles
                                                               .sourceSans.body3
                                                               .colour(UiConstants
@@ -171,62 +334,14 @@ class Win extends StatelessWidget {
                                 ],
                               ),
                               SizedBox(
-                                height: SizeConfig.padding24,
+                                height: SizeConfig.padding8,
                               ),
-                              Divider(
-                                color: Colors.white,
-                                thickness: 0.3,
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding16,
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  model.navigateToMyWinnings(model);
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                            Assets.unredemmedGoldenTicketBG,
-                                            height: SizeConfig.padding32),
-                                        SizedBox(
-                                          width: SizeConfig.padding8,
-                                        ),
-                                        Text(
-                                          locale.goldenTicketText,
-                                          style: TextStyles.sourceSans.body2
-                                              .colour(Colors.white),
-                                              key: ValueKey(Constants.GOLDENTICKET),
-                                        ),
-
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        UnscratchedGTCountChip(),
-                                        SizedBox(
-                                          width: SizeConfig.padding10,
-                                        ),
-                                        Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.white,
-                                          size: SizeConfig.padding24,
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )
                             ],
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: SizeConfig.padding24,
+                        height: SizeConfig.padding4,
                       ),
 
                       //Refer and Earn
@@ -269,7 +384,8 @@ class Win extends StatelessWidget {
                                                           .kTextColor3)),
                                               TextSpan(
                                                   text:
-                                                      '₹${AppConfig.getValue(AppConfigKey.referralBonus)} '+locale.and,
+                                                      '₹${AppConfig.getValue(AppConfigKey.referralBonus)} ' +
+                                                          locale.and,
                                                   style: TextStyles
                                                       .sourceSansB.body3
                                                       .colour(UiConstants
@@ -293,8 +409,7 @@ class Win extends StatelessWidget {
                                                       .colour(UiConstants
                                                           .kTextColor)),
                                               TextSpan(
-                                                  text:
-                                                      locale.winipadText,
+                                                  text: locale.winipadText,
                                                   style: TextStyles
                                                       .sourceSans.body3
                                                       .colour(UiConstants
@@ -439,25 +554,26 @@ class Win extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding44,
                       ),
+                      if (FlavorConfig.isDevelopment()) CacheClearWidget(),
 
                       //Leader Board
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: SizeConfig.padding24,
-                        ),
-                        child: Text(
-                          locale.leaderBoard,
-                          style: TextStyles.sourceSans.semiBold
-                              .colour(Colors.white)
-                              .title3,
-                        ),
-                      ),
-                      WinnerboardView(
-                        count: 4,
-                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.only(
+                      //     left: SizeConfig.padding24,
+                      //   ),
+                      //   child: Text(
+                      //     locale.leaderBoard,
+                      //     style: TextStyles.sourceSans.semiBold
+                      //         .colour(Colors.white)
+                      //         .title3,
+                      //   ),
+                      // ),
+                      // WinnerboardView(
+                      //   count: 4,
+                      // ),
 
                       SizedBox(
-                        height: SizeConfig.navBarHeight,
+                        height: SizeConfig.navBarHeight * 2,
                       ),
                     ],
                   ),
@@ -632,7 +748,7 @@ class FelloNewsComponent extends StatelessWidget {
 //                         )),
 //                         TextSpan(
 //                             text:
-//                                 '200 from every Golden Ticket. Win an iPad every month.',
+//                                 '200 from every Scratch Card. Win an iPad every month.',
 //                             style: TextStyles.sourceSans.body3
 //                                 .colour(UiConstants.kTextColor3)),
 //                       ],

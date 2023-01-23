@@ -1,16 +1,18 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/util/logger.dart';
 
 class AppConfig {
   String message;
   Map<AppConfigKey, Object?> data = {};
   static Map<String, AppConfig> _instances = {};
-  factory AppConfig.instance(Map<String, dynamic> json) =>
-      _instances.putIfAbsent('instance', () => AppConfig._fromJson(json));
+  factory AppConfig.instance(Map<String, dynamic> json) {
+    log("APP CONFIG ${json.toString()}");
+    _instances['instance'] = AppConfig._fromJson(json);
+    return AppConfig._fromJson(json);
+  }
+  // _instances.putIfAbsent('instance', () => AppConfig._fromJson(json));
 
   AppConfig({required this.message, required this.data});
 

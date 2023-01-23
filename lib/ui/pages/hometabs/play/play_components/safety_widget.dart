@@ -21,7 +21,8 @@ class SafetyWidget extends StatelessWidget {
                 width: 0.4, color: UiConstants.kLastUpdatedTextColor),
             borderRadius:
                 BorderRadius.all(Radius.circular(SizeConfig.roundness16))),
-        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        margin:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         padding: EdgeInsets.all(SizeConfig.padding16),
         child: Row(
           children: [

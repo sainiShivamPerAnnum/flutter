@@ -1,13 +1,10 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +47,14 @@ class _HelpFabState extends State<HelpFab> {
     super.initState();
   }
 
+  // clearCache() {
+  //   PreferenceHelper.remove(
+  //       PreferenceHelper.CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE);
+  //   PreferenceHelper.remove(
+  //       PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_TIMESTAMP);
+  //   BaseUtil.showNegativeAlert("Cache Cleared", "Restart to see changes");
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -58,15 +63,37 @@ class _HelpFabState extends State<HelpFab> {
           SizeConfig.padding16,
       right: SizeConfig.padding16,
       child: InkWell(
-        onTap: () {
-          if (FlavorConfig.isDevelopment()) {
-            PreferenceHelper.setInt(
-                PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
-                DateTime.now().subtract(Duration(days: 1)).day);
-            BaseUtil.showPositiveAlert("DAILY APP BONUS",
-                "Now, Claimed cached day is ${DateTime.now().subtract(Duration(days: 1)).day}");
-          }
+        onTap: () async {
+          // if (FlavorConfig.isDevelopment()) {
+          //   PreferenceHelper.setInt(
+          //       PreferenceHelper.CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY,
+          //       DateTime.now().subtract(Duration(days: 1)).day);
+          //   BaseUtil.showPositiveAlert("DAILY APP BONUS",
+          //       "Now, Claimed cached day is ${DateTime.now().subtract(Duration(days: 1)).day}");
+          // }
           // clearCache();
+          // ScratchCardService.scratchCardsList = [
+          //   "9miii7TX9Jb5EKyVPskH",
+          //   "BLCAvoIWaaVlprHVRdIE",
+          //   "f6lwyjqs8qBzkTHvtmnq",
+          //   "jQhLdgrm3hnxR0QOrTI6"
+          // ];
+          // ScratchCardService.scratchCardId = "NMNNp3NoTGh4dx8mTJzN";
+          // await locator<ScratchCardService>().fetchAndVerifyScratchCardByID();
+          // locator<ScratchCardService>()
+          //     .showInstantScratchCardView(source: GTSOURCE.prize);
+
+          // locator<UserRepository>()
+          //     .getUserById(id: '8NGDOhOuriReoaLpszCc')
+          //     .then((value) {
+          //   if (value.isSuccess()) {
+          //     print(value.model.toString());
+          //   } else {
+          //     print(value.errorMessage);
+          //   }
+          // });
+
+//Actual Code
           trackHelpTappedEvent();
           AppState.delegate!
               .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));

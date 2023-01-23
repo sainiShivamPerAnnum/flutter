@@ -151,7 +151,7 @@ class AnalyticsEvents {
   static const referAndEarnTapped = "Refer Earn section tap";
   static const redeemWinningsTapped = "Redeem Winnings Tapped";
   static const questionMarkTaoped = "Question Mark Tapped";
-  static const goldenTicketSectionOpen = 'Golden Ticket section open';
+  static const scratchCardSectionOpen = 'Scratch Card section open';
   static const signupEnterMobile = "Entered Mobile number";
   static const mobileOtpDone = "Entered OTP";
 
@@ -159,4 +159,8 @@ class AnalyticsEvents {
 
   static const dailyAppBonusClaimed = "Tapped on Daily App Bonus";
   static const dailyAppBonusGotItTapped = "Daily App Open Got It Tapped";
+
+  //Transaction Events
+  static const transactionCompleted = "Razorpay Transaction Completed";
+  static const transactionFailed = "Razorpay Transaction Failed";
 }

@@ -300,14 +300,14 @@ class _InfoComponent3State extends State<InfoComponent3> {
         SizeConfig.pageHorizontalMargins,
         0.0,
         SizeConfig.pageHorizontalMargins,
-        SizeConfig.pageHorizontalMargins,
+        0,
       ),
       padding: EdgeInsets.fromLTRB(
-        SizeConfig.pageHorizontalMargins,
-        SizeConfig.pageHorizontalMargins,
-        SizeConfig.pageHorizontalMargins,
-        SizeConfig.pageHorizontalMargins,
-      ),
+          SizeConfig.pageHorizontalMargins,
+          SizeConfig.pageHorizontalMargins,
+          SizeConfig.pageHorizontalMargins,
+          // SizeConfig.pageHorizontalMargins,
+          0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

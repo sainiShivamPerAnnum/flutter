@@ -76,7 +76,6 @@ class DailyAppCheckInEventModel {
       'startedOn': startedOn.toMap(),
       'streakStart': streakStart.toMap(),
       'streakEnd': streakEnd.toMap(),
-      'gtId': gtId,
     };
   }
 

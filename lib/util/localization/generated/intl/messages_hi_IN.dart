@@ -70,7 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m20(username) =>
       "आपका उपयोगकर्ता नाम ${username} सफलतापूर्वक पंजीकृत हो गया है!";
 
-  static String m21(ticketType) => "एक ${ticketType} टिकट जीतें";
+  static String m21(ticketType, rewardAmount) => "एक ${ticketType} टिकट जीतें";
 
   static String m22(prize) =>
       "जीत को ₹${prize} तक पहुंचने पर रिडीम किया जा सकता है";
@@ -440,14 +440,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "get1Ticket": m5,
         "get1Token": MessageLookupByLibrary.simpleMessage(
             "बचाए गए प्रत्येक रुपये के लिए 1 टोकन प्राप्त करें"),
-        "getGoldenTickets": MessageLookupByLibrary.simpleMessage(
-            "हर रेफरल के लिए गोल्डन टिकट कमाएं"),
         "getHappyHourNotified": MessageLookupByLibrary.simpleMessage(
             "अगला हैप्पी आवर लाइव होने पर सूचित करें"),
         "getMoreTokens":
             MessageLookupByLibrary.simpleMessage("अधिक टोकन प्राप्त करें"),
         "getRedeemErrorSubtitle": MessageLookupByLibrary.simpleMessage(
             "कृपया अपने जीत अनुभाग में पुनः प्रयास करें"),
+        "getScratchCards": MessageLookupByLibrary.simpleMessage(
+            "हर रेफरल के लिए गोल्डन टिकट कमाएं"),
         "getStartedWithSIP": MessageLookupByLibrary.simpleMessage(
             "साप्ताहिक/दैनिक एसआईपी के साथ शुरुआत करें"),
         "getTickets": MessageLookupByLibrary.simpleMessage("टिकिट पाएं"),
@@ -466,8 +466,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "goldSellingCapacity": MessageLookupByLibrary.simpleMessage(
             "एक बार में ₹ 50,000 तक की बिक्री की जा सकती है।"),
         "goldSold": MessageLookupByLibrary.simpleMessage("सोना बिका:"),
-        "goldenTicket": MessageLookupByLibrary.simpleMessage("गोल्डन टिकट"),
-        "goldenTicketText": MessageLookupByLibrary.simpleMessage("गोल्डन टिकट"),
         "gotIt": MessageLookupByLibrary.simpleMessage("समझ गया"),
         "govtAcc": MessageLookupByLibrary.simpleMessage("सरकारी. प्रत्यायित"),
         "gtRedeemErrorTitle": MessageLookupByLibrary.simpleMessage(
@@ -799,7 +797,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingTitle3":
             MessageLookupByLibrary.simpleMessage("रु.1 करोड़ जीतें!"),
         "onboradButton": MessageLookupByLibrary.simpleMessage("शुरू हो जाओ"),
-        "oneGoldenTicket":
+        "oneScratchCard":
             MessageLookupByLibrary.simpleMessage("1 गोल्डन\nटिकट"),
         "operationCannotBeCompleted": MessageLookupByLibrary.simpleMessage(
             "कार्रवाई इस समय पूरी नहीं की जा सकती"),
@@ -964,6 +962,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "अब आप बिना ऐप खोले डिजिटल गोल्ड में अपने आप सेव कर सकते हैं। फेलो ऑटोसेव अभी सेटअप करें!"),
         "scratchAndWin": MessageLookupByLibrary.simpleMessage(
             "स्क्रैच करें और रोमांचक पुरस्कार जीतें।"),
+        "scratchCard": MessageLookupByLibrary.simpleMessage("गोल्डन टिकट"),
+        "scratchCardText": MessageLookupByLibrary.simpleMessage("गोल्डन टिकट"),
         "secureFelloTitle":
             MessageLookupByLibrary.simpleMessage("सुरक्षित फेलो"),
         "selectRating":

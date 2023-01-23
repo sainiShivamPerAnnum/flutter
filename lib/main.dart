@@ -17,9 +17,10 @@ import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -122,12 +123,15 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
           ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
           ChangeNotifierProvider(create: (_) => locator<JourneyService>()),
+
           ChangeNotifierProvider(
               create: (_) => locator<AugmontTransactionService>()),
           ChangeNotifierProvider(create: (_) => locator<RazorpayService>()),
           ChangeNotifierProvider<ConnectivityService>(
               create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => appState),
+
+          ChangeNotifierProvider(create: (_) => locator<TambolaService>()),
         ],
         child: PropertyChangeProvider<JourneyService, JourneyServiceProperties>(
           value: locator<JourneyService>(),
@@ -159,9 +163,9 @@ class _MyAppState extends State<MyApp> {
                               LendboxTransactionService,
                               TransactionServiceProperties>(
                             value: locator<LendboxTransactionService>(),
-                            child: PropertyChangeProvider<GoldenTicketService,
-                                GoldenTicketServiceProperties>(
-                              value: locator<GoldenTicketService>(),
+                            child: PropertyChangeProvider<ScratchCardService,
+                                ScratchCardServiceProperties>(
+                              value: locator<ScratchCardService>(),
                               child: PropertyChangeProvider<
                                   MarketingEventHandlerService,
                                   MarketingEventsHandlerProperties>(

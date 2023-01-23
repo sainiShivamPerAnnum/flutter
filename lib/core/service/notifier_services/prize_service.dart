@@ -1,11 +1,11 @@
 import 'package:felloapp/core/model/prizes_model.dart';
-import 'package:felloapp/core/repository/golden_ticket_repo.dart';
+import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 class PrizeService extends ChangeNotifier {
-  final GoldenTicketRepository _gtRepo = locator<GoldenTicketRepository>();
+  final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
 
   Map<String, PrizesModel> gamePrizeMap = {};
 

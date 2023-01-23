@@ -1,15 +1,15 @@
 //Project imports
 import 'dart:async';
-import 'dart:io';
-import 'package:apxor_flutter/apxor_flutter.dart';
+
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 //Flutter imports
@@ -28,8 +28,9 @@ class PageAction {
 
 class AppState extends ChangeNotifier {
   final WinnerService? _winnerService = locator<WinnerService>();
-  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  // final LeaderboardService? _lbService = locator<LeaderboardService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final RootController _rootController = locator<RootController>();
   int _rootIndex = 0;
   static PageController homeTabPageController = PageController(initialPage: 0);
   // Future _txnFunction;
@@ -52,6 +53,9 @@ class AppState extends ChangeNotifier {
   static bool isWinOpened = false;
   static bool isRootAvailableForIncomingTaskExecution = true;
   static bool isInstantGtViewInView = false;
+  static int ticketCount = 0;
+  static bool isFirstTimeJourneyOpened = false;
+  static bool isJourneyFirstTab = false;
 
   static List<ScreenItem> screenStack = [];
   static FelloRouterDelegate? delegate;
@@ -116,28 +120,27 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
-      switch (index) {
-        case 0:
-          _analyticsService!.trackScreen(screen: 'Journey',properties: {});
-          break;
-        case 1:
-          _analyticsService!.trackScreen(screen: 'Save',properties: {});
-          break;
-        case 2:
-          _analyticsService!.trackScreen(screen: 'Play',properties: {});
-          break;
-        case 3:
-          _analyticsService!.trackScreen(screen: 'Win',properties: {});
-          break;
-        default:
-      }
-  
-
-    // homeTabPageController.jumpToPage(_rootIndex);
-    if (index == 2 && isWinOpened == false) {
-      _lbService!.fetchReferralLeaderBoard();
-      isWinOpened = true;
+    switch (index) {
+      case 0:
+        _analyticsService!.trackScreen(screen: 'Journey', properties: {});
+        break;
+      case 1:
+        _analyticsService!.trackScreen(screen: 'Save', properties: {});
+        break;
+      case 2:
+        _analyticsService!.trackScreen(screen: 'Play', properties: {});
+        break;
+      case 3:
+        _analyticsService!.trackScreen(screen: 'Win', properties: {});
+        break;
+      default:
     }
+    //First Call check for journey
+    executeForFirstJourneyTabClick(index);
+    // if (index == 2 && isWinOpened == false) {
+    //   _lbService!.fetchReferralLeaderBoard();
+    //   isWinOpened = true;
+    // }
     print(_rootIndex);
     notifyListeners();
   }
@@ -166,13 +169,33 @@ class AppState extends ChangeNotifier {
     });
   }
 
-  static dump() {
+  dump() {
     isRootAvailableForIncomingTaskExecution = true;
+    isFirstTimeJourneyOpened = false;
+    isJourneyFirstTab = false;
     isFirstTime = false;
+    _rootController.navItems.clear();
   }
   // setLastTapIndex() {
   //   SharedPreferences.getInstance().then((instance) {
   //     rootIndex = instance.getInt('lastTab');
   //   });
   // }
+
+  executeForFirstJourneyTabClick(int index) {
+    final JourneyService _journeyService = locator<JourneyService>();
+    int journeyIndex = _rootController.navItems.values
+        .toList()
+        .indexWhere((item) => item.title == "Journey");
+    if (journeyIndex == 0) {
+      isFirstTimeJourneyOpened = true;
+      isJourneyFirstTab = true;
+    }
+    if (!isFirstTimeJourneyOpened) {
+      if (index == journeyIndex) {
+        isFirstTimeJourneyOpened = true;
+        _journeyService.buildJourney();
+      }
+    }
+  }
 }

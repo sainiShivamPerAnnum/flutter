@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
+import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/widgets/buttons/nav_buttons/nav_buttons.dart';
-import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -22,7 +22,7 @@ class Blogs extends StatelessWidget {
     S locale = S.of(context);
     return Column(
       children: [
-        SizedBox(height: SizeConfig.padding16),
+        SizedBox(height: SizeConfig.padding8),
         GestureDetector(
           onTap: () {
             model.navigateToViewAllBlogs();
@@ -62,7 +62,6 @@ class Blogs extends StatelessWidget {
           ),
         ),
         SaveBlogSection(model: model),
-        SizedBox(height: SizeConfig.padding40),
       ],
     );
   }

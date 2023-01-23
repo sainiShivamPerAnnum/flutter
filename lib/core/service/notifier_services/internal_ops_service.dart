@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/foundation.dart';
 
 class InternalOpsService extends ChangeNotifier {
   String? phoneModel;
+  String? _deviceId;
   String? softwareVersion;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   bool isDeviceInfoInitiated = false;
@@ -35,7 +37,6 @@ class InternalOpsService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> initDeviceInfo() async {
-    String? _deviceId;
     String? _platform;
     String? brand;
     bool? isPhysicalDevice;
@@ -64,7 +65,7 @@ class InternalOpsService extends ChangeNotifier {
           logger!.d(
               "Device Information - phoneModel: $phoneModel \nSoftware version: $softwareVersion \nDeviceId $_deviceId");
         }
-        isDeviceInfoInitiated = true;
+        if ((_deviceId ?? '').isNotEmpty) isDeviceInfoInitiated = true;
         return {
           "deviceId": _deviceId ?? "",
           "platform": _platform ?? "",
@@ -74,6 +75,11 @@ class InternalOpsService extends ChangeNotifier {
           "isPhysicalDevice": isPhysicalDevice ?? false
         };
       } catch (e) {
+        logFailure(
+          locator<UserService>().baseUser?.uid ?? '',
+          FailType.GetDeviceInfoFailed,
+          {'message': "Get Device info failed"},
+        );
         log.error('Initiating Device Info failed');
       }
     }

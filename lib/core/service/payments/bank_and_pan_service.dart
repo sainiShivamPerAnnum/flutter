@@ -127,10 +127,6 @@ class BankAndPanService
         isKYCVerified = true;
       }
     }
-    // final res = await _userRep.getUserPan();
-    // if (res.isSuccess()) {
-    //   userPan = res.model;
-    // }
   }
 
   checkForUserBankAccountDetails() async {

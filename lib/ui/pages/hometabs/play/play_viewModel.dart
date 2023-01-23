@@ -1,44 +1,48 @@
 import 'dart:async';
 
-import 'package:apxor_flutter/apxor_flutter.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
+import 'package:felloapp/ui/elements/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/more_games_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
-import 'package:felloapp/ui/widgets/tambola_card/tambola_card_view.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/base_util.dart';
+
 import '../../../../util/assets.dart';
 
 class PlayViewModel extends BaseViewModel {
   S? locale;
+
   PlayViewModel({this.locale}) {
     locale = locator<S>();
     boxHeading = locale!.howGamesWork;
     boxTitles.addAll([
       locale!.boxPlayTitle1,
       locale!.boxPlayTitle2,
-      locale!.boxPlayTitle3,
-      locale!.boxPlayTitle4,
+      "Win scratch cards everytime you score",
     ]);
   }
   final GetterRepository? _getterRepo = locator<GetterRepository>();
@@ -47,12 +51,14 @@ class PlayViewModel extends BaseViewModel {
   final GameRepo? gamesRepo = locator<GameRepo>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final WinnerService _winnerService = locator<WinnerService>();
+  final UserStatsRepo _userStatsRepo = locator<UserStatsRepo>();
   bool _showSecurityMessageAtTop = true;
   final TambolaWidgetController _tambolaController = TambolaWidgetController();
   String? _message;
   String? _sessionId;
   bool _isOfferListLoading = true;
   bool _isGamesListDataLoading = true;
+  late GameStats? gameStats;
 
   List<PromoCardModel>? _offerList;
   List<GameModel>? _gamesListData;
@@ -65,7 +71,6 @@ class PlayViewModel extends BaseViewModel {
   List<String> boxAssets = [
     Assets.ludoGameAsset,
     Assets.token,
-    Assets.leaderboardGameAsset,
     Assets.gift,
   ];
   List<String> boxTitles = [];
@@ -109,10 +114,25 @@ class PlayViewModel extends BaseViewModel {
     _baseUtil!.openProfileDetailsScreen();
   }
 
+  Future<void> setGameStatus() async {
+    final data = await _userStatsRepo.completer.future;
+    if (data?.data?.updatedOn?.seconds != gameStats?.data?.updatedOn?.seconds) {
+      gameStats = data;
+
+      notifyListeners();
+    }
+  }
+
   init() async {
     isGamesListDataLoading = true;
+
     final response = await gamesRepo!.getGames();
-    _winnerService.fetchWinnersForAllGames();
+
+    locator<UserStatsRepo>().getGameStats();
+    gameStats = await _userStatsRepo.completer.future.onError(
+        (error, stackTrace) => BaseUtil.showNegativeAlert(
+            "", "Something went wrong please try again"));
+
     showSecurityMessageAtTop =
         _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
     if (response.isSuccess()) {
@@ -121,6 +141,9 @@ class PlayViewModel extends BaseViewModel {
     } else {
       BaseUtil.showNegativeAlert("", response.errorMessage);
     }
+    _userStatsRepo.addListener(() {
+      setGameStatus();
+    });
   }
 
   getOrderedPlayViewItems(PlayViewModel model) {
@@ -129,9 +152,13 @@ class PlayViewModel extends BaseViewModel {
     DynamicUiUtils.playViewOrder.forEach((key) {
       switch (key) {
         case 'TM':
-          playViewChildren.add(TambolaCard(
-            tambolaController: _tambolaController,
-          ));
+          if (!locator<RootController>()
+              .navItems
+              .containsValue(RootController.tambolaNavBar)) {
+            playViewChildren.add(TambolaCard(
+              tambolaController: _tambolaController,
+            ));
+          }
           break;
         case 'AG':
           playViewChildren.add(TrendingGamesSection(model: model));
@@ -155,8 +182,12 @@ class PlayViewModel extends BaseViewModel {
           break;
       }
     });
-    playViewChildren.add(
-        AppFooter(bottomPad: SizeConfig.navBarHeight + SizeConfig.padding80));
+    playViewChildren.add(AppFooter(bottomPad: 0));
+    playViewChildren.add(Padding(
+      padding: EdgeInsets.only(
+          bottom: SizeConfig.navBarHeight + SizeConfig.padding80),
+      child: TermsAndConditions(url: Constants.gamingtnc),
+    ));
     return playViewChildren;
   }
 

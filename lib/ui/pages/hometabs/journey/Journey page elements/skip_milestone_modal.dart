@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -16,7 +16,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:felloapp/core/repository/golden_ticket_repo.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SkipMilestoneModalSheet extends StatefulWidget {
@@ -28,8 +27,8 @@ class SkipMilestoneModalSheet extends StatefulWidget {
 }
 
 class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
-  final GoldenTicketRepository? _goldenTicketRepo =
-      locator<GoldenTicketRepository>();
+  final ScratchCardRepository? _scratchCardRepo =
+      locator<ScratchCardRepository>();
   final JourneyService? _journeyService = locator<JourneyService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   bool _skippingInProgress = false;
@@ -45,7 +44,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
   onTokenSkipPressed() async {
     AppState.screenStack.add(ScreenItem.loader);
     skippingInProgress = true;
-    final res = await _goldenTicketRepo!.skipMilestone();
+    final res = await _scratchCardRepo!.skipMilestone();
     if (res.isSuccess()) {
       _userCoinService!.getUserCoinBalance();
       skippingInProgress = false;
@@ -210,9 +209,8 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                         alignment: Alignment.center,
                                         child: TextButton(
                                           child: Text(
-                                            locale.skipWithtokenCost(
-                                              widget.milestone!.skipCost!['flc']
-                                            ),
+                                            locale.skipWithtokenCost(widget
+                                                .milestone!.skipCost!['flc']),
                                             style: TextStyles.sourceSansL.body3
                                                 .colour(Colors.white),
                                           ),

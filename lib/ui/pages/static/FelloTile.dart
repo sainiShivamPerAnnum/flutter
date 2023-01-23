@@ -4,7 +4,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 
 class FelloTile extends StatelessWidget {
   final String? leadingAsset;
@@ -27,7 +26,7 @@ class FelloTile extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return InkWell(
-      onTap: onTap as void Function()?,
+      onTap: () => onTap!(),
       child: Container(
         height: SizeConfig.screenWidth! * 0.25,
         decoration: BoxDecoration(

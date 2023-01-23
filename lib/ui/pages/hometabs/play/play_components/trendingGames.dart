@@ -1,13 +1,17 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/game_model.dart';
+import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
-import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
+import 'package:felloapp/ui/pages/static/sticky_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -15,8 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/util/locator.dart';
 
 class TrendingGamesSection extends StatelessWidget {
   final PlayViewModel model;
@@ -35,6 +37,41 @@ class TrendingGamesSection extends StatelessWidget {
         TitleSubtitleContainer(
           title: locale.allgames,
         ),
+        SizedBox(
+          height: SizeConfig.padding12,
+        ),
+        Center(
+          child: StickyNote(
+            trailingWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: SizeConfig.padding16,
+                ),
+                SvgPicture.asset(
+                  Assets.token,
+                  height: SizeConfig.padding20,
+                ),
+                SizedBox(
+                  width: SizeConfig.padding4,
+                ),
+                Text("1", style: TextStyles.sourceSansB.title3),
+                SizedBox(
+                  width: SizeConfig.padding8,
+                ),
+                Text(
+                  "Gaming Token",
+                  style: TextStyles.sourceSansSB.body4,
+                )
+              ],
+            ),
+            amount: "1",
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.padding12,
+        ),
         Container(
           width: SizeConfig.screenWidth,
           margin: EdgeInsets.symmetric(
@@ -51,12 +88,12 @@ class TrendingGamesSection extends StatelessWidget {
                   ? TrendingGamesShimmer()
                   : TrendingGames(
                       game: model.trendingGamesListData[index],
-                        key: ValueKey(Constants.ALL_GAMES),
-                    );
+                      model: model,
+                      key: ValueKey(model.trendingGamesListData[index].code));
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: .58,
+                childAspectRatio: .63,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12),
           ),
@@ -68,10 +105,39 @@ class TrendingGamesSection extends StatelessWidget {
 
 class TrendingGames extends StatelessWidget {
   final GameModel? game;
+  final PlayViewModel model;
   const TrendingGames({
     this.game,
+    required this.model,
     Key? key,
-  }) : super(key: key);
+  });
+
+  Gm? getGameInfo(String gameCode) {
+    switch (gameCode) {
+      case "GM_CRICKET_HERO":
+        return model.gameStats?.data?.gmCricketHero;
+
+      case "GM_FOOTBALL_KICKOFF":
+        return model.gameStats?.data?.gmFootballKickoff;
+
+      case "GM_CANDY_FIESTA":
+        return model.gameStats?.data?.gmCandyFiesta;
+
+      case "GM_ROLLY_VORTEX":
+        return model.gameStats?.data?.gmRallyVertex;
+      case "GM_POOL_CLUB":
+        return model.gameStats?.data?.gmPoolClub;
+      case "GM_KNIFE_HIT":
+        return model.gameStats?.data?.gmKnifeHit;
+      case "GM_BOWLING":
+        return model.gameStats?.data?.gmBowling;
+      case "GM_BOTTLE_FLIP":
+        return model.gameStats?.data?.gmBottleFlip;
+
+      default:
+        return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +159,8 @@ class TrendingGames extends StatelessWidget {
               "location": "Trending games"
             }));
         Haptic.vibrate();
-        AppState.delegate!.parseRoute(
-          Uri.parse(game!.route!),
-        );
+
+        BaseUtil.openGameModalSheet(game!.gameCode!);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -107,48 +172,54 @@ class TrendingGames extends StatelessWidget {
             SvgPicture.network(
               game!.icon!,
               fit: BoxFit.cover,
-              width: SizeConfig.screenWidth! * 0.24,
-              height: SizeConfig.screenWidth! * 0.24,
+              width: SizeConfig.screenWidth! * 0.2,
+              height: SizeConfig.screenWidth! * 0.2,
             ),
             Text(
               game!.gameName!,
               textAlign: TextAlign.center,
-              style: TextStyles.rajdhani.body3
-                  .colour(Colors.white.withOpacity(0.7)),
+              style: TextStyles.sourceSans.body3.colour(Colors.white),
             ),
             SizedBox(height: SizeConfig.padding4),
             RichText(
                 text: TextSpan(
-                    text:locale.btnWin+' ',
-                    style: TextStyles.sourceSans.body3.colour(Colors.white),
+                    text: "Win upto ",
+                    style: TextStyles.sourceSans.body4
+                        .colour(Colors.white.withOpacity(0.6)),
                     children: [
                   TextSpan(
                       text:
-                          '${NumberFormat.compact().format(game!.prizeAmount)}',
-                      style: TextStyles.sourceSansB.body3.colour(Colors.white))
+                          '₹${NumberFormat.compact().format(game!.prizeAmount)}',
+                      style: TextStyles.sourceSansB.body4.colour(Colors.white))
                 ])),
-            SizedBox(height: SizeConfig.padding10),
+            // SizedBox(height: SizeConfig.padding10),
+            Spacer(),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding10, vertical: 4),
               decoration: BoxDecoration(
-                color: Color(0xff232326),
-                border: Border.all(color: Color(0xff919193)),
-                borderRadius: BorderRadius.circular(12),
+                color: UiConstants.kBackgroundColor,
+                border: Border.all(color: UiConstants.kTextColor2),
+                borderRadius: BorderRadius.circular(SizeConfig.padding8),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Text(
+                    "PLAY  ",
+                    style: TextStyles.sourceSans.body3.colour(Colors.white),
+                  ),
                   SvgPicture.asset(
                     Assets.token,
                     height: SizeConfig.padding12,
                     width: SizeConfig.padding12,
                   ),
-                  SizedBox(width: SizeConfig.padding4),
-                  Text(game!.playCost.toString(),
+                  Text(" " + game!.playCost.toString(),
                       style: TextStyles.sourceSans.body3),
                 ],
               ),
             ),
+            SizedBox(height: SizeConfig.padding10),
           ],
         ),
       ),

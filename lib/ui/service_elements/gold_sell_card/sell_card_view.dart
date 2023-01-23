@@ -1,14 +1,14 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/modals_sheets/gold_sell_reason_modal_sheet.dart';
+import 'package:felloapp/ui/modalsheets/gold_sell_reason_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -111,7 +111,7 @@ class SellCardView extends StatelessWidget {
               SizedBox(height: SizeConfig.padding12),
               if (!sellService.isKYCVerified || sellService.userKycData == null)
                 SellActionButton(
-                  title:locale.completeKYCText ,
+                  title: locale.completeKYCText,
                   onTap: navigateToKycScreen,
                 ),
               if (!sellService.isBankDetailsAdded ||

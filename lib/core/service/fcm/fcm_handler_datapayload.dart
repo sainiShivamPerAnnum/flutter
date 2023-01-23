@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
+import 'package:felloapp/ui/elements/buttons/fello_button/large_button.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_info_dialog.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';

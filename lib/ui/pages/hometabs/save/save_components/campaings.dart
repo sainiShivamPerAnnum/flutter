@@ -2,9 +2,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/carousal_widget.dart';
+import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/widgets/carousal_widget.dart';
-import 'package:felloapp/ui/widgets/title_subtitle_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -25,9 +25,10 @@ class Campaigns extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: SizeConfig.padding16),
         TitleSubtitleContainer(
-          title:locale.challenges,
-          subTitle: locale.contestTitle,
+          title: locale.offers,
+          subTitle: locale.offersSubtitle,
         ),
         CampaignCardSection(saveVm: model),
       ],
@@ -45,7 +46,7 @@ class CampaignCardSection extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         left: SizeConfig.padding24,
-        top: SizeConfig.padding16,
+        top: SizeConfig.padding8,
         right: SizeConfig.padding16,
       ),
       child: Container(

@@ -245,7 +245,7 @@ class TransactionHistoryService
     } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
       return locale.rewardsRedemeed;
     } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK)
-      return locale.goldenTicket;
+      return locale.scratchCard;
     return locale.felloRewards;
   }
 
@@ -253,9 +253,9 @@ class TransactionHistoryService
     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
       return locale.btnDeposit.toUpperCase();
     } else if (type == UserTransaction.TRAN_TYPE_PRIZE) {
-      return locale.prizeText;
+      return locale.prizeText.toUpperCase();
     } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-      return locale.withdrawal;
+      return locale.withdrawal.toUpperCase();
     }
     return locale.autoSipText;
   }
@@ -277,7 +277,7 @@ class TransactionHistoryService
         type == UserTransaction.TRAN_STATUS_FAILED) {
       return Colors.redAccent;
     } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-      return UiConstants.primaryColor;
+      return UiConstants.kTabBorderColor;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
       return Colors.amber;
     } else if (type == UserTransaction.TRAN_STATUS_PROCESSING) {

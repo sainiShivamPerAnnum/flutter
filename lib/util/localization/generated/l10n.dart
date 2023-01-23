@@ -502,20 +502,20 @@ class S {
     );
   }
 
-  /// `Your KYC Details`
+  /// `KYC Details`
   String get obKYCDetailsLabel {
     return Intl.message(
-      'Your KYC Details',
+      'KYC Details',
       name: 'obKYCDetailsLabel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Your Bank Account Details`
+  /// `Bank Account Details`
   String get obBankDetails {
     return Intl.message(
-      'Your Bank Account Details',
+      'Bank Account Details',
       name: 'obBankDetails',
       desc: '',
       args: [],
@@ -1118,10 +1118,10 @@ class S {
     );
   }
 
-  /// `Buy 24K pure DigitalYou own Gold`
+  /// `Buy 24K pure Digital You own Gold`
   String get buyGold {
     return Intl.message(
-      'Buy 24K pure DigitalYou own Gold',
+      'Buy 24K pure Digital You own Gold',
       name: 'buyGold',
       desc: '',
       args: [],
@@ -1678,10 +1678,10 @@ class S {
     );
   }
 
-  /// `Fello Flo (10%)`
+  /// `Fello Flo`
   String get felloFloMainTitle {
     return Intl.message(
-      'Fello Flo (10%)',
+      'Fello Flo',
       name: 'felloFloMainTitle',
       desc: '',
       args: [],
@@ -1952,10 +1952,10 @@ class S {
     );
   }
 
-  /// ` from every Golden Ticket. Highest referrer wins iPad every month`
+  /// ` from every Scratch Card. Highest referrer wins iPad every month`
   String get winIpadFromGT {
     return Intl.message(
-      ' from every Golden Ticket. Highest referrer wins iPad every month',
+      ' from every Scratch Card. Highest referrer wins iPad every month',
       name: 'winIpadFromGT',
       desc: '',
       args: [],
@@ -1992,21 +1992,21 @@ class S {
     );
   }
 
-  /// `on reaching `
+  /// ` on reaching `
   String get onReaching {
     return Intl.message(
-      'on reaching ',
+      ' on reaching ',
       name: 'onReaching',
       desc: '',
       args: [],
     );
   }
 
-  /// `Golden Tickets`
-  String get goldenTicketText {
+  /// `Scratch Cards`
+  String get scratchCardText {
     return Intl.message(
-      'Golden Tickets',
-      name: 'goldenTicketText',
+      'Scratch Cards',
+      name: 'scratchCardText',
       desc: '',
       args: [],
     );
@@ -2032,10 +2032,10 @@ class S {
     );
   }
 
-  /// ` from every Golden Ticket. Highest referrer wins an iPad every month.`
+  /// ` from every Scratch Card. Highest referrer wins an iPad every month.`
   String get winipadText {
     return Intl.message(
-      ' from every Golden Ticket. Highest referrer wins an iPad every month.',
+      ' from every Scratch Card. Highest referrer wins an iPad every month.',
       name: 'winipadText',
       desc: '',
       args: [],
@@ -2162,11 +2162,21 @@ class S {
     );
   }
 
-  /// `Golden Ticket`
-  String get goldenTicket {
+  /// `Scratch Card`
+  String get scratchCard {
     return Intl.message(
-      'Golden Ticket',
-      name: 'goldenTicket',
+      'Scratch Card',
+      name: 'scratchCard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scratch Cards`
+  String get scratchCards {
+    return Intl.message(
+      'Scratch Cards',
+      name: 'scratchCards',
       desc: '',
       args: [],
     );
@@ -2302,10 +2312,10 @@ class S {
     );
   }
 
-  /// `You’ve earned a golden ticket.`
+  /// `You’ve earned a scratch card.`
   String get earnedGTText {
     return Intl.message(
-      'You’ve earned a golden ticket.',
+      'You’ve earned a scratch card.',
       name: 'earnedGTText',
       desc: '',
       args: [],
@@ -2362,10 +2372,10 @@ class S {
     );
   }
 
-  /// `You won a golden ticket`
+  /// `You won a scratch card`
   String get wonGT {
     return Intl.message(
-      'You won a golden ticket',
+      'You won a scratch card',
       name: 'wonGT',
       desc: '',
       args: [],
@@ -2594,10 +2604,10 @@ class S {
     );
   }
 
-  /// `My Profile`
+  /// `Profile`
   String get abMyProfile {
     return Intl.message(
-      'My Profile',
+      'Profile',
       name: 'abMyProfile',
       desc: '',
       args: [],
@@ -2870,11 +2880,11 @@ class S {
     );
   }
 
-  /// `Earn Golden Tickets for every referral`
-  String get getGoldenTickets {
+  /// `Earn Scratch Cards for every referral`
+  String get getScratchCards {
     return Intl.message(
-      'Earn Golden Tickets for every referral',
-      name: 'getGoldenTickets',
+      'Earn Scratch Cards for every referral',
+      name: 'getScratchCards',
       desc: '',
       args: [],
     );
@@ -2910,11 +2920,11 @@ class S {
     );
   }
 
-  /// `1 Golden\nTicket`
-  String get oneGoldenTicket {
+  /// `1 Scratch\nCard`
+  String get oneScratchCard {
     return Intl.message(
-      '1 Golden\nTicket',
-      name: 'oneGoldenTicket',
+      '1 Scratch\nCard',
+      name: 'oneScratchCard',
       desc: '',
       args: [],
     );
@@ -5802,13 +5812,13 @@ class S {
     );
   }
 
-  /// `Win a {ticketType} ticket`
-  String winATicket(Object ticketType) {
+  /// `Win a {ticketType} Card worth upto ₹{rewardAmount}`
+  String winATicket(Object ticketType, Object rewardAmount) {
     return Intl.message(
-      'Win a $ticketType ticket',
+      'Win a $ticketType Card worth upto ₹$rewardAmount',
       name: 'winATicket',
       desc: '',
-      args: [ticketType],
+      args: [ticketType, rewardAmount],
     );
   }
 
@@ -6342,10 +6352,10 @@ class S {
     );
   }
 
-  /// `Read about the world of games and finance`
+  /// `Read about the world of finance`
   String get blogsSubTitle {
     return Intl.message(
-      'Read about the world of games and finance',
+      'Read about the world of finance',
       name: 'blogsSubTitle',
       desc: '',
       args: [],
@@ -6359,6 +6369,26 @@ class S {
     return Intl.message(
       'Challenges',
       name: 'challenges',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Offers`
+  String get offers {
+    return Intl.message(
+      'Offers',
+      name: 'offers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personalized offers, just for you`
+  String get offersSubtitle {
+    return Intl.message(
+      'Personalized offers, just for you',
+      name: 'offersSubtitle',
       desc: '',
       args: [],
     );
@@ -7766,10 +7796,10 @@ class S {
     );
   }
 
-  /// `Are you sure you want to update your profile picture`
+  /// `Are you sure you want to update your profile picture?`
   String get profileUpdateAlert {
     return Intl.message(
-      'Are you sure you want to update your profile picture',
+      'Are you sure you want to update your profile picture?',
       name: 'profileUpdateAlert',
       desc: '',
       args: [],
@@ -7886,10 +7916,10 @@ class S {
     );
   }
 
-  /// `An error occured while redeeming your golden ticket`
+  /// `An error occured while redeeming your scratch card`
   String get gtRedeemErrorTitle {
     return Intl.message(
-      'An error occured while redeeming your golden ticket',
+      'An error occured while redeeming your scratch card',
       name: 'gtRedeemErrorTitle',
       desc: '',
       args: [],

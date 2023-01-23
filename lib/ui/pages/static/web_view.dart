@@ -1,12 +1,12 @@
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
   final String url;
-  WebViewScreen({required this.url});
+  final String? title;
+  WebViewScreen({required this.url, this.title});
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -30,10 +30,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
-        title: Text(
-          widget.url,
-          style: TextStyles.body2,
-        ),
+       
         actions: [
           if (viewLoader)
             Row(
@@ -50,7 +47,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ],
       ),
       body: WebView(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         initialUrl: widget.url,
         javascriptMode: JavascriptMode.unrestricted,
         onPageFinished: (_) => viewLoader = false,

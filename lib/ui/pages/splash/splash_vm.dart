@@ -49,7 +49,7 @@ class LauncherViewModel extends BaseViewModel {
   final FcmListener _fcmListener = locator<FcmListener>();
   final UserService userService = locator<UserService>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final TambolaService _tambolaService = locator<TambolaService>();
+  // final TambolaService _tambolaService = locator<TambolaService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final UserRepository _userRepo = locator<UserRepository>();
   final PaytmService _paytmService = locator<PaytmService>();
@@ -59,7 +59,6 @@ class LauncherViewModel extends BaseViewModel {
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   // final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final UserService _userService = locator<UserService>();
-
   FirebasePerformance _performance = FirebasePerformance.instance;
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -174,7 +173,7 @@ class LauncherViewModel extends BaseViewModel {
         {'error': "Splash Screen init : $e"},
       );
     }
-    if (userService.isUserOnboarded) _tambolaService.init();
+
     _timer3.cancel();
     log("Splash init http: ${DateFormat('yyyy-MM-dd – hh:mm:ss').format(DateTime.now())}");
 

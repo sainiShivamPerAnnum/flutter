@@ -1,4 +1,5 @@
 package `in`.fello.felloapp
+import android.graphics.Color
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 import com.webengage.sdk.android.LocationTrackingStrategy
@@ -14,6 +15,8 @@ class Application : FlutterApplication() {
 
 
         val webEngageConfig = WebEngageConfig.Builder()
+                .setPushSmallIcon(R.drawable.ic_action_name)
+                .setPushAccentColor(Color.parseColor("#43BEA4"))
                 .setWebEngageKey(getString(R.string.webengage_code))
                 .setAutoGCMRegistrationFlag(false)
                 .setLocationTrackingStrategy(LocationTrackingStrategy.ACCURACY_BEST)
