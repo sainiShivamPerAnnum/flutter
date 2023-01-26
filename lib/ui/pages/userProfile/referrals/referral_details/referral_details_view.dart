@@ -53,7 +53,7 @@ class ReferralDetailsView extends StatelessWidget {
             ),
             body: Stack(
               children: [
-                NewSquareBackground(),
+                const NewSquareBackground(),
                 SingleChildScrollView(
                   controller: _controller,
                   physics: ClampingScrollPhysics(),

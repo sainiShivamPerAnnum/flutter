@@ -66,7 +66,6 @@ import 'package:felloapp/ui/pages/finance/transactions_history/transaction_histo
 import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
-import 'package:felloapp/ui/pages/games/web/reward_leaderboard/reward_leaderboard_vm.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
@@ -136,7 +135,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => UserCoinService());
   locator.registerLazySingleton(() => AugmontTransactionService());
   locator.registerLazySingleton(() => LendboxTransactionService());
-  locator.registerLazySingleton(() => TransactionHistoryService());
+  locator.registerLazySingleton(() => TxnHistoryService());
   locator.registerLazySingleton(() => TambolaService());
   locator.registerLazySingleton(() => PrizeService());
   locator.registerLazySingleton(() => WinnerService());
@@ -196,7 +195,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => TambolaHomeViewModel());
   // locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => WebHomeViewModel());
-  locator.registerFactory(() => RewardLeaderboardViewModel());
+  // locator.registerFactory(() => RewardLeaderboardViewModel());
   locator.registerFactory(() => WebGameViewModel());
   locator.registerFactory(() => PicksCardViewModel());
   locator.registerFactory(() => ReferralDetailsViewModel());

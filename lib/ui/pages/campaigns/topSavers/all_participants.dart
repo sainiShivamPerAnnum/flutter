@@ -81,7 +81,7 @@ class AllParticipantsView extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor,
         body: Stack(
           children: [
-            NewSquareBackground(),
+            const NewSquareBackground(),
             SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),

@@ -27,6 +27,7 @@ import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -53,69 +54,70 @@ class _JourneyViewState extends State<JourneyView>
   @override
   Widget build(BuildContext context) {
     log("ROOT: Journey view build called");
-    return BaseView<JourneyPageViewModel>(
-      onModelReady: (model) async {
-        modelInstance = model;
-        await model.init(this);
-      },
-      onModelDispose: (model) {
-        model.dump();
-      },
-      builder: (ctx, model, child) {
-        log("ROOT: Journey view baseview build called");
-        return Consumer<JourneyService>(
-          builder: (context, service, child) => Scaffold(
-            key: ValueKey(Constants.JOURNEY_SCREEN_TAG),
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.black,
-            body: service.isLoading && model.pages == null
-                ? JourneyErrorScreen()
-                : Stack(
-                    children: [
-                      SizedBox(
-                        height: SizeConfig.screenHeight,
-                        width: SizeConfig.screenWidth,
-                        child: SingleChildScrollView(
-                          controller: model.mainController,
-                          physics: const BouncingScrollPhysics(),
-                          reverse: true,
-                          child: Container(
-                            height: model.currentFullViewHeight,
+    return PropertyChangeProvider<JourneyService, JourneyServiceProperties>(
+        value: locator<JourneyService>(),
+        child: BaseView<JourneyPageViewModel>(
+          onModelReady: (model) async {
+            modelInstance = model;
+            await model.init(this);
+          },
+          onModelDispose: (model) {
+            model.dump();
+          },
+          builder: (ctx, model, child) {
+            return Consumer<JourneyService>(
+              builder: (context, service, child) => Scaffold(
+                key: ValueKey(Constants.JOURNEY_SCREEN_TAG),
+                resizeToAvoidBottomInset: false,
+                backgroundColor: Colors.black,
+                body: service.isLoading && model.pages == null
+                    ? JourneyErrorScreen()
+                    : Stack(
+                        children: [
+                          SizedBox(
+                            height: SizeConfig.screenHeight,
                             width: SizeConfig.screenWidth,
-                            child: Stack(
-                              children: [
-                                Background(model: model),
-                                ActiveMilestoneBackgroundGlow(),
-                                JourneyAssetPath(model: model),
-                                if (model.avatarPath != null)
-                                  AvatarPathPainter(model: model),
-                                ActiveMilestoneBaseGlow(),
-                                Milestones(model: model),
-                                if (service.showFocusRing) FocusRing(),
-                                LevelBlurView(),
-                                PrizeToolTips(model: model),
-                                MilestoneTooltip(model: model),
-                                Avatar(model: model),
-                              ],
+                            child: SingleChildScrollView(
+                              controller: model.mainController,
+                              physics: const BouncingScrollPhysics(),
+                              reverse: true,
+                              child: Container(
+                                height: model.currentFullViewHeight,
+                                width: SizeConfig.screenWidth,
+                                child: Stack(
+                                  children: [
+                                    Background(model: model),
+                                    ActiveMilestoneBackgroundGlow(),
+                                    JourneyAssetPath(model: model),
+                                    if (model.avatarPath != null)
+                                      AvatarPathPainter(model: model),
+                                    ActiveMilestoneBaseGlow(),
+                                    Milestones(model: model),
+                                    if (service.showFocusRing) FocusRing(),
+                                    LevelBlurView(),
+                                    PrizeToolTips(model: model),
+                                    MilestoneTooltip(model: model),
+                                    Avatar(model: model),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          if (DynamicUiUtils.helpFab.actionUri != null &&
+                              DynamicUiUtils.helpFab.actionUri.isNotEmpty)
+                            HelpFab(),
+                          JourneyAppBar(),
+                          JourneyBannersView(),
+                          if (model.isRefreshing || service.isRefreshing)
+                            JRefreshIndicator(model: model),
+                          JPageLoader(model: model),
+                          LevelUpAnimation(),
+                        ],
                       ),
-                      if (DynamicUiUtils.helpFab.actionUri != null &&
-                          DynamicUiUtils.helpFab.actionUri.isNotEmpty)
-                        HelpFab(),
-                      JourneyAppBar(),
-                      JourneyBannersView(),
-                      if (model.isRefreshing || service.isRefreshing)
-                        JRefreshIndicator(model: model),
-                      JPageLoader(model: model),
-                      LevelUpAnimation(),
-                    ],
-                  ),
-          ),
-        );
-      },
-    );
+              ),
+            );
+          },
+        ));
   }
 }
 
@@ -538,44 +540,45 @@ class CacheClearWidget extends StatelessWidget {
   const CacheClearWidget({
     Key? key,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InkWell(
-            onTap: () async {
-              await CacheService.invalidateAll();
-              BaseUtil.showPositiveAlert(
-                  "Isar cleared successfully", "get back to work");
-            },
-            child: Chip(
-              backgroundColor: Colors.purple,
-              label: Text(
-                "clear Isar cache",
-                style: TextStyles.body3.colour(Colors.white),
-              ),
+    return FlavorConfig.isDevelopment()
+        ? Container(
+            margin: EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () async {
+                    await CacheService.invalidateAll();
+                    BaseUtil.showPositiveAlert(
+                        "Isar cleared successfully", "get back to work");
+                  },
+                  child: Chip(
+                    backgroundColor: Colors.purple,
+                    label: Text(
+                      "clear Isar cache",
+                      style: TextStyles.body3.colour(Colors.white),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    PreferenceHelper.clear();
+                    BaseUtil.showPositiveAlert(
+                        "Preferences cleared successfully", "get back to work");
+                  },
+                  child: Chip(
+                    backgroundColor: Colors.indigo,
+                    label: Text(
+                      "clear Shared Prefs",
+                      style: TextStyles.body3.colour(Colors.white),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              PreferenceHelper.clear();
-              BaseUtil.showPositiveAlert(
-                  "Preferences cleared successfully", "get back to work");
-            },
-            child: Chip(
-              backgroundColor: Colors.indigo,
-              label: Text(
-                "clear Shared Prefs",
-                style: TextStyles.body3.colour(Colors.white),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+          )
+        : SizedBox();
   }
 }

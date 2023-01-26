@@ -10,7 +10,6 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -50,7 +49,7 @@ class PlayViewModel extends BaseViewModel {
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final GameRepo? gamesRepo = locator<GameRepo>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
-  final WinnerService _winnerService = locator<WinnerService>();
+  // final WinnerService _winnerService = locator<WinnerService>();
   final UserStatsRepo _userStatsRepo = locator<UserStatsRepo>();
   bool _showSecurityMessageAtTop = true;
   final TambolaWidgetController _tambolaController = TambolaWidgetController();
@@ -148,7 +147,7 @@ class PlayViewModel extends BaseViewModel {
 
   getOrderedPlayViewItems(PlayViewModel model) {
     List<Widget> playViewChildren = [];
-
+    playViewChildren.add(const SizedBox(height: kToolbarHeight));
     DynamicUiUtils.playViewOrder.forEach((key) {
       switch (key) {
         case 'TM':

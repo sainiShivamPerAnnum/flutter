@@ -53,7 +53,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final DBModel? _dbModel = locator<DBModel>();
   final CustomLogger _logger = locator<CustomLogger>();
-  // final ApiCacheManager? _apiCacheManager = locator<ApiCacheManager>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();

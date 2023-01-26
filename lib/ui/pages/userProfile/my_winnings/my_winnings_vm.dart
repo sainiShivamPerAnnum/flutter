@@ -40,8 +40,8 @@ class MyWinningsViewModel extends BaseViewModel {
   //LOCATORS
   final CustomLogger? _logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
-  final TransactionHistoryService? _transactionHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _transactionHistoryService =
+      locator<TxnHistoryService>();
   // final LocalDBModel? _localDBModel = locator<LocalDBModel>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();

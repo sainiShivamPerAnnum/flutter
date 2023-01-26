@@ -1,7 +1,5 @@
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
@@ -11,7 +9,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
 class MiniTransactionCard extends StatelessWidget {
   final InvestmentType investmentType;
@@ -28,101 +25,88 @@ class MiniTransactionCard extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return AnimatedContainer(
-          duration: Duration(milliseconds: 2000),
-          curve: Curves.easeInOutCubic,
-          child: PropertyChangeConsumer<TransactionHistoryService,
-              TransactionHistoryServiceProperties>(
-            properties: [
-              TransactionHistoryServiceProperties.TransactionHistoryList
-            ],
-            builder: (ctx, m, child) {
-              final txnList = m!.txnList != null && m.txnList!.isNotEmpty
-                  ? m.txnList!
-                      .where((e) => e.subType == investmentType.name)
-                      .toList()
-                  : [];
-
-              return Column(
-                children: [
-                  model.state == ViewState.Busy || m.txnList == null
-                      ? SizedBox(
-                          child: Row(children: [
-                            TitleSubtitleContainer(
-                                title: locale.txns, leadingPadding: false),
-                            Spacer(),
-                            Container(
-                              width: SizeConfig.avatarRadius,
-                              height: SizeConfig.avatarRadius,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 0.5,
-                                color: UiConstants.primaryColor,
-                              ),
+            duration: Duration(milliseconds: 2000),
+            curve: Curves.easeInOutCubic,
+            child: Column(
+              children: [
+                model.state == ViewState.Busy || model.transactions == null
+                    ? SizedBox(
+                        child: Row(children: [
+                          TitleSubtitleContainer(
+                              title: locale.txns, leadingPadding: false),
+                          Spacer(),
+                          Container(
+                            width: SizeConfig.avatarRadius,
+                            height: SizeConfig.avatarRadius,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 0.5,
+                              color: UiConstants.primaryColor,
                             ),
-                            SizedBox(
-                              width: SizeConfig.pageHorizontalMargins * 1.5,
-                            )
-                          ]),
-                        )
-                      : (m.txnList!.length == 0
-                          ? SizedBox(height: SizeConfig.padding12)
-                          : Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding10,
-                                  vertical: SizeConfig.padding10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      TitleSubtitleContainer(
-                                          title: locale.txns,
-                                          leadingPadding: false),
-                                      Spacer(),
-                                      model.state == ViewState.Idle &&
-                                              m.txnList != null &&
-                                              m.txnList!.isNotEmpty &&
-                                              m.txnList!.length > 3
-                                          ? InkWell(
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  top: SizeConfig.padding2,
-                                                ),
-                                                child: Text(
-                                                  locale.btnSeeAll,
-                                                  style: TextStyles
-                                                      .rajdhaniSB.body2
-                                                      .colour(UiConstants
-                                                          .primaryColor),
-                                                ),
+                          ),
+                          SizedBox(
+                            width: SizeConfig.pageHorizontalMargins * 1.5,
+                          )
+                        ]),
+                      )
+                    : (model.transactions!.length == 0
+                        ? SizedBox(height: SizeConfig.padding12)
+                        : Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding10,
+                                vertical: SizeConfig.padding10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    TitleSubtitleContainer(
+                                        title: locale.txns,
+                                        leadingPadding: false),
+                                    Spacer(),
+                                    model.state == ViewState.Idle &&
+                                            model.transactions != null &&
+                                            model.transactions!.isNotEmpty &&
+                                            model.transactions!.length > 3
+                                        ? InkWell(
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                top: SizeConfig.padding2,
                                               ),
-                                              onTap: () =>
-                                                  model.viewAllTransaction(
-                                                      investmentType),
-                                            )
-                                          : SizedBox(),
-                                      SizedBox(
-                                        width: SizeConfig.pageHorizontalMargins,
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: SizeConfig.padding8),
-                                  Column(
-                                    children: List.generate(
-                                      txnList.length < 4 ? txnList.length : 3,
-                                      (i) => TransactionTile(
-                                        txn: txnList[i],
-                                      ),
+                                              child: Text(
+                                                locale.btnSeeAll,
+                                                style: TextStyles
+                                                    .rajdhaniSB.body2
+                                                    .colour(UiConstants
+                                                        .primaryColor),
+                                              ),
+                                            ),
+                                            onTap: () =>
+                                                model.viewAllTransaction(
+                                                    investmentType),
+                                          )
+                                        : SizedBox(),
+                                    SizedBox(
+                                      width: SizeConfig.pageHorizontalMargins,
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: SizeConfig.padding8),
+                                Column(
+                                  children: List.generate(
+                                    model.transactions!.length < 4
+                                        ? model.transactions!.length
+                                        : 3,
+                                    (i) => TransactionTile(
+                                      txn: model.transactions![i],
                                     ),
                                   ),
-                                ],
-                              ),
-                            )),
-                  SizedBox(height: SizeConfig.padding12),
-                ],
-              );
-            },
-          ),
-        );
+                                ),
+                              ],
+                            ),
+                          )),
+                SizedBox(height: SizeConfig.padding12),
+              ],
+            ));
       },
     );
   }

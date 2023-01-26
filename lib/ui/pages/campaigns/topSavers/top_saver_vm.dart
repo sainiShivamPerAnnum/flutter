@@ -9,7 +9,6 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
@@ -29,7 +28,7 @@ class TopSaverViewModel extends BaseViewModel {
   final DBModel? _dbModel = locator<DBModel>();
   final UserService? _userService = locator<UserService>();
   final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final WinnerService? _winnerService = locator<WinnerService>();
+  // final WinnerService? _winnerService = locator<WinnerService>();
   final CampaignRepo? _campaignRepo = locator<CampaignRepo>();
   S locale = locator<S>();
 

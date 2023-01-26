@@ -58,8 +58,7 @@ class SaveViewModel extends BaseViewModel {
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
 
@@ -179,6 +178,7 @@ class SaveViewModel extends BaseViewModel {
 
   getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
+    saveViewItems.add(const SizedBox(height: kToolbarHeight));
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {

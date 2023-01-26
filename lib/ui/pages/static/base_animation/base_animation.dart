@@ -3,6 +3,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class BaseAnimation extends StatefulWidget {
+  const BaseAnimation();
   @override
   State<BaseAnimation> createState() => _BaseAnimationState();
 }

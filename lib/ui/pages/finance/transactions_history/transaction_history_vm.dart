@@ -4,17 +4,15 @@ import 'package:felloapp/core/model/subscription_models/active_subscription_mode
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/subcription_repo.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 enum TranFilterType { Type, Subtype }
 
@@ -24,8 +22,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   final PaytmService? _paytmService = locator<PaytmService>();
   final SubscriptionRepo? _subcriptionRepo = locator<SubscriptionRepo>();
 
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
 
   //local variables
   int _filter = 1;

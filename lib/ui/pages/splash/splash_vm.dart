@@ -14,10 +14,10 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -58,6 +58,7 @@ class LauncherViewModel extends BaseViewModel {
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   // final LocalDBModel _localDBModel = locator<LocalDBModel>();
+  final ReferralService _referralService = locator<ReferralService>();
   final UserService _userService = locator<UserService>();
   FirebasePerformance _performance = FirebasePerformance.instance;
   //GETTERS
@@ -122,6 +123,8 @@ class LauncherViewModel extends BaseViewModel {
       if (userService.isUserOnboarded) {
         await _journeyRepo.init();
         await _journeyService.init();
+        _userCoinService.init();
+        _referralService.init();
       }
 
       // check if cache invalidation required
@@ -132,21 +135,8 @@ class LauncherViewModel extends BaseViewModel {
       if (now <= _invalidate) {
         await CacheService.invalidateAll();
       }
-      // test
-      // await new CacheService().invalidateAll();
-      if (userService.isUserOnboarded) _userCoinService.init();
 
       _baseUtil.init();
-
-      // if (AppConfig.getValue<bool>(AppConfigKey.changeAppIcon)) {
-      //   if (await FlutterDynamicIcon.supportsAlternateIcons) {
-      //     final str = await FlutterDynamicIcon.getAlternateIconName();
-      //     if (str == null) {
-      //       FlutterDynamicIcon.setAlternateIconName('ch');
-      //     }
-      //   }
-      // }
-
       _fcmListener.setupFcm();
 
       if (userService.isUserOnboarded)

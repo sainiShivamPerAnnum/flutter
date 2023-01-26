@@ -306,8 +306,7 @@ class NoTransactionsContent extends StatelessWidget {
 class TransactionTile extends StatelessWidget {
   // final TransactionsHistoryViewModel model;
   final UserTransaction txn;
-  final TransactionHistoryService txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService txnHistoryService = locator<TxnHistoryService>();
   TransactionTile({
     // @required this.model,
     required this.txn,
@@ -419,8 +418,7 @@ class TransactionStatusChip extends StatelessWidget {
 class TransactionSIPTile extends StatelessWidget {
   final TransactionsHistoryViewModel? model;
   final AutosaveTransactionModel? txn;
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   TransactionSIPTile({
     required this.model,
     this.txn,

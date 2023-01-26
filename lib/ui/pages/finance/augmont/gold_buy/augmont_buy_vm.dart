@@ -286,7 +286,7 @@ class GoldBuyViewModel extends BaseViewModel {
       _augTxnService!.isGoldBuyInProgress = false;
       return;
     }
-    await _augTxnService!.initateAugmontTransaction(
+    await _augTxnService!.initiateAugmontTransaction(
       details: GoldPurchaseDetails(
         goldBuyAmount: goldBuyAmount,
         goldRates: goldRates,

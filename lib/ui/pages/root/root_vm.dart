@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -23,7 +22,6 @@ import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
@@ -70,10 +68,9 @@ class RootViewModel extends BaseViewModel {
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
-  final WinnerService? winnerService = locator<WinnerService>();
+  // final WinnerService? winnerService = locator<WinnerService>();
   final ReferralRepo _refRepo = locator<ReferralRepo>();
-  final TransactionHistoryService _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final PaytmService _paytmService = locator<PaytmService>();
   final ReferralService _referralService = locator<ReferralService>();
@@ -87,8 +84,6 @@ class RootViewModel extends BaseViewModel {
     await _userService.getUserFundWalletData();
     _txnHistoryService.signOut();
     _paytmService.getActiveSubscriptionDetails();
-    await _txnHistoryService.fetchTransactions(
-        subtype: InvestmentType.AUGGOLD99);
     await _journeyService.checkForMilestoneLevelChange();
     await _gtService?.updateUnscratchedGTCount();
     await _journeyService.getUnscratchedGT();

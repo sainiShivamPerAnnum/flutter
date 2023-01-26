@@ -5,7 +5,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -27,7 +26,7 @@ class PageAction {
 }
 
 class AppState extends ChangeNotifier {
-  final WinnerService? _winnerService = locator<WinnerService>();
+  // final WinnerService? _winnerService = locator<WinnerService>();
   // final LeaderboardService? _lbService = locator<LeaderboardService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final RootController _rootController = locator<RootController>();

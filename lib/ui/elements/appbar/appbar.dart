@@ -45,11 +45,8 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          showAvatar
-              ? Container(
-                  margin: EdgeInsets.only(left: leftPad ?? 0),
-                  child: ProfileImageSE())
-              : SizedBox(),
+          SizedBox(width: SizeConfig.padding8),
+          showAvatar ? ProfileImageSE() : SizedBox(),
           Text(
             '${title ?? ''}',
             style: TextStyles.rajdhaniSB.title5,
@@ -68,7 +65,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
                   key: ValueKey(Constants.FELLO_COIN_BAR)),
             if (type != null) FaqPill(type: type),
             if (action != null) action!,
-            SizedBox(width: SizeConfig.padding20)
+            SizedBox(width: SizeConfig.padding14)
           ],
         )
       ],

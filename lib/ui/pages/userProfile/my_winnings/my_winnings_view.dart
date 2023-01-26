@@ -50,7 +50,7 @@ class MyWinningsView extends StatelessWidget {
           backgroundColor: UiConstants.kBackgroundColor,
           body: Stack(
             children: [
-              NewSquareBackground(),
+              const NewSquareBackground(),
               NotificationListener<ScrollEndNotification>(
                 onNotification: (ScrollNotification scrollInfo) {
                   if (scrollInfo.metrics.pixels >=
