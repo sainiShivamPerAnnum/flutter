@@ -108,6 +108,17 @@ class Assets {
   static final String flyingGhost = "assets/svg/flying_ghost.svg";
   static final String tambolaTicket = "assets/svg/tambola_ticket.svg";
   static final String scratchCard = "assets/svg/scratch_card.svg";
+  static final String floAsset = "assets/svg/fello_flo.svg";
+  static final String goldAsset = "assets/svg/digital_gold.svg";
+  static final String rbi = "assets/svg/rbi.svg";
+  static final String icici = "assets/svg/icici.svg";
+  static final String sebi = "assets/svg/sebi.svg";
+
+  static final String arrowIcon = "assets/svg/raising_arrow.svg";
+  static final String timer = "assets/svg/timer.svg";
+  static final String shield = "assets/svg/shield.svg";
+  static final String goldConveyor = "assets/svg/goldConveyor.svg";
+  static final String floConveyor = "assets/svg/floConveyor.svg";
 
   // WIN
 

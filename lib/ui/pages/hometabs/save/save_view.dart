@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/new_user_save.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -23,6 +24,8 @@ class Save extends StatelessWidget {
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
         log("ROOT: Save view baseview build called");
+        if (model.userFundWallet?.netWorth == null ||
+            model.userFundWallet?.netWorth == 0) return NewUserSaveView();
         return Scaffold(
           key: ValueKey(Constants.SAVE_SCREEN_TAG),
           backgroundColor: Colors.transparent,
