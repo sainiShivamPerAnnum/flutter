@@ -60,13 +60,6 @@
 			remoteGlobalIDString = 18D1938E2D5D13EFBEC5567066EF4E64;
 			remoteInfo = local_auth_ios;
 		};
-		381F56A0296DB99A005944C7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 48D0C9F2116ED3BC490023C8A0B0430F;
-			remoteInfo = flutter_dynamic_icon;
-		};
 		3837C8EC2966BB69002E75C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -150,6 +143,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = B799BFFEC5B11F90F501202080A57F37;
 			remoteInfo = sqflite;
+		};
+		38C688A629841C2100EE66B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 93C6A45C6E4792269BE9BE0073839BF0;
+			remoteInfo = shared_preferences_foundation;
 		};
 		38CC6DA82966B1E60002C0B9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -676,7 +676,7 @@
 				53E99C002770AA48000F1EEC /* FirebaseDynamicLinks */,
 				53C8032E27A85D5C00190100 /* FirebaseFirestore */,
 				53E99C022770AA48000F1EEC /* FirebaseInAppMessaging */,
-				53E99C042770AA48000F1EEC /* InAppMessagingDisplayResources.bundle */,
+				53E99C042770AA48000F1EEC /* FirebaseInAppMessaging-InAppMessagingDisplayResources */,
 				53E99C062770AA48000F1EEC /* FirebaseInstallations */,
 				53E99C082770AA48000F1EEC /* FirebaseMessaging */,
 				53E99C0A2770AA48000F1EEC /* FirebasePerformance */,
@@ -688,10 +688,10 @@
 				385870C1286B48EE006AA702 /* google_sign_in_ios */,
 				53E99C1E2770AA48000F1EEC /* GoogleDataTransport */,
 				38CC6DAD2966B1E60002C0B9 /* GoogleSignIn */,
-				38CC6DAF2966B1E60002C0B9 /* GoogleSignIn.bundle */,
+				38CC6DAF2966B1E60002C0B9 /* GoogleSignIn-GoogleSignIn */,
 				53E99C202770AA48000F1EEC /* GoogleUtilities */,
 				53C8033227A85D5C00190100 /* gRPC-C++ */,
-				53C8033427A85D5C00190100 /* gRPCCertificates-Cpp.bundle */,
+				53C8033427A85D5C00190100 /* gRPC-C++-gRPCCertificates-Cpp */,
 				53C8033627A85D5C00190100 /* gRPC-Core */,
 				53E99C222770AA48000F1EEC /* GTMAppAuth */,
 				53E99C242770AA48000F1EEC /* GTMSessionFetcher */,
@@ -714,6 +714,7 @@
 				07AE377528BCC63900FC1168 /* razorpay_flutter */,
 				53C8033A27A85D5C00190100 /* ReachabilitySwift */,
 				3869290D2886DEF600813FBA /* share_plus */,
+				38C688A729841C2100EE66B1 /* shared_preferences_foundation */,
 				53C8033C27A85D5C00190100 /* shared_preferences_ios */,
 				3869290F2886DEF600813FBA /* sms_autofill */,
 				386929112886DEF600813FBA /* sqflite */,
@@ -888,14 +889,6 @@
 			remoteRef = 381A1E72291E841800848F4A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		381F56A1296DB99A005944C7 /* flutter_dynamic_icon */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			name = flutter_dynamic_icon;
-			path = flutter_dynamic_icon.framework;
-			remoteRef = 381F56A0296DB99A005944C7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		3837C8ED2966BB69002E75C4 /* FirebaseAppCheckInterop */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -992,6 +985,14 @@
 			remoteRef = 386929102886DEF600813FBA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		38C688A729841C2100EE66B1 /* shared_preferences_foundation */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = shared_preferences_foundation;
+			path = shared_preferences_foundation.framework;
+			remoteRef = 38C688A629841C2100EE66B1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		38CC6DA92966B1E60002C0B9 /* permission_handler_apple */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1016,9 +1017,10 @@
 			remoteRef = 38CC6DAC2966B1E60002C0B9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		38CC6DAF2966B1E60002C0B9 /* GoogleSignIn.bundle */ = {
+		38CC6DAF2966B1E60002C0B9 /* GoogleSignIn-GoogleSignIn */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
+			name = "GoogleSignIn-GoogleSignIn";
 			path = GoogleSignIn.bundle;
 			remoteRef = 38CC6DAE2966B1E60002C0B9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1095,9 +1097,10 @@
 			remoteRef = 53C8033127A85D5C00190100 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53C8033427A85D5C00190100 /* gRPCCertificates-Cpp.bundle */ = {
+		53C8033427A85D5C00190100 /* gRPC-C++-gRPCCertificates-Cpp */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
+			name = "gRPC-C++-gRPCCertificates-Cpp";
 			path = "gRPCCertificates-Cpp.bundle";
 			remoteRef = 53C8033327A85D5C00190100 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1318,9 +1321,10 @@
 			remoteRef = 53E99C012770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		53E99C042770AA48000F1EEC /* InAppMessagingDisplayResources.bundle */ = {
+		53E99C042770AA48000F1EEC /* FirebaseInAppMessaging-InAppMessagingDisplayResources */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
+			name = "FirebaseInAppMessaging-InAppMessagingDisplayResources";
 			path = InAppMessagingDisplayResources.bundle;
 			remoteRef = 53E99C032770AA48000F1EEC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1701,7 +1705,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 167;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
@@ -1721,7 +1725,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.1.4;
+				MARKETING_VERSION = 4.1.5;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1799,7 +1803,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 167;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -1819,7 +1823,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.1.4;
+				MARKETING_VERSION = 4.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1895,7 +1899,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 167;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_qa.dart;
@@ -1913,7 +1917,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.1.4;
+				MARKETING_VERSION = 4.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1986,7 +1990,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 167;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
@@ -2006,7 +2010,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.1.4;
+				MARKETING_VERSION = 4.1.5;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.qa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2086,7 +2090,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 167;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2106,7 +2110,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.1.4;
+				MARKETING_VERSION = 4.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2182,7 +2186,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 167;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2199,7 +2203,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.1.4;
+				MARKETING_VERSION = 4.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2272,7 +2276,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 167;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Gitlab/felloapp;
@@ -2292,7 +2296,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.1.4;
+				MARKETING_VERSION = 4.1.5;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2424,7 +2428,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 167;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2443,7 +2447,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.1.4;
+				MARKETING_VERSION = 4.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2465,7 +2469,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 167;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Gitlab/felloapp/lib/main_prod.dart;
@@ -2483,7 +2487,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.1.4;
+				MARKETING_VERSION = 4.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
