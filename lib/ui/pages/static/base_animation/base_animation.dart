@@ -3,9 +3,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class BaseAnimation extends StatefulWidget {
-  const BaseAnimation({Key? key, this.child}) : super(key: key);
-  final Widget? child;
-
   @override
   State<BaseAnimation> createState() => _BaseAnimationState();
 }
@@ -58,7 +55,7 @@ class _BaseAnimationState extends State<BaseAnimation>
   }
 
   void initDelay() async {
-    await Future.delayed(const Duration(milliseconds: 100), () {});
+    await Future.delayed(const Duration(milliseconds: 200), () {});
     _animationController.forward();
   }
 
@@ -69,7 +66,6 @@ class _BaseAnimationState extends State<BaseAnimation>
       builder: (context, child) {
         return Stack(
           children: [
-            if (widget.child != null) widget.child!,
             Visibility(
               visible: _animationController.value != 1,
               child: CustomPaint(

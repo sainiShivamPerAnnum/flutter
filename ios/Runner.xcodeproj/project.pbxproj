@@ -60,6 +60,13 @@
 			remoteGlobalIDString = 18D1938E2D5D13EFBEC5567066EF4E64;
 			remoteInfo = local_auth_ios;
 		};
+		381F56A0296DB99A005944C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 48D0C9F2116ED3BC490023C8A0B0430F;
+			remoteInfo = flutter_dynamic_icon;
+		};
 		3837C8EC2966BB69002E75C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -879,6 +886,14 @@
 			name = local_auth_ios;
 			path = local_auth_ios.framework;
 			remoteRef = 381A1E72291E841800848F4A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		381F56A1296DB99A005944C7 /* flutter_dynamic_icon */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = flutter_dynamic_icon;
+			path = flutter_dynamic_icon.framework;
+			remoteRef = 381F56A0296DB99A005944C7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3837C8ED2966BB69002E75C4 /* FirebaseAppCheckInterop */ = {
