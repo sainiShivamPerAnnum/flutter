@@ -44,9 +44,9 @@ class CampaignCardSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: SizeConfig.padding16,
+        // left: SizeConfig.padding16,
         top: SizeConfig.padding8,
-        right: SizeConfig.padding16,
+        // right: SizeConfig.padding16,
       ),
       child: Container(
         height: SizeConfig.screenWidth! * 0.57,

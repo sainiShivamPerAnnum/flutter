@@ -74,7 +74,7 @@ class SaveViewModel extends BaseViewModel {
   double _nonWithdrawableQnt = 0.0;
   double _withdrawableQnt = 0.0;
   late final PageController offersController =
-      PageController(viewportFraction: 0.8);
+      PageController(viewportFraction: 0.9, initialPage: 1);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;

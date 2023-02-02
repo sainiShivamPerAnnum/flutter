@@ -1,9 +1,7 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +12,6 @@ final avatarKey = GlobalKey();
 class Avatar extends StatelessWidget {
   final JourneyPageViewModel? model;
   Avatar({Key? key, this.model}) : super(key: key);
-  final BaseUtil _baseUtil = locator<BaseUtil>();
   @override
   Widget build(BuildContext context) {
     print(model!.avatarPosition);
@@ -26,8 +23,6 @@ class Avatar extends StatelessWidget {
       builder: (context, model, properties) {
         return Positioned(
           key: avatarKey,
-          // duration: Duration(seconds: 10),
-          // curve: Curves.decelerate,
           top: model!.avatarPosition?.dy,
           left: model.avatarPosition?.dx,
           child: CustomPaint(
