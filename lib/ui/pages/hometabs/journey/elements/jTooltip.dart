@@ -1,6 +1,6 @@
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/jMilestones.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';

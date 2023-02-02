@@ -5,7 +5,7 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/static/blur_filter.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/service_elements/user_service/life_time_wins.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';

@@ -1,11 +1,11 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/news_component.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/refer_and_earn_card.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/scratch_card_info_strip.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/static/dev_rel.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
