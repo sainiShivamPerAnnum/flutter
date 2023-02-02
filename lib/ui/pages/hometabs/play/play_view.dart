@@ -10,6 +10,7 @@ class Play extends StatelessWidget {
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
         return ListView(
+          cacheExtent: 500,
           physics: BouncingScrollPhysics(),
           children: model.getOrderedPlayViewItems(model),
         );

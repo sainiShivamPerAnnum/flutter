@@ -6,7 +6,7 @@ import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -21,95 +21,101 @@ class MyWinningsView extends StatelessWidget {
   MyWinningsView({this.openFirst = false});
   @override
   Widget build(BuildContext context) {
-    S? locale = S.of(context);
-    return BaseView<MyWinningsViewModel>(
-      onModelReady: (model) {
-        model.init();
-      },
-      builder: (ctx, model, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Scratch Cards",
-              maxLines: 1,
-              overflow: TextOverflow.clip,
-              style: TextStyles.title4.bold.colour(Colors.white),
-            ),
-            elevation: 0.0,
-            backgroundColor: UiConstants.kBackgroundColor,
-            leading: IconButton(
-              onPressed: () {
-                AppState.backButtonDispatcher!.didPopRoute();
-              },
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          backgroundColor: UiConstants.kBackgroundColor,
-          body: Stack(
-            children: [
-              const NewSquareBackground(),
-              NotificationListener<ScrollEndNotification>(
-                onNotification: (ScrollNotification scrollInfo) {
-                  if (scrollInfo.metrics.pixels >=
-                      scrollInfo.metrics.maxScrollExtent) {
-                    print("Max extent reached");
-                    model.fetchMoreCards();
-                  }
-
-                  return true;
-                },
-                child: RefreshIndicator(
-                  backgroundColor: Colors.black,
-                  onRefresh: () async {
-                    await model.init();
-                    return Future.value(true);
+    return PropertyChangeProvider<ScratchCardService,
+            ScratchCardServiceProperties>(
+        value: locator<ScratchCardService>(),
+        child: BaseView<MyWinningsViewModel>(
+          onModelReady: (model) {
+            model.init();
+          },
+          builder: (ctx, model, child) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  "Scratch Cards",
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  style: TextStyles.title4.bold.colour(Colors.white),
+                ),
+                elevation: 0.0,
+                backgroundColor: UiConstants.kBackgroundColor,
+                leading: IconButton(
+                  onPressed: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
                   },
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      PrizeClaimCard(),
-                      ScratchCardsView(),
-                    ],
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
                   ),
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                child: PropertyChangeConsumer<ScratchCardService,
-                        ScratchCardServiceProperties>(
-                    properties: [ScratchCardServiceProperties.AllScratchCards],
-                    builder: (context, service, properties) {
-                      return service!.isFetchingScratchCards &&
-                              service.allScratchCards.isNotEmpty
-                          ? Container(
-                              color: UiConstants.kBackgroundColor3,
-                              width: SizeConfig.screenWidth,
-                              padding: EdgeInsets.all(SizeConfig.padding12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SpinKitWave(
-                                    color: UiConstants.primaryColor,
-                                    size: SizeConfig.padding16,
+              backgroundColor: UiConstants.kBackgroundColor,
+              body: Stack(
+                children: [
+                  const NewSquareBackground(),
+                  NotificationListener<ScrollEndNotification>(
+                    onNotification: (ScrollNotification scrollInfo) {
+                      if (scrollInfo.metrics.pixels >=
+                          scrollInfo.metrics.maxScrollExtent) {
+                        print("Max extent reached");
+                        model.fetchMoreCards();
+                      }
+
+                      return true;
+                    },
+                    child: RefreshIndicator(
+                      backgroundColor: Colors.black,
+                      onRefresh: () async {
+                        await model.init();
+                        return Future.value(true);
+                      },
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          PrizeClaimCard(),
+                          ScratchCardsView(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    child: PropertyChangeConsumer<ScratchCardService,
+                            ScratchCardServiceProperties>(
+                        properties: [
+                          ScratchCardServiceProperties.AllScratchCards
+                        ],
+                        builder: (context, service, properties) {
+                          return service!.isFetchingScratchCards &&
+                                  service.allScratchCards.isNotEmpty
+                              ? Container(
+                                  color: UiConstants.kBackgroundColor3,
+                                  width: SizeConfig.screenWidth,
+                                  padding: EdgeInsets.all(SizeConfig.padding12),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SpinKitWave(
+                                        color: UiConstants.primaryColor,
+                                        size: SizeConfig.padding16,
+                                      ),
+                                      SizedBox(height: SizeConfig.padding4),
+                                      Text(
+                                        "Loading more tickets",
+                                        style: TextStyles.body4
+                                            .colour(Colors.grey),
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(height: SizeConfig.padding4),
-                                  Text(
-                                    "Loading more tickets",
-                                    style: TextStyles.body4.colour(Colors.grey),
-                                  )
-                                ],
-                              ),
-                            )
-                          : SizedBox();
-                    }),
-              )
-            ],
-          ),
-        );
-      },
-    );
+                                )
+                              : SizedBox();
+                        }),
+                  )
+                ],
+              ),
+            );
+          },
+        ));
   }
 }

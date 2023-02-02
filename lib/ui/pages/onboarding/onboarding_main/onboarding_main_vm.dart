@@ -1,22 +1,18 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingViewModel extends BaseViewModel {
@@ -99,22 +95,14 @@ class OnboardingViewModel extends BaseViewModel {
     ];
   }
 
-  registerWalkthroughCompletion(String comingFrom) async {
+  registerWalkthroughCompletion() async {
     PreferenceHelper.setBool(
         PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
-    onBoardingCompleted(comingFrom);
-
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.replaceAll,
+      page: LoginPageConfig,
+    );
     if (_analyticsService != null)
       _analyticsService!.track(eventName: AnalyticsEvents.splashScrenProceed);
-  }
-
-  onBoardingCompleted(String comingFrom) {
-    if (comingFrom == COMING_FROM_SPLASH)
-      AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.replaceAll,
-        page: LoginPageConfig,
-      );
-    else
-      AppState.backButtonDispatcher!.didPopRoute();
   }
 }

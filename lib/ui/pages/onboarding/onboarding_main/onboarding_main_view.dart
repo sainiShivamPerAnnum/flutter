@@ -1,5 +1,7 @@
+import 'dart:developer';
+
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_vm.dart';
+import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_vm.dart';
 import 'package:felloapp/ui/pages/static/base_animation/base_animation.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -11,52 +13,43 @@ const String COMING_FROM_SPLASH = "fromSplash";
 const String COMING_FROM_HOME = "fromHome";
 
 class OnBoardingView extends StatefulWidget {
-  final String comingFrom;
-
-  const OnBoardingView({Key? key, this.comingFrom = COMING_FROM_SPLASH})
-      : super(key: key);
+  const OnBoardingView({Key? key}) : super(key: key);
 
   @override
   State<OnBoardingView> createState() => _OnBoardingViewState();
 }
 
 class _OnBoardingViewState extends State<OnBoardingView>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   AnimationController? controller;
 
   @override
   void initState() {
+    log("BUILD: Init called for onboarding view");
     controller =
         AnimationController(vsync: this, duration: Duration(seconds: 6));
     Future.delayed(
       Duration(seconds: 2),
-      () {
-        WidgetsBinding.instance!.addPostFrameCallback(
-          (timeStamp) {
-            controller!.animateTo(0.26);
-          },
-        );
-      },
+      () => controller!.animateTo(0.26),
     );
     super.initState();
   }
 
   @override
   void dispose() {
-    controller!.dispose();
+    log("BUILD: Dispose called for onboarding view");
+    controller?.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 1000), () {
-      controller!.animateTo(0.53);
-    });
+  bool get wantKeepAlive => true;
 
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     return BaseView<OnboardingViewModel>(
-      onModelReady: (model) {
-        model.init();
-      },
+      onModelReady: (model) => model.init(),
       builder: (context, model, child) {
         return Scaffold(
           backgroundColor: Color(0xFF032A2E),
@@ -64,7 +57,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
             backgroundColor: Color(0xff0B867C),
             onPressed: () {
               if (model.currentPage == 2)
-                model.registerWalkthroughCompletion(widget.comingFrom);
+                model.registerWalkthroughCompletion();
               else
                 model.pageController!.animateToPage(model.currentPage + 1,
                     duration: Duration(milliseconds: 500),
@@ -97,7 +90,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
               if (swipeCount >= 40) {
                 if (leftSwipe) {
                   if (model.currentPage == 2) {
-                    // model.registerWalkthroughCompletion(comingFrom);
+                    model.registerWalkthroughCompletion();
                     return;
                   } else {
                     model.pageController!.nextPage(
@@ -139,14 +132,11 @@ class _OnBoardingViewState extends State<OnBoardingView>
                   child: SafeArea(
                     child: Transform.translate(
                       offset: Offset(0, -SizeConfig.screenHeight! * 0.1),
-                      child: Container(
-                        // color: Colors.red,
-                        child: Lottie.asset("assets/lotties/onboarding.json",
-                            width: SizeConfig.screenWidth,
-                            // height: SizeConfig.screenWidth,
-                            controller: controller,
-                            fit: BoxFit.fitWidth),
-                      ),
+                      child: Lottie.asset("assets/lotties/onboarding.json",
+                          width: SizeConfig.screenWidth,
+                          frameRate: FrameRate(60),
+                          controller: controller,
+                          fit: BoxFit.fitWidth),
                     ),
                   ),
                 ),
@@ -156,7 +146,6 @@ class _OnBoardingViewState extends State<OnBoardingView>
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.screenHeight! * 0.6,
                     decoration: BoxDecoration(
-                      // color: Colors.transparent,
                       gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
@@ -170,14 +159,6 @@ class _OnBoardingViewState extends State<OnBoardingView>
                             Color(0xff0B867C).withOpacity(0.05),
                             Colors.transparent
                           ]),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color: Color(0xFF0B7D75),
-                      //     blurRadius: 60,
-                      //     spreadRadius: 30,
-                      //     offset: Offset(0, -10),
-                      //   ),
-                      // ],
                     ),
                   ),
                 ),

@@ -189,8 +189,6 @@ class LauncherViewModel extends BaseViewModel {
       new Duration(milliseconds: 820),
     );
 
-    ///check if user is onboarded
-
     if (!userService.isUserOnboarded) {
       _logger.d("New user. Moving to Onboarding..");
       bool showOnboarding = PreferenceHelper.getBool(
@@ -208,7 +206,6 @@ class LauncherViewModel extends BaseViewModel {
           page: LoginPageConfig,
         );
       }
-      // });
     }
 
     ///Check if app needs to be open securely

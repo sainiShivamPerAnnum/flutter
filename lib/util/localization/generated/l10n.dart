@@ -5384,10 +5384,10 @@ class S {
     );
   }
 
-  /// `how are you gonna withdraw less than 1?`
+  /// `Minimum sell amount is ₹10`
   String get txnWithDrawMin {
     return Intl.message(
-      'how are you gonna withdraw less than 1?',
+      'Minimum sell amount is ₹10',
       name: 'txnWithDrawMin',
       desc: '',
       args: [],

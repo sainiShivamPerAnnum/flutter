@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/carousal_widget.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/assets.dart';
@@ -45,54 +44,51 @@ class CampaignCardSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: SizeConfig.padding24,
+        left: SizeConfig.padding16,
         top: SizeConfig.padding8,
         right: SizeConfig.padding16,
       ),
       child: Container(
         height: SizeConfig.screenWidth! * 0.57,
+        width: SizeConfig.screenWidth,
         child: saveVm.isChallengesLoading
             ? SizedBox()
-            : CarousalWidget(
-                height: SizeConfig.screenWidth! * 0.49,
-                width: SizeConfig.screenWidth,
-                widgets: List.generate(
-                  saveVm.ongoingEvents!.length,
-                  (index) {
-                    final event = saveVm.ongoingEvents![index];
-
-                    return GestureDetector(
-                      onTap: () {
-                        if (_userService.baseUser!.username!.isEmpty)
-                          return BaseUtil.showUsernameInputModalSheet();
-                        saveVm.trackChallangeTapped(event.type, index);
-                        AppState.delegate!.parseRoute(Uri.parse(event.type));
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(right: SizeConfig.padding10),
-                        child: CampaignCard(
-                          isLoading: saveVm.isChallengesLoading,
-                          topPadding: SizeConfig.padding16,
-                          leftPadding: SizeConfig.padding20,
-                          event: event,
-                          subText: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Container(
-                              width: SizeConfig.screenWidth! * 0.4,
-                              padding: EdgeInsets.only(
-                                top: SizeConfig.padding8,
-                              ),
-                              child: Text(
-                                event.subtitle ?? '',
-                                style: TextStyles.sourceSans.body4,
-                              ),
+            : PageView.builder(
+                controller: saveVm.offersController,
+                itemCount: saveVm.ongoingEvents!.length,
+                itemBuilder: ((context, index) {
+                  final event = saveVm.ongoingEvents![index];
+                  return GestureDetector(
+                    onTap: () {
+                      if (_userService.baseUser!.username!.isEmpty)
+                        return BaseUtil.showUsernameInputModalSheet();
+                      saveVm.trackChallangeTapped(event.type, index);
+                      AppState.delegate!.parseRoute(Uri.parse(event.type));
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(right: SizeConfig.padding10),
+                      child: CampaignCard(
+                        isLoading: saveVm.isChallengesLoading,
+                        topPadding: SizeConfig.padding16,
+                        leftPadding: SizeConfig.padding20,
+                        event: event,
+                        subText: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Container(
+                            width: SizeConfig.screenWidth! * 0.4,
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.padding8,
+                            ),
+                            child: Text(
+                              event.subtitle ?? '',
+                              style: TextStyles.sourceSans.body4,
                             ),
                           ),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                }),
               ),
       ),
     );

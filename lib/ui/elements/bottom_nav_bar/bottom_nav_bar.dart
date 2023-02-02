@@ -1,7 +1,7 @@
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -10,12 +10,10 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatelessWidget {
-  final RootViewModel parentModel;
-  S? locale;
-  BottomNavBar({required this.parentModel});
-
+  const BottomNavBar();
   @override
   Widget build(BuildContext context) {
+    RootController _rootController = locator<RootController>();
     return Consumer<AppState>(
       builder: (ctx, superModel, child) => Positioned(
         bottom:
@@ -31,10 +29,10 @@ class BottomNavBar extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              children:
-                  List.generate(parentModel.navBarItems.values.length, (index) {
+              children: List.generate(_rootController.navItems.values.length,
+                  (index) {
                 final navbarItems =
-                    parentModel.navBarItems.values.toList()[index];
+                    _rootController.navItems.values.toList()[index];
                 return superModel.getCurrentTabIndex == index
                     ? Expanded(
                         child: NavBarIcon(
@@ -51,7 +49,7 @@ class BottomNavBar extends StatelessWidget {
                           width: SizeConfig.screenWidth! * 0.2,
                           child: GestureDetector(
                             onTap: () {
-                              parentModel.onItemTapped(index);
+                              superModel.onItemTapped(index);
                             },
                             child: NavBarIcon(
                               key: ValueKey(navbarItems.title),

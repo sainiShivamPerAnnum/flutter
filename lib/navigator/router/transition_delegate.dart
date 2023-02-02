@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class MyTransitionDelegate extends TransitionDelegate {
@@ -23,9 +25,13 @@ class MyTransitionDelegate extends TransitionDelegate {
             pageRouteToPagelessRoutes.containsKey(exitingPageRoute);
         final bool isLastExitingPageRoute =
             isLast && !locationToExitingPageRoute.containsKey(exitingPageRoute);
-        if (isLastExitingPageRoute && !hasPagelessRoute) {
-          //   exitingPageRoute.markForPop(exitingPageRoute.route.currentResult);
-          // } else {
+        if (isLastExitingPageRoute //&& !AppState.isRootLoaded
+            &&
+            !hasPagelessRoute) {
+          log("ROOT LOADED");
+          exitingPageRoute
+              .markForComplete(exitingPageRoute.route.currentResult);
+        } else {
           exitingPageRoute
               .markForComplete(exitingPageRoute.route.currentResult);
         }

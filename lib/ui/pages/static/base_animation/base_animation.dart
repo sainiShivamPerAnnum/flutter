@@ -56,7 +56,7 @@ class _BaseAnimationState extends State<BaseAnimation>
   }
 
   void initDelay() async {
-    await Future.delayed(const Duration(milliseconds: 200), () {});
+    await Future.delayed(const Duration(milliseconds: 500), () {});
     _animationController.forward();
   }
 
@@ -67,17 +67,16 @@ class _BaseAnimationState extends State<BaseAnimation>
       builder: (context, child) {
         return Stack(
           children: [
-            Visibility(
-              visible: _animationController.value != 1,
-              child: CustomPaint(
-                painter: AnimationPainter(
-                  transparentCircleRadius: _animation1!.value,
-                  outerCircleRadius: _animation2!.value,
-                  outerThinCircleRadius: _animation3!.value,
+            if (_animationController.value != 1)
+              Center(
+                child: CustomPaint(
+                  painter: AnimationPainter(
+                    transparentCircleRadius: _animation1!.value,
+                    outerCircleRadius: _animation2!.value,
+                    outerThinCircleRadius: _animation3!.value,
+                  ),
                 ),
-                size: Size(sw!, sh!),
               ),
-            ),
           ],
         );
       },

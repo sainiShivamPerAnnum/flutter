@@ -87,14 +87,15 @@ class _JourneyViewState extends State<JourneyView>
                                 child: Stack(
                                   children: [
                                     Background(model: model),
-                                    ActiveMilestoneBackgroundGlow(),
+                                    const ActiveMilestoneBackgroundGlow(),
                                     JourneyAssetPath(model: model),
                                     if (model.avatarPath != null)
                                       AvatarPathPainter(model: model),
-                                    ActiveMilestoneBaseGlow(),
+                                    const ActiveMilestoneBaseGlow(),
                                     Milestones(model: model),
-                                    if (service.showFocusRing) FocusRing(),
-                                    LevelBlurView(),
+                                    if (service.showFocusRing)
+                                      const FocusRing(),
+                                    const LevelBlurView(),
                                     PrizeToolTips(model: model),
                                     MilestoneTooltip(model: model),
                                     Avatar(model: model),
@@ -105,13 +106,13 @@ class _JourneyViewState extends State<JourneyView>
                           ),
                           if (DynamicUiUtils.helpFab.actionUri != null &&
                               DynamicUiUtils.helpFab.actionUri.isNotEmpty)
-                            HelpFab(),
-                          JourneyAppBar(),
-                          JourneyBannersView(),
+                            const HelpFab(),
+                          const JourneyAppBar(),
+                          const JourneyBannersView(),
                           if (model.isRefreshing || service.isRefreshing)
-                            JRefreshIndicator(model: model),
+                            const JRefreshIndicator(),
                           JPageLoader(model: model),
-                          LevelUpAnimation(),
+                          const LevelUpAnimation(),
                         ],
                       ),
               ),
@@ -170,30 +171,32 @@ class JourneyErrorScreen extends StatelessWidget {
 }
 
 class LevelUpAnimation extends StatelessWidget {
+  const LevelUpAnimation();
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [JourneyServiceProperties.LevelCompletion],
-        builder: (context, jModel, properties) {
-          return jModel!.showLevelUpAnimation
-              ? Align(
-                  alignment: Alignment.center,
-                  child: IgnorePointer(
-                    ignoring: true,
-                    child: Lottie.asset(
-                      Assets.levelUpLottie,
-                      width: SizeConfig.screenWidth,
-                      fit: BoxFit.fitWidth,
-                      controller: jModel.levelUpLottieController,
-                      onLoaded: (composition) {
-                        jModel.levelUpLottieController!
-                          ..duration = composition.duration;
-                      },
-                    ),
+      properties: [JourneyServiceProperties.LevelCompletion],
+      builder: (context, jModel, properties) {
+        return jModel!.showLevelUpAnimation
+            ? Align(
+                alignment: Alignment.center,
+                child: IgnorePointer(
+                  ignoring: true,
+                  child: Lottie.asset(
+                    Assets.levelUpLottie,
+                    width: SizeConfig.screenWidth,
+                    fit: BoxFit.fitWidth,
+                    controller: jModel.levelUpLottieController,
+                    onLoaded: (composition) {
+                      jModel.levelUpLottieController!
+                        ..duration = composition.duration;
+                    },
                   ),
-                )
-              : SizedBox();
-        });
+                ),
+              )
+            : SizedBox();
+      },
+    );
   }
 }
 
@@ -216,8 +219,7 @@ class AvatarPathPainter extends StatelessWidget {
 }
 
 class JRefreshIndicator extends StatelessWidget {
-  final JourneyPageViewModel model;
-  const JRefreshIndicator({Key? key, required this.model}) : super(key: key);
+  const JRefreshIndicator({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -285,6 +287,7 @@ class JPageLoader extends StatelessWidget {
 }
 
 class LevelBlurView extends StatelessWidget {
+  const LevelBlurView();
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);

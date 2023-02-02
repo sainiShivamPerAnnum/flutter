@@ -86,6 +86,7 @@ class _JourneyAssetPathState extends State<JourneyAssetPath> {
 // }
 
 class ActiveMilestoneBackgroundGlow extends StatelessWidget {
+  const ActiveMilestoneBackgroundGlow();
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
@@ -123,6 +124,7 @@ class ActiveMilestoneBackgroundGlow extends StatelessWidget {
 }
 
 class ActiveMilestoneBaseGlow extends StatelessWidget {
+  const ActiveMilestoneBaseGlow();
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(

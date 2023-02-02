@@ -54,6 +54,7 @@ class SaveViewModel extends BaseViewModel {
   final SaveRepo? _saveRepo = locator<SaveRepo>();
   final UserService? _userService = locator<UserService>();
   BaseUtil? baseProvider;
+
   final BankAndPanService? _sellService = locator<BankAndPanService>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
@@ -72,7 +73,8 @@ class SaveViewModel extends BaseViewModel {
   ];
   double _nonWithdrawableQnt = 0.0;
   double _withdrawableQnt = 0.0;
-
+  late final PageController offersController =
+      PageController(viewportFraction: 0.8);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
@@ -178,7 +180,7 @@ class SaveViewModel extends BaseViewModel {
 
   getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
-    saveViewItems.add(const SizedBox(height: kToolbarHeight));
+    saveViewItems.add(SizedBox(height: SizeConfig.fToolBarHeight));
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {

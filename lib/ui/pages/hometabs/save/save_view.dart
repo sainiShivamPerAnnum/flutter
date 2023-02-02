@@ -23,9 +23,12 @@ class Save extends StatelessWidget {
         child: BaseView<SaveViewModel>(
           onModelReady: (model) => model.init(),
           builder: (ctx, model, child) {
-            return ListView(
+            return SingleChildScrollView(
               physics: BouncingScrollPhysics(),
-              children: model.getSaveViewItems(model),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: model.getSaveViewItems(model),
+              ),
             );
           },
         ),

@@ -1231,8 +1231,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Your transaction is being verified and will be updated shortly"),
         "txnWithDrawLimit": MessageLookupByLibrary.simpleMessage(
             "You can\'t withdraw more than available balance"),
-        "txnWithDrawMin": MessageLookupByLibrary.simpleMessage(
-            "how are you gonna withdraw less than 1?"),
+        "txnWithDrawMin":
+            MessageLookupByLibrary.simpleMessage("Minimum sell amount is ₹10"),
         "txnWithDrawReq": MessageLookupByLibrary.simpleMessage(
             "Your withdrawal request has been placed and the money will be credited to your account in the next 1-2 business working days"),
         "txnWithDrawalProgress": MessageLookupByLibrary.simpleMessage(
