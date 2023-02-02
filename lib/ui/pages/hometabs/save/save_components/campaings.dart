@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -242,48 +243,59 @@ class CampaignCard extends StatelessWidget {
             baseColor: UiConstants.kUserRankBackgroundColor,
             highlightColor: UiConstants.kBackgroundColor,
           )
-        : Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: UiConstants.kSecondaryBackgroundColor,
-            ),
-            padding: EdgeInsets.only(
-              left: this.leftPadding,
-              right: SizeConfig.padding24,
-              top: this.topPadding,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      prefix,
-                      style: TextStyles.sourceSans.body1.bold,
-                    ),
-                    Text(
-                      suffix.toUpperCase(),
-                      style: TextStyles.sourceSansEB.title50
-                          .letterSpace(0.6)
-                          .colour(
-                            event.textColor.toColor(),
-                          )
-                          .setHeight(1),
-                    ),
-                    this.subText
-                  ],
-                ),
-                Expanded(
-                  child: SvgPicture.asset(
-                    asset,
-                    fit: BoxFit.fitHeight,
+        : event.bgImage.isNotEmpty
+            ? Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  color: UiConstants.kSecondaryBackgroundColor,
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(event.thumbnail),
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ],
-            ),
-          );
+              )
+            : Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  color: UiConstants.kSecondaryBackgroundColor,
+                ),
+                padding: EdgeInsets.only(
+                  left: this.leftPadding,
+                  right: SizeConfig.padding24,
+                  top: this.topPadding,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          prefix,
+                          style: TextStyles.sourceSans.body1.bold,
+                        ),
+                        Text(
+                          suffix.toUpperCase(),
+                          style: TextStyles.sourceSansEB.title50
+                              .letterSpace(0.6)
+                              .colour(
+                                event.textColor.toColor(),
+                              )
+                              .setHeight(1),
+                        ),
+                        this.subText
+                      ],
+                    ),
+                    Expanded(
+                      child: SvgPicture.asset(
+                        asset,
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                  ],
+                ),
+              );
   }
 }
