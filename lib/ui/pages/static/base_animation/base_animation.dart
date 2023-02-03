@@ -27,20 +27,20 @@ class _BaseAnimationState extends State<BaseAnimation>
     _animation1 = Tween(begin: 0.0, end: sw! * 1.195).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Cubic(.20, .20, 1, 0),
+        curve: Curves.slowMiddle,
       ),
     );
     _animation2 = Tween(begin: 0.0, end: sw! * 1.195).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Cubic(.10, .4, .50, 0),
+        curve: Curves.slowMiddle,
       ),
     );
 
     _animation3 = Tween(begin: 0.0, end: sw! * 1.195).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Cubic(0.20, .65, .30, 0),
+        curve: Curves.slowMiddle,
       ),
     );
     initDelay();
@@ -65,10 +65,8 @@ class _BaseAnimationState extends State<BaseAnimation>
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
-        return Stack(
-          children: [
-            if (_animationController.value != 1)
-              Center(
+        return (_animationController.value != 1)
+            ? Center(
                 child: CustomPaint(
                   painter: AnimationPainter(
                     transparentCircleRadius: _animation1!.value,
@@ -76,9 +74,8 @@ class _BaseAnimationState extends State<BaseAnimation>
                     outerThinCircleRadius: _animation3!.value,
                   ),
                 ),
-              ),
-          ],
-        );
+              )
+            : SizedBox();
       },
     );
   }

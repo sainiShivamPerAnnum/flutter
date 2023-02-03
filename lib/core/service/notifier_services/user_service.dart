@@ -515,6 +515,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     ];
     DynamicUiUtils.helpFab = dynamicUi.journeyFab;
     DynamicUiUtils.navBar = dynamicUi.navBar;
+    _rootController.navItems.clear();
     DynamicUiUtils.navBar.forEach(_rootController.getNavItems);
   }
 

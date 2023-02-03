@@ -36,89 +36,94 @@ class LendboxBuyInputView extends StatelessWidget {
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     if (model.state == ViewState.Busy) return Center(child: FullScreenLoader());
 
-    return Stack(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(height: SizeConfig.padding16),
-            LendboxAppBar(
-              isEnabled: !model.isBuyInProgress,
-              trackClosingEvent: () {
-                _analyticsService!.track(
-                    eventName: AnalyticsEvents.savePageClosed,
-                    properties: {
-                      "Amount entered": model.amountController!.text,
-                      "Asset": 'Flo',
-                    });
-              },
-            ),
-            SizedBox(height: SizeConfig.padding32),
-            BannerWidget(
-              model: model.assetOptionsModel!.data.banner,
-              happyHourCampign:
-                  locator.isRegistered<HappyHourCampign>() ? locator() : null,
-            ),
-            AmountInputView(
-              amountController: model.amountController,
-              focusNode: model.buyFieldNode,
-              chipAmounts: model.assetOptionsModel!.data.userOptions,
-              isEnabled: !model.isBuyInProgress,
-              maxAmount: model.maxAmount,
-              maxAmountMsg: locale.upto50000,
-              minAmount: model.minAmount,
-              minAmountMsg: locale.minPurchaseText1,
-              notice: model.buyNotice,
-              onAmountChange: (int amount) {},
-              bestChipIndex: 2,
-              readOnly: model.readOnly,
-              onTap: () => model.showKeyBoard(),
-            ),
-            Spacer(),
-            SizedBox(
-              height: SizeConfig.padding32,
-            ),
-            PropertyChangeConsumer<BankAndPanService,
-                BankAndPanServiceProperties>(
-              properties: [
-                BankAndPanServiceProperties.kycVerified,
-              ],
-              builder: (ctx, service, child) {
-                return (!service!.isKYCVerified)
-                    ? _kycWidget(model, context)
-                    : model.isBuyInProgress
-                        ? Container(
-                            height: SizeConfig.screenWidth! * 0.1556,
-                            alignment: Alignment.center,
-                            width: SizeConfig.screenWidth! * 0.7,
-                            child: LinearProgressIndicator(
-                              color: UiConstants.primaryColor,
-                              backgroundColor: UiConstants.kDarkBackgroundColor,
-                            ),
-                          )
-                        : AppPositiveBtn(
-                            btnText: locale.btnSave,
-                            onPressed: () async {
-                              if (!model.isBuyInProgress) {
-                                FocusScope.of(context).unfocus();
-                                model.initiateBuy();
-                              }
-                            },
-                            width: SizeConfig.screenWidth! * 0.813,
-                          );
-              },
-            ),
-            SizedBox(
-              height: SizeConfig.padding32,
-            ),
-          ],
-        ),
-        CustomKeyboardSubmitButton(
-          onSubmit: () => model.buyFieldNode.unfocus(),
-        )
-      ],
+    return PropertyChangeProvider<BankAndPanService,
+        BankAndPanServiceProperties>(
+      value: locator<BankAndPanService>(),
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              SizedBox(height: SizeConfig.padding16),
+              LendboxAppBar(
+                isEnabled: !model.isBuyInProgress,
+                trackClosingEvent: () {
+                  _analyticsService!.track(
+                      eventName: AnalyticsEvents.savePageClosed,
+                      properties: {
+                        "Amount entered": model.amountController!.text,
+                        "Asset": 'Flo',
+                      });
+                },
+              ),
+              SizedBox(height: SizeConfig.padding32),
+              BannerWidget(
+                model: model.assetOptionsModel!.data.banner,
+                happyHourCampign:
+                    locator.isRegistered<HappyHourCampign>() ? locator() : null,
+              ),
+              AmountInputView(
+                amountController: model.amountController,
+                focusNode: model.buyFieldNode,
+                chipAmounts: model.assetOptionsModel!.data.userOptions,
+                isEnabled: !model.isBuyInProgress,
+                maxAmount: model.maxAmount,
+                maxAmountMsg: locale.upto50000,
+                minAmount: model.minAmount,
+                minAmountMsg: locale.minPurchaseText1,
+                notice: model.buyNotice,
+                onAmountChange: (int amount) {},
+                bestChipIndex: 2,
+                readOnly: model.readOnly,
+                onTap: () => model.showKeyBoard(),
+              ),
+              Spacer(),
+              SizedBox(
+                height: SizeConfig.padding32,
+              ),
+              PropertyChangeConsumer<BankAndPanService,
+                  BankAndPanServiceProperties>(
+                properties: [
+                  BankAndPanServiceProperties.kycVerified,
+                ],
+                builder: (ctx, service, child) {
+                  return (!service!.isKYCVerified)
+                      ? _kycWidget(model, context)
+                      : model.isBuyInProgress
+                          ? Container(
+                              height: SizeConfig.screenWidth! * 0.1556,
+                              alignment: Alignment.center,
+                              width: SizeConfig.screenWidth! * 0.7,
+                              child: LinearProgressIndicator(
+                                color: UiConstants.primaryColor,
+                                backgroundColor:
+                                    UiConstants.kDarkBackgroundColor,
+                              ),
+                            )
+                          : AppPositiveBtn(
+                              btnText: locale.btnSave,
+                              onPressed: () async {
+                                if (!model.isBuyInProgress) {
+                                  FocusScope.of(context).unfocus();
+                                  model.initiateBuy();
+                                }
+                              },
+                              width: SizeConfig.screenWidth! * 0.813,
+                            );
+                },
+              ),
+              SizedBox(
+                height: SizeConfig.padding32,
+              ),
+            ],
+          ),
+          CustomKeyboardSubmitButton(
+            onSubmit: () => model.buyFieldNode.unfocus(),
+          )
+        ],
+      ),
     );
   }
 

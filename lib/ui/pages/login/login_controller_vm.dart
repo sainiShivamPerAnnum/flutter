@@ -22,6 +22,7 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -59,6 +60,8 @@ class LoginControllerViewModel extends BaseViewModel {
   final UserRepository? _userRepo = locator<UserRepository>();
   final JourneyService? _journeyService = locator<JourneyService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
+  final ReferralService _referralService = locator<ReferralService>();
+
   S locale = locator<S>();
 
   // static LocalDBModel? lclDbProvider = locator<LocalDBModel>();
@@ -359,12 +362,23 @@ class LoginControllerViewModel extends BaseViewModel {
       if (source == LoginSource.TRUECALLER)
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerLogin);
       userService.baseUser = user.model;
-      userService.logUserInstalledApps().then((value) {
-        logger!.i(value);
-        _analyticsService!.track(
+      userService.logUserInstalledApps().then(
+        (value) {
+          logger!.i(value);
+          _analyticsService!.track(
             eventName: AnalyticsEvents.installedApps,
-            properties: value as Map<String, dynamic>);
-      });
+            appFlyer: false,
+            apxor: false,
+            webEngage: false,
+            properties: {
+              "apps": Map<String, dynamic>.from(value)
+                  .keys
+                  .map((e) => e.toString())
+                  .toList()
+            },
+          );
+        },
+      );
       _onSignUpComplete();
     }
   }
@@ -385,6 +399,7 @@ class LoginControllerViewModel extends BaseViewModel {
     await userService.init();
     _userCoinService!.init();
     baseProvider!.init();
+    _referralService.init();
     AnalyticsProperties().init();
     if (userService.isUserOnboarded) await _journeyService!.init();
 

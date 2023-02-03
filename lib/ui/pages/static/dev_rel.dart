@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -80,6 +82,15 @@ class CacheClearWidget extends StatelessWidget {
                     final res =
                         await locator<UserService>().logUserInstalledApps();
                     log(res.toString());
+
+                    locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.installedApps,
+                        properties: {
+                          "apps": Map<String, dynamic>.from(res)
+                              .keys
+                              .map((e) => e.toString())
+                              .toList()
+                        });
                   },
                   child: Chip(
                     backgroundColor: Colors.indigo,
