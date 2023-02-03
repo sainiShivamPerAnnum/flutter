@@ -62,7 +62,7 @@ class KYCDetailsView extends StatelessWidget {
           ),
           backgroundColor: UiConstants.kSecondaryBackgroundColor,
           title: Text(
-            locale.kycTitle,
+            locale.kycTitle.toUpperCase(),
             style: TextStyles.rajdhaniSB.title3,
           ),
           actions: [

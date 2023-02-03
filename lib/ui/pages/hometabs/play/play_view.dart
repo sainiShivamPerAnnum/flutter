@@ -11,6 +11,7 @@ class Play extends StatelessWidget {
       builder: (ctx, model, child) {
         return ListView(
           cacheExtent: 500,
+          padding: EdgeInsets.zero,
           physics: BouncingScrollPhysics(),
           children: model.getOrderedPlayViewItems(model),
         );

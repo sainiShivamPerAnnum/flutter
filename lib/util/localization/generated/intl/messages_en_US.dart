@@ -560,7 +560,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Your KYC verification has been successfully completed"),
         "kycSuccessTitle": MessageLookupByLibrary.simpleMessage(
             "KYC successfully completed ✅"),
-        "kycTitle": MessageLookupByLibrary.simpleMessage("KYC DETAILS"),
+        "kycTitle": MessageLookupByLibrary.simpleMessage("Kyc Details"),
         "kycUseCamera": MessageLookupByLibrary.simpleMessage("Use Camera"),
         "kycVerifyText": MessageLookupByLibrary.simpleMessage(
             "This is required to securely verify your identity."),

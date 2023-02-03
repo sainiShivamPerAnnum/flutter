@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
@@ -98,6 +99,16 @@ class GetterRepository extends BaseRepo {
       );
     } catch (e) {
       return ApiResponse.withError('Something went wrong', 400);
+    }
+  }
+
+  Future setUpAppConfigs() async {
+    final _appConfig = await getAppConfig();
+    if (_appConfig.code != 200) {
+      AppConfig.instance({
+        "message": "Default Values",
+        "data": BaseRemoteConfig.DEFAULTS,
+      });
     }
   }
 

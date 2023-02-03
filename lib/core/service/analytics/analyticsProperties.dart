@@ -1,5 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -18,7 +17,6 @@ class AnalyticsProperties {
   static final UserCoinService? _userCoinService = locator<UserCoinService>();
   static final PaytmService? _paytmService = locator<PaytmService>();
   static final JourneyService? _journeyService = locator<JourneyService>();
-  static final TambolaService? _tambolaService = locator<TambolaService>();
   static final TxnHistoryService? _txnHistoryService =
       locator<TxnHistoryService>();
   static final BaseUtil? _baseUtil = locator<BaseUtil>();
@@ -27,18 +25,16 @@ class AnalyticsProperties {
   init() {
     _paytmService!.init();
 
-    _txnHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
-
-    if (!_baseUtil!.referralsFetched!) {
-      _referralRepo!.getReferralHistory().then((refHisModel) {
-        if (refHisModel.isSuccess()) {
-          _baseUtil!.referralsFetched = true;
-          _baseUtil!.userReferralsList = refHisModel.model ?? [];
-        } else {
-          BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
-        }
-      });
-    }
+    // if (!_baseUtil!.referralsFetched!) {
+    //   _referralRepo!.getReferralHistory().then((refHisModel) {
+    //     if (refHisModel.isSuccess()) {
+    //       _baseUtil!.referralsFetched = true;
+    //       _baseUtil!.userReferralsList = refHisModel.model ?? [];
+    //     } else {
+    //       BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
+    //     }
+    //   });
+    // }
   }
 
   static getTotalReferralCount() {

@@ -119,9 +119,9 @@ class GTInstantViewModel extends BaseViewModel {
     });
   }
 
-  showAutosavePrompt() {
-    _gtService!.showAutosavePrompt();
-  }
+  // showAutosavePrompt() {
+  //   _gtService!.showAutosavePrompt();
+  // }
 
   Future<void> redeemTicket() async {
     scratchKey.currentState!.reveal();

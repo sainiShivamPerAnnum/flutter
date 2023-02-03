@@ -365,7 +365,7 @@
   "btnDiscard": "Discard",
   "------------------": "----------------------------",
   "kycNameLabel": "Name as per your PAN Card",
-  "kycTitle": "KYC DETAILS",
+  "kycTitle": "Kyc Details",
   "kycVerifyText": "This is required to securely verify your identity.",
   "kycPanUpload": "Upload your PAN Card",
   "kycUseCamera": "Use Camera",

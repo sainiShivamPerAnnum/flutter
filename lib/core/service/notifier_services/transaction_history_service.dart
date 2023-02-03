@@ -17,7 +17,7 @@ class TxnHistoryService extends ChangeNotifier {
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
-  List<UserTransaction>? _txnList;
+  List<UserTransaction>? _txnList = [];
   String? lastTxnDocId;
   String? lastPrizeTxnDocId;
   String? lastDepositTxnDocId;

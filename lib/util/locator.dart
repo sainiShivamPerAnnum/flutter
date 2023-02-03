@@ -22,6 +22,7 @@ import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/user_stats_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
@@ -118,6 +119,7 @@ Future<void> setupLocator() async {
 
   locator.registerLazySingleton(() => PaytmService());
 
+  locator.registerLazySingleton(() => AnalyticsProperties());
   locator.registerLazySingleton(() => AnalyticsService());
   locator.registerLazySingleton(() => MixpanelAnalytics());
   locator.registerLazySingleton(() => WebEngageAnalytics());

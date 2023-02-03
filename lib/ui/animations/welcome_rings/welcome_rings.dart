@@ -40,7 +40,7 @@ class _CircularAnimState extends State<CircularAnim>
     super.initState();
     // _scrollController = ScrollController(initialScrollOffset: 300);
     _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1500));
+        vsync: this, duration: const Duration(milliseconds: 1000));
     _ringOneAnimation = CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.0, 0.4, curve: Curves.easeOutCirc));
@@ -57,15 +57,15 @@ class _CircularAnimState extends State<CircularAnim>
 
   void animate() {
     Future.delayed(
-      Duration(milliseconds: 100),
+      Duration(milliseconds: 400),
       () {
         _controller.reset();
         scaleFactor = 1;
         _controller.forward();
-        Future.delayed(const Duration(milliseconds: 1100), () {
+        Future.delayed(const Duration(milliseconds: 600), () {
           scaleFactor = 5.0;
         });
-        Future.delayed(const Duration(milliseconds: 2000), () {
+        Future.delayed(const Duration(milliseconds: 1500), () {
           isAnimationInProgress = false;
         });
       },

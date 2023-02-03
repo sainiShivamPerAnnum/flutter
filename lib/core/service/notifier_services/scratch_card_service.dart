@@ -4,27 +4,18 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/fello_dialog/fello_info_dialog.dart';
-import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratch_cards_view.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -43,7 +34,7 @@ class ScratchCardService
   final CustomLogger? _logger = locator<CustomLogger>();
   final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
   final UserService? _userService = locator<UserService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
   S locale = locator<S>();
@@ -377,42 +368,42 @@ class ScratchCardService
     }
   }
 
-  showAutosavePrompt() {
-    if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
-    BaseUtil.openDialog(
-      addToScreenStack: true,
-      isBarrierDismissible: false,
-      hapticVibrate: true,
-      content: FelloInfoDialog(
-        title: locale.savingsOnAuto,
-        subtitle: locale.savingsOnAutoSubtitle,
-        png: Assets.preAutosave,
-        action: AppPositiveBtn(
-          btnText: locale.btnSetupAutoSave,
-          onPressed: () {
-            AppState.backButtonDispatcher!.didPopRoute();
-            openAutosave();
-          },
-        ),
-      ),
-    );
-  }
+  // showAutosavePrompt() {
+  //   if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
+  //   BaseUtil.openDialog(
+  //     addToScreenStack: true,
+  //     isBarrierDismissible: false,
+  //     hapticVibrate: true,
+  //     content: FelloInfoDialog(
+  //       title: locale.savingsOnAuto,
+  //       subtitle: locale.savingsOnAutoSubtitle,
+  //       png: Assets.preAutosave,
+  //       action: AppPositiveBtn(
+  //         btnText: locale.btnSetupAutoSave,
+  //         onPressed: () {
+  //           AppState.backButtonDispatcher!.didPopRoute();
+  //           openAutosave();
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  openAutosave() {
-    if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
+  // openAutosave() {
+  //   if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
 
-    if (_paytmService!.activeSubscription != null) {
-      AppState.delegate!.appState.currentAction = PageAction(
-          page: AutosaveProcessViewPageConfig,
-          widget: AutosaveProcessView(page: 2),
-          state: PageState.addWidget);
-    } else {
-      AppState.delegate!.appState.currentAction = PageAction(
-        page: AutosaveDetailsViewPageConfig,
-        state: PageState.addPage,
-      );
-    }
-  }
+  //   if (_paytmService!.activeSubscription != null) {
+  //     AppState.delegate!.appState.currentAction = PageAction(
+  //         page: AutosaveProcessViewPageConfig,
+  //         widget: AutosaveProcessView(page: 2),
+  //         state: PageState.addWidget);
+  //   } else {
+  //     AppState.delegate!.appState.currentAction = PageAction(
+  //       page: AutosaveDetailsViewPageConfig,
+  //       state: PageState.addPage,
+  //     );
+  //   }
+  // }
 
   Future<void> fetchScratchCards({bool more = false}) async {
     try {

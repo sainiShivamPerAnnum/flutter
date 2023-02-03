@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -28,8 +24,6 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
-import 'package:intl/intl.dart';
 
 import '../../../core/repository/user_repo.dart';
 
@@ -61,6 +55,9 @@ class LauncherViewModel extends BaseViewModel {
   final ReferralService _referralService = locator<ReferralService>();
   final UserService _userService = locator<UserService>();
   FirebasePerformance _performance = FirebasePerformance.instance;
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final AnalyticsProperties _analyticsProperties =
+      locator<AnalyticsProperties>();
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
 
@@ -82,15 +79,9 @@ class LauncherViewModel extends BaseViewModel {
     // _togglePerformanceCollection();
 
     initLogic();
-
     _timer3 = new Timer(const Duration(seconds: 6), () {
-      //display slow internet message
       isSlowConnection = true;
     });
-  }
-
-  fetchUserBootUpDetails() async {
-    await _userService.userBootUpEE();
   }
 
   exit() {
@@ -99,61 +90,32 @@ class LauncherViewModel extends BaseViewModel {
   }
 
   initLogic() async {
-    // final Trace trace = _performance.newTrace('Splash trace start');
-    // await trace.start();
-    // trace.putAttribute('Splash', 'userService init started');
-    // trace.putAttribute('Splash', 'userService init ended');
-
     try {
-      await CacheService.initialize();
-      await userService.init();
-      fetchUserBootUpDetails();
+      //Initialize every time
+      await Future.wait([
+        CacheService.initialize(),
+        userService.init(),
+        _getterRepo.setUpAppConfigs()
+      ]);
 
-      // await BaseRemoteConfig.init();
-
-      final _appConfig = await locator<GetterRepository>().getAppConfig();
-
-      if (_appConfig.code != 200) {
-        AppConfig.instance({
-          "message": "Default Values",
-          "data": BaseRemoteConfig.DEFAULTS,
-        });
-      }
-
+      //Initialize only if user is onboarded
       if (userService.isUserOnboarded) {
-        await _journeyRepo.init();
-        await _journeyService.init();
+        await Future.wait([
+          _journeyRepo.init(),
+          _journeyService.init(),
+          CacheService.checkIfInvalidationRequired(),
+          _analyticsService.login(
+              isOnBoarded: true, baseUser: userService.baseUser),
+          userService.firebaseUser!.getIdToken().then(
+                (token) =>
+                    _userRepo.updateUserAppFlyer(userService.baseUser!, token),
+              ),
+        ]);
         _userCoinService.init();
         _referralService.init();
-      }
-
-      // check if cache invalidation required
-      final now = DateTime.now().millisecondsSinceEpoch;
-
-      final _invalidate =
-          AppConfig.getValue(AppConfigKey.invalidateBefore) as int;
-      if (now <= _invalidate) {
-        await CacheService.invalidateAll();
-      }
-
-      _baseUtil.init();
-      _fcmListener.setupFcm();
-
-      if (userService.isUserOnboarded)
-        userService.firebaseUser?.getIdToken().then(
-              (token) =>
-                  _userRepo.updateUserAppFlyer(userService.baseUser!, token),
-            );
-
-      if (userService.baseUser != null) {
-        if (userService.isUserOnboarded)
-          await _analyticsService.login(
-            isOnBoarded: userService.isUserOnboarded,
-            baseUser: userService.baseUser,
-          );
-
-        //To fetch the properties required to pass for the analytics
-        await AnalyticsProperties().init();
+        _baseUtil.init();
+        _fcmListener.setupFcm();
+        _analyticsProperties.init();
       }
     } catch (e) {
       _logger.e("Splash Screen init : $e");
@@ -165,29 +127,12 @@ class LauncherViewModel extends BaseViewModel {
     }
 
     _timer3.cancel();
-    log("Splash init http: ${DateFormat('yyyy-MM-dd – hh:mm:ss').format(DateTime.now())}");
-
-    // await trace.stop();
-
-    // log(_logoWatch.elapsed.inMilliseconds.toString());
-
     int delayedSecond = _logoWatch.elapsed.inMilliseconds % loopLottieDuration;
-
     delayedSecond = loopLottieDuration - delayedSecond;
-    log('Delayed seconds: $delayedSecond');
-    await Future.delayed(
-      new Duration(milliseconds: delayedSecond),
-    );
+    await Future.delayed(Duration(milliseconds: delayedSecond));
     isFetchingData = false;
     loopOutlottieAnimationController!.forward();
-
-    // 21 FPS = 350 millisecods : Cal
-    // = 1000 / 60 = 16.66
-    // = 16.66 * 21 = 350
-
-    await Future.delayed(
-      new Duration(milliseconds: 900),
-    );
+    await Future.delayed(new Duration(milliseconds: 900));
 
     if (!userService.isUserOnboarded) {
       _logger.d("New user. Moving to Onboarding..");
@@ -195,7 +140,6 @@ class LauncherViewModel extends BaseViewModel {
           PreferenceHelper.CACHE_ONBOARDING_COMPLETION);
 
       if (showOnboarding == false) {
-        //show tutorial
         return navigator.currentAction = PageAction(
           state: PageState.replaceAll,
           page: OnBoardingViewPageConfig,
@@ -212,40 +156,17 @@ class LauncherViewModel extends BaseViewModel {
     userService.authenticateDevice();
   }
 
-  Future<void> _togglePerformanceCollection() async {
-    // No-op for web.
-    await _performance
-        .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
+  // Future<void> _togglePerformanceCollection() async {
+  //   // No-op for web.
+  //   await _performance
+  //       .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
 
-    // Always true for web.
-    final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
+  //   // Always true for web.
+  //   final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
 
-    _isPerformanceCollectionEnabled = isEnabled;
-    _performanceCollectionMessage = _isPerformanceCollectionEnabled
-        ? 'Performance collection is enabled.'
-        : 'Performance collection is disabled.';
-  }
+  //   _isPerformanceCollectionEnabled = isEnabled;
+  //   _performanceCollectionMessage = _isPerformanceCollectionEnabled
+  //       ? 'Performance collection is enabled.'
+  //       : 'Performance collection is disabled.';
+  // }
 }
-
-/// Indicates that the user has not yet configured a passcode (iOS) or
-/// PIN/pattern/password (Android) on the device.
-const String passcodeNotSet = 'PasscodeNotSet';
-
-/// Indicates the user has not enrolled any biometrics on the device.
-const String notEnrolled = 'NotEnrolled';
-
-/// Indicates the device does not have hardware support for biometrics.
-const String notAvailable = 'NotAvailable';
-
-/// Indicates the device operating system is unsupported.
-const String otherOperatingSystem = 'OtherOperatingSystem';
-
-/// Indicates the API is temporarily locked out due to too many attempts.
-const String lockedOut = 'LockedOut';
-
-/// Indicates the API is locked out more persistently than [lockedOut].
-/// Strong authentication like PIN/Pattern/Password is required to unlock.
-const String permanentlyLockedOut = 'PermanentlyLockedOut';
-
-/// Indicates that the biometricOnly parameter can't be true on Windows
-const String biometricOnlyNotSupported = 'biometricOnlyNotSupported';

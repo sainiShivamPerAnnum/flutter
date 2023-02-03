@@ -101,9 +101,9 @@ class RootViewModel extends BaseViewModel {
 
   initialize() async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await _userService.userBootUpEE();
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
-
       await handleStartUpNotificationData();
       _userService.getUserFundWalletData();
       _userService.checkForNewNotifications();

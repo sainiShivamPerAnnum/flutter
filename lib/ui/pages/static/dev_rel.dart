@@ -57,8 +57,8 @@ class CacheClearWidget extends StatelessWidget {
                   onTap: () async {
                     String? deviceId;
                     try {
-                      const platform = MethodChannel(
-                          "fello.in/dev/notifications/channel/tambola");
+                      const platform =
+                          MethodChannel("methodChannel/deviceData");
 
                       final String result =
                           await platform.invokeMethod('getDeviceId');
@@ -67,6 +67,8 @@ class CacheClearWidget extends StatelessWidget {
                       debugPrint(e.toString());
                       deviceId = "";
                     }
+                    BaseUtil.showPositiveAlert(
+                        "Your device Id is:", "$deviceId");
                     log("DEVICE ID: $deviceId");
                   },
                   child: Chip(

@@ -517,6 +517,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     DynamicUiUtils.navBar = dynamicUi.navBar;
     _rootController.navItems.clear();
     DynamicUiUtils.navBar.forEach(_rootController.getNavItems);
+    _rootController.onChange(_rootController.navItems.values.toList()[0]);
   }
 
   diplayUsername(String username) {

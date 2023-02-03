@@ -66,7 +66,7 @@ class MyTransitionDelegate extends TransitionDelegate {
       if (pageRoute.isWaitingForEnteringDecision) {
         if (!locationToExitingPageRoute.containsKey(pageRoute) &&
             isLastIteration) {
-          pageRoute.markForPush();
+          pageRoute.markForAdd();
         } else {
           pageRoute.markForAdd();
         }

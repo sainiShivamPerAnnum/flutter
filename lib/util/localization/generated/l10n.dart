@@ -3588,10 +3588,10 @@ class S {
     );
   }
 
-  /// `KYC DETAILS`
+  /// `Kyc Details`
   String get kycTitle {
     return Intl.message(
-      'KYC DETAILS',
+      'Kyc Details',
       name: 'kycTitle',
       desc: '',
       args: [],
