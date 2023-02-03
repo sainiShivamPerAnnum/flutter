@@ -28,7 +28,6 @@ class Campaigns extends StatelessWidget {
         SizedBox(height: SizeConfig.padding16),
         TitleSubtitleContainer(
           title: locale.offers,
-          subTitle: locale.offersSubtitle,
         ),
         CampaignCardSection(saveVm: model),
       ],

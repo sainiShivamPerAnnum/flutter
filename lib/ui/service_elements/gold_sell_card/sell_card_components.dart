@@ -49,26 +49,28 @@ class SellButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return GestureDetector(
-      onTap: isActive ? onTap as void Function()? : () {},
-      child: Container(
-        height: SizeConfig.screenWidth! * 0.12,
-        width: SizeConfig.screenWidth! * 0.29,
-        margin: EdgeInsets.only(left: SizeConfig.padding24),
-        decoration: BoxDecoration(
-          color: isActive ? Colors.white : Colors.white.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-        ),
-        child: Center(
-          child: Text(
-            locale.saveSellButton,
-            style: TextStyles.rajdhaniSB.body0.colour(
-              Colors.black,
+    return isActive
+        ? GestureDetector(
+            onTap: isActive ? onTap as void Function()? : () {},
+            child: Container(
+              height: SizeConfig.screenWidth! * 0.12,
+              width: SizeConfig.screenWidth! * 0.29,
+              margin: EdgeInsets.only(left: SizeConfig.padding24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+              ),
+              child: Center(
+                child: Text(
+                  locale.saveSellButton,
+                  style: TextStyles.rajdhaniSB.body0.colour(
+                    Colors.black,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : SizedBox();
   }
 }
 
@@ -126,6 +128,7 @@ class SellActionButton extends StatelessWidget {
           height: SizeConfig.screenWidth! * 0.16,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
+            border: Border.all(color: Colors.white.withOpacity(0.5)),
             borderRadius: BorderRadius.circular(SizeConfig.roundness5),
             color: Color(0xffd9d9d9).withOpacity(0.1),
           ),

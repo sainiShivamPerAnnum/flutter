@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -29,6 +30,18 @@ Map<String, String> _lbInfo = {
   "Everyday": "Credits"
 };
 
+final _goldMarquee = [
+  "₹1 Crore+ invested in Gold on Fello",
+  "Minimize risks in your portfolio",
+  "48 hours lock-in period"
+];
+
+final _floMarquee = [
+  "Higher returns than FDs",
+  "Your money is safe with us",
+  "7 days lock-in period"
+];
+
 class SaveContainer extends StatelessWidget {
   SaveContainer({
     Key? key,
@@ -40,6 +53,7 @@ class SaveContainer extends StatelessWidget {
   final InvestmentType investmentType;
   final bool isPopular;
   final List<String> bottomStrip;
+
   int value = 500;
   final bool isGold;
   @override
@@ -53,7 +67,7 @@ class SaveContainer extends StatelessWidget {
         padding: EdgeInsets.only(bottom: SizeConfig.padding20),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-          height: SizeConfig.screenHeight! * 0.33,
+          height: SizeConfig.screenHeight! * 0.35,
           decoration: BoxDecoration(
             color: getCardBgColor,
             borderRadius: BorderRadius.circular(12),
@@ -118,19 +132,8 @@ class SaveContainer extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: BlackWhiteButton(
-                              onPress: () {
-                                BaseUtil().openRechargeModalSheet(
-                                    investmentType: investmentType, amt: value);
-                              },
-                              title: "SAVE NOW",
-                            ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding6,
-                          ),
-                          Expanded(
                             child: BlackWhiteButton.inverse(
+                                height: SizeConfig.screenHeight! * 0.05,
                                 onPress: () =>
                                     AppState.delegate!.appState.currentAction =
                                         PageAction(
@@ -139,19 +142,50 @@ class SaveContainer extends StatelessWidget {
                                             widget: AssetSectionView(
                                                 type: investmentType)),
                                 title: "LEARN MORE"),
-                          )
+                          ),
+                          SizedBox(
+                            width: SizeConfig.padding6,
+                          ),
+                          Expanded(
+                            child: BlackWhiteButton(
+                              height: SizeConfig.screenHeight! * 0.05,
+                              onPress: () {
+                                BaseUtil().openRechargeModalSheet(
+                                    investmentType: investmentType, amt: value);
+                              },
+                              title: "SAVE NOW",
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                  Text(
-                    "₹100K + invested till date",
-                    style: TextStyles.sourceSans.body3
-                        .colour(Colors.white.withOpacity(0.6)),
-                  ),
+
                   SizedBox(
-                    height: SizeConfig.padding8,
+                    height: SizeConfig.screenHeight! * 0.04,
+                    width: double.infinity,
+                    child: Builder(builder: (context) {
+                      final type = investmentType == InvestmentType.AUGGOLD99
+                          ? _goldMarquee
+                          : _floMarquee;
+                      return CarouselSlider.builder(
+                        itemCount: type.length,
+                        itemBuilder: (context, index, realIndex) => Text(
+                          type[index],
+                          textAlign: TextAlign.center,
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white.withOpacity(0.3)),
+                        ),
+                        options: CarouselOptions(
+                            autoPlay: true,
+                            viewportFraction: 1,
+                            scrollPhysics: NeverScrollableScrollPhysics()),
+                      );
+                    }),
                   ),
+                  // SizedBox(
+                  //   height: SizeConfig.padding8,
+                  // ),
                 ],
               ),
               if (isPopular)

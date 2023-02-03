@@ -41,6 +41,12 @@ class GoldBuyInputView extends StatelessWidget {
   Widget build(BuildContext context) {
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     S locale = locator<S>();
+    AppState.onTap = () {
+      model.initiateBuy();
+      AppState.backButtonDispatcher!.didPopRoute();
+    };
+    AppState.type = InvestmentType.AUGGOLD99;
+    AppState.amt = double.tryParse(model.goldAmountController!.text) ?? 0;
     return Stack(
       children: [
         Column(
@@ -63,14 +69,17 @@ class GoldBuyInputView extends StatelessWidget {
                           : "Not Applied",
                     });
                 if (locator<BackButtonActions>().isTransactionCancelled) {
-                  locator<BackButtonActions>()
-                      .showWantToCloseTransactionBottomSheet(
-                          double.parse(model.goldAmountController!.text)
-                              .round(),
-                          InvestmentType.AUGGOLD99, () {
-                    model.initiateBuy();
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  });
+                  if (!AppState.isRepeated) {
+                    locator<BackButtonActions>()
+                        .showWantToCloseTransactionBottomSheet(
+                            double.parse(model.goldAmountController!.text)
+                                .round(),
+                            InvestmentType.AUGGOLD99, () {
+                      model.initiateBuy();
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    });
+                    AppState.isRepeated = true;
+                  }
                   return;
                 }
               },

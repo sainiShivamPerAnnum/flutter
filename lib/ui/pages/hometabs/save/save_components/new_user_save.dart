@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/custom_card/save_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
@@ -61,18 +62,18 @@ class NewUserSaveView extends StatelessWidget {
                   ),
                   ...getAssetWidget(),
                   SizedBox(
-                    height: SizeConfig.padding24,
+                    height: SizeConfig.padding8,
                   ),
-                  Center(
-                    child: Text(
-                      "100% SAFE & SECURE",
-                      style: TextStyles.sourceSans.body3
-                          .colour(
-                            Colors.white.withOpacity(0.6),
-                          )
-                          .copyWith(letterSpacing: 1.12),
-                    ),
-                  ),
+                  // Center(
+                  //   child: Text(
+                  //     "100% SAFE & SECURE",
+                  //     style: TextStyles.sourceSans.body3
+                  //         .colour(
+                  //           Colors.white.withOpacity(0.6),
+                  //         )
+                  //         .copyWith(letterSpacing: 1.12),
+                  //   ),
+                  // ),
                   SizedBox(
                     height: SizeConfig.padding10,
                   ),
@@ -107,7 +108,7 @@ class NewUserSaveView extends StatelessWidget {
                 "An average saver saves ₹500 in Gold every 2 days"
               ],
               investmentType: InvestmentType.LENDBOXP2P,
-              isPopular: false,
+              isPopular: DynamicUiUtils.islbTrending,
             ),
           );
         } else if (element == "AG") {
@@ -117,7 +118,7 @@ class NewUserSaveView extends StatelessWidget {
               "An average saver saves ₹500 in Gold every 2 days"
             ],
             investmentType: InvestmentType.AUGGOLD99,
-            isPopular: true,
+            isPopular: DynamicUiUtils.isGoldTrending,
           ));
         }
       },

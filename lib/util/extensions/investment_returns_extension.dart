@@ -15,8 +15,10 @@ extension ReturnInvestments on int {
   }
 
   String calculateCompoundInterest(
-      InvestmentType investmentType, principalAmount,
-      [int period = 3]) {
+    InvestmentType investmentType,
+    principalAmount,
+  ) {
+    final period = this;
     final interestRate = investmentType == InvestmentType.AUGGOLD99 ? 7 : 10;
 
     return (principalAmount * (pow((1 + interestRate / 100), period)))

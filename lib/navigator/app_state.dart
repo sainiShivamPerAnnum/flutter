@@ -1,6 +1,7 @@
 //Project imports
 import 'dart:async';
 
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -61,6 +62,10 @@ class AppState extends ChangeNotifier {
   static FelloRouterDelegate? delegate;
   static FelloBackButtonDispatcher? backButtonDispatcher;
 
+  static void Function()? onTap;
+  static InvestmentType? type;
+  static double? amt;
+  static bool isRepeated = false;
   PageAction _currentAction = PageAction();
   // BackButtonDispatcher backButtonDispatcher;
 

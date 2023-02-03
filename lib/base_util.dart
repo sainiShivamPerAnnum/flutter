@@ -372,8 +372,11 @@ class BaseUtil extends ChangeNotifier {
                 skipMl: isSkipMl ?? false,
                 onChanged: (p0) => amount = p0,
               ),
-      ).then((value) =>
-          locator<BackButtonActions>().isTransactionCancelled = false);
+      ).then((value) {
+        AppState.isRepeated = false;
+        AppState.onTap = null;
+        locator<BackButtonActions>().isTransactionCancelled = false;
+      });
     });
   }
 
@@ -381,6 +384,7 @@ class BaseUtil extends ChangeNotifier {
     await openModalBottomSheet(
         isBarrierDismissible: false,
         addToScreenStack: true,
+        isScrollControlled: true,
         content: ConfirmExitModal());
   }
 

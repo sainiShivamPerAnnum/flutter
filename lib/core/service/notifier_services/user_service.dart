@@ -109,7 +109,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
   bool get hasNewNotifications => _hasNewNotifications;
   // UserAugmontDetail get userAugmontDetails => this._userAugmontDetails;
-
+  List _userSegments = [];
   set baseUser(baseUser) {
     _baseUser = baseUser;
   }
@@ -119,6 +119,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     notifyListeners(UserServiceProperties.myNotificationStatus);
     _logger!.d(
         "Notification Status updated in userservice, property listeners notified");
+  }
+
+  set userSegments(List userSeg) {
+    _userSegments = userSeg;
+    notifyListeners(UserServiceProperties.mySegments);
   }
 
   UserFundWallet? get userFundWallet => _userFundWallet;
@@ -407,6 +412,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       isEmailVerified = baseUser?.isEmailVerified ?? false;
       isSimpleKycVerified = baseUser?.isSimpleKycVerified ?? false;
       setEmail(baseUser!.email);
+      userSegments = response.model!.segments;
       setMyAvatarId(baseUser!.avatarId);
       setMyUserName(baseUser?.kycName ?? baseUser!.name);
       setDateOfBirth(baseUser!.dob);
@@ -518,6 +524,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     DynamicUiUtils.navBar = dynamicUi.navBar;
     _rootController.navItems.clear();
     DynamicUiUtils.navBar.forEach(_rootController.getNavItems);
+    DynamicUiUtils.isGoldTrending =
+        dynamicUi.save.badgeText?.AUGGOLD99?.contains("Trending") ?? false;
+    DynamicUiUtils.islbTrending =
+        dynamicUi.save.badgeText?.LENDBOXP2P?.contains("Trending") ?? false;
+    if (dynamicUi.save.ctaText != null)
+      DynamicUiUtils.ctaText = dynamicUi.save.ctaText!;
   }
 
   diplayUsername(String username) {

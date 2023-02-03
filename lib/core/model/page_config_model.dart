@@ -54,10 +54,13 @@ class DynamicUI {
 class SaveUi {
   List<String> assets;
   List<String> sections;
-  SaveUi({
-    required this.assets,
-    required this.sections,
-  });
+  final CtaText? ctaText;
+  final BadgeText? badgeText;
+  SaveUi(
+      {required this.assets,
+      required this.sections,
+      required this.badgeText,
+      required this.ctaText});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -68,10 +71,12 @@ class SaveUi {
 
   factory SaveUi.fromMap(Map<String, dynamic> map) {
     return SaveUi(
-      assets: List<String>.from((map['assets'].cast<String>() as List<String>)),
-      sections:
-          List<String>.from((map['sections'].cast<String>() as List<String>)),
-    );
+        assets:
+            List<String>.from((map['assets'].cast<String>() as List<String>)),
+        sections:
+            List<String>.from((map['sections'].cast<String>() as List<String>)),
+        badgeText: BadgeText.fromMap(map['badgeText']),
+        ctaText: CtaText.fromMap(map["ctaText"]));
   }
 
   String toJson() => json.encode(toMap());
@@ -92,6 +97,26 @@ class SaveUi {
 
   @override
   int get hashCode => assets.hashCode ^ sections.hashCode;
+}
+
+class CtaText {
+  final String? AUGGOLD99;
+  final String? LENDBOXP2P;
+
+  CtaText(this.AUGGOLD99, this.LENDBOXP2P);
+
+  factory CtaText.fromMap(Map<String, dynamic> data) =>
+      CtaText(data["AUGGOLD99"], data["LENDBOXP2P"]);
+}
+
+class BadgeText {
+  final String? AUGGOLD99;
+  final String? LENDBOXP2P;
+
+  BadgeText(this.AUGGOLD99, this.LENDBOXP2P);
+
+  factory BadgeText.fromMap(Map<String, dynamic> data) =>
+      BadgeText(data["AUGGOLD99"], data["LENDBOXP2P"]);
 }
 
 class SingleInfo {

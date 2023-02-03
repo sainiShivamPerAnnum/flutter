@@ -33,7 +33,6 @@ class Blogs extends StatelessWidget {
             children: [
               TitleSubtitleContainer(
                 title: locale.blogsTitle,
-                subTitle: locale.blogsSubTitle,
               ),
               Padding(
                 padding: EdgeInsets.only(

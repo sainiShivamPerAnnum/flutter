@@ -20,8 +20,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-
-
 class GoldBuyView extends StatefulWidget {
   final int? amount;
   final bool skipMl;
@@ -115,8 +113,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
                     if (model.state == ViewState.Busy)
                       return Center(child: FullScreenLoader());
                     _secureScreenshots(txnService);
-                    widget.onChanged(
-                        double.parse(model.goldAmountController!.text));
+
                     return _getView(txnService, model);
                   },
                 ),

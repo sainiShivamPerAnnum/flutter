@@ -108,9 +108,9 @@ class RootViewModel extends BaseViewModel {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
-
+      await _userService.getUserFundWalletData();
       await handleStartUpNotificationData();
-      _userService.getUserFundWalletData();
+
       _userService.checkForNewNotifications();
       _userService.getProfilePicture();
       _tambolaService!.init();

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
@@ -9,6 +10,7 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
@@ -161,7 +163,8 @@ class LendboxTransactionService extends BaseTransactionService {
           if (!txnStatus.data!.isUpdating!) {
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
-
+            await CacheService.invalidateByKey(CacheKeys.USER);
+            await locator<UserService>().setBaseUser();
             _tambolaService!.weeklyTicksFetched = false;
             transactionReponseModel = res.model!;
             timer!.cancel();

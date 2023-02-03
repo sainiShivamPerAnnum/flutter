@@ -141,7 +141,10 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                 width: SizeConfig.screenWidth! * 0.8,
                 child: AppPositiveBtn(
                   btnText: "Continue Saving",
-                  onPressed: () => onContinue(),
+                  onPressed: () {
+                    locator<BackButtonActions>().isTransactionCancelled = false;
+                    onContinue();
+                  },
                 )),
             SizedBox(
               height: SizeConfig.padding10,
@@ -151,6 +154,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
             ),
             InkWell(
               onTap: () async {
+                locator<BackButtonActions>().isTransactionCancelled = false;
                 AppState.backButtonDispatcher!.didPopRoute().then(
                     (value) => AppState.backButtonDispatcher!.didPopRoute());
               },

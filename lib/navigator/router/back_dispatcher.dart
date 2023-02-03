@@ -1,5 +1,6 @@
 //Project Imports
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/base_util.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
@@ -67,6 +69,24 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     //   _journeyService!.isJourneyOnboardingInView = false;
     //   _journeyService!.isUserJourneyOnboarded = true;
     // }
+
+    if (locator<BackButtonActions>().isTransactionCancelled) {
+      if (AppState.onTap != null &&
+          AppState.type != null &&
+          AppState.amt != null) {
+        if (!AppState.isRepeated) {
+          locator<BackButtonActions>().showWantToCloseTransactionBottomSheet(
+            AppState.amt!.round(),
+            AppState.type!,
+            () {
+              AppState.onTap?.call();
+            },
+          );
+          AppState.isRepeated = true;
+          return Future.value(true);
+        }
+      }
+    }
     if (AppState.isInstantGtViewInView) return Future.value(true);
     if (AppState.screenStack.last == ScreenItem.loader)
       return Future.value(true);

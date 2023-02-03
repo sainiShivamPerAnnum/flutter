@@ -38,7 +38,12 @@ class LendboxBuyInputView extends StatelessWidget {
     S locale = S.of(context);
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     if (model.state == ViewState.Busy) return Center(child: FullScreenLoader());
-
+    AppState.onTap = () {
+      model.initiateBuy();
+      AppState.backButtonDispatcher!.didPopRoute();
+    };
+    AppState.type = InvestmentType.AUGGOLD99;
+    AppState.amt = double.tryParse(model.amountController!.text) ?? 0;
     return Stack(
       children: [
         Column(
@@ -57,15 +62,17 @@ class LendboxBuyInputView extends StatelessWidget {
                       "Asset": 'Flo',
                     });
                 if (locator<BackButtonActions>().isTransactionCancelled) {
-                  locator<BackButtonActions>()
-                      .showWantToCloseTransactionBottomSheet(
-                          double.parse(model.amountController!.text)
-                              .round(),
-                          InvestmentType.LENDBOXP2P, () {
-                    model.initiateBuy();
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  });
-                  return;
+                  if (!AppState.isRepeated) {
+                    locator<BackButtonActions>()
+                        .showWantToCloseTransactionBottomSheet(
+                            double.parse(model.amountController!.text).round(),
+                            InvestmentType.LENDBOXP2P, () {
+                      model.initiateBuy();
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    });
+                    AppState.isRepeated = true;
+                    return;
+                  }
                 }
               },
             ),

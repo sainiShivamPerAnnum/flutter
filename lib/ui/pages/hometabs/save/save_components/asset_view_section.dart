@@ -5,8 +5,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/buttons/black_white_button/black_white_button.dart';
+import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
@@ -14,6 +17,8 @@ import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -21,7 +26,10 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+
+import '../../../../service_elements/user_service/user_fund_quantity_se.dart';
 
 class AssetSectionView extends StatelessWidget {
   AssetSectionView({Key? key, required this.type, UserService? userService})
@@ -43,222 +51,264 @@ class AssetSectionView extends StatelessWidget {
   final Map<String, String> _goldInfo = {
     "24K": "Gold",
     "99.9%": "Pure",
-    "Live": "Gold Rate"
+    "48 Hrs": "Lock-in"
   };
 
   final Map<String, String> _lbInfo = {
     "P2P": "Asset",
     "10%": "Returns",
-    "Daily": "Interest credits"
+    "7 days": "Lock-in"
   };
 
   @override
   Widget build(BuildContext context) {
-    bool isNewUser = (_userService.userFundWallet?.netWorth ?? -1) == 0;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xff232326),
-        body: Stack(
-          children: [
-            Container(
-              height: SizeConfig.screenHeight! * 0.5,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  _getBackgroundColor,
-                  _secondaryColor,
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-              ),
-            ),
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return PropertyChangeConsumer<UserService, UserServiceProperties>(
+        properties: [
+          UserServiceProperties.myUserWallet,
+          UserServiceProperties.myAugmontDetails,
+          UserServiceProperties.myUserFund,
+          UserServiceProperties.mySegments,
+        ],
+        builder: (_, model, ___) {
+          bool isNewUser = model!.baseUser!.segments.contains("NEW_USER");
+          final balance = type == InvestmentType.AUGGOLD99
+              ? model.userFundWallet!.augGoldQuantity
+              : model.userFundWallet!.wLbBalance;
+          return Scaffold(
+            backgroundColor: Color(0xff232326),
+            body: Stack(
+              children: [
+                Container(
+                  height: SizeConfig.screenHeight! * 0.5,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      _getBackgroundColor,
+                      _secondaryColor,
+                    ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: SizeConfig.padding16),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: SizeConfig.padding20,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withOpacity(0.3),
+                                blurRadius: 50,
+                              )
+                            ],
+                          ),
+                          child: SvgPicture.asset(
+                            _getAsset,
+                            height: SizeConfig.screenHeight! * 0.18,
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        Text(
+                          _isGold ? "Digital Gold" : "Fello Flo",
+                          style:
+                              TextStyles.rajdhaniSB.title3.colour(Colors.white),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+
+                        Text(
+                          _isGold ? _goldSubtitle : _floSubtitle,
+                          style: TextStyles.sourceSans.body2
+                              .colour(_subTitleColor),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding10,
+                        ),
+                        if (balance == 0)
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding40),
+                            child: Text(
+                              _isGold ? __goldDescription : _floDescription,
+                              textAlign: TextAlign.center,
+                              style: TextStyles.sourceSans.body3.colour(
+                                Colors.white.withOpacity(0.6),
+                              ),
+                            ),
+                          ),
+                        if (balance != 0)
+                          _BuildOwnAsset(
+                            type: type,
+                            userService: model,
+                          ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        if (balance == 0) ...[
+                          SizedBox(
+                            height: SizeConfig.padding10,
+                          ),
+                          _buildInfoSection(),
+                          SizedBox(
+                            height: SizeConfig.padding10,
+                          ),
+                        ],
+                        //TODO: Find a better slider to do this
+
+                        if (!isNewUser) ...[
+                          MiniTransactionCard(investmentType: type),
+                          if (balance != 0) ...[
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(left: SizeConfig.padding10),
+                                child: TitleSubtitleContainer(
+                                    title: "Withdrawal", leadingPadding: false),
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding12,
+                            ),
+                            SellCardView(investmentType: type),
+                            SizedBox(
+                              height: SizeConfig.padding28,
+                            ),
+                          ]
+                        ],
+                        SizedBox(
+                          height: SizeConfig.padding8,
+                        ),
+                        Text(
+                          _isGold
+                              ? "How to save in Digital Gold?"
+                              : "How Fello Flo works?",
+                          style: TextStyles.rajdhaniSB.title5,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding20),
+                          child: TambolaVideoPlayer(
+                              link: "https://fello.in/videos/howToInvest.webm"),
+                        ),
+                        ...[
+                          SizedBox(
+                            height: SizeConfig.padding24,
+                          ),
+                          _CircularSlider(
+                            type: type,
+                          )
+                        ],
+
+                        SizedBox(
+                          height: SizeConfig.padding40,
+                        ),
+                        _WhySection(isDigitalGold: _isGold),
+                        SizedBox(
+                          height: SizeConfig.screenHeight! * 0.06,
+                        ),
+                        ComparisonBox(
+                          backgroundColor: _getBackgroundColor,
+                          isGold: _isGold,
+                        ),
+                        _Footer(
+                          isGold: _isGold,
+                        ),
+                        TermsAndConditions(url: Constants.savingstnc),
+                        SizedBox(
+                          height: SizeConfig.screenHeight! * 0.15,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    color: Color(0xff232326).withOpacity(0.9),
+                    padding:
+                        EdgeInsets.symmetric(vertical: SizeConfig.padding14)
+                            .copyWith(top: 2),
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              _getAsset,
+                              height: SizeConfig.screenHeight! * 0.03,
+                              width: SizeConfig.screenHeight! * 0.03,
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding1,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding4),
+                              child: Text(
+                                _isGold
+                                    ? DynamicUiUtils.ctaText.AUGGOLD99 ?? ""
+                                    : DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
+                                style: TextStyles.sourceSans.body4.colour(
+                                  Color(0xff919193),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.screenWidth! * 0.8,
+                          height: SizeConfig.screenHeight! * 0.07,
+                          child: AppPositiveBtn(
+                              btnText: "SAVE",
+                              onPressed: () {
+                                BaseUtil().openRechargeModalSheet(
+                                    investmentType: type);
+                              }),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding2,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SafeArea(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       BackButton(
                         color: Colors.white,
                         onPressed: () => Navigator.of(context).pop(),
                       ),
+                      Spacer(),
                       FaqPill(
                         type: FaqsType.savings,
                       ),
                     ],
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white.withOpacity(0.3),
-                          blurRadius: 50,
-                        )
-                      ],
-                    ),
-                    child: SvgPicture.asset(
-                      _getAsset,
-                      height: SizeConfig.screenHeight! * 0.18,
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding4,
-                  ),
-                  Text(
-                    _isGold ? "Digital Gold" : "Fello Flo",
-                    style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding4,
-                  ),
-                  Text(
-                    _isGold ? _goldSubtitle : _floSubtitle,
-                    style: TextStyles.sourceSans.body2.colour(_subTitleColor),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding10,
-                  ),
-                  if (isNewUser)
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding40),
-                      child: Text(
-                        _isGold ? __goldDescription : _floDescription,
-                        textAlign: TextAlign.center,
-                        style: TextStyles.sourceSans.body3.colour(
-                          Colors.white.withOpacity(0.6),
-                        ),
-                      ),
-                    ),
-                  if (!isNewUser)
-                    _BuildOwnAsset(
-                      type: type,
-                      userService: _userService,
-                    ),
-                  SizedBox(
-                    height: SizeConfig.padding20,
-                  ),
-                  if (isNewUser) ...[
-                    SizedBox(
-                      height: SizeConfig.padding20,
-                    ),
-                    _buildInfoSection(),
-                    SizedBox(
-                      height: SizeConfig.padding20,
-                    ),
-                  ],
-                  //TODO: Find a better slider to do this
-
-                  if (!isNewUser) ...[
-                    MiniTransactionCard(investmentType: type),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: SizeConfig.padding10),
-                        child: TitleSubtitleContainer(
-                            title: "Withdrawal", leadingPadding: false),
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding12,
-                    ),
-                    SellCardView(investmentType: type),
-                    SizedBox(
-                      height: SizeConfig.padding40,
-                    ),
-                  ],
-
-                  Text(
-                    _isGold
-                        ? "How to save in Digital Gold?"
-                        : "How Fello Flo works?",
-                    style: TextStyles.rajdhaniSB.title5,
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding14,
-                  ),
-
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-                    child: TambolaVideoPlayer(
-                        link: "https://fello.in/videos/howToInvest.webm"),
-                  ),
-                  if (isNewUser) ...[
-                    SizedBox(
-                      height: SizeConfig.padding20,
-                    ),
-                    Text(
-                      "Return Calculator",
-                      style: TextStyles.rajdhaniSB.title5,
-                    ),
-                    _CircularSlider(
-                      type: type,
-                    )
-                  ],
-
-                  SizedBox(
-                    height: SizeConfig.padding40,
-                  ),
-                  _WhySection(isDigitalGold: _isGold),
-                  SizedBox(
-                    height: SizeConfig.screenHeight! * 0.06,
-                  ),
-                  ComparisonBox(
-                    backgroundColor: _getBackgroundColor,
-                    isGold: _isGold,
-                  ),
-                  _Footer(
-                    isGold: _isGold,
-                  ),
-                  SizedBox(
-                    height: SizeConfig.screenHeight! * 0.1,
-                  ),
-                ],
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                color: Color(0xff232326),
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
-                width: double.infinity,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: SizeConfig.screenWidth! * 0.8,
-                      height: SizeConfig.screenHeight! * 0.07,
-                      child: AppPositiveBtn(
-                          btnText: "SAVE",
-                          onPressed: () {
-                            BaseUtil()
-                                .openRechargeModalSheet(investmentType: type);
-                          }),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          _getAsset,
-                          height: SizeConfig.screenHeight! * 0.05,
-                          width: SizeConfig.screenHeight! * 0.05,
-                        ),
-                        Text(
-                          "56% of our users have invested in ${_isGold ? "Digital Gold" : "Fello Flo"}",
-                          style: TextStyles.sourceSans.body4.colour(
-                            Color(0xff919193),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
                 ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+              ],
+            ),
+          );
+        });
   }
 
   Widget _buildInfoSection() {
@@ -266,21 +316,25 @@ class AssetSectionView extends StatelessWidget {
     List<Widget> children = [];
     for (var e in info.entries) {
       children.add(
-        Column(
-          children: [
-            Text(
-              e.key,
-              style: TextStyles.rajdhaniSB.body1.colour(
-                Colors.white.withOpacity(0.8),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                e.key,
+                style: TextStyles.rajdhaniSB.body1.colour(
+                  Colors.white.withOpacity(0.8),
+                ),
               ),
-            ),
-            Text(
-              e.value,
-              style: TextStyles.sourceSans.body3.colour(
-                Colors.white.withOpacity(0.4),
-              ),
-            )
-          ],
+              Text(
+                e.value,
+                style: TextStyles.sourceSans.body3.colour(
+                  Colors.white.withOpacity(0.4),
+                ),
+              )
+            ],
+          ),
         ),
       );
       if (!(info.values.toList().indexOf(e.value) == info.values.length - 1))
@@ -296,9 +350,8 @@ class AssetSectionView extends StatelessWidget {
         );
     }
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.12),
+      padding: EdgeInsets.zero,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: children,
       ),
     );
@@ -331,17 +384,21 @@ class _BuildOwnAsset extends StatelessWidget {
           horizontal: SizeConfig.padding24, vertical: SizeConfig.padding20),
       decoration: BoxDecoration(
         color: color,
+        border: Border.all(color: Colors.white.withOpacity(0.5)),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                isGold ? "You Own" : "Invested",
+                isGold
+                    ? "You Own"
+                    : (userService.userFundWallet?.wLbBalance ==
+                            userService.userFundWallet?.wLbPrinciple)
+                        ? "Invested Amount"
+                        : "Current Amount",
                 style: TextStyles.sourceSans.body2,
                 textAlign: TextAlign.center,
               ),
@@ -352,7 +409,7 @@ class _BuildOwnAsset extends StatelessWidget {
                             .toString() +
                         " gms"
                     : "₹ " +
-                        (userService.userFundWallet?.wLbPrinciple ?? 0)
+                        (userService.userFundWallet?.wLbBalance ?? 0)
                             .toStringAsFixed(2),
                 textAlign: TextAlign.center,
                 style: TextStyles.rajdhaniSB.title3.colour(
@@ -361,22 +418,27 @@ class _BuildOwnAsset extends StatelessWidget {
               )
             ],
           ),
-          if (type == InvestmentType.LENDBOXP2P) ...[
+          if (type == InvestmentType.LENDBOXP2P &&
+              !(userService.userFundWallet?.wLbBalance ==
+                  userService.userFundWallet?.wLbPrinciple)) ...[
             SizedBox(
               height: SizeConfig.padding4,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Current Value",
+                  "Invested Amount",
                   style: TextStyles.sourceSans.body2,
                   textAlign: TextAlign.center,
                 ),
+                SizedBox(
+                  width: SizeConfig.padding1,
+                ),
+                LboxGrowthArrow(),
                 Spacer(),
                 Text(
                   "₹ " +
-                      (userService.userFundWallet?.wLbBalance ?? 0)
+                      (userService.userFundWallet?.wLbPrinciple ?? 0)
                           .toStringAsFixed(2),
                   textAlign: TextAlign.center,
                   style: TextStyles.rajdhaniSB.title3.colour(
@@ -456,7 +518,7 @@ class ComparisonBox extends StatelessWidget {
                     margin:
                         EdgeInsets.symmetric(horizontal: SizeConfig.padding40),
                     padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding34,
+                        horizontal: SizeConfig.padding28,
                         vertical: SizeConfig.padding10),
                     decoration: BoxDecoration(
                       color: backgroundColor,
@@ -482,9 +544,9 @@ class ComparisonBox extends StatelessWidget {
                               isGold ? "Digital Gold" : "Fello Flo",
                               style: TextStyles.sourceSans.body3,
                             ),
-                            // SizedBox(
-                            //   width: SizeConfig.padding20,
-                            // ),
+                            SizedBox(
+                              width: SizeConfig.padding20,
+                            ),
                             Text(
                               isGold ? "100%" : "10%",
                               style: TextStyles.rajdhaniSB.title1,
@@ -583,7 +645,7 @@ class ComparisonBox extends StatelessWidget {
                                   height: SizeConfig.padding10,
                                 ),
                                 Text(
-                                  "Volatile Returns\nHigh Risk",
+                                  "Low Returns\nHigh Risk",
                                   style: TextStyles.sourceSans.body3
                                       .colour(Colors.white.withOpacity(0.4)),
                                 )
@@ -665,7 +727,7 @@ class ComparisonBox extends StatelessWidget {
                                   height: SizeConfig.padding10,
                                 ),
                                 Text(
-                                  "Volatile Returns\nHigh Risk",
+                                  "Volatile Returns\nHigh Lock-in",
                                   style: TextStyles.sourceSans.body3
                                       .colour(Colors.white.withOpacity(0.4)),
                                 )
@@ -757,11 +819,11 @@ class _WhySection extends StatelessWidget {
     ),
     Assets.timer: RichText(
       text: TextSpan(
-          text: "Best for ",
+          text: "Interest Credited",
           style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
           children: [
             TextSpan(
-                text: "Quick turnarounds",
+                text: " Everyday",
                 style: TextStyles.sourceSans.body2.colour(Colors.white)),
           ]),
     ),
@@ -839,8 +901,9 @@ class _WhySection extends StatelessWidget {
 class _Footer extends StatelessWidget {
   const _Footer({Key? key, required this.isGold}) : super(key: key);
   final bool isGold;
-  static String goldTitle = "56% of our users\nhave invested in\nDigital gold ";
-  static String felloTitle = "200% profits earned\non Fello Flo\ninvestments";
+  static String goldTitle =
+      "₹1Cr invested till date\nin digital Gold on \nFello";
+  static String felloTitle = "₹80 Lakh invested \ntill date on Fello flo";
 
   @override
   Widget build(BuildContext context) {
@@ -874,8 +937,10 @@ class _Footer extends StatelessWidget {
               SizedBox(
                 height: SizeConfig.padding32,
               ),
-              SvgPicture.asset(
-                  isGold ? Assets.goldConveyor : Assets.floConveyor),
+              Image.asset(
+                isGold ? Assets.goldConveyor : Assets.floConveyor,
+                fit: BoxFit.fill,
+              ),
             ],
           )
         ],
@@ -893,7 +958,7 @@ class _CircularSlider extends StatefulWidget {
 }
 
 class _CircularSliderState extends State<_CircularSlider> {
-  double _volumeValue = 1000;
+  double _volumeValue = 500;
 
   void onVolumeChanged(double value) {
     setState(() {
@@ -914,8 +979,8 @@ class _CircularSliderState extends State<_CircularSlider> {
             child: SfRadialGauge(
               axes: <RadialAxis>[
                 RadialAxis(
-                  minimum: 500,
-                  maximum: 2000,
+                  minimum: 100,
+                  maximum: 50000,
                   startAngle: 270,
                   endAngle: 270,
                   showLabels: false,
@@ -970,9 +1035,16 @@ class _CircularSliderState extends State<_CircularSlider> {
             ),
           ),
         ),
+        Positioned(
+          top: 12,
+          child: Text(
+            "Return Calculator",
+            style: TextStyles.rajdhaniSB.title5,
+          ),
+        ),
         Padding(
           padding:
-              EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.17),
+              EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.1),
           child: Column(
             children: [
               Text(
@@ -986,73 +1058,85 @@ class _CircularSliderState extends State<_CircularSlider> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "₹" +
-                            1.getReturns(widget.type, _volumeValue.round(), 0),
-                        style: TextStyles.rajdhaniSB.body1,
-                      ),
-                      Text(
-                        "1 mo",
-                        style: TextStyles.sourceSans.body3.colour(
-                          Color(0xff919193),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹" +
+                              6.getReturns(
+                                  widget.type, _volumeValue.round(), 0),
+                          style: TextStyles.rajdhaniSB.body1,
                         ),
-                      )
-                    ],
+                        Text(
+                          "6 mo",
+                          style: TextStyles.sourceSans.body3.colour(
+                            Color(0xff919193),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "₹" +
-                            3.getReturns(widget.type, _volumeValue.round(), 0),
-                        style: TextStyles.rajdhaniSB.body1,
-                      ),
-                      Text(
-                        "3 mo",
-                        style: TextStyles.sourceSans.body3.colour(
-                          Color(0xff919193),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹" +
+                              12.getReturns(
+                                  widget.type, _volumeValue.round(), 0),
+                          style: TextStyles.rajdhaniSB.body1,
                         ),
-                      )
-                    ],
+                        Text(
+                          "1 Y",
+                          style: TextStyles.sourceSans.body3.colour(
+                            Color(0xff919193),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "₹" +
-                            6.getReturns(widget.type, _volumeValue.round(), 0),
-                        style: TextStyles.rajdhaniSB.body1,
-                      ),
-                      Text(
-                        "6 mo",
-                        style: TextStyles.sourceSans.body3.colour(
-                          Color(0xff919193),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹" +
+                              3.calculateCompoundInterest(
+                                  widget.type, _volumeValue.round()),
+                          style: TextStyles.rajdhaniSB.body1,
                         ),
-                      )
-                    ],
+                        Text(
+                          "3 Y",
+                          style: TextStyles.sourceSans.body3.colour(
+                            Color(0xff919193),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "₹" +
-                            12.getReturns(widget.type, _volumeValue.round(), 0),
-                        style: TextStyles.rajdhaniSB.body1,
-                      ),
-                      Text(
-                        "1 yr",
-                        style: TextStyles.sourceSans.body3.colour(
-                          Color(0xff919193),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹" +
+                              5.calculateCompoundInterest(
+                                  widget.type, _volumeValue.round()),
+                          style: TextStyles.rajdhaniSB.body1,
                         ),
-                      )
-                    ],
+                        Text(
+                          "5 Y",
+                          style: TextStyles.sourceSans.body3.colour(
+                            Color(0xff919193),
+                          ),
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),

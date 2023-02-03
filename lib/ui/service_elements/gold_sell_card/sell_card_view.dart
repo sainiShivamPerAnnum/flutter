@@ -90,7 +90,7 @@ class SellCardView extends StatelessWidget {
                     sellService.isKYCVerified && sellService.isBankDetailsAdded
                         ? SizedBox()
                         : Text(
-                            "To enable sell, complete the following:",
+                            "To withdraw, complete the following steps:",
                             style: TextStyles.sourceSans.body4.colour(
                               Colors.white,
                             ),

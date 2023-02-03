@@ -37,6 +37,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
@@ -194,14 +195,18 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     });
-    saveViewItems.add(AppFooter(bottomPad: 0));
-    saveViewItems.add(Padding(
-      padding: EdgeInsets.only(
-        bottom: SizeConfig.padding80 + SizeConfig.navBarHeight,
-      ),
-      child: TermsAndConditions(url: Constants.savingstnc),
-    ));
 
+    saveViewItems.add(
+      Padding(
+        padding: EdgeInsets.only(top: SizeConfig.padding20),
+        child:
+            LottieBuilder.asset("assets/lotties/Inapp scroll animation.json"),
+      ),
+    );
+
+    saveViewItems.add(SizedBox(
+      height: SizeConfig.navBarHeight,
+    ));
     return saveViewItems;
   }
 

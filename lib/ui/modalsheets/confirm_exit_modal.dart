@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 
 import '../pages/static/app_widget.dart';
 
@@ -14,7 +16,7 @@ class ConfirmExitModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenHeight! * 0.37,
+      height: SizeConfig.screenHeight! * 0.59,
       padding: EdgeInsets.symmetric(
           horizontal: SizeConfig.pageHorizontalMargins,
           vertical: SizeConfig.padding20),
@@ -33,6 +35,13 @@ class ConfirmExitModal extends StatelessWidget {
             style: TextStyles.sourceSans.body2.colour(
               Color(0xffD9D9D9),
             ),
+          ),
+          LottieBuilder.asset(
+            Assets.goldDepostSuccessLottie,
+            height: SizeConfig.screenHeight! * 0.25,
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
           ),
           Spacer(),
           Row(
@@ -55,7 +64,7 @@ class ConfirmExitModal extends StatelessWidget {
             height: SizeConfig.padding12,
           ),
           AppPositiveBtn(
-            btnText: "CONTINUE WITH SIGN UP",
+            btnText: "COMPLETE SIGN UP",
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
             },
