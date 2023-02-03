@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 4.1.4+166
+version: 4.1.6+169
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
@@ -40,7 +40,7 @@ dependencies:
     sdk: flutter
   flutter_facebook_sdk:
     path: packages/flutter_facebook_sdk/
-  flutter_html: null
+  flutter_html:
   flutter_inset_box_shadow: ^1.0.8
   flutter_localizations:
     sdk: flutter

@@ -114,10 +114,11 @@ class ReferralDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> fetchReferralCode() async {
-    final ApiResponse res = await _refRepo!.getReferralCode();
+    final ApiResponse<ReferralResponse> res = await _refRepo!.getReferralCode();
     if (res.code == 200) {
-      _refCode = res.model;
-      _shareMsg = (appShareMessage != null && appShareMessage.isNotEmpty)
+      _refCode = res.model?.code ?? "";
+      appShareMessage = res.model?.message ?? "";
+      _shareMsg = (appShareMessage.isNotEmpty)
           ? appShareMessage
           : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralFlcBonus)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';
     } else {
