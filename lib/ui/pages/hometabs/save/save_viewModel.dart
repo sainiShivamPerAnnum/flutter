@@ -23,6 +23,7 @@ import 'package:felloapp/ui/pages/finance/augmont/augmont_gold_details/save_asse
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
@@ -323,7 +324,9 @@ class SaveViewModel extends BaseViewModel {
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SaveAssetsViewConfig,
-        widget: SaveAssetView(),
+        widget: AssetSectionView(
+          type: investmentType,
+        ),
       );
     } else {
       _analyticsService!.track(
@@ -340,8 +343,10 @@ class SaveViewModel extends BaseViewModel {
 
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
-        page: LendboxDetailsPageConfig,
-        widget: LendboxDetailsView(),
+        page: SaveAssetsViewConfig,
+        widget: AssetSectionView(
+          type: investmentType,
+        ),
       );
     }
   }

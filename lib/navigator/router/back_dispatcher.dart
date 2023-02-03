@@ -82,7 +82,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
-      showNegativeAlert("Exit Signup?", "Press back once more to exit");
+      BaseUtil().showConfirmExit();
       AppState.isOnboardingInProgress = false;
       return Future.value(true);
     }

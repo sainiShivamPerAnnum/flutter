@@ -273,7 +273,7 @@ class AugmontService extends ChangeNotifier {
     if (response == null) {
       log.error('response is null');
     }
-    if (response.statusCode != 200 && response.statusCode != 201) {
+    if (response.statusCode != 200 && response.statusCode != 201) {     
       log.error(
           'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
       if (response.statusCode == 502)

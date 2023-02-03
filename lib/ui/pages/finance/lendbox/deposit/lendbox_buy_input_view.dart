@@ -1,9 +1,12 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/amount_input_view.dart';
 import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
@@ -53,6 +56,17 @@ class LendboxBuyInputView extends StatelessWidget {
                       "Amount entered": model.amountController!.text,
                       "Asset": 'Flo',
                     });
+                if (locator<BackButtonActions>().isTransactionCancelled) {
+                  locator<BackButtonActions>()
+                      .showWantToCloseTransactionBottomSheet(
+                          double.parse(model.amountController!.text)
+                              .round(),
+                          InvestmentType.LENDBOXP2P, () {
+                    model.initiateBuy();
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  });
+                  return;
+                }
               },
             ),
             SizedBox(height: SizeConfig.padding32),

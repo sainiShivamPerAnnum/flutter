@@ -1,10 +1,12 @@
 import "dart:math" as math;
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/banner_widget.dart';
@@ -60,6 +62,17 @@ class GoldBuyInputView extends StatelessWidget {
                           ? model.appliedCoupon!.code
                           : "Not Applied",
                     });
+                if (locator<BackButtonActions>().isTransactionCancelled) {
+                  locator<BackButtonActions>()
+                      .showWantToCloseTransactionBottomSheet(
+                          double.parse(model.goldAmountController!.text)
+                              .round(),
+                          InvestmentType.AUGGOLD99, () {
+                    model.initiateBuy();
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  });
+                  return;
+                }
               },
             ),
             SizedBox(height: SizeConfig.padding24),
@@ -123,6 +136,7 @@ class GoldBuyInputView extends StatelessWidget {
 class RechargeModalSheetAppBar extends StatelessWidget {
   final AugmontTransactionService txnService;
   final Function? trackCloseTapped;
+
   RechargeModalSheetAppBar({required this.txnService, this.trackCloseTapped});
   @override
   Widget build(BuildContext context) {
@@ -165,7 +179,8 @@ class RechargeModalSheetAppBar extends StatelessWidget {
                   icon: Icon(Icons.close, color: Colors.white),
                   onPressed: () {
                     if (trackCloseTapped != null) trackCloseTapped!();
-                    AppState.backButtonDispatcher!.didPopRoute();
+                    if (!locator<BackButtonActions>().isTransactionCancelled)
+                      AppState.backButtonDispatcher!.didPopRoute();
                   },
                 ),
     );

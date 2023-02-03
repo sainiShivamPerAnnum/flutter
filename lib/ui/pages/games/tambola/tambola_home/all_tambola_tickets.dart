@@ -11,7 +11,7 @@ class AllTambolaTickets extends StatefulWidget {
       : super(key: key);
 
   final List<Widget> ticketList;
-
+  
   @override
   State<AllTambolaTickets> createState() => _AllTambolaTicketsState();
 }

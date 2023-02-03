@@ -24,8 +24,14 @@ class Save extends StatelessWidget {
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
         log("ROOT: Save view baseview build called");
-        if (model.userFundWallet?.netWorth == null ||
-            model.userFundWallet?.netWorth == 0) return NewUserSaveView();
+
+        if (model.userFundWallet == null) {
+          return CircularProgressIndicator();
+        }
+        if (model.userFundWallet?.netWorth == 0)
+          return NewUserSaveView(
+            model: model,
+          );
         return Scaffold(
           key: ValueKey(Constants.SAVE_SCREEN_TAG),
           backgroundColor: Colors.transparent,

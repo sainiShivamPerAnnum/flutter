@@ -1,28 +1,30 @@
+import 'dart:async';
+
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/custom_card/save_container.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
-import '../../../../../util/assets.dart';
+import 'package:lottie/lottie.dart';
 
 class NewUserSaveView extends StatelessWidget {
-  const NewUserSaveView({Key? key}) : super(key: key);
-
+  const NewUserSaveView({Key? key, required this.model}) : super(key: key);
+  final SaveViewModel model;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff232326),
+      backgroundColor: Color(0xff151515),
       appBar: FAppBar(
-        showAvatar: false,
-        title: "Save",
+        showAvatar: true,
+        backgroundColor: Color(0xff232326),
+        showCoinBar: false,
         type: FaqsType.savings,
         style: TextStyle(
           color: Color(0xffBDBDBE),
@@ -35,37 +37,58 @@ class NewUserSaveView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-              child: Text(
-                "Take your first step\nto start an investment",
-                style: TextStyles.rajdhaniSB.body1,
+            Container(
+              decoration: BoxDecoration(
+                  color: Color(0xff232326),
+                  borderRadius: BorderRadius.vertical(
+                      bottom: Radius.circular(SizeConfig.padding24))),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding4,
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+                    child: Text(
+                      "Take your first step towards healthy Savings",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding14,
+                  ),
+                  ...getAssetWidget(),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Center(
+                    child: Text(
+                      "100% SAFE & SECURE",
+                      style: TextStyles.sourceSans.body3
+                          .colour(
+                            Colors.white.withOpacity(0.6),
+                          )
+                          .copyWith(letterSpacing: 1.12),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding10,
+                  ),
+                  SaveAssetsFooter(),
+                  SizedBox(
+                    height: SizeConfig.padding10,
+                  ),
+                ],
               ),
             ),
-            SizedBox(
-              height: SizeConfig.padding14,
-            ),
-            ...getAssetWidget(),
-            SizedBox(
-              height: SizeConfig.padding28,
-            ),
-            Center(
-              child: Text(
-                "100% Safe & Secure",
-                style: TextStyles.sourceSans.body3
-                    .colour(
-                      Colors.white.withOpacity(0.6),
-                    )
-                    .copyWith(letterSpacing: 1.12),
-              ),
-            ),
+            Campaigns(model: model),
             SizedBox(
               height: SizeConfig.padding10,
             ),
-            SaveAssetsFooter(),
+            LottieBuilder.asset("assets/lotties/Inapp scroll animation.json"),
             SizedBox(height: SizeConfig.navBarHeight),
-
-            
           ],
         ),
       ),
@@ -79,13 +102,22 @@ class NewUserSaveView extends StatelessWidget {
         if (element == "LB") {
           children.add(
             SaveContainer(
+              bottomStrip: [
+                "750+ users deposited in Gold today!",
+                "An average saver saves ₹500 in Gold every 2 days"
+              ],
               investmentType: InvestmentType.LENDBOXP2P,
-              isPopular: true,
+              isPopular: false,
             ),
           );
         } else if (element == "AG") {
           children.add(SaveContainer(
+            bottomStrip: [
+              "750+ users deposited in Gold today!",
+              "An average saver saves ₹500 in Gold every 2 days"
+            ],
             investmentType: InvestmentType.AUGGOLD99,
+            isPopular: true,
           ));
         }
       },
@@ -94,3 +126,58 @@ class NewUserSaveView extends StatelessWidget {
     return children;
   }
 }
+
+// class MarqueeWidget extends StatefulWidget {
+//   const MarqueeWidget({Key? key}) : super(key: key);
+
+//   @override
+//   State<MarqueeWidget> createState() => _MarqueeWidgetState();
+// }
+
+// class _MarqueeWidgetState extends State<MarqueeWidget> {
+//   final ScrollController scrollController = ScrollController();
+//   late Timer timer;
+
+//   @override
+//   void initState() {
+//     timer = Timer.periodic(Duration(milliseconds: 160), (timer) {
+//       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+//         if (scrollController.hasClients) {
+//           scrollController.animateTo(10,
+//               duration: Duration(milliseconds: 160), curve: Curves.linear);
+//         }
+//       });
+//     });
+//     super.initState();
+//   }
+
+//   @override
+//   void dispose() {
+//     scrollController.dispose();
+//     timer.cancel();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.builder(
+//         scrollDirection: Axis.horizontal,
+//         controller: scrollController,
+//         itemBuilder: (_, index) {
+//           return Column(
+//             children: [
+//               Row(
+//                 children: [
+//                   Text("5 Lakh+ Users"),
+//                 ],
+//               ),
+//               Row(
+//                 children: [
+//                   Text("")
+//                 ],
+//               )
+//             ],
+//           );
+//         });
+//   }
+// }

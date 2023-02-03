@@ -50,6 +50,7 @@ import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/elements/faq_card/faq_card_vm.dart';
 import 'package:felloapp/ui/elements/tambola_card/tambola_card_vm.dart';
@@ -127,7 +128,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => InternalOpsService());
   locator.registerLazySingleton(() => BankAndPanService());
   locator.registerLazySingleton(() => ReferralService());
-
+  locator.registerLazySingleton(() => BackButtonActions());
   //Model Services
   locator.registerLazySingleton(() => BaseUtil());
   locator.registerLazySingleton(() => AppState());

@@ -43,6 +43,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
       //         icon: Icon(Icons.adaptive.arrow_back_rounded),
       //         onPressed: () => AppState.backButtonDispatcher!.didPopRoute())
       //     : SizedBox(),
+    
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

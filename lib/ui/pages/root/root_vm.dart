@@ -95,13 +95,12 @@ class RootViewModel extends BaseViewModel {
   }
 
   onInit() {
-    _rootController.currentNavBarItemModel =
-        _rootController.navItems.values.first;
-
     AppState.isUserSignedIn = true;
     AppState().setRootLoadValue = true;
     _referralService.verifyReferral();
     _referralService.initDynamicLinks();
+    _rootController.currentNavBarItemModel =
+        _rootController.navItems.values.first;
     initialize();
   }
 

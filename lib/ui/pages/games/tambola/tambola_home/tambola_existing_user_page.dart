@@ -60,31 +60,63 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
         showCoinBar: false,
         showHelpButton: false,
 
-        action: TextButton(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-            child: Text(
-              locale.tHowToPlay,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: SizeConfig.body2,
+        action: Row(
+          children: [
+            TextButton(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                child: Text(
+                  "Prizes",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: SizeConfig.body2,
+                  ),
+                ),
               ),
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+                onSurface: Colors.white,
+                side: BorderSide(color: Colors.white, width: 1),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25))),
+              ),
+              onPressed: () {
+                AppState.delegate!.appState.currentAction = PageAction(
+                  state: PageState.addWidget,
+                  page: TambolaNewUser,
+                  widget: TambolaNewUserPage(
+                    model: widget.model,
+                    showPrizeSection: true,
+                  ),
+                );
+              },
             ),
-          ),
-          style: TextButton.styleFrom(
-            primary: Colors.white,
-            onSurface: Colors.white,
-            side: BorderSide(color: Colors.white, width: 2),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25))),
-          ),
-          onPressed: () {
-            AppState.delegate!.appState.currentAction = PageAction(
-              state: PageState.addWidget,
-              page: TambolaNewUser,
-              widget: TambolaNewUserPage(model: widget.model),
-            );
-          },
+            SizedBox(
+              width: SizeConfig.padding12,
+            ),
+            InkWell(
+              onTap: () =>
+                  AppState.delegate!.appState.currentAction = PageAction(
+                state: PageState.addWidget,
+                page: TambolaNewUser,
+                widget: TambolaNewUserPage(
+                  model: widget.model,
+                ),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xff1a1a1a),
+                    border: Border.all(color: Colors.white)),
+                padding: EdgeInsets.all(6),
+                child: Icon(
+                  Icons.question_mark,
+                  color: Colors.white,
+                  size: SizeConfig.padding20,
+                ),
+              ),
+            )
+          ],
         ),
         title: locale.tTitle,
         backgroundColor: UiConstants.kArrowButtonBackgroundColor,
@@ -125,6 +157,9 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                     ],
                   ),
                   amount: "500",
+                ),
+                SizedBox(
+                  height: SizeConfig.padding6,
                 ),
                 if (widget.model.userWeeklyBoards != null) ...[
                   Padding(
@@ -181,6 +216,9 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: SizeConfig.padding6,
+                  ),
                   TicketsView(model: widget.model),
                 ] else
                   Container(
@@ -224,6 +262,46 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                       children: [
                         Text(
                           locale.tViewAllTicks,
+                          style: TextStyles.rajdhaniSB.body1,
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: SizeConfig.padding16,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding14,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addWidget,
+                      page: TambolaNewUser,
+                      widget: TambolaNewUserPage(
+                        model: widget.model,
+                        showWinners: true,
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.screenWidth! * 0.06),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Color(0xff627F8E).withOpacity(0.2),
+                      border: Border.all(color: Color(0xff627F8E)),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Last week Winners",
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Icon(

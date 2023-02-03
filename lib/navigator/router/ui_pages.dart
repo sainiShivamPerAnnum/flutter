@@ -78,6 +78,7 @@ const String SettingsScreenPath = '/settingsScreenPath';
 const String TExistingUserViewPath = '/texistingUserPath';
 const String TNewUserViewPath = '/tnewUserViewPath';
 const String TransactionDetailsPath = '/transactionDetailsPage';
+const String AssetViewPath = '/assetViewSection';
 
 enum Pages {
   Splash,
@@ -107,6 +108,7 @@ enum Pages {
   TExistingUser,
   TGame,
   TWeeklyResult,
+  AssetViewSection,
   TWalkthrough,
   TPickDraw,
   TShowAllTickets,
@@ -185,6 +187,11 @@ PageConfiguration SplashPageConfig = PageConfiguration(
   uiPage: Pages.Splash,
   name: 'Splash Screen',
 );
+PageConfiguration AssetViewPageConfig = PageConfiguration(
+    key: 'AssetView',
+    path: AssetViewPath,
+    uiPage: Pages.AssetViewSection,
+    name: 'AssetViewScreen');
 
 PageConfiguration TransactionDetailsPageConfig = PageConfiguration(
     key: 'TransactionDetailsPage',

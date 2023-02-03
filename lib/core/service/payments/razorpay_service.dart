@@ -17,6 +17,7 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -81,6 +82,8 @@ class RazorpayService extends ChangeNotifier {
   void handlePaymentError(PaymentFailureResponse response) {
     _txnService!.currentTransactionState = TransactionState.idle;
     AppState.unblockNavigation();
+    if (response.code == 2)
+      locator<BackButtonActions>().isTransactionCancelled = true;
     BaseUtil.showNegativeAlert(locale.txnFailed, locale.txnFailedSubtitle);
     log.debug("ERROR: " + response.code.toString() + " - " + response.message!);
     Map<String, dynamic>? currentTxnDetails =

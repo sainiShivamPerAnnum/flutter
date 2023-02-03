@@ -1,0 +1,79 @@
+import 'dart:developer';
+
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../pages/static/app_widget.dart';
+
+class ConfirmExitModal extends StatelessWidget {
+  const ConfirmExitModal({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: SizeConfig.screenHeight! * 0.37,
+      padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.pageHorizontalMargins,
+          vertical: SizeConfig.padding20),
+      child: Column(
+        children: [
+          Text(
+            "Are you sure you want to exit the app?",
+            style: TextStyles.sourceSansB.body1.colour(Colors.white),
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          Text(
+            "Don’t miss a chance to invest &\ngrow your savings by 10%",
+            textAlign: TextAlign.center,
+            style: TextStyles.sourceSans.body2.colour(
+              Color(0xffD9D9D9),
+            ),
+          ),
+          Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset("assets/images/cus_photos.png"),
+              SizedBox(
+                width: 4,
+              ),
+              Text(
+                "5.5 Lakh+ users trust Fello",
+                style: TextStyles.sourceSansB.colour(
+                  Color(0xffd9d9d9).withOpacity(0.9),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+          AppPositiveBtn(
+            btnText: "CONTINUE WITH SIGN UP",
+            onPressed: () {
+              AppState.backButtonDispatcher!.didPopRoute();
+            },
+          ),
+          SizedBox(
+            height: SizeConfig.padding8,
+          ),
+          TextButton(
+            onPressed: () async {
+              SystemNavigator.pop();
+            },
+            child: Text(
+              "EXIT ANYWAY",
+              style: TextStyles.rajdhaniB.body2,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

@@ -87,12 +87,31 @@ class MiniTransactionCard extends StatelessWidget {
                                                 padding: EdgeInsets.only(
                                                   top: SizeConfig.padding2,
                                                 ),
-                                                child: Text(
-                                                  locale.btnSeeAll,
-                                                  style: TextStyles
-                                                      .rajdhaniSB.body2
-                                                      .colour(UiConstants
-                                                          .primaryColor),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      locale.btnSeeAll,
+                                                      style: TextStyles
+                                                          .rajdhaniSB.body2
+                                                          .colour(
+                                                            Colors.white,
+                                                          )
+                                                          .copyWith(
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline),
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          SizeConfig.padding2,
+                                                    ),
+                                                    Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      size:
+                                                          SizeConfig.iconSize2,
+                                                      color: Colors.white,
+                                                    )
+                                                  ],
                                                 ),
                                               ),
                                               onTap: () =>

@@ -1,22 +1,23 @@
 import "dart:math" as math;
 
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LendboxAppBar extends StatelessWidget {
-
   final bool isEnabled;
   final Function? trackClosingEvent;
   const LendboxAppBar({required this.isEnabled, this.trackClosingEvent});
 
   @override
   Widget build(BuildContext context) {
-      S locale = S.of(context);
+    S locale = S.of(context);
     return ListTile(
       leading: Container(
         width: SizeConfig.screenWidth! * 0.168,
@@ -54,7 +55,8 @@ class LendboxAppBar extends StatelessWidget {
               icon: Icon(Icons.close, color: Colors.white),
               onPressed: () {
                 if (trackClosingEvent != null) trackClosingEvent!();
-                AppState.backButtonDispatcher!.didPopRoute();
+                if (!locator<BackButtonActions>().isTransactionCancelled)
+                  AppState.backButtonDispatcher!.didPopRoute();
               },
             ),
     );

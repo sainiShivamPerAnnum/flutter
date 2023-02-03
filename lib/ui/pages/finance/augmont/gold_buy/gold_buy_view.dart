@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_input_view.dart';
@@ -19,10 +20,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
+
+
 class GoldBuyView extends StatefulWidget {
   final int? amount;
   final bool skipMl;
-  const GoldBuyView({Key? key, this.amount, this.skipMl = false})
+  final OnAmountChanged onChanged;
+  const GoldBuyView(
+      {Key? key, this.amount, this.skipMl = false, required this.onChanged})
       : super(key: key);
 
   @override
@@ -110,6 +115,8 @@ class _GoldBuyViewState extends State<GoldBuyView>
                     if (model.state == ViewState.Busy)
                       return Center(child: FullScreenLoader());
                     _secureScreenshots(txnService);
+                    widget.onChanged(
+                        double.parse(model.goldAmountController!.text));
                     return _getView(txnService, model);
                   },
                 ),

@@ -31,7 +31,9 @@ import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
 import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
@@ -49,6 +51,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -307,7 +310,6 @@ class BaseUtil extends ChangeNotifier {
       addToScreenStack: false,
       content: WebGameModalSheet(
         game: game,
-        
       ),
       backgroundColor: Color(0xff39393C),
       hapticVibrate: true,
@@ -350,6 +352,7 @@ class BaseUtil extends ChangeNotifier {
           locale.tryLater,
         );
       }
+      double amount = 0;
 
       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
@@ -360,15 +363,25 @@ class BaseUtil extends ChangeNotifier {
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
             ? GoldBuyView(
+                onChanged: (p0) => amount = p0,
                 amount: amt,
                 skipMl: isSkipMl ?? false,
               )
             : LendboxBuyView(
                 amount: amt,
                 skipMl: isSkipMl ?? false,
+                onChanged: (p0) => amount = p0,
               ),
-      );
+      ).then((value) =>
+          locator<BackButtonActions>().isTransactionCancelled = false);
     });
+  }
+
+  Future<void> showConfirmExit() async {
+    await openModalBottomSheet(
+        isBarrierDismissible: false,
+        addToScreenStack: true,
+        content: ConfirmExitModal());
   }
 
   void openSellModalSheet({required InvestmentType investmentType}) {

@@ -14,25 +14,24 @@ class SellText extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     final title = investmentType == InvestmentType.AUGGOLD99
-        ? locale.sellCardTitle1
+        ? "Sell Digital Gold"
         : locale.sellCardTitle2;
-    final subTitle =locale.sellCardSubTitle1;
+    final subTitle = locale.sellCardSubTitle1;
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: TextStyles.sourceSansSB.body2.colour(
-              Colors.grey.withOpacity(0.8),
+            style: TextStyles.sourceSansSB.body1.colour(
+              Colors.white,
             ),
           ),
           SizedBox(height: SizeConfig.padding6),
           Text(
             subTitle,
             // maxLines: 2,
-            style:
-                TextStyles.sourceSans.body4.colour(UiConstants.kBlogTitleColor),
+            style: TextStyles.sourceSans.body4.colour(Color(0xffc5cacd)),
           ),
         ],
       ),
@@ -57,17 +56,14 @@ class SellButton extends StatelessWidget {
         width: SizeConfig.screenWidth! * 0.29,
         margin: EdgeInsets.only(left: SizeConfig.padding24),
         decoration: BoxDecoration(
+          color: isActive ? Colors.white : Colors.white.withOpacity(0.5),
           borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-          border: Border.all(
-            color: isActive ? Colors.white : UiConstants.kTextColor2,
-            width: 1,
-          ),
         ),
         child: Center(
           child: Text(
             locale.saveSellButton,
             style: TextStyles.rajdhaniSB.body0.colour(
-              isActive ? UiConstants.kTextColor : UiConstants.kTextColor2,
+              Colors.black,
             ),
           ),
         ),
@@ -131,7 +127,7 @@ class SellActionButton extends StatelessWidget {
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-            color: UiConstants.kDarkBackgroundColor,
+            color: Color(0xffd9d9d9).withOpacity(0.1),
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
@@ -142,8 +138,12 @@ class SellActionButton extends StatelessWidget {
               children: [
                 Text(
                   title!,
-                  style: TextStyles.rajdhaniM.body1,
+                  style: TextStyles.rajdhaniM.body1.colour(Colors.white),
                 ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                )
               ],
             ),
           ),

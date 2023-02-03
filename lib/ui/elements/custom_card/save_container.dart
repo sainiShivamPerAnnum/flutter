@@ -1,9 +1,13 @@
 import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/buttons/black_white_button/black_white_button.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/extensions/investment_returns_extension.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -26,150 +30,167 @@ Map<String, String> _lbInfo = {
 };
 
 class SaveContainer extends StatelessWidget {
-  const SaveContainer({
+  SaveContainer({
     Key? key,
     required this.investmentType,
     this.isPopular = false,
-  }) : super(key: key);
+    required this.bottomStrip,
+  })  : isGold = investmentType == InvestmentType.AUGGOLD99,
+        super(key: key);
   final InvestmentType investmentType;
   final bool isPopular;
-
+  final List<String> bottomStrip;
+  int value = 500;
+  final bool isGold;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: SizeConfig.padding12),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-        height: SizeConfig.screenHeight! * 0.42,
-        decoration: BoxDecoration(
-          color: getCardBgColor,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 1))],
-          border: isPopular
-              ? Border.all(
-                  color: Color(0xff93B5FE),
-                )
-              : null,
-        ),
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                _Header(
-                  investmentType: investmentType,
-                ),
-                SizedBox(
-                  height: SizeConfig.padding16,
-                ),
-                _InvestmentDetails(
-                  onChange: (amount) {
-                    log(amount.toString());
-                  },
-                  gain: 200,
-                ),
-                SizedBox(
-                  height: SizeConfig.padding20,
-                ),
-                Stack(
-                  children: [
-                    Padding(
+    return GestureDetector(
+      onTap: () => AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: AssetViewPageConfig,
+          widget: AssetSectionView(type: investmentType)),
+      child: Padding(
+        padding: EdgeInsets.only(bottom: SizeConfig.padding20),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+          height: SizeConfig.screenHeight! * 0.33,
+          decoration: BoxDecoration(
+            color: getCardBgColor,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 1))],
+            border: isPopular ? Border.all(color: borderColor, width: 2) : null,
+          ),
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  _Header(
+                    investmentType: investmentType,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding20 + SizeConfig.padding2,
+                  ),
+                  _InvestmentDetails(
+                    type: investmentType,
+                    initialValue: value,
+                    onChange: (p0) => value = p0,
+                  ),
+                  // SizedBox(
+                  //   height: SizeConfig.padding20,
+                  // ),
+                  // Stack(
+                  //   children: [
+                  //     Padding(
+                  //       padding: EdgeInsets.symmetric(
+                  //           horizontal: SizeConfig.padding16),
+                  //       child: Divider(
+                  //         color: Color(0xff93B5FE).withOpacity(0.3),
+                  //       ),
+                  //     ),
+                  //     Align(
+                  //       alignment: Alignment.center,
+                  //       child: ColoredBox(
+                  //         color: getCardBgColor,
+                  //         child: Padding(
+                  //           padding: EdgeInsets.symmetric(horizontal: 8),
+                  //           child: Text(
+                  //             "You will invest in",
+                  //             style: TextStyles.sourceSans.body4
+                  //                 .colour(Colors.white.withOpacity(0.6)),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(
+                  //   height: SizeConfig.padding14,
+                  // ),
+                  // _buildInformationRow(),
+                  // SizedBox(
+                  //   height: SizeConfig.padding14,
+                  // ),
+                  Expanded(
+                    child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.padding16),
-                      child: Divider(
-                        color: Color(0xff93B5FE).withOpacity(0.3),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ColoredBox(
-                        color: getCardBgColor,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(
-                            "You will invest in",
-                            style: TextStyles.sourceSans.body4
-                                .colour(Colors.white.withOpacity(0.6)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: BlackWhiteButton(
+                              onPress: () {
+                                BaseUtil().openRechargeModalSheet(
+                                    investmentType: investmentType, amt: value);
+                              },
+                              title: "SAVE NOW",
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            width: SizeConfig.padding6,
+                          ),
+                          Expanded(
+                            child: BlackWhiteButton.inverse(
+                                onPress: () =>
+                                    AppState.delegate!.appState.currentAction =
+                                        PageAction(
+                                            state: PageState.addWidget,
+                                            page: AssetViewPageConfig,
+                                            widget: AssetSectionView(
+                                                type: investmentType)),
+                                title: "LEARN MORE"),
+                          )
+                        ],
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.padding14,
-                ),
-                _buildInformationRow(),
-                SizedBox(
-                  height: SizeConfig.padding14,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+                  ),
+                  Text(
+                    "₹100K + invested till date",
+                    style: TextStyles.sourceSans.body3
+                        .colour(Colors.white.withOpacity(0.6)),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding8,
+                  ),
+                ],
+              ),
+              if (isPopular)
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding12,
+                      vertical: SizeConfig.padding2,
+                    ),
+                    decoration: BoxDecoration(
+                        color: borderColor,
+                        borderRadius:
+                            BorderRadius.vertical(bottom: Radius.circular(5))),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                          child: BlackWhiteButton(
-                            onPress: () {},
-                            title: "Invest Now",
-                          ),
-                        ),
+                        SvgPicture.asset(Assets.arrowTreading),
                         SizedBox(
-                          width: SizeConfig.padding6,
+                          width: SizeConfig.padding4,
                         ),
-                        Expanded(
-                          child: BlackWhiteButton.inverse(
-                              onPress: () => Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_) => AssetSectionView(
-                                        type: investmentType,
-                                      ),
-                                    ),
-                                  ),
-                              title: "Learn More"),
-                        )
+                        Text(
+                          "TRENDING",
+                          style: TextStyles.sourceSansSB.body4
+                              .colour(Color(0xff39498C)),
+                        ),
                       ],
                     ),
                   ),
-                ),
-                Text(
-                  "₹100K + invested till date",
-                  style: TextStyles.sourceSans.body3
-                      .colour(Colors.white.withOpacity(0.4)),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding8,
-                ),
-              ],
-            ),
-            if (isPopular)
-              Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding12,
-                    vertical: SizeConfig.padding2,
-                  ),
-                  decoration: BoxDecoration(
-                      color: Color(0xff93B5FE),
-                      borderRadius:
-                          BorderRadius.vertical(bottom: Radius.circular(5))),
-                  child: Text(
-                    "POPULAR",
-                    style:
-                        TextStyles.sourceSansSB.body4.colour(Color(0xff39498C)),
-                  ),
-                ),
-              )
-          ],
+                )
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildInformationRow() {
-    final info = investmentType == InvestmentType.AUGGOLD99 ? _goldInfo : _lbInfo;
+    final info = isGold ? _goldInfo : _lbInfo;
 
     List<Widget> children = [];
 
@@ -218,53 +239,77 @@ class SaveContainer extends StatelessWidget {
   }
 
   Color get getCardBgColor {
-    if (investmentType == InvestmentType.AUGGOLD99) return Color(0xff293566);
+    if (isGold) return Color(0xff293566);
 
     return Color(0xff173B3F);
   }
 
   //TODO: Get a border color for lendbox container
-  // Color get borderColor
-
+  Color get borderColor => isGold ? Color(0xff93B5FE) : Color(0xff3CB9A4);
 }
 
 class _InvestmentDetails extends StatelessWidget {
-  const _InvestmentDetails(
-      {Key? key, required this.onChange, required this.gain})
+  _InvestmentDetails(
+      {Key? key,
+      required this.type,
+      required this.initialValue,
+      required this.onChange})
       : super(key: key);
-  final onInvestmentChange onChange;
-  final double gain;
+
+  final int initialValue;
+  final InvestmentType type;
+  final void Function(int) onChange;
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<int> _onValueChanged = ValueNotifier(initialValue);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20)
+          .copyWith(right: SizeConfig.padding34),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Invest",
-                style: TextStyles.body4.colour(
+                "Invest today",
+                style: TextStyles.sourceSans.body4.colour(
                   Colors.white.withOpacity(0.7),
                 ),
               ),
-              _InvestCounter(initialCount: 200, onChange: onChange),
+              SizedBox(
+                height: SizeConfig.padding2,
+              ),
+              _InvestCounter(
+                  initialCount: initialValue,
+                  onChange: (value) {
+                    _onValueChanged.value = value;
+                    onChange.call(value);
+                  }),
             ],
           ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Gain",
-                style: TextStyles.body4.colour(
+                "Gain in 3Y",
+                style: TextStyles.sourceSans.body4.colour(
                   Colors.white.withOpacity(0.7),
                 ),
               ),
-              Text("₹${gain.round()}", style: TextStyles.rajdhaniSB.title4)
+              SizedBox(
+                height: SizeConfig.padding2,
+              ),
+              ValueListenableBuilder<int>(
+                valueListenable: _onValueChanged,
+                builder: (context, snapshot, child) {
+                  return Text(
+                      "₹${12.calculateCompoundInterest(type, _onValueChanged.value)}",
+                      style: TextStyles.rajdhaniSB.title4);
+                },
+              )
             ],
           ),
         ],
@@ -280,7 +325,8 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20)
+          .copyWith(bottom: SizeConfig.padding4, top: SizeConfig.padding8),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.vertical(
@@ -302,9 +348,10 @@ class _Header extends StatelessWidget {
               ),
               Text(
                 investmentType == InvestmentType.AUGGOLD99
-                    ? "Low risk  • Withdraw anytime  • No KYC"
-                    : "Quick returns  • Withdraw anytime ",
-                style: TextStyles.sourceSans.body4,
+                    ? "24K Gold • 99.99% Pure  •  100% Secure"
+                    : "P2P Asset  • 10% Returns •  RBI Certified",
+                style: TextStyles.sourceSans.body4
+                    .colour(Colors.white.withOpacity(0.8)),
               ),
             ],
           ),
@@ -324,10 +371,10 @@ class _Header extends StatelessWidget {
 }
 
 class _InvestCounter extends StatefulWidget {
-  _InvestCounter({Key? key, this.initialCount, required this.onChange})
+  _InvestCounter({Key? key, this.initialCount, this.onChange})
       : super(key: key);
   final int? initialCount;
-  final onInvestmentChange onChange;
+  final onInvestmentChange? onChange;
 
   @override
   State<_InvestCounter> createState() => _InvestCounterState();
@@ -345,39 +392,33 @@ class _InvestCounterState extends State<_InvestCounter> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          children: [
-            _buildIconButton(Icons.remove, _onRemove),
-            ValueListenableBuilder<int>(
-                valueListenable: _investmentCounter,
-                builder: (context, snapshot, child) {
-                  return Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-                    child: Text(
-                      "₹$snapshot",
-                      style: TextStyles.rajdhaniSB.title4,
-                    ),
-                  );
-                }),
-            _buildIconButton(Icons.add, _onAdd),
-          ],
-        ),
+        _buildIconButton(Icons.remove, _onRemove),
+        ValueListenableBuilder<int>(
+            valueListenable: _investmentCounter,
+            builder: (context, snapshot, child) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                child: Text(
+                  "₹$snapshot",
+                  style: TextStyles.rajdhaniSB.title4,
+                ),
+              );
+            }),
+        _buildIconButton(Icons.add, _onAdd),
       ],
     );
   }
 
   void _onAdd() {
     _investmentCounter.value += 100;
-    widget.onChange(_investmentCounter.value);
+    widget.onChange?.call(_investmentCounter.value);
   }
 
   void _onRemove() {
     if (_investmentCounter.value == 100) return;
     _investmentCounter.value -= 100;
-    widget.onChange(_investmentCounter.value);
+    widget.onChange?.call(_investmentCounter.value);
   }
 
   Widget _buildIconButton(IconData icons, void Function() onChange) {
@@ -386,12 +427,16 @@ class _InvestCounterState extends State<_InvestCounter> {
         HapticFeedback.lightImpact();
         onChange.call();
       },
-      child: Container(
-        height: SizeConfig.padding32,
-        width: SizeConfig.padding32,
-        decoration:
-            BoxDecoration(color: Color(0Xff0C1D20), shape: BoxShape.circle),
-        child: Icon(icons, color: Colors.white, size: SizeConfig.padding24),
+      child: Padding(
+        padding: EdgeInsets.all(4),
+        child: Container(
+          height: SizeConfig.padding24,
+          width: SizeConfig.padding24,
+          decoration: BoxDecoration(
+              color: Color(0Xff0C1D20).withOpacity(0.5),
+              shape: BoxShape.circle),
+          child: Icon(icons, color: Colors.white, size: SizeConfig.padding16),
+        ),
       ),
     );
   }

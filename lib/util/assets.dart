@@ -230,6 +230,7 @@ class Assets {
 
   static final String chevRonRightArrow =
       "assets/vectors/icons/chevron_right_arrow.svg";
+  static final String arrowTreading = "assets/svg/arrow_trending.svg";
   //Golden Tickeets screen
   static final String unredemmedScratchCardBG = "assets/svg/unredeemed_gt.svg";
   static final String levelUpUnRedeemedScratchCardBG =
@@ -319,4 +320,14 @@ class Assets {
   static const String wohooLottie = "assets/lotties/woohoo.json";
   static const String gtScratch = "assets/lotties/scratch.json";
   static const String multiReward = "assets/lotties/multiReward.json";
+
+  static const String crypto = "assets/svg/crypto.svg";
+  static const String single_gold_brick = "assets/svg/single_gold_brick.svg";
+  static const String tri_gold_brick = "assets/svg/tri_gold_bricks.svg";
+  static const String multiple_gold_brick =
+      "assets/svg/multiple_gold_bricks.svg";
+  static const String volatile = "assets/svg/volatile.svg";
+  static const String cash_single = "assets/svg/cash_note.svg";
+  static const String cash_bindle = "assets/svg/cash_bundle.svg";
+  static const String cash_with_coins = "assets/svg/cash_with_coins.svg";
 }

@@ -72,11 +72,13 @@ class TambolaNewUserPage extends StatefulWidget {
       {Key? key,
       required this.model,
       this.showPrizeSection = false,
+      this.showWinners = false,
       this.isFromNavigation = false})
       : super(key: key);
   final TambolaHomeViewModel model;
   final bool showPrizeSection;
   final bool isFromNavigation;
+  final bool showWinners;
   @override
   State<TambolaNewUserPage> createState() => _TambolaNewUserPageState();
 }
@@ -92,6 +94,15 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
       Future.delayed(Duration(seconds: 1), () {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           _scrollController?.animateTo(SizeConfig.screenWidth! * 1.7,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.fastLinearToSlowEaseIn);
+        });
+      });
+    }
+    if (widget.showWinners) {
+      Future.delayed(Duration(seconds: 1), () {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          _scrollController?.animateTo(SizeConfig.screenWidth! * 2.2,
               duration: Duration(milliseconds: 500),
               curve: Curves.fastLinearToSlowEaseIn);
         });

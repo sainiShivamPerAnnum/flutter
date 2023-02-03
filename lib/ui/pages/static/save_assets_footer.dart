@@ -32,7 +32,7 @@ class SaveAssetsFooter extends StatelessWidget {
               imageWidth: SizeConfig.screenWidth! * 0.16,
             ),
             VerticalDivider(
-              color: Colors.white,
+              color: Colors.white.withOpacity(0.4),
               thickness: 0.2,
               width: 10,
               indent: 2,
@@ -45,7 +45,7 @@ class SaveAssetsFooter extends StatelessWidget {
               imageWidth: SizeConfig.screenWidth! * 0.16,
             ),
             VerticalDivider(
-              color: Colors.white,
+              color: Colors.white.withOpacity(0.4),
               thickness: 0.2,
               width: 10,
               indent: 2,
