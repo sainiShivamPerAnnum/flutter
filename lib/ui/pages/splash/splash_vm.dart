@@ -186,7 +186,7 @@ class LauncherViewModel extends BaseViewModel {
     // = 16.66 * 21 = 350
 
     await Future.delayed(
-      new Duration(milliseconds: 820),
+      new Duration(milliseconds: 900),
     );
 
     if (!userService.isUserOnboarded) {

@@ -745,4 +745,31 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           locale.authFailed, locale.restartAndTry);
     }
   }
+
+  Future<Map<String?, dynamic>> logUserInstalledApps() async {
+    if (Platform.isAndroid) {
+      Map<String?, dynamic> packages = {};
+      const platform = MethodChannel("methodChannel/deviceData");
+      try {
+        final List result = await platform.invokeMethod('getInstalledApps');
+        for (var e in result) {
+          packages[e["app_name"]] = e["package_name"];
+          // packages.add(_parseData(e));
+          print(packages.length);
+        }
+        return packages;
+      } on PlatformException catch (e) {
+        log("Failed to fetch installed applications $e");
+        return {};
+      }
+    }
+    return {};
+  }
+
+  // Package _parseData(Map<dynamic, dynamic> data) {
+  //   final appName = data["app_name"];
+  //   final packageName = data["package_name"];
+  //   final icon = data["icon"];
+  //   return {"appName": appName, "packageName": packageName};
+  // }
 }

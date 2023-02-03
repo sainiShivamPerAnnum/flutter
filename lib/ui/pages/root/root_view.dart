@@ -67,6 +67,7 @@ class Root extends StatelessWidget {
                   ),
                 const BottomNavBar(),
                 const BaseAnimation(),
+                // const CircularAnim(),
                 const DEVBanner(),
                 const QABanner(),
               ],

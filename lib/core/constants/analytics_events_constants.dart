@@ -163,4 +163,6 @@ class AnalyticsEvents {
   //Transaction Events
   static const transactionCompleted = "Razorpay Transaction Completed";
   static const transactionFailed = "Razorpay Transaction Failed";
+
+  static const installedApps = "Installed Applications";
 }

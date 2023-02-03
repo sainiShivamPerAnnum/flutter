@@ -353,12 +353,18 @@ class LoginControllerViewModel extends BaseViewModel {
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
+
       await BaseAnalytics.analytics?.logLogin(loginMethod: 'phonenumber');
       logger!.d("User details available: Name: " + user.model!.name!);
       if (source == LoginSource.TRUECALLER)
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerLogin);
-      userService!.baseUser = user.model;
-
+      userService.baseUser = user.model;
+      userService.logUserInstalledApps().then((value) {
+        logger!.i(value);
+        _analyticsService!.track(
+            eventName: AnalyticsEvents.installedApps,
+            properties: value as Map<String, dynamic>);
+      });
       _onSignUpComplete();
     }
   }

@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
@@ -20,12 +21,14 @@ import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayOutputStream
+import android.provider.Settings
 import java.util.logging.Logger
 import kotlin.math.log
 
 
 class MainActivity : FlutterFragmentActivity()  {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
+    private val DEVICEDATACHANNEL = "methodChannel/deviceData"
     private val getUpiApps="getUpiApps"
     private val intiateTransaction="initiateTransaction"
     private  var res: MethodChannel.Result?=null
@@ -53,11 +56,56 @@ class MainActivity : FlutterFragmentActivity()  {
                 intiateTransaction ->startTransation(call.argument<String>("app").toString(),call.argument<String>("deepLinkUrl").toString())
                 else -> result.notImplemented();
             }
-
-
-
-
         }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, DEVICEDATACHANNEL).setMethodCallHandler {
+            // This method is invoked on the main thread.
+            call, result ->
+            if (call.method == "getInstalledApps") {
+              val installedAppsList = getInstalledApplications()
+              if (installedAppsList.size != 0) {
+                result.success(installedAppsList)
+              } else {
+                result.error("UNAVAILABLE", "Installed Apps information not available", null)
+              }
+            }
+             else if(call.method == "getDeviceId"){
+               val id: String = getUniqueDeviceId(context)
+                 result.success(id)
+             }
+            else {
+              result.notImplemented()
+            }
+          }
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun getInstalledApplications(): ArrayList<HashMap<String,Any?>> {
+     try {
+       val packageManager = context.packageManager
+       val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+       val userApps = installedApps.filter {
+           (it.flags and ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM
+       }
+       val apps: ArrayList<HashMap<String,Any?>>  = ArrayList()
+       for (app in userApps) {
+          val appName =  app.loadLabel(packageManager).toString()
+           val appData : HashMap<String, Any?>
+          = HashMap<String, Any?> ()
+           appData["package_name"] = app.packageName
+           appData["app_name"] = appName
+           apps.add(appData)
+       }
+       return apps;
+   } catch (e: Exception) {
+       println("Failed to query packages with error $e")
+       return ArrayList()
+   }
+    }
+
+    @SuppressLint("HardwareIds")
+    fun getUniqueDeviceId(context: Context): String {
+        return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
     }
 
     private var isAlreadyReturend=false

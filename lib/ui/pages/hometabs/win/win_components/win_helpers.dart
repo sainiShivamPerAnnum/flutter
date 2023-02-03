@@ -27,6 +27,7 @@ class Salutation extends StatelessWidget {
           return Text(
             "Hi " +
                 ((model?.baseUser?.kycName ?? model?.baseUser?.name ?? "")
+                    .trim()
                     .split(' ')
                     .first
                     .capitalize()),
