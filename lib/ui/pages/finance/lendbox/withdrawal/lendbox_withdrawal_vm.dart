@@ -85,7 +85,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   Future<void> initiateWithdraw() async {
     final amount = await initChecks();
     if (amount == 0) return;
-    if (withdrawableQuantity!.limitAmount > withdrawableQuantity!.limit) {
+    if (withdrawableQuantity!.limitAmount <= 0) {
       await BaseUtil.openDialog(
         isBarrierDismissible: false,
         content: ConfirmationDialog(
