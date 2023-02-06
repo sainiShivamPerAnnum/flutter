@@ -89,7 +89,7 @@ class RazorpayService extends ChangeNotifier {
     currentTxnDetails?["Error message"] = response.message;
     _analyticsService!.track(
         eventName: AnalyticsEvents.paymentCancelled,
-        properties: currentTxnDetails);
+        properties: _txnService!.currentTransactionAnalyticsDetails ?? {});
 
     locator<InternalOpsService>().logFailure(
       _userService!.baseUser!.uid,
