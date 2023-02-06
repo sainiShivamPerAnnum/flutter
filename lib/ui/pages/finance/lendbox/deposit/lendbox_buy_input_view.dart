@@ -42,7 +42,7 @@ class LendboxBuyInputView extends StatelessWidget {
       model.initiateBuy();
       AppState.backButtonDispatcher!.didPopRoute();
     };
-    AppState.type = InvestmentType.AUGGOLD99;
+    AppState.type = InvestmentType.LENDBOXP2P;
     AppState.amt = double.tryParse(model.amountController!.text) ?? 0;
     return Stack(
       children: [
@@ -72,7 +72,11 @@ class LendboxBuyInputView extends StatelessWidget {
                     });
                     AppState.isRepeated = true;
                     return;
+                  } else {
+                    AppState.backButtonDispatcher!.didPopRoute();
                   }
+                } else {
+                  AppState.backButtonDispatcher!.didPopRoute();
                 }
               },
             ),

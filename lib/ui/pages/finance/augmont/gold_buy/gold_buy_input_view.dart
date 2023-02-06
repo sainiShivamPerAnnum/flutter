@@ -79,8 +79,12 @@ class GoldBuyInputView extends StatelessWidget {
                       AppState.backButtonDispatcher!.didPopRoute();
                     });
                     AppState.isRepeated = true;
+                  } else {
+                    AppState.backButtonDispatcher!.didPopRoute();
                   }
                   return;
+                } else {
+                  AppState.backButtonDispatcher!.didPopRoute();
                 }
               },
             ),
@@ -188,8 +192,6 @@ class RechargeModalSheetAppBar extends StatelessWidget {
                   icon: Icon(Icons.close, color: Colors.white),
                   onPressed: () {
                     if (trackCloseTapped != null) trackCloseTapped!();
-                    if (!locator<BackButtonActions>().isTransactionCancelled)
-                      AppState.backButtonDispatcher!.didPopRoute();
                   },
                 ),
     );

@@ -992,6 +992,7 @@ class _CircularSliderState extends State<_CircularSlider> {
       locator<AnalyticsService>().track(
           eventName: "Return Calculator Used",
           properties: {"new user": widget.isNewUser});
+      isEventSent = true;
     }
     setState(() {
       _volumeValue = value;
