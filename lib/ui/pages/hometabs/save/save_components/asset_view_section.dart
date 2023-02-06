@@ -402,6 +402,10 @@ class _BuildOwnAsset extends StatelessWidget {
                 style: TextStyles.sourceSans.body2,
                 textAlign: TextAlign.center,
               ),
+              if (!isGold &&
+                  !(userService.userFundWallet?.wLbBalance ==
+                      userService.userFundWallet?.wLbPrinciple))
+                LboxGrowthArrow(),
               Spacer(),
               Text(
                 isGold
@@ -434,7 +438,6 @@ class _BuildOwnAsset extends StatelessWidget {
                 SizedBox(
                   width: SizeConfig.padding1,
                 ),
-                LboxGrowthArrow(),
                 Spacer(),
                 Text(
                   "₹ " +
@@ -771,7 +774,7 @@ class _WhySection extends StatelessWidget {
   _WhySection({Key? key, required this.isDigitalGold}) : super(key: key);
   final bool isDigitalGold;
 
-  final Map<String, Widget> goldPros = {
+  final Map<dynamic, Widget> goldPros = {
     Assets.arrowIcon: RichText(
       text: TextSpan(
           text: "Steady returns ",
@@ -804,8 +807,10 @@ class _WhySection extends StatelessWidget {
         ],
       ),
     ),
+    Icons.lock_outline: Text("48 hours Lock-in",
+        style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
   };
-  final Map<String, Widget> felloPros = {
+  final Map<dynamic, Widget> felloPros = {
     Assets.arrowIcon: RichText(
       text: TextSpan(
           text: "Higher returns ",
@@ -838,8 +843,9 @@ class _WhySection extends StatelessWidget {
         ],
       ),
     ),
+    Icons.lock_outline: Text("7 days Lock-in",
+        style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
   };
-  final List<String> svgs = [Assets.arrowIcon, Assets.timer, Assets.shield];
 
   @override
   Widget build(BuildContext context) {
@@ -878,10 +884,20 @@ class _WhySection extends StatelessWidget {
                 SizedBox(
                   height: SizeConfig.padding16,
                   width: SizeConfig.padding16,
-                  child: SvgPicture.asset(
-                    key,
-                    fit: BoxFit.fill,
-                  ),
+                  child: key is String
+                      ? Center(
+                          child: SvgPicture.asset(
+                            key,
+                            fit: BoxFit.contain,
+                          ),
+                        )
+                      : Center(
+                          child: Icon(
+                            key,
+                            size: SizeConfig.padding20,
+                            color: Color(0xff62E3C4).withOpacity(0.7),
+                          ),
+                        ),
                 ),
                 SizedBox(
                   width: SizeConfig.padding24,
