@@ -55,8 +55,6 @@ class LendboxAppBar extends StatelessWidget {
               icon: Icon(Icons.close, color: Colors.white),
               onPressed: () {
                 if (trackClosingEvent != null) trackClosingEvent!();
-                if (!locator<BackButtonActions>().isTransactionCancelled)
-                  AppState.backButtonDispatcher!.didPopRoute();
               },
             ),
     );
