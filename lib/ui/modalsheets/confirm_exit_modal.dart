@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +68,8 @@ class ConfirmExitModal extends StatelessWidget {
           AppPositiveBtn(
             btnText: "COMPLETE SIGN UP",
             onPressed: () {
+              locator<AnalyticsService>()
+                  .track(eventName: "Signup Cancel - Continue Tapped");
               AppState.backButtonDispatcher!.didPopRoute();
             },
           ),
@@ -74,6 +78,8 @@ class ConfirmExitModal extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
+              locator<AnalyticsService>()
+                  .track(eventName: "Signup Cancel - Exit Tapped");
               SystemNavigator.pop();
             },
             child: Text(

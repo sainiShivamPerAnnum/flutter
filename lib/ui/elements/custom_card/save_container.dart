@@ -1,15 +1,21 @@
 import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/buttons/black_white_button/black_white_button.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -61,10 +67,28 @@ class SaveContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: AssetViewPageConfig,
-          widget: AssetSectionView(type: investmentType)),
+      onTap: () {
+        locator<AnalyticsService>().track(
+          eventName: AnalyticsEvents.assetBannerTapped,
+          properties: AnalyticsProperties.getDefaultPropertiesMap(
+            extraValuesMap: {
+              'Asset':
+                  investmentType == InvestmentType.AUGGOLD99 ? "Gold" : "Flo",
+              "Failed transaction count":
+                  AnalyticsProperties.getFailedTxnCount(),
+              "Successs transaction count":
+                  AnalyticsProperties.getSucessTxnCount(),
+              "Pending transaction count":
+                  AnalyticsProperties.getPendingTxnCount(),
+              "amt": value,
+            },
+          ),
+        );
+        AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: AssetViewPageConfig,
+            widget: AssetSectionView(type: investmentType));
+      },
       child: Padding(
         padding: EdgeInsets.only(bottom: SizeConfig.padding20),
         child: Container(
@@ -136,13 +160,26 @@ class SaveContainer extends StatelessWidget {
                           Expanded(
                             child: BlackWhiteButton.inverse(
                                 height: SizeConfig.screenHeight! * 0.05,
-                                onPress: () =>
-                                    AppState.delegate!.appState.currentAction =
-                                        PageAction(
-                                            state: PageState.addWidget,
-                                            page: AssetViewPageConfig,
-                                            widget: AssetSectionView(
-                                                type: investmentType)),
+                                onPress: () {
+                                  locator<AnalyticsService>().track(
+                                      eventName: "Asset Learn More Tapped",
+                                      properties: {
+                                        "asset name": investmentType ==
+                                                InvestmentType.AUGGOLD99
+                                            ? "Gold"
+                                            : "Flo",
+                                        "amt": value,
+                                        "isPopular": isPopular,
+                                        // "popularTag":
+                                      });
+                                  AppState.delegate!.appState.currentAction =
+                                      PageAction(
+                                    state: PageState.addWidget,
+                                    page: AssetViewPageConfig,
+                                    widget:
+                                        AssetSectionView(type: investmentType),
+                                  );
+                                },
                                 title: "LEARN MORE"),
                           ),
                           SizedBox(
@@ -152,6 +189,24 @@ class SaveContainer extends StatelessWidget {
                             child: BlackWhiteButton(
                               height: SizeConfig.screenHeight! * 0.05,
                               onPress: () {
+                                locator<AnalyticsService>().track(
+                                    eventName: "Save on Asset Banner",
+                                    properties: {
+                                      "asset name": investmentType ==
+                                              InvestmentType.AUGGOLD99
+                                          ? "Gold"
+                                          : "Flo",
+                                      "balance in gold": locator<UserService>()
+                                              .userFundWallet
+                                              ?.augGoldBalance ??
+                                          0,
+                                      "isNewUser": true,
+                                      "balance in flo": locator<UserService>()
+                                              .userFundWallet
+                                              ?.wLbBalance ??
+                                          0,
+                                      "amt": value
+                                    });
                                 BaseUtil().openRechargeModalSheet(
                                     investmentType: investmentType, amt: value);
                               },
@@ -210,9 +265,11 @@ class SaveContainer extends StatelessWidget {
                           width: SizeConfig.padding4,
                         ),
                         Text(
-                          "TRENDING",
+                          investmentType == InvestmentType.AUGGOLD99
+                              ? DynamicUiUtils.goldTag
+                              : DynamicUiUtils.lbTag,
                           style: TextStyles.sourceSansSB.body4
-                              .colour(UiConstants.kGoldContainerColor),
+                              .colour(UiConstants.kBackgroundColor),
                         ),
                       ],
                     ),
@@ -447,12 +504,17 @@ class _InvestCounterState extends State<_InvestCounter> {
   }
 
   void _onAdd() {
+    locator<AnalyticsService>().track(
+        eventName: "Amount Edit on Asset Banner", properties: {"type": "plus"});
     _investmentCounter.value += 100;
     widget.onChange?.call(_investmentCounter.value);
   }
 
   void _onRemove() {
     if (_investmentCounter.value == 100) return;
+    locator<AnalyticsService>().track(
+        eventName: "Amount Edit on Asset Banner",
+        properties: {"type": "minus"});
     _investmentCounter.value -= 100;
     widget.onChange?.call(_investmentCounter.value);
   }

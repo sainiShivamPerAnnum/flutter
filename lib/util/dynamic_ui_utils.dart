@@ -12,6 +12,10 @@ class DynamicUiUtils {
   );
   static bool isGoldTrending = false;
   static bool islbTrending = false;
+
+  static String goldTag = "";
+  static String lbTag = "";
+  // static Text trendingTag=
   static List<String> navBar = ["JN", "SV", "TM", "PL", "AC"];
   static List<String> playViewOrder = ['TA', 'AG', 'HTP', 'GOW', 'ST'];
   static SingleInfo helpFab =

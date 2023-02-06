@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -146,6 +147,12 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                 child: AppPositiveBtn(
                   btnText: "Continue Saving",
                   onPressed: () {
+                    locator<AnalyticsService>().track(
+                      eventName: "Payment Cancel - Continue Tapped",
+                      properties: {
+                        "amount": amt,
+                      },
+                    );
                     locator<BackButtonActions>().isTransactionCancelled = false;
                     onContinue();
                   },
@@ -158,6 +165,9 @@ class TransactionCancelBottomSheet extends StatelessWidget {
             ),
             InkWell(
               onTap: () async {
+                locator<AnalyticsService>().track(
+                    eventName: "Payment Cancel - Exit Tapped",
+                    properties: {"amount": amt});
                 locator<BackButtonActions>().isTransactionCancelled = false;
                 AppState.backButtonDispatcher!.didPopRoute().then(
                     (value) => AppState.backButtonDispatcher!.didPopRoute());

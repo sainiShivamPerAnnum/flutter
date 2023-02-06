@@ -88,6 +88,7 @@ class SaveNetWorthSection extends StatelessWidget {
                 locator<AnalyticsService>()
                     .track(eventName: "Save on Asset Banner", properties: {
                   "asset name": "LENDBOX",
+                  "isNewUser":false,
                   "balance in gold":
                       locator<UserService>().userFundWallet?.augGoldBalance ??
                           0,

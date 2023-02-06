@@ -56,10 +56,12 @@ class SaveUi {
   List<String> sections;
   final CtaText? ctaText;
   final BadgeText? badgeText;
+  final String trendingAsset;
   SaveUi(
       {required this.assets,
       required this.sections,
       required this.badgeText,
+      required this.trendingAsset,
       required this.ctaText});
 
   Map<String, dynamic> toMap() {
@@ -76,6 +78,7 @@ class SaveUi {
         sections:
             List<String>.from((map['sections'].cast<String>() as List<String>)),
         badgeText: BadgeText.fromMap(map['badgeText']),
+        trendingAsset: map['trendingAsset'] ?? "",
         ctaText: CtaText.fromMap(map["ctaText"]));
   }
 
