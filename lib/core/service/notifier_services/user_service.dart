@@ -524,10 +524,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     DynamicUiUtils.navBar = dynamicUi.navBar;
     _rootController.navItems.clear();
     DynamicUiUtils.navBar.forEach(_rootController.getNavItems);
+    DynamicUiUtils.goldTag = dynamicUi.save.badgeText?.AUGGOLD99 ?? "";
+    DynamicUiUtils.lbTag = dynamicUi.save.badgeText?.LENDBOXP2P ?? "";
+    DynamicUiUtils.islbTrending = dynamicUi.save.trendingAsset == "LENDBOXP2P";
+
     DynamicUiUtils.isGoldTrending =
-        dynamicUi.save.badgeText?.AUGGOLD99?.contains("Trending") ?? false;
-    DynamicUiUtils.islbTrending =
-        dynamicUi.save.badgeText?.LENDBOXP2P?.contains("Trending") ?? false;
+        dynamicUi.save.trendingAsset != "LENDBOXP2P";
     if (dynamicUi.save.ctaText != null)
       DynamicUiUtils.ctaText = dynamicUi.save.ctaText!;
   }

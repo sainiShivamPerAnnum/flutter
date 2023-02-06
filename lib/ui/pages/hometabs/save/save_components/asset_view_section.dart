@@ -6,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
@@ -70,8 +71,8 @@ class AssetSectionView extends StatelessWidget {
         builder: (_, model, ___) {
           bool isNewUser = model!.baseUser!.segments.contains("NEW_USER");
           final balance = type == InvestmentType.AUGGOLD99
-              ? model.userFundWallet!.augGoldQuantity
-              : model.userFundWallet!.wLbBalance;
+              ? model.userFundWallet?.augGoldQuantity ?? 0
+              : model.userFundWallet?.wLbBalance ?? 0;
           return Scaffold(
             backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(
@@ -204,6 +205,7 @@ class AssetSectionView extends StatelessWidget {
                             height: SizeConfig.padding24,
                           ),
                           _CircularSlider(
+                            isNewUser: isNewUser,
                             type: type,
                           )
                         ],
@@ -355,8 +357,9 @@ class AssetSectionView extends StatelessWidget {
     );
   }
 
-  Color get _getBackgroundColor =>
-      _isGold ? UiConstants.kGoldContainerColor: UiConstants.kFloContainerColor;
+  Color get _getBackgroundColor => _isGold
+      ? UiConstants.kGoldContainerColor
+      : UiConstants.kFloContainerColor;
   Color get _secondaryColor => _isGold
       ? Color(0xff293566).withOpacity(0)
       : Color(0xff297264).withOpacity(0);
@@ -455,8 +458,9 @@ class _BuildOwnAsset extends StatelessWidget {
     );
   }
 
-  Color get color =>
-      type == InvestmentType.AUGGOLD99 ? Color(0xff303B6A) : UiConstants.kFloContainerColor;
+  Color get color => type == InvestmentType.AUGGOLD99
+      ? Color(0xff303B6A)
+      : UiConstants.kFloContainerColor;
 }
 
 class ComparisonBox extends StatelessWidget {
@@ -931,33 +935,40 @@ class _Footer extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: SizeConfig.padding32),
       child: Stack(
         children: [
-          RichText(
-            text: TextSpan(
-              text: highlightedText + " ",
-              style: TextStyles.sourceSansSB.title5.colour(
-                Color(0xffA9C6D6).withOpacity(0.7),
-              ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Column(
               children: [
-                TextSpan(
-                  text: remaining,
-                  style: TextStyles.sourceSansSB.title5.colour(
-                    UiConstants.kTextColor2,
-                  ),
-                )
+                SizedBox(
+                  height: SizeConfig.padding32,
+                ),
+                Image.asset(
+                  isGold ? Assets.goldConveyor : Assets.floConveyor,
+                  fit: BoxFit.fill,
+                  width: SizeConfig.screenHeight! * 0.4,
+                ),
               ],
             ),
           ),
-          Column(
-            children: [
-              SizedBox(
-                height: SizeConfig.padding32,
+          Positioned(
+            left: SizeConfig.padding44,
+            child: RichText(
+              text: TextSpan(
+                text: highlightedText + " ",
+                style: TextStyles.sourceSansSB.title5.colour(
+                  Color(0xffA9C6D6).withOpacity(0.7),
+                ),
+                children: [
+                  TextSpan(
+                    text: remaining,
+                    style: TextStyles.sourceSansSB.title5.colour(
+                      UiConstants.kTextColor2,
+                    ),
+                  )
+                ],
               ),
-              Image.asset(
-                isGold ? Assets.goldConveyor : Assets.floConveyor,
-                fit: BoxFit.fill,
-              ),
-            ],
-          )
+            ),
+          ),
         ],
       ),
     );
@@ -965,17 +976,23 @@ class _Footer extends StatelessWidget {
 }
 
 class _CircularSlider extends StatefulWidget {
-  const _CircularSlider({Key? key, required this.type}) : super(key: key);
+  const _CircularSlider({Key? key, required this.type, required this.isNewUser})
+      : super(key: key);
   final InvestmentType type;
-
+  final bool isNewUser;
   @override
   State<_CircularSlider> createState() => _CircularSliderState();
 }
 
 class _CircularSliderState extends State<_CircularSlider> {
   double _volumeValue = 500;
-
+  bool isEventSent = false;
   void onVolumeChanged(double value) {
+    if (isEventSent) {
+      locator<AnalyticsService>().track(
+          eventName: "Return Calculator Used",
+          properties: {"new user": widget.isNewUser});
+    }
     setState(() {
       _volumeValue = value;
     });
@@ -1079,9 +1096,7 @@ class _CircularSliderState extends State<_CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" +
-                              6.getReturns(
-                                  widget.type, _volumeValue, 0),
+                          "₹" + 6.getReturns(widget.type, _volumeValue, 0),
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1099,9 +1114,7 @@ class _CircularSliderState extends State<_CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" +
-                              12.getReturns(
-                                  widget.type, _volumeValue, 0),
+                          "₹" + 12.getReturns(widget.type, _volumeValue, 0),
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(

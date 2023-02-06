@@ -118,8 +118,8 @@ class Assets {
   static final String arrowIcon = "assets/svg/raising_arrow.svg";
   static final String timer = "assets/svg/timer.svg";
   static final String shield = "assets/svg/shield.svg";
-  static final String goldConveyor = "assets/images/gold_convyor.png";
-  static final String floConveyor = "assets/images/flo_convyor.png";
+  static final String goldConveyor = "assets/images/gold_convyor.webp";
+  static final String floConveyor = "assets/images/flo_convyor.webp";
 
   // WIN
 
