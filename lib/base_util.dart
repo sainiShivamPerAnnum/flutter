@@ -476,18 +476,18 @@ class BaseUtil extends ChangeNotifier {
   //   return false;
   // }
 
-  static void openDialog({
+  static Future<void> openDialog({
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
     required bool isBarrierDismissible,
     ValueChanged<dynamic>? callback,
-  }) {
+  }) async{
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     print("Current Stack: ${AppState.screenStack}");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
-    showDialog(
+    await showDialog(
       context: AppState.delegate!.navigatorKey.currentContext!,
       barrierDismissible: isBarrierDismissible,
       builder: (ctx) => content!,

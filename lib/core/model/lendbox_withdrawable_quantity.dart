@@ -4,12 +4,19 @@ class LendboxWithdrawableQuantity {
   final double amount;
   final double lockedAmount;
   final String lockedMessage;
+  final double limitAmount;
+  final double limit;
+  final String limitHeading;
+  final String limitMessage;
 
-  LendboxWithdrawableQuantity({
-    required this.amount,
-    required this.lockedAmount,
-    required this.lockedMessage,
-  });
+  LendboxWithdrawableQuantity(
+      {required this.amount,
+      required this.lockedAmount,
+      required this.lockedMessage,
+      required this.limit,
+      required this.limitAmount,
+      required this.limitHeading,
+      required this.limitMessage});
 
   LendboxWithdrawableQuantity copyWith({
     double? amount,
@@ -17,10 +24,13 @@ class LendboxWithdrawableQuantity {
     String? lockedMessage,
   }) {
     return LendboxWithdrawableQuantity(
-      amount: amount ?? this.amount,
-      lockedAmount: lockedAmount ?? this.lockedAmount,
-      lockedMessage: lockedMessage ?? this.lockedMessage,
-    );
+        amount: amount ?? this.amount,
+        lockedAmount: lockedAmount ?? this.lockedAmount,
+        lockedMessage: lockedMessage ?? this.lockedMessage,
+        limit: limit,
+        limitAmount: limitAmount,
+        limitHeading: limitHeading,
+        limitMessage: limitMessage);
   }
 
   Map<String, dynamic> toMap() {
@@ -33,10 +43,13 @@ class LendboxWithdrawableQuantity {
 
   factory LendboxWithdrawableQuantity.fromMap(Map<String, dynamic> map) {
     return LendboxWithdrawableQuantity(
-      amount: map['amount']?.toDouble() ?? 0.0,
-      lockedAmount: map['lockedAmount']?.toDouble() ?? 0.0,
-      lockedMessage: map['lockedMessage'] ?? '',
-    );
+        amount: map['amount']?.toDouble() ?? 0.0,
+        lockedAmount: map['lockedAmount']?.toDouble() ?? 0.0,
+        lockedMessage: map['lockedMessage'] ?? '',
+        limit: map['limit'] * 1.0,
+        limitAmount: map['limitAmount'] * 1.0,
+        limitHeading: map['limitHeading'],
+        limitMessage: map['limitMessage']);
   }
 
   String toJson() => json.encode(toMap());

@@ -15,6 +15,7 @@ import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart'
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/finance/sell_confirmation_screen.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -84,6 +85,24 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   Future<void> initiateWithdraw() async {
     final amount = await initChecks();
     if (amount == 0) return;
+    if (withdrawableQuantity!.limitAmount > withdrawableQuantity!.limit) {
+      await BaseUtil.openDialog(
+        isBarrierDismissible: false,
+        content: ConfirmationDialog(
+            title: withdrawableQuantity!.limitHeading,
+            description: withdrawableQuantity!.limitMessage,
+            buttonText: "OK",
+            showSecondaryButton: false,
+            confirmAction: () {
+              AppState.backButtonDispatcher!.didPopRoute();
+            },
+            cancelAction: () {}),
+      );
+      _inProgress = false;
+      notifyListeners();
+      return;
+    }
+
     AppState.delegate!.appState.currentAction = PageAction(
       widget: SellConfirmationView(
         amount: amount.toDouble(),
