@@ -177,7 +177,6 @@ class SaveViewModel extends BaseViewModel {
 
   getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
-    saveViewItems.add(SizedBox(height: SizeConfig.fToolBarHeight));
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {

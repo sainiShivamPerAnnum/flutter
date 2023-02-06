@@ -12,6 +12,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 class InternalOpsService extends ChangeNotifier {
   String? phoneModel;
@@ -49,7 +50,6 @@ class InternalOpsService extends ChangeNotifier {
           phoneModel = iosDeviceInfo.name;
           softwareVersion = iosDeviceInfo.systemVersion;
           _deviceId = iosDeviceInfo.identifierForVendor;
-          isPhysicalDevice = iosDeviceInfo.isPhysicalDevice;
           brand = "apple";
           _platform = "ios";
           logger!.d(
@@ -64,6 +64,9 @@ class InternalOpsService extends ChangeNotifier {
           _platform = "android";
           logger!.d(
               "Device Information - phoneModel: $phoneModel \nSoftware version: $softwareVersion \nDeviceId $_deviceId");
+        }
+        if ((_deviceId ?? '').isEmpty) {
+          _deviceId = await getDeviceId();
         }
         if ((_deviceId ?? '').isNotEmpty) isDeviceInfoInitiated = true;
         return {
@@ -136,4 +139,18 @@ class InternalOpsService extends ChangeNotifier {
       log.error('Crashlytics record error fail : $e');
     }
   }
+}
+
+Future<String> getDeviceId() async {
+  String deviceId = "";
+  try {
+    const platform = MethodChannel("methodChannel/deviceData");
+
+    final String result = await platform.invokeMethod('getDeviceId');
+    deviceId = result;
+  } catch (e) {
+    debugPrint(e.toString());
+    deviceId = "";
+  }
+  return deviceId;
 }
