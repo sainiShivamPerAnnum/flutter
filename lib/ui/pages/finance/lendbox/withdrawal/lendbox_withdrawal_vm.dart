@@ -87,9 +87,10 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     final amount = await initChecks();
     if (amount == 0) return;
     if (withdrawableQuantity!.limitAmount <= 0) {
-      AppState.screenStack.add(ScreenItem.dialog);
+      
       await BaseUtil.openDialog(
         isBarrierDismissible: false,
+        addToScreenStack: true,
         content: ConfirmationDialog(
             title: withdrawableQuantity!.limitHeading,
             description: withdrawableQuantity!.limitMessage,

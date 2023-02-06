@@ -336,6 +336,7 @@ class GoldSellViewModel extends BaseViewModel {
       AppState.screenStack.add(ScreenItem.dialog);
       await BaseUtil.openDialog(
         isBarrierDismissible: false,
+        addToScreenStack: true,
         content: ConfirmationDialog(
             title: responseModel.data!.limitHeading,
             description: responseModel.data!.limitMessage,
