@@ -249,7 +249,7 @@ class CampaignCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12),
                   color: UiConstants.kSecondaryBackgroundColor,
                   image: DecorationImage(
-                    image: CachedNetworkImageProvider(event.thumbnail),
+                    image: CachedNetworkImageProvider(event.bgImage),
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -110,7 +110,7 @@ class RootViewModel extends BaseViewModel {
       _userService.getProfilePicture();
       _tambolaService!.init();
       _initAdhocNotifications();
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(Duration(seconds: 8), () {
         _marketingService.checkUserDailyAppCheckInStatus().then((value) {
           getHappyHourCampaign();
         });

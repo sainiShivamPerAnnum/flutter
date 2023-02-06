@@ -42,22 +42,36 @@ class _CircularAnimState extends State<CircularAnim>
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1000));
     _ringOneAnimation = CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.4, curve: Curves.easeOutCirc));
+      parent: _controller,
+      curve: const Interval(
+        0.0,
+        0.4,
+        curve: Curves.decelerate,
+      ),
+    );
     _ringTwoAnimation = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.0, 0.4, curve: Curves.easeOutCirc),
+      curve: const Interval(
+        0.0,
+        0.4,
+        curve: Curves.decelerate,
+      ),
     );
     _holeAnimation = CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 1, curve: Curves.easeOutCirc));
+      parent: _controller,
+      curve: const Interval(
+        0.0,
+        1,
+        curve: Curves.decelerate,
+      ),
+    );
 
     animate();
   }
 
   void animate() {
     Future.delayed(
-      Duration(milliseconds: 400),
+      Duration(milliseconds: 200),
       () {
         _controller.reset();
         scaleFactor = 1;

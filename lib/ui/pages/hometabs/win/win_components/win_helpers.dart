@@ -26,7 +26,11 @@ class Salutation extends StatelessWidget {
         builder: (context, model, child) {
           return Text(
             "Hi " +
-                ((model?.baseUser?.kycName ?? model?.baseUser?.name ?? "User")
+                ((model!.baseUser!.kycName!.isNotEmpty
+                        ? model.baseUser!.kycName!
+                        : model.baseUser!.name!.isNotEmpty
+                            ? model.baseUser!.name!
+                            : "User")
                     .trim()
                     .split(' ')
                     .first
