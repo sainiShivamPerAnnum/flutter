@@ -19,7 +19,6 @@ import 'package:flutter/services.dart';
 import '../../radial_gauge/annotation/gauge_annotation_renderer.dart';
 import '../../radial_gauge/axis/radial_axis_widget.dart';
 import '../../radial_gauge/pointers/marker_pointer_renderer.dart';
-import '../../radial_gauge/pointers/needle_pointer_renderer.dart';
 import '../../radial_gauge/pointers/range_pointer_renderer.dart';
 import '../../radial_gauge/pointers/widget_pointer_renderer.dart';
 import '../../radial_gauge/range/gauge_range_renderer.dart';
@@ -67,8 +66,6 @@ class RadialAxisParentElement extends MultiChildRenderObjectElement {
       renderObject.axis = child;
     } else if (child is RenderWidgetPointer) {
       renderObject.addWidgetPointer(child);
-    } else if (child is RenderNeedlePointer) {
-      renderObject.addNeedlePointer(child);
     } else if (child is RenderRangePointer) {
       renderObject.addRangePointer(child);
     } else if (child is RenderMarkerPointer) {
@@ -87,8 +84,6 @@ class RadialAxisParentElement extends MultiChildRenderObjectElement {
       renderObject.axis = null;
     } else if (child is RenderWidgetPointer) {
       renderObject.removeWidgetPointer(child);
-    } else if (child is RenderNeedlePointer) {
-      renderObject.removeNeedlePointer(child);
     } else if (child is RenderRangePointer) {
       renderObject.removeRangePointer(child);
     } else if (child is RenderMarkerPointer) {
@@ -147,7 +142,7 @@ class RenderRadialAxisParent extends RenderBox
   late HorizontalDragGestureRecognizer _horizontalDragGestureRecognizer;
 
   final List<RenderWidgetPointer> _widgetPointers = <RenderWidgetPointer>[];
-  final List<RenderNeedlePointer> _needlePointers = <RenderNeedlePointer>[];
+
   final List<RenderRangePointer> _rangePointers = <RenderRangePointer>[];
   final List<RenderMarkerPointer> _markerPointers = <RenderMarkerPointer>[];
   final List<RenderGaugeRange> _ranges = <RenderGaugeRange>[];
@@ -208,16 +203,8 @@ class RenderRadialAxisParent extends RenderBox
   }
 
   /// Adds the needle render object to needle pointer collection.
-  void addNeedlePointer(RenderNeedlePointer needlePointers) {
-    _needlePointers.add(needlePointers);
-    markNeedsLayout();
-  }
 
   /// Removes the needle render object from needle pointer collection.
-  void removeNeedlePointer(RenderNeedlePointer needlePointers) {
-    _needlePointers.remove(needlePointers);
-    markNeedsLayout();
-  }
 
   /// Adds the range render object to range pointer collection.
   void addRangePointer(RenderRangePointer rangePointer) {
@@ -275,7 +262,6 @@ class RenderRadialAxisParent extends RenderBox
       _markerPointers,
       _widgetPointers,
       _rangePointers,
-      _needlePointers
     ].expand((List<RenderBox> x) => x).toList();
 
     for (int i = 0; i < _axisElements.length; i++) {
@@ -405,7 +391,6 @@ class RenderRadialAxisParent extends RenderBox
       if (isHit &&
           !_restrictHitTestPointerChange &&
           (child is RenderMarkerPointer ||
-              child is RenderNeedlePointer ||
               child is RenderRangePointer ||
               child is RenderWidgetPointer)) {
         _pointerRenderObject = child;

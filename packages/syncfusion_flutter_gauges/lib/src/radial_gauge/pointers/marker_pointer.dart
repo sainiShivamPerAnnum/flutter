@@ -4,7 +4,6 @@ import 'package:syncfusion_flutter_core/theme.dart';
 import '../../radial_gauge/axis/radial_axis_scope.dart';
 import '../../radial_gauge/pointers/gauge_pointer.dart';
 import '../../radial_gauge/pointers/marker_pointer_renderer.dart';
-import '../../radial_gauge/renderers/marker_pointer_renderer.dart';
 import '../../radial_gauge/styles/radial_text_style.dart';
 import '../../radial_gauge/utils/enum.dart';
 import '../../radial_gauge/utils/helper.dart';
@@ -56,7 +55,6 @@ class MarkerPointer extends LeafRenderObjectWidget implements GaugePointer {
     this.borderColor,
     this.offsetUnit = GaugeSizeUnit.logicalPixel,
     this.imageUrl,
-    this.onCreatePointerRenderer,
     GaugeTextStyle? textStyle,
     this.overlayColor,
     this.overlayRadius,
@@ -344,8 +342,6 @@ class MarkerPointer extends LeafRenderObjectWidget implements GaugePointer {
   /// _CustomPointerRenderer class implementation
   /// }
   ///```
-  final MarkerPointerRendererFactory<MarkerPointerRenderer>?
-      onCreatePointerRenderer;
 
   /// Elevation of the pointer.
   ///
@@ -658,12 +654,6 @@ class MarkerPointer extends LeafRenderObjectWidget implements GaugePointer {
     final RadialAxisInheritedWidget ancestor = context
         .dependOnInheritedWidgetOfExactType<RadialAxisInheritedWidget>()!;
 
-    MarkerPointerRenderer? markerPointerRenderer;
-    if (onCreatePointerRenderer != null) {
-      markerPointerRenderer = onCreatePointerRenderer!();
-      markerPointerRenderer.pointer = this;
-    }
-
     return RenderMarkerPointer(
         value: value.clamp(ancestor.minimum, ancestor.maximum),
         enableDragging: enableDragging,
@@ -681,7 +671,6 @@ class MarkerPointer extends LeafRenderObjectWidget implements GaugePointer {
         borderColor: borderColor,
         offsetUnit: offsetUnit,
         imageUrl: imageUrl,
-        markerPointerRenderer: markerPointerRenderer,
         textStyle: textStyle,
         overlayColor: overlayColor,
         overlayRadius: overlayRadius,
@@ -704,11 +693,6 @@ class MarkerPointer extends LeafRenderObjectWidget implements GaugePointer {
     final RadialAxisScope radialAxisScope = RadialAxisScope.of(context);
     final RadialAxisInheritedWidget ancestor = context
         .dependOnInheritedWidgetOfExactType<RadialAxisInheritedWidget>()!;
-    MarkerPointerRenderer? markerPointerRenderer;
-    if (onCreatePointerRenderer != null) {
-      markerPointerRenderer = onCreatePointerRenderer!();
-      markerPointerRenderer.pointer = this;
-    }
 
     renderObject
       ..enableDragging = enableDragging
@@ -726,7 +710,6 @@ class MarkerPointer extends LeafRenderObjectWidget implements GaugePointer {
       ..borderColor = borderColor
       ..offsetUnit = offsetUnit
       ..imageUrl = imageUrl
-      ..markerPointerRenderer = markerPointerRenderer
       ..textStyle = textStyle
       ..overlayColor = overlayColor
       ..overlayRadius = overlayRadius

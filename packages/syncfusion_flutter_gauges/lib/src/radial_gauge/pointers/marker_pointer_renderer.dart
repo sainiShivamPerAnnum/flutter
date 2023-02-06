@@ -9,7 +9,6 @@ import 'package:syncfusion_flutter_core/theme.dart';
 
 import '../../radial_gauge/axis/radial_axis_widget.dart';
 import '../../radial_gauge/pointers/pointer_painting_details.dart';
-import '../../radial_gauge/renderers/marker_pointer_renderer.dart';
 import '../../radial_gauge/styles/radial_text_style.dart';
 import '../../radial_gauge/utils/enum.dart';
 import '../../radial_gauge/utils/helper.dart';
@@ -35,7 +34,6 @@ class RenderMarkerPointer extends RenderBox {
       Color? borderColor,
       required GaugeSizeUnit offsetUnit,
       String? imageUrl,
-      MarkerPointerRenderer? markerPointerRenderer,
       required GaugeTextStyle textStyle,
       required BuildContext context,
       Color? overlayColor,
@@ -63,7 +61,6 @@ class RenderMarkerPointer extends RenderBox {
         _overlayColor = overlayColor,
         _overlayRadius = overlayRadius,
         _elevation = elevation,
-        _markerPointerRenderer = markerPointerRenderer,
         _pointerAnimationController = pointerAnimationController,
         _repaintNotifier = repaintNotifier,
         _gaugeThemeData = gaugeThemeData,
@@ -440,18 +437,8 @@ class RenderMarkerPointer extends RenderBox {
   }
 
   /// Gets the text markerPointerRenderer to [RenderMarkerPointer].
-  MarkerPointerRenderer? get markerPointerRenderer => _markerPointerRenderer;
-  MarkerPointerRenderer? _markerPointerRenderer;
 
   /// Sets the markerPointerRenderer for [RenderMarkerPointer].
-  set markerPointerRenderer(MarkerPointerRenderer? value) {
-    if (value == _markerPointerRenderer) {
-      return;
-    }
-
-    _markerPointerRenderer = value;
-    markNeedsPaint();
-  }
 
   /// Gets the repaintNotifier assigned to [RenderMarkerPointer].
   ValueNotifier<int> get repaintNotifier => _repaintNotifier;
@@ -937,12 +924,8 @@ class RenderMarkerPointer extends RenderBox {
 
       _markerRect = Rect.fromLTRB(-markerWidth / 2, -markerHeight / 2,
           markerWidth / 2, markerHeight / 2);
-      if (markerPointerRenderer != null) {
-        markerPointerRenderer!
-            .drawPointer(canvas, pointerPaintingDetails, _gaugeThemeData);
-      } else {
-        drawPointer(canvas, pointerPaintingDetails, _gaugeThemeData);
-      }
+
+      drawPointer(canvas, pointerPaintingDetails, _gaugeThemeData);
     }
   }
 }
