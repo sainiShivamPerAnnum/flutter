@@ -147,7 +147,7 @@ class PlayViewModel extends BaseViewModel {
 
   getOrderedPlayViewItems(PlayViewModel model) {
     List<Widget> playViewChildren = [];
-    playViewChildren.add(SizedBox(height: SizeConfig.fToolBarHeight));
+
     DynamicUiUtils.playViewOrder.forEach((key) {
       switch (key) {
         case 'TM':

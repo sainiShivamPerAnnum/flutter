@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -219,7 +218,7 @@ class SaveContainer extends StatelessWidget {
                   ),
 
                   SizedBox(
-                    height: SizeConfig.screenHeight! * 0.04,
+                    height: SizeConfig.padding54,
                     width: double.infinity,
                     child: Builder(builder: (context) {
                       final type = investmentType == InvestmentType.AUGGOLD99

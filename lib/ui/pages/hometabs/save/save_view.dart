@@ -50,10 +50,20 @@ class SaveViewWrapper extends StatelessWidget {
             model: model,
           );
         }
-        return ListView(
-          padding: EdgeInsets.zero,
-          cacheExtent: SizeConfig.screenHeight,
-          children: model.getSaveViewItems(model),
+        return Container(
+          height: SizeConfig.screenHeight,
+          child: Column(
+            children: [
+              SizedBox(height: SizeConfig.fToolBarHeight),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  cacheExtent: SizeConfig.screenHeight,
+                  children: model.getSaveViewItems(model),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

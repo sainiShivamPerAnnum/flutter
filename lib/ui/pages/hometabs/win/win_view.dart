@@ -20,30 +20,40 @@ class Win extends StatelessWidget {
       onModelReady: (model) => model.init(),
       onModelDispose: (model) => model.clear(),
       builder: (ctx, model, child) {
-        return SingleChildScrollView(
+        return Container(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: SizeConfig.fToolBarHeight),
-              const Salutation(),
-              AccountInfoTiles(title: locale.abMyProfile, uri: "/profile"),
-              AccountInfoTiles(title: locale.kycTitle, uri: "/kycVerify"),
-              AccountInfoTiles(
-                  title: locale.bankAccDetails, uri: "/bankDetails"),
-              //Scratch Cards count and navigation
-              const ScratchCardsInfoStrip(),
-              //Current Winnings Information
-              const CurrentWinningsInfo(),
-              //Refer and Earn
-              const ReferEarnCard(),
-              // Referral Leaderboard
-              const ReferralLeaderboard(),
-              //Fello News
-              FelloNewsComponent(model: model),
-              // DEV PURPOSE ONLY
-              const CacheClearWidget(),
-              const SizedBox(height: 100),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Salutation(),
+                      AccountInfoTiles(
+                          title: locale.abMyProfile, uri: "/profile"),
+                      AccountInfoTiles(
+                          title: locale.kycTitle, uri: "/kycVerify"),
+                      AccountInfoTiles(
+                          title: locale.bankAccDetails, uri: "/bankDetails"),
+                      //Scratch Cards count and navigation
+                      const ScratchCardsInfoStrip(),
+                      //Current Winnings Information
+                      const CurrentWinningsInfo(),
+                      //Refer and Earn
+                      const ReferEarnCard(),
+                      // Referral Leaderboard
+                      const ReferralLeaderboard(),
+                      //Fello News
+                      FelloNewsComponent(model: model),
+                      // DEV PURPOSE ONLY
+                      const CacheClearWidget(),
+                      const SizedBox(height: 100),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         );

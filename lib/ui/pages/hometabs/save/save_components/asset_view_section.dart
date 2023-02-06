@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -182,16 +181,16 @@ class AssetSectionView extends StatelessWidget {
                           ]
                         ],
                         SizedBox(
-                          height: SizeConfig.padding8,
+                          height: SizeConfig.padding24,
                         ),
                         Text(
                           _isGold
                               ? "How to save in Digital Gold?"
                               : "How Fello Flo works?",
-                          style: TextStyles.rajdhaniSB.title5,
+                          style: TextStyles.rajdhaniSB.title3,
                         ),
                         SizedBox(
-                          height: SizeConfig.padding24,
+                          height: SizeConfig.padding16,
                         ),
 
                         Padding(
@@ -492,19 +491,19 @@ class ComparisonBox extends StatelessWidget {
                         EdgeInsets.symmetric(vertical: SizeConfig.padding8),
                     child: RichText(
                       text: TextSpan(
-                        text: isGold ? "Gold " : "Fello Flo ",
+                        text: isGold ? "Gold " : "Flo🤟🏻 ",
                         style:
-                            TextStyles.rajdhaniSB.title5.colour(Colors.white),
+                            TextStyles.rajdhaniSB.title3.colour(Colors.white),
                         children: [
                           TextSpan(
                             text: "vs ",
-                            style: TextStyles.rajdhaniSB.title5.colour(
+                            style: TextStyles.rajdhaniSB.title3.colour(
                               Color(0xffF6CC60),
                             ),
                           ),
                           TextSpan(
                             text: "other investments",
-                            style: TextStyles.rajdhaniSB.title5
+                            style: TextStyles.rajdhaniSB.title3
                                 .colour(Colors.white),
                           )
                         ],
@@ -860,7 +859,7 @@ class _WhySection extends StatelessWidget {
         children: [
           Text(
             "Why ${isDigitalGold ? "Digital Gold" : "Fello Flo"}?",
-            style: TextStyles.rajdhaniSB.title5,
+            style: TextStyles.rajdhaniSB.title3,
           ),
           SizedBox(
             height: SizeConfig.padding14,
@@ -1072,7 +1071,7 @@ class _CircularSliderState extends State<_CircularSlider> {
           top: 12,
           child: Text(
             "Return Calculator",
-            style: TextStyles.rajdhaniSB.title5,
+            style: TextStyles.rajdhaniSB.title3,
           ),
         ),
         Padding(

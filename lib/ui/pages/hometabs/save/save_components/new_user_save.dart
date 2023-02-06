@@ -1,9 +1,4 @@
-import 'dart:async';
-
-import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/custom_card/save_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -12,7 +7,6 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -21,78 +15,77 @@ class NewUserSaveView extends StatelessWidget {
   final SaveViewModel model;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xff151515),
-      appBar: FAppBar(
-        showAvatar: true,
-        backgroundColor: Color(0xff232326),
-        showCoinBar: false,
-        type: FaqsType.savings,
-        style: TextStyle(
-          color: Color(0xffBDBDBE),
-        ),
-      ),
+    return Container(
+      height: SizeConfig.screenHeight,
 
       //Horizontal Padding for each widget is 24px
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  color: Color(0xff232326),
-                  borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(SizeConfig.padding24))),
+      child: Column(
+        children: [
+          SizedBox(height: SizeConfig.fToolBarHeight),
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: SizeConfig.padding4,
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-                    child: Text(
-                      "Take your first step towards healthy Savings",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Color(0xff232326),
+                        borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(SizeConfig.padding24))),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding16),
+                          child: Text(
+                            "Take your first step towards healthy Savings",
+                            textAlign: TextAlign.center,
+                            style: TextStyles.rajdhaniSB.title4
+                                .colour(Colors.white),
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding14,
+                        ),
+                        ...getAssetWidget(),
+                        SizedBox(
+                          height: SizeConfig.padding8,
+                        ),
+                        // Center(
+                        //   child: Text(
+                        //     "100% SAFE & SECURE",
+                        //     style: TextStyles.sourceSans.body3
+                        //         .colour(
+                        //           Colors.white.withOpacity(0.6),
+                        //         )
+                        //         .copyWith(letterSpacing: 1.12),
+                        //   ),
+                        // ),
+                        SizedBox(
+                          height: SizeConfig.padding10,
+                        ),
+                        SaveAssetsFooter(),
+                        SizedBox(
+                          height: SizeConfig.padding10,
+                        ),
+                      ],
                     ),
                   ),
+                  Campaigns(model: model),
                   SizedBox(
-                    height: SizeConfig.padding14,
+                    height: SizeConfig.padding40,
                   ),
-                  ...getAssetWidget(),
-                  SizedBox(
-                    height: SizeConfig.padding8,
-                  ),
-                  // Center(
-                  //   child: Text(
-                  //     "100% SAFE & SECURE",
-                  //     style: TextStyles.sourceSans.body3
-                  //         .colour(
-                  //           Colors.white.withOpacity(0.6),
-                  //         )
-                  //         .copyWith(letterSpacing: 1.12),
-                  //   ),
-                  // ),
-                  SizedBox(
-                    height: SizeConfig.padding10,
-                  ),
-                  SaveAssetsFooter(),
-                  SizedBox(
-                    height: SizeConfig.padding10,
-                  ),
+                  LottieBuilder.asset(Assets.inAppScrollAnimation),
+                  SizedBox(height: SizeConfig.navBarHeight),
                 ],
               ),
             ),
-            Campaigns(model: model),
-            SizedBox(
-              height: SizeConfig.padding10,
-            ),
-            LottieBuilder.asset(Assets.inAppScrollAnimation),
-            SizedBox(height: SizeConfig.navBarHeight),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
