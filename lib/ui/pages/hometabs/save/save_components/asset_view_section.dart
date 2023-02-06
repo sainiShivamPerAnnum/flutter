@@ -779,32 +779,32 @@ class _WhySection extends StatelessWidget {
   final Map<dynamic, Widget> goldPros = {
     Assets.arrowIcon: RichText(
       text: TextSpan(
-          text: "Steady returns ",
+          text: "Pure 99.9% ",
           style: TextStyles.sourceSans.body2.colour(Colors.white),
           children: [
             TextSpan(
-              text: "on the investment",
+              text: "BIS Hallmark Gold",
               style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
             )
           ]),
     ),
     Assets.timer: RichText(
       text: TextSpan(
-          text: "Interest Credited",
+          text: "Stable ",
           style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
           children: [
             TextSpan(
-                text: "Everyday",
+                text: "returns",
                 style: TextStyles.sourceSans.body2.colour(Colors.white))
           ]),
     ),
     Assets.shield: RichText(
       text: TextSpan(
-        text: "No risks ",
+        text: "Safest mode ",
         style: TextStyles.sourceSans.body2.colour(Colors.white),
         children: [
           TextSpan(
-              text: "involved",
+              text: "of saving",
               style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
         ],
       ),
@@ -984,10 +984,10 @@ class _CircularSlider extends StatefulWidget {
 }
 
 class _CircularSliderState extends State<_CircularSlider> {
-  double _volumeValue = 500;
+  double _volumeValue = 10000;
   bool isEventSent = false;
   void onVolumeChanged(double value) {
-    if (isEventSent) {
+    if (!isEventSent) {
       locator<AnalyticsService>().track(
           eventName: "Return Calculator Used",
           properties: {"new user": widget.isNewUser});
