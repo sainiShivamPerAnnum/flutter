@@ -1,27 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:property_change_notifier/property_change_notifier.dart';
-
-class TransactionHistoryService
-    extends PropertyChangeNotifier<TransactionHistoryServiceProperties> {
+class TxnHistoryService extends ChangeNotifier {
   final CustomLogger? _logger = locator<CustomLogger>();
   final S locale = locator<S>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
-  List<UserTransaction>? _txnList;
+  List<UserTransaction>? _txnList = [];
   String? lastTxnDocId;
   String? lastPrizeTxnDocId;
   String? lastDepositTxnDocId;
@@ -37,7 +33,7 @@ class TransactionHistoryService
 
   set txnList(List<UserTransaction>? list) {
     _txnList = list;
-    notifyListeners(TransactionHistoryServiceProperties.TransactionHistoryList);
+    notifyListeners();
   }
 
   appendTxns(List<UserTransaction> list) {
@@ -48,7 +44,7 @@ class TransactionHistoryService
     });
     _txnList!
         .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
-    notifyListeners(TransactionHistoryServiceProperties.TransactionHistoryList);
+    notifyListeners();
   }
 
   fetchTransactions({

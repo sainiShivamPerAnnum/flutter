@@ -42,7 +42,7 @@ class UserProfileDetails extends StatelessWidget {
         ),
         body: Stack(
           children: [
-            NewSquareBackground(),
+            const NewSquareBackground(),
             model.state == ViewState.Busy
                 ? Center(child: FullScreenLoader())
                 : ListView(

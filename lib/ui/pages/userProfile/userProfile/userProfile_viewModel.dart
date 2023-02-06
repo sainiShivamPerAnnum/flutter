@@ -69,8 +69,7 @@ class UserProfileVM extends BaseViewModel {
   final UserService? _userService = locator<UserService>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final FcmListener? fcmlistener = locator<FcmListener>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   final AppState _appstate = locator<AppState>();
   final TambolaService? _tambolaService = locator<TambolaService>();
@@ -238,6 +237,15 @@ class UserProfileVM extends BaseViewModel {
     if (_userService!.isEmailVerified) isgmailFieldEnabled = false;
     if (isNewUser) usernameController = TextEditingController();
     checkIfUserIsKYCVerified();
+  }
+
+  dispose() {
+    nameController?.dispose();
+    dobController?.dispose();
+    genderController?.dispose();
+    emailController?.dispose();
+    mobileController?.dispose();
+    usernameController?.dispose();
   }
 
   usernameInit() {

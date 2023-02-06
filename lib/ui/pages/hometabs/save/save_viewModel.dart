@@ -18,18 +18,13 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
-import 'package:felloapp/ui/pages/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
-import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -56,12 +51,12 @@ class SaveViewModel extends BaseViewModel {
   final SaveRepo? _saveRepo = locator<SaveRepo>();
   final UserService? _userService = locator<UserService>();
   BaseUtil? baseProvider;
+
   final BankAndPanService? _sellService = locator<BankAndPanService>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
 
@@ -75,7 +70,8 @@ class SaveViewModel extends BaseViewModel {
   ];
   double _nonWithdrawableQnt = 0.0;
   double _withdrawableQnt = 0.0;
-
+  late final PageController offersController =
+      PageController(viewportFraction: 0.9, initialPage: 1);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
@@ -181,6 +177,7 @@ class SaveViewModel extends BaseViewModel {
 
   getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
+    saveViewItems.add(SizedBox(height: SizeConfig.fToolBarHeight));
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
@@ -197,10 +194,9 @@ class SaveViewModel extends BaseViewModel {
     });
 
     saveViewItems.add(
-      Padding(
-        padding: EdgeInsets.only(top: SizeConfig.padding20),
-        child:
-            LottieBuilder.asset(Assets.inAppScrollAnimation),
+      Container(
+        margin: EdgeInsets.only(top: SizeConfig.padding40),
+        child: LottieBuilder.asset(Assets.inAppScrollAnimation),
       ),
     );
 

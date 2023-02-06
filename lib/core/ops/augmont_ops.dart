@@ -45,8 +45,7 @@ class AugmontService extends ChangeNotifier {
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   List<String> _sellingReasons = [];

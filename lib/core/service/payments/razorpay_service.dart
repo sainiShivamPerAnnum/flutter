@@ -92,14 +92,14 @@ class RazorpayService extends ChangeNotifier {
     currentTxnDetails?["Error message"] = response.message;
     _analyticsService!.track(
         eventName: AnalyticsEvents.paymentCancelled,
-        properties: currentTxnDetails);
+        properties: _txnService!.currentTransactionAnalyticsDetails ?? {});
 
     locator<InternalOpsService>().logFailure(
       _userService!.baseUser!.uid,
       FailType.RazorpayTransactionFailed,
-      {'message': "Scratch Card data fetch failed"},
+      {'message': "Razorpay payment cancelled or failed"},
     );
-    _currentTxn!.rzp?[UserTransaction.subFldRzpStatus] =
+    _currentTxn?.rzp?[UserTransaction.subFldRzpStatus] =
         UserTransaction.RZP_TRAN_STATUS_FAILED;
     if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
 

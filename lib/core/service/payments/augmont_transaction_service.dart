@@ -8,7 +8,6 @@ import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/payment_mode_enum.dart';
-import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
@@ -44,8 +43,7 @@ class AugmontTransactionService extends BaseTransactionService {
   final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
   final _gtService = ScratchCardService();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
@@ -61,7 +59,7 @@ class AugmontTransactionService extends BaseTransactionService {
 
   set isGoldBuyInProgress(value) {
     this._isGoldBuyInProgress = value;
-    notifyListeners(TransactionServiceProperties.transactionStatus);
+    notifyListeners();
   }
 
   TransactionResponseModel? _model;
@@ -76,10 +74,10 @@ class AugmontTransactionService extends BaseTransactionService {
 
   set isGoldSellInProgress(bool value) {
     this._isGoldSellInProgress = value;
-    notifyListeners(TransactionServiceProperties.transactionStatus);
+    notifyListeners();
   }
 
-  Future<void>? initateAugmontTransaction(
+  Future<void>? initiateAugmontTransaction(
       {required GoldPurchaseDetails details}) {
     currentGoldPurchaseDetails = details;
     String paymentMode = this.getPaymentMode();
@@ -87,18 +85,13 @@ class AugmontTransactionService extends BaseTransactionService {
     switch (paymentMode) {
       case "PAYTM-PG":
         return processPaytmTransaction();
-        break;
       case "PAYTM":
         return getUserUpiAppChoice(this);
-        break;
       case "RZP-PG":
         return processRazorpayTransaction();
-        break;
       default:
         return processRazorpayTransaction();
     }
-
-    return null;
   }
 
   //6 -- UPI

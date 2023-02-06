@@ -3588,10 +3588,10 @@ class S {
     );
   }
 
-  /// `KYC DETAILS`
+  /// `Kyc Details`
   String get kycTitle {
     return Intl.message(
-      'KYC DETAILS',
+      'Kyc Details',
       name: 'kycTitle',
       desc: '',
       args: [],
@@ -5384,10 +5384,10 @@ class S {
     );
   }
 
-  /// `how are you gonna withdraw less than 1?`
+  /// `Minimum sell amount is ₹10`
   String get txnWithDrawMin {
     return Intl.message(
-      'how are you gonna withdraw less than 1?',
+      'Minimum sell amount is ₹10',
       name: 'txnWithDrawMin',
       desc: '',
       args: [],

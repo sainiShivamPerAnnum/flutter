@@ -71,7 +71,7 @@ class TambolaHomeView extends StatelessWidget {
           backgroundColor: UiConstants.kBackgroundColor,
           body: Stack(
             children: [
-              NewSquareBackground(),
+              const NewSquareBackground(),
               SingleChildScrollView(
                 child: Column(
                   children: [

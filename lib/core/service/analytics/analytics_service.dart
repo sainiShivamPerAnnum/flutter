@@ -47,7 +47,14 @@ class AnalyticsService extends BaseAnalyticsService {
     _appFlyer!.signOut();
   }
 
-  void track({String? eventName, Map<String, dynamic>? properties}) {
+  void track({
+    String? eventName,
+    Map<String, dynamic>? properties,
+    bool mixpanel = true,
+    bool webEngage = true,
+    bool appFlyer = true,
+    bool apxor = true,
+  }) {
     try {
       if (FirebaseAuth.instance.currentUser != null) {
         String uid = FirebaseAuth.instance.currentUser!.uid;
@@ -58,11 +65,13 @@ class AnalyticsService extends BaseAnalyticsService {
     } catch (e) {}
     try {
       _logger!.d(eventName);
-      _mixpanel!.track(eventName: eventName, properties: properties);
-      _webengage!.track(eventName: eventName, properties: properties);
-      _appFlyer!.track(eventName: eventName, properties: properties);
-
-      if (Platform.isAndroid) {
+      if (mixpanel)
+        _mixpanel!.track(eventName: eventName, properties: properties);
+      if (webEngage)
+        _webengage!.track(eventName: eventName, properties: properties);
+      if (appFlyer)
+        _appFlyer!.track(eventName: eventName, properties: properties);
+      if (Platform.isAndroid && apxor) {
         ApxorFlutter.logAppEvent(eventName!, attributes: properties);
       }
     } catch (e) {

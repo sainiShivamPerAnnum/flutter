@@ -124,7 +124,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
       backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(
         children: [
-          NewSquareBackground(),
+          const NewSquareBackground(),
           SingleChildScrollView(
             controller: _scrollController,
             child: Column(

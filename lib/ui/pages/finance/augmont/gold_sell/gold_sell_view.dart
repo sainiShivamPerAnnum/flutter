@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:animations/animations.dart';
-import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -14,18 +13,13 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 class GoldSellView extends StatelessWidget {
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeConsumer<AugmontTransactionService,
-        TransactionServiceProperties>(
-      properties: [
-        TransactionServiceProperties.transactionState,
-        TransactionServiceProperties.transactionStatus
-      ],
+    return Consumer<AugmontTransactionService>(
       builder: (transactionContext, txnService, transactionProperty) {
         return AnimatedContainer(
           width: double.infinity,

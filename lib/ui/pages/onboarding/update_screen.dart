@@ -25,7 +25,7 @@ class UpdateRequiredScreen extends StatelessWidget {
       body: Stack(
         alignment: AlignmentDirectional.center,
         children: [
-          NewSquareBackground(),
+          const NewSquareBackground(),
           Positioned(
             top: 0,
             child: Container(

@@ -286,7 +286,7 @@ class GoldBuyViewModel extends BaseViewModel {
       _augTxnService!.isGoldBuyInProgress = false;
       return;
     }
-    await _augTxnService!.initateAugmontTransaction(
+    await _augTxnService!.initiateAugmontTransaction(
       details: GoldPurchaseDetails(
         goldBuyAmount: goldBuyAmount,
         goldRates: goldRates,
@@ -348,6 +348,13 @@ class GoldBuyViewModel extends BaseViewModel {
 
   trackCheckOOutEvent(String errorMessage) {
     _augTxnService.currentTransactionAnalyticsDetails = {
+      //   "Asset": "Flo",
+      // "Amount Entered": lboxAmount!.text,
+      // "Best flag": goldAmountController!.text ==
+      //         assetOptionsModel?.data.userOptions[2].value.toString()
+      //     ? true
+      //     : false,
+      // "Error message": errorMessage,
       "Asset": "Gold",
       "Coupon Code":
           appliedCoupon != null ? appliedCoupon?.code : "Not Applied",

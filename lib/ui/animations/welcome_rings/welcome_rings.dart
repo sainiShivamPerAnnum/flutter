@@ -1,6 +1,5 @@
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 class CircularAnim extends StatefulWidget {
   const CircularAnim({Key? key}) : super(key: key);
@@ -39,19 +38,52 @@ class _CircularAnimState extends State<CircularAnim>
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController(initialScrollOffset: 300);
+    // _scrollController = ScrollController(initialScrollOffset: 300);
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1000));
     _ringOneAnimation = CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.1, curve: Curves.easeOutCirc));
+      parent: _controller,
+      curve: const Interval(
+        0.0,
+        0.4,
+        curve: Curves.decelerate,
+      ),
+    );
     _ringTwoAnimation = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.0, 0.1, curve: Curves.easeOutCirc),
+      curve: const Interval(
+        0.0,
+        0.4,
+        curve: Curves.decelerate,
+      ),
     );
     _holeAnimation = CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 1, curve: Curves.easeOutCirc));
+      parent: _controller,
+      curve: const Interval(
+        0.0,
+        1,
+        curve: Curves.decelerate,
+      ),
+    );
+
+    animate();
+  }
+
+  void animate() {
+    Future.delayed(
+      Duration(milliseconds: 200),
+      () {
+        _controller.reset();
+        scaleFactor = 1;
+        _controller.forward();
+        Future.delayed(const Duration(milliseconds: 600), () {
+          scaleFactor = 5.0;
+        });
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          isAnimationInProgress = false;
+        });
+      },
+    );
   }
 
   @override
@@ -93,35 +125,27 @@ class _CircularAnimState extends State<CircularAnim>
               ringAnimation: _ringTwoAnimation,
             ),
           ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: SafeArea(
-            child: CircleAvatar(
-              child: FloatingActionButton(
-                onPressed: () {
-                  _controller.reset();
-                  scaleFactor = 1;
-                  _controller.forward();
-
-                  // Future.delayed(
-                  //   const Duration(milliseconds: 800),
-                  //       () {
-                  //     _scrollController.animateTo(0,
-                  //         duration: const Duration(seconds: 2), curve: Curves.easeOut);
-                  //   },
-                  // );
-                  Future.delayed(const Duration(milliseconds: 600), () {
-                    scaleFactor = 5.0;
-                  });
-                  Future.delayed(const Duration(milliseconds: 1600), () {
-                    isAnimationInProgress = false;
-                  });
-                },
-                child: const Icon(Icons.animation, color: Colors.white),
-              ),
-            ),
-          ),
-        )
+        // Align(
+        //   alignment: Alignment.bottomRight,
+        //   child: SafeArea(
+        //     child: CircleAvatar(
+        //       child: FloatingActionButton(
+        //         onPressed: () {
+        //           _controller.reset();
+        //           scaleFactor = 1;
+        //           _controller.forward();
+        //           Future.delayed(const Duration(milliseconds: 300), () {
+        //             scaleFactor = 5.0;
+        //           });
+        //           Future.delayed(const Duration(milliseconds: 1600), () {
+        //             isAnimationInProgress = false;
+        //           });
+        //         },
+        //         child: const Icon(Icons.animation, color: Colors.white),
+        //       ),
+        //     ),
+        //   ),
+        // )
       ],
     );
   }

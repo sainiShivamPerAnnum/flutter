@@ -41,8 +41,8 @@ class GoldSellViewModel extends BaseViewModel {
       locator<AugmontTransactionService>();
   BankAndPanService? _sellService = locator<BankAndPanService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final TransactionHistoryService? _transactionHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _transactionHistoryService =
+      locator<TxnHistoryService>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   bool isGoldRateFetching = false;

@@ -14,11 +14,11 @@ import 'package:felloapp/util/locator.dart';
 class MiniTransactionCardViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
 
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   AppState? appState;
   bool _isRefreshing = false;
   bool get isRefreshing => this._isRefreshing;
+  List<UserTransaction>? transactions = [];
 
   set isRefreshing(bool value) {
     this._isRefreshing = value;
@@ -27,13 +27,12 @@ class MiniTransactionCardViewModel extends BaseViewModel {
 
   List<UserTransaction>? get txnList => _txnHistoryService!.txnList;
 
-  TransactionHistoryService? get txnHistoryService => _txnHistoryService;
+  TxnHistoryService? get txnHistoryService => _txnHistoryService;
 
   getMiniTransactions(InvestmentType investmentType) async {
-    _logger!.d("Getting mini transactions");
     setState(ViewState.Busy);
-    await _txnHistoryService!.updateTransactions(investmentType);
-
+    await _txnHistoryService.updateTransactions(investmentType);
+    transactions = _txnHistoryService.txnList ?? [];
     setState(ViewState.Idle);
   }
 

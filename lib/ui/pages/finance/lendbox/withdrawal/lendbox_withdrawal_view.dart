@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:animations/animations.dart';
-import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
@@ -16,7 +15,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 class LendboxWithdrawalView extends StatefulWidget {
   @override
@@ -57,12 +56,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
 
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeConsumer<LendboxTransactionService,
-        TransactionServiceProperties>(
-      properties: [
-        TransactionServiceProperties.transactionState,
-        TransactionServiceProperties.transactionStatus
-      ],
+    return Consumer<LendboxTransactionService>(
       builder: (transactionContext, txnService, transactionProperty) {
         return AnimatedContainer(
           width: double.infinity,

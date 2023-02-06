@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -12,7 +11,6 @@ import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
@@ -23,7 +21,6 @@ import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
@@ -32,7 +29,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -66,14 +62,14 @@ class RootViewModel extends BaseViewModel {
   final TambolaService? _tambolaService = locator<TambolaService>();
   final ScratchCardService? _gtService = locator<ScratchCardService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
+  final AppState appState = locator<AppState>();
   final S locale;
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
-  final WinnerService? winnerService = locator<WinnerService>();
+  // final WinnerService? winnerService = locator<WinnerService>();
   final ReferralRepo _refRepo = locator<ReferralRepo>();
-  final TransactionHistoryService _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final PaytmService _paytmService = locator<PaytmService>();
   final ReferralService _referralService = locator<ReferralService>();
@@ -87,8 +83,6 @@ class RootViewModel extends BaseViewModel {
     await _userService.getUserFundWalletData();
     _txnHistoryService.signOut();
     _paytmService.getActiveSubscriptionDetails();
-    await _txnHistoryService.fetchTransactions(
-        subtype: InvestmentType.AUGGOLD99);
     await _journeyService.checkForMilestoneLevelChange();
     await _gtService?.updateUnscratchedGTCount();
     await _journeyService.getUnscratchedGT();
@@ -96,7 +90,7 @@ class RootViewModel extends BaseViewModel {
 
   onInit() {
     AppState.isUserSignedIn = true;
-    AppState().setRootLoadValue = true;
+    appState.setRootLoadValue = true;
     _referralService.verifyReferral();
     _referralService.initDynamicLinks();
     _rootController.currentNavBarItemModel =
@@ -106,6 +100,7 @@ class RootViewModel extends BaseViewModel {
 
   initialize() async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await _userService.userBootUpEE();
       await verifyUserBootupDetails();
       await checkForBootUpAlerts();
       await _userService.getUserFundWalletData();
@@ -115,7 +110,7 @@ class RootViewModel extends BaseViewModel {
       _userService.getProfilePicture();
       _tambolaService!.init();
       _initAdhocNotifications();
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(Duration(seconds: 8), () {
         _marketingService.checkUserDailyAppCheckInStatus().then((value) {
           getHappyHourCampaign();
         });
@@ -128,48 +123,8 @@ class RootViewModel extends BaseViewModel {
 
   onDispose() {
     AppState.isUserSignedIn = false;
+    appState.setRootLoadValue = false;
     _fcmListener!.addIncomingMessageListener(null);
-  }
-
-  void onItemTapped(int index) {
-    if (JourneyService.isAvatarAnimationInProgress) return;
-    _rootController.onChange(_rootController.navItems.values.toList()[index]);
-
-    AppState.delegate!.appState.setCurrentTabIndex = index;
-    trackEvent(index);
-    Haptic.vibrate();
-    if (_rootController.currentNavBarItemModel ==
-        RootController.journeyNavBarItem)
-      _journeyService.checkForMilestoneLevelChange();
-
-    if (_rootController.currentNavBarItemModel ==
-        RootController.tambolaNavBar) {
-      _tambolaService!.completer.future.then((value) {
-        if ((_tambolaService!.initialTicketCount ?? -1) == 0) {
-          if (_tambolaService!.userWeeklyBoards!.length > 0) {
-            _tambolaService!.initialTicketCount =
-                _tambolaService!.userWeeklyBoards!.length;
-            WidgetsBinding.instance.addPostFrameCallback(
-              (timeStamp) {
-                _showTambolaTicketDialog(
-                    _tambolaService!.userWeeklyBoards!.length);
-              },
-            );
-          }
-        }
-      });
-    }
-  }
-
-  _showTambolaTicketDialog(int ticketCount) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
-      PageRouteBuilder(
-          opaque: false,
-          pageBuilder: (BuildContext context, _, __) => TambolaInstantView(
-                ticketCount: ticketCount,
-              )),
-    );
   }
 
   _initAdhocNotifications() {
@@ -274,48 +229,6 @@ class RootViewModel extends BaseViewModel {
           },
         ),
       );
-    }
-  }
-
-  void trackEvent(int index) {
-    if (_rootController.currentNavBarItemModel ==
-        RootController.journeyNavBarItem) {
-      _analyticsService.track(
-          eventName: AnalyticsEvents.journeySection,
-          properties: AnalyticsProperties.getDefaultPropertiesMap());
-    } else if (_rootController.currentNavBarItemModel ==
-        RootController.saveNavBarItem) {
-      _analyticsService.track(
-          eventName: AnalyticsEvents.saveSection,
-          properties: AnalyticsProperties.getDefaultPropertiesMap());
-    } else if (_rootController.currentNavBarItemModel ==
-        RootController.playNavBarItem) {
-      _analyticsService.track(
-          eventName: AnalyticsEvents.playSection,
-          properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-            "Time left for draw Tambola (mins)":
-                AnalyticsProperties.getTimeLeftForTambolaDraw(),
-            "Tambola Tickets Owned":
-                AnalyticsProperties.getTambolaTicketCount(),
-          }));
-    } else if (_rootController.currentNavBarItemModel ==
-        RootController.winNavBarItem) {
-      _analyticsService.track(
-          eventName: "Account section tapped",
-          properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-            "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
-            "Unscratched Ticket Count": _gtService?.unscratchedTicketsCount,
-            "Scratched Ticket Count": (_gtService!.activeScratchCards.length) -
-                _gtService!.unscratchedTicketsCount,
-          }));
-    } else if (_rootController.currentNavBarItemModel ==
-        RootController.tambolaNavBar) {
-      _analyticsService.track(eventName: "Tambola tab tapped", properties: {
-        "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
-        "index": index
-      });
     }
   }
 

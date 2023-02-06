@@ -76,7 +76,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              NewSquareBackground(),
+              const NewSquareBackground(),
               SafeArea(
                 child: PageView(
                   controller: model.pageController,

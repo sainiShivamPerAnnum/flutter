@@ -37,7 +37,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          NewSquareBackground(),
+          const NewSquareBackground(),
           Container(
             width: double.infinity,
             height: double.infinity,

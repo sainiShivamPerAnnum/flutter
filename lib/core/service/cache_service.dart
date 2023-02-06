@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -27,6 +29,15 @@ class CacheService {
       BaseUtil.showNegativeAlert("Isar initialization failed", e.toString(),
           seconds: 20);
       log("ISAR:: Unable to initialize isar");
+    }
+  }
+
+  static Future<void> checkIfInvalidationRequired() async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final _invalidate =
+        AppConfig.getValue(AppConfigKey.invalidateBefore) as int;
+    if (now <= _invalidate) {
+      await CacheService.invalidateAll();
     }
   }
 

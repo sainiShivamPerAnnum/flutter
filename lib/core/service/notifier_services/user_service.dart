@@ -53,7 +53,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final DBModel? _dbModel = locator<DBModel>();
   final CustomLogger _logger = locator<CustomLogger>();
-  // final ApiCacheManager? _apiCacheManager = locator<ApiCacheManager>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
@@ -530,6 +529,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         dynamicUi.save.badgeText?.LENDBOXP2P?.contains("Trending") ?? false;
     if (dynamicUi.save.ctaText != null)
       DynamicUiUtils.ctaText = dynamicUi.save.ctaText!;
+    _rootController.onChange(_rootController.navItems.values.toList()[0]);
   }
 
   diplayUsername(String username) {
@@ -759,4 +759,31 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           locale.authFailed, locale.restartAndTry);
     }
   }
+
+  Future<Map<String?, dynamic>> logUserInstalledApps() async {
+    if (Platform.isAndroid) {
+      Map<String?, dynamic> packages = {};
+      const platform = MethodChannel("methodChannel/deviceData");
+      try {
+        final List result = await platform.invokeMethod('getInstalledApps');
+        for (var e in result) {
+          packages[e["app_name"]] = e["package_name"];
+          // packages.add(_parseData(e));
+          print(packages.length);
+        }
+        return packages;
+      } on PlatformException catch (e) {
+        log("Failed to fetch installed applications $e");
+        return {};
+      }
+    }
+    return {};
+  }
+
+  // Package _parseData(Map<dynamic, dynamic> data) {
+  //   final appName = data["app_name"];
+  //   final packageName = data["package_name"];
+  //   final icon = data["icon"];
+  //   return {"appName": appName, "packageName": packageName};
+  // }
 }

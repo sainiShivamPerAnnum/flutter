@@ -30,102 +30,107 @@ class SellCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return PropertyChangeConsumer<BankAndPanService,
+    return PropertyChangeProvider<BankAndPanService,
         BankAndPanServiceProperties>(
-      properties: [
-        BankAndPanServiceProperties.reachedLockIn,
-        BankAndPanServiceProperties.augmontSellDisabled,
-        BankAndPanServiceProperties.bankDetailsVerified,
-        BankAndPanServiceProperties.kycVerified,
-        BankAndPanServiceProperties.ongoing,
-      ],
-      builder: (ctx, sellService, child) => Container(
-        margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-            color: color,
-            border: Border.all(color: Colors.white.withOpacity(0.4))),
-        child: Column(
-          children: [
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SellText(
-                    investmentType: investmentType,
-                  ),
-                  SellButton(
-                    onTap: () {
-                      BaseUtil.openModalBottomSheet(
-                        backgroundColor: UiConstants.kModalSheetBackgroundColor,
-                        isBarrierDismissible: true,
-                        addToScreenStack: true,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness32),
-                          topRight: Radius.circular(SizeConfig.roundness32),
-                        ),
-                        content: SellingReasonBottomSheet(
-                          investmentType: investmentType,
-                        ),
-                      );
-                    },
-                    isActive: sellService!.getButtonAvailibility(),
-                  ),
-                ],
+      value: locator<BankAndPanService>(),
+      child: PropertyChangeConsumer<BankAndPanService,
+          BankAndPanServiceProperties>(
+        properties: [
+          BankAndPanServiceProperties.reachedLockIn,
+          BankAndPanServiceProperties.augmontSellDisabled,
+          BankAndPanServiceProperties.bankDetailsVerified,
+          BankAndPanServiceProperties.kycVerified,
+          BankAndPanServiceProperties.ongoing,
+        ],
+        builder: (ctx, sellService, child) => Container(
+          margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+              color: color,
+              border: Border.all(color: Colors.white.withOpacity(0.4))),
+          child: Column(
+            children: [
+              SizedBox(
+                height: SizeConfig.padding24,
               ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding10,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: SizeConfig.padding24),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child:
-                    sellService.isKYCVerified && sellService.isBankDetailsAdded
-                        ? SizedBox()
-                        : Text(
-                            "To withdraw, complete the following steps:",
-                            style: TextStyles.sourceSans.body4.colour(
-                              Colors.white,
-                            ),
-                            textAlign: TextAlign.start,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SellText(
+                      investmentType: investmentType,
+                    ),
+                    SellButton(
+                      onTap: () {
+                        BaseUtil.openModalBottomSheet(
+                          backgroundColor:
+                              UiConstants.kModalSheetBackgroundColor,
+                          isBarrierDismissible: true,
+                          addToScreenStack: true,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness32),
+                            topRight: Radius.circular(SizeConfig.roundness32),
                           ),
+                          content: SellingReasonBottomSheet(
+                            investmentType: investmentType,
+                          ),
+                        );
+                      },
+                      isActive: sellService!.getButtonAvailibility(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: SizeConfig.padding12),
-            if (!sellService.isKYCVerified || sellService.userKycData == null)
-              SellActionButton(
-                title: locale.completeKYCText,
-                onTap: navigateToKycScreen,
+              SizedBox(
+                height: SizeConfig.padding10,
               ),
-            if (!sellService.isBankDetailsAdded ||
-                sellService.activeBankAccountDetails == null)
-              SellActionButton(
-                title: locale.addBankDetails,
-                onTap: navigateToBankDetailsScreen,
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.padding24),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: sellService.isKYCVerified &&
+                          sellService.isBankDetailsAdded
+                      ? SizedBox()
+                      : Text(
+                          "To withdraw, complete the following steps:",
+                          style: TextStyles.sourceSans.body4.colour(
+                            Colors.white,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                ),
               ),
-            // SizedBox(height: SizeConfig.padding12),
-            // if (sellService.sellNotice != null &&
-            //     sellService.sellNotice.isNotEmpty)
-            //   SellCardInfoStrips(
-            //     leadingIcon: Icon(
-            //       Icons.warning_amber_rounded,
-            //       color: UiConstants.tertiarySolid.withOpacity(0.5),
-            //     ),
-            //     content: sellService.sellNotice,
-            //     textColor: Colors.amber,
-            //     backgroundColor: Colors.amber.withOpacity(0.16),
-            //   ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-          ],
+              SizedBox(height: SizeConfig.padding12),
+              if (!sellService.isKYCVerified || sellService.userKycData == null)
+                SellActionButton(
+                  title: locale.completeKYCText,
+                  onTap: navigateToKycScreen,
+                ),
+              if (!sellService.isBankDetailsAdded ||
+                  sellService.activeBankAccountDetails == null)
+                SellActionButton(
+                  title: locale.addBankDetails,
+                  onTap: navigateToBankDetailsScreen,
+                ),
+              // SizedBox(height: SizeConfig.padding12),
+              // if (sellService.sellNotice != null &&
+              //     sellService.sellNotice.isNotEmpty)
+              //   SellCardInfoStrips(
+              //     leadingIcon: Icon(
+              //       Icons.warning_amber_rounded,
+              //       color: UiConstants.tertiarySolid.withOpacity(0.5),
+              //     ),
+              //     content: sellService.sellNotice,
+              //     textColor: Colors.amber,
+              //     backgroundColor: Colors.amber.withOpacity(0.16),
+              //   ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+            ],
+          ),
         ),
       ),
     );

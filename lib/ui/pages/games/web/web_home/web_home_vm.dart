@@ -337,9 +337,9 @@ class WebHomeViewModel extends BaseViewModel {
     );
   }
 
-  refreshLeaderboard() async {
-    await _lbService!.fetchWebGameLeaderBoard(game: currentGame);
-  }
+  // refreshLeaderboard() async {
+  //   await _lbService!.fetchWebGameLeaderBoard(game: currentGame);
+  // }
 
   setGameDetails(String game) async {
     isGameLoading = true;
