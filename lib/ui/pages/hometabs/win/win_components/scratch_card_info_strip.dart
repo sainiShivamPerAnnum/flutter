@@ -25,6 +25,7 @@ class ScratchCardsInfoStrip extends StatelessWidget {
           height: 0.3,
           width: SizeConfig.screenWidth,
           margin: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding10,
               horizontal: SizeConfig.pageHorizontalMargins),
           color: Color(0xff9EA1A1),
         ),
@@ -70,6 +71,7 @@ class ScratchCardsInfoStrip extends StatelessWidget {
           height: 0.3,
           width: SizeConfig.screenWidth,
           margin: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding10,
               horizontal: SizeConfig.pageHorizontalMargins),
           color: Color(0xff9EA1A1),
         ),

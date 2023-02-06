@@ -34,6 +34,8 @@ class Root extends StatelessWidget {
           body: Stack(
             children: [
               const NewSquareBackground(),
+
+              RootAppBar(),
               RefreshIndicator(
                 triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 color: UiConstants.primaryColor,
@@ -48,7 +50,6 @@ class Root extends StatelessWidget {
                   },
                 ),
               ),
-              RootAppBar(),
               if (model.showHappyHourBanner)
                 Consumer<AppState>(
                   builder: (ctx, m, child) => AnimatedPositioned(
@@ -107,9 +108,9 @@ class RootAppBar extends StatelessWidget {
                                     RootController.saveNavBarItem)
                                 ? (userservice!.baseUser!.segments
                                         .contains("NEW_USER"))
-                                    ? Colors.transparent
+                                    ? UiConstants.kBackgroundColor
                                     : UiConstants.kSecondaryBackgroundColor
-                                : Colors.transparent,
+                                : UiConstants.kBackgroundColor,
                         child: FAppBar(
                           type: FaqsType.play,
                           backgroundColor: (locator<RootController>()
@@ -117,9 +118,9 @@ class RootAppBar extends StatelessWidget {
                                   RootController.saveNavBarItem)
                               ? (userservice!.baseUser!.segments
                                       .contains("NEW_USER"))
-                                  ? Colors.transparent
+                                  ? UiConstants.kBackgroundColor
                                   : UiConstants.kSecondaryBackgroundColor
-                              : Colors.transparent,
+                              : UiConstants.kBackgroundColor,
                           showAvatar: true,
                         ),
                       )

@@ -31,7 +31,6 @@ import 'package:flutter/services.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:upi_pay/upi_pay.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../enums/app_config_keys.dart';
 import '../../model/app_config_model.dart';
@@ -479,7 +478,7 @@ class PaytmService extends PropertyChangeNotifier<PaytmServiceProperties> {
       } else if (upiApplication.appName == "PhonePe") {
         url = "phonepe:" + url.split(":").last;
       }
-      launchUrl(Uri.parse(url)).then((value) async {
+      BaseUtil.launchUrl(url).then((value) async {
         _txnService = investmentType == InvestmentType.LENDBOXP2P
             ? locator<LendboxTransactionService>()
             : locator<AugmontTransactionService>();

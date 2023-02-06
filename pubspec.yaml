@@ -89,7 +89,7 @@ dependencies:
   truecaller_sdk: ^0.1.1
   upi_pay:
     path: packages/upi/
-  url_launcher: ^6.0.9
+  url_launcher: ^6.1.8
   video_player: null
   webengage_flutter: ^1.2.1
   webview_flutter: ^3.0.4

@@ -12,7 +12,6 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
-import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
@@ -51,13 +50,12 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
@@ -482,7 +480,7 @@ class BaseUtil extends ChangeNotifier {
     bool? hapticVibrate,
     required bool isBarrierDismissible,
     ValueChanged<dynamic>? callback,
-  }) async{
+  }) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     print("Current Stack: ${AppState.screenStack}");
@@ -601,10 +599,8 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static void launchUrl(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      launchUrl(url);
-    } else {
+  static Future<void> launchUrl(String url) async {
+    if (!await launchUrlString(url, mode: LaunchMode.externalApplication)) {
       BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
           "Please try after some time");
     }

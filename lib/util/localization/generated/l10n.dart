@@ -1741,7 +1741,7 @@ class S {
   /// `To enable sell,\ncomplete the following:`
   String get enableSell {
     return Intl.message(
-      'To enable sell,complete the following:',
+      'To enable sell,\ncomplete the following:',
       name: 'enableSell',
       desc: '',
       args: [],

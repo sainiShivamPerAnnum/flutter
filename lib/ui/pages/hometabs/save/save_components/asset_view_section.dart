@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -8,12 +7,10 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
@@ -75,261 +72,240 @@ class AssetSectionView extends StatelessWidget {
           final balance = type == InvestmentType.AUGGOLD99
               ? model.userFundWallet?.augGoldQuantity ?? 0
               : model.userFundWallet?.wLbBalance ?? 0;
-          return BaseView<SaveViewModel>(
-            builder: (context, state, _) {
-              return RefreshIndicator(
-                color: UiConstants.primaryColor,
-                backgroundColor: Colors.black,
-                onRefresh: () async {
-                  state.refreshTransactions(type);
-                },
-                child: Scaffold(
-                  backgroundColor: UiConstants.kBackgroundColor,
-                  body: Stack(
-                    children: [
-                      Container(
-                        height: SizeConfig.screenHeight! * 0.5,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [
-                                _getBackgroundColor,
-                                _secondaryColor,
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter),
+          return Scaffold(
+            backgroundColor: UiConstants.kBackgroundColor,
+            body: Stack(
+              children: [
+                Container(
+                  height: SizeConfig.screenHeight! * 0.5,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      _getBackgroundColor,
+                      _secondaryColor,
+                    ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: SizeConfig.padding16),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: SizeConfig.padding20,
                         ),
-                      ),
-                      SingleChildScrollView(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: SizeConfig.padding16),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: SizeConfig.padding20,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.3),
-                                      blurRadius: 50,
-                                    )
-                                  ],
-                                ),
-                                child: SvgPicture.asset(
-                                  _getAsset,
-                                  height: SizeConfig.screenHeight! * 0.18,
-                                ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding4,
-                              ),
-                              Text(
-                                _isGold ? "Digital Gold" : "Fello Flo",
-                                style: TextStyles.rajdhaniSB.title3
-                                    .colour(Colors.white),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding4,
-                              ),
-
-                              Text(
-                                _isGold ? _goldSubtitle : _floSubtitle,
-                                style: TextStyles.sourceSans.body2
-                                    .colour(_subTitleColor),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding10,
-                              ),
-                              if (balance == 0)
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.padding40),
-                                  child: Text(
-                                    _isGold
-                                        ? __goldDescription
-                                        : _floDescription,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyles.sourceSans.body3.colour(
-                                      Colors.white.withOpacity(0.6),
-                                    ),
-                                  ),
-                                ),
-                              if (balance != 0)
-                                _BuildOwnAsset(
-                                  type: type,
-                                  userService: model,
-                                ),
-                              SizedBox(
-                                height: SizeConfig.padding4,
-                              ),
-                              if (balance == 0) ...[
-                                SizedBox(
-                                  height: SizeConfig.padding10,
-                                ),
-                                _buildInfoSection(),
-                                SizedBox(
-                                  height: SizeConfig.padding10,
-                                ),
-                              ],
-                              //TODO: Find a better slider to do this
-
-                              if (!isNewUser) ...[
-                                MiniTransactionCard(investmentType: type),
-                                if (balance != 0) ...[
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: SizeConfig.padding10),
-                                      child: TitleSubtitleContainer(
-                                          title: "Withdrawal",
-                                          leadingPadding: false),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding12,
-                                  ),
-                                  SellCardView(investmentType: type),
-                                  SizedBox(
-                                    height: SizeConfig.padding28,
-                                  ),
-                                ]
-                              ],
-                              SizedBox(
-                                height: SizeConfig.padding8,
-                              ),
-                              Text(
-                                _isGold
-                                    ? "How to save in Digital Gold?"
-                                    : "How Fello Flo works?",
-                                style: TextStyles.rajdhaniSB.title5,
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding24,
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding20),
-                                child: TambolaVideoPlayer(
-                                    link: type == InvestmentType.AUGGOLD99
-                                        ? "https://fello.in/videos/howToInvest.webm"
-                                        : "https://d37gtxigg82zaw.cloudfront.net/flo-workflow.mp4"),
-                              ),
-                              ...[
-                                SizedBox(
-                                  height: SizeConfig.padding24,
-                                ),
-                                _CircularSlider(
-                                  isNewUser: isNewUser,
-                                  type: type,
-                                )
-                              ],
-
-                              SizedBox(
-                                height: SizeConfig.padding40,
-                              ),
-                              _WhySection(isDigitalGold: _isGold),
-                              SizedBox(
-                                height: SizeConfig.screenHeight! * 0.06,
-                              ),
-                              ComparisonBox(
-                                backgroundColor: _getBackgroundColor,
-                                isGold: _isGold,
-                              ),
-                              _Footer(
-                                isGold: _isGold,
-                              ),
-                              TermsAndConditions(url: Constants.savingstnc),
-                              SizedBox(
-                                height: SizeConfig.screenHeight! * 0.15,
-                              ),
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withOpacity(0.3),
+                                blurRadius: 50,
+                              )
                             ],
                           ),
+                          child: SvgPicture.asset(
+                            _getAsset,
+                            height: SizeConfig.screenHeight! * 0.18,
+                          ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          color: Color(0xff232326).withOpacity(0.9),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        Text(
+                          _isGold ? "Digital Gold" : "Fello Flo",
+                          style:
+                              TextStyles.rajdhaniSB.title3.colour(Colors.white),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+
+                        Text(
+                          _isGold ? _goldSubtitle : _floSubtitle,
+                          style: TextStyles.sourceSans.body2
+                              .colour(_subTitleColor),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding10,
+                        ),
+                        if (balance == 0)
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding40),
+                            child: Text(
+                              _isGold ? __goldDescription : _floDescription,
+                              textAlign: TextAlign.center,
+                              style: TextStyles.sourceSans.body3.colour(
+                                Colors.white.withOpacity(0.6),
+                              ),
+                            ),
+                          ),
+                        if (balance != 0)
+                          _BuildOwnAsset(
+                            type: type,
+                            userService: model,
+                          ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        if (balance == 0) ...[
+                          SizedBox(
+                            height: SizeConfig.padding10,
+                          ),
+                          _buildInfoSection(),
+                          SizedBox(
+                            height: SizeConfig.padding10,
+                          ),
+                        ],
+                        //TODO: Find a better slider to do this
+
+                        if (!isNewUser) ...[
+                          MiniTransactionCard(investmentType: type),
+                          if (balance != 0) ...[
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(left: SizeConfig.padding10),
+                                child: TitleSubtitleContainer(
+                                    title: "Withdrawal", leadingPadding: false),
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding12,
+                            ),
+                            SellCardView(investmentType: type),
+                            SizedBox(
+                              height: SizeConfig.padding28,
+                            ),
+                          ]
+                        ],
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+                        Text(
+                          _isGold
+                              ? "How to save in Digital Gold?"
+                              : "How Fello Flo works?",
+                          style: TextStyles.rajdhaniSB.title3,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+
+                        Padding(
                           padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding14)
-                              .copyWith(top: 2),
-                          width: double.infinity,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    _getAsset,
-                                    height: SizeConfig.screenHeight! * 0.03,
-                                    width: SizeConfig.screenHeight! * 0.03,
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding1,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig.padding4),
-                                    child: Text(
-                                      _isGold
-                                          ? DynamicUiUtils.ctaText.AUGGOLD99 ??
-                                              ""
-                                          : DynamicUiUtils.ctaText.LENDBOXP2P ??
-                                              "",
-                                      style: TextStyles.sourceSans.body4.colour(
-                                        UiConstants.kTextColor2,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding4,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.screenWidth! * 0.8,
-                                height: SizeConfig.screenHeight! * 0.07,
-                                child: AppPositiveBtn(
-                                    btnText: "SAVE",
-                                    onPressed: () {
-                                      BaseUtil().openRechargeModalSheet(
-                                          investmentType: type);
-                                    }),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding2,
-                              ),
-                            ],
-                          ),
+                              horizontal: SizeConfig.padding20),
+                          child: TambolaVideoPlayer(
+                              link: "https://fello.in/videos/howToInvest.webm"),
                         ),
-                      ),
-                      SafeArea(
-                        child: Row(
+                        ...[
+                          SizedBox(
+                            height: SizeConfig.padding24,
+                          ),
+                          _CircularSlider(
+                            isNewUser: isNewUser,
+                            type: type,
+                          )
+                        ],
+
+                        SizedBox(
+                          height: SizeConfig.padding40,
+                        ),
+                        _WhySection(isDigitalGold: _isGold),
+                        SizedBox(
+                          height: SizeConfig.screenHeight! * 0.06,
+                        ),
+                        ComparisonBox(
+                          backgroundColor: _getBackgroundColor,
+                          isGold: _isGold,
+                        ),
+                        _Footer(
+                          isGold: _isGold,
+                        ),
+                        TermsAndConditions(url: Constants.savingstnc),
+                        SizedBox(
+                          height: SizeConfig.screenHeight! * 0.15,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    color: Color(0xff232326).withOpacity(0.9),
+                    padding:
+                        EdgeInsets.symmetric(vertical: SizeConfig.padding14)
+                            .copyWith(top: 2),
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            BackButton(
-                              color: Colors.white,
-                              onPressed: () => Navigator.of(context).pop(),
+                            SvgPicture.asset(
+                              _getAsset,
+                              height: SizeConfig.screenHeight! * 0.03,
+                              width: SizeConfig.screenHeight! * 0.03,
                             ),
-                            Spacer(),
-                            FaqPill(
-                              type: FaqsType.savings,
+                            SizedBox(
+                              height: SizeConfig.padding1,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding4),
+                              child: Text(
+                                _isGold
+                                    ? DynamicUiUtils.ctaText.AUGGOLD99 ?? ""
+                                    : DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
+                                style: TextStyles.sourceSans.body4.colour(
+                                  UiConstants.kTextColor2,
+                                ),
+                              ),
                             ),
                           ],
                         ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.screenWidth! * 0.8,
+                          height: SizeConfig.screenHeight! * 0.07,
+                          child: AppPositiveBtn(
+                              btnText: "SAVE",
+                              onPressed: () {
+                                BaseUtil().openRechargeModalSheet(
+                                    investmentType: type);
+                              }),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding2,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SafeArea(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      BackButton(
+                        color: Colors.white,
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      Spacer(),
+                      FaqPill(
+                        type: FaqsType.savings,
                       ),
                     ],
                   ),
                 ),
-              );
-            },
+              ],
+            ),
           );
         });
   }
@@ -515,19 +491,19 @@ class ComparisonBox extends StatelessWidget {
                         EdgeInsets.symmetric(vertical: SizeConfig.padding8),
                     child: RichText(
                       text: TextSpan(
-                        text: isGold ? "Gold " : "Fello Flo ",
+                        text: isGold ? "Gold " : "Flo🤟🏻 ",
                         style:
-                            TextStyles.rajdhaniSB.title5.colour(Colors.white),
+                            TextStyles.rajdhaniSB.title3.colour(Colors.white),
                         children: [
                           TextSpan(
                             text: "vs ",
-                            style: TextStyles.rajdhaniSB.title5.colour(
+                            style: TextStyles.rajdhaniSB.title3.colour(
                               Color(0xffF6CC60),
                             ),
                           ),
                           TextSpan(
                             text: "other investments",
-                            style: TextStyles.rajdhaniSB.title5
+                            style: TextStyles.rajdhaniSB.title3
                                 .colour(Colors.white),
                           )
                         ],
@@ -803,32 +779,32 @@ class _WhySection extends StatelessWidget {
   final Map<dynamic, Widget> goldPros = {
     Assets.arrowIcon: RichText(
       text: TextSpan(
-          text: "Pure 99.9% ",
+          text: "Steady returns ",
           style: TextStyles.sourceSans.body2.colour(Colors.white),
           children: [
             TextSpan(
-              text: "BIS Hallmark Gold",
+              text: "on the investment",
               style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
             )
           ]),
     ),
     Assets.timer: RichText(
       text: TextSpan(
-          text: "Stable ",
+          text: "Interest Credited",
           style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
           children: [
             TextSpan(
-                text: "returns",
+                text: "Everyday",
                 style: TextStyles.sourceSans.body2.colour(Colors.white))
           ]),
     ),
     Assets.shield: RichText(
       text: TextSpan(
-        text: "Safest ",
+        text: "No risks ",
         style: TextStyles.sourceSans.body2.colour(Colors.white),
         children: [
           TextSpan(
-              text: "mode of saving",
+              text: "involved",
               style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
         ],
       ),
@@ -883,7 +859,7 @@ class _WhySection extends StatelessWidget {
         children: [
           Text(
             "Why ${isDigitalGold ? "Digital Gold" : "Fello Flo"}?",
-            style: TextStyles.rajdhaniSB.title5,
+            style: TextStyles.rajdhaniSB.title3,
           ),
           SizedBox(
             height: SizeConfig.padding14,
@@ -917,10 +893,12 @@ class _WhySection extends StatelessWidget {
                             fit: BoxFit.contain,
                           ),
                         )
-                      : Icon(
-                          key,
-                          size: SizeConfig.padding16,
-                          color: Color(0xff62E3C4).withOpacity(0.7),
+                      : Center(
+                          child: Icon(
+                            key,
+                            size: SizeConfig.padding20,
+                            color: Color(0xff62E3C4).withOpacity(0.7),
+                          ),
                         ),
                 ),
                 SizedBox(
@@ -1006,10 +984,10 @@ class _CircularSlider extends StatefulWidget {
 }
 
 class _CircularSliderState extends State<_CircularSlider> {
-  double _volumeValue = 10000;
+  double _volumeValue = 500;
   bool isEventSent = false;
   void onVolumeChanged(double value) {
-    if (!isEventSent) {
+    if (isEventSent) {
       locator<AnalyticsService>().track(
           eventName: "Return Calculator Used",
           properties: {"new user": widget.isNewUser});
@@ -1093,7 +1071,7 @@ class _CircularSliderState extends State<_CircularSlider> {
           top: 12,
           child: Text(
             "Return Calculator",
-            style: TextStyles.rajdhaniSB.title5,
+            style: TextStyles.rajdhaniSB.title3,
           ),
         ),
         Padding(

@@ -49,7 +49,7 @@ class CampaignCardSection extends StatelessWidget {
         // right: SizeConfig.padding16,
       ),
       child: Container(
-        height: SizeConfig.screenWidth! * 0.57,
+        height: SizeConfig.screenWidth! * 0.5,
         width: SizeConfig.screenWidth,
         child: saveVm.isChallengesLoading
             ? SizedBox()
