@@ -332,24 +332,7 @@ class GoldSellViewModel extends BaseViewModel {
     _augTxnService!.currentTxnAmount = goldAmountFromGrams;
     _augTxnService!.currentTxnGms = sellGramAmount;
     _augTxnService!.isGoldSellInProgress = true;
-    if (responseModel.data!.limitQuantity <= 0) {
-      AppState.screenStack.add(ScreenItem.dialog);
-      await BaseUtil.openDialog(
-        isBarrierDismissible: false,
-        addToScreenStack: true,
-        content: ConfirmationDialog(
-            title: responseModel.data!.limitHeading,
-            description: responseModel.data!.limitMessage,
-            showSecondaryButton: false,
-            buttonText: "OK",
-            confirmAction: () {
-              AppState.backButtonDispatcher!.didPopRoute();
-            },
-            cancelAction: () {}),
-      );
 
-      return;
-    }
     AppState.screenStack.add(ScreenItem.loader);
     final res =
         await _augmontModel!.initiateWithdrawal(goldRates!, sellGramAmount);

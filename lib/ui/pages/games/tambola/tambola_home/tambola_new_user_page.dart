@@ -91,21 +91,18 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
     _scrollController = ScrollController();
 
     if (widget.showPrizeSection) {
-      Future.delayed(Duration(seconds: 1), () {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          _scrollController?.animateTo(SizeConfig.screenWidth! * 1.7,
-              duration: Duration(milliseconds: 500),
-              curve: Curves.fastLinearToSlowEaseIn);
-        });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _scrollController?.animateTo(SizeConfig.screenWidth! * 1.7,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.fastLinearToSlowEaseIn);
       });
     }
+
     if (widget.showWinners) {
-      Future.delayed(Duration(seconds: 1), () {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          _scrollController?.animateTo(SizeConfig.screenWidth! * 2.2,
-              duration: Duration(milliseconds: 500),
-              curve: Curves.fastLinearToSlowEaseIn);
-        });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _scrollController?.animateTo(SizeConfig.screenWidth! * 2.6,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.fastLinearToSlowEaseIn);
       });
     }
 

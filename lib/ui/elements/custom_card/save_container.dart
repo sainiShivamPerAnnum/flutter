@@ -50,7 +50,7 @@ final _floMarquee = [
   "7 days lock-in period"
 ];
 
-class SaveContainer extends StatelessWidget {
+class SaveContainer extends StatefulWidget {
   SaveContainer({
     Key? key,
     required this.investmentType,
@@ -62,8 +62,21 @@ class SaveContainer extends StatelessWidget {
   final bool isPopular;
   final List<String> bottomStrip;
 
-  int value = 500;
   final bool isGold;
+
+  @override
+  State<SaveContainer> createState() => _SaveContainerState();
+}
+
+class _SaveContainerState extends State<SaveContainer> {
+  late int value;
+
+  @override
+  initState() {
+    value = widget.investmentType == InvestmentType.AUGGOLD99 ? 500 : 1000;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -72,8 +85,10 @@ class SaveContainer extends StatelessWidget {
           eventName: AnalyticsEvents.assetBannerTapped,
           properties: AnalyticsProperties.getDefaultPropertiesMap(
             extraValuesMap: {
-              'Asset':
-                  investmentType == InvestmentType.AUGGOLD99 ? "Gold" : "Flo",
+              "isNewUser": true,
+              'Asset': widget.investmentType == InvestmentType.AUGGOLD99
+                  ? "Gold"
+                  : "Flo",
               "Failed transaction count":
                   AnalyticsProperties.getFailedTxnCount(),
               "Successs transaction count":
@@ -87,7 +102,7 @@ class SaveContainer extends StatelessWidget {
         AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.addWidget,
             page: AssetViewPageConfig,
-            widget: AssetSectionView(type: investmentType));
+            widget: AssetSectionView(type: widget.investmentType));
       },
       child: Padding(
         padding: EdgeInsets.only(bottom: SizeConfig.padding20),
@@ -98,20 +113,22 @@ class SaveContainer extends StatelessWidget {
             color: getCardBgColor,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 1))],
-            border: isPopular ? Border.all(color: borderColor, width: 2) : null,
+            border: widget.isPopular
+                ? Border.all(color: borderColor, width: 2)
+                : null,
           ),
           child: Stack(
             children: [
               Column(
                 children: [
                   _Header(
-                    investmentType: investmentType,
+                    investmentType: widget.investmentType,
                   ),
                   SizedBox(
                     height: SizeConfig.padding20 + SizeConfig.padding2,
                   ),
                   _InvestmentDetails(
-                    type: investmentType,
+                    type: widget.investmentType,
                     initialValue: value,
                     onChange: (p0) => value = p0,
                   ),
@@ -164,20 +181,20 @@ class SaveContainer extends StatelessWidget {
                                   locator<AnalyticsService>().track(
                                       eventName: "Asset Learn More Tapped",
                                       properties: {
-                                        "asset name": investmentType ==
+                                        "asset name": widget.investmentType ==
                                                 InvestmentType.AUGGOLD99
                                             ? "Gold"
                                             : "Flo",
                                         "amt": value,
-                                        "isPopular": isPopular,
+                                        "isPopular": widget.isPopular,
                                         // "popularTag":
                                       });
                                   AppState.delegate!.appState.currentAction =
                                       PageAction(
                                     state: PageState.addWidget,
                                     page: AssetViewPageConfig,
-                                    widget:
-                                        AssetSectionView(type: investmentType),
+                                    widget: AssetSectionView(
+                                        type: widget.investmentType),
                                   );
                                 },
                                 title: "LEARN MORE"),
@@ -192,7 +209,7 @@ class SaveContainer extends StatelessWidget {
                                 locator<AnalyticsService>().track(
                                     eventName: "Save on Asset Banner",
                                     properties: {
-                                      "asset name": investmentType ==
+                                      "asset name": widget.investmentType ==
                                               InvestmentType.AUGGOLD99
                                           ? "Gold"
                                           : "Flo",
@@ -208,7 +225,8 @@ class SaveContainer extends StatelessWidget {
                                       "amt": value
                                     });
                                 BaseUtil().openRechargeModalSheet(
-                                    investmentType: investmentType, amt: value);
+                                    investmentType: widget.investmentType,
+                                    amt: value);
                               },
                               title: "SAVE NOW",
                             ),
@@ -222,9 +240,10 @@ class SaveContainer extends StatelessWidget {
                     height: SizeConfig.screenHeight! * 0.04,
                     width: double.infinity,
                     child: Builder(builder: (context) {
-                      final type = investmentType == InvestmentType.AUGGOLD99
-                          ? _goldMarquee
-                          : _floMarquee;
+                      final type =
+                          widget.investmentType == InvestmentType.AUGGOLD99
+                              ? _goldMarquee
+                              : _floMarquee;
                       return CarouselSlider.builder(
                         itemCount: type.length,
                         itemBuilder: (context, index, realIndex) => Text(
@@ -245,7 +264,7 @@ class SaveContainer extends StatelessWidget {
                   // ),
                 ],
               ),
-              if (isPopular)
+              if (widget.isPopular)
                 Align(
                   alignment: Alignment.topCenter,
                   child: Container(
@@ -265,7 +284,7 @@ class SaveContainer extends StatelessWidget {
                           width: SizeConfig.padding4,
                         ),
                         Text(
-                          investmentType == InvestmentType.AUGGOLD99
+                          widget.investmentType == InvestmentType.AUGGOLD99
                               ? DynamicUiUtils.goldTag
                               : DynamicUiUtils.lbTag,
                           style: TextStyles.sourceSansSB.body4
@@ -283,7 +302,7 @@ class SaveContainer extends StatelessWidget {
   }
 
   Widget _buildInformationRow() {
-    final info = isGold ? _goldInfo : _lbInfo;
+    final info = widget.isGold ? _goldInfo : _lbInfo;
 
     List<Widget> children = [];
 
@@ -332,13 +351,14 @@ class SaveContainer extends StatelessWidget {
   }
 
   Color get getCardBgColor {
-    if (isGold) return Color(0xff293566);
+    if (widget.isGold) return Color(0xff293566);
 
     return Color(0xff173B3F);
   }
 
   //TODO: Get a border color for lendbox container
-  Color get borderColor => isGold ? Color(0xff93B5FE) : Color(0xff3CB9A4);
+  Color get borderColor =>
+      widget.isGold ? Color(0xff93B5FE) : Color(0xff3CB9A4);
 }
 
 class _InvestmentDetails extends StatelessWidget {
@@ -399,7 +419,7 @@ class _InvestmentDetails extends StatelessWidget {
                 valueListenable: _onValueChanged,
                 builder: (context, snapshot, child) {
                   return Text(
-                      "₹${12.calculateCompoundInterest(type, _onValueChanged.value * 1.0)}",
+                      "₹${3.calculateCompoundInterest(type, _onValueChanged.value * 1.0)}",
                       style: TextStyles.rajdhaniSB.title4);
                 },
               )

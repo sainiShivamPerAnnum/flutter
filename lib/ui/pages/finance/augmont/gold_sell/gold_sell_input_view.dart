@@ -1,10 +1,13 @@
 //Project Imports
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/sell_confirmation_screen.dart';
@@ -39,7 +42,10 @@ class GoldSellInputView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: SizeConfig.padding16),
-            RechargeModalSheetAppBar(txnService: augTxnService),
+            RechargeModalSheetAppBar(
+                txnService: augTxnService,
+                trackCloseTapped: () =>
+                    AppState.backButtonDispatcher!.didPopRoute()),
             SizedBox(
               height: SizeConfig.padding24,
             ),
@@ -226,7 +232,22 @@ class GoldSellInputView extends StatelessWidget {
                     child: ReactivePositiveAppButton(
                       btnText: locale.saveSellButton,
                       onPressed: () async {
-                        if (!augTxnService.isGoldSellInProgress &&
+                        if (model.responseModel.data!.limitQuantity <= 0) {
+                          await BaseUtil.openDialog(
+                            isBarrierDismissible: false,
+                            addToScreenStack: true,
+                            content: ConfirmationDialog(
+                                title: model.responseModel.data!.limitHeading,
+                                description:
+                                    model.responseModel.data!.limitMessage,
+                                showSecondaryButton: false,
+                                buttonText: "OK",
+                                confirmAction: () {
+                                  AppState.backButtonDispatcher!.didPopRoute();
+                                },
+                                cancelAction: () {}),
+                          );
+                        } else if (!augTxnService.isGoldSellInProgress &&
                             !model.isQntFetching) {
                           FocusScope.of(context).unfocus();
                           bool isDetailComplete =

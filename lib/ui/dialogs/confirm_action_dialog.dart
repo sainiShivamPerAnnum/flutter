@@ -111,7 +111,7 @@ class _FormDialogState extends State<ConfirmationDialog> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (widget.showSecondaryButton)
+                      if (widget.showSecondaryButton) ...[
                         Expanded(
                           child: AppNegativeBtn(
                             width: SizeConfig.screenWidth! * 0.40,
@@ -121,19 +121,22 @@ class _FormDialogState extends State<ConfirmationDialog> {
                             },
                           ),
                         ),
-                      SizedBox(
-                        width: SizeConfig.padding10,
-                      ),
+                        SizedBox(
+                          width: SizeConfig.padding10,
+                        ),
+                      ],
                       Expanded(
-                        child: AppPositiveBtn(
-                          btnText: widget.buttonText,
-                          width: SizeConfig.screenWidth! * 0.40,
-                          onPressed: () {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            return widget.confirmAction();
-                          },
+                        child: Center(
+                          child: AppPositiveBtn(
+                            btnText: widget.buttonText,
+                            width: SizeConfig.screenWidth! * 0.40,
+                            onPressed: () {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              return widget.confirmAction();
+                            },
+                          ),
                         ),
                       ),
                     ],
