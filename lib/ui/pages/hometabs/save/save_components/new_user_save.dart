@@ -8,6 +8,7 @@ import 'package:felloapp/ui/elements/custom_card/save_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -88,7 +89,7 @@ class NewUserSaveView extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding10,
             ),
-            LottieBuilder.asset("assets/lotties/Inapp scroll animation.json"),
+            LottieBuilder.asset(Assets.inAppScrollAnimation),
             SizedBox(height: SizeConfig.navBarHeight),
           ],
         ),

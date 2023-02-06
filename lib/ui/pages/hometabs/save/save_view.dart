@@ -41,7 +41,7 @@ class SaveViewWrapper extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
         properties: [UserServiceProperties.mySegments],
         builder: (_, prop, ___) {
-          if (locator<UserService>().baseUser!.segments.contains("NEW_USER")) {
+          if (prop!.baseUser!.segments.contains("NEW_USER")) {
             return NewUserSaveView(
               model: model,
             );

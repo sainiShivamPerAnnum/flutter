@@ -10,7 +10,8 @@ class Assets {
       'images/onboard_collage-small.png';
 
   static final String noTransaction = "assets/vectors/no-transactions.png";
-
+  static final inAppScrollAnimation =
+      "assets/lotties/Inapp scroll animation.json";
   static final String augmontShare = "images/augmont-share.png";
   static final String preAutosave = "assets/images/preautosave.png";
   static final String customAvatar = 'assets/vectors/userAvatars/CUSTOM.svg';

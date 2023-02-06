@@ -26,7 +26,7 @@ class SellCardView extends StatelessWidget {
 
   Color get color => investmentType == InvestmentType.AUGGOLD99
       ? Color(0xff303B6A)
-      : Color(0xff023C40);
+      : UiConstants.kFloContainerColor;
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);

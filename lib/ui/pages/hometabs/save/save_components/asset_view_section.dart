@@ -6,9 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/ui/elements/buttons/black_white_button/black_white_button.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
@@ -20,10 +18,10 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -75,7 +73,7 @@ class AssetSectionView extends StatelessWidget {
               ? model.userFundWallet!.augGoldQuantity
               : model.userFundWallet!.wLbBalance;
           return Scaffold(
-            backgroundColor: Color(0xff232326),
+            backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(
               children: [
                 Container(
@@ -263,7 +261,7 @@ class AssetSectionView extends StatelessWidget {
                                     ? DynamicUiUtils.ctaText.AUGGOLD99 ?? ""
                                     : DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
                                 style: TextStyles.sourceSans.body4.colour(
-                                  Color(0xff919193),
+                                  UiConstants.kTextColor2,
                                 ),
                               ),
                             ),
@@ -358,14 +356,15 @@ class AssetSectionView extends StatelessWidget {
   }
 
   Color get _getBackgroundColor =>
-      _isGold ? Color(0xff39498C) : Color(0xff023C40);
+      _isGold ? UiConstants.kGoldContainerColor: UiConstants.kFloContainerColor;
   Color get _secondaryColor => _isGold
       ? Color(0xff293566).withOpacity(0)
       : Color(0xff297264).withOpacity(0);
 
   String get _getAsset => _isGold ? Assets.goldAsset : Assets.floAsset;
 
-  Color get _subTitleColor => _isGold ? Color(0xff93B5FE) : Color(0xff62E3C4);
+  Color get _subTitleColor =>
+      _isGold ? UiConstants.kBlogTitleColor : UiConstants.kTabBorderColor;
 }
 
 class _BuildOwnAsset extends StatelessWidget {
@@ -457,7 +456,7 @@ class _BuildOwnAsset extends StatelessWidget {
   }
 
   Color get color =>
-      type == InvestmentType.AUGGOLD99 ? Color(0xff303B6A) : Color(0xff023C40);
+      type == InvestmentType.AUGGOLD99 ? Color(0xff303B6A) : UiConstants.kFloContainerColor;
 }
 
 class ComparisonBox extends StatelessWidget {
@@ -471,7 +470,7 @@ class ComparisonBox extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(bottom: SizeConfig.padding20),
-      color: Color(0xff1A1A1A),
+      color: UiConstants.kArrowButtonBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -521,7 +520,7 @@ class ComparisonBox extends StatelessWidget {
                     margin:
                         EdgeInsets.symmetric(horizontal: SizeConfig.padding40),
                     padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding28,
+                        horizontal: SizeConfig.padding24,
                         vertical: SizeConfig.padding10),
                     decoration: BoxDecoration(
                       color: backgroundColor,
@@ -574,7 +573,7 @@ class ComparisonBox extends StatelessWidget {
                     items: [
                       Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding34,
+                            horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
                           color: Color(0xff323232),
@@ -618,7 +617,7 @@ class ComparisonBox extends StatelessWidget {
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding34,
+                            horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
                           color: Color(0xff323232),
@@ -659,7 +658,7 @@ class ComparisonBox extends StatelessWidget {
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding34,
+                            horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
                           color: Color(0xff323232),
@@ -700,7 +699,7 @@ class ComparisonBox extends StatelessWidget {
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding34,
+                            horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
                           color: Color(0xff323232),
@@ -942,7 +941,7 @@ class _Footer extends StatelessWidget {
                 TextSpan(
                   text: remaining,
                   style: TextStyles.sourceSansSB.title5.colour(
-                    Color(0xff919193),
+                    UiConstants.kTextColor2,
                   ),
                 )
               ],
@@ -1082,13 +1081,13 @@ class _CircularSliderState extends State<_CircularSlider> {
                         Text(
                           "₹" +
                               6.getReturns(
-                                  widget.type, _volumeValue.round(), 0),
+                                  widget.type, _volumeValue, 0),
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
                           "6 mo",
                           style: TextStyles.sourceSans.body3.colour(
-                            Color(0xff919193),
+                            UiConstants.kTextColor2,
                           ),
                         )
                       ],
@@ -1102,13 +1101,13 @@ class _CircularSliderState extends State<_CircularSlider> {
                         Text(
                           "₹" +
                               12.getReturns(
-                                  widget.type, _volumeValue.round(), 0),
+                                  widget.type, _volumeValue, 0),
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
                           "1 Y",
                           style: TextStyles.sourceSans.body3.colour(
-                            Color(0xff919193),
+                            UiConstants.kTextColor2,
                           ),
                         )
                       ],
@@ -1122,13 +1121,13 @@ class _CircularSliderState extends State<_CircularSlider> {
                         Text(
                           "₹" +
                               3.calculateCompoundInterest(
-                                  widget.type, _volumeValue.round()),
+                                  widget.type, _volumeValue),
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
                           "3 Y",
                           style: TextStyles.sourceSans.body3.colour(
-                            Color(0xff919193),
+                            UiConstants.kTextColor2,
                           ),
                         )
                       ],
@@ -1142,13 +1141,13 @@ class _CircularSliderState extends State<_CircularSlider> {
                         Text(
                           "₹" +
                               5.calculateCompoundInterest(
-                                  widget.type, _volumeValue.round()),
+                                  widget.type, _volumeValue),
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
                           "5 Y",
                           style: TextStyles.sourceSans.body3.colour(
-                            Color(0xff919193),
+                            UiConstants.kTextColor2,
                           ),
                         )
                       ],

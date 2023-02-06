@@ -7,6 +7,7 @@ import 'package:felloapp/util/extensions/investment_returns_extension.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
@@ -68,7 +69,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                       Text(
                         "Invest Today",
                         style: TextStyles.sourceSans.body3
-                            .colour(Color(0xff919193)),
+                            .colour(UiConstants.kTextColor2),
                       ),
                       SizedBox(
                         height: SizeConfig.padding2,
@@ -92,13 +93,16 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                       Text(
                         "In 1 Year",
                         style: TextStyles.sourceSans.body3
-                            .colour(Color(0xff919193)),
+                            .colour(UiConstants.kTextColor2),
                       ),
                       SizedBox(
                         height: SizeConfig.padding2,
                       ),
                       Text(
-                        "₹ " + 12.getReturns(investMentType, amt, 0).toString(),
+                        "₹ " +
+                            12
+                                .getReturns(investMentType, amt * 1.0, 0)
+                                .toString(),
                         style:
                             TextStyles.sourceSansSB.body1.colour(Colors.white),
                       )
@@ -117,7 +121,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                       Text(
                         "In 3 Years",
                         style: TextStyles.sourceSans.body3
-                            .colour(Color(0xff919193)),
+                            .colour(UiConstants.kTextColor2),
                       ),
                       SizedBox(
                         height: SizeConfig.padding2,
@@ -126,7 +130,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                         "₹ " +
                             3.calculateCompoundInterest(
                               investMentType,
-                              amt,
+                              amt * 1.0,
                             ),
                         style:
                             TextStyles.sourceSansSB.body1.colour(Colors.white),

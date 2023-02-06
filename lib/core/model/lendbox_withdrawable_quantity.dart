@@ -46,8 +46,8 @@ class LendboxWithdrawableQuantity {
         amount: map['amount']?.toDouble() ?? 0.0,
         lockedAmount: map['lockedAmount']?.toDouble() ?? 0.0,
         lockedMessage: map['lockedMessage'] ?? '',
-        limit: map['limit'] * 1.0,
-        limitAmount: map['limitAmount'] * 1.0,
+        limit: (map['limit'] ?? 0) * 1.0,
+        limitAmount: (map['limitAmount'] ?? 0) * 1.0,
         limitHeading: map['limitHeading'],
         limitMessage: map['limitMessage']);
   }

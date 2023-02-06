@@ -200,7 +200,7 @@ class SaveViewModel extends BaseViewModel {
       Padding(
         padding: EdgeInsets.only(top: SizeConfig.padding20),
         child:
-            LottieBuilder.asset("assets/lotties/Inapp scroll animation.json"),
+            LottieBuilder.asset(Assets.inAppScrollAnimation),
       ),
     );
 

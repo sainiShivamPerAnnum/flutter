@@ -332,8 +332,8 @@ class GoldSellViewModel extends BaseViewModel {
     _augTxnService!.currentTxnAmount = goldAmountFromGrams;
     _augTxnService!.currentTxnGms = sellGramAmount;
     _augTxnService!.isGoldSellInProgress = true;
-    if (responseModel.data!.limitQuantity <=0
-        ) {
+    if (responseModel.data!.limitQuantity <= 0) {
+      AppState.screenStack.add(ScreenItem.dialog);
       await BaseUtil.openDialog(
         isBarrierDismissible: false,
         content: ConfirmationDialog(

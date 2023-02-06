@@ -9,8 +9,10 @@ import 'package:felloapp/ui/elements/buttons/black_white_button/black_white_butt
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -210,7 +212,7 @@ class SaveContainer extends StatelessWidget {
                         Text(
                           "TRENDING",
                           style: TextStyles.sourceSansSB.body4
-                              .colour(Color(0xff39498C)),
+                              .colour(UiConstants.kGoldContainerColor),
                         ),
                       ],
                     ),
@@ -340,7 +342,7 @@ class _InvestmentDetails extends StatelessWidget {
                 valueListenable: _onValueChanged,
                 builder: (context, snapshot, child) {
                   return Text(
-                      "₹${12.calculateCompoundInterest(type, _onValueChanged.value)}",
+                      "₹${12.calculateCompoundInterest(type, _onValueChanged.value * 1.0)}",
                       style: TextStyles.rajdhaniSB.title4);
                 },
               )
@@ -458,7 +460,7 @@ class _InvestCounterState extends State<_InvestCounter> {
   Widget _buildIconButton(IconData icons, void Function() onChange) {
     return InkWell(
       onTap: () {
-        HapticFeedback.lightImpact();
+        Haptic.vibrate();
         onChange.call();
       },
       child: Padding(
