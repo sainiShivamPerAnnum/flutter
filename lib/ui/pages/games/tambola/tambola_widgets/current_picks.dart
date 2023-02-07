@@ -94,7 +94,7 @@ class TodayPicksBallsAnimation extends StatelessWidget {
   }
 }
 
-class AnimatedPicksDisplay extends StatelessWidget {
+class AnimatedPicksDisplay extends StatefulWidget {
   AnimatedPicksDisplay({
     Key? key,
     required this.number,
@@ -111,22 +111,48 @@ class AnimatedPicksDisplay extends StatelessWidget {
   final double ballHeight;
   final double ballWidth;
 
+  @override
+  State<AnimatedPicksDisplay> createState() => _AnimatedPicksDisplayState();
+}
+
+class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
   Random random = new Random();
 
   List<int> randomList = [];
+
   bool isAnimationDone = false;
+
   List<Color> ballColorCodes = [
     Color(0xffC34B29),
     Color(0xffFFD979),
     Color(0xffAECCFF),
   ];
 
-  final ScrollController _controller = ScrollController();
+  ScrollController? _controller;
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (isAnimationDone == false) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          _scrollDown();
+        });
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
 
   void _scrollDown() {
-    _controller.animateTo(
-      _controller.position.maxScrollExtent,
-      duration: Duration(milliseconds: animationDurationMilliseconds),
+    _controller!.animateTo(
+      _controller!.position.maxScrollExtent,
+      duration: Duration(milliseconds: widget.animationDurationMilliseconds),
       curve: Curves.fastOutSlowIn,
     );
     isAnimationDone = true;
@@ -134,16 +160,16 @@ class AnimatedPicksDisplay extends StatelessWidget {
 
   Container _buildBalls(int nToShow, bool showEmpty, Color ballColor) {
     return Container(
-      width: ballWidth,
-      height: ballHeight,
+      width: widget.ballWidth,
+      height: widget.ballHeight,
       padding: EdgeInsets.all(SizeConfig.padding4),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
       ),
       child: Container(
         padding: EdgeInsets.all(SizeConfig.padding4),
-        width: ballWidth,
-        height: ballHeight,
+        width: widget.ballWidth,
+        height: widget.ballHeight,
         decoration: BoxDecoration(
           color: ballColor,
           shape: BoxShape.circle,
@@ -174,15 +200,6 @@ class AnimatedPicksDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //GEnerating random numbers
-    for (int i = 0; i < 8; i++) {
-      randomList.add(random.nextInt(99));
-    }
-
-    if (isAnimationDone == false) {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _scrollDown();
-      });
-    }
     return Container(
       width: SizeConfig.screenWidth! * 0.14,
       height: SizeConfig.screenWidth! * 0.14,
@@ -198,7 +215,7 @@ class AnimatedPicksDisplay extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               isAnimationDone
-                  ? _buildBalls(number, false, ballColor)
+                  ? _buildBalls(widget.number, false, widget.ballColor)
                   : ListView.builder(
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
@@ -212,7 +229,7 @@ class AnimatedPicksDisplay extends StatelessWidget {
                                 Random().nextInt(Colors.primaries.length)]);
                       },
                     ),
-              _buildBalls(number, false, ballColor),
+              _buildBalls(widget.number, false, widget.ballColor),
             ],
           ),
         ),

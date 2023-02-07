@@ -11,7 +11,6 @@ class CircularAnim extends StatefulWidget {
 class _CircularAnimState extends State<CircularAnim>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  ScrollController? _scrollController;
   late Animation<double> _ringOneAnimation;
   late Animation<double> _ringTwoAnimation;
   late Animation<double> _holeAnimation;
@@ -38,7 +37,6 @@ class _CircularAnimState extends State<CircularAnim>
   @override
   void initState() {
     super.initState();
-    // _scrollController = ScrollController(initialScrollOffset: 300);
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1000));
     _ringOneAnimation = CurvedAnimation(
