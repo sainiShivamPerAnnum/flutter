@@ -266,7 +266,7 @@ class AugmontTransactionService extends BaseTransactionService {
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
-            _newUserCheck();
+            await _newUserCheck();
             transactionResponseModel = res.model;
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
