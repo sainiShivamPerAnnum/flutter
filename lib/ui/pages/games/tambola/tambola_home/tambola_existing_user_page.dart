@@ -20,6 +20,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class TambolaExistingUserPage extends StatefulWidget {
   TambolaExistingUserPage({Key? key, required this.model}) : super(key: key);
@@ -340,7 +341,11 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                 SizedBox(
                   height: SizeConfig.padding4,
                 ),
-                TermsAndConditions(url: Constants.tambolatnc),
+                // TermsAndConditions(url: Constants.tambolatnc),
+
+                LottieBuilder.network(
+                    "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+
                 SizedBox(
                   height: SizeConfig.navBarHeight + SizeConfig.padding16,
                 ),

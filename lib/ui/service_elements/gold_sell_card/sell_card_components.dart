@@ -42,8 +42,12 @@ class SellText extends StatelessWidget {
 class SellButton extends StatelessWidget {
   final Function onTap;
   final bool isActive;
-
-  SellButton({Key? key, required this.onTap, required this.isActive})
+  final String text;
+  SellButton(
+      {Key? key,
+      required this.onTap,
+      required this.isActive,
+      required this.text})
       : super(key: key);
 
   @override
@@ -62,8 +66,8 @@ class SellButton extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  locale.saveSellButton,
-                  style: TextStyles.rajdhaniSB.body0.colour(
+                  text,
+                  style: TextStyles.rajdhaniSB.body1.colour(
                     Colors.black,
                   ),
                 ),

@@ -79,7 +79,7 @@ class NewUserSaveView extends StatelessWidget {
                       height: SizeConfig.padding40,
                     )
                   ],
-                  LottieBuilder.asset(Assets.inAppScrollAnimation),
+                  LottieBuilder.network("https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
                   SizedBox(height: SizeConfig.navBarHeight),
                 ],
               ),

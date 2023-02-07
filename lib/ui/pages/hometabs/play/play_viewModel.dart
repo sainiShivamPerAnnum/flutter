@@ -182,13 +182,14 @@ class PlayViewModel extends BaseViewModel {
           break;
       }
     });
-    playViewChildren.add(AppFooter(bottomPad: 0));
-    playViewChildren.add(TermsAndConditions(url: Constants.gamingtnc));
+    // playViewChildren.add(AppFooter(bottomPad: 0));
+    // playViewChildren.add(TermsAndConditions(url: Constants.gamingtnc));
     playViewChildren.add(SizedBox(
       height: SizeConfig.padding10,
     ));
     playViewChildren.add(
-      LottieBuilder.asset(Assets.inAppScrollAnimation),
+      LottieBuilder.network(
+          "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
     );
     playViewChildren.add(SizedBox(height: SizeConfig.navBarHeight));
     return playViewChildren;

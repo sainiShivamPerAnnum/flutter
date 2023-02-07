@@ -474,7 +474,7 @@ class _BuildOwnAsset extends StatelessWidget {
                       (userService.userFundWallet?.wLbPrinciple ?? 0)
                           .toStringAsFixed(2),
                   textAlign: TextAlign.center,
-                  style: TextStyles.rajdhaniSB.title2.colour(
+                  style: TextStyles.rajdhaniSB.title3.colour(
                     Colors.white.withOpacity(0.8),
                   ),
                 )

@@ -195,7 +195,7 @@ class SaveViewModel extends BaseViewModel {
     saveViewItems.add(
       Container(
         margin: EdgeInsets.only(top: SizeConfig.padding40),
-        child: LottieBuilder.asset(Assets.inAppScrollAnimation),
+        child: LottieBuilder.network("https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
       ),
     );
 

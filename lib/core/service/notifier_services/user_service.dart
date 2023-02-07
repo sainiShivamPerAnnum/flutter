@@ -125,7 +125,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     notifyListeners(UserServiceProperties.mySegments);
   }
 
- List<dynamic> get  userSegments=>_userSegments;
+  List<dynamic> get userSegments => _userSegments;
 
   UserFundWallet? get userFundWallet => _userFundWallet;
   UserJourneyStatsModel? get userJourneyStats => _userJourneyStats;
@@ -525,6 +525,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     DynamicUiUtils.navBar = dynamicUi.navBar;
     _rootController.navItems.clear();
     DynamicUiUtils.navBar.forEach(_rootController.getNavItems);
+
     DynamicUiUtils.goldTag = dynamicUi.save.badgeText?.AUGGOLD99 ?? "";
     DynamicUiUtils.lbTag = dynamicUi.save.badgeText?.LENDBOXP2P ?? "";
     DynamicUiUtils.islbTrending = dynamicUi.save.trendingAsset == "LENDBOXP2P";

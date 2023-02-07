@@ -79,7 +79,6 @@ class _FormDialogState extends State<ConfirmationDialog> {
               style: TextStyles.rajdhaniB.title3,
               textAlign: TextAlign.center,
             ),
-            
             if (widget.asset != null)
               Padding(padding: EdgeInsets.zero, child: widget.asset),
             if (widget.description.isNotEmpty)
@@ -130,7 +129,9 @@ class _FormDialogState extends State<ConfirmationDialog> {
                         child: Center(
                           child: AppPositiveBtn(
                             btnText: widget.buttonText,
-                            width: SizeConfig.screenWidth! * 0.40,
+                            width: !widget.showSecondaryButton
+                                ? null
+                                : SizeConfig.screenWidth! * 0.40,
                             onPressed: () {
                               setState(() {
                                 isLoading = true;

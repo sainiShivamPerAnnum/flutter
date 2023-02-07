@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/finance/sell_confirmation_screen.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -22,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class GoldSellInputView extends StatelessWidget {
   final GoldSellViewModel model;
@@ -241,6 +243,14 @@ class GoldSellInputView extends StatelessWidget {
                             isBarrierDismissible: false,
                             addToScreenStack: true,
                             content: ConfirmationDialog(
+                                asset: Padding(
+                                  padding: EdgeInsets.all(SizeConfig.padding16),
+                                  child: SvgPicture.asset(
+                                    Assets.securityCheck,
+                                    height: SizeConfig.screenHeight! * 0.15,
+                                    width: SizeConfig.screenHeight! * 0.15,
+                                  ),
+                                ),
                                 title: model.responseModel.data!.limitHeading,
                                 description:
                                     model.responseModel.data!.limitMessage,

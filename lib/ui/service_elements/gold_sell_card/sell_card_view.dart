@@ -63,6 +63,9 @@ class SellCardView extends StatelessWidget {
                       investmentType: investmentType,
                     ),
                     SellButton(
+                      text: investmentType == InvestmentType.AUGGOLD99
+                          ? "SELL"
+                          : "WITHDRAW",
                       onTap: () {
                         BaseUtil.openModalBottomSheet(
                           backgroundColor:
