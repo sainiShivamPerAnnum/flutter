@@ -7,7 +7,7 @@ extension ReturnInvestments on int {
       [decimalPoint = 2]) {
     final month = this;
     final int returnPercentage =
-        investmentType == InvestmentType.AUGGOLD99 ? 7 : 10;
+        investmentType == InvestmentType.AUGGOLD99 ? 11 : 10;
 
     return (amount +
             ((calculatePercentageInterest(month, returnPercentage) * amount)))
@@ -19,7 +19,7 @@ extension ReturnInvestments on int {
     double principalAmount,
   ) {
     final period = this;
-    final interestRate = investmentType == InvestmentType.AUGGOLD99 ? 7 : 10;
+    final interestRate = investmentType == InvestmentType.AUGGOLD99 ? 11 : 10;
 
     return (principalAmount * (pow((1 + interestRate / 100), period)))
         .toStringAsFixed(0);

@@ -955,7 +955,7 @@ class _Footer extends StatelessWidget {
   const _Footer({Key? key, required this.isGold}) : super(key: key);
   final bool isGold;
   final String goldTitle = "11% Returns gained from\nDigital Gold in 2022";
-  static String felloTitle = "₹80 Lakh invested \ntill date on Fello Flo";
+  final String felloTitle = "₹1000 invested every \nminute on Fello Flo";
 
   @override
   Widget build(BuildContext context) {
@@ -1102,10 +1102,18 @@ class _CircularSliderState extends State<_CircularSlider> {
           ),
         ),
         Positioned(
-          top: 12,
-          child: Text(
-            "Return Calculator",
-            style: TextStyles.rajdhaniSB.title3,
+          top: 0,
+          child: Column(
+            children: [
+              Text(
+                "Return Calculator",
+                style: TextStyles.rajdhaniSB.title3,
+              ),
+              Text(
+                "(Based on last years' returns)",
+                style: TextStyles.sourceSans.body3.colour(Color(0xffA9C6D6)),
+              )
+            ],
           ),
         ),
         Padding(
