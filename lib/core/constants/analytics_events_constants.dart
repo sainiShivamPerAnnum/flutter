@@ -145,7 +145,7 @@ class AnalyticsEvents {
   static const playSection = "Play Tab Tapped";
   static const saveSection = "Save Tab Clicked";
   static const journeySection = "Journey Tab Clicked";
-  static const winSection = "Win Tab tapped";
+  static const winSection = "Account Tab tapped";
   static const copyReferalCode = "Copy Referral Code";
   static const shareReferalCode = "Share Referral Code";
   static const referAndEarnTapped = "Refer Earn section tap";

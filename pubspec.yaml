@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 4.1.6+169
+version: 4.1.7+170
 
 environment:
   sdk: ">=2.18.6 <3.0.0"
@@ -15,7 +15,9 @@ dependencies:
   app_install_date: ^0.1.1
   appsflyer_sdk: ^6.5.2
   apxor_flutter:
-    git: https://github.com/apxor/apxor-flutter-sdk.git
+    git: 
+      url: https://github.com/apxor/apxor-flutter-sdk.git
+      ref: 19d6f70
   cached_network_image: ^3.2.3
   carousel_slider: ^4.2.1
   cloud_firestore: ^4.2.0
@@ -90,7 +92,7 @@ dependencies:
   upi_pay:
     path: packages/upi/
   url_launcher: ^6.1.8
-  video_player: null
+  video_player: ^2.5.1
   webengage_flutter: ^1.2.1
   webview_flutter: ^3.0.4
 
