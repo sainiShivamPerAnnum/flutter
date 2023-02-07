@@ -162,8 +162,7 @@ class LendboxTransactionService extends BaseTransactionService {
           if (!txnStatus.data!.isUpdating!) {
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
-            await CacheService.invalidateByKey(CacheKeys.USER);
-            await locator<UserService>().setBaseUser();
+            await _newUserCheck();
             _tambolaService!.weeklyTicksFetched = false;
             transactionReponseModel = res.model!;
             timer!.cancel();
@@ -186,6 +185,17 @@ class LendboxTransactionService extends BaseTransactionService {
           break;
       }
     }
+  }
+
+  Future<void> _newUserCheck() async {
+    if (_userService!.baseUser!.segments.contains("NEW_USER")) {
+      await CacheService.invalidateByKey(CacheKeys.USER);
+      final list = _userService!.baseUser!.segments;
+      list.remove("NEW_USER");
+      _userService!.userSegments = list;
+      _userService!.baseUser!.segments = list;
+    }
+    
   }
 
   Future<void> transactionResponseUpdate(

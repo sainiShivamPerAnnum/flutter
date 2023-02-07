@@ -125,6 +125,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     notifyListeners(UserServiceProperties.mySegments);
   }
 
+ List<dynamic> get  userSegments=>_userSegments;
+
   UserFundWallet? get userFundWallet => _userFundWallet;
   UserJourneyStatsModel? get userJourneyStats => _userJourneyStats;
 

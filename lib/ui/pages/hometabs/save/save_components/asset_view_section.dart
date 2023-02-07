@@ -71,7 +71,7 @@ class AssetSectionView extends StatelessWidget {
           UserServiceProperties.mySegments,
         ],
         builder: (_, model, ___) {
-          bool isNewUser = model!.baseUser!.segments.contains("NEW_USER");
+          bool isNewUser = model!.userSegments.contains("NEW_USER");
           final balance = type == InvestmentType.AUGGOLD99
               ? model.userFundWallet?.augGoldQuantity ?? 0
               : model.userFundWallet?.wLbBalance ?? 0;

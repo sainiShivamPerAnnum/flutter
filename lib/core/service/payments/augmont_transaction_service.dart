@@ -266,8 +266,7 @@ class AugmontTransactionService extends BaseTransactionService {
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
-            await CacheService.invalidateByKey(CacheKeys.USER);
-            await locator<UserService>().setBaseUser();
+            _newUserCheck();
             transactionResponseModel = res.model;
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
@@ -295,6 +294,16 @@ class AugmontTransactionService extends BaseTransactionService {
           );
           break;
       }
+    }
+  }
+
+  Future<void> _newUserCheck() async {
+    if (_userService!.baseUser!.segments.contains("NEW_USER")) {
+      await CacheService.invalidateByKey(CacheKeys.USER);
+      final list = _userService!.baseUser!.segments;
+      list.remove("NEW_USER");
+      _userService!.userSegments = list;
+      _userService!.baseUser!.segments = list;
     }
   }
 

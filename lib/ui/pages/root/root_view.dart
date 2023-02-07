@@ -106,7 +106,7 @@ class RootAppBar extends StatelessWidget {
                         color:
                             (locator<RootController>().currentNavBarItemModel ==
                                     RootController.saveNavBarItem)
-                                ? (userservice!.baseUser!.segments
+                                ? (userservice!.userSegments
                                         .contains("NEW_USER"))
                                     ? UiConstants.kBackgroundColor
                                     : UiConstants.kSecondaryBackgroundColor
@@ -116,7 +116,7 @@ class RootAppBar extends StatelessWidget {
                           backgroundColor: (locator<RootController>()
                                       .currentNavBarItemModel ==
                                   RootController.saveNavBarItem)
-                              ? (userservice!.baseUser!.segments
+                              ? (userservice!.userSegments
                                       .contains("NEW_USER"))
                                   ? UiConstants.kBackgroundColor
                                   : UiConstants.kSecondaryBackgroundColor

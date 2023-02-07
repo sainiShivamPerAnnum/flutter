@@ -73,7 +73,8 @@ class NewUserSaveView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Campaigns(model: model),
+                  if (DynamicUiUtils.saveViewOrder[1].contains("CH"))
+                    Campaigns(model: model),
                   SizedBox(
                     height: SizeConfig.padding40,
                   ),
