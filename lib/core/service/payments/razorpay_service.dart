@@ -68,7 +68,7 @@ class RazorpayService extends ChangeNotifier {
     _txnService!.initiatePolling();
     log.debug(
         "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
-    _currentTxn!.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
+    _currentTxn?.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
     if (_currentTxn!.rzp![UserTransaction.subFldRzpOrderId] !=
         checkoutOrderId) {
       _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
@@ -83,7 +83,7 @@ class RazorpayService extends ChangeNotifier {
     _txnService!.currentTransactionState = TransactionState.idle;
     AppState.unblockNavigation();
     if (response.code == 2)
-    locator<BackButtonActions>().isTransactionCancelled = true;
+      locator<BackButtonActions>().isTransactionCancelled = true;
     BaseUtil.showNegativeAlert(locale.txnFailed, locale.txnFailedSubtitle);
     log.debug("ERROR: " + response.code.toString() + " - " + response.message!);
     Map<String, dynamic>? currentTxnDetails =
