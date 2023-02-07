@@ -752,10 +752,10 @@ class S {
     );
   }
 
-  /// `verify Email`
+  /// `Verify Email`
   String get obVerifyEmail {
     return Intl.message(
-      'verify Email',
+      'Verify Email',
       name: 'obVerifyEmail',
       desc: '',
       args: [],
@@ -1118,10 +1118,10 @@ class S {
     );
   }
 
-  /// `Buy 24K pure Digital You own Gold`
+  /// `Buy 24K pure Digital Gold`
   String get buyGold {
     return Intl.message(
-      'Buy 24K pure Digital You own Gold',
+      'Buy 24K pure Digital Gold',
       name: 'buyGold',
       desc: '',
       args: [],

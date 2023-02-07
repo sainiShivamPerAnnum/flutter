@@ -253,8 +253,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "btnYes": MessageLookupByLibrary.simpleMessage("Yes"),
         "businessDays":
             MessageLookupByLibrary.simpleMessage("1-2 business working days"),
-        "buyGold": MessageLookupByLibrary.simpleMessage(
-            "Buy 24K pure Digital You own Gold"),
+        "buyGold":
+            MessageLookupByLibrary.simpleMessage("Buy 24K pure Digital Gold"),
         "by2030": MessageLookupByLibrary.simpleMessage("by 2030! 💸"),
         "cancelledUi": MessageLookupByLibrary.simpleMessage("cancelledUI"),
         "cashPrize": MessageLookupByLibrary.simpleMessage("Cashprize"),
@@ -773,7 +773,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obValidEmail":
             MessageLookupByLibrary.simpleMessage("Please enter a valid email"),
         "obVerify": MessageLookupByLibrary.simpleMessage("Verify"),
-        "obVerifyEmail": MessageLookupByLibrary.simpleMessage("verify Email"),
+        "obVerifyEmail": MessageLookupByLibrary.simpleMessage("Verify Email"),
         "obuniqueNameText": MessageLookupByLibrary.simpleMessage(
             "This will be your unique name across our games and challenges leaderboard"),
         "offers": MessageLookupByLibrary.simpleMessage("Offers"),
