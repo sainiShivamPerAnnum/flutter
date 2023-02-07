@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_pa
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/sticky_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -130,6 +131,12 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                    color: UiConstants.kArrowButtonBackgroundColor,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding26)
+                            .copyWith(top: SizeConfig.padding10),
+                    child: Image.asset(Assets.win1croreBanner)),
                 TodayWeeklyPicksCard(
                   model: widget.model,
                 ),

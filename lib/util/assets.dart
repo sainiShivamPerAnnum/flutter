@@ -128,6 +128,7 @@ class Assets {
   static final String iphone2 = "assets/images/iphone2.png";
 
   // TRANSACTIONS
+  static final String win1croreBanner = "assets/images/win1crore.webp";
 
   static final String bankDetails = "assets/vectors/icons/bankDetails.svg";
   static final String txnHistory = "assets/vectors/icons/txnHistory.svg";

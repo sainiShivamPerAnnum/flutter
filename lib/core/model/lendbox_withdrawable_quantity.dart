@@ -48,8 +48,8 @@ class LendboxWithdrawableQuantity {
         lockedMessage: map['lockedMessage'] ?? '',
         limit: (map['limit'] ?? 0) * 1.0,
         limitAmount: (map['limitAmount'] ?? 0) * 1.0,
-        limitHeading: map['limitHeading'],
-        limitMessage: map['limitMessage']);
+        limitHeading: map['limitHeading'] ?? "",
+        limitMessage: map['limitMessage'] ?? "");
   }
 
   String toJson() => json.encode(toMap());

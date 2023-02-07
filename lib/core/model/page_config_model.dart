@@ -77,9 +77,12 @@ class SaveUi {
             List<String>.from((map['assets'].cast<String>() as List<String>)),
         sections:
             List<String>.from((map['sections'].cast<String>() as List<String>)),
-        badgeText: BadgeText.fromMap(map['badgeText']),
+        badgeText: map['badgeText'] != null
+            ? BadgeText.fromMap(map['badgeText'])
+            : null,
         trendingAsset: map['trendingAsset'] ?? "",
-        ctaText: CtaText.fromMap(map["ctaText"]));
+        ctaText:
+            map["ctaText"] != null ? CtaText.fromMap(map["ctaText"]) : null);
   }
 
   String toJson() => json.encode(toMap());

@@ -111,8 +111,8 @@ class WithdrawableGoldDetails {
       lockedQuantity: map['lockedQuantity'].toDouble(),
       balance: map['balance'].toDouble(),
       limit: (map['limit'] ?? 0) * 1.0,
-      limitHeading: map['limitHeading'],
-      limitMessage: map['limitMessage'],
+      limitHeading: map['limitHeading'] ?? "",
+      limitMessage: map['limitMessage'] ?? "",
       limitQuantity: (map['limitQuantity'] ?? 0) * 1.0,
     );
   }

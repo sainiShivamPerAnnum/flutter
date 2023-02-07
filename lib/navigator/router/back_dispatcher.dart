@@ -14,6 +14,7 @@ import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -150,6 +151,9 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         AppState.delegate!.appState.rootIndex != 0) {
       logger!.w("Checking if app can be closed");
       AppState.delegate!.appState.setCurrentTabIndex = 0;
+      locator<RootController>()
+          .onChange(locator<RootController>().navItems.values.toList()[0]);
+
       _journeyService!.checkForMilestoneLevelChange();
       return Future.value(true);
     }

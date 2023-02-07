@@ -133,7 +133,6 @@ class AssetSectionView extends StatelessWidget {
                               SizedBox(
                                 height: SizeConfig.padding4,
                               ),
-
                               Text(
                                 _isGold ? _goldSubtitle : _floSubtitle,
                                 style: TextStyles.sourceSans.body2
@@ -173,8 +172,6 @@ class AssetSectionView extends StatelessWidget {
                                   height: SizeConfig.padding10,
                                 ),
                               ],
-                              //TODO: Find a better slider to do this
-
                               if (!isNewUser) ...[
                                 MiniTransactionCard(investmentType: type),
                                 if (balance != 0) ...[
@@ -209,7 +206,6 @@ class AssetSectionView extends StatelessWidget {
                               SizedBox(
                                 height: SizeConfig.padding16,
                               ),
-
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: SizeConfig.padding20),
@@ -227,7 +223,6 @@ class AssetSectionView extends StatelessWidget {
                                   type: type,
                                 )
                               ],
-
                               SizedBox(
                                 height: SizeConfig.padding40,
                               ),

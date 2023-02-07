@@ -73,11 +73,12 @@ class NewUserSaveView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (DynamicUiUtils.saveViewOrder[1].contains("CH"))
+                  if (DynamicUiUtils.saveViewOrder[1].contains("CH")) ...[
                     Campaigns(model: model),
-                  SizedBox(
-                    height: SizeConfig.padding40,
-                  ),
+                    SizedBox(
+                      height: SizeConfig.padding40,
+                    )
+                  ],
                   LottieBuilder.asset(Assets.inAppScrollAnimation),
                   SizedBox(height: SizeConfig.navBarHeight),
                 ],
