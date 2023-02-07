@@ -130,24 +130,10 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
-    // switch (index) {
-    //   case 0:
-    //     _analyticsService!.trackScreen(screen: 'Journey', properties: {});
-    //     break;
-    //   case 1:
-    //     _analyticsService!.trackScreen(screen: 'Save', properties: {});
-    //     break;
-    //   case 2:
-    //     _analyticsService!.trackScreen(screen: 'Play', properties: {});
-    //     break;
-    //   case 3:
-    //     _analyticsService!.trackScreen(screen: 'Win', properties: {});
-    //     break;
-    //   default:
-    // }
     //First Call check for journey
     executeForFirstJourneyTabClick(index);
     executeNavBarItemFirstClick(index);
+    _rootController.onChange(_rootController.navItems.values.toList()[index]);
     print(_rootIndex);
     notifyListeners();
   }

@@ -48,7 +48,7 @@ class LevelBlurView extends StatelessWidget {
                         top: jModel.pageHeight! * (1 - levelData.breakpoint!) +
                             jModel.pageHeight! *
                                 (jModel.pageCount - levelData.pageEnd!) -
-                            SizeConfig.avatarRadius,
+                            SizeConfig.avatarRadius * 1.5,
                         child: Container(
                           width: jModel.pageWidth,
                           child: Row(
