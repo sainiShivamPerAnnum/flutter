@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -27,6 +29,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/util/url_type_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
 
 class TambolaWrapper extends StatelessWidget {
@@ -361,8 +364,15 @@ class TambolaTicketInfo extends StatelessWidget {
 }
 
 class TambolaVideoPlayer extends StatefulWidget {
-  const TambolaVideoPlayer({Key? key, required this.link}) : super(key: key);
+  const TambolaVideoPlayer(
+      {Key? key,
+      required this.link,
+      this.showShimmer = false,
+      this.aspectRatio})
+      : super(key: key);
   final String link;
+  final bool showShimmer;
+  final double? aspectRatio;
   @override
   State<TambolaVideoPlayer> createState() => _TambolaVideoPlayerState();
 }
@@ -395,10 +405,25 @@ class _TambolaVideoPlayerState extends State<TambolaVideoPlayer> {
         ? ClipRRect(
             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
             child: AspectRatio(
-              aspectRatio: _controller!.value.aspectRatio,
+              aspectRatio: widget.aspectRatio ?? _controller!.value.aspectRatio,
               child: VideoPlayer(_controller!),
             ),
           )
-        : Container();
+        : widget.showShimmer
+            ? Shimmer.fromColors(
+                baseColor: UiConstants.kUserRankBackgroundColor,
+                highlightColor: Colors.grey.shade800,
+                child: AspectRatio(
+                  aspectRatio: 1.4,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                    ),
+                  ),
+                ),
+              )
+            : Container();
   }
 }

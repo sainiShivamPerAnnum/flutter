@@ -233,7 +233,10 @@ class GoldSellInputView extends StatelessWidget {
                       btnText: locale.saveSellButton,
                       onPressed: () async {
                         if (model.responseModel.data!.limitQuantity <
-                            double.parse(model.goldAmountController!.text)) {
+                            double.parse(
+                                model.goldAmountController!.text.isNotEmpty
+                                    ? model.goldAmountController!.text
+                                    : '0')) {
                           await BaseUtil.openDialog(
                             isBarrierDismissible: false,
                             addToScreenStack: true,

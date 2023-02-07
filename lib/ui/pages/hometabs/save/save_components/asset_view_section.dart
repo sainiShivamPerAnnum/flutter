@@ -47,7 +47,7 @@ class AssetSectionView extends StatelessWidget {
       "Digital gold is an efficient way of investing in gold. Each unit is backed by 24K 99.9% purity gold.";
 
   final String _floDescription =
-      "Fello Flo is an RBI regulated peer to peer lending asset offered in partnership with Lendbox-an RBI regulated P2P NBFC";
+      "Fello Flo is a peer to peer lending asset offered in partnership with Lendbox - an RBI regulated P2P NBFC";
 
   final Map<String, String> _goldInfo = {
     "24K": "Gold",
@@ -194,6 +194,12 @@ class AssetSectionView extends StatelessWidget {
                                   ),
                                 ]
                               ],
+                              if (!isNewUser) ...[
+                                _CircularSlider(
+                                  isNewUser: isNewUser,
+                                  type: type,
+                                )
+                              ],
                               SizedBox(
                                 height: SizeConfig.padding24,
                               ),
@@ -210,11 +216,13 @@ class AssetSectionView extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: SizeConfig.padding20),
                                 child: TambolaVideoPlayer(
+                                    aspectRatio: 1.4,
+                                    showShimmer: true,
                                     link: _isGold
                                         ? "https://fello.in/videos/howToInvest.webm"
                                         : "https://d37gtxigg82zaw.cloudfront.net/flo-workflow.mp4"),
                               ),
-                              ...[
+                              if (!isNewUser) ...[
                                 SizedBox(
                                   height: SizeConfig.padding24,
                                 ),
@@ -306,16 +314,19 @@ class AssetSectionView extends StatelessWidget {
                       ),
                       SafeArea(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             BackButton(
                               color: Colors.white,
                               onPressed: () => Navigator.of(context).pop(),
                             ),
-                            Spacer(),
-                            FaqPill(
-                              type: FaqsType.savings,
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(right: SizeConfig.padding8),
+                              child: FaqPill(
+                                type: FaqsType.savings,
+                              ),
                             ),
                           ],
                         ),
@@ -464,7 +475,7 @@ class _BuildOwnAsset extends StatelessWidget {
                       (userService.userFundWallet?.wLbPrinciple ?? 0)
                           .toStringAsFixed(2),
                   textAlign: TextAlign.center,
-                  style: TextStyles.rajdhaniSB.title3.colour(
+                  style: TextStyles.rajdhaniSB.title2.colour(
                     Colors.white.withOpacity(0.8),
                   ),
                 )
@@ -575,11 +586,17 @@ class ComparisonBox extends StatelessWidget {
                               isGold ? "100%" : "10%",
                               style: TextStyles.rajdhaniSB.title1,
                             ),
+
                             // SizedBox(
                             //   height: SizeConfig.padding10,
                             // ),
                             Text(
                               isGold ? "Stable returns" : "Assured Returns",
+                              style: TextStyles.sourceSans.body3
+                                  .colour(Colors.white.withOpacity(0.4)),
+                            ),
+                            Text(
+                              '(Per annum)',
                               style: TextStyles.sourceSans.body3
                                   .colour(Colors.white.withOpacity(0.4)),
                             )
@@ -626,7 +643,7 @@ class ComparisonBox extends StatelessWidget {
                                   height: SizeConfig.padding10,
                                 ),
                                 Text(
-                                  "No Fixed returns\nHigh Risk",
+                                  "High volatility\nHigh Risk",
                                   textAlign: TextAlign.start,
                                   style: TextStyles.sourceSans.body3.colour(
                                     Colors.white.withOpacity(0.4),
@@ -662,14 +679,14 @@ class ComparisonBox extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Mutual Funds",
+                                  "FDs",
                                   style: TextStyles.sourceSans.body3,
                                 ),
                                 SizedBox(
                                   height: SizeConfig.padding10,
                                 ),
                                 Text(
-                                  "Low Returns\nHigh Risk",
+                                  "Low returns\nHigh lock-in",
                                   style: TextStyles.sourceSans.body3
                                       .colour(Colors.white.withOpacity(0.4)),
                                 )
@@ -710,7 +727,7 @@ class ComparisonBox extends StatelessWidget {
                                   height: SizeConfig.padding10,
                                 ),
                                 Text(
-                                  "Volatile Returns\nHigh Risk",
+                                  "Volatile Returns\nHigh risk",
                                   style: TextStyles.sourceSans.body3
                                       .colour(Colors.white.withOpacity(0.4)),
                                 )
@@ -751,7 +768,7 @@ class ComparisonBox extends StatelessWidget {
                                   height: SizeConfig.padding10,
                                 ),
                                 Text(
-                                  "Volatile Returns\nHigh Lock-in",
+                                  "Stable returns\nHigh Lock-in",
                                   style: TextStyles.sourceSans.body3
                                       .colour(Colors.white.withOpacity(0.4)),
                                 )
@@ -855,16 +872,16 @@ class _WhySection extends StatelessWidget {
     ),
     Assets.shield: RichText(
       text: TextSpan(
-        text: "No risks ",
+        text: "Authorized ",
         style: TextStyles.sourceSans.body2.colour(Colors.white),
         children: [
           TextSpan(
-              text: "involved",
+              text: "& Secured",
               style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
         ],
       ),
     ),
-    Icons.lock_outline: Text("7 days Lock-in",
+    Icons.lock_outline: Text("7 days Withdrawal Lock-in",
         style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
   };
 
@@ -938,9 +955,8 @@ class _WhySection extends StatelessWidget {
 class _Footer extends StatelessWidget {
   const _Footer({Key? key, required this.isGold}) : super(key: key);
   final bool isGold;
-  static String goldTitle =
-      "₹1Cr invested till date\nin digital Gold on \nFello";
-  static String felloTitle = "₹80 Lakh invested \ntill date on Fello flo";
+  final String goldTitle = "11% Returns gained from\nDigital Gold in 2022";
+  static String felloTitle = "₹80 Lakh invested \ntill date on Fello Flo";
 
   @override
   Widget build(BuildContext context) {
