@@ -510,7 +510,7 @@ class ComparisonBox extends StatelessWidget {
                         EdgeInsets.symmetric(vertical: SizeConfig.padding8),
                     child: RichText(
                       text: TextSpan(
-                        text: isGold ? "Gold " : "Flo🤟🏻 ",
+                        text: isGold ? "Gold " : "Flo ",
                         style:
                             TextStyles.rajdhaniSB.title3.colour(Colors.white),
                         children: [
