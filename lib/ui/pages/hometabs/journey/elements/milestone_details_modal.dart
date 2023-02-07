@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -245,9 +246,33 @@ class _JourneyMilestoneDetailsModalSheetState
                                 onPressed: () {
                                   AppState.backButtonDispatcher!.didPopRoute();
                                   if (widget.milestone.actionUri != null &&
-                                      widget.milestone.actionUri!.isNotEmpty)
-                                    AppState.delegate!.parseRoute(
-                                        Uri.parse(widget.milestone.actionUri!));
+                                      widget.milestone.actionUri!.isNotEmpty) {
+                                    if ((widget.milestone.value ?? 0) > 0) {
+                                      List<String> routes = widget
+                                          .milestone.actionUri!
+                                          .split('/')
+                                          .toList();
+                                      if (routes.contains('augBuy')) {
+                                        BaseUtil().openRechargeModalSheet(
+                                            amt: widget.milestone.value,
+                                            investmentType:
+                                                InvestmentType.AUGGOLD99);
+                                      } else if (routes.contains('lboxBuy')) {
+                                        BaseUtil().openRechargeModalSheet(
+                                            amt: widget.milestone.value,
+                                            investmentType:
+                                                InvestmentType.LENDBOXP2P);
+                                      } else if (routes.contains('assetBuy')) {
+                                        BaseUtil().openDepositOptionsModalSheet(
+                                          amount: widget.milestone.value,
+                                        );
+                                      }
+                                    } else {
+                                      AppState.delegate!.parseRoute(Uri.parse(
+                                          widget.milestone.actionUri!));
+                                    }
+                                  }
+
                                   try {
                                     _analyticsService!.track(
                                         eventName:
