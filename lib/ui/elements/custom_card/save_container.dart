@@ -107,7 +107,7 @@ class _SaveContainerState extends State<SaveContainer> {
         padding: EdgeInsets.only(bottom: SizeConfig.padding20),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-          height: SizeConfig.screenHeight! * 0.35,
+          height: SizeConfig.screenHeight! * 0.32,
           decoration: BoxDecoration(
             color: getCardBgColor,
             borderRadius: BorderRadius.circular(12),
@@ -236,7 +236,7 @@ class _SaveContainerState extends State<SaveContainer> {
                   ),
 
                   SizedBox(
-                    height: SizeConfig.padding54,
+                    height: SizeConfig.padding40,
                     width: double.infinity,
                     child: Builder(builder: (context) {
                       final type =
@@ -245,11 +245,13 @@ class _SaveContainerState extends State<SaveContainer> {
                               : _floMarquee;
                       return CarouselSlider.builder(
                         itemCount: type.length,
-                        itemBuilder: (context, index, realIndex) => Text(
-                          type[index],
-                          textAlign: TextAlign.center,
-                          style: TextStyles.sourceSans.body3
-                              .colour(Colors.white.withOpacity(0.3)),
+                        itemBuilder: (context, index, realIndex) => Center(
+                          child: Text(
+                            type[index],
+                            textAlign: TextAlign.center,
+                            style: TextStyles.sourceSans.body3
+                                .colour(Colors.white.withOpacity(0.3)),
+                          ),
                         ),
                         options: CarouselOptions(
                             autoPlay: true,

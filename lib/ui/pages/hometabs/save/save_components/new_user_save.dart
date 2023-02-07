@@ -36,7 +36,7 @@ class NewUserSaveView extends StatelessWidget {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: SizeConfig.padding4,
+                          height: SizeConfig.padding8,
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -52,9 +52,7 @@ class NewUserSaveView extends StatelessWidget {
                           height: SizeConfig.padding14,
                         ),
                         ...getAssetWidget(),
-                        SizedBox(
-                          height: SizeConfig.padding8,
-                        ),
+
                         // Center(
                         //   child: Text(
                         //     "100% SAFE & SECURE",

@@ -29,6 +29,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../util/assets.dart';
 
@@ -182,11 +183,14 @@ class PlayViewModel extends BaseViewModel {
       }
     });
     playViewChildren.add(AppFooter(bottomPad: 0));
-    playViewChildren.add(Padding(
-      padding: EdgeInsets.only(
-          bottom: SizeConfig.navBarHeight + SizeConfig.padding80),
-      child: TermsAndConditions(url: Constants.gamingtnc),
+    playViewChildren.add(TermsAndConditions(url: Constants.gamingtnc));
+    playViewChildren.add(SizedBox(
+      height: SizeConfig.padding10,
     ));
+    playViewChildren.add(
+      LottieBuilder.asset(Assets.inAppScrollAnimation),
+    );
+    playViewChildren.add(SizedBox(height: SizeConfig.navBarHeight));
     return playViewChildren;
   }
 

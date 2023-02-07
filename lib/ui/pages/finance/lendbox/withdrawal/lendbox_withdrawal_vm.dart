@@ -18,10 +18,13 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/finance/sell_confirmation_screen.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 class LendboxWithdrawalViewModel extends BaseViewModel {
@@ -86,14 +89,23 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   Future<void> initiateWithdraw() async {
     final amount = await initChecks();
     if (amount == 0) return;
-    if (withdrawableQuantity!.limitAmount <= 0) {
+    if (withdrawableQuantity!.limitAmount <
+        double.parse(amountController!.text)) {
       await BaseUtil.openDialog(
         isBarrierDismissible: false,
         addToScreenStack: true,
         content: ConfirmationDialog(
             title: withdrawableQuantity!.limitHeading,
             description: withdrawableQuantity!.limitMessage,
-            buttonText: "OK",
+            buttonText: "OKAY",
+            asset: Padding(
+              padding: EdgeInsets.all(SizeConfig.padding16),
+              child: SvgPicture.asset(
+                Assets.securityCheck,
+                height: SizeConfig.screenHeight! * 0.15,
+                width: SizeConfig.screenHeight! * 0.15,
+              ),
+            ),
             showSecondaryButton: false,
             confirmAction: () {
               AppState.backButtonDispatcher!.didPopRoute();

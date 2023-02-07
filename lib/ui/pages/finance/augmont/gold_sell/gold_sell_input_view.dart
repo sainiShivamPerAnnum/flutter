@@ -232,7 +232,8 @@ class GoldSellInputView extends StatelessWidget {
                     child: ReactivePositiveAppButton(
                       btnText: locale.saveSellButton,
                       onPressed: () async {
-                        if (model.responseModel.data!.limitQuantity <= 0) {
+                        if (model.responseModel.data!.limitQuantity <
+                            double.parse(model.goldAmountController!.text)) {
                           await BaseUtil.openDialog(
                             isBarrierDismissible: false,
                             addToScreenStack: true,
@@ -241,7 +242,7 @@ class GoldSellInputView extends StatelessWidget {
                                 description:
                                     model.responseModel.data!.limitMessage,
                                 showSecondaryButton: false,
-                                buttonText: "OK",
+                                buttonText: "OKAY",
                                 confirmAction: () {
                                   AppState.backButtonDispatcher!.didPopRoute();
                                 },

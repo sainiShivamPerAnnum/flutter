@@ -83,7 +83,6 @@ class TodayPicksBallsAnimation extends StatelessWidget {
                 ballHeight: ballHeight ?? SizeConfig.screenWidth! * 0.14,
                 ballWidth: ballWidth ?? SizeConfig.screenWidth! * 0.14,
                 number: picksList[index],
-                tabIndex: m.getCurrentTabIndex ?? 0,
                 animationDurationMilliseconds: animationDurations[index],
                 ballColor: ballColorCodes[index],
               ),
@@ -99,7 +98,6 @@ class AnimatedPicksDisplay extends StatelessWidget {
   AnimatedPicksDisplay({
     Key? key,
     required this.number,
-    required this.tabIndex,
     required this.animationDurationMilliseconds,
     required this.ballColor,
     required this.ballHeight,
@@ -107,7 +105,7 @@ class AnimatedPicksDisplay extends StatelessWidget {
   }) : super(key: key);
 
   final int number;
-  final int tabIndex;
+
   final int animationDurationMilliseconds;
   final Color ballColor;
   final double ballHeight;
@@ -180,7 +178,7 @@ class AnimatedPicksDisplay extends StatelessWidget {
       randomList.add(random.nextInt(99));
     }
 
-    if (tabIndex == 1 && isAnimationDone == false) {
+    if (isAnimationDone == false) {
       Future.delayed(const Duration(milliseconds: 500), () {
         _scrollDown();
       });

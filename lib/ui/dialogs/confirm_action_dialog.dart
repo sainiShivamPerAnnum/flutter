@@ -79,6 +79,7 @@ class _FormDialogState extends State<ConfirmationDialog> {
               style: TextStyles.rajdhaniB.title3,
               textAlign: TextAlign.center,
             ),
+            
             if (widget.asset != null)
               Padding(padding: EdgeInsets.zero, child: widget.asset),
             if (widget.description.isNotEmpty)
