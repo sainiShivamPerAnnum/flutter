@@ -95,6 +95,7 @@ class RootViewModel extends BaseViewModel {
     _referralService.initDynamicLinks();
     _rootController.currentNavBarItemModel =
         _rootController.navItems.values.first;
+    _tambolaService!.init();
     initialize();
   }
 
@@ -109,7 +110,6 @@ class RootViewModel extends BaseViewModel {
 
       _userService.checkForNewNotifications();
       _userService.getProfilePicture();
-      _tambolaService!.init();
       _initAdhocNotifications();
       Future.delayed(Duration(seconds: 8), () {
         _marketingService.checkUserDailyAppCheckInStatus().then((value) {
