@@ -107,7 +107,7 @@ class _SaveContainerState extends State<SaveContainer> {
         padding: EdgeInsets.only(bottom: SizeConfig.padding20),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
-          height: SizeConfig.screenHeight! * 0.32,
+          height: SizeConfig.screenHeight! * 0.35,
           decoration: BoxDecoration(
             color: getCardBgColor,
             borderRadius: BorderRadius.circular(12),
