@@ -218,7 +218,7 @@ class AssetSectionView extends StatelessWidget {
                                     aspectRatio: 1.4,
                                     showShimmer: true,
                                     link: _isGold
-                                        ? "https://fello.in/videos/howToInvest.webm"
+                                        ? "https://d37gtxigg82zaw.cloudfront.net/digital-gold-workflow.mp4"
                                         : "https://d37gtxigg82zaw.cloudfront.net/flo-workflow.mp4"),
                               ),
                               if (isNewUser) ...[

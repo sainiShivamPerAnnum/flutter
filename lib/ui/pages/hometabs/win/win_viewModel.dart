@@ -73,6 +73,7 @@ class WinViewModel extends BaseViewModel {
 
   init() {
     getFelloFacts();
+    _lbService!.fetchReferralLeaderBoard();
   }
 
   // Future<void> shareWhatsApp() async {
