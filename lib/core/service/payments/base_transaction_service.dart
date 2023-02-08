@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -12,11 +11,9 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-abstract class BaseTransactionService
-    extends PropertyChangeNotifier<TransactionServiceProperties> {
+abstract class BaseTransactionService extends ChangeNotifier {
   final ScratchCardService? _gtService = locator<ScratchCardService>();
   S locale = locator<S>();
 
@@ -24,7 +21,7 @@ abstract class BaseTransactionService
   TransactionState get currentTransactionState => _currentTransactionState;
   set currentTransactionState(TransactionState state) {
     _currentTransactionState = state;
-    notifyListeners(TransactionServiceProperties.transactionState);
+    notifyListeners();
   }
 
   List<ApplicationMeta> appMetaList = [];

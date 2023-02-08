@@ -1,6 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/assets.dart';
-
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -22,7 +21,7 @@ class BlockedUserView extends StatelessWidget {
       body: Stack(
         alignment: AlignmentDirectional.center,
         children: [
-          NewSquareBackground(),
+          const NewSquareBackground(),
           Positioned(
             top: 0,
             child: Container(

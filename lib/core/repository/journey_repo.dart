@@ -92,10 +92,6 @@ class JourneyRepository extends BaseRepo {
     String filePath = '';
     if (Platform.isAndroid) {
       try {
-        // final directory = await getApplicationDocumentsDirectory();
-        // if (!await directory.exists()) await directory.create(recursive: true);
-        // filePath = '${directory.path}/journey_assets/$fileName';
-
         filePath = '$_filePathDirectory$fileName';
         File file = await new File(filePath).create(recursive: true);
         file.writeAsBytesSync(svgBytes);
@@ -108,9 +104,6 @@ class JourneyRepository extends BaseRepo {
       }
     } else if (Platform.isIOS) {
       try {
-        // final directory = await getTemporaryDirectory();
-        // if (!await directory.exists()) await directory.create(recursive: true);
-        // filePath = '${directory.path}/journey_assets/$fileName';
         filePath = '$_filePathDirectory$fileName';
         File file = await new File(filePath).create(recursive: true);
         file.writeAsBytesSync(svgBytes);

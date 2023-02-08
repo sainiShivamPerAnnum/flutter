@@ -22,6 +22,7 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -59,6 +60,8 @@ class LoginControllerViewModel extends BaseViewModel {
   final UserRepository? _userRepo = locator<UserRepository>();
   final JourneyService? _journeyService = locator<JourneyService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
+  final ReferralService _referralService = locator<ReferralService>();
+
   S locale = locator<S>();
 
   // static LocalDBModel? lclDbProvider = locator<LocalDBModel>();
@@ -353,17 +356,37 @@ class LoginControllerViewModel extends BaseViewModel {
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
+
       await BaseAnalytics.analytics?.logLogin(loginMethod: 'phonenumber');
       logger!.d("User details available: Name: " + user.model!.name!);
       if (source == LoginSource.TRUECALLER)
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerLogin);
-      userService!.baseUser = user.model;
-
+      userService.baseUser = user.model;
+      userService.logUserInstalledApps().then(
+        (value) {
+          logger!.i(value);
+          _analyticsService!.track(
+            eventName: AnalyticsEvents.installedApps,
+            appFlyer: false,
+            apxor: false,
+            webEngage: false,
+            properties: {
+              "apps": Map<String, dynamic>.from(value)
+                  .keys
+                  .map((e) => e.toString())
+                  .toList()
+            },
+          );
+        },
+      );
       _onSignUpComplete();
     }
   }
 
   Future _onSignUpComplete() async {
+    await userService.init();
+    baseProvider!.init();
+    AnalyticsProperties().init();
     if (_isSignup) {
       _userRepo!.updateUserAppFlyer(
           userService!.baseUser!, await userService.firebaseUser!.getIdToken());
@@ -376,15 +399,13 @@ class LoginControllerViewModel extends BaseViewModel {
     }
 
     BaseAnalytics.logUserProfile(userService.baseUser!);
-    await userService.init();
+    await _journeyRepo!.init();
+    await _journeyService!.init();
     _userCoinService!.init();
-    baseProvider!.init();
-    AnalyticsProperties().init();
-    if (userService.isUserOnboarded) await _journeyService!.init();
-
+    _referralService.init();
     fcmListener!.setupFcm();
     logger!.i("Calling analytics init for new onboarded user");
-    await _analyticsService!.login(
+    _analyticsService!.login(
       isOnBoarded: userService.isUserOnboarded,
       baseUser: userService.baseUser,
     );
@@ -392,27 +413,26 @@ class LoginControllerViewModel extends BaseViewModel {
     AppState.isOnboardingInProgress = false;
     appStateProvider.rootIndex = 0;
 
-    Map<String, dynamic> response = await _internalOpsService!.initDeviceInfo();
-    logger!.d("Device Details: $response");
-    if (response != {}) {
-      final String? deviceId = response["deviceId"];
-      final String? platform = response["platform"];
-      final String? model = response["model"];
-      final String? brand = response["brand"];
-      final bool? isPhysicalDevice = response["isPhysicalDevice"];
-      final String? version = response["version"];
-      await _userRepo!.setNewDeviceId(
-        uid: userService.baseUser!.uid,
-        deviceId: deviceId,
-        platform: platform,
-        model: model,
-        brand: brand,
-        version: version,
-        isPhysicalDevice: isPhysicalDevice,
-      );
-    }
-    userService.userBootUpEE();
-
+    _internalOpsService!.initDeviceInfo().then((Map<String, dynamic> response) {
+      logger!.d("Device Details: $response");
+      if (response != {}) {
+        final String? deviceId = response["deviceId"];
+        final String? platform = response["platform"];
+        final String? model = response["model"];
+        final String? brand = response["brand"];
+        final bool? isPhysicalDevice = response["isPhysicalDevice"];
+        final String? version = response["version"];
+        _userRepo!.setNewDeviceId(
+          uid: userService.baseUser!.uid,
+          deviceId: deviceId,
+          platform: platform,
+          model: model,
+          brand: brand,
+          version: version,
+          isPhysicalDevice: isPhysicalDevice,
+        );
+      }
+    });
     setState(ViewState.Idle);
 
     ///check if the account is blocked

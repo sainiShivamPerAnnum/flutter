@@ -270,7 +270,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         );
       } else
         await scrollPageToAvatarPosition();
-      showFocusRing = true;
+      if (avatarRemoteMlIndex == 1) showFocusRing = true;
       await animateAvatar();
       updateRewardSTooltips();
       mainController!.addListener(() {

@@ -24,39 +24,30 @@ class SellCardView extends StatelessWidget {
   const SellCardView({Key? key, required this.investmentType})
       : super(key: key);
 
+  Color get color => investmentType == InvestmentType.AUGGOLD99
+      ? Color(0xff303B6A)
+      : UiConstants.kFloContainerColor;
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return PropertyChangeConsumer<BankAndPanService,
+    return PropertyChangeProvider<BankAndPanService,
         BankAndPanServiceProperties>(
-      properties: [
-        BankAndPanServiceProperties.reachedLockIn,
-        BankAndPanServiceProperties.augmontSellDisabled,
-        BankAndPanServiceProperties.bankDetailsVerified,
-        BankAndPanServiceProperties.kycVerified,
-        BankAndPanServiceProperties.ongoing,
-      ],
-      builder: (ctx, sellService, child) => Container(
-        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomLeft,
-            colors: [
-              Colors.white.withOpacity(0.3),
-              Colors.black.withOpacity(0),
-              Colors.white.withOpacity(0.3),
-            ],
-          ),
-        ),
-        width: SizeConfig.screenWidth,
-        child: Container(
-          margin: EdgeInsets.all(1),
+      value: locator<BankAndPanService>(),
+      child: PropertyChangeConsumer<BankAndPanService,
+          BankAndPanServiceProperties>(
+        properties: [
+          BankAndPanServiceProperties.reachedLockIn,
+          BankAndPanServiceProperties.augmontSellDisabled,
+          BankAndPanServiceProperties.bankDetailsVerified,
+          BankAndPanServiceProperties.kycVerified,
+          BankAndPanServiceProperties.ongoing,
+        ],
+        builder: (ctx, sellService, child) => Container(
+          margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-            color: UiConstants.kSecondaryBackgroundColor,
-          ),
+              borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+              color: color,
+              border: Border.all(color: Colors.white.withOpacity(0.4))),
           child: Column(
             children: [
               SizedBox(
@@ -72,6 +63,9 @@ class SellCardView extends StatelessWidget {
                       investmentType: investmentType,
                     ),
                     SellButton(
+                      text: investmentType == InvestmentType.AUGGOLD99
+                          ? "SELL"
+                          : "WITHDRAW",
                       onTap: () {
                         BaseUtil.openModalBottomSheet(
                           backgroundColor:
@@ -92,19 +86,22 @@ class SellCardView extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(
+                height: SizeConfig.padding10,
+              ),
               Padding(
-                padding: EdgeInsets.only(right: SizeConfig.padding24),
+                padding: EdgeInsets.only(left: SizeConfig.padding24),
                 child: Align(
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.centerLeft,
                   child: sellService.isKYCVerified &&
                           sellService.isBankDetailsAdded
                       ? SizedBox()
                       : Text(
-                          locale.enableSell,
+                          "To withdraw, complete the following steps:",
                           style: TextStyles.sourceSans.body4.colour(
-                            UiConstants.primaryColor,
+                            Colors.white,
                           ),
-                          textAlign: TextAlign.end,
+                          textAlign: TextAlign.start,
                         ),
                 ),
               ),

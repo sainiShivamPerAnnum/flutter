@@ -4,10 +4,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/payment_mode_enum.dart';
-import 'package:felloapp/core/enums/transaction_service_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
@@ -16,6 +16,7 @@ import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
@@ -42,8 +43,7 @@ class AugmontTransactionService extends BaseTransactionService {
   final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
   final _gtService = ScratchCardService();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
@@ -59,7 +59,7 @@ class AugmontTransactionService extends BaseTransactionService {
 
   set isGoldBuyInProgress(value) {
     this._isGoldBuyInProgress = value;
-    notifyListeners(TransactionServiceProperties.transactionStatus);
+    notifyListeners();
   }
 
   TransactionResponseModel? _model;
@@ -74,10 +74,10 @@ class AugmontTransactionService extends BaseTransactionService {
 
   set isGoldSellInProgress(bool value) {
     this._isGoldSellInProgress = value;
-    notifyListeners(TransactionServiceProperties.transactionStatus);
+    notifyListeners();
   }
 
-  Future<void>? initateAugmontTransaction(
+  Future<void>? initiateAugmontTransaction(
       {required GoldPurchaseDetails details}) {
     currentGoldPurchaseDetails = details;
     String paymentMode = this.getPaymentMode();
@@ -85,18 +85,13 @@ class AugmontTransactionService extends BaseTransactionService {
     switch (paymentMode) {
       case "PAYTM-PG":
         return processPaytmTransaction();
-        break;
       case "PAYTM":
         return getUserUpiAppChoice(this);
-        break;
       case "RZP-PG":
         return processRazorpayTransaction();
-        break;
       default:
         return processRazorpayTransaction();
     }
-
-    return null;
   }
 
   //6 -- UPI
@@ -271,6 +266,7 @@ class AugmontTransactionService extends BaseTransactionService {
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
+            await _newUserCheck();
             transactionResponseModel = res.model;
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
@@ -298,6 +294,16 @@ class AugmontTransactionService extends BaseTransactionService {
           );
           break;
       }
+    }
+  }
+
+  Future<void> _newUserCheck() async {
+    if (_userService!.baseUser!.segments.contains("NEW_USER")) {
+      await CacheService.invalidateByKey(CacheKeys.USER);
+      final list = _userService!.baseUser!.segments;
+      list.remove("NEW_USER");
+      _userService!.userSegments = list;
+      _userService!.baseUser!.segments = list;
     }
   }
 

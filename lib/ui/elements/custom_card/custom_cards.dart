@@ -165,28 +165,11 @@ class SaveCustomCard extends StatelessWidget {
                                     )
                                   ],
                                 ),
-                                Column(
-                                  children: [
-                                    // AnimatedTextKit(
-                                    //   repeatForever: true,
-                                    //   animatedTexts: List.generate(
-                                    //     chipText.length,
-                                    //     (index) => RotateAnimatedText(
-                                    //       chipText[index].toUpperCase(),
-                                    //       duration: Duration(seconds: 2),
-                                    //       textStyle: TextStyles
-                                    //           .sourceSansSB.body4
-                                    //           .colour(Colors.white),
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                    CustomSaveButton(
-                                      onTap: onTap,
-                                      title: locale.btnSave.toUpperCase(),
-                                      width: SizeConfig.screenWidth! * 0.2,
-                                      height: SizeConfig.screenWidth! * 0.11,
-                                    ),
-                                  ],
+                                CustomSaveButton(
+                                  onTap: onTap,
+                                  title: locale.btnSave.toUpperCase(),
+                                  width: SizeConfig.screenWidth! * 0.2,
+                                  height: SizeConfig.screenWidth! * 0.11,
                                 )
                               ],
                             )

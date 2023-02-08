@@ -18,25 +18,33 @@ import Flutter
 
         FirebaseApp.configure()
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-        let paymentChannel = FlutterMethodChannel(name:"fello.in/dev/notifications/channel/tambola",
+        let paymentChannel = FlutterMethodChannel(name: "methodChannel/deviceData",
                                                   binaryMessenger: controller.binaryMessenger)
         paymentChannel.setMethodCallHandler{(call: FlutterMethodCall, result: @escaping
                                              FlutterResult) -> Void in
-            self.resultMyFlutter = result
-            let arguments = call.arguments as? NSDictionary
-            let uri=arguments?["uri"] as? String
-            if uri != nil{
-                switch call.method {
-                case "canLaunch":
-                    result(self.canLaunch(uri: uri!))
-                    return
-                case "launch":
-                    self.launchUri(uri: uri!)
-                    return
-                default:
-                    result(FlutterMethodNotImplemented)
-                    return
-                }
+//            self.resultMyFlutter = result
+//            let arguments = call.arguments as? NSDictionary
+//            let uri=arguments?["uri"] as? String
+//            if uri != nil{
+//                switch call.method {
+//                case "canLaunch":
+//                    result(self.canLaunch(uri: uri!))
+//                    return
+//                case "launch":
+//                    self.launchUri(uri: uri!)
+//                    return
+//                default:
+//                    result(FlutterMethodNotImplemented)
+//                    return
+//                }
+//
+//            }
+            switch call.method {
+            case "getDeviceId":
+                self.getUniqueDeviceId(result: result)
+            default:
+                result(FlutterMethodNotImplemented)
+                return
             }
         }
             
@@ -73,6 +81,9 @@ import Flutter
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
+    private func getUniqueDeviceId(result:FlutterResult) {
+        result(UIDevice.current.identifierForVendor!.uuidString)
+    }
     
     private func canLaunch(uri: String) -> Bool {
        let url: URL? = URL(string: uri)

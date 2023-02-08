@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/carousal_widget.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/assets.dart';
@@ -28,7 +28,6 @@ class Campaigns extends StatelessWidget {
         SizedBox(height: SizeConfig.padding16),
         TitleSubtitleContainer(
           title: locale.offers,
-          subTitle: locale.offersSubtitle,
         ),
         CampaignCardSection(saveVm: model),
       ],
@@ -45,54 +44,51 @@ class CampaignCardSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: SizeConfig.padding24,
+        // left: SizeConfig.padding16,
         top: SizeConfig.padding8,
-        right: SizeConfig.padding16,
+        // right: SizeConfig.padding16,
       ),
       child: Container(
-        height: SizeConfig.screenWidth! * 0.57,
+        height: SizeConfig.screenWidth! * 0.5,
+        width: SizeConfig.screenWidth,
         child: saveVm.isChallengesLoading
             ? SizedBox()
-            : CarousalWidget(
-                height: SizeConfig.screenWidth! * 0.49,
-                width: SizeConfig.screenWidth,
-                widgets: List.generate(
-                  saveVm.ongoingEvents!.length,
-                  (index) {
-                    final event = saveVm.ongoingEvents![index];
-
-                    return GestureDetector(
-                      onTap: () {
-                        if (_userService.baseUser!.username!.isEmpty)
-                          return BaseUtil.showUsernameInputModalSheet();
-                        saveVm.trackChallangeTapped(event.type, index);
-                        AppState.delegate!.parseRoute(Uri.parse(event.type));
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(right: SizeConfig.padding10),
-                        child: CampaignCard(
-                          isLoading: saveVm.isChallengesLoading,
-                          topPadding: SizeConfig.padding16,
-                          leftPadding: SizeConfig.padding20,
-                          event: event,
-                          subText: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Container(
-                              width: SizeConfig.screenWidth! * 0.4,
-                              padding: EdgeInsets.only(
-                                top: SizeConfig.padding8,
-                              ),
-                              child: Text(
-                                event.subtitle ?? '',
-                                style: TextStyles.sourceSans.body4,
-                              ),
+            : PageView.builder(
+                controller: saveVm.offersController,
+                itemCount: saveVm.ongoingEvents!.length,
+                itemBuilder: ((context, index) {
+                  final event = saveVm.ongoingEvents![index];
+                  return GestureDetector(
+                    onTap: () {
+                      if (_userService.baseUser!.username!.isEmpty)
+                        return BaseUtil.showUsernameInputModalSheet();
+                      saveVm.trackChallangeTapped(event.type, index);
+                      AppState.delegate!.parseRoute(Uri.parse(event.type));
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(right: SizeConfig.padding10),
+                      child: CampaignCard(
+                        isLoading: saveVm.isChallengesLoading,
+                        topPadding: SizeConfig.padding16,
+                        leftPadding: SizeConfig.padding20,
+                        event: event,
+                        subText: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Container(
+                            width: SizeConfig.screenWidth! * 0.4,
+                            padding: EdgeInsets.only(
+                              top: SizeConfig.padding8,
+                            ),
+                            child: Text(
+                              event.subtitle ?? '',
+                              style: TextStyles.sourceSans.body4,
                             ),
                           ),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                }),
               ),
       ),
     );
@@ -246,48 +242,59 @@ class CampaignCard extends StatelessWidget {
             baseColor: UiConstants.kUserRankBackgroundColor,
             highlightColor: UiConstants.kBackgroundColor,
           )
-        : Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: UiConstants.kSecondaryBackgroundColor,
-            ),
-            padding: EdgeInsets.only(
-              left: this.leftPadding,
-              right: SizeConfig.padding24,
-              top: this.topPadding,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      prefix,
-                      style: TextStyles.sourceSans.body1.bold,
-                    ),
-                    Text(
-                      suffix.toUpperCase(),
-                      style: TextStyles.sourceSansEB.title50
-                          .letterSpace(0.6)
-                          .colour(
-                            event.textColor.toColor(),
-                          )
-                          .setHeight(1),
-                    ),
-                    this.subText
-                  ],
-                ),
-                Expanded(
-                  child: SvgPicture.asset(
-                    asset,
-                    fit: BoxFit.fitHeight,
+        : event.bgImage.isNotEmpty
+            ? Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  color: UiConstants.kSecondaryBackgroundColor,
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(event.bgImage),
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ],
-            ),
-          );
+              )
+            : Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  color: UiConstants.kSecondaryBackgroundColor,
+                ),
+                padding: EdgeInsets.only(
+                  left: this.leftPadding,
+                  right: SizeConfig.padding24,
+                  top: this.topPadding,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          prefix,
+                          style: TextStyles.sourceSans.body1.bold,
+                        ),
+                        Text(
+                          suffix.toUpperCase(),
+                          style: TextStyles.sourceSansEB.title50
+                              .letterSpace(0.6)
+                              .colour(
+                                event.textColor.toColor(),
+                              )
+                              .setHeight(1),
+                        ),
+                        this.subText
+                      ],
+                    ),
+                    Expanded(
+                      child: SvgPicture.asset(
+                        asset,
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                  ],
+                ),
+              );
   }
 }

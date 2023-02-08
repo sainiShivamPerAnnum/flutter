@@ -44,6 +44,8 @@ class UiConstants {
       900: const Color(0xff2EB19F),
     },
   );
+  static const Color kGoldContainerColor = const Color(0xff39498C);
+  static const Color kFloContainerColor = const Color(0xff023C40);
 
   /// New UI Colors
   static const Color kTextColor = const Color(0xFFFFFFFF);

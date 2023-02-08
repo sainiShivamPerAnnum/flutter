@@ -18,7 +18,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   final Widget? action;
   final double? leftPad;
   // final bool hasBackButton;
-
+  final TextStyle? style;
   const FAppBar({
     Key? key,
     this.type,
@@ -27,6 +27,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     this.showAvatar = true,
     this.showHelpButton = true,
     this.backgroundColor,
+    this.style,
     this.action,
     this.leftPad,
     // this.hasBackButton = true
@@ -42,17 +43,15 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
       //         icon: Icon(Icons.adaptive.arrow_back_rounded),
       //         onPressed: () => AppState.backButtonDispatcher!.didPopRoute())
       //     : SizedBox(),
+
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          showAvatar
-              ? Container(
-                  margin: EdgeInsets.only(left: leftPad ?? 0),
-                  child: ProfileImageSE())
-              : SizedBox(),
+          SizedBox(width: SizeConfig.padding8),
+          showAvatar ? ProfileImageSE() : SizedBox(),
           Text(
             '${title ?? ''}',
-            style: TextStyles.rajdhaniSB.title5,
+            style: TextStyles.rajdhaniSB.title5.merge(style),
           ),
         ],
       ),
@@ -68,7 +67,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
                   key: ValueKey(Constants.FELLO_COIN_BAR)),
             if (type != null) FaqPill(type: type),
             if (action != null) action!,
-            SizedBox(width: SizeConfig.padding20)
+            SizedBox(width: SizeConfig.padding14)
           ],
         )
       ],

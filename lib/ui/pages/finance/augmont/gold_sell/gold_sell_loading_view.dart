@@ -24,8 +24,7 @@ class GoldSellLoadingView extends StatelessWidget {
 
   final AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   final int waitTimeInSec = 45;
 

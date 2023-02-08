@@ -17,6 +17,7 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -67,7 +68,7 @@ class RazorpayService extends ChangeNotifier {
     _txnService!.initiatePolling();
     log.debug(
         "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
-    _currentTxn!.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
+    _currentTxn?.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
     if (_currentTxn!.rzp![UserTransaction.subFldRzpOrderId] !=
         checkoutOrderId) {
       _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
@@ -81,6 +82,8 @@ class RazorpayService extends ChangeNotifier {
   void handlePaymentError(PaymentFailureResponse response) {
     _txnService!.currentTransactionState = TransactionState.idle;
     AppState.unblockNavigation();
+    if (response.code == 2)
+      locator<BackButtonActions>().isTransactionCancelled = true;
     BaseUtil.showNegativeAlert(locale.txnFailed, locale.txnFailedSubtitle);
     log.debug("ERROR: " + response.code.toString() + " - " + response.message!);
     Map<String, dynamic>? currentTxnDetails =
@@ -89,14 +92,14 @@ class RazorpayService extends ChangeNotifier {
     currentTxnDetails?["Error message"] = response.message;
     _analyticsService!.track(
         eventName: AnalyticsEvents.paymentCancelled,
-        properties: currentTxnDetails);
+        properties: _txnService!.currentTransactionAnalyticsDetails ?? {});
 
     locator<InternalOpsService>().logFailure(
       _userService!.baseUser!.uid,
       FailType.RazorpayTransactionFailed,
-      {'message': "Scratch Card data fetch failed"},
+      {'message': "Razorpay payment cancelled or failed"},
     );
-    _currentTxn!.rzp?[UserTransaction.subFldRzpStatus] =
+    _currentTxn?.rzp?[UserTransaction.subFldRzpStatus] =
         UserTransaction.RZP_TRAN_STATUS_FAILED;
     if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
 

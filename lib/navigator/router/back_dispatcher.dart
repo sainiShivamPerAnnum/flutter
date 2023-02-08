@@ -1,5 +1,6 @@
 //Project Imports
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/base_util.dart';
@@ -8,10 +9,12 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -67,6 +70,24 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     //   _journeyService!.isJourneyOnboardingInView = false;
     //   _journeyService!.isUserJourneyOnboarded = true;
     // }
+
+    if (locator<BackButtonActions>().isTransactionCancelled) {
+      if (AppState.onTap != null &&
+          AppState.type != null &&
+          AppState.amt != null) {
+        if (!AppState.isRepeated) {
+          locator<BackButtonActions>().showWantToCloseTransactionBottomSheet(
+            AppState.amt!.round(),
+            AppState.type!,
+            () {
+              AppState.onTap?.call();
+            },
+          );
+          AppState.isRepeated = true;
+          return Future.value(true);
+        }
+      }
+    }
     if (AppState.isInstantGtViewInView) return Future.value(true);
     if (AppState.screenStack.last == ScreenItem.loader)
       return Future.value(true);
@@ -82,7 +103,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
-      showNegativeAlert("Exit Signup?", "Press back once more to exit");
+      BaseUtil().showConfirmExit();
       AppState.isOnboardingInProgress = false;
       return Future.value(true);
     }
@@ -130,6 +151,9 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         AppState.delegate!.appState.rootIndex != 0) {
       logger!.w("Checking if app can be closed");
       AppState.delegate!.appState.setCurrentTabIndex = 0;
+      locator<RootController>()
+          .onChange(locator<RootController>().navItems.values.toList()[0]);
+
       _journeyService!.checkForMilestoneLevelChange();
       return Future.value(true);
     }

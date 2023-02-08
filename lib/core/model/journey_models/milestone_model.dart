@@ -28,6 +28,7 @@ class MilestoneModel {
   final MilestoneShadowModel? shadow;
   final bool? hFlip;
   final bool vFlip;
+  final int? value;
   MilestoneModel({
     this.id,
     required this.asset,
@@ -49,6 +50,7 @@ class MilestoneModel {
     this.shadow,
     this.hFlip = false,
     this.vFlip = false,
+    this.value,
   });
 
   MilestoneModel copyWith({
@@ -72,6 +74,7 @@ class MilestoneModel {
     MilestoneShadowModel? shadow,
     bool? hFlip,
     bool? vFlip,
+    int? value,
   }) {
     return MilestoneModel(
       id: id ?? this.id,
@@ -94,6 +97,7 @@ class MilestoneModel {
       shadow: shadow ?? this.shadow,
       hFlip: hFlip ?? this.hFlip,
       vFlip: vFlip ?? this.vFlip,
+      value: value ?? this.value,
     );
   }
 
@@ -160,6 +164,7 @@ class MilestoneModel {
           ? MilestoneShadowModel.fromMap(
               map['shadow'] as Map<String, dynamic>, map, page)
           : null,
+      value: map['value'] ?? 0,
     );
   }
 

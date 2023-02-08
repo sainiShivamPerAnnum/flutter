@@ -12,6 +12,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 class MiniTransactionCard extends StatelessWidget {
   final InvestmentType investmentType;
@@ -30,13 +31,9 @@ class MiniTransactionCard extends StatelessWidget {
         return AnimatedContainer(
           duration: Duration(milliseconds: 2000),
           curve: Curves.easeInOutCubic,
-          child: PropertyChangeConsumer<TransactionHistoryService,
-              TransactionHistoryServiceProperties>(
-            properties: [
-              TransactionHistoryServiceProperties.TransactionHistoryList
-            ],
+          child: Consumer<TxnHistoryService>(
             builder: (ctx, m, child) {
-              final txnList = m!.txnList != null && m.txnList!.isNotEmpty
+              final txnList = m.txnList != null && m.txnList!.isNotEmpty
                   ? m.txnList!
                       .where((e) => e.subType == investmentType.name)
                       .toList()

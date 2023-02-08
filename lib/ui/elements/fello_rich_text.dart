@@ -19,8 +19,7 @@ class FelloRichText extends RichText {
           (!paragraph.contains("*") && !paragraph.contains("_"))) {
         return new TextSpan(
             text: paragraph,
-            style:  
-                TextStyles.sourceSans.body1.colour(UiConstants.kTextColor));
+            style: TextStyles.sourceSans.body1.colour(UiConstants.kTextColor));
       }
 
       String snip = '';

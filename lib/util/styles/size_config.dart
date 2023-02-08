@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
 
 class SizeConfig {
   // reference
@@ -27,6 +28,7 @@ class SizeConfig {
   static late double globalMargin;
   static double? scaffoldMargin;
   static late EdgeInsets viewInsets;
+  static late double fToolBarHeight;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -47,6 +49,7 @@ class SizeConfig {
     cardBorderRadius = 12;
     globalMargin = blockSizeHorizontal * 3;
     scaffoldMargin = blockSizeHorizontal * 5;
+    fToolBarHeight = viewInsets.top + kToolbarHeight;
   }
 
   // TEXT SIZES

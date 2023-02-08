@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
@@ -33,7 +35,6 @@ class Blogs extends StatelessWidget {
             children: [
               TitleSubtitleContainer(
                 title: locale.blogsTitle,
-                subTitle: locale.blogsSubTitle,
               ),
               Padding(
                 padding: EdgeInsets.only(
@@ -73,72 +74,75 @@ class SaveBlogSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("BUILD: blog build method called");
     return Padding(
-        padding: EdgeInsets.only(
-            left: SizeConfig.padding24, top: SizeConfig.padding10),
-        child: Container(
-          height: SizeConfig.screenWidth! * 0.4,
-          child: model.isLoading
-              ? ListView.builder(
-                  itemCount: 2,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (ctx, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(right: SizeConfig.padding10),
-                      child: Container(
-                        width: SizeConfig.screenWidth! - 80,
-                        decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness12),
-                            color: UiConstants.kSecondaryBackgroundColor),
-                        child: Padding(
-                          padding: EdgeInsets.all(SizeConfig.padding6),
-                          child: Row(
-                            children: [
-                              Shimmer.fromColors(
-                                baseColor: UiConstants.kUserRankBackgroundColor,
-                                highlightColor: UiConstants.kBackgroundColor,
-                                child: Container(
-                                  height: SizeConfig.screenWidth! * 0.23,
-                                  width: SizeConfig.screenWidth! * 0.25,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness12),
-                                      color: UiConstants.kBackgroundColor),
-                                ),
+      padding: EdgeInsets.only(
+          left: SizeConfig.padding24, top: SizeConfig.padding10),
+      child: Container(
+        height: SizeConfig.screenWidth! * 0.4,
+        child: model.isLoading
+            ? ListView.builder(
+                itemCount: 2,
+                scrollDirection: Axis.horizontal,
+                cacheExtent: 500,
+                itemBuilder: (ctx, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(right: SizeConfig.padding10),
+                    child: Container(
+                      width: SizeConfig.screenWidth! - 80,
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness12),
+                          color: UiConstants.kSecondaryBackgroundColor),
+                      child: Padding(
+                        padding: EdgeInsets.all(SizeConfig.padding6),
+                        child: Row(
+                          children: [
+                            Shimmer.fromColors(
+                              baseColor: UiConstants.kUserRankBackgroundColor,
+                              highlightColor: UiConstants.kBackgroundColor,
+                              child: Container(
+                                height: SizeConfig.screenWidth! * 0.23,
+                                width: SizeConfig.screenWidth! * 0.25,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness12),
+                                    color: UiConstants.kBackgroundColor),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  },
-                )
-              : model.blogPosts == null || model.blogPosts!.isEmpty
-                  ? SizedBox()
-                  : ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: model.blogPosts!.length,
-                      itemBuilder: (ctx, index) {
-                        return Padding(
-                          padding: EdgeInsets.only(right: SizeConfig.padding10),
-                          child: SaveBlogTile(
-                            onTap: () {
-                              model.trackBannerClickEvent(index);
-
-                              model.navigateToBlogWebView(
-                                  model.blogPosts![index].slug,
-                                  model.blogPosts![index].acf!.categories);
-                            },
-                            title: model.blogPosts![index].acf!.categories!,
-                            description:
-                                model.blogPosts![index].title!.rendered!,
-                            imageUrl: model.blogPosts![index].yoastHeadJson!,
-                          ),
-                        );
-                      },
                     ),
-        ));
+                  );
+                },
+              )
+            : model.blogPosts == null || model.blogPosts!.isEmpty
+                ? SizedBox()
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: model.blogPosts!.length,
+                    cacheExtent: 500,
+                    itemBuilder: (ctx, index) {
+                      return Padding(
+                        padding: EdgeInsets.only(right: SizeConfig.padding10),
+                        child: SaveBlogTile(
+                          onTap: () {
+                            model.trackBannerClickEvent(index);
+
+                            model.navigateToBlogWebView(
+                                model.blogPosts![index].slug,
+                                model.blogPosts![index].acf!.categories);
+                          },
+                          title: model.blogPosts![index].acf!.categories!,
+                          description: model.blogPosts![index].title!.rendered!,
+                          imageUrl: model.blogPosts![index].yoastHeadJson!,
+                        ),
+                      );
+                    },
+                  ),
+      ),
+    );
   }
 }
 
@@ -182,21 +186,17 @@ class SaveBlogTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final document = parse(description);
-    // final String parsedDesc = parse(document.body.text).documentElement.text;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: SizeConfig.screenWidth! - 50,
-        child: ClipRRect(
+        height: SizeConfig.screenWidth! * 0.4,
+        width: SizeConfig.screenWidth! - SizeConfig.padding54,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: CachedNetworkImageProvider(imageUrl!),
+              fit: BoxFit.cover,
+              alignment: Alignment.centerLeft),
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-          child: CachedNetworkImage(
-            imageUrl: imageUrl!,
-            height: SizeConfig.screenWidth! * 0.4,
-            width: SizeConfig.screenWidth,
-            fit: BoxFit.cover,
-            alignment: Alignment.centerLeft,
-          ),
         ),
       ),
     );

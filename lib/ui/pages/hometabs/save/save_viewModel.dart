@@ -18,17 +18,13 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
-import 'package:felloapp/ui/pages/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
-import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -36,6 +32,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
@@ -54,12 +51,12 @@ class SaveViewModel extends BaseViewModel {
   final SaveRepo? _saveRepo = locator<SaveRepo>();
   final UserService? _userService = locator<UserService>();
   BaseUtil? baseProvider;
+
   final BankAndPanService? _sellService = locator<BankAndPanService>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
 
@@ -73,7 +70,8 @@ class SaveViewModel extends BaseViewModel {
   ];
   double _nonWithdrawableQnt = 0.0;
   double _withdrawableQnt = 0.0;
-
+  late final PageController offersController =
+      PageController(viewportFraction: 0.9, initialPage: 1);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
@@ -193,14 +191,17 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     });
-    saveViewItems.add(AppFooter(bottomPad: 0));
-    saveViewItems.add(Padding(
-      padding: EdgeInsets.only(
-        bottom: SizeConfig.padding80 + SizeConfig.navBarHeight,
-      ),
-      child: TermsAndConditions(url: Constants.savingstnc),
-    ));
 
+    saveViewItems.add(
+      Container(
+        margin: EdgeInsets.only(top: SizeConfig.padding40),
+        child: LottieBuilder.network("https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+      ),
+    );
+
+    saveViewItems.add(SizedBox(
+      height: SizeConfig.navBarHeight,
+    ));
     return saveViewItems;
   }
 
@@ -323,7 +324,9 @@ class SaveViewModel extends BaseViewModel {
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SaveAssetsViewConfig,
-        widget: SaveAssetView(),
+        widget: AssetSectionView(
+          type: investmentType,
+        ),
       );
     } else {
       _analyticsService!.track(
@@ -340,8 +343,10 @@ class SaveViewModel extends BaseViewModel {
 
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
-        page: LendboxDetailsPageConfig,
-        widget: LendboxDetailsView(),
+        page: SaveAssetsViewConfig,
+        widget: AssetSectionView(
+          type: investmentType,
+        ),
       );
     }
   }

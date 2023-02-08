@@ -1,9 +1,5 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
-import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -15,7 +11,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AutosaveCard extends StatefulWidget {
@@ -32,55 +27,57 @@ class _AutosaveCardState extends State<AutosaveCard> {
 
   @override
   Widget build(BuildContext context) {
-    ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityService>(context, listen: true)
-            .connectivityStatus;
-    return BaseView<SubscriptionCardViewModel>(
-      onModelReady: (model) async => await model.init(),
-      builder: (context, subscriptionModel, child) =>
-          PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
-        builder: (context, model, property) => model!.autosaveVisible
-            ? GestureDetector(
-                onTap: () async {
-                  if (connectivityStatus == ConnectivityStatus.Offline)
-                    return BaseUtil.showNoInternetAlert();
-                  // if (!subscriptionModel.isUserProfileComplete())
-                  //   return BaseUtil.openDialog(
-                  //       addToScreenStack: true,
-                  //       isBarrierDismissible: true,
-                  //       hapticVibrate: false,
-                  //       content: CompleteProfileDialog(
-                  //         subtitle:
-                  //             'Please complete your profile to win your first reward and to start autosaving',
-                  //       ));
-                  if (isLoading) return;
-                  setState(() {
-                    isLoading = true;
-                  });
-                  await subscriptionModel.getActiveButtonAction();
-                  setState(() {
-                    isLoading = false;
-                  });
-                },
-                child: (model.activeSubscription != null &&
-                        model.activeSubscription!.status ==
-                            Constants.SUBSCRIPTION_ACTIVE)
-                    ? (widget.locationKey.value == 'save'
-                        ? SizedBox()
-                        : ActiveOrPausedAutosaveCard(
-                            isLoading: isLoading,
-                            isResumingInProgress: isResumingInProgress,
-                            subscriptionModel: subscriptionModel,
-                          ))
-                    : InitAutosaveCard(
-                        onTap: () {
-                          subscriptionModel.getActiveButtonAction();
-                        },
-                      ),
-              )
-            : SizedBox(),
-      ),
-    );
+    // ConnectivityStatus connectivityStatus =
+    //     Provider.of<ConnectivityService>(context, listen: true)
+    //         .connectivityStatus;
+    return SizedBox();
+
+    // BaseView<SubscriptionCardViewModel>(
+    //   onModelReady: (model) async => await model.init(),
+    //   builder: (context, subscriptionModel, child) =>
+    //       PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
+    //     builder: (context, model, property) => model!.autosaveVisible
+    //         ? GestureDetector(
+    //             onTap: () async {
+    //               if (connectivityStatus == ConnectivityStatus.Offline)
+    //                 return BaseUtil.showNoInternetAlert();
+    //               // if (!subscriptionModel.isUserProfileComplete())
+    //               //   return BaseUtil.openDialog(
+    //               //       addToScreenStack: true,
+    //               //       isBarrierDismissible: true,
+    //               //       hapticVibrate: false,
+    //               //       content: CompleteProfileDialog(
+    //               //         subtitle:
+    //               //             'Please complete your profile to win your first reward and to start autosaving',
+    //               //       ));
+    //               if (isLoading) return;
+    //               setState(() {
+    //                 isLoading = true;
+    //               });
+    //               await subscriptionModel.getActiveButtonAction();
+    //               setState(() {
+    //                 isLoading = false;
+    //               });
+    //             },
+    //             child: (model.activeSubscription != null &&
+    //                     model.activeSubscription!.status ==
+    //                         Constants.SUBSCRIPTION_ACTIVE)
+    //                 ? (widget.locationKey.value == 'save'
+    //                     ? SizedBox()
+    //                     : ActiveOrPausedAutosaveCard(
+    //                         isLoading: isLoading,
+    //                         isResumingInProgress: isResumingInProgress,
+    //                         subscriptionModel: subscriptionModel,
+    //                       ))
+    //                 : InitAutosaveCard(
+    //                     onTap: () {
+    //                       subscriptionModel.getActiveButtonAction();
+    //                     },
+    //                   ),
+    //           )
+    //         : SizedBox(),
+    //   ),
+    // );
   }
 }
 

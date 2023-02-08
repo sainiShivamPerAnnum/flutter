@@ -45,8 +45,7 @@ class AugmontService extends ChangeNotifier {
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   List<String> _sellingReasons = [];
@@ -273,7 +272,7 @@ class AugmontService extends ChangeNotifier {
     if (response == null) {
       log.error('response is null');
     }
-    if (response.statusCode != 200 && response.statusCode != 201) {
+    if (response.statusCode != 200 && response.statusCode != 201) {     
       log.error(
           'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
       if (response.statusCode == 502)

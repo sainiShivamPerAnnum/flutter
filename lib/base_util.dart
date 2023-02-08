@@ -12,7 +12,6 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
-import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/prize_leader_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
@@ -31,7 +30,9 @@ import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
 import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
@@ -54,7 +55,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
@@ -307,7 +308,6 @@ class BaseUtil extends ChangeNotifier {
       addToScreenStack: false,
       content: WebGameModalSheet(
         game: game,
-        
       ),
       backgroundColor: Color(0xff39393C),
       hapticVibrate: true,
@@ -350,6 +350,7 @@ class BaseUtil extends ChangeNotifier {
           locale.tryLater,
         );
       }
+      double amount = 0;
 
       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
@@ -360,15 +361,29 @@ class BaseUtil extends ChangeNotifier {
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
             ? GoldBuyView(
+                onChanged: (p0) => amount = p0,
                 amount: amt,
                 skipMl: isSkipMl ?? false,
               )
             : LendboxBuyView(
                 amount: amt,
                 skipMl: isSkipMl ?? false,
+                onChanged: (p0) => amount = p0,
               ),
-      );
+      ).then((value) {
+        AppState.isRepeated = false;
+        AppState.onTap = null;
+        locator<BackButtonActions>().isTransactionCancelled = false;
+      });
     });
+  }
+
+  Future<void> showConfirmExit() async {
+    await openModalBottomSheet(
+        isBarrierDismissible: false,
+        addToScreenStack: true,
+        isScrollControlled: true,
+        content: ConfirmExitModal());
   }
 
   void openSellModalSheet({required InvestmentType investmentType}) {
@@ -459,18 +474,18 @@ class BaseUtil extends ChangeNotifier {
   //   return false;
   // }
 
-  static void openDialog({
+  static Future<void> openDialog({
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
     required bool isBarrierDismissible,
     ValueChanged<dynamic>? callback,
-  }) {
+  }) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     print("Current Stack: ${AppState.screenStack}");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
-    showDialog(
+    await showDialog(
       context: AppState.delegate!.navigatorKey.currentContext!,
       barrierDismissible: isBarrierDismissible,
       builder: (ctx) => content!,
@@ -584,10 +599,8 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static void launchUrl(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      launchUrl(url);
-    } else {
+  static Future<void> launchUrl(String url) async {
+    if (!await launchUrlString(url, mode: LaunchMode.externalApplication)) {
       BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
           "Please try after some time");
     }

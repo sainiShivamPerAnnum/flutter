@@ -752,10 +752,10 @@ class S {
     );
   }
 
-  /// `verify Email`
+  /// `Verify Email`
   String get obVerifyEmail {
     return Intl.message(
-      'verify Email',
+      'Verify Email',
       name: 'obVerifyEmail',
       desc: '',
       args: [],
@@ -1118,10 +1118,10 @@ class S {
     );
   }
 
-  /// `Buy 24K pure Digital You own Gold`
+  /// `Buy 24K pure Digital Gold`
   String get buyGold {
     return Intl.message(
-      'Buy 24K pure Digital You own Gold',
+      'Buy 24K pure Digital Gold',
       name: 'buyGold',
       desc: '',
       args: [],
@@ -3588,10 +3588,10 @@ class S {
     );
   }
 
-  /// `KYC DETAILS`
+  /// `Kyc Details`
   String get kycTitle {
     return Intl.message(
-      'KYC DETAILS',
+      'Kyc Details',
       name: 'kycTitle',
       desc: '',
       args: [],
@@ -5384,10 +5384,10 @@ class S {
     );
   }
 
-  /// `how are you gonna withdraw less than 1?`
+  /// `Minimum sell amount is ₹10`
   String get txnWithDrawMin {
     return Intl.message(
-      'how are you gonna withdraw less than 1?',
+      'Minimum sell amount is ₹10',
       name: 'txnWithDrawMin',
       desc: '',
       args: [],

@@ -1,16 +1,20 @@
 //Project Imports
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/sell_confirmation_screen.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -19,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class GoldSellInputView extends StatelessWidget {
   final GoldSellViewModel model;
@@ -39,7 +44,10 @@ class GoldSellInputView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: SizeConfig.padding16),
-            RechargeModalSheetAppBar(txnService: augTxnService),
+            RechargeModalSheetAppBar(
+                txnService: augTxnService,
+                trackCloseTapped: () =>
+                    AppState.backButtonDispatcher!.didPopRoute()),
             SizedBox(
               height: SizeConfig.padding24,
             ),
@@ -226,7 +234,34 @@ class GoldSellInputView extends StatelessWidget {
                     child: ReactivePositiveAppButton(
                       btnText: locale.saveSellButton,
                       onPressed: () async {
-                        if (!augTxnService.isGoldSellInProgress &&
+                        if (model.responseModel.data!.limitQuantity <
+                            double.parse(
+                                model.goldAmountController!.text.isNotEmpty
+                                    ? model.goldAmountController!.text
+                                    : '0')) {
+                          await BaseUtil.openDialog(
+                            isBarrierDismissible: false,
+                            addToScreenStack: true,
+                            content: ConfirmationDialog(
+                                asset: Padding(
+                                  padding: EdgeInsets.all(SizeConfig.padding16),
+                                  child: SvgPicture.asset(
+                                    Assets.securityCheck,
+                                    height: SizeConfig.screenHeight! * 0.15,
+                                    width: SizeConfig.screenHeight! * 0.15,
+                                  ),
+                                ),
+                                title: model.responseModel.data!.limitHeading,
+                                description:
+                                    model.responseModel.data!.limitMessage,
+                                showSecondaryButton: false,
+                                buttonText: "OKAY",
+                                confirmAction: () {
+                                  AppState.backButtonDispatcher!.didPopRoute();
+                                },
+                                cancelAction: () {}),
+                          );
+                        } else if (!augTxnService.isGoldSellInProgress &&
                             !model.isQntFetching) {
                           FocusScope.of(context).unfocus();
                           bool isDetailComplete =

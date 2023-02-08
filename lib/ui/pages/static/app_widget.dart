@@ -378,22 +378,22 @@ class AppPositiveBtn extends StatelessWidget {
                 ),
           ),
         ),
-        Container(
-          height: SizeConfig.padding2,
-          width: (width ?? SizeConfig.screenWidth)! - SizeConfig.padding4,
-          margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding2,
-          ),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: UiConstants.kTextColor,
-                offset: Offset(0, SizeConfig.padding2),
-                blurRadius: SizeConfig.padding4,
-              ),
-            ],
-          ),
-        ),
+        // Container(
+        //   height: SizeConfig.padding2,
+        //   width: (width ?? SizeConfig.screenWidth)! - SizeConfig.padding4,
+        //   margin: EdgeInsets.symmetric(
+        //     horizontal: SizeConfig.padding2,
+        //   ),
+        //   decoration: BoxDecoration(
+        //     boxShadow: [
+        //       BoxShadow(
+        //         color: UiConstants.kTextColor,
+        //         offset: Offset(0, SizeConfig.padding2),
+        //         blurRadius: SizeConfig.padding4,
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }

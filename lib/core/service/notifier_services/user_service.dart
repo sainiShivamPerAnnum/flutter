@@ -53,7 +53,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final DBModel? _dbModel = locator<DBModel>();
   final CustomLogger _logger = locator<CustomLogger>();
-  // final ApiCacheManager? _apiCacheManager = locator<ApiCacheManager>();
   final UserRepository? _userRepo = locator<UserRepository>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
@@ -109,7 +108,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
   bool get hasNewNotifications => _hasNewNotifications;
   // UserAugmontDetail get userAugmontDetails => this._userAugmontDetails;
-
+  List _userSegments = [];
   set baseUser(baseUser) {
     _baseUser = baseUser;
   }
@@ -120,6 +119,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger!.d(
         "Notification Status updated in userservice, property listeners notified");
   }
+
+  set userSegments(List userSeg) {
+    _userSegments = userSeg;
+    notifyListeners(UserServiceProperties.mySegments);
+  }
+
+  List<dynamic> get userSegments => _userSegments;
 
   UserFundWallet? get userFundWallet => _userFundWallet;
   UserJourneyStatsModel? get userJourneyStats => _userJourneyStats;
@@ -362,6 +368,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       await CacheService.invalidateAll();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
+      _journeyRepo!.dump();
       // await _apiCacheManager!.clearCacheMemory();
       _logger!.d("UserService signout called");
       _userFundWallet = null;
@@ -407,6 +414,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       isEmailVerified = baseUser?.isEmailVerified ?? false;
       isSimpleKycVerified = baseUser?.isSimpleKycVerified ?? false;
       setEmail(baseUser!.email);
+      userSegments = response.model!.segments;
       setMyAvatarId(baseUser!.avatarId);
       setMyUserName(baseUser?.kycName ?? baseUser!.name);
       setDateOfBirth(baseUser!.dob);
@@ -518,6 +526,16 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     DynamicUiUtils.navBar = dynamicUi.navBar;
     _rootController.navItems.clear();
     DynamicUiUtils.navBar.forEach(_rootController.getNavItems);
+
+    DynamicUiUtils.goldTag = dynamicUi.save.badgeText?.AUGGOLD99 ?? "";
+    DynamicUiUtils.lbTag = dynamicUi.save.badgeText?.LENDBOXP2P ?? "";
+    DynamicUiUtils.islbTrending = dynamicUi.save.trendingAsset == "LENDBOXP2P";
+
+    DynamicUiUtils.isGoldTrending =
+        dynamicUi.save.trendingAsset != "LENDBOXP2P";
+    if (dynamicUi.save.ctaText != null)
+      DynamicUiUtils.ctaText = dynamicUi.save.ctaText!;
+    _rootController.onChange(_rootController.navItems.values.toList()[0]);
   }
 
   diplayUsername(String username) {
@@ -747,4 +765,31 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           locale.authFailed, locale.restartAndTry);
     }
   }
+
+  Future<Map<String?, dynamic>> logUserInstalledApps() async {
+    if (Platform.isAndroid) {
+      Map<String?, dynamic> packages = {};
+      const platform = MethodChannel("methodChannel/deviceData");
+      try {
+        final List result = await platform.invokeMethod('getInstalledApps');
+        for (var e in result) {
+          packages[e["app_name"]] = e["package_name"];
+          // packages.add(_parseData(e));
+          print(packages.length);
+        }
+        return packages;
+      } on PlatformException catch (e) {
+        log("Failed to fetch installed applications $e");
+        return {};
+      }
+    }
+    return {};
+  }
+
+  // Package _parseData(Map<dynamic, dynamic> data) {
+  //   final appName = data["app_name"];
+  //   final packageName = data["package_name"];
+  //   final icon = data["icon"];
+  //   return {"appName": appName, "packageName": packageName};
+  // }
 }

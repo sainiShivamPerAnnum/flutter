@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/amount_input_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
@@ -29,7 +30,11 @@ class LendboxWithdrawalInputView extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             SizedBox(height: SizeConfig.padding16),
-            LendboxAppBar(isEnabled: !model.inProgress),
+            LendboxAppBar(
+              isEnabled: !model.inProgress,
+              trackClosingEvent: () =>
+                  AppState.backButtonDispatcher!.didPopRoute(),
+            ),
             SizedBox(height: SizeConfig.padding32),
             if (model.state == ViewState.Idle &&
                 (model.withdrawableQuantity?.lockedAmount ?? 0) > 0)

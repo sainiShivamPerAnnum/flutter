@@ -10,7 +10,6 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -30,6 +29,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../util/assets.dart';
 
@@ -50,7 +50,7 @@ class PlayViewModel extends BaseViewModel {
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final GameRepo? gamesRepo = locator<GameRepo>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
-  final WinnerService _winnerService = locator<WinnerService>();
+  // final WinnerService _winnerService = locator<WinnerService>();
   final UserStatsRepo _userStatsRepo = locator<UserStatsRepo>();
   bool _showSecurityMessageAtTop = true;
   final TambolaWidgetController _tambolaController = TambolaWidgetController();
@@ -182,12 +182,16 @@ class PlayViewModel extends BaseViewModel {
           break;
       }
     });
-    playViewChildren.add(AppFooter(bottomPad: 0));
-    playViewChildren.add(Padding(
-      padding: EdgeInsets.only(
-          bottom: SizeConfig.navBarHeight + SizeConfig.padding80),
-      child: TermsAndConditions(url: Constants.gamingtnc),
+    // playViewChildren.add(AppFooter(bottomPad: 0));
+    // playViewChildren.add(TermsAndConditions(url: Constants.gamingtnc));
+    playViewChildren.add(SizedBox(
+      height: SizeConfig.padding10,
     ));
+    playViewChildren.add(
+      LottieBuilder.network(
+          "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+    );
+    playViewChildren.add(SizedBox(height: SizeConfig.navBarHeight));
     return playViewChildren;
   }
 

@@ -505,8 +505,7 @@ class TransationTile extends StatelessWidget {
   }) : super(key: key);
   final bool isLast;
   final AutosaveTransactionModel txn;
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   @override
   Widget build(BuildContext context) {
     return Column(

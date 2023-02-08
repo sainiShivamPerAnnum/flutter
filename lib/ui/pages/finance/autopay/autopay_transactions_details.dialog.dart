@@ -3,7 +3,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -26,8 +25,7 @@ class AutosaveTransactionDetailsDialogState
     extends State<AutosaveTransactionDetailsDialog> {
   final Log log = new Log('AutosaveAutosaveTransactionDetailsDialog');
 
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
 
   @override
   Widget build(BuildContext context) {
@@ -155,13 +153,13 @@ class AutosaveTransactionDetailsDialogState
                       ),
                     (widget._transaction.status != null)
                         ? referralTileWide(
-                          locale.txnStatus,
+                            locale.txnStatus,
                             widget._transaction.status!,
                             _txnHistoryService!
                                 .getTileColor(widget._transaction.status),
                           )
-                        : referralTileWide(locale.txnStatus, locale.txnCompleted,
-                            UiConstants.primaryColor),
+                        : referralTileWide(locale.txnStatus,
+                            locale.txnCompleted, UiConstants.primaryColor),
                     referralTileWide(
                         locale.dateTime,
                         "${_getFormattedDate(widget._transaction.createdOn!)}, ${_getFormattedTime(widget._transaction.createdOn!)}",

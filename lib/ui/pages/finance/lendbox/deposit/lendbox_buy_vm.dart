@@ -88,7 +88,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     log(amount.toString());
     _isBuyInProgress = true;
     notifyListeners();
-
+    trackCheckOut(amount.toDouble());
     await _txnService!.initiateTransaction(amount.toDouble(), skipMl);
     _isBuyInProgress = false;
     notifyListeners();
@@ -101,6 +101,23 @@ class LendboxBuyViewModel extends BaseViewModel {
       readOnly = false;
       notifyListeners();
     }
+  }
+
+  trackCheckOut(double? amount) {
+    _txnService!.currentTransactionAnalyticsDetails = {
+      "Asset": "Flo",
+      "Amount Entered": amount ?? 0,
+      "Error message": "",
+    };
+    _analyticsService!.track(
+      eventName: AnalyticsEvents.saveCheckout,
+      properties: AnalyticsProperties.getDefaultPropertiesMap(
+        extraValuesMap: {
+          "Asset": "Flo",
+          "Amount Entered": amount ?? 0,
+        },
+      ),
+    );
   }
 
   //2 Basic Checks

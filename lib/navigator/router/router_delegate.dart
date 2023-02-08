@@ -9,6 +9,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_rating_dialog.dart';
@@ -24,13 +25,13 @@ import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_vi
 import 'package:felloapp/ui/pages/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/weekly_results/weekly_result.dart';
-import 'package:felloapp/ui/pages/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
-import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
+import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
@@ -69,6 +70,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
+  
   CustomLogger _logger = locator<CustomLogger>();
   BaseUtil? _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final AppState appState;
@@ -95,7 +97,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       key: navigatorKey,
       onPopPage: _onPopPage,
       pages: buildPages(),
-      // transitionDelegate: const MyTransitionDelegate(),
+      transitionDelegate: const MyTransitionDelegate(),
     );
   }
 
@@ -324,6 +326,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         // case Pages.TransactionDetailsPage:
         //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);
         //   break;
+
         default:
           break;
       }
@@ -618,6 +621,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.SellConfirmationView:
         SellConfirmationViewConfig.currentPageAction = action;
         break;
+      case Pages.AssetViewSection:
+        AssetViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -694,7 +700,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         if (segment.startsWith('d-', 0)) {
           dialogCheck(segment.split('-').last);
         } else if (segment.startsWith('GM_')) {
-          openWebGame(segment,);
+          openWebGame(
+            segment,
+          );
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else if (segment.startsWith('story-')) {
@@ -950,7 +958,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   openAppWalkthrough() {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
-      widget: OnBoardingView(comingFrom: COMING_FROM_HOME),
+      widget: const OnBoardingView(),
       page: OnBoardingViewPageConfig,
     );
   }

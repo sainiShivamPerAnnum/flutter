@@ -10,7 +10,8 @@ class Assets {
       'images/onboard_collage-small.png';
 
   static final String noTransaction = "assets/vectors/no-transactions.png";
-
+  static final inAppScrollAnimation =
+      "assets/lotties/Inapp scroll animation.json";
   static final String augmontShare = "images/augmont-share.png";
   static final String preAutosave = "assets/images/preautosave.png";
   static final String customAvatar = 'assets/vectors/userAvatars/CUSTOM.svg';
@@ -108,6 +109,17 @@ class Assets {
   static final String flyingGhost = "assets/svg/flying_ghost.svg";
   static final String tambolaTicket = "assets/svg/tambola_ticket.svg";
   static final String scratchCard = "assets/svg/scratch_card.svg";
+  static final String floAsset = "assets/svg/fello_flo.svg";
+  static final String goldAsset = "assets/svg/digital_gold.svg";
+  static final String rbi = "assets/svg/rbi.svg";
+  static final String icici = "assets/svg/icici.svg";
+  static final String sebi = "assets/svg/sebi.svg";
+
+  static final String arrowIcon = "assets/svg/raising_arrow.svg";
+  static final String timer = "assets/svg/timer.svg";
+  static final String shield = "assets/svg/shield.svg";
+  static final String goldConveyor = "assets/images/gold_convyor.webp";
+  static final String floConveyor = "assets/images/flo_convyor.webp";
 
   // WIN
 
@@ -116,6 +128,7 @@ class Assets {
   static final String iphone2 = "assets/images/iphone2.png";
 
   // TRANSACTIONS
+  static final String win1croreBanner = "assets/images/win1crore.webp";
 
   static final String bankDetails = "assets/vectors/icons/bankDetails.svg";
   static final String txnHistory = "assets/vectors/icons/txnHistory.svg";
@@ -219,6 +232,7 @@ class Assets {
 
   static final String chevRonRightArrow =
       "assets/vectors/icons/chevron_right_arrow.svg";
+  static final String arrowTreading = "assets/svg/arrow_trending.svg";
   //Golden Tickeets screen
   static final String unredemmedScratchCardBG = "assets/svg/unredeemed_gt.svg";
   static final String levelUpUnRedeemedScratchCardBG =
@@ -308,4 +322,14 @@ class Assets {
   static const String wohooLottie = "assets/lotties/woohoo.json";
   static const String gtScratch = "assets/lotties/scratch.json";
   static const String multiReward = "assets/lotties/multiReward.json";
+
+  static const String crypto = "assets/svg/crypto.svg";
+  static const String single_gold_brick = "assets/svg/single_gold_brick.svg";
+  static const String tri_gold_brick = "assets/svg/tri_gold_bricks.svg";
+  static const String multiple_gold_brick =
+      "assets/svg/multiple_gold_bricks.svg";
+  static const String volatile = "assets/svg/volatile.svg";
+  static const String cash_single = "assets/svg/cash_note.svg";
+  static const String cash_bindle = "assets/svg/cash_bundle.svg";
+  static const String cash_with_coins = "assets/svg/cash_with_coins.svg";
 }

@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/lendbox_withdrawable_quantity.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
@@ -15,11 +16,15 @@ import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart'
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/finance/sell_confirmation_screen.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 class LendboxWithdrawalViewModel extends BaseViewModel {
@@ -84,6 +89,34 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   Future<void> initiateWithdraw() async {
     final amount = await initChecks();
     if (amount == 0) return;
+    if (withdrawableQuantity!.limitAmount <
+        double.parse(amountController!.text)) {
+      await BaseUtil.openDialog(
+        isBarrierDismissible: false,
+        addToScreenStack: true,
+        content: ConfirmationDialog(
+            title: withdrawableQuantity!.limitHeading,
+            description: withdrawableQuantity!.limitMessage,
+            buttonText: "OKAY",
+            asset: Padding(
+              padding: EdgeInsets.all(SizeConfig.padding16),
+              child: SvgPicture.asset(
+                Assets.securityCheck,
+                height: SizeConfig.screenHeight! * 0.15,
+                width: SizeConfig.screenHeight! * 0.15,
+              ),
+            ),
+            showSecondaryButton: false,
+            confirmAction: () {
+              AppState.backButtonDispatcher!.didPopRoute();
+            },
+            cancelAction: () {}),
+      );
+      _inProgress = false;
+      notifyListeners();
+      return;
+    }
+
     AppState.delegate!.appState.currentAction = PageAction(
       widget: SellConfirmationView(
         amount: amount.toDouble(),

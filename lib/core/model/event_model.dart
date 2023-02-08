@@ -1,11 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
 class EventModel {
   String title;
   String subtitle;
   String thumbnail;
+  String bgImage;
   String type;
   int position;
   String textColor;
@@ -27,6 +26,7 @@ class EventModel {
     required this.position,
     required this.textColor,
     required this.image,
+    required this.bgImage,
     required this.maxWin,
     required this.minVersion,
     required this.info,
@@ -45,6 +45,7 @@ class EventModel {
     int? position,
     int? maxWin,
     String? color,
+    String? bgImage,
     int? minVersion,
     List<String>? info,
     String? image,
@@ -60,6 +61,7 @@ class EventModel {
       textColor: color ?? this.textColor,
       maxWin: maxWin ?? this.maxWin,
       image: image ?? this.image,
+      bgImage: bgImage ?? this.bgImage,
       minVersion: minVersion ?? this.minVersion,
       info: info ?? this.info,
       instructions: instructions ?? this.instructions,
@@ -80,6 +82,7 @@ class EventModel {
       'color': textColor,
       'image': image,
       'maxWin': maxWin,
+      'bgImage': bgImage,
       'minVersion': minVersion,
       'info': info,
       'url': url,
@@ -101,6 +104,7 @@ class EventModel {
       image: map['image'] ?? '',
       maxWin: map['maxWin'] ?? 250,
       url: map['url'] ?? '',
+      bgImage: map['bgImage'] ?? '',
       formUrl: map['formUrl'] ?? '',
       minVersion: map["minVersion"] ?? 0,
       info: map["info"] ?? [],

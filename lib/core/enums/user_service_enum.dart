@@ -15,4 +15,5 @@ enum UserServiceProperties {
   myAvatarId,
   myUpiId,
   myAugmontDetails,
+  mySegments
 }

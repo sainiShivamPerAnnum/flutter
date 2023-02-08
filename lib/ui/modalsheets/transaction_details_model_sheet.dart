@@ -34,8 +34,7 @@ class _TransactionDetailsBottomSheetState
   bool _showInvoiceButton = false;
   bool _showAppliedCoupon = false;
   final AugmontService? augmontProvider = locator<AugmontService>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
   bool _isInvoiceLoading = false;
@@ -498,8 +497,7 @@ class _TransactionDetailsBottomSheetState
 
 class TransactionSummary extends StatelessWidget {
   final List<TransactionStatusMapItemModel>? summary;
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   TransactionSummary({this.summary});
   bool isTBD = false;
   int naPoint = 0;

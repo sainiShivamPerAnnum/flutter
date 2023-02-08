@@ -88,6 +88,7 @@ class SaveNetWorthSection extends StatelessWidget {
                 locator<AnalyticsService>()
                     .track(eventName: "Save on Asset Banner", properties: {
                   "asset name": "LENDBOX",
+                  "isNewUser":false,
                   "balance in gold":
                       locator<UserService>().userFundWallet?.augGoldBalance ??
                           0,
@@ -111,59 +112,64 @@ class SaveNetWorthSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [UserServiceProperties.myUserFund],
-      builder: (context, model, property) => Container(
-        // height: SizeConfig.screenWidth * 1.4,
-        margin: EdgeInsets.only(bottom: SizeConfig.padding16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(SizeConfig.roundness16),
-            bottomRight: Radius.circular(SizeConfig.roundness16),
-          ),
-          color: UiConstants.kSecondaryBackgroundColor,
+    return Container(
+      // height: SizeConfig.screenWidth * 1.4,
+      margin: EdgeInsets.only(bottom: SizeConfig.padding16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(SizeConfig.roundness16),
+          bottomRight: Radius.circular(SizeConfig.roundness16),
         ),
-        child: Column(
-          children: [
-            SizedBox(
-              height: SizeConfig.padding12,
+        color: UiConstants.kSecondaryBackgroundColor,
+      ),
+      child: Column(
+        children: [
+          // SizedBox(
+          //   height: SizeConfig.padding12,
+          // ),
+          PropertyChangeConsumer<UserService, UserServiceProperties>(
+            properties: [UserServiceProperties.myUserFund],
+            builder: (context, model, property) => Container(
+              height: SizeConfig.screenWidth! * 0.22,
+              child: model?.userFundWallet?.netWorth != null &&
+                      model?.userFundWallet?.netWorth != 0
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            height: SizeConfig.padding12,
+                          ),
+                          Text(
+                            locale.totalSavings,
+                            style: TextStyles.rajdhani.body2
+                                .colour(UiConstants.kTextColor),
+                            key: ValueKey(Constants.TOTAL_SAVINGS),
+                          ),
+                          NetWorthValue(
+                            style: TextStyles.sourceSans.title0.bold,
+                          ),
+                        ],
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding12,
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      child: Text(
+                        "Take your first step towards healthy Savings",
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyles.rajdhaniSB.title4.colour(Colors.white),
+                      ),
+                    ),
             ),
-            model?.userFundWallet?.netWorth != null &&
-                    model?.userFundWallet?.netWorth != 0
-                ? Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          height: SizeConfig.padding12,
-                        ),
-                        Text(
-                          locale.totalSavings,
-                          style: TextStyles.rajdhani.body2
-                              .colour(UiConstants.kTextColor),
-                          key: ValueKey(Constants.TOTAL_SAVINGS),
-                        ),
-                        NetWorthValue(
-                          style: TextStyles.sourceSans.title0.bold,
-                        ),
-                      ],
-                    ),
-                  )
-                : Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    child: Text(
-                      "Take your first step towards healthy Savings",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
-                    ),
-                  ),
-            getAssetsOrder(),
-            SaveAssetsFooter(),
-          ],
-        ),
+          ),
+          getAssetsOrder(),
+          SaveAssetsFooter(),
+        ],
       ),
     );
   }

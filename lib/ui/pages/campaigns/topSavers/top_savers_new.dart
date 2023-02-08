@@ -64,7 +64,7 @@ class CampaignView extends StatelessWidget {
           backgroundColor: UiConstants.kBackgroundColor,
           body: Stack(
             children: [
-              NewSquareBackground(),
+              const NewSquareBackground(),
               model.state == ViewState.Busy
                   ? Center(
                       child: FullScreenLoader(),

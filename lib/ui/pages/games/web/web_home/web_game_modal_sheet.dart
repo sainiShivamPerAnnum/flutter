@@ -1,9 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/model/game_stats_model.dart';
-import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/games/web/web_home/web_home_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -13,8 +10,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WebGameModalSheet extends StatelessWidget {
@@ -272,5 +269,96 @@ class _RewardCriteriaState extends State<RewardCriteria> {
             imageUrl: widget.data,
             errorWidget: (_, __, ___) => SizedBox(),
           );
+  }
+}
+
+class StreamView extends StatelessWidget {
+  StreamView({Key? key, required this.model, required this.game})
+      : super(key: key);
+
+  final WebHomeViewModel model;
+  final String game;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      initialData: null,
+      stream: model.getRealTimePlayingStream(game),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                  backgroundColor: UiConstants.primaryColor,
+                  radius: SizeConfig.padding4),
+              SizedBox(
+                width: SizeConfig.padding8,
+              ),
+              Text(
+                "_",
+                style: TextStyles.sourceSans.body2.colour(
+                  Color(0xffE0E0E0),
+                ),
+              )
+            ],
+          );
+        }
+
+        if ((snapshot.data as DatabaseEvent).snapshot.value != null) {
+          Map fetchedData = Map<dynamic, dynamic>.from(
+              (snapshot.data as DatabaseEvent).snapshot.value
+                  as Map<dynamic, dynamic>);
+          String? fieldToFetch = fetchedData['field'] as String?;
+
+          Map<Object, Object> requiredTimeData =
+              Map<Object, Object>.from(fetchedData[fieldToFetch!]);
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(scale: animation, child: child);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                    backgroundColor: UiConstants.primaryColor,
+                    radius: SizeConfig.padding4),
+                SizedBox(
+                  width: SizeConfig.padding8,
+                ),
+                Text(
+                  "${model.sortPlayerNumbers(requiredTimeData['value'].toString())}+ Playing",
+                  style: TextStyles.sourceSans.body2.colour(
+                    Color(0xffE0E0E0),
+                  ),
+                )
+              ],
+            ),
+          );
+        } else {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                  backgroundColor: UiConstants.primaryColor,
+                  radius: SizeConfig.padding4),
+              SizedBox(
+                width: SizeConfig.padding8,
+              ),
+              Text(
+                "50+ Playing",
+                style: TextStyles.sourceSans.body2.colour(
+                  Color(0xffE0E0E0),
+                ),
+              ),
+            ],
+          );
+        }
+      },
+    );
   }
 }
