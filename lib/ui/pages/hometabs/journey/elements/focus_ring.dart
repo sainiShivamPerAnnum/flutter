@@ -171,7 +171,7 @@ class _FocusRingState extends State<FocusRing>
                                       vertical: SizeConfig.padding8),
                                   child: Wrap(
                                     children: [
-                                      Text(locale.startSaving,
+                                      Text("Start",
                                           style: TextStyles.sourceSansM.body3),
                                       SvgPicture.asset(
                                         Assets.chevRonRightArrow,

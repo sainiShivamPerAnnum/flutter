@@ -221,7 +221,7 @@ class AssetSectionView extends StatelessWidget {
                                         ? "https://fello.in/videos/howToInvest.webm"
                                         : "https://d37gtxigg82zaw.cloudfront.net/flo-workflow.mp4"),
                               ),
-                              if (!isNewUser) ...[
+                              if (isNewUser) ...[
                                 SizedBox(
                                   height: SizeConfig.padding24,
                                 ),

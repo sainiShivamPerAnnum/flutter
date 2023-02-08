@@ -145,9 +145,9 @@ class RootViewModel extends BaseViewModel {
 
   // }
 
-  downloadJourneyPage() {
-    _journeyRepo!.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
-  }
+  // downloadJourneyPage() {
+  //   _journeyRepo!.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
+  // }
 
   Future<void> openJourneyView() async {
     AppState.delegate!.appState.currentAction =
