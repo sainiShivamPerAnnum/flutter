@@ -3,7 +3,6 @@ import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -24,7 +23,8 @@ void main() async {
         mixpanelToken: MixpanelAnalytics.DEV_TOKEN,
         dynamicLinkPrefix: 'https://dev.fello.in/test',
         gameApiTokenSecret:
-            "3565d165c367a0f1c615c27eb957dddfef33565b3f5ad1dda3fe2efd07326c1f"),
+            "3565d165c367a0f1c615c27eb957dddfef33565b3f5ad1dda3fe2efd07326c1f",
+        dummyMobileNo: '8888800002'),
   );
 
   await mainInit();
