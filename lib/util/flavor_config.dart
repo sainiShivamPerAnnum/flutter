@@ -17,6 +17,7 @@ class FlavorValues {
     required this.dynamicLinkPrefix,
     required this.mixpanelToken,
     required this.gameApiTokenSecret,
+    required this.dummyMobileNo,
   });
 
   final AWSIciciStage awsIciciStage;
@@ -31,6 +32,7 @@ class FlavorValues {
   final String dynamicLinkPrefix;
   final String mixpanelToken;
   final String gameApiTokenSecret;
+  final String dummyMobileNo;
 //Add other flavor specific values, e.g database name
 }
 
