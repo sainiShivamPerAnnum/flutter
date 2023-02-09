@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/milestone_details_modal.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -153,6 +154,9 @@ class _FocusRingState extends State<FocusRing>
                                   isScrollControlled: true,
                                   content: JourneyMilestoneDetailsModalSheet(
                                     milestone: m.currentMilestoneList[0],
+                                    version: locator<UserService>()
+                                        .userJourneyStats!
+                                        .version,
                                     status: JOURNEY_MILESTONE_STATUS.ACTIVE,
                                   ),
                                 );

@@ -30,9 +30,9 @@ enum JOURNEY_MILESTONE_STATUS { COMPLETED, INCOMPLETE, ACTIVE }
 class JourneyMilestoneDetailsModalSheet extends StatefulWidget {
   final MilestoneModel milestone;
   final JOURNEY_MILESTONE_STATUS status;
-
+  final String version;
   JourneyMilestoneDetailsModalSheet(
-      {required this.milestone, required this.status});
+      {required this.milestone, required this.status, required this.version});
   @override
   State<JourneyMilestoneDetailsModalSheet> createState() =>
       _JourneyMilestoneDetailsModalSheetState();
@@ -280,6 +280,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                         properties: AnalyticsProperties
                                             .getDefaultPropertiesMap(
                                                 extraValuesMap: {
+                                                  "version":widget.version,
                                               "Capsule text":
                                                   AnalyticsProperties
                                                       .getJouneryCapsuleText(),

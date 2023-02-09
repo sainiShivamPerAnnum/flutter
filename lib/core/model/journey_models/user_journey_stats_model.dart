@@ -10,14 +10,15 @@ class UserJourneyStatsModel {
   final String? mlId;
   final String? prizeSubtype;
   final int? skipCount;
-  UserJourneyStatsModel({
-    required this.page,
-    required this.level,
-    required this.mlIndex,
-    required this.mlId,
-    required this.prizeSubtype,
-    required this.skipCount,
-  });
+  final String version;
+  UserJourneyStatsModel(
+      {required this.page,
+      required this.level,
+      required this.mlIndex,
+      required this.mlId,
+      required this.prizeSubtype,
+      required this.skipCount,
+      required this.version});
 
   UserJourneyStatsModel copyWith(
       {int? page,
@@ -25,9 +26,11 @@ class UserJourneyStatsModel {
       int? mlIndex,
       String? mlId,
       String? nextPrizeSubtype,
+      String? version,
       int? skipCount}) {
     return UserJourneyStatsModel(
         page: page ?? this.page,
+        version: version ?? this.version,
         level: level ?? this.level,
         mlIndex: mlIndex ?? this.mlIndex,
         mlId: mlId ?? this.mlId,
@@ -48,13 +51,13 @@ class UserJourneyStatsModel {
 
   factory UserJourneyStatsModel.fromMap(Map<String, dynamic> map) {
     return UserJourneyStatsModel(
-      page: map['page'] as int?,
-      level: map['level'] as int?,
-      mlIndex: map['mlIndex'] as int?,
-      mlId: map['mlId'] as String?,
-      skipCount: map["skipCount"] as int?,
-      prizeSubtype: map['prizeSubtype'] as String?,
-    );
+        page: map['page'] as int?,
+        level: map['level'] as int?,
+        mlIndex: map['mlIndex'] as int?,
+        mlId: map['mlId'] as String?,
+        skipCount: map["skipCount"] as int?,
+        prizeSubtype: map['prizeSubtype'] as String?,
+        version: map['version'] ?? 'v1');
   }
 
   String toJson() => json.encode(toMap());
