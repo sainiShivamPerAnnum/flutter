@@ -271,6 +271,7 @@ class JourneyPageViewModel extends BaseViewModel {
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "version": _userService!.userJourneyStats!.version,
             "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
             "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
             "MileStone sub Text":
@@ -284,6 +285,7 @@ class JourneyPageViewModel extends BaseViewModel {
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "version": _userService!.userJourneyStats!.version,
             "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
             "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
             "MileStone sub Text":
@@ -296,6 +298,7 @@ class JourneyPageViewModel extends BaseViewModel {
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "version": _userService!.userJourneyStats!.version,
             "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
             "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
             "MileStone sub Text":
@@ -314,6 +317,7 @@ class JourneyPageViewModel extends BaseViewModel {
       isScrollControlled: true,
       content: JourneyMilestoneDetailsModalSheet(
         milestone: milestone,
+        version: _userService!.userJourneyStats!.version,
         status: status,
       ),
     );

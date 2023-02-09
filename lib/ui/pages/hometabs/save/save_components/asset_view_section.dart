@@ -462,7 +462,7 @@ class _BuildOwnAsset extends StatelessWidget {
               children: [
                 Text(
                   "Invested Amount",
-                  style: TextStyles.sourceSans.body2,
+                  style: TextStyles.sourceSans.body1.colour(Colors.white),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
@@ -474,7 +474,7 @@ class _BuildOwnAsset extends StatelessWidget {
                       (userService.userFundWallet?.wLbPrinciple ?? 0)
                           .toStringAsFixed(2),
                   textAlign: TextAlign.center,
-                  style: TextStyles.rajdhaniSB.title3.colour(
+                  style: TextStyles.rajdhaniSB.title4.colour(
                     Colors.white.withOpacity(0.8),
                   ),
                 )

@@ -519,7 +519,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         mlIndex: currentMilestone.index,
         mlId: currentMilestone.id,
         prizeSubtype: currentMilestone.prizeSubType,
-        skipCount: _userService.userJourneyStats!.skipCount! + 1);
+        skipCount: _userService.userJourneyStats!.skipCount! + 1,
+        version: _userService.userJourneyStats!.version);
   }
 
   //Check if there is a need to blur next level milestones
