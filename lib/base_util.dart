@@ -501,7 +501,7 @@ class BaseUtil extends ChangeNotifier {
     required bool isBarrierDismissible,
     BorderRadius? borderRadius,
     bool isScrollControlled = false,
-    BoxConstraints? boxContraints,
+  BoxConstraints? boxContraints,
     bool enableDrag = false,
   }) async {
     if (addToScreenStack != null && addToScreenStack == true)
@@ -932,14 +932,13 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future showHappyHourDialog(HappyHourCampign model,
-      {bool afterHappyHour = false, bool isComingFromSave = false}) async {
+      {bool isComingFromSave = false}) async {
     return openModalBottomSheet(
       backgroundColor: Colors.transparent,
       addToScreenStack: true,
       hapticVibrate: true,
       content: HappyHourModel(
         model: model,
-        isAfterHappyHour: afterHappyHour,
         isComingFromSave: isComingFromSave,
       ),
       isBarrierDismissible: true,

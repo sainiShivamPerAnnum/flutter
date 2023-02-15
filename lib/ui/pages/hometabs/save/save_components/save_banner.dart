@@ -76,7 +76,7 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
               ),
               RichText(
                 text: TextSpan(
-                  text: locale.happyHoursEndingin,
+                  text: "Happy Hour ends in ",
                   style: TextStyles.sourceSans.body3.colour(Colors.white),
                   children: [
                     TextSpan(
