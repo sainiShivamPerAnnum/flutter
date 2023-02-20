@@ -1,0 +1,26 @@
+This is a game based savings app for the Gen-Z of India. Fello builds a layer of gaming around traditional finance to get more of the Indian youth interested in Finance. It does the following:
+- showcase various interesting snippets about finance,
+- lists strong investment assets like Gold
+- engages the users through fun games like cricket. 
+
+You can read more about our platform in this website link: 
+- https://fello.in
+
+We're presently only focused on growth amongst the Indian audience.
+
+To access the app, kindly use the following credentials to sign in:
+Mobile: 9999900002
+OTP: 887711
+
+All the relevant recommendations made by you have been considered and the necessary updates have been made. We were slightly confused by your recommendation made for guideline 4.0. Our App Design has been the same for the past many builds and this point wasn't brought forward previously. However, we've taken your feedback into account and made the relevant updates for tablet dimensions. 
+
+We are excited to get our new update onto to the hands of our users. There are several critical fixes in this release that need to go out soon, and we are looking forward to completing the review process soon.
+
+Let us know if you have any queries. We will be extremely prompt in our communication and would be sincerely grateful for your pace.
+
+We look forward to your positive feedback!
+
+Thank You
+
+Regards,
+Team Fello

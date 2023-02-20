@@ -1,0 +1,188 @@
+//Project Imports
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:another_flushbar/flushbar.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/navigator/router/router_delegate.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/util/app_toasts_utils.dart';
+import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+//Flutter Imports
+import 'package:flutter/material.dart';
+
+import '../../core/repository/user_stats_repo.dart';
+
+class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
+  final FelloRouterDelegate? _routerDelegate;
+  final CustomLogger? logger = locator<CustomLogger>();
+  final UserRepository? _userRepo = locator<UserRepository>();
+  BaseUtil? _baseUtil = locator<BaseUtil>();
+  final UserService? _userService = locator<UserService>();
+  final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
+  final JourneyService? _journeyService = locator<JourneyService>();
+
+  FelloBackButtonDispatcher(this._routerDelegate) : super();
+
+  Future<bool> _confirmExit(String title, String description,
+      Function confirmAction, bool isInLandScape) {
+    BaseUtil.openDialog(
+      addToScreenStack: true,
+      isBarrierDismissible: false,
+      hapticVibrate: true,
+      content: RotatedBox(
+        quarterTurns: 0,
+        child: ConfirmationDialog(
+          title: title,
+          description: description,
+          cancelBtnText: "Exit",
+          buttonText: "Stay",
+          confirmAction: didPopRoute,
+          cancelAction: confirmAction,
+        ),
+      ),
+    );
+    return Future.value(true);
+  }
+
+  bool isAnyDialogOpen() {
+    if (AppState.screenStack.last == ScreenItem.dialog) return true;
+    return false;
+  }
+
+  @override
+  Future<bool> didPopRoute() {
+    AppToasts.flushbar?.dismiss();
+    // _journeyService!.checkForMilestoneLevelChange();
+    // if (_journeyService!.isJourneyOnboardingInView) {
+    //   _journeyService!.isJourneyOnboardingInView = false;
+    //   _journeyService!.isUserJourneyOnboarded = true;
+    // }
+
+    if (locator<BackButtonActions>().isTransactionCancelled) {
+      if (AppState.onTap != null &&
+          AppState.type != null &&
+          AppState.amt != null) {
+        if (!AppState.isRepeated) {
+          locator<BackButtonActions>().showWantToCloseTransactionBottomSheet(
+            AppState.amt!.round(),
+            AppState.type!,
+            () {
+              AppState.onTap?.call();
+            },
+          );
+          AppState.isRepeated = true;
+          return Future.value(true);
+        }
+      }
+    }
+    if (AppState.isInstantGtViewInView) return Future.value(true);
+    if (AppState.screenStack.last == ScreenItem.loader)
+      return Future.value(true);
+
+    // If the top item is anything except a scaffold
+    if (AppState.screenStack.last == ScreenItem.dialog ||
+        AppState.screenStack.last == ScreenItem.modalsheet) {
+      Navigator.pop(_routerDelegate!.navigatorKey.currentContext!);
+      AppState.screenStack.removeLast();
+      print("Current Stack: ${AppState.screenStack}");
+      return Future.value(true);
+    }
+
+    // If onboarding is in progress
+    else if (AppState.isOnboardingInProgress) {
+      BaseUtil().showConfirmExit();
+      AppState.isOnboardingInProgress = false;
+      return Future.value(true);
+    }
+    //If the cricket game is in progress
+    else if (AppState.isWebGameLInProgress)
+      return _confirmExit(
+        "Exit Game",
+        "Are you sure you want to leave?",
+        () {
+          logger!.d("Closing landscape mode game view");
+          AppState.isWebGameLInProgress = false;
+          didPopRoute();
+          didPopRoute();
+          _webGameViewModel!.handleGameSessionEnd();
+        },
+        true,
+      );
+    else if (AppState.isWebGamePInProgress)
+      return _confirmExit(
+        "Exit Game",
+        "Are you sure you want to leave?",
+        () {
+          AppState.isWebGamePInProgress = false;
+          didPopRoute();
+          didPopRoute();
+          _webGameViewModel!
+              .handleGameSessionEnd(duration: Duration(milliseconds: 500));
+        },
+        false,
+      );
+    else if (AppState.isUpdateScreen) {
+      AppState.isUpdateScreen = false;
+      return _routerDelegate!.popRoute();
+    }
+
+    //If device authentication failed
+    else if (AppState.screenStack.length == 1 &&
+        AppState.delegate!.pages[0].name == SplashPath) {
+      return _routerDelegate!.popRoute();
+    }
+    // If the root tab is not 0 at the time of exit
+
+    else if (_userService!.isUserOnboarded &&
+        AppState.screenStack.length == 1 &&
+        AppState.delegate!.appState.rootIndex != 0) {
+      logger!.w("Checking if app can be closed");
+      AppState.delegate!.appState.setCurrentTabIndex = 0;
+      locator<RootController>()
+          .onChange(locator<RootController>().navItems.values.toList()[0]);
+
+      _journeyService!.checkForMilestoneLevelChange();
+      return Future.value(true);
+    }
+
+    return _routerDelegate!.popRoute();
+  }
+
+  showNegativeAlert(String title, String message, {int? seconds}) {
+    Flushbar(
+      flushbarPosition: FlushbarPosition.BOTTOM,
+      flushbarStyle: FlushbarStyle.FLOATING,
+      icon: Icon(
+        Icons.assignment_late,
+        size: 28.0,
+        color: UiConstants.tertiarySolid,
+      ),
+      margin: EdgeInsets.all(10),
+      borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+      title: title,
+      message: message,
+      duration: Duration(seconds: seconds ?? 3),
+      backgroundColor: Colors.black,
+      boxShadows: [
+        BoxShadow(
+          color: UiConstants.negativeAlertColor,
+          offset: Offset(0.0, 2.0),
+          blurRadius: 3.0,
+        )
+      ],
+    )..show(AppState.delegate!.navigatorKey.currentContext!);
+  }
+}
