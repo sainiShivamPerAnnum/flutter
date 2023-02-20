@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:encrypt/encrypt.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 abstract class API {
@@ -37,6 +39,9 @@ class APIService implements API {
   APIService._();
   static final instance = APIService._();
 
+  final _CACHE_ENCRYPTION_KEY = "264a239b0d87e175509b2aeb2a44b28c";
+  final _CACHE_ENCRYPTION_IV = "cffb220f03eaac73";
+
   @override
   Future<dynamic> getData(
     String url, {
@@ -44,6 +49,7 @@ class APIService implements API {
     Map<String, dynamic>? queryParams,
     Map<String, dynamic>? headers,
     String? cBaseUrl,
+    bool decryptData = false,
   }) async {
     // final HttpMetric metric =
     //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
@@ -75,7 +81,12 @@ class APIService implements API {
       logger!.d("Full url: $finalPath");
       logger!.d("Get Response: ${response.statusCode}");
       logger!.d("Get Response: ${response.body}");
-      responseJson = returnResponse(response);
+      Response res = response;
+      if (decryptData) {
+        final data = await _decryptData(response.body);
+        return jsonDecode(data!.trim());
+      }
+      responseJson = returnResponse(res);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     } on UnauthorizedException {
@@ -307,6 +318,20 @@ class APIService implements API {
       default:
         throw FetchDataException(responseJson["message"]);
     }
+  }
+
+  Future<String?> _decryptData(String data) async {
+    final encrypter = Encrypter(AES(
+        Key.fromUtf8(utf8.decode(_CACHE_ENCRYPTION_KEY.codeUnits)),
+        mode: AESMode.cbc,
+        padding: null));
+
+    final _data = encrypter.decrypt16(
+      data,
+      iv: IV.fromUtf8(utf8.decode(_CACHE_ENCRYPTION_IV.codeUnits)),
+    );
+
+    return _data;
   }
 
   Future<String> _getAppVersion() async {

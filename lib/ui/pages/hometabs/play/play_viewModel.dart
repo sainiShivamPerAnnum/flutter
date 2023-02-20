@@ -20,6 +20,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/more_games_secti
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
+import 'package:felloapp/ui/pages/hometabs/play/widgets/games_widget/games_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
@@ -161,7 +162,7 @@ class PlayViewModel extends BaseViewModel {
           }
           break;
         case 'AG':
-          playViewChildren.add(TrendingGamesSection(model: model));
+          playViewChildren.add(GamesWidget(model: model));
           break;
         case 'HTP':
           playViewChildren.add(InfoComponent2(

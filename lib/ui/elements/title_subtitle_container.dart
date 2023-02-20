@@ -7,11 +7,15 @@ class TitleSubtitleContainer extends StatelessWidget {
   final String title;
   final String? subTitle;
   final bool leadingPadding;
+  final TextStyle? titleStyle;
+  final TextStyle? subtitleStyle;
 
   const TitleSubtitleContainer(
       {Key? key,
       required this.title,
       this.subTitle,
+      this.titleStyle,
+      this.subtitleStyle,
       this.leadingPadding = true})
       : super(key: key);
 
@@ -23,15 +27,17 @@ class TitleSubtitleContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyles.rajdhaniSB.title3),
+          Text(title, style: TextStyles.rajdhaniSB.title3.merge(titleStyle)),
           if (subTitle != null)
             Padding(
               padding: EdgeInsets.only(top: SizeConfig.padding4),
               child: Text(
                 subTitle!,
-                style: TextStyles.sourceSans.body4.colour(
-                  UiConstants.kTextColor2,
-                ),
+                style: TextStyles.sourceSans.body4
+                    .colour(
+                      UiConstants.kTextColor2,
+                    )
+                    .merge(subtitleStyle),
               ),
             ),
         ],

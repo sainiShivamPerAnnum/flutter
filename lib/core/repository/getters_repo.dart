@@ -21,10 +21,15 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
+//[TODO]:Added Prod CDN url;
 class GetterRepository extends BaseRepo {
   final _cacheService = CacheService();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://qdp0idzhjc.execute-api.ap-south-1.amazonaws.com/dev'
+      : 'https://vbbe56oey5.execute-api.ap-south-1.amazonaws.com/prod';
+
+  final _cdnBaseUrl = FlavorConfig.isDevelopment()
+      ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
       : 'https://vbbe56oey5.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
@@ -120,8 +125,8 @@ class GetterRepository extends BaseRepo {
         CacheKeys.APPCONFIG,
         TTL.ONE_DAY,
         () => APIService.instance.getData(
-          ApiPath.getAppConfig,
-          cBaseUrl: _baseUrl,
+          'appConfig.txt',
+          cBaseUrl: _cdnBaseUrl,
           headers: {
             'authKey':
                 '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
@@ -267,13 +272,10 @@ class GetterRepository extends BaseRepo {
       return await _cacheService.cachedApi(
         '${CacheKeys.PAGE_CONFIGS}',
         TTL.ONE_DAY,
-        () => APIService.instance.getData(
-          ApiPath.dynamicUi,
-          cBaseUrl: _baseUrl,
-          token: token,
-        ),
+        () => APIService.instance.getData("dynamicUi.txt",
+            cBaseUrl: _cdnBaseUrl, token: token, decryptData: true),
         (response) {
-          final responseData = response["data"]["dynamicUi"];
+          final responseData = response["dynamicUi"];
 
           logger.d("Page Config: $responseData");
           final pageConfig = DynamicUI.fromMap(responseData);
