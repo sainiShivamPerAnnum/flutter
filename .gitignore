@@ -26,6 +26,8 @@ ios/Runner.xcworkspace/*
 # You definitely want these for CI and CD
 **/ios/*.ipa
 **/ios/*.app.dSYM.zip
+ios/*.ipa
+ios/*.app.dSYM.zip
 
 # These are optional
 android/fastlane/report.xml
