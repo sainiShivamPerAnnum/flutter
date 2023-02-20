@@ -1,1 +1,0 @@
-enum ScratchCardServiceProperties { UnscratchedCount, AllScratchCards }
