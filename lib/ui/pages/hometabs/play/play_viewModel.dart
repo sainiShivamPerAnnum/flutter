@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_stats_model.dart';
+import 'package:felloapp/core/model/game_tier_model.dart' hide GameModel;
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -128,7 +129,7 @@ class PlayViewModel extends BaseViewModel {
     isGamesListDataLoading = true;
 
     final response = await gamesRepo!.getGames();
-
+    final res = await gamesRepo!.getGameTiers();
     locator<UserStatsRepo>().getGameStats();
     gameStats = await _userStatsRepo.completer.future.onError(
         (error, stackTrace) => BaseUtil.showNegativeAlert(
@@ -136,6 +137,10 @@ class PlayViewModel extends BaseViewModel {
 
     showSecurityMessageAtTop =
         _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
+
+    if (res.isSuccess()) {
+      gameTier = res.model;
+    }
     if (response.isSuccess()) {
       gamesListData = response.model;
       isGamesListDataLoading = false;
@@ -146,6 +151,8 @@ class PlayViewModel extends BaseViewModel {
       setGameStatus();
     });
   }
+
+  GameTiers? gameTier;
 
   getOrderedPlayViewItems(PlayViewModel model) {
     List<Widget> playViewChildren = [];

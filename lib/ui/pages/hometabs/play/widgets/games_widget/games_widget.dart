@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
@@ -21,18 +23,34 @@ class GamesWidget extends StatelessWidget {
         UserServiceProperties.myUserFund
       ],
       builder: (_, prop, ___) {
-        if (prop!.userFundWallet == null) return SizedBox();
+        if (model.isGamesListDataLoading || prop!.userFundWallet == null)
+          return Container(
+            width: SizeConfig.screenWidth,
+            margin: EdgeInsets.symmetric(
+                vertical: SizeConfig.pageHorizontalMargins / 2),
+            child: GridView.builder(
+              physics: BouncingScrollPhysics(),
+              itemCount: 3,
+              shrinkWrap: true,
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+              itemBuilder: (ctx, index) {
+                return TrendingGamesShimmer();
+              },
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: .63,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12),
+            ),
+          );
 
-        final _viewModel = viewModel..processData();
+        final _viewModel = GameViewModel.fromGameTier(model.gameTier!)
+          ..processData();
         return Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TitleSubtitleContainer(title: _viewModel.title),
-              SizedBox(
-                height: SizeConfig.padding16,
-              ),
               ...List.generate(
                 _viewModel.gameTiers.length,
                 (index) => Padding(
@@ -55,7 +73,7 @@ class _GameTierWidget extends StatelessWidget {
   const _GameTierWidget(
       {super.key, required this.gameTier, required this.model});
 
-  final GameTiers gameTier;
+  final GameTier gameTier;
   final PlayViewModel model;
   @override
   Widget build(BuildContext context) {
@@ -96,7 +114,8 @@ class _GameTierWidget extends StatelessWidget {
                             width: SizeConfig.screenWidth! * 0.272,
                             child: TrendingGames(
                               model: model,
-                              game: e,
+                              game: model.gamesListData!.firstWhere(
+                                  (element) => element.code == e?.code),
                             ),
                           ),
                         )
@@ -115,9 +134,27 @@ class _GameTierWidget extends StatelessWidget {
   }
 }
 
-class _LockedState extends StatelessWidget {
+class _LockedState extends StatefulWidget {
   const _LockedState({super.key, required this.gameTier});
-  final GameTiers gameTier;
+  final GameTier gameTier;
+
+  @override
+  State<_LockedState> createState() => _LockedStateState();
+}
+
+class _LockedStateState extends State<_LockedState>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 700))
+          ..forward();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
@@ -127,7 +164,7 @@ class _LockedState extends StatelessWidget {
           gradient: LinearGradient(
             colors: [Colors.black, Colors.transparent],
             begin: Alignment.bottomCenter,
-            stops: [gameTier.shadow, 1],
+            stops: [widget.gameTier.shadow, 1],
             end: Alignment.topCenter,
           ),
         ),
@@ -148,7 +185,7 @@ class _LockedState extends StatelessWidget {
                     width: SizeConfig.padding12,
                   ),
                   Text(
-                    "Winnings\nupto ₹20K",
+                    widget.gameTier.winningText,
                     style: TextStyles.rajdhaniSB.body0,
                   ),
                 ],
@@ -157,20 +194,40 @@ class _LockedState extends StatelessWidget {
                 height: SizeConfig.padding6,
               ),
               Text(
-                "Unlock Level 2 Games first to start playing Level 3 Games",
+                widget.gameTier.winningSubtext,
                 style: TextStyles.rajdhaniSB.body4,
               ),
               SizedBox(
                 height: SizeConfig.padding8,
               ),
-              if (gameTier.showProgressIndicator)
-                CustomPaint(
-                  foregroundPainter: CustomProgressBar(
-                    gameTier.level.minAmount * 1.0,
-                    gameTier.netWorth,
-                    gameTier.amountToCompleteLevel.round(),
-                  ),
-                  size: Size(double.infinity, SizeConfig.screenWidth! * 0.05),
+              if (widget.gameTier.showProgressIndicator)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AnimatedBuilder(
+                      builder: (context, child) {
+                        return CustomPaint(
+                          painter: CustomProgressBar(
+                              widget.gameTier.level * 1.0,
+                              widget.gameTier.netWorth,
+                              widget.gameTier.amountToCompleteLevel.round(),
+                              _controller),
+                          size: Size(SizeConfig.screenWidth! * 0.7,
+                              SizeConfig.screenWidth! * 0.05),
+                        );
+                      },
+                      animation: _controller,
+                    ),
+                    Text(
+                      "₹" +
+                          widget.gameTier.amountToCompleteLevel
+                              .round()
+                              .toString() +
+                          ' left',
+                      style: TextStyles.rajdhaniB.body2,
+                    )
+                  ],
                 ),
               SizedBox(
                 height: SizeConfig.padding12,
@@ -187,7 +244,9 @@ class CustomProgressBar extends CustomPainter {
   final double minAmount;
   final double netWorth;
   final int reamingAmount;
-  CustomProgressBar(this.minAmount, this.netWorth, this.reamingAmount);
+  final AnimationController controller;
+  CustomProgressBar(
+      this.minAmount, this.netWorth, this.reamingAmount, this.controller);
   @override
   void paint(Canvas canvas, Size size) {
     final _center = Offset(size.width / 2, 0);
@@ -203,36 +262,42 @@ class CustomProgressBar extends CustomPainter {
     canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromLTWH(
-              0, 0, getFilledWidth(size) == 0 ? 20 : getFilledWidth(size), 16),
+              0,
+              0,
+              lerpDouble(
+                  0,
+                  getFilledWidth(size) == 0 ? 20 : getFilledWidth(size),
+                  controller.value)!,
+              16),
           Radius.circular(SizeConfig.padding26),
         ),
         Paint()
           ..color = Color(0xff297264)
           ..style = PaintingStyle.fill);
 
-    _drawText(canvas, size);
+    // _drawText(canvas, size);
   }
 
   double getFilledWidth(Size size) => (size.width / minAmount) * netWorth;
 
-  void _drawText(Canvas canvas, Size size) {
-    final textSpan = TextSpan(
-      text: '₹$reamingAmount left',
-      style: TextStyles.rajdhaniSB.body4.colour(Colors.black),
-    );
-    final textPainter = TextPainter(
-      text: textSpan,
-      textDirection: TextDirection.ltr,
-    );
-    textPainter.layout(
-      minWidth: 0,
-      maxWidth: size.width,
-    );
-    final xCenter = (size.width - textPainter.width - SizeConfig.padding10);
-    final yCenter = (size.height - textPainter.height) / 2;
-    final offset = Offset(xCenter, yCenter);
-    textPainter.paint(canvas, offset);
-  }
+  // void _drawText(Canvas canvas, Size size) {
+  //   final textSpan = TextSpan(
+  //     text: '₹$reamingAmount left',
+  //     style: TextStyles.rajdhaniSB.body3.colour(Colors.black),
+  //   );
+  //   final textPainter = TextPainter(
+  //     text: textSpan,
+  //     textDirection: TextDirection.ltr,
+  //   );
+  //   textPainter.layout(
+  //     minWidth: 0,
+  //     maxWidth: size.width,
+  //   );
+  //   final xCenter = (size.width - textPainter.width - SizeConfig.padding10);
+  //   final yCenter = (size.height - textPainter.height) / 2;
+  //   final offset = Offset(xCenter, yCenter);
+  //   textPainter.paint(canvas, offset);
+  // }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;

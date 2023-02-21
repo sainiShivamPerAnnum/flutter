@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
+import '../model/game_tier_model.dart' hide GameModel;
 import 'base_repo.dart';
 
 class GameRepo extends BaseRepo {
@@ -57,6 +58,26 @@ class GameRepo extends BaseRepo {
       logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch game by id", 400);
+    }
+  }
+
+  Future<ApiResponse<GameTiers>> getGameTiers() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        '/games/tiers',
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      return ApiResponse<GameTiers>(
+          model: GameTiers.fromJson(response), code: 200);
+    } catch (e) {
+      logger!.e("Unable to fetch games ${e.toString()}");
+
+      allgames = [];
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch games", 400);
     }
   }
 

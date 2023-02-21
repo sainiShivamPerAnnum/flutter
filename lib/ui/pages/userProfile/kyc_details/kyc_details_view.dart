@@ -5,6 +5,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/pages/userProfile/kyc_details/key_help.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_verification_views.dart/kyc_error.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_verification_views.dart/kyc_success.dart';
@@ -32,21 +33,35 @@ class UpperCaseTextFormatter extends TextInputFormatter {
   }
 }
 
-getKycView(KYCDetailsViewModel model) {
-  switch (model.kycVerificationStatus) {
-    case KycVerificationStatus.VERIFIED:
-      return KycSuccessView(model: model);
-    case KycVerificationStatus.UNVERIFIED:
-      return KycUnVerifiedView(model: model);
-
-    case KycVerificationStatus.FAILED:
-      return KycUnVerifiedView(model: model);
-    case KycVerificationStatus.NONE:
-      return NoKycView(model: model);
-  }
+class KYCDetailsView extends StatefulWidget {
+  @override
+  State<KYCDetailsView> createState() => _KYCDetailsViewState();
 }
 
-class KYCDetailsView extends StatelessWidget {
+class _KYCDetailsViewState extends State<KYCDetailsView> {
+  bool _showKycDetails = false;
+
+  getKycView(KYCDetailsViewModel model) {
+    switch (model.kycVerificationStatus) {
+      case KycVerificationStatus.VERIFIED:
+        return KycSuccessView(model: model);
+      case KycVerificationStatus.UNVERIFIED:
+        _showKycDetails = true;
+
+        return KycUnVerifiedView(model: model);
+
+      case KycVerificationStatus.FAILED:
+        return KycUnVerifiedView(model: model);
+      case KycVerificationStatus.NONE:
+        return NoKycView(model: model);
+    }
+  }
+
+  void changeView() {
+    _showKycDetails = false;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -54,98 +69,104 @@ class KYCDetailsView extends StatelessWidget {
       onModelReady: (model) {
         model.init();
       },
-      builder: (ctx, model, child) => Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          leading: BackButton(
-            onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
-          ),
-          backgroundColor: UiConstants.kSecondaryBackgroundColor,
-          title: Text(
-            locale.kycTitle.toUpperCase(),
-            style: TextStyles.rajdhaniSB.title3,
-          ),
-          actions: [
-            if (!model.isUpdatingKycDetails)
-              Row(
-                children: [
-                  FaqPill(type: FaqsType.yourAccount),
+      builder: (ctx, model, child) => _showKycDetails
+          ? KycHelpView(callBack: changeView)
+          : Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: AppBar(
+                leading: BackButton(
+                  onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
+                ),
+                backgroundColor: UiConstants.kSecondaryBackgroundColor,
+                title: Text(
+                  locale.kycTitle.toUpperCase(),
+                  style: TextStyles.rajdhaniSB.title3,
+                ),
+                actions: [
+                  if (!model.isUpdatingKycDetails)
+                    Row(
+                      children: [
+                        FaqPill(type: FaqsType.yourAccount),
+                      ],
+                    ),
+                  SizedBox(width: SizeConfig.padding16)
                 ],
               ),
-            SizedBox(width: SizeConfig.padding16)
-          ],
-        ),
-        backgroundColor: UiConstants.kBackgroundColor,
-        body: model.state == ViewState.Busy
-            ? Center(
-                child: FullScreenLoader(),
-              )
-            : Padding(
-                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    getKycView(model),
-                    Spacer(),
-                    model.kycVerificationStatus ==
-                                KycVerificationStatus.UNVERIFIED ||
-                            model.kycVerificationStatus ==
-                                KycVerificationStatus.FAILED
-                        ? Column(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.pageHorizontalMargins),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding16,
-                                    horizontal: SizeConfig.padding20),
-                                decoration: BoxDecoration(
-                                  color: UiConstants.kBackgroundColor3,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(SizeConfig.roundness12)),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
+              backgroundColor: UiConstants.kBackgroundColor,
+              body: model.state == ViewState.Busy
+                  ? Center(
+                      child: FullScreenLoader(),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          getKycView(model),
+                          Spacer(),
+                          model.kycVerificationStatus ==
+                                      KycVerificationStatus.UNVERIFIED ||
+                                  model.kycVerificationStatus ==
+                                      KycVerificationStatus.FAILED
+                              ? Column(
                                   children: [
-                                    SvgPicture.asset(
-                                      "assets/svg/safety_asset.svg",
-                                      width: SizeConfig.padding20,
-                                    ),
-                                    SizedBox(
-                                      width: SizeConfig.padding14,
-                                    ),
-                                    Expanded(
-                                      child: FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(
-                                          locale.kycVerifyText,
-                                          style: TextStyles.sourceSans.body3
-                                              .colour(UiConstants.kTextColor2),
-                                        ),
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                          vertical:
+                                              SizeConfig.pageHorizontalMargins),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: SizeConfig.padding16,
+                                          horizontal: SizeConfig.padding20),
+                                      decoration: BoxDecoration(
+                                        color: UiConstants.kBackgroundColor3,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                SizeConfig.roundness12)),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SvgPicture.asset(
+                                            "assets/svg/safety_asset.svg",
+                                            width: SizeConfig.padding20,
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding14,
+                                          ),
+                                          Expanded(
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Text(
+                                                locale.kycVerifyText,
+                                                style: TextStyles
+                                                    .sourceSans.body3
+                                                    .colour(UiConstants
+                                                        .kTextColor2),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
+                                    model.isUpdatingKycDetails
+                                        ? LinearProgressIndicator(
+                                            backgroundColor: Colors.black,
+                                          )
+                                        : AppPositiveBtn(
+                                            onPressed: () async {
+                                              await model.onSubmit(context);
+                                            },
+                                            btnText: locale.btnSumbit,
+                                            width: SizeConfig.screenWidth,
+                                          ),
                                   ],
-                                ),
-                              ),
-                              model.isUpdatingKycDetails
-                                  ? LinearProgressIndicator(
-                                      backgroundColor: Colors.black,
-                                    )
-                                  : AppPositiveBtn(
-                                      onPressed: () async {
-                                        await model.onSubmit(context);
-                                      },
-                                      btnText: locale.btnSumbit,
-                                      width: SizeConfig.screenWidth,
-                                    ),
-                            ],
-                          )
-                        : SizedBox(),
-                    SizedBox(height: SizeConfig.padding10),
-                  ],
-                ),
-              ),
-      ),
+                                )
+                              : SizedBox(),
+                          SizedBox(height: SizeConfig.padding10),
+                        ],
+                      ),
+                    ),
+            ),
     );
   }
 }

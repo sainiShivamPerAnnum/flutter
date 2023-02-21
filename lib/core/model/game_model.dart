@@ -139,8 +139,7 @@ class GameModel {
 
   String toJson() => json.encode(toMap());
 
-  factory GameModel.fromJson(
-          String source, PageConfiguration pageConfiguration) =>
+  factory GameModel.fromJson(String source) =>
       GameModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
