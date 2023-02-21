@@ -1,5 +1,6 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -60,7 +61,7 @@ class Root extends StatelessWidget {
                             ? SizeConfig.navBarHeight
                             : -50,
                     duration: Duration(milliseconds: 400),
-                    child: HappyHourBanner(model: model.happyHourCampaign),
+                    child: HappyHourBanner(model: locator<HappyHourCampign>()),
                   ),
                 ),
               const BottomNavBar(),
@@ -103,21 +104,19 @@ class RootAppBar extends StatelessWidget {
                         width: SizeConfig.screenWidth,
                         height: kToolbarHeight + SizeConfig.viewInsets.top,
                         alignment: Alignment.bottomCenter,
-                        color:
-                            (locator<RootController>().currentNavBarItemModel ==
-                                    RootController.saveNavBarItem)
-                                ? (userservice!.userSegments
-                                        .contains("NEW_USER"))
-                                    ? UiConstants.kBackgroundColor
-                                    : UiConstants.kSecondaryBackgroundColor
-                                : UiConstants.kBackgroundColor,
+                        color: (locator<RootController>()
+                                    .currentNavBarItemModel ==
+                                RootController.saveNavBarItem)
+                            ? (userservice!.userSegments.contains("NEW_USER"))
+                                ? UiConstants.kBackgroundColor
+                                : UiConstants.kSecondaryBackgroundColor
+                            : UiConstants.kBackgroundColor,
                         child: FAppBar(
                           type: FaqsType.play,
                           backgroundColor: (locator<RootController>()
                                       .currentNavBarItemModel ==
                                   RootController.saveNavBarItem)
-                              ? (userservice!.userSegments
-                                      .contains("NEW_USER"))
+                              ? (userservice!.userSegments.contains("NEW_USER"))
                                   ? UiConstants.kBackgroundColor
                                   : UiConstants.kSecondaryBackgroundColor
                               : UiConstants.kBackgroundColor,

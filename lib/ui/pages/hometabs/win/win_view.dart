@@ -50,7 +50,7 @@ class Win extends StatelessWidget {
                       //Fello News
                       FelloNewsComponent(model: model),
                       // DEV PURPOSE ONLY
-                        const CacheClearWidget(),
+                      const CacheClearWidget(),
                       SizedBox(
                         height: SizeConfig.padding10,
                       ),

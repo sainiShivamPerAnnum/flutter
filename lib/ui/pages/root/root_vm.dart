@@ -47,11 +47,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
 
 class RootViewModel extends BaseViewModel {
-  RootViewModel({S? l})
+  RootViewModel({S? l, SharedPreferences? pref})
       : locale = l ?? locator<S>(),
+        _sharePreference = pref ?? locator<SharedPreferences>(),
         super();
 
   final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final SharedPreferences _sharePreference;
   final FcmHandler? _fcmListener = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
@@ -233,66 +235,56 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  late HappyHourCampign happyHourCampaign;
+  // late HappyHourCampign happyHourCampaign;
 
-  Future getHappyHourCampaign() async {
+  Future<void> getHappyHourCampaign() async {
     final campaign = await locator<CampaignRepo>().getHappyHourCampaign();
     if (campaign.code == 200 && campaign.model != null) {
+      final data = campaign.model!.data!;
+      //[Not Started]
+      if (data.happyHourType == HappyHourType.notStarted) return;
+
       if (locator.isRegistered<HappyHourCampign>()) {
         locator.unregister<HappyHourCampign>();
       }
       locator.registerSingleton<HappyHourCampign>(campaign.model!);
-      final _isDuringHappyHourVisited =
-          locator<SharedPreferences>().getBool("duringHappyHourVisited") ??
-              false;
-      if (_isDuringHappyHourVisited) {
-        final date =
-            locator<SharedPreferences>().getString("timStampOfHappyHour") ??
-                DateTime.now().toString();
 
-        final shouldClearCache = DateTime.now().day != DateTime.parse(date).day;
-
-        if (shouldClearCache) {
-          locator<SharedPreferences>().remove('timStampOfHappyHour');
-          locator<SharedPreferences>().remove('duringHappyHourVisited');
-          locator<SharedPreferences>().remove('showedAfterHappyHourDialog');
-        }
+      // [PREBUZZ]
+      if (data.happyHourType == HappyHourType.preBuzz) {
+        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        return;
       }
 
-      if (campaign.model!.data!.showHappyHour) {
+      //Clear Cache
+
+      clearCache();
+
+      //[Live]
+      if (data.happyHourType == HappyHourType.live) {
         if (!_isDuringHappyHourVisited && !AppState.isFirstTime) {
           locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-          locator<SharedPreferences>().setBool("duringHappyHourVisited", true);
-          locator<SharedPreferences>()
-              .setString('timStampOfHappyHour', DateTime.now().toString());
+          _sharePreference.setBool("duringHappyHourVisited", true);
+          _sharePreference.setString(
+              'timStampOfHappyHour', DateTime.now().toString());
         }
-
-        happyHourCampaign = campaign.model!;
         showHappyHourBanner = true;
         notifyListeners();
         return;
       }
 
+      //[Expired]
       final endTime = DateTime.parse(campaign.model!.data!.endTime!);
 
       if (endTime.day != DateTime.now().day) {
         return;
       }
-      final isVistedDuringHappyHour =
-          locator<SharedPreferences>().getBool('duringHappyHourVisited') ??
-              false;
-      final isalreadyShowed =
-          locator<SharedPreferences>().getBool("showedAfterHappyHourDialog") ??
-              false;
+
       if (DateTime.now().isAfter(endTime) &&
-          !isVistedDuringHappyHour &&
-          !isalreadyShowed) {
-        locator<BaseUtil>()
-            .showHappyHourDialog(campaign.model!, afterHappyHour: true);
-        locator<SharedPreferences>()
-            .setBool("showedAfterHappyHourDialog", true);
+          !_isDuringHappyHourVisited &&
+          !alreadyShowed) {
+        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        _sharePreference.setBool("showedAfterHappyHourDialog", true);
       }
-      ;
     }
   }
 
@@ -304,6 +296,25 @@ class RootViewModel extends BaseViewModel {
         AppState.startupNotifMessage,
         MsgSource.Terminated,
       );
+    }
+  }
+
+  bool get _isDuringHappyHourVisited =>
+      _sharePreference.getBool("duringHappyHourVisited") ?? false;
+
+  bool get alreadyShowed =>
+      _sharePreference.getBool("showedAfterHappyHourDialog") ?? false;
+
+  void clearCache() {
+    final date = _sharePreference.getString("timStampOfHappyHour") ?? "0";
+
+    final day = DateTime.tryParse(date)?.day;
+    if (day == null) return;
+
+    if (DateTime.now().day != day) {
+      _sharePreference.remove('timStampOfHappyHour');
+      _sharePreference.remove('duringHappyHourVisited');
+      _sharePreference.remove('showedAfterHappyHourDialog');
     }
   }
 
