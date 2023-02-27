@@ -61,14 +61,14 @@ class CampaignRepo extends BaseRepo {
       final _token = await getBearerToken();
 
       final response = await APIService.instance.getData(
-        '/felloFacts.txt',
+        'felloFacts.txt',
         token: _token,
         cBaseUrl: _cdnBaseUrl,
         decryptData: true
       );
 
       // final responseData = response["data"];
-      logger!.d(response);
+        logger!.d(response);
       if (response != null) {
         response.forEach((e) {
           facts.add(FelloFactsModel.fromMap(e));

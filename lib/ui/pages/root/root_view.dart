@@ -19,60 +19,72 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
+  late RootViewModel model;
+
   @override
   Widget build(BuildContext context) {
-    return BaseView<RootViewModel>(
-      onModelReady: (model) => model.onInit(),
-      onModelDispose: (model) => model.onDispose(),
-      builder: (ctx, model, child) {
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: UiConstants.kBackgroundColor,
-          body: Stack(
-            children: [
-              const NewSquareBackground(),
-
-              RootAppBar(),
-              RefreshIndicator(
-                triggerMode: RefreshIndicatorTriggerMode.onEdge,
-                color: UiConstants.primaryColor,
-                backgroundColor: Colors.black,
-                onRefresh: model.refresh,
-                child: Consumer<AppState>(
-                  builder: (ctx, m, child) {
-                    return IndexedStack(
-                      children: model.navBarItems.keys.toList(),
-                      index: m.getCurrentTabIndex,
-                    );
-                  },
-                ),
-              ),
-              if (model.showHappyHourBanner)
-                Consumer<AppState>(
-                  builder: (ctx, m, child) => AnimatedPositioned(
-                    bottom:
-                        !(locator<RootController>().currentNavBarItemModel ==
-                                    RootController.journeyNavBarItem ||
-                                !_showHappyHour())
-                            ? SizeConfig.navBarHeight
-                            : -50,
-                    duration: Duration(milliseconds: 400),
-                    child: HappyHourBanner(model: locator<HappyHourCampign>()),
-                  ),
-                ),
-              const BottomNavBar(),
-              // const BaseAnimation(),
-              const CircularAnim(),
-              const DEVBanner(),
-              const QABanner(),
-            ],
-          ),
-        );
+    return ShowCaseWidget(
+      onFinish: () {
+        model.showMarketingCampings();
       },
+      builder: Builder(
+          builder: (_) => BaseView<RootViewModel>(
+              onModelReady: (model) {
+                model.onInit(_);
+                this.model = model;
+              },
+              onModelDispose: (model) => model.onDispose(),
+              builder: (ctx, model, child) {
+                return Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  backgroundColor: UiConstants.kBackgroundColor,
+                  body: Stack(
+                    children: [
+                      const NewSquareBackground(),
+
+                      RootAppBar(),
+                      RefreshIndicator(
+                        triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                        color: UiConstants.primaryColor,
+                        backgroundColor: Colors.black,
+                        onRefresh: model.refresh,
+                        child: Consumer<AppState>(
+                          builder: (ctx, m, child) {
+                            return IndexedStack(
+                              children: model.navBarItems.keys.toList(),
+                              index: m.getCurrentTabIndex,
+                            );
+                          },
+                        ),
+                      ),
+                      if (model.showHappyHourBanner)
+                        Consumer<AppState>(
+                          builder: (ctx, m, child) => AnimatedPositioned(
+                            bottom: !(locator<RootController>()
+                                            .currentNavBarItemModel ==
+                                        RootController.journeyNavBarItem ||
+                                    !_showHappyHour())
+                                ? SizeConfig.navBarHeight
+                                : -50,
+                            duration: Duration(milliseconds: 400),
+                            child: HappyHourBanner(
+                                model: locator<HappyHourCampign>()),
+                          ),
+                        ),
+                      const BottomNavBar(),
+                      // const BaseAnimation(),
+                      const CircularAnim(),
+                      const DEVBanner(),
+                      const QABanner(),
+                    ],
+                  ),
+                );
+              })),
     );
   }
 }

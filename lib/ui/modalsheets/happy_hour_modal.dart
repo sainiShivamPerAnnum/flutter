@@ -83,8 +83,8 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
           height: widget.isComingFromSave
               ? SizeConfig.screenHeight! * 0.42
               : _happyHourType == HappyHourType.expired
-                  ? SizeConfig.screenHeight! * 0.34
-                  : SizeConfig.screenHeight! * 0.48,
+                  ? SizeConfig.screenHeight! * 0.32
+                  : SizeConfig.screenHeight! * 0.46,
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -92,8 +92,8 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                 height: widget.isComingFromSave
                     ? SizeConfig.screenHeight! * 0.35
                     : _happyHourType == HappyHourType.expired
-                        ? SizeConfig.screenHeight! * 0.28
-                        : SizeConfig.screenHeight! * 0.42,
+                        ? SizeConfig.screenHeight! * 0.25
+                        : SizeConfig.screenHeight! * 0.39,
                 width: SizeConfig.screenWidth,
                 decoration: BoxDecoration(
                   color: UiConstants.kSaveDigitalGoldCardBg,
@@ -114,7 +114,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                       style: TextStyles.sourceSansSB.body0,
                     ),
                     SizedBox(
-                      height: SizeConfig.screenHeight! * .02,
+                      height: SizeConfig.padding16,
                     ),
                     subtitle.beautify(
                       style: TextStyles.sourceSans.body3.colour(
@@ -125,7 +125,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                       ),
                     ),
                     SizedBox(
-                      height: SizeConfig.padding32,
+                      height: SizeConfig.padding16,
                     ),
                     if (_happyHourType != HappyHourType.expired) ...[
                       Text(
@@ -138,8 +138,9 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                         height: SizeConfig.padding12,
                       ),
                     ],
+                    Spacer(),
                     if (data.preBuzz!.luckyWinnersCount != 0 &&
-                        _happyHourType != HappyHourType.expired)
+                        _happyHourType != HappyHourType.expired) ...[
                       Stack(
                         alignment: Alignment.center,
                         children: [
@@ -152,7 +153,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                           ),
                         ],
                       )
-                    else if (_happyHourType != HappyHourType.expired)
+                    ] else if (_happyHourType != HappyHourType.expired)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -258,8 +259,8 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                 bottom: widget.isComingFromSave
                     ? SizeConfig.screenHeight! * 0.30
                     : _happyHourType == HappyHourType.expired
-                        ? SizeConfig.screenHeight! * 0.23
-                        : SizeConfig.screenHeight! * 0.36,
+                        ? SizeConfig.screenHeight! * 0.21
+                        : SizeConfig.screenHeight! * 0.35,
                 child: SvgPicture.asset(
                   Assets.sandTimer,
                   height: 90,

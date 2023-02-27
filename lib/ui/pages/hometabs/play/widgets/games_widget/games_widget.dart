@@ -23,7 +23,7 @@ class GamesWidget extends StatelessWidget {
         UserServiceProperties.myUserFund
       ],
       builder: (_, prop, ___) {
-        if (model.isGamesListDataLoading || prop!.userFundWallet == null)
+        if (model.isGamesListDataLoading || prop?.userFundWallet == null)
           return Container(
             width: SizeConfig.screenWidth,
             margin: EdgeInsets.symmetric(
@@ -202,22 +202,24 @@ class _LockedStateState extends State<_LockedState>
               ),
               if (widget.gameTier.showProgressIndicator)
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AnimatedBuilder(
-                      builder: (context, child) {
-                        return CustomPaint(
-                          painter: CustomProgressBar(
-                              widget.gameTier.level * 1.0,
-                              widget.gameTier.netWorth,
-                              widget.gameTier.amountToCompleteLevel.round(),
-                              _controller),
-                          size: Size(SizeConfig.screenWidth! * 0.7,
-                              SizeConfig.screenWidth! * 0.05),
-                        );
-                      },
-                      animation: _controller,
+                    Expanded(
+                      child: AnimatedBuilder(
+                        builder: (context, child) {
+                          return CustomPaint(
+                            foregroundPainter: CustomProgressBar(
+                                widget.gameTier.level * 1.0,
+                                widget.gameTier.netWorth,
+                                widget.gameTier.amountToCompleteLevel.round(),
+                                _controller),
+                          );
+                        },
+                        animation: _controller,
+                      ),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding6,
                     ),
                     Text(
                       "₹" +
@@ -230,7 +232,7 @@ class _LockedStateState extends State<_LockedState>
                   ],
                 ),
               SizedBox(
-                height: SizeConfig.padding12,
+                height: SizeConfig.padding16,
               ),
             ],
           ),
@@ -253,7 +255,7 @@ class CustomProgressBar extends CustomPainter {
 
     canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromLTWH(0, 0, size.width, 16),
+          Rect.fromLTWH(0, -8, size.width, 16),
           Radius.circular(SizeConfig.padding26),
         ),
         Paint()
@@ -263,7 +265,7 @@ class CustomProgressBar extends CustomPainter {
         RRect.fromRectAndRadius(
           Rect.fromLTWH(
               0,
-              0,
+              -8,
               lerpDouble(
                   0,
                   getFilledWidth(size) == 0 ? 20 : getFilledWidth(size),

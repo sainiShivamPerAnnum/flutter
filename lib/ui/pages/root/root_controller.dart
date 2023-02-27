@@ -5,18 +5,19 @@ import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/show_case_key.dart';
 import 'package:flutter/material.dart';
 
 class RootController {
   static final tambolaNavBar =
-      NavBarItemModel("Tambola", Assets.navTambolaLottie);
+      NavBarItemModel("Tambola", Assets.navTambolaLottie,ShowCaseKeys.TambolaKey);
   static final journeyNavBarItem =
-      NavBarItemModel("Journey", Assets.navJourneyLottie);
+      NavBarItemModel("Journey", Assets.navJourneyLottie,ShowCaseKeys.Journey);
 
-  static final playNavBarItem = NavBarItemModel("Play", Assets.navPlayLottie);
+  static final playNavBarItem = NavBarItemModel("Play", Assets.navPlayLottie,ShowCaseKeys.PlayKey);
 
-  static final winNavBarItem = NavBarItemModel("Account", Assets.navWinLottie);
-  static final saveNavBarItem = NavBarItemModel("Save", Assets.navSaveLottie);
+  static final winNavBarItem = NavBarItemModel("Account", Assets.navWinLottie,ShowCaseKeys.AccountKey);
+  static final saveNavBarItem = NavBarItemModel("Save", Assets.navSaveLottie,ShowCaseKeys.SaveKey);
 
   late NavBarItemModel currentNavBarItemModel;
 

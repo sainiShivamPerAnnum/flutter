@@ -37,12 +37,14 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
 
@@ -90,7 +92,7 @@ class RootViewModel extends BaseViewModel {
     await _journeyService.getUnscratchedGT();
   }
 
-  onInit() {
+  onInit(BuildContext context) {
     AppState.isUserSignedIn = true;
     appState.setRootLoadValue = true;
     _referralService.verifyReferral();
@@ -98,10 +100,10 @@ class RootViewModel extends BaseViewModel {
     _rootController.currentNavBarItemModel =
         _rootController.navItems.values.first;
     _tambolaService!.init();
-    initialize();
+    initialize(context);
   }
 
-  initialize() async {
+  initialize(BuildContext context) async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       await _userService.userBootUpEE();
       await verifyUserBootupDetails();
@@ -113,10 +115,16 @@ class RootViewModel extends BaseViewModel {
       _userService.checkForNewNotifications();
       _userService.getProfilePicture();
       _initAdhocNotifications();
-      Future.delayed(Duration(seconds: 8), () {
-        _marketingService.checkUserDailyAppCheckInStatus().then((value) {
-          getHappyHourCampaign();
-        });
+      showMarketingCampings();  
+      // ShowCaseWidget.of(context).startShowCase(
+      //     [..._rootController.navItems.values.map((e) => e.key).toList()]);
+    });
+  }
+
+  void showMarketingCampings() {
+    Future.delayed(Duration(seconds: 8), () {
+      _marketingService.checkUserDailyAppCheckInStatus().then((value) {
+        getHappyHourCampaign();
       });
     });
   }
@@ -252,6 +260,9 @@ class RootViewModel extends BaseViewModel {
       // [PREBUZZ]
       if (data.happyHourType == HappyHourType.preBuzz) {
         locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        _sharePreference.remove('duringHappyHourVisited');
+        _sharePreference.remove('timStampOfHappyHour');
+        _sharePreference.remove('showedAfterHappyHourDialog');
         return;
       }
 

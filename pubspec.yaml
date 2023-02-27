@@ -15,7 +15,7 @@ dependencies:
   app_install_date: ^0.1.1
   appsflyer_sdk: ^6.5.2
   apxor_flutter:
-    git: 
+    git:
       url: https://github.com/apxor/apxor-flutter-sdk.git
       ref: 19d6f70
   cached_network_image: ^3.2.3
@@ -25,6 +25,7 @@ dependencies:
   connectivity_plus: ^3.0.2
   dart_jsonwebtoken: ^2.4.2
   device_info_plus: 7.0.0
+  device_preview: ^1.1.0
   encrypt: ^5.0.0
   external_app_launcher: ^3.1.0
   firebase_analytics: ^10.0.7
@@ -42,7 +43,7 @@ dependencies:
     sdk: flutter
   flutter_facebook_sdk:
     path: packages/flutter_facebook_sdk/
-  flutter_html:
+  flutter_html: null
   flutter_inset_box_shadow: ^1.0.8
   flutter_localizations:
     sdk: flutter
@@ -56,7 +57,6 @@ dependencies:
   http: ^0.13.3
   image_picker: ^0.8.3
   in_app_review: ^2.0.3
-  device_preview: ^1.1.0
   intl: ^0.17.0
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
@@ -81,6 +81,7 @@ dependencies:
   shared_preferences_android: ^2.0.13
   shared_preferences_ios: ^2.1.1
   shimmer: ^2.0.0
+  showcaseview: ^2.0.0+1
   sms_autofill: ^2.0.0
   story_view:
     git:
