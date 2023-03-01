@@ -599,11 +599,13 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static Future<void> launchUrl(String url) async {
+  static Future<bool> launchUrl(String url) async {
     if (!await launchUrlString(url, mode: LaunchMode.externalApplication)) {
       BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
           "Please try after some time");
+      return false;
     }
+    return true;
   }
 
   // void openTambolaGame() async {

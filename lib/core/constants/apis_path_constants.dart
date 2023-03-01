@@ -137,4 +137,9 @@ class ApiPath {
 
   //marketing events
   static String kDailyAppBonusEvent(String uid) => "/user/$uid/daily-bonus";
+
+  //phonepe subscriptions
+  static String subscription(String uid) => "/$uid/sub";
+  static const pauseSubscription = "/sub/pause";
+  static const resumeSubscription = "/sub/resume";
 }

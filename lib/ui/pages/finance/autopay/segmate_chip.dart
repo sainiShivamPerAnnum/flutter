@@ -2,10 +2,10 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class SegmentChips extends StatelessWidget {
-  final model;
+  bool isDaily;
   final String? text;
 
-  SegmentChips({this.model, this.text});
+  SegmentChips({required this.isDaily, this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class SegmentChips extends StatelessWidget {
   }
 
   getBorder() {
-    if (model.isDaily) {
+    if (isDaily) {
       if (text == "Daily")
         return Colors.white;
       else

@@ -476,7 +476,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                             model.amountFieldController.text);
                       },
                       child: SegmentChips(
-                        model: model,
+                        isDaily: model.isDaily,
                         text: locale.daily,
                       ),
                     ),
@@ -491,7 +491,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                         );
                       },
                       child: SegmentChips(
-                        model: model,
+                        isDaily: model.isDaily,
                         text: locale.weekly,
                       ),
                     ),

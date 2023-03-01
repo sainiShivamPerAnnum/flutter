@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -568,7 +569,7 @@ class TransationTile extends StatelessWidget {
 }
 
 class PauseAutosaveModal extends StatefulWidget {
-  final UserAutosaveDetailsViewModel? model;
+  final SubscriptionService? model;
 
   const PauseAutosaveModal({Key? key, this.model}) : super(key: key);
 
@@ -577,10 +578,12 @@ class PauseAutosaveModal extends StatefulWidget {
 }
 
 class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
-  int? pauseValue = 1;
-  setPauseValue(value) {
+  AutosavePauseOption pauseValue = AutosavePauseOption.ONE_WEEK;
+  int pauseInt = 0;
+  setPauseValue(AutosavePauseOption value, int val) {
     setState(() {
       pauseValue = value;
+      pauseInt = val;
     });
   }
 
@@ -619,18 +622,22 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
           pauseOptionTile(
             text: "1 Week",
             radioValue: 1,
+            option: AutosavePauseOption.ONE_WEEK,
           ),
           pauseOptionTile(
             text: "2 Weeks",
             radioValue: 2,
+            option: AutosavePauseOption.TWO_WEEK,
           ),
           pauseOptionTile(
             text: "1 Month",
             radioValue: 3,
+            option: AutosavePauseOption.ONE_MONTH,
           ),
           pauseOptionTile(
             text: "Forever",
             radioValue: 4,
+            option: AutosavePauseOption.FOREVER,
           ),
           Container(height: SizeConfig.padding16),
           AppPositiveCustomChildBtn(
@@ -685,15 +692,15 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
     );
   }
 
-  pauseOptionTile({
-    required text,
-    required radioValue,
-  }) {
+  pauseOptionTile(
+      {required String text,
+      required int radioValue,
+      required AutosavePauseOption option}) {
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: () {
-        setPauseValue(radioValue);
+        setPauseValue(option, radioValue);
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
@@ -718,9 +725,9 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
           ),
           trailing: Radio(
             value: radioValue,
-            groupValue: pauseValue,
+            groupValue: pauseInt,
             onChanged: (dynamic value) {
-              setPauseValue(value);
+              setPauseValue(option, radioValue);
             },
             activeColor: UiConstants.primaryColor,
           ),

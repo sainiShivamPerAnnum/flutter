@@ -160,20 +160,20 @@ class APIService implements API {
 
       if (cBaseUrl != null) _url = cBaseUrl + url;
       logger!.d("response from $_url");
-
+      final headers = {
+        'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
+        'platform': Platform.isAndroid ? 'android' : 'iOS',
+        'version':
+            _versionString.isEmpty ? await _getAppVersion() : _versionString,
+        'uid': userService?.baseUser?.uid as String,
+      };
+      logger!.d("Body : $body");
+      logger!.d("Headers : $headers");
       final response = await http.put(
-        Uri.parse(
-          _url,
-        ),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
-          'platform': Platform.isAndroid ? 'android' : 'iOS',
-          'version':
-              _versionString.isEmpty ? await _getAppVersion() : _versionString,
-          'uid': userService?.baseUser?.uid as String,
-        },
-        body: body == null ? null : jsonEncode(body),
+        Uri.parse(_url),
+        headers: headers,
+        body: jsonEncode(body ?? {}),
       );
       responseJson = returnResponse(response);
     } on SocketException {
