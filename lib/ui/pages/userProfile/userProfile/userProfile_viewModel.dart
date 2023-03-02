@@ -122,7 +122,7 @@ class UserProfileVM extends BaseViewModel {
 
   String? get myUserDpUrl => _userService!.myUserDpUrl;
   String get myname => _userService!.name ?? "";
-  String get myUsername => _userService!.baseUser!.username ?? "";
+  String get myUsername => _userService!.baseUser?.username ?? "";
   String get myDob => _userService!.dob ?? "";
   String get myEmail => _userService!.email ?? "";
   String get myGender => _userService!.gender ?? "";

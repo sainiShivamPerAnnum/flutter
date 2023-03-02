@@ -11,7 +11,7 @@ class SubscriptionModel {
   String? status;
   String? note;
   String? cloudTask;
-  TimestampModel? resumeFrequency;
+  String? resumeFrequency;
   TimestampModel? resumeDate;
   TimestampModel? startDate;
   TimestampModel? createdOn;

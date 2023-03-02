@@ -1,6 +1,9 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -45,13 +48,10 @@ class _AutosaveCardState extends State<AutosaveCard> {
         case AutosaveState.ACTIVE:
           return Container(
             padding: EdgeInsets.all(SizeConfig.padding10),
-            decoration: BoxDecoration(
-              border: Border.all(color: UiConstants.tertiarySolid),
-            ),
+            decoration: BoxDecoration(border: Border.all(color: Colors.white)),
             child: Text(
               'UPDATE',
-              style: TextStyles.sourceSansB.body3
-                  .colour(UiConstants.tertiarySolid),
+              style: TextStyles.sourceSansB.body3.colour(Colors.white),
             ),
           );
         case AutosaveState.INIT:
@@ -65,6 +65,7 @@ class _AutosaveCardState extends State<AutosaveCard> {
             ),
           );
         case AutosaveState.PAUSED:
+        case AutosaveState.PAUSED_FOREVER:
           return Container(
             padding: EdgeInsets.all(SizeConfig.padding10),
             decoration: BoxDecoration(
@@ -90,36 +91,56 @@ class _AutosaveCardState extends State<AutosaveCard> {
             horizontal: SizeConfig.padding16,
             vertical: SizeConfig.padding10,
           ),
-          child: ListTile(
-            contentPadding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding12,
-                vertical: SizeConfig.padding14),
-            leading: SvgPicture.asset(
-              Assets.autoSaveDefault,
-              width: SizeConfig.padding40,
-            ),
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Amount: " + (service.subscriptionData?.amount ?? '0'),
-                  style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+          child: Column(
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.only(
+                    left: SizeConfig.padding12,
+                    right: SizeConfig.padding12,
+                    top: SizeConfig.padding14),
+                leading: SvgPicture.asset(
+                  Assets.autoSaveDefault,
+                  width: SizeConfig.padding40,
                 ),
-                Text(
-                  "  ${service.autosaveState == AutosaveState.ACTIVE ? "[ACTIVE]" : ""}",
-                  style: TextStyles.sourceSansB.body4
-                      .colour(UiConstants.primaryColor),
-                )
-              ],
-            ),
-            subtitle: Text(
-              "Frequency: ${service.subscriptionData?.frequency}",
-              style: TextStyles.rajdhaniL.colour(UiConstants.kTextColor2),
-            ),
-            trailing: Container(
-                margin: EdgeInsets.only(right: SizeConfig.padding12),
-                child: getTrailingWidget(service)),
-            onTap: service.handleTap,
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Amount: " + (service.subscriptionData?.amount ?? '0'),
+                      style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                    ),
+                    Text(
+                      "  ${service.autosaveState == AutosaveState.ACTIVE ? "[ACTIVE]" : ""}",
+                      style: TextStyles.sourceSansB.body4
+                          .colour(UiConstants.primaryColor),
+                    )
+                  ],
+                ),
+                subtitle: Text(
+                  "Frequency: ${service.subscriptionData?.frequency}",
+                  style: TextStyles.rajdhani.colour(UiConstants.kTextColor2),
+                ),
+                trailing: Container(
+                    margin: EdgeInsets.only(right: SizeConfig.padding12),
+                    child: getTrailingWidget(service)),
+                onTap: service.handleTap,
+              ),
+              // if (service.autosaveState != AutosaveState.INIT)
+              TextButton(
+                  onPressed: () {
+                    // SubscriptionRepo
+                    // locator<SubscriptionRepo>()
+                    //     .getSubscriptionTransactionHistory(
+                    //         offset: 1, limit: 30);
+                    AppState.delegate!.appState.currentAction = PageAction(
+                        page: TransactionsHistoryPageConfig,
+                        state: PageState.addPage);
+                  },
+                  child: Text(
+                    "Transaction History",
+                    style: TextStyles.body3.colour(UiConstants.kTextColor2),
+                  )),
+            ],
           ),
         ),
       ),

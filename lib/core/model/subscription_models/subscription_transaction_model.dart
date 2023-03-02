@@ -1,9 +1,76 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:flutter/foundation.dart';
+
+class SubscriptionTransactionModel {
+  String? id;
+  String? subId;
+  String? status;
+  String? type;
+  String? amount;
+  String? referenceId;
+  String? payResponseCode;
+  String? note;
+  TimestampModel? createdOn;
+  TimestampModel? updatedOn;
+  String? blockId;
+  String? lockPrice;
+  String? gold;
+  String? closingBalance;
+  String? tambolaTickets;
+  List<String>? gts;
+  String? refundStatus;
+  String? refundId;
+  String? refundAmount;
+  static final helper = HelperModel<SubscriptionTransactionModel>(
+    (map) => SubscriptionTransactionModel.fromMap(map),
+  );
+  SubscriptionTransactionModel(
+      {this.id,
+      this.subId,
+      this.status,
+      this.type,
+      this.amount,
+      this.referenceId,
+      this.payResponseCode,
+      this.note,
+      this.createdOn,
+      this.updatedOn,
+      this.blockId,
+      this.lockPrice,
+      this.gold,
+      this.closingBalance,
+      this.tambolaTickets,
+      this.gts,
+      this.refundStatus,
+      this.refundId,
+      this.refundAmount});
+
+  SubscriptionTransactionModel.fromMap(Map<String, dynamic> json) {
+    id = json['id'];
+    subId = json['subId'];
+    status = json['status'];
+    type = json['type'];
+    amount = json['amount'];
+    referenceId = json['referenceId'];
+    payResponseCode = json['payResponseCode'];
+    note = json['note'];
+    createdOn = TimestampModel.fromMap(json['createdOn']);
+    updatedOn = TimestampModel.fromMap(json['updatedOn']);
+    blockId = json['blockId'];
+    lockPrice = json['lockPrice'];
+    gold = json['gold'];
+    closingBalance = json['closingBalance'];
+    tambolaTickets = json['tambola_tickets'];
+    gts = json['gts'] != null
+        ? List<String>.from((json['gts'].cast<String>() as List<String>))
+        : [];
+    refundStatus = json['refund_status'];
+    refundId = json['refund_id'];
+    refundAmount = json['refund_amount'];
+  }
+}
 
 class AutosaveTransactionModel {
   String? id;
@@ -24,20 +91,20 @@ class AutosaveTransactionModel {
     (map) => AutosaveTransactionModel.fromMap(map),
   );
   AutosaveTransactionModel({
-    @required this.id,
-    @required this.amount,
-    @required this.status,
-    @required this.txnId,
-    @required this.txnDateTime,
-    @required this.currency,
-    @required this.paymentMode,
-    @required this.bankTxnId,
-    @required this.gatewayName,
-    @required this.bankName,
-    @required this.note,
-    @required this.augmontMap,
-    @required this.closingBalance,
-    @required this.createdOn,
+    required this.id,
+    required this.amount,
+    required this.status,
+    required this.txnId,
+    required this.txnDateTime,
+    required this.currency,
+    required this.paymentMode,
+    required this.bankTxnId,
+    required this.gatewayName,
+    required this.bankName,
+    required this.note,
+    required this.augmontMap,
+    required this.closingBalance,
+    required this.createdOn,
   });
 
   AutosaveTransactionModel copyWith({
@@ -70,7 +137,7 @@ class AutosaveTransactionModel {
       note: note ?? this.note,
       augmontMap: augmontMap ?? this.augmontMap,
       closingBalance: closingBalance ?? this.closingBalance,
-      createdOn: createdOn?? this.createdOn,
+      createdOn: createdOn ?? this.createdOn,
     );
   }
 
@@ -169,13 +236,13 @@ class AugmontDataModel {
   String? aPaymode;
   double? aTaxedGoldBalance;
   AugmontDataModel({
-    @required this.aAugTranId,
-    @required this.aBlockId,
-    @required this.aGoldBalance,
-    @required this.aGoldInTxn,
-    @required this.aLockPrice,
-    @required this.aPaymode,
-    @required this.aTaxedGoldBalance,
+    required this.aAugTranId,
+    required this.aBlockId,
+    required this.aGoldBalance,
+    required this.aGoldInTxn,
+    required this.aLockPrice,
+    required this.aPaymode,
+    required this.aTaxedGoldBalance,
   });
 
   AugmontDataModel copyWith({

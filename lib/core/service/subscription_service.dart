@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/subscription_update_dialog.dart';
@@ -9,6 +10,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 enum AutosaveState {
+  IDLE,
   INIT,
   PROCESSING,
   ACTIVE,
@@ -26,7 +28,7 @@ enum AutosavePauseOption {
 
 class SubscriptionService extends ChangeNotifier {
   final SubscriptionRepo _subscriptionRepo = locator<SubscriptionRepo>();
-  AutosaveState _autosaveState = AutosaveState.INIT;
+  AutosaveState _autosaveState = AutosaveState.IDLE;
   TextEditingController amountController = TextEditingController();
   int minValue = 25;
   int maxValue = 5000;
@@ -35,7 +37,8 @@ class SubscriptionService extends ChangeNotifier {
   bool _showMinAlert = false;
   bool _showMaxAlert = false;
   bool _isDaily = true;
-
+  List<SubscriptionTransactionModel> subscriptionTxnsHistoryList = [];
+  bool hasNoMoreSubsTxns = false;
   get isDaily => this._isDaily;
 
   set isDaily(value) {
@@ -83,7 +86,13 @@ class SubscriptionService extends ChangeNotifier {
 
   dump() {
     pollCount = 0;
-    autosaveState = AutosaveState.INIT;
+    _subscriptionData = null;
+    hasNoMoreSubsTxns = false;
+    _isDaily = true;
+    timer?.cancel();
+
+    subscriptionTxnsHistoryList = [];
+    autosaveState = AutosaveState.IDLE;
   }
 
   Future<void> createSubscription(
@@ -110,7 +119,7 @@ class SubscriptionService extends ChangeNotifier {
   }
 
   startPollingForResponse() {
-    timer = Timer.periodic(Duration(seconds: 15), (timer) {
+    timer = Timer.periodic(Duration(seconds: 10), (timer) {
       pollCount++;
       if (pollCount > 100) {
         timer.cancel();
@@ -124,7 +133,11 @@ class SubscriptionService extends ChangeNotifier {
     final res = await _subscriptionRepo.getSubscription();
     if (res.isSuccess()) {
       subscriptionData = res.model;
+      if (subscriptionData!.status != "INIT" &&
+          subscriptionData!.status != "CANCELLED") timer?.cancel();
     }
+
+    if (autosaveState == AutosaveState.IDLE) autosaveState = AutosaveState.INIT;
   }
 
   Future<void> updateSubscription() async {
@@ -138,7 +151,7 @@ class SubscriptionService extends ChangeNotifier {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
       Future.delayed(Duration(seconds: 1), () {
-        BaseUtil.showNegativeAlert("Subscription updated successfully",
+        BaseUtil.showPositiveAlert("Subscription updated successfully",
             "Effective changes will take place from tomorrow");
       });
     } else {
@@ -168,7 +181,7 @@ class SubscriptionService extends ChangeNotifier {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
       Future.delayed(Duration(seconds: 1), () {
-        BaseUtil.showNegativeAlert("Subscription paused successfully",
+        BaseUtil.showPositiveAlert("Subscription paused successfully",
             "Effective changes will take place from tomorrow");
       });
     } else {
@@ -177,16 +190,29 @@ class SubscriptionService extends ChangeNotifier {
   }
 
   Future<void> resumeSubscription() async {
+    autosaveState = AutosaveState.PROCESSING;
     final res = await _subscriptionRepo.resumeSubscription();
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
       Future.delayed(Duration(seconds: 1), () {
-        BaseUtil.showNegativeAlert("Subscription resumed successfully",
+        BaseUtil.showPositiveAlert("Subscription resumed successfully",
             "Effective changes will take place from tomorrow");
       });
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+    }
+  }
+
+  Future<void> getSubscriptionTransactionHistory(
+      {bool firstFetch = false}) async {
+    if (firstFetch) subscriptionTxnsHistoryList = [];
+    if (hasNoMoreSubsTxns) return;
+    final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
+        limit: 30, offset: firstFetch ? 1 : subscriptionTxnsHistoryList.length);
+    if (res.isSuccess()) {
+      if (res.model!.length < 30) hasNoMoreSubsTxns = true;
+      subscriptionTxnsHistoryList.addAll(res.model!);
     }
   }
 
@@ -240,9 +266,9 @@ class SubscriptionService extends ChangeNotifier {
             package: "com.phonepe.app",
             asset: "AUGGOLD99");
       case AutosaveState.PAUSED:
-        return BaseUtil.showNegativeAlert(
-            "Updating Autosave feature is not there yet",
-            "Hold on for next release");
+        return resumeSubscription();
+      case AutosaveState.PAUSED_FOREVER:
+        return resumeSubscription();
       default:
         return;
     }

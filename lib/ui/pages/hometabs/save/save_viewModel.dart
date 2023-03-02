@@ -178,7 +178,6 @@ class SaveViewModel extends BaseViewModel {
   getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
-    saveViewItems.add(AutosaveCard(locationKey: ValueKey('save')));
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {

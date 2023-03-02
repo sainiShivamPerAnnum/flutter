@@ -85,10 +85,11 @@ class RootViewModel extends BaseViewModel {
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     _txnHistoryService.signOut();
-    _paytmService.getActiveSubscriptionDetails();
+    // _paytmService.getActiveSubscriptionDetails();
     await _journeyService.checkForMilestoneLevelChange();
     await _gtService?.updateUnscratchedGTCount();
     await _journeyService.getUnscratchedGT();
+    await _subscriptionService.getSubscription();
   }
 
   onInit() {

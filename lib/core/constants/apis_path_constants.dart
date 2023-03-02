@@ -142,4 +142,5 @@ class ApiPath {
   static String subscription(String uid) => "/$uid/sub";
   static const pauseSubscription = "/sub/pause";
   static const resumeSubscription = "/sub/resume";
+  static String txnsSubscription(String uid) => "/$uid/sub/txns";
 }

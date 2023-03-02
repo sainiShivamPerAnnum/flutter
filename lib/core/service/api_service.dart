@@ -72,7 +72,6 @@ class APIService implements API {
       });
       log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
       logger!.d("response from $finalPath");
-      logger!.d("Full url: $finalPath");
       logger!.d("Get Response: ${response.statusCode}");
       logger!.d("Get Response: ${response.body}");
       responseJson = returnResponse(response);
@@ -221,16 +220,20 @@ class APIService implements API {
   Future<dynamic> patchData(
     String url, {
     Map<String, dynamic>? body,
+    String? cBaseUrl,
     String? token,
   }) async {
     // final HttpMetric metric =
     //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
     // await metric.start();
+    String _url = _baseUrl + url;
 
+    if (cBaseUrl != null) _url = cBaseUrl + url;
+    logger!.d("response from $_url");
     var responseJson;
     try {
       final response = await http.patch(
-        Uri.parse(_baseUrl + url),
+        Uri.parse(_url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader:

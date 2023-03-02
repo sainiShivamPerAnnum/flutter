@@ -16,7 +16,6 @@ import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -135,7 +134,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     subStatusController = new TextEditingController(text: "Active");
     await findActiveSubscription();
     await getChipAmounts();
-    if (activeSubscription != null) await getLatestTransactions();
+    // if (activeSubscription != null) await getLatestTransactions();
     setState(ViewState.Idle);
   }
 
@@ -186,23 +185,23 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     }
   }
 
-  getLatestTransactions() async {
-    if (activeSubscription == null) {
-      return;
-    }
-    final ApiResponse<List<AutosaveTransactionModel>> result =
-        await _subcriptionRepo!.getAutosaveTransactions(
-      uid: _userService!.baseUser!.uid,
-      lastDocument: null,
-      limit: 5,
-    );
-    if (result.code == 200) {
-      filteredList = result.model;
-      if (filteredList!.isNotEmpty && filteredList!.length > 4) {
-        hasMoreTxns = true;
-      }
-    }
-  }
+  // getLatestTransactions() async {
+  //   if (activeSubscription == null) {
+  //     return;
+  //   }
+  //   final ApiResponse<List<AutosaveTransactionModel>> result =
+  //       await _subcriptionRepo!.getAutosaveTransactions(
+  //     uid: _userService!.baseUser!.uid,
+  //     lastDocument: null,
+  //     limit: 5,
+  //   );
+  //   if (result.code == 200) {
+  //     filteredList = result.model;
+  //     if (filteredList!.isNotEmpty && filteredList!.length > 4) {
+  //       hasMoreTxns = true;
+  //     }
+  //   }
+  // }
 
   getChipAmounts() async {
     dailyChips = await _paytmService!.getAmountChips(

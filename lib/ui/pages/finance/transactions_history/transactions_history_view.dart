@@ -417,7 +417,7 @@ class TransactionStatusChip extends StatelessWidget {
 
 class TransactionSIPTile extends StatelessWidget {
   final TransactionsHistoryViewModel? model;
-  final AutosaveTransactionModel? txn;
+  final SubscriptionTransactionModel? txn;
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   TransactionSIPTile({
     required this.model,
@@ -436,8 +436,8 @@ class TransactionSIPTile extends StatelessWidget {
       title: Text(locale.btnDeposit.toUpperCase(),
           style: TextStyles.sourceSans.body3),
       subtitle: Text(
-        _txnHistoryService!
-            .getFormattedSIPDate(DateTime.parse(txn!.txnDateTime!)),
+        _txnHistoryService!.getFormattedSIPDate(
+            DateTime.parse(txn!.createdOn!.toDate().toString())),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Wrap(
@@ -447,7 +447,8 @@ class TransactionSIPTile extends StatelessWidget {
             status: txn!.status,
           ),
           Text(
-            _txnHistoryService!.getFormattedTxnAmount(txn!.amount!),
+            _txnHistoryService!
+                .getFormattedTxnAmount(double.tryParse(txn!.amount!)!),
             style: TextStyles.sourceSansM.body3,
           ),
           Padding(

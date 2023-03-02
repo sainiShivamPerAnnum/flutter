@@ -16,30 +16,33 @@ class SubscriptionRepo extends BaseRepo {
       ? ""
       : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
 
-  Future<ApiResponse<List<AutosaveTransactionModel>>> getAutosaveTransactions({
-    required String? uid,
-    String? lastDocument,
+  Future<ApiResponse<List<SubscriptionTransactionModel>>>
+      getSubscriptionTransactionHistory({
+    int? offset,
     int? limit,
   }) async {
     try {
       final String token = await getBearerToken();
       final res = await APIService.instance.getData(
-        ApiPath.getTransaction(uid),
+        ApiPath.txnsSubscription(userService.baseUser!.uid!),
         cBaseUrl: baseUrl,
         queryParams: {
-          "lastDocId": lastDocument,
+          "offset": offset.toString(),
           "limit": limit.toString(),
         },
         token: token,
       );
-      final responseData = res['data'];
-      logger!.d(responseData);
-      final result = AutosaveTransactionModel.helper.fromMapArray(res['data']);
-
-      return ApiResponse(model: result, code: 200);
+      final responseData = res['data']['transactions'];
+      logger.d(responseData);
+      if (responseData != null) {
+        final result =
+            SubscriptionTransactionModel.helper.fromMapArray(responseData);
+        return ApiResponse(model: result, code: 200);
+      }
+      return ApiResponse(model: [], code: 200);
     } catch (e) {
-      logger!.e(e.toString());
-      return ApiResponse.withError(e?.toString() ?? "Unable to get txns", 400);
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -111,7 +114,7 @@ class SubscriptionRepo extends BaseRepo {
 
       final token = await getBearerToken();
 
-      final response = await APIService.instance.putData(
+      final response = await APIService.instance.patchData(
         ApiPath.subscription(userService.baseUser!.uid!),
         body: _body,
         cBaseUrl: baseUrl,
@@ -162,8 +165,8 @@ class SubscriptionRepo extends BaseRepo {
 
       final token = await getBearerToken();
 
-      final response = await APIService.instance.putData(
-        ApiPath.subscription(userService.baseUser!.uid!),
+      final response = await APIService.instance.postData(
+        ApiPath.resumeSubscription,
         body: _body,
         cBaseUrl: baseUrl,
         token: token,
