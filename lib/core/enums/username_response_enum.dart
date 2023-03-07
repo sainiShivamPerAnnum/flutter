@@ -1,1 +1,0 @@
-enum UsernameResponse { AVAILABLE, UNAVAILABLE, INVALID, EMPTY, SHORT, LONG }
