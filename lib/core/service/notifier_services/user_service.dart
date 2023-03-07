@@ -38,7 +38,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -116,7 +115,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   set hasNewNotifications(bool val) {
     _hasNewNotifications = val;
     notifyListeners(UserServiceProperties.myNotificationStatus);
-    _logger!.d(
+    _logger.d(
         "Notification Status updated in userservice, property listeners notified");
   }
 
@@ -140,7 +139,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   setMyAvatarId(String? avId) {
     _avatarId = avId;
     notifyListeners(UserServiceProperties.myAvatarId);
-    _logger!.d(
+    _logger.d(
         "My user avatar Id updated in userservice, property listeners notified");
   }
 
@@ -167,28 +166,28 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   setDateOfBirth(String? dob) {
     _dob = dob;
     notifyListeners(UserServiceProperties.myDob);
-    _logger!
+    _logger
         .d("My user dob updated in userservice, property listeners notified");
   }
 
   setGender(String? gender) {
     _gender = gender;
     notifyListeners(UserServiceProperties.myGender);
-    _logger!.d(
+    _logger.d(
         "My user gender updated in userservice, property listeners notified");
   }
 
   setEmail(String? email) {
     _email = email;
     notifyListeners(UserServiceProperties.myEmail);
-    _logger!
+    _logger
         .d("My user email updated in userservice, property listeners notified");
   }
 
   set userFundWallet(UserFundWallet? wallet) {
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
-    _logger!.d("Wallet updated in userservice, property listeners notified");
+    _logger.d("Wallet updated in userservice, property listeners notified");
   }
 
   set userJourneyStats(UserJourneyStatsModel? stats) {
@@ -197,42 +196,42 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           _userJourneyStats?.prizeSubtype ?? '';
     _userJourneyStats = stats;
     notifyListeners(UserServiceProperties.myJourneyStats);
-    _logger!
+    _logger
         .d("Journey Stats updated in userservice, property listeners notified");
-    _logger!.d(
+    _logger.d(
         "Previous PrizeSubtype : ${ScratchCardService.previousPrizeSubtype}  Current PrizeSubtype: ${_userJourneyStats?.prizeSubtype} ");
   }
 
   set augGoldPrinciple(double principle) {
     _userFundWallet!.augGoldPrinciple = principle;
     notifyListeners(UserServiceProperties.myUserFund);
-    _logger!.d(
+    _logger.d(
         "Wallet:Aug Gold Quantity updated in userservice, property listeners notified");
   }
 
   set augGoldQuantity(double quantity) {
     _userFundWallet!.augGoldQuantity = quantity;
     notifyListeners(UserServiceProperties.myUserFund);
-    _logger!.d(
+    _logger.d(
         "Wallet:Aug Gold Quantity updated in userservice, property listeners notified");
   }
 
   set isEmailVerified(bool val) {
     _isEmailVerified = val;
     notifyListeners(UserServiceProperties.myEmailVerification);
-    _logger!.d("Email:User email verified, property listeners notified");
+    _logger.d("Email:User email verified, property listeners notified");
   }
 
   set isSimpleKycVerified(bool val) {
     _isSimpleKycVerified = val;
     notifyListeners(UserServiceProperties.mySimpleKycVerified);
-    _logger!.d("Email:User simple kyc verified, property listeners notified");
+    _logger.d("Email:User simple kyc verified, property listeners notified");
   }
 
   setUserAugmontDetails(value) {
     this._userAugmontDetails = value;
     notifyListeners(UserServiceProperties.myAugmontDetails);
-    _logger!.d(
+    _logger.d(
         "AgmontDetails :User augmontDetails updated, property listeners notified");
   }
 
@@ -248,11 +247,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           _baseUser!.uid!.isNotEmpty &&
           _baseUser!.mobile!.isNotEmpty &&
           _baseUser!.name!.isNotEmpty) {
-        _logger!.d("Onborded User: ${_baseUser!.uid}");
+        _logger.d("Onborded User: ${_baseUser!.uid}");
         return true;
       }
     } catch (e) {
-      _logger!.e(e.toString());
+      _logger.e(e.toString());
     }
 
     return false;
@@ -270,10 +269,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
       Map<String, dynamic> response =
           await _internalOpsService!.initDeviceInfo();
-      if (response != null) {
-        deviceId = response["deviceId"];
-        platform = response["platform"];
-      }
+      deviceId = response["deviceId"];
+      platform = response["platform"];
 
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       appVersion = packageInfo.buildNumber;
@@ -294,7 +291,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
     } else {
       //No user logged in
-      _logger!.d("No user logged in, exiting user boot up details");
+      _logger.d("No user logged in, exiting user boot up details");
     }
   }
 
@@ -311,9 +308,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       if (savedDate == today) {
         //The count is for today
         //Increase the count
-        int current_count = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
-        current_count = current_count + 1;
-        prefs.setInt(Constants.DAY_OPENED_COUNT, current_count);
+        int currentCount = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
+        currentCount = currentCount + 1;
+        prefs.setInt(Constants.DAY_OPENED_COUNT, currentCount);
       } else {
         //Date has changed
         prefs.setString(Constants.DATE_TODAY, today);
@@ -352,7 +349,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         }
       }
     } catch (e) {
-      _logger!.e(e.toString());
+      _logger.e(e.toString());
       _internalOpsService!
           .logFailure(baseUser?.uid ?? '', FailType.UserServiceInitFailed, {
         "title": "UserService initialization Failed",
@@ -370,7 +367,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       await CacheManager.clearCacheMemory();
       _journeyRepo!.dump();
       // await _apiCacheManager!.clearCacheMemory();
-      _logger!.d("UserService signout called");
+      _logger.d("UserService signout called");
       _userFundWallet = null;
       _firebaseUser = null;
       _baseUser = null;
@@ -384,7 +381,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       // _myUpiId = null;
       return true;
     } catch (e) {
-      _logger!.e("Failed to logout user: ${e.toString()}");
+      _logger.e("Failed to logout user: ${e.toString()}");
       return false;
     }
   }
@@ -393,23 +390,23 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     if (_firebaseUser != null) {
       final response = await _userRepo!.getUserById(id: _firebaseUser?.uid);
       if (response.code == 400) {
-        _logger!.d("Unable to cast user data object.");
+        _logger.d("Unable to cast user data object.");
         return;
       }
       _baseUser = response.model;
-      _logger!
+      _logger
           .d("Base user initialized, UID: ${_baseUser?.toJson().toString()}");
 
       _idToken = await CacheManager.readCache(key: 'token');
 
       _idToken == null
-          ? _logger!.d("No FCM token in pref")
-          : _logger!.d("FCM token from pref: $_idToken");
+          ? _logger.d("No FCM token in pref")
+          : _logger.d("FCM token from pref: $_idToken");
 
       _baseUser?.client_token != null
-          ? _logger!
+          ? _logger
               .d("Current FCM token from baseUser : ${_baseUser?.client_token}")
-          : _logger!.d("No FCM token in firestored");
+          : _logger.d("No FCM token in firestored");
 
       isEmailVerified = baseUser?.isEmailVerified ?? false;
       isSimpleKycVerified = baseUser?.isSimpleKycVerified ?? false;
@@ -432,7 +429,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         baseUser!.avatarId == "CUSTOM") {
       if (!PreferenceHelper.exists('dpUrl')) {
         // try {
-        _logger!.d("Fetching profile picture");
+        _logger.d("Fetching profile picture");
 
         String? myUserDpUrl;
         if (baseUser != null)
@@ -441,7 +438,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           await CacheManager.writeCache(
               key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
           setMyUserDpUrl(myUserDpUrl);
-          _logger!.d("No profile picture found in cache, fetched from server");
+          _logger.d("No profile picture found in cache, fetched from server");
         }
         // } catch (e) {
         //   _logger.e(e.toString());
@@ -493,7 +490,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         userJourneyStats = res.model;
         return true;
       } else {
-        _logger!.e("Error fetching User journey stats data");
+        _logger.e("Error fetching User journey stats data");
         return false;
       }
     }
@@ -501,14 +498,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   _compileUserWallet() {
-    _logger!.d("Creating new fund wallet");
+    _logger.d("Creating new fund wallet");
     userFundWallet = (_userFundWallet == null)
         ? UserFundWallet.newWallet()
         : _userFundWallet;
   }
 
   checkForNewNotifications() {
-    _logger!.d("Looking for new notifications");
+    _logger.d("Looking for new notifications");
     _userRepo!.checkIfUserHasNewNotifications().then((value) {
       if (value.code == 200) {
         if (value.model!) hasNewNotifications = true;
@@ -525,8 +522,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     DynamicUiUtils.helpFab = dynamicUi.journeyFab;
     DynamicUiUtils.navBar = dynamicUi.navBar;
     _rootController.navItems.clear();
-    DynamicUiUtils.navBar.forEach(_rootController.getNavItems);
 
+    DynamicUiUtils.navBar.forEach(_rootController.getNavItems);
+    _rootController.onChange(_rootController.navItems.values.toList()[0]);
     DynamicUiUtils.goldTag = dynamicUi.save.badgeText?.AUGGOLD99 ?? "";
     DynamicUiUtils.lbTag = dynamicUi.save.badgeText?.LENDBOXP2P ?? "";
     DynamicUiUtils.islbTrending = dynamicUi.save.trendingAsset == "LENDBOXP2P";
@@ -535,7 +533,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         dynamicUi.save.trendingAsset != "LENDBOXP2P";
     if (dynamicUi.save.ctaText != null)
       DynamicUiUtils.ctaText = dynamicUi.save.ctaText!;
-    _rootController.onChange(_rootController.navItems.values.toList()[0]);
   }
 
   diplayUsername(String username) {
@@ -610,8 +607,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       supportDir = await getApplicationSupportDirectory();
     } catch (e1) {
-      _logger!.e('Support Directory not found');
-      _logger!.e('$e1');
+      _logger.e('Support Directory not found');
+      _logger.e('$e1');
       return false;
     }
 
@@ -627,8 +624,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       Reference ref = storage.ref().child("dps/${baseUser!.uid}/image");
       uploadTask = ref.putFile(compressedFile);
     } catch (e2) {
-      _logger!.e('putFile Failed. Reference Error');
-      _logger!.e('$e2');
+      _logger.e('putFile Failed. Reference Error');
+      _logger.e('$e2');
       return false;
     }
 
@@ -638,15 +635,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       setMyAvatarId('CUSTOM');
       final updateUserAvatarResponse = await _userRepo!.updateUser(
           dMap: {BaseUser.fldAvatarId: avatarId}, uid: baseUser!.uid);
-      if (url != null &&
-          updateUserAvatarResponse.isSuccess() &&
+      if (updateUserAvatarResponse.isSuccess() &&
           updateUserAvatarResponse.model!) {
         await CacheManager.writeCache(
             key: 'dpUrl', value: url, type: CacheType.string);
         setMyUserDpUrl(url);
         setMyAvatarId('CUSTOM');
         //_baseUtil.setDisplayPictureUrl(url);
-        _logger!.d('Final DP Uri: $url');
+        _logger.d('Final DP Uri: $url');
         return true;
       } else
         return false;

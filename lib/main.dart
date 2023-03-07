@@ -17,6 +17,7 @@ import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -30,6 +31,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
 
@@ -105,6 +107,23 @@ class _MyAppState extends State<MyApp> {
             useInheritedMediaQuery: true,
             debugShowCheckedModeBanner: false,
             backButtonDispatcher: backButtonDispatcher,
+            builder: (context, child) {
+              return ShowCaseWidget(
+                skipButtonClicked: () {
+                  SpotLightController.instance.isSkipButtonClicked = true;
+                },
+                onFinish: () {
+                  SpotLightController.instance.completer.complete();
+                  SpotLightController.instance.isTourStarted = false;
+                },
+                builder: Builder(
+                  builder: (_) {
+                    SpotLightController.instance.currentContext = _;
+                    return child ?? Container();
+                  },
+                ),
+              );
+            },
             routerDelegate: delegate!,
             routeInformationParser: parser,
             // showPerformanceOverlay: true,

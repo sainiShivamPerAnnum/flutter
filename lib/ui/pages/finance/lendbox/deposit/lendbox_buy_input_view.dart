@@ -13,15 +13,18 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:showcaseview/showcaseview.dart';
 
-class LendboxBuyInputView extends StatelessWidget {
+class LendboxBuyInputView extends StatefulWidget {
   final int? amount;
   final bool? skipMl;
   final LendboxBuyViewModel model;
@@ -34,16 +37,28 @@ class LendboxBuyInputView extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<LendboxBuyInputView> createState() => _LendboxBuyInputViewState();
+}
+
+class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
+  @override
+  void initState() {
+    SpotLightController.instance.userFlow = UserFlow.floInputView;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-    if (model.state == ViewState.Busy) return Center(child: FullScreenLoader());
+    if (widget.model.state == ViewState.Busy)
+      return Center(child: FullScreenLoader());
     AppState.onTap = () {
-      model.initiateBuy();
+      widget.model.initiateBuy();
       AppState.backButtonDispatcher!.didPopRoute();
     };
     AppState.type = InvestmentType.LENDBOXP2P;
-    AppState.amt = double.tryParse(model.amountController!.text) ?? 0;
+    AppState.amt = double.tryParse(widget.model.amountController!.text) ?? 0;
     return PropertyChangeProvider<BankAndPanService,
         BankAndPanServiceProperties>(
       value: locator<BankAndPanService>(),
@@ -56,22 +71,22 @@ class LendboxBuyInputView extends StatelessWidget {
             children: [
               SizedBox(height: SizeConfig.padding16),
               LendboxAppBar(
-                isEnabled: !model.isBuyInProgress,
+                isEnabled: !widget.model.isBuyInProgress,
                 trackClosingEvent: () {
                   _analyticsService!.track(
                       eventName: AnalyticsEvents.savePageClosed,
                       properties: {
-                        "Amount entered": model.amountController!.text,
+                        "Amount entered": widget.model.amountController!.text,
                         "Asset": 'Flo',
                       });
                   if (locator<BackButtonActions>().isTransactionCancelled) {
                     if (!AppState.isRepeated) {
                       locator<BackButtonActions>()
                           .showWantToCloseTransactionBottomSheet(
-                              double.parse(model.amountController!.text)
+                              double.parse(widget.model.amountController!.text)
                                   .round(),
                               InvestmentType.LENDBOXP2P, () {
-                        model.initiateBuy();
+                        widget.model.initiateBuy();
                         AppState.backButtonDispatcher!.didPopRoute();
                       });
                       AppState.isRepeated = true;
@@ -86,24 +101,29 @@ class LendboxBuyInputView extends StatelessWidget {
               ),
               SizedBox(height: SizeConfig.padding32),
               BannerWidget(
-                model: model.assetOptionsModel!.data.banner,
+                model: widget.model.assetOptionsModel!.data.banner,
                 happyHourCampign:
                     locator.isRegistered<HappyHourCampign>() ? locator() : null,
               ),
-              AmountInputView(
-                amountController: model.amountController,
-                focusNode: model.buyFieldNode,
-                chipAmounts: model.assetOptionsModel!.data.userOptions,
-                isEnabled: !model.isBuyInProgress,
-                maxAmount: model.maxAmount,
-                maxAmountMsg: locale.upto50000,
-                minAmount: model.minAmount,
-                minAmountMsg: locale.minPurchaseText1,
-                notice: model.buyNotice,
-                onAmountChange: (int amount) {},
-                bestChipIndex: 2,
-                readOnly: model.readOnly,
-                onTap: () => model.showKeyBoard(),
+              Showcase(
+                key: ShowCaseKeys.floAmountKey,
+                description:
+                    'Edit or change the amount to deposit in Fello Flo',
+                child: AmountInputView(
+                  amountController: widget.model.amountController,
+                  focusNode: widget.model.buyFieldNode,
+                  chipAmounts: widget.model.assetOptionsModel!.data.userOptions,
+                  isEnabled: !widget.model.isBuyInProgress,
+                  maxAmount: widget.model.maxAmount,
+                  maxAmountMsg: locale.upto50000,
+                  minAmount: widget.model.minAmount,
+                  minAmountMsg: locale.minPurchaseText1,
+                  notice: widget.model.buyNotice,
+                  onAmountChange: (int amount) {},
+                  bestChipIndex: 2,
+                  readOnly: widget.model.readOnly,
+                  onTap: () => widget.model.showKeyBoard(),
+                ),
               ),
               Spacer(),
               SizedBox(
@@ -116,8 +136,8 @@ class LendboxBuyInputView extends StatelessWidget {
                 ],
                 builder: (ctx, service, child) {
                   return (!service!.isKYCVerified)
-                      ? _kycWidget(model, context)
-                      : model.isBuyInProgress
+                      ? _kycWidget(widget.model, context)
+                      : widget.model.isBuyInProgress
                           ? Container(
                               height: SizeConfig.screenWidth! * 0.1556,
                               alignment: Alignment.center,
@@ -131,9 +151,9 @@ class LendboxBuyInputView extends StatelessWidget {
                           : AppPositiveBtn(
                               btnText: locale.btnSave,
                               onPressed: () async {
-                                if (!model.isBuyInProgress) {
+                                if (!widget.model.isBuyInProgress) {
                                   FocusScope.of(context).unfocus();
-                                  model.initiateBuy();
+                                  widget.model.initiateBuy();
                                 }
                               },
                               width: SizeConfig.screenWidth! * 0.813,
@@ -146,7 +166,7 @@ class LendboxBuyInputView extends StatelessWidget {
             ],
           ),
           CustomKeyboardSubmitButton(
-            onSubmit: () => model.buyFieldNode.unfocus(),
+            onSubmit: () => widget.model.buyFieldNode.unfocus(),
           )
         ],
       ),
@@ -171,10 +191,15 @@ class LendboxBuyInputView extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding8,
           ),
-          AppNegativeBtn(
-            btnText: locale.completeKYCText,
-            onPressed: model.navigateToKycScreen,
-            width: SizeConfig.screenWidth,
+          Showcase(
+            key: ShowCaseKeys.floKYCKey,
+            description:
+                'Complete your KYC to start your journey towards 10% returns',
+            child: AppNegativeBtn(
+              btnText: locale.completeKYCText,
+              onPressed: model.navigateToKycScreen,
+              width: SizeConfig.screenWidth,
+            ),
           ),
         ],
       ),

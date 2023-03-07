@@ -4,7 +4,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -15,6 +17,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MarketingEventHandlerService
     extends PropertyChangeNotifier<MarketingEventsHandlerProperties> {
@@ -62,6 +65,86 @@ class MarketingEventHandlerService
   //   await checkUserDailyAppCheckInStatus();
   // }
 
+  late bool showHappyHourBanner = false;
+
+
+
+  Future<void> getHappyHourCampaign() async {
+    showHappyHourBanner = false;
+    notifyListeners(MarketingEventsHandlerProperties.HappyHour);
+    final campaign = await locator<CampaignRepo>().getHappyHourCampaign();
+    if (campaign.code == 200 && campaign.model != null) {
+      final data = campaign.model!.data!;
+      //[Not Started]
+      if (data.happyHourType == HappyHourType.notStarted) return;
+
+    if (locator.isRegistered<HappyHourCampign>()) {
+        locator.unregister<HappyHourCampign>();
+      }
+      locator.registerSingleton<HappyHourCampign>(campaign.model!);
+
+      // [PREBUZZ]
+      if (data.happyHourType == HappyHourType.preBuzz) {
+        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        _sharePreference.remove('duringHappyHourVisited');
+        _sharePreference.remove('timStampOfHappyHour');
+        _sharePreference.remove('showedAfterHappyHourDialog');
+        return;
+      }
+
+      //Clear Cache
+
+      clearCache();
+
+      //[Live]
+      if (data.happyHourType == HappyHourType.live) {
+        if (!_isDuringHappyHourVisited && !AppState.isFirstTime) {
+          locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+          _sharePreference.setBool("duringHappyHourVisited", true);
+          _sharePreference.setString(
+              'timStampOfHappyHour', DateTime.now().toString());
+        }
+        showHappyHourBanner = true;
+        notifyListeners(MarketingEventsHandlerProperties.HappyHour);
+        return;
+      }
+
+      //[Expired]
+      final endTime = DateTime.parse(campaign.model!.data!.endTime!);
+
+      if (endTime.day != DateTime.now().day) {
+        return;
+      }
+
+      if (DateTime.now().isAfter(endTime) &&
+          !_isDuringHappyHourVisited &&
+          !alreadyShowed) {
+        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        _sharePreference.setBool("showedAfterHappyHourDialog", true);
+      }
+    }
+  }
+
+  void clearCache() {
+    final date = _sharePreference.getString("timStampOfHappyHour") ?? "0";
+
+    final day = DateTime.tryParse(date)?.day;
+    if (day == null) return;
+
+    if (DateTime.now().day != day) {
+      _sharePreference.remove('timStampOfHappyHour');
+      _sharePreference.remove('duringHappyHourVisited');
+      _sharePreference.remove('showedAfterHappyHourDialog');
+    }
+  }
+
+  final _sharePreference = locator<SharedPreferences>();
+  bool get _isDuringHappyHourVisited =>
+      _sharePreference.getBool("duringHappyHourVisited") ?? false;
+
+  bool get alreadyShowed =>
+      _sharePreference.getBool("showedAfterHappyHourDialog") ?? false;
+
   dump() {
     currentDay = -1;
     _dailyAppBonusClaimRewardData = null;
@@ -71,6 +154,11 @@ class MarketingEventHandlerService
   }
 
   //Daily App Bonus Methods
+
+  Future<void> getCampaigns() async {
+    await checkUserDailyAppCheckInStatus()
+        .then((value) => getHappyHourCampaign());
+  }
 
   Future<void> checkUserDailyAppCheckInStatus() async {
     _logger.d("DAILY APP BONUS: checking begin");

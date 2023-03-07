@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
@@ -11,6 +12,9 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:showcaseview/showcaseview.dart';
+
+import '../../../../../../util/show_case_key.dart';
 
 class GamesWidget extends StatelessWidget {
   const GamesWidget({super.key, required this.model});
@@ -53,13 +57,23 @@ class GamesWidget extends StatelessWidget {
             children: [
               ...List.generate(
                 _viewModel.gameTiers.length,
-                (index) => Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-                  child: _GameTierWidget(
-                    gameTier: _viewModel.gameTiers[index],
-                    model: model,
-                  ),
-                ),
+                (index) {
+                  final child = Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+                    child: _GameTierWidget(
+                      gameTier: _viewModel.gameTiers[index],
+                      model: model,
+                    ),
+                  );
+                  if (index == 0)
+                    return Showcase(
+                      key: ShowCaseKeys.GamesKey,
+                      description: 'Use these tokens to Play games. For every score that beats the threshold, you get a scratch card',
+                      child: child,
+                    );
+                  return child;
+                },
               ),
             ],
           ),
@@ -70,8 +84,7 @@ class GamesWidget extends StatelessWidget {
 }
 
 class _GameTierWidget extends StatelessWidget {
-  const _GameTierWidget(
-      {super.key, required this.gameTier, required this.model});
+  const _GameTierWidget({required this.gameTier, required this.model});
 
   final GameTier gameTier;
   final PlayViewModel model;
@@ -81,11 +94,26 @@ class _GameTierWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleSubtitleContainer(
-          title: gameTier.title,
-          titleStyle: TextStyles.rajdhaniSB.title5,
-          subTitle: gameTier.subTitle,
-          subtitleStyle: TextStyles.rajdhaniSB.body3,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.asset(
+                gameTier.svg,
+                height: SizeConfig.padding46,
+              ),
+              TitleSubtitleContainer(
+                zeroPadding: true,
+                padding: EdgeInsets.zero,
+                title: gameTier.title,
+                titleStyle: TextStyles.rajdhaniSB.title5,
+                subTitle: gameTier.subTitle,
+                subtitleStyle: TextStyles.rajdhaniSB.body3
+                    .colour(Colors.white.withOpacity(0.5)),
+              ),
+            ],
+          ),
         ),
         SizedBox(
           height: SizeConfig.padding12,
@@ -99,27 +127,29 @@ class _GameTierWidget extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.padding24,
                 ),
-                child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.end,
-                    alignment: gameTier.isLocked
-                        ? WrapAlignment.end
-                        : WrapAlignment.start,
-                    spacing: 12,
-                    runSpacing: 12,
-                    direction: Axis.horizontal,
-                    children: gameTier.games
-                        .map(
-                          (e) => SizedBox(
-                            height: SizeConfig.screenHeight! * 0.22,
-                            width: SizeConfig.screenWidth! * 0.272,
-                            child: TrendingGames(
-                              model: model,
-                              game: model.gamesListData!.firstWhere(
-                                  (element) => element.code == e?.code),
+                child: IgnorePointer(
+                  ignoring: gameTier.isLocked,
+                  child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.end,
+                      alignment: WrapAlignment.start,
+                      spacing: 12,
+                      runSpacing: 12,
+                      direction: Axis.horizontal,
+                      children: gameTier.games
+                          .map(
+                            (e) => SizedBox(
+                              height: SizeConfig.screenHeight! * 0.22,
+                              width: SizeConfig.screenWidth! * 0.272,
+                              child: TrendingGames(
+                                model: model,
+                                game: model.gamesListData?.firstWhere(
+                                  (element) => element.code == e?.code,
+                                ),
+                              ),
                             ),
-                          ),
-                        )
-                        .toList()),
+                          )
+                          .toList()),
+                ),
               ),
             ),
             if (gameTier.isLocked)
@@ -135,7 +165,7 @@ class _GameTierWidget extends StatelessWidget {
 }
 
 class _LockedState extends StatefulWidget {
-  const _LockedState({super.key, required this.gameTier});
+  const _LockedState({required this.gameTier});
   final GameTier gameTier;
 
   @override
@@ -157,8 +187,15 @@ class _LockedStateState extends State<_LockedState>
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      ignoring: false,
+    return GestureDetector(
+      onTap: () {
+        if (widget.gameTier.showProgressIndicator)
+          BaseUtil().openDepositOptionsModalSheet(
+              amount: widget.gameTier.amountToCompleteLevel.round(),
+              title:
+                  "Save in any asset to unlock ${widget.gameTier.title} Games",
+              subtitle: 'Earn 1 token with every Rupee saved');
+      },
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -175,14 +212,14 @@ class _LockedStateState extends State<_LockedState>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.lock,
-                    color: Colors.white,
-                    size: SizeConfig.padding38,
+                  Image.asset(
+                    'assets/images/lock icon.webp',
+                    height: SizeConfig.padding32,
                   ),
                   SizedBox(
-                    width: SizeConfig.padding12,
+                    width: SizeConfig.padding8,
                   ),
                   Text(
                     widget.gameTier.winningText,
@@ -195,7 +232,7 @@ class _LockedStateState extends State<_LockedState>
               ),
               Text(
                 widget.gameTier.winningSubtext,
-                style: TextStyles.rajdhaniSB.body4,
+                style: TextStyles.rajdhaniSB.body3,
               ),
               SizedBox(
                 height: SizeConfig.padding8,
@@ -302,5 +339,5 @@ class CustomProgressBar extends CustomPainter {
   // }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

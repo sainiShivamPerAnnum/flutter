@@ -266,6 +266,9 @@ class _JourneyMilestoneDetailsModalSheetState
                                         BaseUtil().openDepositOptionsModalSheet(
                                           amount: widget.milestone.value,
                                         );
+                                      } else {
+                                        AppState.delegate!.parseRoute(Uri.parse(
+                                            widget.milestone.actionUri!));
                                       }
                                     } else {
                                       AppState.delegate!.parseRoute(Uri.parse(
@@ -280,7 +283,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                         properties: AnalyticsProperties
                                             .getDefaultPropertiesMap(
                                                 extraValuesMap: {
-                                                  "version":widget.version,
+                                              "version": widget.version,
                                               "Capsule text":
                                                   AnalyticsProperties
                                                       .getJouneryCapsuleText(),

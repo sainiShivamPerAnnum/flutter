@@ -7,10 +7,12 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class ScratchCardsInfoStrip extends StatelessWidget {
   const ScratchCardsInfoStrip({
@@ -29,41 +31,46 @@ class ScratchCardsInfoStrip extends StatelessWidget {
               horizontal: SizeConfig.pageHorizontalMargins),
           color: Color(0xff9EA1A1),
         ),
-        Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.pageHorizontalMargins,
-            vertical: SizeConfig.padding16,
-          ),
-          child: InkWell(
-            onTap: () {
-              AppState.delegate!.appState.currentAction = PageAction(
-                  state: PageState.addWidget,
-                  page: MyWinningsPageConfig,
-                  widget: MyWinningsView());
-            },
-            child: Row(
-              children: [
-                SvgPicture.asset(Assets.unredemmedScratchCardBG,
-                    height: SizeConfig.padding24),
-                SizedBox(
-                  width: SizeConfig.padding8,
-                ),
-                Text(
-                  locale.scratchCardText,
-                  style: TextStyles.sourceSans.body2.colour(Colors.white),
-                  key: ValueKey(Constants.GOLDENTICKET),
-                ),
-                Spacer(),
-                UnscratchedGTCountChip(),
-                SizedBox(
-                  width: SizeConfig.padding10,
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: SizeConfig.padding20,
-                )
-              ],
+        Showcase(
+          key: ShowCaseKeys.ScratchCardKey,
+          description:
+              'All your Scratch cards go here. You can visit this section to see the list of scratch cards you have',
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins,
+              vertical: SizeConfig.padding16,
+            ),
+            child: InkWell(
+              onTap: () {
+                AppState.delegate!.appState.currentAction = PageAction(
+                    state: PageState.addWidget,
+                    page: MyWinningsPageConfig,
+                    widget: MyWinningsView());
+              },
+              child: Row(
+                children: [
+                  SvgPicture.asset(Assets.unredemmedScratchCardBG,
+                      height: SizeConfig.padding24),
+                  SizedBox(
+                    width: SizeConfig.padding8,
+                  ),
+                  Text(
+                    locale.scratchCardText,
+                    style: TextStyles.sourceSans.body2.colour(Colors.white),
+                    key: ValueKey(Constants.GOLDENTICKET),
+                  ),
+                  Spacer(),
+                  UnscratchedGTCountChip(),
+                  SizedBox(
+                    width: SizeConfig.padding10,
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: SizeConfig.padding20,
+                  )
+                ],
+              ),
             ),
           ),
         ),

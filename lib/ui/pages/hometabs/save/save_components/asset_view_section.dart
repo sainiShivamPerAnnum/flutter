@@ -16,30 +16,40 @@ import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../../../../service_elements/user_service/user_fund_quantity_se.dart';
 
-class AssetSectionView extends StatelessWidget {
+class AssetSectionView extends StatefulWidget {
   AssetSectionView({Key? key, required this.type, UserService? userService})
       : _userService = userService ?? locator<UserService>(),
         super(key: key);
   final InvestmentType type;
   final UserService _userService;
-  bool get _isGold => type == InvestmentType.AUGGOLD99;
+
+  @override
+  State<AssetSectionView> createState() => _AssetSectionViewState();
+}
+
+class _AssetSectionViewState extends State<AssetSectionView> {
+  bool get _isGold => widget.type == InvestmentType.AUGGOLD99;
 
   final String _goldSubtitle = "24K Gold  •  99.99% Pure •  100% Secure";
+
   final String _floSubtitle = "P2P Asset  • 10% Returns • RBI Certified";
 
   final String __goldDescription =
@@ -61,6 +71,17 @@ class AssetSectionView extends StatelessWidget {
   };
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      SpotLightController.instance.userFlow =
+          widget.type == InvestmentType.AUGGOLD99
+              ? UserFlow.onAssetPageGold
+              : UserFlow.onAssetPageFlo;
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
         properties: [
@@ -71,7 +92,7 @@ class AssetSectionView extends StatelessWidget {
         ],
         builder: (_, model, ___) {
           bool isNewUser = model!.userSegments.contains("NEW_USER");
-          final balance = type == InvestmentType.AUGGOLD99
+          final balance = widget.type == InvestmentType.AUGGOLD99
               ? model.userFundWallet?.augGoldQuantity ?? 0
               : model.userFundWallet?.wLbBalance ?? 0;
           return BaseView<SaveViewModel>(
@@ -80,7 +101,7 @@ class AssetSectionView extends StatelessWidget {
                 color: UiConstants.primaryColor,
                 backgroundColor: Colors.black,
                 onRefresh: () async {
-                  await state.refreshTransactions(type);
+                  await state.refreshTransactions(widget.type);
                 },
                 child: Scaffold(
                   backgroundColor: UiConstants.kBackgroundColor,
@@ -106,19 +127,25 @@ class AssetSectionView extends StatelessWidget {
                               SizedBox(
                                 height: SizeConfig.padding20,
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.3),
-                                      blurRadius: 50,
-                                    )
-                                  ],
-                                ),
-                                child: SvgPicture.asset(
-                                  _getAsset,
-                                  height: SizeConfig.screenHeight! * 0.18,
+                              Showcase(
+                                targetShapeBorder: CircleBorder(),
+                                key: ShowCaseKeys.assetPicture,
+                                description:
+                                    'You can learn more about the asset on this page',
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.white.withOpacity(0.3),
+                                        blurRadius: 50,
+                                      )
+                                    ],
+                                  ),
+                                  child: SvgPicture.asset(
+                                    _getAsset,
+                                    height: SizeConfig.screenHeight! * 0.18,
+                                  ),
                                 ),
                               ),
                               SizedBox(
@@ -156,7 +183,7 @@ class AssetSectionView extends StatelessWidget {
                                 ),
                               if (balance != 0)
                                 _BuildOwnAsset(
-                                  type: type,
+                                  type: widget.type,
                                   userService: model,
                                 ),
                               SizedBox(
@@ -172,7 +199,8 @@ class AssetSectionView extends StatelessWidget {
                                 ),
                               ],
                               if (!isNewUser) ...[
-                                MiniTransactionCard(investmentType: type),
+                                MiniTransactionCard(
+                                    investmentType: widget.type),
                                 if (balance != 0) ...[
                                   Align(
                                     alignment: Alignment.centerLeft,
@@ -187,7 +215,7 @@ class AssetSectionView extends StatelessWidget {
                                   SizedBox(
                                     height: SizeConfig.padding12,
                                   ),
-                                  SellCardView(investmentType: type),
+                                  SellCardView(investmentType: widget.type),
                                   SizedBox(
                                     height: SizeConfig.padding28,
                                   ),
@@ -196,7 +224,7 @@ class AssetSectionView extends StatelessWidget {
                               if (!isNewUser) ...[
                                 _CircularSlider(
                                   isNewUser: isNewUser,
-                                  type: type,
+                                  type: widget.type,
                                 )
                               ],
                               SizedBox(
@@ -227,7 +255,7 @@ class AssetSectionView extends StatelessWidget {
                                 ),
                                 _CircularSlider(
                                   isNewUser: isNewUser,
-                                  type: type,
+                                  type: widget.type,
                                 )
                               ],
                               SizedBox(
@@ -294,15 +322,20 @@ class AssetSectionView extends StatelessWidget {
                               SizedBox(
                                 height: SizeConfig.padding4,
                               ),
-                              SizedBox(
-                                width: SizeConfig.screenWidth! * 0.8,
-                                height: SizeConfig.screenHeight! * 0.07,
-                                child: AppPositiveBtn(
-                                    btnText: "SAVE",
-                                    onPressed: () {
-                                      BaseUtil().openRechargeModalSheet(
-                                          investmentType: type);
-                                    }),
+                              Showcase(
+                                key: ShowCaseKeys.SaveButton,
+                                description:
+                                    'Once you are done, tap on SAVE to start saving!',
+                                child: SizedBox(
+                                  width: SizeConfig.screenWidth! * 0.8,
+                                  height: SizeConfig.screenHeight! * 0.07,
+                                  child: AppPositiveBtn(
+                                      btnText: "SAVE",
+                                      onPressed: () {
+                                        BaseUtil().openRechargeModalSheet(
+                                            investmentType: widget.type);
+                                      }),
+                                ),
                               ),
                               SizedBox(
                                 height: SizeConfig.padding2,
@@ -388,6 +421,7 @@ class AssetSectionView extends StatelessWidget {
   Color get _getBackgroundColor => _isGold
       ? UiConstants.kGoldContainerColor
       : UiConstants.kFloContainerColor;
+
   Color get _secondaryColor => _isGold
       ? Color(0xff293566).withOpacity(0)
       : Color(0xff297264).withOpacity(0);

@@ -11,21 +11,25 @@ class GameViewModel {
   GameViewModel(this.gameTiers)
       : _wallet = locator<UserService>().userFundWallet!;
 
+  double get netWorth =>
+      _wallet.augGoldPrinciple + (_wallet.wLbPrinciple ?? 0.0);
+
   void processData() {
     for (var i = 0; i < gameTiers.length; i++) {
       _setLockedFlag(i);
       _setProgressIndicatorFlag(i);
 
-      gameTiers[i].netWorth = _wallet.netWorth!;
+      gameTiers[i].netWorth = netWorth;
     }
   }
 
   void _setLockedFlag(int index) {
     final gameTier = gameTiers[index];
-    if (_wallet.netWorth! >= gameTier.level) {
+    gameTier.svg = 'assets/images/gem stones-$index.webp';
+    if (netWorth >= gameTier.level) {
       gameTier.isLocked = false;
-    
-        gameTier.subTitle =index==0? "":'Maintain min ₹${gameTier.level} balance to play';
+
+      // gameTier.subTitle = ;
     } else {
       gameTier.isLocked = true;
     }
@@ -53,9 +57,9 @@ class GameViewModel {
     final gameTier = gameTiers[index];
     if (gameTiers[index - 1].isLocked == false) {
       if (gameTier.isLocked) {
-        gameTier.amountToCompleteLevel = gameTier.level - _wallet.netWorth!;
+        gameTier.amountToCompleteLevel = gameTier.level - netWorth;
         gameTier.showProgressIndicator = true;
-        gameTier.shadow = 0.3;
+        gameTier.shadow = 0.4;
       }
     } else {
       gameTier.showProgressIndicator = false;
@@ -77,6 +81,7 @@ class GameTier {
   double netWorth;
   String winningText;
   String winningSubtext;
+  String svg;
 
   GameTier(
       {required this.level,
@@ -90,5 +95,6 @@ class GameTier {
       this.showBuyButton = false,
       this.shadow = 0.0,
       this.winningText = '',
+      this.svg = 'assets/images/gem stones-3.webp',
       this.winningSubtext = ''});
 }

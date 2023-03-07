@@ -57,9 +57,9 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse(model: statisticsResponse["data"], code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch statistics", 400);
+          e.toString() ?? "Unable to fetch statistics", 400);
     }
   }
 
@@ -80,9 +80,9 @@ class GetterRepository extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch statistics", 400);
+          e.toString() ?? "Unable to fetch statistics", 400);
     }
   }
 
@@ -127,6 +127,7 @@ class GetterRepository extends BaseRepo {
         () => APIService.instance.getData(
           'appConfig.txt',
           cBaseUrl: _cdnBaseUrl,
+          decryptData: true,
           headers: {
             'authKey':
                 '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
@@ -160,7 +161,7 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse(model: winnerModel, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
@@ -184,7 +185,7 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse(model: amountChipsModel, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
@@ -196,7 +197,7 @@ class GetterRepository extends BaseRepo {
         ApiPath.kPromos,
         cBaseUrl: _baseUrl,
         queryParams: {
-          "uid": userService!.baseUser!.uid,
+          "uid": userService.baseUser!.uid,
         },
         token: token,
       );
@@ -205,12 +206,12 @@ class GetterRepository extends BaseRepo {
 
       print("Test123 ${response.toString()}");
 
-      logger!.d(responseData);
+      logger.d(responseData);
       final events = PromoCardModel.helper.fromMapArray(responseData['promos']);
 
       return ApiResponse<List<PromoCardModel>>(model: events, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       print("Test123 ${e.toString()}");
       return ApiResponse.withError("Unable to fetch promos", 400);
     }
@@ -235,11 +236,11 @@ class GetterRepository extends BaseRepo {
           final faqs = FAQDataModel.helper.fromMapArray(response["data"]);
           return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
         },
-      ))) as ApiResponse<List<FAQDataModel>>;
+      )));
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch statistics", 400);
+          e.toString() ?? "Unable to fetch statistics", 400);
     }
   }
 
@@ -255,12 +256,12 @@ class GetterRepository extends BaseRepo {
 
       final responseData = response["data"];
 
-      logger!.d(responseData);
+      logger.d(responseData);
       final events = StoryItemModel.helper.fromMapArray(responseData['slides']);
 
       return ApiResponse<List<StoryItemModel>>(model: events, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);
     }
   }

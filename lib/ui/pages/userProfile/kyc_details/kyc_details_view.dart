@@ -46,8 +46,6 @@ class _KYCDetailsViewState extends State<KYCDetailsView> {
       case KycVerificationStatus.VERIFIED:
         return KycSuccessView(model: model);
       case KycVerificationStatus.UNVERIFIED:
-        _showKycDetails = true;
-
         return KycUnVerifiedView(model: model);
 
       case KycVerificationStatus.FAILED:
@@ -57,9 +55,10 @@ class _KYCDetailsViewState extends State<KYCDetailsView> {
     }
   }
 
+  late KYCDetailsViewModel model;
+
   void changeView() {
-    _showKycDetails = false;
-    setState(() {});
+    model.changeView();
   }
 
   @override
@@ -68,8 +67,9 @@ class _KYCDetailsViewState extends State<KYCDetailsView> {
     return BaseView<KYCDetailsViewModel>(
       onModelReady: (model) {
         model.init();
+        this.model = model;
       },
-      builder: (ctx, model, child) => _showKycDetails
+      builder: (ctx, model, child) => model.showKycHelpView
           ? KycHelpView(callBack: changeView)
           : Scaffold(
               resizeToAvoidBottomInset: false,
@@ -128,21 +128,17 @@ class _KYCDetailsViewState extends State<KYCDetailsView> {
                                         children: [
                                           SvgPicture.asset(
                                             "assets/svg/safety_asset.svg",
-                                            width: SizeConfig.padding20,
+                                            width: SizeConfig.padding24,
                                           ),
                                           SizedBox(
                                             width: SizeConfig.padding14,
                                           ),
                                           Expanded(
-                                            child: FittedBox(
-                                              fit: BoxFit.scaleDown,
-                                              child: Text(
-                                                locale.kycVerifyText,
-                                                style: TextStyles
-                                                    .sourceSans.body3
-                                                    .colour(UiConstants
-                                                        .kTextColor2),
-                                              ),
+                                            child: Text(
+                                              'Name on your PAN Card should be the same as Name on your Bank Account',
+                                              style: TextStyles.sourceSans.body3
+                                                  .colour(
+                                                      UiConstants.kTextColor2),
                                             ),
                                           ),
                                         ],

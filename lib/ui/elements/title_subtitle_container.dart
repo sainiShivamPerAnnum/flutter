@@ -9,28 +9,34 @@ class TitleSubtitleContainer extends StatelessWidget {
   final bool leadingPadding;
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
-
+  final bool zeroPadding;
+  final EdgeInsets? padding;
   const TitleSubtitleContainer(
       {Key? key,
       required this.title,
       this.subTitle,
       this.titleStyle,
       this.subtitleStyle,
+      this.padding,
+      this.zeroPadding = false,
       this.leadingPadding = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-          left: leadingPadding ? SizeConfig.padding24 : SizeConfig.padding14),
+      padding: zeroPadding
+          ? EdgeInsets.zero
+          : EdgeInsets.only(
+              left:
+                  leadingPadding ? SizeConfig.padding24 : SizeConfig.padding14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: TextStyles.rajdhaniSB.title3.merge(titleStyle)),
           if (subTitle != null && subTitle!.isNotEmpty)
             Padding(
-              padding: EdgeInsets.only(top: SizeConfig.padding4),
+              padding:padding??EdgeInsets.only(top: SizeConfig.padding4),
               child: Text(
                 subTitle!,
                 style: TextStyles.sourceSans.body4

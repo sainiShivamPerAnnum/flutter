@@ -162,21 +162,21 @@ class ScratchCardService
     return false;
   }
 
-  showInstantScratchCardView(
+Future<void>  showInstantScratchCardView(
       {required GTSOURCE source,
       String? title,
       double? amount = 0,
       bool onJourney = false,
-      bool showAutoSavePrompt = false}) {
+      bool showAutoSavePrompt = false})async {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
     if (currentGT != null) {
       log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${ScratchCardService.currentGT!.prizeSubtype} ");
       if (previousPrizeSubtype == ScratchCardService.currentGT!.prizeSubtype &&
           !onJourney) return;
-      Future.delayed(Duration(milliseconds: 200), () {
+     await  Future.delayed(Duration(milliseconds: 200), () async{
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
-        Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+       await  Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
           PageRouteBuilder(
             opaque: false,
             pageBuilder: (BuildContext context, _, __) => GTInstantView(

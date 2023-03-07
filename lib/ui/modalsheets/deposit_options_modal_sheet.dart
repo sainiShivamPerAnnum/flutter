@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 class DepositOptionModalSheet extends StatelessWidget {
   final int? amount;
   final bool? isSkipMl;
-  DepositOptionModalSheet({this.amount, this.isSkipMl});
-
+  DepositOptionModalSheet({this.amount, this.isSkipMl, this.title,this.subtitle});
+  final String? title;
+  final String? subtitle;
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -29,11 +30,11 @@ class DepositOptionModalSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(locale.chooseYourAsset, style: TextStyles.rajdhaniSB.title5),
+              Text(title ?? locale.chooseYourAsset, style: TextStyles.rajdhaniSB.title5),
               Padding(
                 padding: EdgeInsets.only(top: SizeConfig.padding4),
                 child: Text(
-                  locale.earnOneToken,
+                  subtitle ?? locale.earnOneToken,
                   style: TextStyles.sourceSans.body4.colour(
                     UiConstants.kTextColor2,
                   ),
@@ -52,7 +53,7 @@ class DepositOptionModalSheet extends StatelessWidget {
                     title: Text(locale.digitalGoldText,
                         style: TextStyles.rajdhaniB.title4),
                     subtitle: Text(
-                    locale.buyGold,
+                      locale.buyGold,
                       style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kTextColor2),
                     ),
@@ -77,8 +78,8 @@ class DepositOptionModalSheet extends StatelessWidget {
                 padding: EdgeInsets.all(SizeConfig.padding12),
                 child: ListTile(
                     leading: Image.asset(Assets.felloFlo),
-                    title:
-                        Text(locale.felloFloText, style: TextStyles.rajdhaniB.title4),
+                    title: Text(locale.felloFloText,
+                        style: TextStyles.rajdhaniB.title4),
                     subtitle: Text(
                       locale.felloFloEarnTxt,
                       style: TextStyles.sourceSans.body3

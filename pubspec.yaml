@@ -77,11 +77,13 @@ dependencies:
   rxdart: ^0.27.7
   scratcher: ^2.3.0
   share_plus: ^6.3.0
+  
   shared_preferences: ^2.0.6
   shared_preferences_android: ^2.0.13
   shared_preferences_ios: ^2.1.1
   shimmer: ^2.0.0
-  showcaseview: ^2.0.0+1
+  showcaseview:
+    path: packages/flutter_showcaseview
   sms_autofill: ^2.0.0
   story_view:
     git:
@@ -102,6 +104,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   isar_generator: null
+  
 
 # dependency_overrides:
 #    firebase_core_platform_interface: 4.5.1

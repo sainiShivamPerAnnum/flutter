@@ -6,8 +6,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
-import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -30,6 +28,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -37,14 +36,12 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
 
@@ -97,35 +94,40 @@ class RootViewModel extends BaseViewModel {
     appState.setRootLoadValue = true;
     _referralService.verifyReferral();
     _referralService.initDynamicLinks();
+
     _rootController.currentNavBarItemModel =
         _rootController.navItems.values.first;
+
     _tambolaService!.init();
     initialize(context);
   }
 
   initialize(BuildContext context) async {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      await _userService.userBootUpEE();
-      await verifyUserBootupDetails();
-      await checkForBootUpAlerts();
-      await _userService.getUserFundWalletData();
-      await handleStartUpNotificationData();
-      _journeyService.getUnscratchedGT();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) async {
+        await _userService.userBootUpEE();
+        await verifyUserBootupDetails();
+        await checkForBootUpAlerts();
+        await _userService.getUserFundWalletData();
+        if (AppState.isFirstTime)
+          Future.delayed(Duration(seconds: 1), () {
+            SpotLightController.instance.showTourDialog();
+          });
+        await handleStartUpNotificationData();
 
-      _userService.checkForNewNotifications();
-      _userService.getProfilePicture();
-      _initAdhocNotifications();
-      showMarketingCampings();  
-      // ShowCaseWidget.of(context).startShowCase(
-      //     [..._rootController.navItems.values.map((e) => e.key).toList()]);
-    });
+        _journeyService.getUnscratchedGT();
+
+        _userService.checkForNewNotifications();
+        _userService.getProfilePicture();
+        _initAdhocNotifications();
+        if (!AppState.isFirstTime) showMarketingCampings();
+      },
+    );
   }
 
   void showMarketingCampings() {
-    Future.delayed(Duration(seconds: 8), () {
-      _marketingService.checkUserDailyAppCheckInStatus().then((value) {
-        getHappyHourCampaign();
-      });
+    Future.delayed(Duration(seconds: 2), () {
+      _marketingService.getCampaigns();
     });
   }
 
@@ -243,62 +245,6 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  // late HappyHourCampign happyHourCampaign;
-
-  Future<void> getHappyHourCampaign() async {
-    final campaign = await locator<CampaignRepo>().getHappyHourCampaign();
-    if (campaign.code == 200 && campaign.model != null) {
-      final data = campaign.model!.data!;
-      //[Not Started]
-      if (data.happyHourType == HappyHourType.notStarted) return;
-
-      if (locator.isRegistered<HappyHourCampign>()) {
-        locator.unregister<HappyHourCampign>();
-      }
-      locator.registerSingleton<HappyHourCampign>(campaign.model!);
-
-      // [PREBUZZ]
-      if (data.happyHourType == HappyHourType.preBuzz) {
-        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-        _sharePreference.remove('duringHappyHourVisited');
-        _sharePreference.remove('timStampOfHappyHour');
-        _sharePreference.remove('showedAfterHappyHourDialog');
-        return;
-      }
-
-      //Clear Cache
-
-      clearCache();
-
-      //[Live]
-      if (data.happyHourType == HappyHourType.live) {
-        if (!_isDuringHappyHourVisited && !AppState.isFirstTime) {
-          locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-          _sharePreference.setBool("duringHappyHourVisited", true);
-          _sharePreference.setString(
-              'timStampOfHappyHour', DateTime.now().toString());
-        }
-        showHappyHourBanner = true;
-        notifyListeners();
-        return;
-      }
-
-      //[Expired]
-      final endTime = DateTime.parse(campaign.model!.data!.endTime!);
-
-      if (endTime.day != DateTime.now().day) {
-        return;
-      }
-
-      if (DateTime.now().isAfter(endTime) &&
-          !_isDuringHappyHourVisited &&
-          !alreadyShowed) {
-        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-        _sharePreference.setBool("showedAfterHappyHourDialog", true);
-      }
-    }
-  }
-
   handleStartUpNotificationData() {
     if (AppState.isRootAvailableForIncomingTaskExecution == true &&
         AppState.startupNotifMessage != null) {
@@ -310,25 +256,6 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  bool get _isDuringHappyHourVisited =>
-      _sharePreference.getBool("duringHappyHourVisited") ?? false;
-
-  bool get alreadyShowed =>
-      _sharePreference.getBool("showedAfterHappyHourDialog") ?? false;
-
-  void clearCache() {
-    final date = _sharePreference.getString("timStampOfHappyHour") ?? "0";
-
-    final day = DateTime.tryParse(date)?.day;
-    if (day == null) return;
-
-    if (DateTime.now().day != day) {
-      _sharePreference.remove('timStampOfHappyHour');
-      _sharePreference.remove('duringHappyHourVisited');
-      _sharePreference.remove('showedAfterHappyHourDialog');
-    }
-  }
-
   checkIfAppLockModalSheetIsRequired() async {
     // show security modal
     if (!canExecuteStartupNotification) return;
@@ -337,9 +264,9 @@ class RootViewModel extends BaseViewModel {
         PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET,
         def: true);
     if (showSecurityPrompt &&
-        _userService!.baseUser!.isAugmontOnboarded! &&
-        _userService!.userFundWallet!.augGoldQuantity > 0 &&
-        _userService!.baseUser!.userPreferences
+        _userService.baseUser!.isAugmontOnboarded! &&
+        _userService.userFundWallet!.augGoldQuantity > 0 &&
+        _userService.baseUser!.userPreferences
                 .getPreference(Preferences.APPLOCK) ==
             0) {
       canExecuteStartupNotification = false;
@@ -359,8 +286,8 @@ class RootViewModel extends BaseViewModel {
         def: false,
       )) return;
 
-      await _refRepo!.createReferral(
-        _userService!.baseUser!.uid,
+      await _refRepo.createReferral(
+        _userService.baseUser!.uid,
         BaseUtil.referrerUserId,
       );
 
@@ -376,12 +303,12 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<dynamic> _verifyOneLinkManualReferral() async {
-    final referrerId = await _refRepo!
+    final referrerId = await _refRepo
         .getUserIdByRefCode(BaseUtil.manualReferralCode!.toUpperCase());
 
     if (referrerId.code == 200) {
-      await _refRepo!.createReferral(
-        _userService!.baseUser!.uid,
+      await _refRepo.createReferral(
+        _userService.baseUser!.uid,
         referrerId.model,
       );
     } else {
@@ -398,7 +325,7 @@ class RootViewModel extends BaseViewModel {
       _logger!.d(deepLink.toString());
       if (deepLink != null)
         return _processDynamicLink(
-          _userService!.baseUser!.uid,
+          _userService.baseUser!.uid,
           deepLink,
           context,
         );
@@ -412,8 +339,7 @@ class RootViewModel extends BaseViewModel {
       final Uri? deepLink = event.link;
       if (deepLink == null) return null;
       _logger!.d('Received deep link. Process the referral');
-      return _processDynamicLink(
-          _userService!.baseUser!.uid, deepLink, context);
+      return _processDynamicLink(_userService.baseUser!.uid, deepLink, context);
     }).onError((e) {
       _logger!.d('Error');
       _logger!.d(e.toString());
@@ -424,8 +350,7 @@ class RootViewModel extends BaseViewModel {
     final Uri? deepLink = data?.link;
     if (deepLink != null) {
       _logger!.d('Received deep link. Process the referral');
-      return _processDynamicLink(
-          _userService!.baseUser!.uid, deepLink, context);
+      return _processDynamicLink(_userService.baseUser!.uid, deepLink, context);
     }
   }
 
@@ -454,8 +379,8 @@ class RootViewModel extends BaseViewModel {
 
       //Referral dynamic link
       bool _flag = await _submitReferral(
-        _userService!.baseUser!.uid,
-        _userService!.myUserName,
+        _userService.baseUser!.uid,
+        _userService.myUserName,
         _uri,
       );
 
@@ -473,9 +398,9 @@ class RootViewModel extends BaseViewModel {
       String prefix = '${Constants.APP_DOWNLOAD_LINK}/campaign/';
       if (deepLink.startsWith(prefix)) {
         String campaignId = deepLink.replaceAll(prefix, '');
-        if (campaignId.isNotEmpty || campaignId == null) {
+        if (campaignId.isNotEmpty) {
           _logger!.d(campaignId);
-          _analyticsService!.trackInstall(campaignId);
+          _analyticsService.trackInstall(campaignId);
           return true;
         }
       }
@@ -494,7 +419,7 @@ class RootViewModel extends BaseViewModel {
         String referee = deepLink.replaceAll(prefix, '');
         _logger!.d(referee);
         if (prefix.length > 0 && prefix != userId) {
-          return _refRepo!.createReferral(userId, referee).then((res) {
+          return _refRepo.createReferral(userId, referee).then((res) {
             // _logger.d('User deserves $userTicketUpdateCount more tickets');
             return res.model!;
           });
@@ -509,7 +434,7 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<void> verifyUserBootupDetails() async {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_userService.baseUser != null && _userService.userBootUp != null) {
         //1.check if the account is blocked
         if (_userService.userBootUp!.data != null &&

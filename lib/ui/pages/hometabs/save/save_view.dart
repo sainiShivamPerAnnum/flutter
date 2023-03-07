@@ -10,10 +10,12 @@ import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/new_user_save.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 const HtmlEscape htmlEscape = HtmlEscape();
 
@@ -29,7 +31,19 @@ class Save extends StatelessWidget {
           onModelReady: (model) => model.init(),
           builder: (ctx, model, child) {
             log("ROOT: Save view baseview build called");
-            return SaveViewWrapper(model: model);
+            return ShowCaseWidget(
+              enableAutoScroll: true,
+              onFinish: () {
+                SpotLightController.instance.completer.complete();
+                SpotLightController.instance.isTourStarted = false;
+              },
+              skipButtonClicked: () =>
+                  SpotLightController.instance.isSkipButtonClicked = true,
+              builder: Builder(builder: (context) {
+                SpotLightController.instance.saveViewContext = context;
+                return SaveViewWrapper(model: model);
+              }),
+            );
           },
         ),
       ),

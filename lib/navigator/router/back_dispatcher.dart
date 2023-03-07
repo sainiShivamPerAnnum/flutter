@@ -1,6 +1,5 @@
 //Project Imports
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/base_util.dart';
@@ -15,6 +14,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -22,8 +22,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
-
-import '../../core/repository/user_stats_repo.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate? _routerDelegate;
@@ -71,13 +69,18 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     //   _journeyService!.isUserJourneyOnboarded = true;
     // }
 
+    if (SpotLightController.instance.isTourStarted) {
+      SpotLightController.instance.dismissSpotLight();
+      return Future.value(false);
+    }
+
     if (locator<BackButtonActions>().isTransactionCancelled) {
       if (AppState.onTap != null &&
           AppState.type != null &&
           AppState.amt != null) {
         if (!AppState.isRepeated) {
           locator<BackButtonActions>().showWantToCloseTransactionBottomSheet(
-            AppState.amt!.round(),
+            AppState.amt!.round(),    
             AppState.type!,
             () {
               AppState.onTap?.call();

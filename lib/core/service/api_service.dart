@@ -84,7 +84,11 @@ class APIService implements API {
       Response res = response;
       if (decryptData) {
         final data = await _decryptData(response.body);
-        return jsonDecode(data!.trim());
+        log(data!);
+
+        final finalData = data.replaceAll(RegExp('[\u0002]+'), '');
+        log(finalData);
+        return json.decode(finalData);
       }
       responseJson = returnResponse(res);
     } on SocketException {
@@ -316,7 +320,7 @@ class APIService implements API {
         throw UnauthorizedException(response.body.toString());
       case 500:
       default:
-        throw FetchDataException(responseJson["message"]);
+                            throw FetchDataException(responseJson["message"]);
     }
   }
 
@@ -336,7 +340,7 @@ class APIService implements API {
 
   Future<String> _getAppVersion() async {
     try {
-      if (_versionString == null || _versionString.isEmpty) {
+      if (_versionString.isEmpty) {
         PackageInfo packageInfo = await PackageInfo.fromPlatform();
         _versionString = '${packageInfo.buildNumber}';
       }

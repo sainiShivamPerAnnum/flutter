@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -18,11 +16,11 @@ import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -30,6 +28,7 @@ import 'package:felloapp/util/url_type_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:video_player/video_player.dart';
 
 class TambolaWrapper extends StatelessWidget {
@@ -220,30 +219,36 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                       ],
                     ),
                   ),
-                  AppPositiveBtn(
-                    btnText: (widget.model.activeTambolaCardCount ?? 0) >= 1
-                        ? locale.getTickets
-                        : locale.tgetFirstTkt,
-                    onPressed: () {
-                      locator<AnalyticsService>().track(
-                          eventName:
-                              (widget.model.activeTambolaCardCount ?? 0) >= 1
-                                  ? AnalyticsEvents.tambolaSaveTapped
-                                  : AnalyticsEvents.tambolaGetFirstTicketTapped,
-                          properties: AnalyticsProperties
-                              .getDefaultPropertiesMap(extraValuesMap: {
-                            "Time left for draw Tambola (mins)":
-                                AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                            "Tambola Tickets Owned":
-                                AnalyticsProperties.getTambolaTicketCount(),
-                            "Number of Tickets":
-                                widget.model.activeTambolaCardCount ?? 0,
-                            "Amount": widget.model.ticketSavedAmount,
-                          }));
-                      widget.model.updateTicketSavedAmount(1);
-                      BaseUtil().openDepositOptionsModalSheet(
-                          amount: widget.model.ticketSavedAmount);
-                    },
+                  Showcase(
+                    key: ShowCaseKeys.TambolaButton,
+                    description: 'You get a ticket on every ₹500 you invest!',
+                    child: AppPositiveBtn(
+                      btnText: (widget.model.activeTambolaCardCount ?? 0) >= 1
+                          ? locale.getTickets
+                          : locale.tgetFirstTkt,
+                      onPressed: () {
+                        locator<AnalyticsService>().track(
+                            eventName:
+                                (widget.model.activeTambolaCardCount ?? 0) >= 1
+                                    ? AnalyticsEvents.tambolaSaveTapped
+                                    : AnalyticsEvents
+                                        .tambolaGetFirstTicketTapped,
+                            properties: AnalyticsProperties
+                                .getDefaultPropertiesMap(extraValuesMap: {
+                              "Time left for draw Tambola (mins)":
+                                  AnalyticsProperties
+                                      .getTimeLeftForTambolaDraw(),
+                              "Tambola Tickets Owned":
+                                  AnalyticsProperties.getTambolaTicketCount(),
+                              "Number of Tickets":
+                                  widget.model.activeTambolaCardCount ?? 0,
+                              "Amount": widget.model.ticketSavedAmount,
+                            }));
+                        widget.model.updateTicketSavedAmount(1);
+                        BaseUtil().openDepositOptionsModalSheet(
+                            amount: widget.model.ticketSavedAmount);
+                      },
+                    ),
                   ),
                   if (isFromNavigation)
                     SizedBox(

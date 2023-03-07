@@ -14,10 +14,12 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
+import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -298,6 +300,8 @@ class AugmontTransactionService extends BaseTransactionService {
   }
 
   Future<void> _newUserCheck() async {
+    locator<MarketingEventHandlerService>().getHappyHourCampaign();
+
     if (_userService!.baseUser!.segments.contains("NEW_USER")) {
       await CacheService.invalidateByKey(CacheKeys.USER);
       final list = _userService!.baseUser!.segments;
@@ -314,8 +318,7 @@ class AugmontTransactionService extends BaseTransactionService {
     String couponCode,
     bool skipMl,
   ) async {
-    if (augmontRates == null || amount == null || augmontRates == null)
-      return null;
+    if (augmontRates == null || amount == null) return null;
 
     double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
     final mid = AppConfig.getValue(AppConfigKey.paytmMid);

@@ -1,1 +1,1 @@
-enum MarketingEventsHandlerProperties { DailyAppCheckIn }
+enum MarketingEventsHandlerProperties { DailyAppCheckIn, HappyHour }

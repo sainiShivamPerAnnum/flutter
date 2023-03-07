@@ -1,8 +1,8 @@
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -39,6 +39,7 @@ class BottomNavBar extends StatelessWidget {
                     ? Expanded(
                         key: ValueKey(navbarItems.title),
                         child: NavBarIcon(
+                          callBack: () => superModel.onItemTapped(index),
                           key: ValueKey(navbarItems.title),
                           animate: true,
                           item: navbarItems,
@@ -53,9 +54,14 @@ class BottomNavBar extends StatelessWidget {
                           width: SizeConfig.screenWidth! * 0.2,
                           child: GestureDetector(
                             onTap: () {
+                              SpotLightController.instance.dismissSpotLight();
                               superModel.onItemTapped(index);
                             },
                             child: NavBarIcon(
+                              callBack: () {
+                                SpotLightController.instance.dismissSpotLight();
+                                superModel.onItemTapped(index);
+                              },
                               animate: false,
                               item: navbarItems,
                               style: TextStyles.rajdhaniSB
@@ -78,17 +84,24 @@ class NavBarIcon extends StatelessWidget {
   final Key? key;
   final NavBarItemModel item;
   final TextStyle style;
-
+  final VoidCallback callBack;
   NavBarIcon(
       {required this.animate,
       required this.item,
       required this.style,
+      required this.callBack,
       this.key});
   @override
   Widget build(BuildContext context) {
     return Showcase(
+      onTargetClick: callBack,
+      disposeOnTap: false,
       key: item.key,
-      description: item.title,
+      description: item.title == 'Play'
+          ? 'Tap on the Play section'
+          : item.title == 'Save'
+              ? 'What are you waiting for?\nStart your savings journey now!'
+              : 'You can find your scratch cards here. Tap on Account tab',
       child: Container(
           key: key,
           alignment: Alignment.center,

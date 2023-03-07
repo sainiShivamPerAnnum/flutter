@@ -5,14 +5,17 @@ import 'package:felloapp/ui/pages/games/web/web_home/web_home_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class WebGameModalSheet extends StatelessWidget {
   const WebGameModalSheet({Key? key, required this.game}) : super(key: key);
@@ -21,7 +24,7 @@ class WebGameModalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gameInfo = locator<UserStatsRepo>().getGameInfo(game);
-
+    SpotLightController.instance.userFlow = UserFlow.onGamesModalSheet;
     return BaseView<WebHomeViewModel>(onModelReady: (model) {
       model.init(game);
     }, onModelDispose: (model) {
@@ -70,8 +73,13 @@ class WebGameModalSheet extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(
                     top: 24, left: 14, right: 14, bottom: 0),
-                child: RewardCriteria(
-                  data: model.currentGameModel?.rewardCriteria ?? "",
+                child: Showcase(
+                  key: ShowCaseKeys.GameRewardsKey,
+                  description:
+                      'You need to cross this score to get a scratch card and win!',
+                  child: RewardCriteria(
+                    data: model.currentGameModel?.rewardCriteria ?? "",
+                  ),
                 ),
               ),
             SizedBox(
@@ -211,34 +219,39 @@ class WebGameModalSheet extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 14),
-              child: AppPositiveBtn(
-                  btnText: "Play",
-                  widget: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "PLAY WITH ",
-                        style: TextStyles.rajdhaniB.body1,
-                      ),
-                      ClipOval(
-                        child: Container(
-                          color: Colors.black,
-                          child: SvgPicture.asset(
-                            Assets.token,
-                            height: SizeConfig.padding20,
-                            width: SizeConfig.padding20,
+              child: Showcase(
+                key: ShowCaseKeys.PlayGameKey,
+                description:
+                    'You exhaust tokens on every gameplay.Tap on play now',
+                child: AppPositiveBtn(
+                    btnText: "Play",
+                    widget: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "PLAY WITH ",
+                          style: TextStyles.rajdhaniB.body1,
+                        ),
+                        ClipOval(
+                          child: Container(
+                            color: Colors.black,
+                            child: SvgPicture.asset(
+                              Assets.token,
+                              height: SizeConfig.padding20,
+                              width: SizeConfig.padding20,
+                            ),
                           ),
                         ),
-                      ),
-                      Text(" " + model.currentGameModel!.playCost.toString(),
-                          style: TextStyles.rajdhaniB.body1)
-                    ],
-                  ),
-                  onPressed: () async {
-                    if (await model.setupGame())
-                      model.launchGame(
-                          gameInfo?.lastScore ?? 0, gameInfo?.topScore ?? 0);
-                  }),
+                        Text(" " + model.currentGameModel!.playCost.toString(),
+                            style: TextStyles.rajdhaniB.body1)
+                      ],
+                    ),
+                    onPressed: () async {
+                      if (await model.setupGame())
+                        model.launchGame(
+                            gameInfo?.lastScore ?? 0, gameInfo?.topScore ?? 0);
+                    }),
+              ),
             ),
             SizedBox(
               height: 28,

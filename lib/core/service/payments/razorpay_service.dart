@@ -61,6 +61,7 @@ class RazorpayService extends ChangeNotifier {
   }
 
   void handlePaymentSuccess(PaymentSuccessResponse response) async {
+    locator<BackButtonActions>().isTransactionCancelled = false;
     String paymentId = response.paymentId!;
     String checkoutOrderId = response.orderId!;
     String paySignature = response.signature!;
@@ -84,6 +85,8 @@ class RazorpayService extends ChangeNotifier {
     AppState.unblockNavigation();
     if (response.code == 2)
       locator<BackButtonActions>().isTransactionCancelled = true;
+    else
+      locator<BackButtonActions>().isTransactionCancelled = false;
     BaseUtil.showNegativeAlert(locale.txnFailed, locale.txnFailedSubtitle);
     log.debug("ERROR: " + response.code.toString() + " - " + response.message!);
     Map<String, dynamic>? currentTxnDetails =

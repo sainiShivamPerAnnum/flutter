@@ -47,16 +47,23 @@ class AccountInfoTiles extends StatelessWidget {
   const AccountInfoTiles({
     Key? key,
     required this.title,
+    this.onTap,
     required this.uri,
   }) : super(key: key);
 
   final String title;
   final String uri;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => AppState.delegate!.parseRoute(Uri.parse(uri)),
+      onTap: () {
+        if (onTap == null)
+          AppState.delegate!.parseRoute(Uri.parse(uri));
+        else
+          onTap!.call();
+      },
       child: Container(
         padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.pageHorizontalMargins,
