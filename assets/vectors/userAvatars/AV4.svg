@@ -1,0 +1,16 @@
+<svg width="231" height="232" viewBox="0 0 231 232" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="115.356" cy="116.172" r="115.306" fill="#FFD979"/>
+<mask id="mask0_1390_2125" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="231" height="232">
+<circle cx="115.359" cy="116.173" r="115.306" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_1390_2125)">
+<path d="M280.084 146.249L139.869 153.411L270.057 77.4951L280.084 146.249Z" fill="black"/>
+<rect width="164.548" height="40.758" transform="matrix(-0.866025 0.5 2.20305e-08 1 282.366 30.9521)" fill="#232326"/>
+<rect width="164.381" height="51.9926" transform="matrix(-0.866025 0.5 0.866025 0.5 236.95 5.15967)" fill="#FFD979"/>
+<rect width="51.273" height="40.5363" transform="matrix(0.866025 0.5 -2.20305e-08 1 95.4629 87.3901)" fill="white"/>
+</g>
+<ellipse cx="98.1699" cy="175.62" rx="29.3637" ry="14.3238" fill="black"/>
+<circle cx="85.2807" cy="150.551" r="30.7961" fill="#5371EE"/>
+<path d="M67.1909 160.581C64.9776 154.851 64.26 139.811 77.8705 134.082" stroke="white" stroke-width="10.8182" stroke-linecap="round"/>
+<circle cx="87.8925" cy="130.494" r="3.58094" fill="white"/>
+</svg>

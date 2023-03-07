@@ -1,0 +1,38 @@
+default_platform(:ios)
+
+
+platform :ios do
+  before_all do
+    increment_build_number(xcodeproj: './Runner.xcodeproj')
+    # xctool #run the tests of your app
+  end
+
+  desc "Push a new release build to the App Store"
+
+  lane :checkRelease do 
+    puts "I'm printing!"
+    puts "Done"
+      # Spaceship::ConnectAPI.login(
+      #   use_portal: false,
+      #   tunes_team_id: "7FH5SHLD2G",
+      # )
+    
+      # app = Spaceship::ConnectAPI::App.find("in.fello.felloappiOS.dev"),
+      # if app.nil?
+      #   UI.important "not found in team 7FH5SHLD2G on ASC!"
+      #   next
+      # end
+    
+      # if !app.reject_version_if_possible!(platform: Spaceship::ConnectAPI::Platform::IOS)
+      #   UI.important "couldn't reject!"
+      #   next
+      # end
+  end
+
+  lane :buildAndRelease do |options|
+    build_app(workspace: "Runner.xcworkspace", scheme: options[:dev] ?  'dev' : options[:prod] ? 'prod': 'dev')
+    upload_to_app_store
+  end
+end
+
+

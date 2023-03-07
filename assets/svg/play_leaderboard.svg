@@ -1,0 +1,16 @@
+<svg width="36" height="71" viewBox="0 0 36 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="19.6799" height="21.7832" transform="matrix(0.866025 0.5 -2.20305e-08 1 6.10352e-05 39.3665)" fill="#495DB3"/>
+<rect width="21.0856" height="21.8522" transform="matrix(0.866025 -0.5 2.20305e-08 1 16.8685 49.1129)" fill="#23316D"/>
+<rect width="19.6799" height="21.0204" transform="matrix(0.866025 0.5 -0.866025 0.5 18.2042 28.8972)" fill="#C2D7FF"/>
+<circle opacity="0.5" r="7.02855" transform="matrix(0.866025 0.5 -0.866025 0.5 17.7967 38.7373)" fill="#23316D"/>
+<circle r="12.6514" transform="matrix(0.746192 0.66573 -0.203443 0.979087 16.6929 24.2776)" fill="#495DB3"/>
+<circle r="12.6514" transform="matrix(0.787925 0.615772 -0.139312 0.990249 13.7679 25.3825)" fill="white"/>
+<mask id="mask0_2_336" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="3" y="10" width="21" height="31">
+<circle r="12.6514" transform="matrix(0.746192 0.66573 -0.203443 0.979087 13.6543 25.0818)" fill="white"/>
+</mask>
+<g mask="url(#mask0_2_336)">
+</g>
+<path d="M14.0505 31.742C12.4757 31.4722 10.8913 29.7183 10.5809 28.3398" stroke="#232326" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle r="1.40268" transform="matrix(0.866025 0.5 -2.20305e-08 1 17.1245 25.4744)" fill="#232326"/>
+<circle r="1.45926" transform="matrix(0.866025 0.5 -2.20305e-08 1 10.7408 21.732)" fill="#232326"/>
+</svg>

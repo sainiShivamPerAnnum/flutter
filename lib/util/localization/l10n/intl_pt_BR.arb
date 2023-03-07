@@ -1,0 +1,32 @@
+{
+  "@@locale": "pt_BR",
+
+  
+  "splashSlowConnection": "A conexão está demorando mais do que o normal",
+
+  "onboardTitle": "Poupança baseada em jogos \n e investimentos🎉",
+  "onboardText1": "Economize ou invista $ 100 e ganhe 1 ingresso de jogo todas as segundas-feiras",
+  "onboardText2": "Use os ingressos para participar de jogos semanais emocionantes",
+  "onboardText3": "Seu dinheiro continua crescendo com grandes retornos enquanto você joga jogos divertidos e ganha prêmios!",
+  "onboradButton": "INICIAR",
+  "formPageAppBarTitle": "Calculadora de Morte por Cafeína",
+  "firstSuggestedDrinkName": "Café Coado (Xícara)",
+  "secondSuggestedDrinkName": "Espresso (Shot)",
+  "thirdSuggestedDrinkName": "Latte (Caneca)",
+  "formPageWeightInputLabel": "Peso Corporal",
+  "formPageWeightInputSuffix": "libras",
+  "formPageRadioListLabel": "Escolha uma bebida",
+  "formPageActionButtonTitle": "CALCULAR",
+  "formPageCustomDrinkRadioTitle": "Outra",
+  "formPageCustomDrinkServingSizeInputLabel": "Tamanho",
+  "formPageCustomDrinkServingSizeInputSuffix": "fl. oz",
+  "formPageCustomDrinkCaffeineAmountInputLabel": "Cafeína",
+  "formPageCustomDrinkCaffeineAmountInputSuffix": "mg",
+  "resultsPageAppBarTitle": "Dosagens",
+  "resultsPageLethalDosageTitle": "Dose Letal",
+  "resultsPageLethalDosageMessage": "{quantity, plural, one{Uma porção.} other{{formattedNumber} porções no seu sistema de uma vez.}}",
+  "resultsPageSafeDosageTitle": "Limite Seguro Diário",
+  "resultsPageSafeDosageMessage": "{quantity, plural, one{Uma porção por dia.} other{{formattedNumber} porções por dia.}}",
+  "resultsPageFirstDisclaimer": "*Baseado em uma porção de {servingSize} fl. oz.",
+  "resultsPageSecondDisclaimer": "*Se aplica a pessoas com 18 anos ou mais. Essa calculadora não substitui conselhos médicos profissionais."
+}

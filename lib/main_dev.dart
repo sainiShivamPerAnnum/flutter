@@ -1,0 +1,42 @@
+// import 'package:device_preview/device_preview.dart';
+import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/flavor_config.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+void main() async {
+  FlavorConfig(
+    flavor: Flavor.DEV,
+    color: Colors.green,
+    values: FlavorValues(
+        awsAugmontStage: AWSAugmontStage.DEV,
+        awsIciciStage: AWSIciciStage.PROD,
+        freshchatStage: FreshchatStage.DEV,
+        razorpayStage: RazorpayStage.DEV,
+        signzyStage: SignzyStage.PROD,
+        signzyPanStage: SignzyPanStage.DEV,
+        paytmStage: PaytmStage.DEV,
+        baseUriUS: 'us-central1-fello-dev-station.cloudfunctions.net',
+        baseUriAsia: 'asia-south1-fello-dev-station.cloudfunctions.net',
+        mixpanelToken: MixpanelAnalytics.DEV_TOKEN,
+        dynamicLinkPrefix: 'https://dev.fello.in/test',
+        gameApiTokenSecret:
+            "3565d165c367a0f1c615c27eb957dddfef33565b3f5ad1dda3fe2efd07326c1f",
+        dummyMobileNo: '8888800002'),
+  );
+
+  await mainInit();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+    (_) {
+      runApp(
+        // DevicePreview(
+        //   enabled: !kReleaseMode,
+        // builder: (context) =>
+        MyApp(), // Wrap your app
+        // ),
+      );
+    },
+  );
+}
