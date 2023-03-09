@@ -1,7 +1,6 @@
 import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -27,6 +26,8 @@ class JourneyRepository extends BaseRepo {
   static const String LOCAL_ASSET_DATABASE = "localAssetDatabase";
   String? _filePathDirectory;
 
+  List<JourneyPage> journeyPages = [];
+
   final _baseUrlJourney = FlavorConfig.isDevelopment()
       ? 'https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://rs0wiakaw7.execute-api.ap-south-1.amazonaws.com/prod';
@@ -34,6 +35,10 @@ class JourneyRepository extends BaseRepo {
   final _baseUrlStats = FlavorConfig.isDevelopment()
       ? "https://l6e3g2pr2b.execute-api.ap-south-1.amazonaws.com/dev"
       : 'https://08wplse7he.execute-api.ap-south-1.amazonaws.com/prod';
+
+  final _cdnBaseUrl = FlavorConfig.isDevelopment()
+      ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
+      : 'https://d11q4cti75qmcp.cloudfront.net/';
 
   //Initiating instance for local directory of Android || iOS
   Future<void> init() async {
@@ -243,11 +248,8 @@ class JourneyRepository extends BaseRepo {
     try {
       List<JourneyLevel> journeylevels = [];
       final _token = await getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath.kJourneyLevel,
-        token: _token,
-        cBaseUrl: _baseUrlJourney,
-      );
+      final response = await APIService.instance.getData(ApiPath.kJourneyLevel,
+          token: _token, cBaseUrl: _cdnBaseUrl, decryptData: true);
 
       final responseData = response["data"];
       responseData.forEach((level, levelDetails) {
