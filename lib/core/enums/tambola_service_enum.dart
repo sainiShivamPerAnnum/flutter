@@ -1,0 +1,1 @@
+enum TambolaServiceEnums { picks }

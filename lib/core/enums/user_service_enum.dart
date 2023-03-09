@@ -1,0 +1,19 @@
+enum UserServiceProperties {
+  myUserDpUrl,
+  myUserName,
+  myName,
+  myUserWallet,
+  myUserFund,
+  myDob,
+  myGender,
+  myEmail,
+  myEmailVerification,
+  mySimpleKycVerified,
+  myNotificationStatus,
+  myConfirmDialogViewStatus,
+  myJourneyStats,
+  myAvatarId,
+  myUpiId,
+  myAugmontDetails,
+  mySegments
+}

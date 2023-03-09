@@ -1,0 +1,35 @@
+{
+    "name": "Augmont 1Gm Gold Coin (999 Purity)",
+    "sku": "AU999GC01R",
+    "productWeight": "1.00",
+    "redeemWeight": "1.00",
+    "metalType": "gold",
+    "purity": "999.00",
+    "jewelleryType": "coin",
+    "productSize": "1",
+    "basePrice": "350.00",
+    "description": "Auspicious 1 gram gold coin crafted with 999 purity and 24k pure gold by Augmont is sure to bring prosperity and luck in your life, this gold coin is a great investment choice for your present and future, gold coin is also valuable and makes a best gift to appreciate your dear and near ones.",
+    "status": "active",
+    "productImages": [
+        {
+            "url": "https://uat-augmontgold.s3.ap-south-1.amazonaws.com/products/1/gallery/75bd6d3a1897026be8c04edf1c19edd4.jpeg",
+            "displayOrder": 1,
+            "defaultImage": true
+        },
+        {
+            "url": "https://uat-augmontgold.s3.ap-south-1.amazonaws.com/products/1/gallery/9a228c5cc729ca976ab7a5312375dbda.jpeg",
+            "displayOrder": 2,
+            "defaultImage": false
+        },
+        {
+            "url": "https://uat-augmontgold.s3.ap-south-1.amazonaws.com/products/1/gallery/052caa2c789f6a465fe9eff756fbc980.jpeg",
+            "displayOrder": 3,
+            "defaultImage": false
+        },
+        {
+            "url": "https://uat-augmontgold.s3.ap-south-1.amazonaws.com/products/1/gallery/b7fdcafa3446abc266e895bf56396016.jpeg",
+            "displayOrder": 4,
+            "defaultImage": false
+        }
+    ]
+}

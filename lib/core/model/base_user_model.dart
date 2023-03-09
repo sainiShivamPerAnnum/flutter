@@ -1,0 +1,253 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
+
+import 'package:felloapp/util/logger.dart';
+
+class BaseUser {
+  static Log log = new Log("User");
+  String? uid;
+  String? mobile;
+  String? name;
+  String? email;
+  String? dob;
+  String? gender; // 0: Male | 1: Female | -1: Rather Not to say
+  String? username;
+  String? verifiedName;
+  String? client_token; //fetched from a subcollection
+  bool? isInvested;
+  bool? isIciciOnboarded;
+  bool? isAugmontOnboarded;
+  bool? isSimpleKycVerified;
+  bool? isBlocked;
+  int isKycVerified;
+  String? kycName;
+  String? pendingTxnId;
+  bool? isIciciEnabled;
+  bool? isAugmontEnabled;
+  bool? isEmailVerified;
+  UserPreferences userPreferences;
+  TimestampModel createdOn;
+  String? appFlyerId;
+  String? avatarId;
+  bool? isOldUser;
+  List segments;
+  static final String fldId = "mID";
+  static final String fldMobile = "mMobile";
+  static final String fldEmail = "mEmail";
+  static final String fldName = "mName";
+  static final String fldDob = "mDob";
+  static final String fldGender = "mGender";
+  static final String fldClient_token = "mClientToken";
+  static final String fldICICIBalance = "mICBalance";
+  static final String fldAugmontBalance = "mAugBalance";
+  static final String fldAugmontQuantity = "mAugQuantity";
+  static final String fldUsername = "mUsername";
+  static final String fldIsEmailVerified = "mIsEmailVerified";
+  static final String fldIsInvested = "mIsInvested";
+  static final String fldIsIciciOnboarded = "mIsIciciOnboarded";
+  static final String fldIsAugmontOnboarded = "mIsAugmontOnboarded";
+  static final String fldIsSimpleKycVerified = "mIsSimpleKycVerified";
+  static final String fldIsBlocked = "mIsBlocked";
+  static final String fldIsKycVerified = "mIsKycVerified";
+  static final String fldPendingTxnId = "mPendingTxnId";
+  static final String fldIsIciciEnabled = "mIsIciciEnabled";
+  static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
+  static final String fldUserPrefs = "mUserPrefs";
+  static final String fldUserPrefsAl = "mUserPrefsAl";
+  static final String fldUserPrefsTn = "mUserPrefsTn";
+  static final String fldCreatedOn = "mCreatedOn";
+  static final String fldKycName = "mKycName";
+  static final String fldStateId = "stateId";
+  static final String fldAppFlyerId = "mAppFlyerId";
+  static final String fldAvatarId = "mAvatarId";
+  static final String fldIsOldUser = "isOldUser";
+
+  BaseUser(
+    this.uid,
+    this.mobile,
+    this.email,
+    this.name,
+    this.dob,
+    this.gender,
+    this.client_token,
+    this.isInvested,
+    this.isIciciOnboarded,
+    this.isAugmontOnboarded,
+    this.isSimpleKycVerified,
+    this.isKycVerified,
+    this.kycName,
+    this.pendingTxnId,
+    this.isIciciEnabled,
+    this.isAugmontEnabled,
+    this.username,
+    this.isEmailVerified,
+    this.isBlocked,
+    this.userPreferences,
+    this.createdOn,
+    this.appFlyerId,
+    this.avatarId,
+    this.isOldUser,
+    this.segments,
+  );
+
+  BaseUser.newUser(String id, String mobile)
+      : this(
+          id,
+          mobile,
+          '',
+          '',
+          '',
+          '',
+          '',
+          false,
+          false,
+          false,
+          false,
+          0,
+          '',
+          '',
+          false,
+          false,
+          '',
+          false,
+          false,
+          UserPreferences({}),
+          TimestampModel.currentTimeStamp(),
+          '',
+          '',
+          false,
+          [],
+        );
+  BaseUser.base()
+      : this(
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          false,
+          false,
+          false,
+          false,
+          0,
+          '',
+          '',
+          false,
+          false,
+          '',
+          false,
+          false,
+          UserPreferences({}),
+          TimestampModel(seconds: 0, nanoseconds: 0),
+          '',
+          '',
+          false,
+          [],
+        );
+  BaseUser.fromMap(Map<String, dynamic> data, String id, [String? client_token])
+      : this(
+            id,
+            data[fldMobile]?.toString() ?? '',
+            data[fldEmail]?.toString() ?? '',
+            data[fldName]?.toString() ?? '',
+            data[fldDob]?.toString() ?? '',
+            data[fldGender]?.toString()?.toUpperCase() ?? '',
+            client_token?.toString() ?? '',
+            data[fldIsInvested] ?? false,
+            data[fldIsIciciOnboarded],
+            data[fldIsAugmontOnboarded] ?? false,
+            data[fldIsSimpleKycVerified] ?? false,
+            data[fldIsKycVerified] ?? 0,
+            data[fldKycName] ?? '',
+            data[fldPendingTxnId] ?? '',
+            data[fldIsIciciEnabled] ?? false,
+            data[fldIsAugmontEnabled] ?? false,
+            data[fldUsername]?.toString() ?? '',
+            data[fldIsEmailVerified] ?? false,
+            data[fldIsBlocked] ?? false,
+            UserPreferences(data[fldUserPrefs]),
+            TimestampModel.fromMap(data[fldCreatedOn]),
+            data[fldAppFlyerId] ?? '',
+            data[fldAvatarId] ?? '',
+            data[fldIsOldUser] ?? false,
+            data['mSegments'] ?? []);
+
+  //to send user object to server
+  toJson() {
+    var userObj = {
+      fldMobile: mobile,
+      fldName: name,
+      fldEmail: email,
+      fldDob: dob,
+      fldGender: gender,
+      fldIsInvested: isInvested,
+      fldIsAugmontOnboarded: isAugmontOnboarded,
+      fldIsSimpleKycVerified: isSimpleKycVerified,
+      fldUsername: username,
+      fldIsEmailVerified: isEmailVerified,
+      fldCreatedOn: createdOn
+    };
+    if (isKycVerified != 0) userObj[fldIsKycVerified] = isKycVerified;
+    if (kycName != null) userObj[fldKycName] = kycName;
+    if (isIciciOnboarded != null)
+      userObj[fldIsIciciOnboarded] = isIciciOnboarded;
+    if (isIciciEnabled != null) userObj[fldIsIciciEnabled] = isIciciEnabled;
+    if (isAugmontEnabled != null)
+      userObj[fldIsAugmontEnabled] = isAugmontEnabled;
+    if (userPreferences != UserPreferences({}))
+      userObj[fldUserPrefs] = userPreferences.toJson();
+    if (isBlocked != null) userObj[fldIsBlocked] = isBlocked;
+    if (appFlyerId != null) userObj[fldAppFlyerId] = appFlyerId;
+    if (avatarId != null) userObj[fldAvatarId] = avatarId;
+    return userObj;
+  }
+
+  bool hasIncompleteDetails() {
+    //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
+    return ((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true));
+  }
+
+  @override
+  String toString() {
+    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: $userPreferences, createdOn: $createdOn, appFlyerId: $appFlyerId, avatarId: $avatarId)';
+  }
+}
+
+enum Preferences { TAMBOLANOTIFICATIONS, APPLOCK }
+
+class UserPreferences {
+  //setup index with firebase keys
+  static const Map<Preferences, String> _index = {
+    Preferences.TAMBOLANOTIFICATIONS: 'tn',
+    Preferences.APPLOCK: 'al'
+  };
+
+  //setup defaults
+  final Map<Preferences, int> _defValues = {
+    Preferences.TAMBOLANOTIFICATIONS: 1,
+    Preferences.APPLOCK: 0
+  };
+
+  //current values
+  Map<String?, int?> _activePrefs = {};
+
+  UserPreferences(Map<dynamic, dynamic>? remValues) {
+    for (Preferences p in Preferences.values) {
+      String? _fKey = _index[p];
+      int? _defValue = _defValues[p];
+      _activePrefs[_fKey] = (remValues != {} &&
+              remValues![_fKey] != null &&
+              remValues[_fKey] is int)
+          ? remValues[_fKey]
+          : _defValue;
+    }
+  }
+
+  int? getPreference(Preferences p) => _activePrefs[_index[p]];
+
+  setPreference(Preferences p, int val) => _activePrefs[_index[p]] = val;
+
+  toJson() => _activePrefs;
+}

@@ -1,0 +1,86 @@
+import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class CacheManager {
+  // static const CACHE_RATING_HIT_COUNT = "rHitCount";
+  // static const CACHE_RATING_DIALOG_OPEN_COUNT = "RDShowCount";
+  static const CACHE_LATEST_NOTIFICATION_TIME = "latestNotification";
+  static const CACHE_LATEST_GOLDEN_TICKET_TIME = "latestScratchCard";
+  static const CACHE_IS_SUBSCRIPTION_FIRST_TIME = "isSubFirstTime";
+  static const CACHE_IS_FIRST_TIME_FOOTBALL = 'firstTimeFootball';
+  static const CACHE_LAST_UGT_CHECK_TIME = "lastUGTCheckTime";
+
+  static Future readCache(
+      {required String key, CacheType type = CacheType.string}) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+
+    var cache;
+    switch (type) {
+      case CacheType.int:
+        cache = sharedPreferences.getInt(key);
+        break;
+      case CacheType.double:
+        cache = sharedPreferences.getDouble(key);
+        break;
+      case CacheType.bool:
+        cache = sharedPreferences.getBool(key);
+        break;
+      case CacheType.stringList:
+        cache = sharedPreferences.getStringList(key);
+        break;
+      case CacheType.string:
+        cache = sharedPreferences.getString(key);
+        break;
+      default:
+        cache = sharedPreferences.getString(key);
+    }
+    return cache;
+  }
+
+  static Future writeCache({
+    required String key,
+    required var value,
+    required CacheType type,
+  }) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    if (type == CacheType.int) return sharedPreferences.setInt(key, value);
+
+    switch (type) {
+      case CacheType.int:
+        await sharedPreferences.setInt(key, value);
+        break;
+      case CacheType.double:
+        await sharedPreferences.setDouble(key, value);
+        break;
+      case CacheType.bool:
+        await sharedPreferences.setBool(key, value);
+        break;
+      case CacheType.stringList:
+        await sharedPreferences.setStringList(key, value);
+        break;
+      case CacheType.string:
+        await sharedPreferences.setString(key, value);
+        break;
+    }
+  }
+
+  static Future deleteCache({required String key}) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    await sharedPreferences.remove(key);
+  }
+
+  static Future clearCacheMemory() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    await sharedPreferences.clear();
+  }
+
+  static Future<bool> exits(String key) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    return sharedPreferences.containsKey(key);
+  }
+}

@@ -1,0 +1,1 @@
+enum UserCoinServiceProperties { coinBalance }
