@@ -1,0 +1,6 @@
+framework module app_install_date {
+  umbrella header "app_install_date-umbrella.h"
+
+  export *
+  module * { export * }
+}

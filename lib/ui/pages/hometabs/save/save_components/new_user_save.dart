@@ -3,12 +3,13 @@ import 'package:felloapp/ui/elements/custom_card/save_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class NewUserSaveView extends StatelessWidget {
   const NewUserSaveView({Key? key, required this.model}) : super(key: key);
@@ -17,8 +18,6 @@ class NewUserSaveView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: SizeConfig.screenHeight,
-
-      //Horizontal Padding for each widget is 24px
       child: Column(
         children: [
           SizedBox(height: SizeConfig.fToolBarHeight),
@@ -63,6 +62,7 @@ class NewUserSaveView extends StatelessWidget {
                         //         .copyWith(letterSpacing: 1.12),
                         //   ),
                         // ),
+
                         SizedBox(
                           height: SizeConfig.padding10,
                         ),
@@ -79,7 +79,8 @@ class NewUserSaveView extends StatelessWidget {
                       height: SizeConfig.padding40,
                     )
                   ],
-                  LottieBuilder.network("https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+                  LottieBuilder.network(
+                      "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
                   SizedBox(height: SizeConfig.navBarHeight),
                 ],
               ),
@@ -96,23 +97,33 @@ class NewUserSaveView extends StatelessWidget {
       (element) {
         if (element == "LB") {
           children.add(
-            SaveContainer(
+            Showcase(
+              key: ShowCaseKeys.LendBoxAssetKey,
+              description:
+                  'You can also invest in P2P asset Fello Flo, which gives you 10% returns per annum',
+              child: SaveContainer(
+                bottomStrip: [
+                  "750+ users deposited in Gold today!",
+                  "An average saver saves ₹500 in Gold every 2 days"
+                ],
+                investmentType: InvestmentType.LENDBOXP2P,
+                isPopular: DynamicUiUtils.islbTrending,
+              ),
+            ),
+          );
+        } else if (element == "AG") {
+          children.add(Showcase(
+            key: ShowCaseKeys.GoldAssetKey,
+            description:
+                'You can start your savings journey on Fello with Digital Gold - a secure and stable asset',
+            child: SaveContainer(
               bottomStrip: [
                 "750+ users deposited in Gold today!",
                 "An average saver saves ₹500 in Gold every 2 days"
               ],
-              investmentType: InvestmentType.LENDBOXP2P,
-              isPopular: DynamicUiUtils.islbTrending,
+              investmentType: InvestmentType.AUGGOLD99,
+              isPopular: DynamicUiUtils.isGoldTrending,
             ),
-          );
-        } else if (element == "AG") {
-          children.add(SaveContainer(
-            bottomStrip: [
-              "750+ users deposited in Gold today!",
-              "An average saver saves ₹500 in Gold every 2 days"
-            ],
-            investmentType: InvestmentType.AUGGOLD99,
-            isPopular: DynamicUiUtils.isGoldTrending,
           ));
         }
       },

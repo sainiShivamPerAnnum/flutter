@@ -13,11 +13,13 @@ import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class SaveNetWorthSection extends StatelessWidget {
   final SaveViewModel saveViewModel;
@@ -32,73 +34,83 @@ class SaveNetWorthSection extends StatelessWidget {
       switch (key) {
         case 'LB':
           orderedAssets.add(
-            SaveCustomCard(
-              title: locale.felloFloMainTitle,
-              subtitle: locale.currentValue,
-              chipText: ["P2P Asset", "Safe & Secure", "10% Returns"],
-              key: Key(Constants.ASSET_TYPE_LENDBOX),
-              cardBgColor: UiConstants.kSaveStableFelloCardBg,
-              cardAssetName: Assets.felloFlo,
-              investmentType: InvestmentType.LENDBOXP2P,
-              onCardTap: () {
-                saveViewModel.navigateToSaveAssetView(
-                  InvestmentType.LENDBOXP2P,
-                );
-              },
-              onTap: () {
-                Haptic.vibrate();
+            Showcase(
+              key: ShowCaseKeys.LendBoxAssetKey,
+              description:
+                  'You can also invest in P2P asset Fello Flo, which gives you 10% returns per annum',
+              child: SaveCustomCard(
+                title: locale.felloFloMainTitle,
+                subtitle: locale.currentValue,
+                chipText: ["P2P Asset", "Safe & Secure", "10% Returns"],
+                key: Key(Constants.ASSET_TYPE_LENDBOX),
+                cardBgColor: UiConstants.kSaveStableFelloCardBg,
+                cardAssetName: Assets.felloFlo,
+                investmentType: InvestmentType.LENDBOXP2P,
+                onCardTap: () {
+                  saveViewModel.navigateToSaveAssetView(
+                    InvestmentType.LENDBOXP2P,
+                  );
+                },
+                onTap: () {
+                  Haptic.vibrate();
 
-                locator<AnalyticsService>()
-                    .track(eventName: "Save on Asset Banner", properties: {
-                  "asset name": "LENDBOX",
-                  "balance in gold":
-                      locator<UserService>().userFundWallet?.augGoldBalance ??
-                          0,
-                  "balance in flo":
-                      locator<UserService>().userFundWallet?.wLbBalance ?? 0,
-                });
-                return BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.LENDBOXP2P,
-                );
-              },
+                  locator<AnalyticsService>()
+                      .track(eventName: "Save on Asset Banner", properties: {
+                    "asset name": "LENDBOX",
+                    "balance in gold":
+                        locator<UserService>().userFundWallet?.augGoldBalance ??
+                            0,
+                    "balance in flo":
+                        locator<UserService>().userFundWallet?.wLbBalance ?? 0,
+                  });
+                  return BaseUtil().openRechargeModalSheet(
+                    investmentType: InvestmentType.LENDBOXP2P,
+                  );
+                },
+              ),
             ),
           );
           break;
         case 'AG':
           orderedAssets.add(
-            SaveCustomCard(
-              title: locale.digitalGoldMailTitle,
-              subtitle: locale.youOwn,
-              chipText: [
-                "Safe & Secure",
-                "24K Gold",
-                "99.9% Pure",
-              ],
-              key: Key(Constants.ASSET_TYPE_AUGMONT),
-              cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
-              cardAssetName: Assets.digitalGoldBar,
-              investmentType: InvestmentType.AUGGOLD99,
-              onCardTap: () {
-                saveViewModel.navigateToSaveAssetView(
-                  InvestmentType.AUGGOLD99,
-                );
-              },
-              onTap: () {
-                Haptic.vibrate();
-                locator<AnalyticsService>()
-                    .track(eventName: "Save on Asset Banner", properties: {
-                  "asset name": "LENDBOX",
-                  "isNewUser":false,
-                  "balance in gold":
-                      locator<UserService>().userFundWallet?.augGoldBalance ??
-                          0,
-                  "balance in flo":
-                      locator<UserService>().userFundWallet?.wLbBalance ?? 0,
-                });
-                return BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.AUGGOLD99,
-                );
-              },
+            Showcase(
+              key: ShowCaseKeys.GoldAssetKey,
+              description:
+                  'You can start your savings journey on Fello with Digital Gold - a secure and stable asset',
+              child: SaveCustomCard(
+                title: locale.digitalGoldMailTitle,
+                subtitle: locale.youOwn,
+                chipText: [
+                  "Safe & Secure",
+                  "24K Gold",
+                  "99.9% Pure",
+                ],
+                key: Key(Constants.ASSET_TYPE_AUGMONT),
+                cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
+                cardAssetName: Assets.digitalGoldBar,
+                investmentType: InvestmentType.AUGGOLD99,
+                onCardTap: () {
+                  saveViewModel.navigateToSaveAssetView(
+                    InvestmentType.AUGGOLD99,
+                  );
+                },
+                onTap: () {
+                  Haptic.vibrate();
+                  locator<AnalyticsService>()
+                      .track(eventName: "Save on Asset Banner", properties: {
+                    "asset name": "LENDBOX",
+                    "isNewUser": false,
+                    "balance in gold":
+                        locator<UserService>().userFundWallet?.augGoldBalance ??
+                            0,
+                    "balance in flo":
+                        locator<UserService>().userFundWallet?.wLbBalance ?? 0,
+                  });
+                  return BaseUtil().openRechargeModalSheet(
+                    investmentType: InvestmentType.AUGGOLD99,
+                  );
+                },
+              ),
             ),
           );
           break;

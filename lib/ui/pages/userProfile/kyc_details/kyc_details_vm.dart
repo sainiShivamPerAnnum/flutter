@@ -33,6 +33,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool showKycHelpView = false;
   bool _hasDetails = false;
   XFile? _capturedImage;
   double? _fileSize;
@@ -43,6 +44,11 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   set kycErrorMessage(value) {
     this._kycErrorMessage = value;
+    notifyListeners();
+  }
+
+  void changeView() {
+    showKycHelpView = false;
     notifyListeners();
   }
 
@@ -60,8 +66,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  KycVerificationStatus _kycVerificationStatus =
-      KycVerificationStatus.UNVERIFIED;
+  KycVerificationStatus _kycVerificationStatus = KycVerificationStatus.NONE;
 
   KycVerificationStatus get kycVerificationStatus =>
       this._kycVerificationStatus;
@@ -123,9 +128,7 @@ class KYCDetailsViewModel extends BaseViewModel {
             isBarrierDismissible: false,
             hapticVibrate: true,
             content: MoreInfoDialog(
-                title: locale.invalidFile,
-                text:
-                    locale.invalidFileSubtitle));
+                title: locale.invalidFile, text: locale.invalidFileSubtitle));
       } else
         return;
     } else {
@@ -135,9 +138,7 @@ class KYCDetailsViewModel extends BaseViewModel {
           isBarrierDismissible: false,
           hapticVibrate: true,
           content: MoreInfoDialog(
-              title: locale.invalidFile,
-              text:
-                  locale.invalidFileSubtitle));
+              title: locale.invalidFile, text: locale.invalidFileSubtitle));
     }
   }
 
@@ -164,6 +165,8 @@ class KYCDetailsViewModel extends BaseViewModel {
     } else {
       kycVerificationStatus = KycVerificationStatus.UNVERIFIED;
     }
+    if (kycVerificationStatus == KycVerificationStatus.UNVERIFIED)
+      showKycHelpView = true;
     setState(ViewState.Idle);
   }
 
@@ -193,8 +196,8 @@ class KYCDetailsViewModel extends BaseViewModel {
 
           _bankAndPanService.checkForUserBankAccountDetails();
           AppState.backButtonDispatcher!.didPopRoute();
-          BaseUtil.showPositiveAlert(locale.kycSuccessTitle,
-              locale.kycSuccessSubTitle);
+          BaseUtil.showPositiveAlert(
+              locale.kycSuccessTitle, locale.kycSuccessSubTitle);
         } else {
           capturedImage = null;
           kycErrorMessage = forgeryUploadRes.errorMessage;
@@ -216,8 +219,7 @@ class KYCDetailsViewModel extends BaseViewModel {
       kycErrorMessage = res.errorMessage;
       kycVerificationStatus = KycVerificationStatus.FAILED;
       BaseUtil.showNegativeAlert(
-          res.errorMessage ?? locale.failedToUploadPAN,
-          locale.tryLater);
+          res.errorMessage ?? locale.failedToUploadPAN, locale.tryLater);
     }
     isUpdatingKycDetails = false;
     AppState.unblockNavigation();

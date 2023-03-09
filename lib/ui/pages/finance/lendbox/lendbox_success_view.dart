@@ -251,6 +251,7 @@ class LendboxSuccessView extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
+                AppState.isRepeated = true;
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.delegate!.appState.setCurrentTabIndex = DynamicUiUtils
                     .navBar

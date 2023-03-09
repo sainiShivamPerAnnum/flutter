@@ -32,7 +32,8 @@ class Data {
   List<Rewards>? rewards;
   int? maxApplicable;
   bool showHappyHour = false;
-
+  HappyHourType happyHourType = HappyHourType.expired;
+  PreBuzz? preBuzz;
   Data(
       {this.id,
       this.title,
@@ -44,6 +45,8 @@ class Data {
       this.docketHeading,
       this.minAmount,
       this.rewards,
+      required this.happyHourType,
+      this.preBuzz,
       this.maxApplicable});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -62,11 +65,13 @@ class Data {
         rewards!.add(new Rewards.fromJson(v));
       });
     }
+    preBuzz = PreBuzz.fromJson(json['prebuzz']);
     maxApplicable = json['maxApplicable'];
     final date = DateTime.now();
     final _startDate = DateTime.parse(startTime!);
     final _endTime = DateTime.parse(endTime!);
     showHappyHour = date.isAfter(_startDate) && date.isBefore(_endTime);
+    getType(_startDate, _endTime);
   }
 
   Map<String, dynamic> toJson() {
@@ -85,6 +90,21 @@ class Data {
     }
     data['maxApplicable'] = this.maxApplicable;
     return data;
+  }
+
+  void getType(DateTime startDate, DateTime endDate) {
+    final _time = DateTime.now();
+
+    if (showHappyHour) {
+      happyHourType = HappyHourType.live;
+    } else if (_time.isBefore(startDate)) {
+      if (startDate.difference(_time).inHours < 5) {
+        happyHourType = HappyHourType.preBuzz;
+      } else {
+        happyHourType = HappyHourType.notStarted;
+      }
+    } else
+      happyHourType = HappyHourType.expired;
   }
 }
 
@@ -106,3 +126,25 @@ class Rewards {
     return data;
   }
 }
+
+class PreBuzz {
+  final String heading;
+  final int luckyWinnersCount;
+  final String subtitle;
+  final String title;
+
+  PreBuzz(
+      {required this.heading,
+      required this.luckyWinnersCount,
+      required this.subtitle,
+      required this.title});
+
+  factory PreBuzz.fromJson(Map<String, dynamic> data) => PreBuzz(
+        heading: data['heading'],
+        luckyWinnersCount: data['luckyWinnersCount'],
+        subtitle: data['subtitle'],
+        title: data['title'],
+      );
+}
+
+enum HappyHourType { notStarted, preBuzz, live, expired }

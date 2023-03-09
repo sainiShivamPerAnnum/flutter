@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/asset_options_model.dart' as I;
 import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -32,9 +33,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
   late bool showHappyHour;
   @override
   void initState() {
-    showHappyHour = timeRemaining.isNegative || timeRemaining.inSeconds == 0
-        ? false
-        : widget.showHappyHour;
+    showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     super.initState();
   }
 

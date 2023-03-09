@@ -121,6 +121,8 @@ class Assets {
   static final String goldConveyor = "assets/images/gold_convyor.webp";
   static final String floConveyor = "assets/images/flo_convyor.webp";
 
+  static final String happyhourPolygon = "assets/svg/happy_hour_polygons.svg";
+
   // WIN
 
   static final String amazonClaim = "assets/images/amazon_claim.png";

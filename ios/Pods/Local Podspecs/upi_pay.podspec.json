@@ -1,0 +1,31 @@
+{
+  "name": "upi_pay",
+  "version": "1.0.0",
+  "summary": "Flutter plugin for UPI payments.",
+  "description": "A flutter plugin to launch UPI payment applications on Android and iOS towards making UPI payments.",
+  "homepage": "https://github.com/drenther/upi_pay",
+  "license": {
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Reetesh Ranjan": "reeteshranjan@piaxis.tech"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "Classes/**/*",
+  "dependencies": {
+    "Flutter": [
+
+    ]
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "pod_target_xcconfig": {
+    "DEFINES_MODULE": "YES",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "i386"
+  },
+  "swift_versions": "5.0",
+  "swift_version": "5.0"
+}

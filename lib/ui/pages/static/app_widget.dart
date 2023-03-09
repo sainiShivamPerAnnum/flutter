@@ -340,6 +340,7 @@ class AppPositiveBtn extends StatelessWidget {
       {Key? key,
       required this.btnText,
       required this.onPressed,
+      this.style,
       this.width,
       this.height,
       this.widget})
@@ -348,6 +349,7 @@ class AppPositiveBtn extends StatelessWidget {
   final VoidCallback onPressed;
   final double? width, height;
   final Widget? widget;
+  final TextStyle? style;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -374,7 +376,7 @@ class AppPositiveBtn extends StatelessWidget {
             child: widget ??
                 Text(
                   btnText!.toUpperCase(),
-                  style: TextStyles.rajdhaniB.title5,
+                  style: TextStyles.rajdhaniB.title5.merge(style),
                 ),
           ),
         ),

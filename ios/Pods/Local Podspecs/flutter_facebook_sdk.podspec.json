@@ -1,0 +1,34 @@
+{
+  "name": "flutter_facebook_sdk",
+  "version": "0.0.1",
+  "summary": "A new flutter plugin project.",
+  "description": "A new flutter plugin project.",
+  "homepage": "https://saadfarhan.com",
+  "license": {
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Saad Farhan": "saadfarhan124l@gmail.com"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "Classes/**/*",
+  "dependencies": {
+    "Flutter": [
+
+    ],
+    "FBSDKCoreKit": [
+      "~> 14.1.0"
+    ]
+  },
+  "platforms": {
+    "ios": "11.0"
+  },
+  "pod_target_xcconfig": {
+    "DEFINES_MODULE": "YES",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "i386"
+  },
+  "swift_versions": "5.0",
+  "swift_version": "5.0"
+}

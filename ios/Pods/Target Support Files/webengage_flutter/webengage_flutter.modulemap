@@ -1,0 +1,6 @@
+framework module webengage_flutter {
+  umbrella header "webengage_flutter-umbrella.h"
+
+  export *
+  module * { export * }
+}

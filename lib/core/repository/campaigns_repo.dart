@@ -17,6 +17,9 @@ class CampaignRepo extends BaseRepo {
       ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com/prod";
 
+  final _cdnBaseUrl = FlavorConfig.isDevelopment()
+      ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
+      : 'https://vbbe56oey5.execute-api.ap-south-1.amazonaws.com/prod';
   Future<ApiResponse<dynamic>> getOngoingEvents() async {
     List<EventModel> events = [];
     try {
@@ -57,16 +60,13 @@ class CampaignRepo extends BaseRepo {
     try {
       final _token = await getBearerToken();
 
-      final response = await APIService.instance.getData(
-        ApiPath.kFelloFacts,
-        token: _token,
-        cBaseUrl: _baseUrl,
-      );
+      final response = await APIService.instance.getData('felloFacts.txt',
+          token: _token, cBaseUrl: _cdnBaseUrl, decryptData: true);
 
-      final responseData = response["data"];
-      logger!.d(responseData);
-      if (responseData != null) {
-        responseData.forEach((e) {
+      // final responseData = response["data"];
+      logger!.d(response);
+      if (response != null) {
+        response.forEach((e) {
           facts.add(FelloFactsModel.fromMap(e));
         });
       }

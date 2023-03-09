@@ -12,6 +12,7 @@ import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_mode
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -188,6 +189,8 @@ class LendboxTransactionService extends BaseTransactionService {
   }
 
   Future<void> _newUserCheck() async {
+    locator<MarketingEventHandlerService>().getHappyHourCampaign();
+
     if (_userService!.baseUser!.segments.contains("NEW_USER")) {
       await CacheService.invalidateByKey(CacheKeys.USER);
       final list = _userService!.baseUser!.segments;
@@ -195,7 +198,6 @@ class LendboxTransactionService extends BaseTransactionService {
       _userService!.userSegments = list;
       _userService!.baseUser!.segments = list;
     }
-    
   }
 
   Future<void> transactionResponseUpdate(
