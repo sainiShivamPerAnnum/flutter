@@ -16,28 +16,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'bank_details_help.dart';
 
-class BankDetailsView extends StatefulWidget {
-  @override
-  State<BankDetailsView> createState() => _BankDetailsViewState();
-}
-
-class _BankDetailsViewState extends State<BankDetailsView> {
-  bool _showBankDetailsHelpView = true;
-
-  void changeView() {
-    _showBankDetailsHelpView = false;
-    setState(() {});
-  }
-
+class BankDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<BankDetailsViewModel>(
       onModelReady: (model) => model.init(),
       builder: (ctx, model, chlid) => model.inEditMode &&
-              _showBankDetailsHelpView
+              model.showBankDetailsHelpView
           ? BankDetailsHelpView(
-              changeView: changeView,
+              changeView: model.changeView,
             )
           : Scaffold(
               resizeToAvoidBottomInset: false,

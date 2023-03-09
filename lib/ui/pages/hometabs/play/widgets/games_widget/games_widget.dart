@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -69,7 +67,8 @@ class GamesWidget extends StatelessWidget {
                   if (index == 0)
                     return Showcase(
                       key: ShowCaseKeys.GamesKey,
-                      description: 'Use these tokens to Play games. For every score that beats the threshold, you get a scratch card',
+                      description:
+                          'Use these tokens to Play games. For every score that beats the threshold, you get a scratch card',
                       child: child,
                     );
                   return child;
@@ -164,36 +163,18 @@ class _GameTierWidget extends StatelessWidget {
   }
 }
 
-class _LockedState extends StatefulWidget {
+class _LockedState extends StatelessWidget {
   const _LockedState({required this.gameTier});
   final GameTier gameTier;
-
-  @override
-  State<_LockedState> createState() => _LockedStateState();
-}
-
-class _LockedStateState extends State<_LockedState>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 700))
-          ..forward();
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (widget.gameTier.showProgressIndicator)
+        if (gameTier.showProgressIndicator)
           BaseUtil().openDepositOptionsModalSheet(
-              amount: widget.gameTier.amountToCompleteLevel.round(),
-              title:
-                  "Save in any asset to unlock ${widget.gameTier.title} Games",
+              amount: gameTier.amountToCompleteLevel.round(),
+              title: "Save in any asset to unlock ${gameTier.title}",
               subtitle: 'Earn 1 token with every Rupee saved');
       },
       child: Container(
@@ -201,7 +182,7 @@ class _LockedStateState extends State<_LockedState>
           gradient: LinearGradient(
             colors: [Colors.black, Colors.transparent],
             begin: Alignment.bottomCenter,
-            stops: [widget.gameTier.shadow, 1],
+            stops: [gameTier.shadow, 1],
             end: Alignment.topCenter,
           ),
         ),
@@ -222,7 +203,7 @@ class _LockedStateState extends State<_LockedState>
                     width: SizeConfig.padding8,
                   ),
                   Text(
-                    widget.gameTier.winningText,
+                    gameTier.winningText,
                     style: TextStyles.rajdhaniSB.body0,
                   ),
                 ],
@@ -231,28 +212,23 @@ class _LockedStateState extends State<_LockedState>
                 height: SizeConfig.padding6,
               ),
               Text(
-                widget.gameTier.winningSubtext,
+                gameTier.winningSubtext,
                 style: TextStyles.rajdhaniSB.body3,
               ),
               SizedBox(
                 height: SizeConfig.padding8,
               ),
-              if (widget.gameTier.showProgressIndicator)
+              if (gameTier.showProgressIndicator)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: AnimatedBuilder(
-                        builder: (context, child) {
-                          return CustomPaint(
-                            foregroundPainter: CustomProgressBar(
-                                widget.gameTier.level * 1.0,
-                                widget.gameTier.netWorth,
-                                widget.gameTier.amountToCompleteLevel.round(),
-                                _controller),
-                          );
-                        },
-                        animation: _controller,
+                      child: CustomPaint(
+                        foregroundPainter: CustomProgressBar(
+                          gameTier.level * 1.0,
+                          gameTier.netWorth,
+                          gameTier.amountToCompleteLevel.round(),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -260,9 +236,7 @@ class _LockedStateState extends State<_LockedState>
                     ),
                     Text(
                       "₹" +
-                          widget.gameTier.amountToCompleteLevel
-                              .round()
-                              .toString() +
+                          gameTier.amountToCompleteLevel.round().toString() +
                           ' left',
                       style: TextStyles.rajdhaniB.body2,
                     )
@@ -283,9 +257,8 @@ class CustomProgressBar extends CustomPainter {
   final double minAmount;
   final double netWorth;
   final int reamingAmount;
-  final AnimationController controller;
-  CustomProgressBar(
-      this.minAmount, this.netWorth, this.reamingAmount, this.controller);
+
+  CustomProgressBar(this.minAmount, this.netWorth, this.reamingAmount);
   @override
   void paint(Canvas canvas, Size size) {
     final _center = Offset(size.width / 2, 0);
@@ -301,13 +274,7 @@ class CustomProgressBar extends CustomPainter {
     canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromLTWH(
-              0,
-              -8,
-              lerpDouble(
-                  0,
-                  getFilledWidth(size) == 0 ? 20 : getFilledWidth(size),
-                  controller.value)!,
-              16),
+              0, -8, getFilledWidth(size) == 0 ? 20 : getFilledWidth(size), 16),
           Radius.circular(SizeConfig.padding26),
         ),
         Paint()

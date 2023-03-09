@@ -5,7 +5,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/pages/userProfile/kyc_details/key_help.dart';
+import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_help.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_verification_views.dart/kyc_error.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_verification_views.dart/kyc_success.dart';
@@ -33,12 +33,7 @@ class UpperCaseTextFormatter extends TextInputFormatter {
   }
 }
 
-class KYCDetailsView extends StatefulWidget {
-  @override
-  State<KYCDetailsView> createState() => _KYCDetailsViewState();
-}
-
-class _KYCDetailsViewState extends State<KYCDetailsView> {
+class KYCDetailsView extends StatelessWidget {
   bool _showKycDetails = false;
 
   getKycView(KYCDetailsViewModel model) {
@@ -55,22 +50,15 @@ class _KYCDetailsViewState extends State<KYCDetailsView> {
     }
   }
 
-  late KYCDetailsViewModel model;
-
-  void changeView() {
-    model.changeView();
-  }
-
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<KYCDetailsViewModel>(
       onModelReady: (model) {
         model.init();
-        this.model = model;
       },
       builder: (ctx, model, child) => model.showKycHelpView
-          ? KycHelpView(callBack: changeView)
+          ? KycHelpView(callBack: model.changeView)
           : Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(

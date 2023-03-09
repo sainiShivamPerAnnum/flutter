@@ -25,14 +25,11 @@ import 'package:provider/provider.dart';
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
-  late RootViewModel model;
-
   @override
   Widget build(BuildContext context) {
     return BaseView<RootViewModel>(
         onModelReady: (model) {
-          model.onInit(context);
-          this.model = model;
+          model.onInit();
         },
         onModelDispose: (model) => model.onDispose(),
         builder: (ctx, model, child) {

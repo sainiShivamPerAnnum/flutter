@@ -4,7 +4,6 @@ import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/static/sticky_widget.dart';
@@ -241,7 +240,7 @@ class TrendingGamesShimmer extends StatelessWidget {
       decoration: BoxDecoration(
           color: UiConstants.kSecondaryBackgroundColor,
           borderRadius:
-              BorderRadius.all(Radius.circular(SizeConfig.roundness112))),
+              BorderRadius.all(Radius.circular(SizeConfig.padding14))),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.roundness5),
         child: Shimmer.fromColors(

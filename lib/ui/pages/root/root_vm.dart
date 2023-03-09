@@ -41,18 +41,16 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
 
 class RootViewModel extends BaseViewModel {
-  RootViewModel({S? l, SharedPreferences? pref})
+  RootViewModel({S? l})
       : locale = l ?? locator<S>(),
-        _sharePreference = pref ?? locator<SharedPreferences>(),
         super();
 
   final BaseUtil? _baseUtil = locator<BaseUtil>();
-  final SharedPreferences _sharePreference;
+
   final FcmHandler? _fcmListener = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
@@ -89,7 +87,7 @@ class RootViewModel extends BaseViewModel {
     await _journeyService.getUnscratchedGT();
   }
 
-  onInit(BuildContext context) {
+  onInit() {
     AppState.isUserSignedIn = true;
     appState.setRootLoadValue = true;
     _referralService.verifyReferral();
@@ -99,20 +97,20 @@ class RootViewModel extends BaseViewModel {
         _rootController.navItems.values.first;
 
     _tambolaService!.init();
-    initialize(context);
+    initialize();
   }
 
-  initialize(BuildContext context) async {
+  initialize() async {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
         await _userService.userBootUpEE();
         await verifyUserBootupDetails();
         await checkForBootUpAlerts();
         await _userService.getUserFundWalletData();
-        if (AppState.isFirstTime)
-          Future.delayed(Duration(seconds: 1), () {
-            SpotLightController.instance.showTourDialog();
-          });
+        // if (AppState.isFirstTime)
+        Future.delayed(Duration(seconds: 1), () {
+          SpotLightController.instance.showTourDialog();
+        });
         await handleStartUpNotificationData();
 
         _journeyService.getUnscratchedGT();
