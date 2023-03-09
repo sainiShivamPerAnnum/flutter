@@ -54,7 +54,6 @@ class SpotLightController {
       addToScreenStack: true,
     );
     await Future.delayed(Duration(seconds: 1));
-
     AppState.backButtonDispatcher!.didPopRoute();
 
     isSkipButtonClicked = false;
