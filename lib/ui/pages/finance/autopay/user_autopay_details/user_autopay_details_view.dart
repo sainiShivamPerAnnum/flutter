@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -310,7 +308,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                   ),
                   Text(
                     locale.primaryUPI,
-                    style: TextStyles.sourceSansSB.body3.setOpecity(0.5),
+                    style: TextStyles.sourceSansSB.body3.setOpacity(0.5),
                   ),
                 ],
               ),
@@ -364,7 +362,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                         child: Text(
                           locale.amountSaved,
                           style: TextStyles.rajdhani.body3
-                              .setOpecity(0.6)
+                              .setOpacity(0.6)
                               .letterSpace(SizeConfig.padding2),
                         ),
                       ),
@@ -404,7 +402,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
                           TextSpan(
                             text: locale.yourAutoSave,
                             style: TextStyles.sourceSans.body4
-                                .setOpecity(0.4)
+                                .setOpacity(0.4)
                                 .copyWith(fontStyle: FontStyle.italic),
                           ),
                           TextSpan(
@@ -439,7 +437,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
         onPressed: () {
           AppState.delegate!.appState.currentAction = PageAction(
             page: AutosaveProcessViewPageConfig,
-            widget: AutosaveProcessView(page: 2),
+            widget: AutosaveProcessView(),
             state: PageState.replaceWidget,
           );
         },
@@ -458,10 +456,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
             //NOTE: CHECK IN EDIT MODE
             AppState.delegate!.appState.currentAction = PageAction(
               page: AutosaveProcessViewPageConfig,
-              widget: AutosaveProcessView(
-                page: 2,
-                isUpdate: true,
-              ),
+              widget: AutosaveProcessView(),
               state: PageState.replaceWidget,
             );
           },
@@ -569,7 +564,7 @@ class TransationTile extends StatelessWidget {
 }
 
 class PauseAutosaveModal extends StatefulWidget {
-  final SubscriptionService? model;
+  final SubService? model;
 
   const PauseAutosaveModal({Key? key, this.model}) : super(key: key);
 

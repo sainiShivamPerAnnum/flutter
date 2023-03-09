@@ -93,7 +93,7 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => locator<WinnerService>()),
           ChangeNotifierProvider(create: (_) => locator<UserService>()),
           ChangeNotifierProvider(create: (_) => locator<ReferralService>()),
-          ChangeNotifierProvider(create: (_) => locator<SubscriptionService>()),
+          ChangeNotifierProvider(create: (_) => locator<SubService>()),
           ChangeNotifierProvider(
               create: (_) => locator<AugmontTransactionService>()),
           ChangeNotifierProvider(

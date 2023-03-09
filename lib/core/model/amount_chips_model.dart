@@ -7,6 +7,7 @@ class AmountChipsModel {
   int? order;
   int? value;
   bool? best;
+  bool? isSelected;
   static final helper = HelperModel<AmountChipsModel>(
     (map) => AmountChipsModel.fromMap(map),
   );
@@ -15,12 +16,14 @@ class AmountChipsModel {
     order = 0;
     value = 0;
     best = false;
+    isSelected = false;
   }
 
   AmountChipsModel({
     @required this.order,
     @required this.value,
     @required this.best,
+    @required this.isSelected,
   });
 
   factory AmountChipsModel.fromMap(Map<String, dynamic> map) {
@@ -28,6 +31,7 @@ class AmountChipsModel {
       order: map['order'] ?? 0,
       value: map['value'] ?? 0,
       best: map['best'] ?? false,
+      isSelected: false,
     );
   }
 

@@ -546,7 +546,7 @@ class UserProfileVM extends BaseViewModel {
                 ScratchCardService.dump();
                 _tambolaRepo.dump();
                 _appstate.dump();
-                locator<SubscriptionService>().dump();
+                locator<SubService>().dump();
                 AppState.backButtonDispatcher!.didPopRoute();
 
                 AppState.delegate!.appState.currentAction = PageAction(

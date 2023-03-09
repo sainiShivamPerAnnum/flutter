@@ -1,23 +1,23 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/subscription_update_dialog.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:upi_pay/upi_pay.dart';
 
-enum AutosaveState {
-  IDLE,
-  INIT,
-  PROCESSING,
-  ACTIVE,
-  PAUSED,
-  PAUSED_FOREVER,
-  CANCELLED
-}
+enum AutosaveState { IDLE, INIT, ACTIVE, PAUSED, PAUSED_FOREVER, CANCELLED }
 
 enum AutosavePauseOption {
   FOREVER,
@@ -26,12 +26,19 @@ enum AutosavePauseOption {
   ONE_MONTH,
 }
 
-class SubscriptionService extends ChangeNotifier {
+class SubService extends ChangeNotifier {
   final SubscriptionRepo _subscriptionRepo = locator<SubscriptionRepo>();
   AutosaveState _autosaveState = AutosaveState.IDLE;
   TextEditingController amountController = TextEditingController();
   int minValue = 25;
   int maxValue = 5000;
+  bool _autosaveVisible = true;
+  bool get autosaveVisible => this._autosaveVisible;
+  set autosaveVisible(bool value) {
+    this._autosaveVisible = value;
+    notifyListeners();
+  }
+
   String minAlert = "A minimum of Rs 25 is required";
   String maxAlert = "A maximum of Rs 5000 is allowed";
   bool _showMinAlert = false;
@@ -40,7 +47,8 @@ class SubscriptionService extends ChangeNotifier {
   List<SubscriptionTransactionModel> subscriptionTxnsHistoryList = [];
   bool hasNoMoreSubsTxns = false;
   get isDaily => this._isDaily;
-
+  UpiApplication? upiApplication;
+  String? selectedUpiApplicationName;
   set isDaily(value) {
     this._isDaily = value;
     notifyListeners();
@@ -73,6 +81,7 @@ class SubscriptionService extends ChangeNotifier {
 
   set subscriptionData(value) {
     this._subscriptionData = value;
+    if (value == null) return;
     amountController.text = subscriptionData!.amount.toString();
     setSubscriptionState(subscriptionData!.status!);
   }
@@ -101,43 +110,80 @@ class SubscriptionService extends ChangeNotifier {
       required String package,
       required String asset}) async {
     pollCount = 0;
-    autosaveState = AutosaveState.PROCESSING;
+    autosaveState = AutosaveState.IDLE;
 
     final res = await _subscriptionRepo.createSubscription(
         freq: freq, amount: amount, package: package, asset: asset);
     if (res.isSuccess()) {
-      bool launchRes = await BaseUtil.launchUrl(res.model!);
-      if (!launchRes) {
-        autosaveState = AutosaveState.INIT;
-      } else {
-        startPollingForResponse();
-      }
+      // try {
+      const platform = MethodChannel("methodChannel/upiIntent");
+
+      final result = await platform.invokeMethod(
+          'initiatePsp', {'redirectUrl': res.model, 'packageName': package});
+      // platform.setMethodCallHandler((call) {
+      //   final String argument = call.arguments;
+      //   switch (call.method) {
+      //     case "onSuccess":
+      //       log("Result from call handler $argument");
+      //       break;
+      //   }
+      //   return Future.value();
+      // });
+      log("Result from initiatePsp: $result");
+
+      // version = result;
+      // return ApiResponse(model: version, code: 200);
+      // } catch (e) {
+      //   debugPrint(e.toString());
+      //   // version = 0;
+      //   // return ApiResponse.withError("Unable to get PhonePe version code", 400);
+      // }
+      // bool launchRes = await BaseUtil.launchUrl(res.model!);
+      // if (!launchRes) {
+      // } else {
+      //   autosaveState = AutosaveState.INIT;
+      //   startPollingForResponse();
+      // }
     } else {
-      autosaveState = AutosaveState.INIT;
+      autosaveState = AutosaveState.IDLE;
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try after sometime");
     }
   }
 
   startPollingForResponse() {
-    timer = Timer.periodic(Duration(seconds: 10), (timer) {
+    timer = Timer.periodic(Duration(seconds: 10), (t) {
       pollCount++;
       if (pollCount > 100) {
-        timer.cancel();
-        autosaveState = AutosaveState.INIT;
+        t.cancel();
+        autosaveState = AutosaveState.IDLE;
       }
-      getSubscription();
+      getSubscription().then((_) {
+        if (subscriptionData!.status != AutosaveState.INIT.name &&
+            subscriptionData!.status != AutosaveState.CANCELLED.name) {
+          print("reached here too");
+          t.cancel();
+        }
+      });
     });
+  }
+
+  Future<int> getPhonePeVersionCode() async {
+    final res = await _subscriptionRepo.getPhonepeVersionCode();
+    if (res.isSuccess()) {
+      return res.model!;
+    } else {
+      return 0;
+    }
   }
 
   Future<void> getSubscription() async {
     final res = await _subscriptionRepo.getSubscription();
     if (res.isSuccess()) {
       subscriptionData = res.model;
-      if (subscriptionData!.status != "INIT" &&
-          subscriptionData!.status != "CANCELLED") timer?.cancel();
+    } else {
+      autosaveState = AutosaveState.IDLE;
+      subscriptionData = null;
     }
-
-    if (autosaveState == AutosaveState.IDLE) autosaveState = AutosaveState.INIT;
   }
 
   Future<void> updateSubscription() async {
@@ -176,6 +222,7 @@ class SubscriptionService extends ChangeNotifier {
   }
 
   Future<void> pauseSubscription(AutosavePauseOption option) async {
+    isPausing = true;
     final res = await _subscriptionRepo.pauseSubscription(option: option);
     if (res.isSuccess()) {
       subscriptionData = res.model;
@@ -187,10 +234,11 @@ class SubscriptionService extends ChangeNotifier {
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
     }
+    isPausing = false;
   }
 
   Future<void> resumeSubscription() async {
-    autosaveState = AutosaveState.PROCESSING;
+    isPausing = true;
     final res = await _subscriptionRepo.resumeSubscription();
     if (res.isSuccess()) {
       subscriptionData = res.model;
@@ -202,6 +250,7 @@ class SubscriptionService extends ChangeNotifier {
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
     }
+    isPausing = false;
   }
 
   Future<void> getSubscriptionTransactionHistory(
@@ -216,6 +265,58 @@ class SubscriptionService extends ChangeNotifier {
     }
   }
 
+  // Future<void> getUserUpiAppChoice() async {
+  //   await getUPIApps();
+  //   BaseUtil.openModalBottomSheet(
+  //     addToScreenStack: true,
+  //     backgroundColor: UiConstants.kBackgroundColor,
+  //     isBarrierDismissible: false,
+  //     isScrollControlled: true,
+  //     borderRadius: BorderRadius.only(
+  //       topLeft: Radius.circular(SizeConfig.roundness12),
+  //       topRight: Radius.circular(SizeConfig.roundness12),
+  //     ),
+  //     content: SubsUPIAppsBottomSheet(subscriptionService: this),
+  //   );
+  // }
+
+  Future<List<ApplicationMeta>> getUPIApps() async {
+    S locale = locator<S>();
+    List<ApplicationMeta> appMetaList = [];
+    try {
+      List<ApplicationMeta> allUpiApps =
+          await UpiPay.getInstalledUpiApplications(
+              statusType: UpiApplicationDiscoveryAppStatusType.all);
+
+      allUpiApps.forEach((element) {
+        if (element.upiApplication.appName == "Paytm" &&
+            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                .contains('P')) {
+          appMetaList.add(element);
+        }
+        if (element.upiApplication.appName == "PhonePe" &&
+            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                .contains('E')) {
+          appMetaList.add(element);
+        }
+        if (element.upiApplication.appName == "PhonePe Preprod" &&
+            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                .contains('E')) {
+          appMetaList.add(element);
+        }
+        if (element.upiApplication.appName == "Google Pay" &&
+            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                .contains('G')) {
+          appMetaList.add(element);
+        }
+      });
+      return appMetaList;
+    } catch (e) {
+      BaseUtil.showNegativeAlert(locale.unableToGetUpi, locale.tryLater);
+      return [];
+    }
+  }
+
   setSubscriptionState(String status) {
     switch (status) {
       case "INIT":
@@ -225,9 +326,9 @@ class SubscriptionService extends ChangeNotifier {
         timer?.cancel();
         autosaveState = AutosaveState.ACTIVE;
         break;
-      case "PROCESSING":
-        autosaveState = AutosaveState.PROCESSING;
-        break;
+      // case "PROCESSING":
+      //   autosaveState = AutosaveState.PROCESSING;
+      //   break;
       case "PAUSE_FROM_APP":
         autosaveState = AutosaveState.PAUSED;
         break;
@@ -249,8 +350,9 @@ class SubscriptionService extends ChangeNotifier {
   handleTap() {
     print(_autosaveState);
     switch (autosaveState) {
-      case AutosaveState.PROCESSING:
-        return;
+      case AutosaveState.INIT:
+        return BaseUtil.showNegativeAlert(
+            "Subscription in processing", "please check back after sometime");
       case AutosaveState.ACTIVE:
         amountController.text = subscriptionData?.amount?.toString() ?? '25';
         return BaseUtil.openDialog(
@@ -258,13 +360,17 @@ class SubscriptionService extends ChangeNotifier {
             addToScreenStack: true,
             hapticVibrate: true,
             content: EditSubscriptionDialog());
-      case AutosaveState.INIT:
-      case AutosaveState.CANCELLED:
-        return createSubscription(
-            freq: "DAILY",
-            amount: 100,
-            package: "com.phonepe.app",
-            asset: "AUGGOLD99");
+      case AutosaveState.IDLE:
+        // return getUserUpiAppChoice();
+        return AppState.delegate!.appState.currentAction = PageAction(
+          page: AutosaveProcessViewPageConfig,
+          state: PageState.addPage,
+        );
+      // return createSubscription(
+      //     freq: "DAILY",
+      //     amount: 100,
+      //     package: "com.phonepe.app",
+      //     asset: "AUGGOLD99");
       case AutosaveState.PAUSED:
         return resumeSubscription();
       case AutosaveState.PAUSED_FOREVER:

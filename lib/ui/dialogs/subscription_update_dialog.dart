@@ -10,8 +10,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 
 class EditSubscriptionDialog extends StatelessWidget {
@@ -19,7 +17,7 @@ class EditSubscriptionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SubscriptionService>(
+    return Consumer<SubService>(
       builder: (context, service, child) => FelloInfoDialog(
         customContent: Column(
           mainAxisSize: MainAxisSize.min,
@@ -86,7 +84,7 @@ class EditSubscriptionDialog extends StatelessWidget {
                     right: SizeConfig.screenWidth! * 0.0666,
                     child: Text(
                       service.isDaily ? "DAILY" : "WEEKLY",
-                      style: TextStyles.sourceSans.body4.setOpecity(0.4),
+                      style: TextStyles.sourceSans.body4.setOpacity(0.4),
                     ),
                   ),
                 ],

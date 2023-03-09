@@ -7,6 +7,8 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'base_repo.dart';
 
@@ -46,11 +48,12 @@ class SubscriptionRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<String>> createSubscription(
-      {required String freq,
-      required int amount,
-      required String package,
-      required String asset}) async {
+  Future<ApiResponse<String>> createSubscription({
+    required String freq,
+    required int amount,
+    required String package,
+    required String asset,
+  }) async {
     try {
       Map<String, dynamic> _body = {
         "amount": amount,
@@ -58,6 +61,11 @@ class SubscriptionRepo extends BaseRepo {
         "pspPackage": package,
         "asset": asset
       };
+
+      if (package.toLowerCase().contains('phonepe')) {
+        final res = await getPhonepeVersionCode();
+        if (res.isSuccess()) _body["version"] = res.model;
+      }
 
       final token = await getBearerToken();
 
@@ -127,6 +135,20 @@ class SubscriptionRepo extends BaseRepo {
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<int>> getPhonepeVersionCode() async {
+    int version = 0;
+    try {
+      const platform = MethodChannel("methodChannel/upiIntent");
+      final int result = await platform.invokeMethod('getPhonePeVersion');
+      version = result;
+      return ApiResponse(model: version, code: 200);
+    } catch (e) {
+      debugPrint(e.toString());
+      version = 0;
+      return ApiResponse.withError("Unable to get PhonePe version code", 400);
     }
   }
 

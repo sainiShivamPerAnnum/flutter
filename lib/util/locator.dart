@@ -150,7 +150,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => RazorpayService());
   locator.registerSingletonAsync(() => SharedPreferences.getInstance());
   locator.registerLazySingleton(() => MarketingEventHandlerService());
-  locator.registerLazySingleton(() => SubscriptionService());
+  locator.registerLazySingleton(() => SubService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());

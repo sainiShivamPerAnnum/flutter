@@ -121,3 +121,117 @@ class UPIAppsBottomSheet extends StatelessWidget {
     );
   }
 }
+
+// class SubsUPIAppsBottomSheet extends StatelessWidget {
+//   final SubService? subscriptionService;
+
+//   const SubsUPIAppsBottomSheet({Key? key, this.subscriptionService})
+//       : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     S locale = S.of(context);
+//     return Container(
+//       padding: EdgeInsets.all(SizeConfig.padding20),
+//       child: Column(
+//         mainAxisSize: MainAxisSize.min,
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Padding(
+//             padding: EdgeInsets.only(
+//                 left: SizeConfig.pageHorizontalMargins,
+//                 right: SizeConfig.pageHorizontalMargins / 2),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 Text(
+//                   subscriptionService!.appMetaList.length > 0
+//                       ? locale.txnSelectUPI
+//                       : locale.txnNoUPI,
+//                   style: TextStyles.title5.bold.colour(Colors.white),
+//                 ),
+//                 GestureDetector(
+//                   onTap: () {
+//                     AppState.backButtonDispatcher!.didPopRoute();
+//                   },
+//                   child: Icon(
+//                     Icons.close,
+//                     color: Colors.white,
+//                   ),
+//                 )
+//               ],
+//             ),
+//           ),
+//           SizedBox(height: 20),
+//           subscriptionService!.appMetaList.length <= 0
+//               ? Container(
+//                   width: SizeConfig.screenWidth,
+//                   child: Column(
+//                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                     crossAxisAlignment: CrossAxisAlignment.center,
+//                     children: [
+//                       SvgPicture.asset(Assets.noTickets,
+//                           height: SizeConfig.screenWidth! * 0.16),
+//                       SizedBox(height: SizeConfig.padding12),
+//                       Text(locale.txnCouldNotFindUPI,
+//                           style: TextStyles.body1.colour(Colors.grey)),
+//                     ],
+//                   ),
+//                 )
+//               : GridView.builder(
+//                   shrinkWrap: true,
+//                   scrollDirection: Axis.vertical,
+//                   itemCount: subscriptionService!.appMetaList.length,
+//                   itemBuilder: (context, index) {
+//                     return GestureDetector(
+//                       onTap: () {
+//                         subscriptionService!.upiApplication =
+//                             subscriptionService!
+//                                 .appMetaList[index].upiApplication;
+//                         subscriptionService!.selectedUpiApplicationName =
+//                             subscriptionService!.appMetaList[index]
+//                                 .upiApplication.androidPackageName;
+//                         debugPrint(
+//                             subscriptionService!.selectedUpiApplicationName!);
+//                         AppState.backButtonDispatcher!.didPopRoute();
+
+//                         AppState.delegate!.appState.currentAction = PageAction(
+//                           page: AutosaveProcessViewPageConfig,
+//                           state: PageState.addPage,
+//                         );
+//                       },
+//                       child: Padding(
+//                         padding: const EdgeInsets.all(10),
+//                         child: Container(
+//                           child: Center(
+//                             child: Column(
+//                               children: [
+//                                 ClipRRect(
+//                                     borderRadius: BorderRadius.circular(5),
+//                                     child: subscriptionService!
+//                                         .appMetaList[index]
+//                                         .iconImage(40)),
+//                                 SizedBox(
+//                                   height: 10,
+//                                 ),
+//                                 Text(
+//                                   subscriptionService!.appMetaList[index]
+//                                       .upiApplication.appName,
+//                                   style: TextStyles.body4.colour(Colors.white),
+//                                 ),
+//                               ],
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                     crossAxisCount: 3,
+//                   ),
+//                 ),
+//         ],
+//       ),
+//     );
+//   }
+// }

@@ -178,7 +178,6 @@ class SaveViewModel extends BaseViewModel {
   getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
-
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
         case 'AS':
@@ -192,14 +191,6 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     });
-    // saveViewItems.add(Container(
-    //   margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-    //   child: AppPositiveBtn(
-    //       btnText: "Subscribe",
-    //       onPressed: () async {
-    //         log(PreferenceHelper.getString("dpUrl", def: "NA"));
-    //       }),
-    // ));
     saveViewItems.add(
       Container(
         margin: EdgeInsets.only(top: SizeConfig.padding40),

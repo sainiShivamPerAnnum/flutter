@@ -1,15 +1,15 @@
 import 'dart:developer';
 
-import 'package:external_app_launcher/external_app_launcher.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/finance/autopay/amount_chips.dart';
+import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_views/autopay_setup_view.dart';
+import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_views/autopay_upi_app-select_view.dart';
 import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_vm.dart';
-import 'package:felloapp/ui/pages/finance/autopay/segmate_chip.dart';
-import 'package:felloapp/ui/pages/finance/autopay/sub_process_text.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -19,16 +19,11 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:upi_pay/upi_pay.dart';
 
 class AutosaveProcessView extends StatefulWidget {
-  final int page;
-  final bool isUpdate;
-
-  const AutosaveProcessView({Key? key, this.page = 0, this.isUpdate = false})
-      : super(key: key);
+  const AutosaveProcessView({Key? key}) : super(key: key);
 
   @override
   State<AutosaveProcessView> createState() => _AutosaveProcessViewState();
@@ -39,23 +34,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<AutosaveProcessViewModel>(
-      onModelReady: (model) {
-        model.init(widget.page);
-      },
-      onModelDispose: (model) {
-        model.clear();
-      },
+      onModelReady: (model) => model.init(),
+      onModelDispose: (model) => model.dump(),
       builder: (context, model, child) {
-        log(model.currentPage.toString());
         return Scaffold(
           backgroundColor: UiConstants.kBackgroundColor,
           appBar: AppBar(
             backgroundColor: UiConstants.kBackgroundColor,
             elevation: 0.0,
-            // title: Text(
-            //   'Setup Autosave',
-            //   style: TextStyles.rajdhaniSB.title4,
-            // ),
             title: model.currentPage <= 2
                 ? Text(
                     "${model.currentPage + 1}/3",
@@ -63,7 +49,6 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   )
                 : Container(),
             centerTitle: true,
-
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -74,178 +59,107 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             actions: [],
           ),
           resizeToAvoidBottomInset: false,
-          body: Stack(
-            children: [
-              const NewSquareBackground(),
-              SafeArea(
-                child: PageView(
-                  controller: model.pageController,
-                  physics: NeverScrollableScrollPhysics(),
+          body: model.state == ViewState.Busy
+              ? Center(
+                  child: FullScreenLoader(),
+                )
+              : Stack(
                   children: [
-                    _buildEnterUpi(model),
-                    _buildPendingUI(model),
-                    _buildAmountSetUi(model, widget.isUpdate),
-                    _buildCompleteUI(model),
-                    Center(
-                      child: Text(locale.cancelledUi,
-                          style: TextStyles.rajdhaniSB.title4),
+                    const NewSquareBackground(),
+                    SafeArea(
+                      child: model.autosaveState == AutosaveState.INIT
+                          ? Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CircularProgressIndicator.adaptive(),
+                                  Text(
+                                      "Your Autosave is progress, come back later.")
+                                ],
+                              ),
+                            )
+                          : model.autosaveState == AutosaveState.IDLE
+                              ? PageView(
+                                  controller: model.pageController,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  children: [
+                                    UpiAppSelectView(
+                                        appList: model.appsList,
+                                        onAppSelect: (ApplicationMeta app) {
+                                          Haptic.vibrate();
+                                          model.selectedUpiApp = app;
+                                        },
+                                        selectedApp: model.selectedUpiApp,
+                                        onCtaPressed: () {
+                                          model.pageController.animateToPage(1,
+                                              duration: Duration(seconds: 1),
+                                              curve: Curves.decelerate);
+                                        }),
+                                    AutoPaySetupOrUpdateView(
+                                        isSetup: true,
+                                        onCtaTapped: (_) {
+                                          model.createSubscription();
+                                        },
+                                        isDaily: model.isDaily,
+                                        onAmountValueChanged: (val) {
+                                          model.amountFieldController.text =
+                                              val.toString();
+                                          model.notifyListeners();
+                                        },
+                                        onChipsTapped: (int val) {
+                                          FocusScope.of(context).unfocus();
+                                          Haptic.vibrate();
+                                          model.amountFieldController.text =
+                                              val.toString();
+                                        },
+                                        onFrequencyTapped: (FREQUENCY freq) {
+                                          Haptic.vibrate();
+                                          if (freq == FREQUENCY.daily)
+                                            model.isDaily = true;
+                                          else
+                                            model.isDaily = false;
+                                        },
+                                        amountFieldController:
+                                            model.amountFieldController,
+                                        dailyChips: model.dailyChips,
+                                        weeklyChips: model.weeklyChips),
+                                    _buildPendingUI(model),
+                                    _buildCompleteUI(model),
+                                    Center(
+                                      child: Text(locale.cancelledUi,
+                                          style: TextStyles.rajdhaniSB.title4),
+                                    ),
+                                  ],
+                                )
+                              : SizedBox(
+                                  child: Text(
+                                    "Autosave Active",
+                                    style:
+                                        TextStyles.body2.colour(Colors.white),
+                                  ),
+                                ),
+                    ),
+                    FutureBuilder(
+                      future: Future.value(true),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<void> snap) {
+                        //If we do not have data as we wait for the future to complete,
+                        //show any widget, eg. empty Container
+                        if (!snap.hasData) {
+                          return Container();
+                        }
+
+                        //Otherwise the future completed, so we can now safely use the controller.page
+                        if (model.pageController.page == 2)
+                          return CustomKeyboardSubmitButton(onSubmit: () {});
+                        else
+                          return SizedBox();
+                      },
                     ),
                   ],
                 ),
-              ),
-              FutureBuilder(
-                future: Future.value(true),
-                builder: (BuildContext context, AsyncSnapshot<void> snap) {
-                  //If we do not have data as we wait for the future to complete,
-                  //show any widget, eg. empty Container
-                  if (!snap.hasData) {
-                    return Container();
-                  }
-
-                  //Otherwise the future completed, so we can now safely use the controller.page
-                  if (model.pageController?.page == 2)
-                    return CustomKeyboardSubmitButton(onSubmit: () {
-                      model.sipAmountNode.unfocus();
-                    });
-                  else
-                    return SizedBox();
-                },
-              ),
-            ],
-          ),
         );
       },
-    );
-  }
-
-  Widget _buildEnterUpi(AutosaveProcessViewModel model) {
-    S locale = S.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: SizeConfig.screenWidth! * 0.12,
-        ),
-        Text(
-          locale.setUpAutoSave,
-          style: TextStyles.sourceSans.body3.setOpecity(0.5),
-        ),
-        SizedBox(
-          height: SizeConfig.padding10,
-        ),
-        Text(
-          locale.txnEnterUPI,
-          style: TextStyles.rajdhaniSB.title4,
-        ),
-        SizedBox(
-          height: SizeConfig.screenWidth! * 0.1,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding40,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppTextFieldLabel(
-                locale.txnEnterUPIFeild,
-                leftPadding: SizeConfig.padding8,
-              ),
-              AppTextField(
-                autoFocus: widget.page == 0,
-                textEditingController: model.vpaController,
-                isEnabled: !model.isSubscriptionInProgress,
-                validator: (val) {
-                  return null;
-                },
-                keyboardType: TextInputType.emailAddress,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@.-]")),
-                ],
-                hintText: "hello@upi",
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
-        Container(
-          width: SizeConfig.screenWidth! * 0.8,
-          child: Wrap(
-            runSpacing: SizeConfig.padding8,
-            spacing: SizeConfig.padding6,
-            alignment: WrapAlignment.center,
-            children: [
-              _upichips('@upi', model),
-              _upichips('@apl', model),
-              _upichips('@fbl', model),
-              _upichips('@ybl', model),
-              _upichips('@paytm', model),
-              _upichips('@okhdfcbank', model),
-              _upichips('@okaxis', model),
-            ],
-          ),
-        ),
-        Spacer(),
-        Text(
-          locale.autoPayBanksSupported,
-          style: TextStyles.sourceSansL.body4,
-        ),
-        SizedBox(
-          height: SizeConfig.padding16,
-        ),
-        Image.asset(
-          "assets/images/autosavebanks.png",
-          width: SizeConfig.screenWidth! * 0.7,
-        ),
-        Spacer(),
-        model.isSubscriptionInProgress
-            ? SubProcessText()
-            : AppPositiveBtn(
-                btnText: locale.btnSumbit,
-                onPressed: () {
-                  Haptic.vibrate();
-                  model.initiateCustomSubscription();
-                  FocusScope.of(context).unfocus();
-                  // model.pageController.jumpToPage(1);
-                },
-                width: SizeConfig.screenWidth! * 0.8,
-              ),
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
-      ],
-    );
-  }
-
-  Widget _upichips(String suffix, AutosaveProcessViewModel model) {
-    return InkWell(
-      onTap: () {
-        Haptic.vibrate();
-        model.vpaController.text =
-            model.vpaController.text.trim().split('@').first + suffix;
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          // color: UiConstants.primaryLight.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-          border: Border.all(
-            color: Color(0xFFFEF5DC),
-            width: SizeConfig.border0,
-          ),
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding12,
-          vertical: SizeConfig.padding8,
-        ),
-        margin: EdgeInsets.only(bottom: SizeConfig.padding4),
-        child: Text(
-          suffix,
-          style: TextStyles.sourceSansL.body2,
-        ),
-      ),
     );
   }
 
@@ -261,7 +175,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
         ),
         Text(
           locale.setUpAutoSave,
-          style: TextStyles.sourceSans.body3.setOpecity(0.5),
+          style: TextStyles.sourceSans.body3.setOpacity(0.5),
         ),
         SizedBox(
           height: SizeConfig.padding10,
@@ -273,37 +187,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
         SizedBox(
           height: SizeConfig.screenWidth! * 0.1,
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding40,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppTextFieldLabel(
-                locale.txnEnterUPIFeild,
-                leftPadding: SizeConfig.padding8,
-              ),
-              AppTextField(
-                autoFocus: widget.page == 1,
-                textEditingController: model.vpaController,
-                isEnabled: false,
-                validator: (val) {
-                  return null;
-                },
-                keyboardType: TextInputType.emailAddress,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                ],
-                suffixIcon: Icon(
-                  Icons.verified,
-                  color: UiConstants.primaryColor,
-                ),
-                hintText: locale.txnEnterAmount,
-              ),
-            ],
-          ),
-        ),
+
         SizedBox(
           height: SizeConfig.padding32,
         ),
@@ -321,25 +205,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           height: SizeConfig.padding24,
         ),
         // if (model.showAppLaunchButton && PlatformUtils.isAndroid)
-        AppPositiveBtn(
-          btnText: locale.btnOpen + '${getUpiAppName(model)}',
-          onPressed: () async {
-            Haptic.vibrate();
-            _analyticService!.track(
-                eventName: AnalyticsEvents.openUPIAppTapped,
-                properties: {
-                  "App name": getUpiAppName(model),
-                  "UPI Id": model.vpaController.text,
-                });
-            await LaunchApp.openApp(
-              androidPackageName: model.androidPackageName,
-              iosUrlScheme: model.iosUrlScheme,
-              openStore: false,
-            );
-            // model.pageController.jumpToPage(2);
-          },
-          width: SizeConfig.screenWidth! * 0.8,
-        ),
+
         SizedBox(
           height: SizeConfig.padding24,
         ),
@@ -375,285 +241,35 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
     );
   }
 
-  String getUpiAppName(AutosaveProcessViewModel model) {
-    final String upi = model.vpaController.text.split('@').last;
-    switch (upi) {
-      case 'upi':
-        return 'BHIM';
-      case 'paytm':
-        return "Paytm";
-      case 'ybl':
-        return "PhonePe";
-      case 'ibl':
-        return "PhonePe";
-      case 'axl':
-        return "PhonePe";
-      case 'okhdfcbank':
-        return "Google Pay";
-      case 'okaksix':
-        return "Google Pay";
-      case 'apl':
-        return "Amazon Pay";
-      case 'indus':
-        return "BHIM Indus Pay";
-      case 'boi':
-        return "BHIM BOI UPI";
-      case 'cnrb':
-        return "BHIM Canara";
-      default:
-        return "preferred UPI App";
-    }
-  }
-
-  Widget _buildAmountSetUi(AutosaveProcessViewModel model, bool isUpdate) {
-    final AnalyticsService? _analyticService = locator<AnalyticsService>();
-    S locale = S.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: SizeConfig.screenWidth! * 0.05,
-        ),
-        Text(
-          isUpdate ? locale.updateAutoSave : locale.setUpAutoSave,
-          style: TextStyles.sourceSans.body3.setOpecity(0.5),
-        ),
-        SizedBox(
-          height: SizeConfig.padding10,
-        ),
-        Text(
-          isUpdate ? locale.txnUpdateAmount : locale.txnEnterAmount,
-          style: TextStyles.rajdhaniSB.title4,
-        ),
-        SizedBox(
-          height: SizeConfig.screenWidth! * 0.144,
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: UiConstants.kAutopayAmountDeactiveTabColor,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-            border: Border.all(
-              color: UiConstants.kBorderColor.withOpacity(0.22),
-              width: SizeConfig.border1,
-            ),
-          ),
-          width: SizeConfig.screenWidth! * 0.5133,
-          height: SizeConfig.screenWidth! * 0.0987,
-          child: Stack(
-            children: [
-              AnimatedPositioned(
-                duration: Duration(milliseconds: 500),
-                curve: Curves.decelerate,
-                left: model.isDaily ? 0 : SizeConfig.screenWidth! * 0.248,
-                child: AnimatedContainer(
-                  width: SizeConfig.screenWidth! * 0.26,
-                  height: SizeConfig.screenWidth! * 0.094,
-                  decoration: BoxDecoration(
-                    color: UiConstants.kAutopayAmountActiveTabColor
-                        .withOpacity(0.45),
-                    borderRadius: model.isDaily
-                        ? BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.roundness5),
-                            bottomLeft: Radius.circular(SizeConfig.roundness5),
-                          )
-                        : BorderRadius.only(
-                            topRight: Radius.circular(SizeConfig.roundness5),
-                            bottomRight: Radius.circular(SizeConfig.roundness5),
-                          ),
-                  ),
-                  duration: Duration(milliseconds: 500),
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Haptic.vibrate();
-                        model.isDaily = true;
-                        model.onAmountValueChanged(
-                            model.amountFieldController.text);
-                      },
-                      child: SegmentChips(
-                        isDaily: model.isDaily,
-                        text: locale.daily,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Haptic.vibrate();
-                        model.isDaily = false;
-                        model.onAmountValueChanged(
-                          model.amountFieldController.text,
-                        );
-                      },
-                      child: SegmentChips(
-                        isDaily: model.isDaily,
-                        text: locale.weekly,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: SizeConfig.screenWidth! * 0.0693,
-        ),
-        Container(
-          width: SizeConfig.screenWidth! * 0.784,
-          decoration: BoxDecoration(
-            color: UiConstants.kTextFieldColor,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-            border: Border.all(
-              color: UiConstants.kTextColor.withOpacity(0.1),
-              width: SizeConfig.border1,
-            ),
-          ),
-          child: Stack(
-            children: [
-              Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "₹",
-                      style: TextStyles.rajdhaniB
-                          .size(SizeConfig.screenWidth! * 0.1067),
-                    ),
-                    SizedBox(
-                      width: ((SizeConfig.screenWidth! * 0.065) *
-                          model.amountFieldController.text.length.toDouble()),
-                      child: AppTextField(
-                        textEditingController: model.amountFieldController,
-                        isEnabled: true,
-                        focusNode: model.sipAmountNode,
-                        validator: (val) {
-                          return null;
-                        },
-                        onChanged: (val) {
-                          model.onAmountValueChanged(val);
-                        },
-                        keyboardType: TextInputType.number,
-                        inputDecoration: InputDecoration(
-                          focusedBorder: InputBorder.none,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          // isCollapse: true,
-                          isDense: true,
-                        ),
-                        textAlign: TextAlign.center,
-                        textStyle: TextStyles.rajdhaniB
-                            .size(SizeConfig.screenWidth! * 0.1067),
-                        // height: SizeConfig.screenWidth * 0.1706,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: SizeConfig.screenWidth! * 0.0666,
-                right: SizeConfig.screenWidth! * 0.0666,
-                child: Text(
-                  model.isDaily ? locale.daily : locale.weekly,
-                  style: TextStyles.sourceSans.body4.setOpecity(0.4),
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
-        Container(
-          width: SizeConfig.screenWidth,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: model.isDaily
-                ? List.generate(
-                    model.dailyChips.length,
-                    (index) => AmountChips(
-                      amount: model.dailyChips[index].value,
-                      model: model,
-                      isBestSeller: model.dailyChips[index].best,
-                    ),
-                  )
-                : List.generate(
-                    model.weeklyChips.length,
-                    (index) => AmountChips(
-                      amount: model.weeklyChips[index].value,
-                      model: model,
-                      isBestSeller: model.weeklyChips[index].best,
-                    ),
-                  ),
-          ),
-        ),
-        Spacer(),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              Assets.star,
-              width: SizeConfig.iconSize3,
-              height: SizeConfig.iconSize3,
-            ),
-            SizedBox(
-              width: SizeConfig.padding4,
-            ),
-            Text(
-              locale.additionalBenefits,
-              style: TextStyles.sourceSans.body3.setOpecity(0.6),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
-        _buildBenefits(),
-        SizedBox(
-          height: SizeConfig.padding40,
-        ),
-        model.isSubscriptionAmountUpdateInProgress
-            ? SpinKitThreeBounce(
-                color: Colors.white,
-                size: 20,
-              )
-            : AppPositiveBtn(
-                btnText: isUpdate ? locale.btnUpdate : locale.setUpText,
-                onPressed: () async {
-                  Haptic.vibrate();
-                  if (isUpdate) {
-                    model.trackSIPUpdateEvent();
-                  } else {
-                    model.trackSIPSetUpEvent();
-                  }
-                  model.setSubscriptionAmount(
-                    int.tryParse(
-                      model.amountFieldController == null ||
-                              model.amountFieldController?.text == null ||
-                              model.amountFieldController.text.isEmpty
-                          ? '0'
-                          : model.amountFieldController.text,
-                    )!
-                        .toDouble(),
-                  );
-                  // model.pageController.jumpToPage(3);
-                },
-                width: SizeConfig.screenWidth! * 0.8,
-              ),
-        SizedBox(
-          height: SizeConfig.pageHorizontalMargins,
-        ),
-      ],
-    );
-  }
+  // String getUpiAppName(AutosaveProcessViewModel model) {
+  //   final String upi = model.vpaController.text.split('@').last;
+  //   switch (upi) {
+  //     case 'upi':
+  //       return 'BHIM';
+  //     case 'paytm':
+  //       return "Paytm";
+  //     case 'ybl':
+  //       return "PhonePe";
+  //     case 'ibl':
+  //       return "PhonePe";
+  //     case 'axl':
+  //       return "PhonePe";
+  //     case 'okhdfcbank':
+  //       return "Google Pay";
+  //     case 'okaksix':
+  //       return "Google Pay";
+  //     case 'apl':
+  //       return "Amazon Pay";
+  //     case 'indus':
+  //       return "BHIM Indus Pay";
+  //     case 'boi':
+  //       return "BHIM BOI UPI";
+  //     case 'cnrb':
+  //       return "BHIM Canara";
+  //     default:
+  //       return "preferred UPI App";
+  //   }
+  // }
 
   Widget _buildCompleteUI(AutosaveProcessViewModel model) {
     S locale = S.of(context);
@@ -735,10 +351,6 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                     SizedBox(
                       width: SizeConfig.padding12,
                     ),
-                    Text(
-                      "${model.vpaController.text}",
-                      style: TextStyles.sourceSansSB.body1,
-                    ),
                   ],
                 ),
                 SizedBox(
@@ -754,7 +366,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                       ),
                       TextSpan(
                         text: "${model.isDaily ? locale.daily : locale.weekly}",
-                        style: TextStyles.sourceSansSB.body1.setOpecity(0.5),
+                        style: TextStyles.sourceSansSB.body1.setOpacity(0.5),
                       ),
                     ],
                   ),
@@ -777,82 +389,6 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
           )
         ],
       ),
-    );
-  }
-
-  Widget _buildBenefits() {
-    S locale = S.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SvgPicture.asset(
-              Assets.sprout,
-              width: SizeConfig.iconSize5,
-              height: SizeConfig.iconSize5,
-            ),
-            SizedBox(
-              height: SizeConfig.padding12,
-            ),
-            Text(
-              locale.interestOnGold,
-              style: TextStyles.sourceSans.body4
-                  .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-        SizedBox(
-          width: SizeConfig.padding12,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SvgPicture.asset(
-              Assets.ticketOutlined,
-              width: SizeConfig.padding24,
-              height: SizeConfig.padding24,
-            ),
-            SizedBox(
-              height: SizeConfig.padding20,
-            ),
-            Text(
-              locale.oneScratchCard,
-              style: TextStyles.sourceSans.body4
-                  .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-        SizedBox(
-          width: SizeConfig.padding12,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SvgPicture.asset(
-              Assets.tokenOutlined,
-              width: SizeConfig.padding24,
-              height: SizeConfig.padding24,
-            ),
-            SizedBox(
-              height: SizeConfig.padding20,
-            ),
-            Text(
-              locale.fiftyFelloTokens,
-              style: TextStyles.sourceSans.body4
-                  .colour(UiConstants.kYellowTextColor.withOpacity(0.7)),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

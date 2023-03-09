@@ -64,8 +64,7 @@ class RootViewModel extends BaseViewModel {
   final ScratchCardService? _gtService = locator<ScratchCardService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
   final AppState appState = locator<AppState>();
-  final SubscriptionService _subscriptionService =
-      locator<SubscriptionService>();
+  final SubService _subscriptionService = locator<SubService>();
   final S locale;
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;

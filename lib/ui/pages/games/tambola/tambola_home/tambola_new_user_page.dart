@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -18,7 +16,6 @@ import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -279,7 +276,7 @@ class TambolaHeader extends StatelessWidget {
             case UrlType.IMAGE:
               return SvgPicture.network(model.game!.walkThroughUri!);
             case UrlType.VIDEO:
-              return TambolaVideoPlayer(link: model.game!.walkThroughUri!);
+              return SizedBox(); // TambolaVideoPlayer(link: model.game!.walkThroughUri!);
 
             default:
               return SizedBox();

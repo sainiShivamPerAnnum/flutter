@@ -121,11 +121,11 @@ class FcmHandler extends ChangeNotifier {
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
           await _fcmHandlerDataPayloads!.userPrizeWinPrompt();
           break;
-        case FcmCommands.COMMAND_SUBSCRIPTION_RESPONSE:
-          if (_paytmService!.isOnSubscriptionFlow)
-            await _autosaveProcessViewModel!
-                .handleSubscriptionPayload(data as Map<String, dynamic>);
-          break;
+        // case FcmCommands.COMMAND_SUBSCRIPTION_RESPONSE:
+        //   if (_paytmService!.isOnSubscriptionFlow)
+        //     await _autosaveProcessViewModel!
+        //         .handleSubscriptionPayload(data as Map<String, dynamic>);
+        //   break;
         default:
       }
     }
