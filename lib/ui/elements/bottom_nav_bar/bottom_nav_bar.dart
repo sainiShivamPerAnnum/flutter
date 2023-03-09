@@ -1,7 +1,6 @@
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -54,12 +53,10 @@ class BottomNavBar extends StatelessWidget {
                           width: SizeConfig.screenWidth! * 0.2,
                           child: GestureDetector(
                             onTap: () {
-                              SpotLightController.instance.dismissSpotLight();
                               superModel.onItemTapped(index);
                             },
                             child: NavBarIcon(
                               callBack: () {
-                                SpotLightController.instance.dismissSpotLight();
                                 superModel.onItemTapped(index);
                               },
                               animate: false,

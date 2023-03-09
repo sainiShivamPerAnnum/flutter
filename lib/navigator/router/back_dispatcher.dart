@@ -101,7 +101,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     if (SpotLightController.instance.isTourStarted) {
       SpotLightController.instance.dismissSpotLight();
-      return Future.value(false);
+      return Future.value(true);
     }
 
     // If onboarding is in progress

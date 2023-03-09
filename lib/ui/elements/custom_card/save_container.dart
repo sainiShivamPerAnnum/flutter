@@ -10,7 +10,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/buttons/black_white_button/black_white_button.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
@@ -177,8 +176,7 @@ class _SaveContainerState extends State<SaveContainer> {
                             child: BlackWhiteButton.inverse(
                                 height: SizeConfig.screenHeight! * 0.05,
                                 onPress: () {
-                                  SpotLightController.instance
-                                      .dismissSpotLight();
+                                  
                                   locator<AnalyticsService>().track(
                                       eventName: "Asset Learn More Tapped",
                                       properties: {

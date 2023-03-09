@@ -114,6 +114,10 @@ class SpotLightController {
       ]);
   }
 
+  void dispose() {
+    _stream.close();
+  }
+
   Future<void> startTambolaFlow({void Function()? onFinish}) async {
     await startShowcase([
       ShowCaseKeys.TambolaButton,
@@ -166,10 +170,14 @@ class SpotLightController {
     }
   }
 
+  bool isSpotLightDismissed = false;
+
   Future<void> dismissSpotLight() async {
     if (isTourStarted) {
+      isSpotLightDismissed = true;
       isSkipButtonClicked = true;
       ShowCaseWidget.of(currentContext).dismiss();
+      ShowCaseWidget.of(saveViewContext!).dismiss();
     }
   }
 

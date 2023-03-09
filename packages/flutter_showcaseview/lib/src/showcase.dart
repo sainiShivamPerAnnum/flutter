@@ -427,12 +427,9 @@ class _ShowcaseState extends State<Showcase> {
   }
 
   Future<void> _getOnTargetTap() async {
-    if (widget.disposeOnTap == true) {
-      await _reverseAnimateTooltip();
+    if ((widget.disposeOnTap ?? true) == false) {
       showCaseWidgetState.dismiss();
-      widget.onTargetClick!();
-    } else {
-      (widget.onTargetClick ?? _nextIfAny).call();
+      widget.onTargetClick?.call();
     }
   }
 
@@ -550,7 +547,7 @@ class _ShowcaseState extends State<Showcase> {
           ),
         ],
         Positioned(
-          top: 30,
+          top: 40,
           left: 20,
           child: MaterialButton(
             color: Colors.white,
@@ -596,27 +593,24 @@ class _TargetWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: offset.dy,
-      left: offset.dx,
+      top: offset.dy - 20,
+      left: offset.dx - 20,
       child: IgnorePointer(
         ignoring: disableDefaultChildGestures,
-        child: FractionalTranslation(
-          translation: const Offset(-0.5, -0.5),
-          child: GestureDetector(
-            onTap: onTap,
-            onLongPress: onLongPress,
-            onDoubleTap: onDoubleTap,
-            child: Container(
-              height: size!.height + 16,
-              width: size!.width + 16,
-              decoration: ShapeDecoration(
-                shape: radius != null
-                    ? RoundedRectangleBorder(borderRadius: radius!)
-                    : shapeBorder ??
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
-              ),
+        child: GestureDetector(
+          onTap: onTap,
+          onLongPress: onLongPress,
+          onDoubleTap: onDoubleTap,
+          child: Container(
+            height: size!.height,
+            width: size!.width,
+            decoration: ShapeDecoration(
+              shape: radius != null
+                  ? RoundedRectangleBorder(borderRadius: radius!)
+                  : shapeBorder ??
+                      const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
             ),
           ),
         ),

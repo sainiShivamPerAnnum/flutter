@@ -55,11 +55,27 @@ class WithDrawWarningScreen extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.all(6),
                 alignment: Alignment.center,
-                child: Text(
-                  'If you withdraw ${type == InvestmentType.AUGGOLD99 ? "$withdrawableQuantity gms of Digital Gold" : "₹$totalAmount from Fello Flo"},\nthe following will be deducted:',
+                child: Text.rich(
+                  TextSpan(
+                    text: 'If you withdraw ',
+                    children: [
+                      TextSpan(
+                        text:
+                            '${type == InvestmentType.AUGGOLD99 ? "$withdrawableQuantity" : "₹$totalAmount"}',
+                        style: TextStyles.sourceSansSB.colour(Colors.white),
+                      ),
+                      TextSpan(
+                          text: type == InvestmentType.AUGGOLD99
+                              ? " gms of Digital Gold"
+                              : " from Fello Flo"),
+                      TextSpan(
+                        text: ',\nthe following will be deducted:',
+                      ),
+                    ],
+                  ),
                   textAlign: TextAlign.center,
                   style: TextStyles.sourceSans.body1.colour(
-                    Colors.white,
+                    Colors.white.withOpacity(0.7),
                   ),
                 ),
               ),

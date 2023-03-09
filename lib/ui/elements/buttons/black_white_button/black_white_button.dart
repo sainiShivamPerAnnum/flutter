@@ -1,4 +1,3 @@
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
@@ -50,7 +49,6 @@ class BlackWhiteButton extends StatelessWidget {
       child: MaterialButton(
         onPressed: () {
           onPress.call();
-          SpotLightController.instance.dismissSpotLight();
         },
         padding: padding,
         shape: RoundedRectangleBorder(
