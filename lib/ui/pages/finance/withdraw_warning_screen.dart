@@ -229,7 +229,7 @@ class WithDrawWarningScreen extends StatelessWidget {
                     },
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 1.2,
+                        childAspectRatio: 3,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12),
                   ),

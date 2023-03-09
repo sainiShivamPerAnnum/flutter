@@ -2,7 +2,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -272,8 +271,9 @@ class GoldSellInputView extends StatelessWidget {
                               widget: SellConfirmationView(
                                 amount: model.goldAmountFromGrams,
                                 grams: model.goldSellGrams!,
-                                onSuccess: () {
-                                  AppState.backButtonDispatcher!.didPopRoute();
+                                onSuccess: () async {
+                                    await AppState.backButtonDispatcher!
+                                      .didPopRoute();
                                   model.initiateSell();
                                 },
                                 investmentType: InvestmentType.AUGGOLD99,
@@ -333,5 +333,4 @@ class GoldSellInputView extends StatelessWidget {
 //   Expanded(child: Text(key,style:TextStyles.sourceSansB),)
 //  ],)
 //   }
-
 }

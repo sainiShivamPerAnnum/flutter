@@ -109,7 +109,7 @@ class _MyAppState extends State<MyApp> {
             backButtonDispatcher: backButtonDispatcher,
             builder: (context, child) {
               return ShowCaseWidget(
-                skipButtonClicked: () {
+                onSkipButtonClicked: () {
                   SpotLightController.instance.isSkipButtonClicked = true;
                 },
                 onFinish: () {

@@ -54,6 +54,7 @@ class SpotLightController {
       addToScreenStack: true,
     );
     await Future.delayed(Duration(seconds: 1));
+
     AppState.backButtonDispatcher!.didPopRoute();
 
     isSkipButtonClicked = false;
@@ -161,8 +162,8 @@ class SpotLightController {
       if (await locator<ScratchCardService>().fetchAndVerifyScratchCardByID()) {
         await locator<ScratchCardService>()
             .showInstantScratchCardView(source: GTSOURCE.newuser);
-        await startShowcase([ShowCaseKeys.SaveKey]);
       }
+      await startShowcase([ShowCaseKeys.SaveKey]);
     }
   }
 
@@ -278,10 +279,3 @@ enum UserFlow {
   onWinPage,
   floInputView
 }
-
-
-
-// Next Button Add in tooltips
-// Play and account section highlight
-// Skip Button 
-// Strip 

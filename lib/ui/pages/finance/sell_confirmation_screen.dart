@@ -105,7 +105,7 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
                   type: widget.investmentType,
                   withdrawableQuantity: widget.grams,
                   totalAmount: widget.amount,
-                  onWithDrawAnyWay: () => widget.onSuccess,
+                  onWithDrawAnyWay: () => widget.onSuccess(),
                 )
               : Scaffold(
                   backgroundColor: UiConstants.kBackgroundColor,
@@ -157,7 +157,8 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
                               btnText: locale.btnContinue,
                               onPressed: () {
                                 final model = WithDrawGameViewModel.fromGames(
-                                    locator<GameRepo>().gameTier, widget.amount);
+                                    locator<GameRepo>().gameTier,
+                                    widget.amount);
                                 if (model.gamesWillBeLocked.isNotEmpty)
                                   showWarningScreen.value = true;
                                 else
