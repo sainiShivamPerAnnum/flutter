@@ -50,6 +50,7 @@ import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -814,6 +815,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'lboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;
+        break;
+      case 'quickTour':
+        SpotLightController.instance.startQuickTour();
         break;
       case 'lendboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;

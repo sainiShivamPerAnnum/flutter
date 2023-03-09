@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
@@ -188,6 +189,18 @@ class SpotLightController {
       ShowCaseKeys.GameRewardsKey,
       ShowCaseKeys.PlayGameKey,
     ]);
+  }
+
+  void startQuickTour() {
+    AppState.delegate!.appState.setCurrentTabIndex = locator<RootController>()
+        .navItems
+        .values
+        .toList()
+        .indexWhere((element) => element == RootController.saveNavBarItem);
+    SpotLightController.instance.isQuickTour = true;
+    SpotLightController.instance.init();
+
+    SpotLightController.instance.userFlow = UserFlow.onSaveTab;
   }
 
   Future<void> startFloInputView() async {
