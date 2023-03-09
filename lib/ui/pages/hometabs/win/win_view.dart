@@ -45,18 +45,7 @@ class Win extends StatelessWidget {
                         title: 'Quick Tour',
                         uri: "",
                         onTap: () {
-                          AppState.delegate!.appState.setCurrentTabIndex =
-                              locator<RootController>()
-                                  .navItems
-                                  .values
-                                  .toList()
-                                  .indexWhere((element) =>
-                                      element == RootController.saveNavBarItem);
-                          SpotLightController.instance.isQuickTour = true;
-                          SpotLightController.instance.init();
-
-                          SpotLightController.instance.userFlow =
-                              UserFlow.onSaveTab;
+                          SpotLightController.instance.startQuickTour();
                         },
                       ),
                       AccountInfoTiles(
