@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
@@ -192,15 +193,18 @@ class SpotLightController {
   }
 
   void startQuickTour() {
-    AppState.delegate!.appState.setCurrentTabIndex = locator<RootController>()
-        .navItems
-        .values
-        .toList()
-        .indexWhere((element) => element == RootController.saveNavBarItem);
-    SpotLightController.instance.isQuickTour = true;
-    SpotLightController.instance.init();
+    if (!(AppState.screenStack.last != ScreenItem.dialog &&
+        AppState.screenStack.last != ScreenItem.modalsheet)) {
+      AppState.delegate!.appState.setCurrentTabIndex = locator<RootController>()
+          .navItems
+          .values
+          .toList()
+          .indexWhere((element) => element == RootController.saveNavBarItem);
+      SpotLightController.instance.isQuickTour = true;
+      SpotLightController.instance.init();
 
-    SpotLightController.instance.userFlow = UserFlow.onSaveTab;
+      SpotLightController.instance.userFlow = UserFlow.onSaveTab;
+    }
   }
 
   Future<void> startFloInputView() async {
