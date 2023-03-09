@@ -69,18 +69,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     //   _journeyService!.isUserJourneyOnboarded = true;
     // }
 
-    if (SpotLightController.instance.isTourStarted) {
-      SpotLightController.instance.dismissSpotLight();
-      return Future.value(false);
-    }
-
     if (locator<BackButtonActions>().isTransactionCancelled) {
       if (AppState.onTap != null &&
           AppState.type != null &&
           AppState.amt != null) {
         if (!AppState.isRepeated) {
           locator<BackButtonActions>().showWantToCloseTransactionBottomSheet(
-            AppState.amt!.round(),    
+            AppState.amt!.round(),
             AppState.type!,
             () {
               AppState.onTap?.call();
@@ -102,6 +97,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
       return Future.value(true);
+    }
+
+    if (SpotLightController.instance.isTourStarted) {
+      SpotLightController.instance.dismissSpotLight();
+      return Future.value(false);
     }
 
     // If onboarding is in progress

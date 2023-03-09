@@ -161,8 +161,8 @@ class SpotLightController {
       if (await locator<ScratchCardService>().fetchAndVerifyScratchCardByID()) {
         await locator<ScratchCardService>()
             .showInstantScratchCardView(source: GTSOURCE.newuser);
-        await startShowcase([ShowCaseKeys.SaveKey]);
       }
+      await startShowcase([ShowCaseKeys.SaveKey]);
     }
   }
 
@@ -278,10 +278,3 @@ enum UserFlow {
   onWinPage,
   floInputView
 }
-
-
-
-// Next Button Add in tooltips
-// Play and account section highlight
-// Skip Button 
-// Strip 

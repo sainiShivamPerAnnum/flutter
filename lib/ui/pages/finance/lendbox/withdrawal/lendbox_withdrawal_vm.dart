@@ -120,8 +120,8 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       widget: SellConfirmationView(
         amount: amount.toDouble(),
         grams: 0.0,
-        onSuccess: () {
-          AppState.backButtonDispatcher!.didPopRoute();
+        onSuccess: () async {
+          await AppState.backButtonDispatcher!.didPopRoute();
           this.processWithdraw(amount);
         },
         investmentType: InvestmentType.LENDBOXP2P,
