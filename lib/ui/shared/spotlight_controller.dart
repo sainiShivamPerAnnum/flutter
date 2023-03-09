@@ -192,10 +192,11 @@ class SpotLightController {
     ]);
   }
 
-  void startQuickTour() async{
+  void startQuickTour() async {
+    await Future.delayed(Duration(seconds: 2));
     if (AppState.screenStack.last != ScreenItem.dialog &&
         AppState.screenStack.last != ScreenItem.modalsheet) {
-          await Future.delayed(Duration(seconds: 1));      AppState.delegate!.appState.setCurrentTabIndex = locator<RootController>()
+      AppState.delegate!.appState.setCurrentTabIndex = locator<RootController>()
           .navItems
           .values
           .toList()
