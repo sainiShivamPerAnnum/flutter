@@ -1,3 +1,5 @@
+import 'package:felloapp/core/model/helper_model.dart';
+
 class JourneyLevel {
   int? start;
   int? end;
@@ -7,6 +9,9 @@ class JourneyLevel {
 
   JourneyLevel(
       {this.start, this.end, this.breakpoint, this.pageEnd, this.level});
+
+  static final helper =
+      HelperModel<JourneyLevel>((map) => JourneyLevel.fromMap(map));
 
   JourneyLevel.fromMap(Map<String, dynamic> map) {
     start = map['start'];

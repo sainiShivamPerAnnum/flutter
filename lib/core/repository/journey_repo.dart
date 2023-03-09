@@ -150,6 +150,7 @@ class JourneyRepository extends BaseRepo {
 
   //Fetch Journey pages from journey collection
   //params: start page and direction[up,down]
+
   Future<ApiResponse<List<JourneyPage>>> fetchJourneyPages(
     int page,
     String direction,
@@ -199,6 +200,51 @@ class JourneyRepository extends BaseRepo {
     }
   }
 
+  Future<ApiResponse<List<JourneyPage>>> fetchNewJourneyPages(
+    int page,
+    String direction,
+  ) async {
+    try {
+      final isUp = direction == PAGE_DIRECTION_UP;
+      final limit = 1; // inclusive limit so actually 2 pages are returned
+
+      final startPage = max(isUp ? page : page - limit, 1);
+      final endPage = isUp ? page + limit : page;
+
+      final token = await getBearerToken();
+      final queryParams = {"page": page.toString(), "direction": direction};
+
+      return await _cacheService.cachedApi(
+          CacheKeys.JOURNEY_PAGE,
+          TTL.ONE_DAY,
+          () => APIService.instance.getData(
+                ApiPath.kJourney,
+                token: token,
+                cBaseUrl: _baseUrlJourney,
+                queryParams: queryParams,
+              ), (responseData) {
+        final start = responseData["start"];
+        final end = responseData["end"];
+        List<dynamic>? items = responseData["items"];
+        if (items!.isEmpty)
+          return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+
+        for (int i = start; i <= end; i++) {
+          journeyPages.add(JourneyPage.fromMap(items[i - start as int], i));
+        }
+
+        return ApiResponse<List<JourneyPage>>(
+            model: journeyPages.sublist(page - 1, page + 1), code: 200);
+      });
+    } on FetchDataException catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 500);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   // Returns User Journey stats
   // refer UserJourneyStatsModel for the response
   Future<ApiResponse<UserJourneyStatsModel>> getUserJourneyStats() async {
@@ -222,45 +268,33 @@ class JourneyRepository extends BaseRepo {
     }
   }
 
-  // Helper Methods
-  // Just the upload created journey page data
-  // Future<void> uploadJourneyPage(JourneyPage page) async {
-  //   try {
-  //     // final String _uid = _userService.baseUser.uid;
-  //     final _token = await getBearerToken();
-  //     final _body = page.toMap();
-  //     dev.log(json.encode(_body));
-  //     final response = await APIService.instance.postData(
-  //       ApiPath.getJourney(2),
-  //       token: _token,
-  //       body: _body,
-  //       cBaseUrl: "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev",
-  //     );
-  //     logger.d(response);
-  //     return true;
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //     return false;
-  //   }
-  // }
-
-  Future<ApiResponse<List<JourneyLevel>>> getJourneyLevels() async {
+  Future<ApiResponse<List<JourneyLevel>>> getJourneyLevels(
+      String version) async {
     try {
-      List<JourneyLevel> journeylevels = [];
+      List<JourneyLevel> journeyLevels = [];
       final _token = await getBearerToken();
-      final response = await APIService.instance.getData(ApiPath.kJourneyLevel,
-          token: _token, cBaseUrl: _cdnBaseUrl, decryptData: true);
+      // final response = await APIService.instance.getData(
+      //     "journeyLevels${version.toUpperCase()}.txt",
+      //     token: _token,
+      //     cBaseUrl: _cdnBaseUrl,
+      //     decryptData: true);
+
+      final response = await APIService.instance.getData(
+        ApiPath.kJourneyLevel,
+        token: _token,
+        cBaseUrl: _baseUrlJourney,
+      );
 
       final responseData = response["data"];
+      // journeyLevels = JourneyLevel.helper.fromMapArray(responseData);
       responseData.forEach((level, levelDetails) {
-        journeylevels.add(JourneyLevel.fromMap(levelDetails));
+        journeyLevels.add(JourneyLevel.fromMap(levelDetails));
       });
-      logger!.d("Response from get Journey Level: $response");
-      return ApiResponse(model: journeylevels, code: 200);
+      logger.d("Response from get Journey Level: $response");
+      return ApiResponse(model: journeyLevels, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
-      return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch user levels", 400);
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

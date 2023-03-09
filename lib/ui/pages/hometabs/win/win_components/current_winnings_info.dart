@@ -57,7 +57,8 @@ class CurrentWinningsInfo extends StatelessWidget {
                     SizedBox(
                       height: SizeConfig.padding16,
                     ),
-                    currentWinning >= referralService.minWithdrawPrizeAmt!
+                    currentWinning >=
+                            (referralService.minWithdrawPrizeAmt ?? 200)
                         ? AppPositiveBtn(
                             height: SizeConfig.screenWidth! * 0.12,
                             btnText: locale.redeem,

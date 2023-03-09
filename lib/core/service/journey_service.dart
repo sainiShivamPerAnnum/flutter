@@ -229,8 +229,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   Future<void> init() async {
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth! * 2.165;
-    await getJourneyLevels();
     await updateUserJourneyStats();
+    await getJourneyLevels();
     await fetchNetworkPages();
     checkIfJourneyOnboardingRequried();
   }
@@ -318,7 +318,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //Fetching journeypages from Journey Repository
   Future<void> fetchNetworkPages() async {
     JourneyLevel currentLevel = levels!.firstWhere(
-        (levelData) => levelData.level == _userService.userJourneyStats!.level);
+        (levelData) => levelData.level == _userService.userJourneyStats!.level,
+        orElse: () => levels![0]);
     final int fetches = (currentLevel.pageEnd! / 2).ceil();
     for (int i = 0; i < fetches; i++) {
       //fetch all the pages till where user is currently on
@@ -392,7 +393,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //Fetch Levels of Journey
   getJourneyLevels() async {
-    final res = await _journeyRepo.getJourneyLevels();
+    final res = await _journeyRepo
+        .getJourneyLevels(_userService.userJourneyStats?.version ?? 'v1');
     if (res.isSuccess())
       levels = res.model;
     else {
