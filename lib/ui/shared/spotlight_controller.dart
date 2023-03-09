@@ -10,6 +10,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:showcaseview/showcaseview.dart';
 
@@ -31,6 +32,7 @@ class SpotLightController {
       BehaviorSubject.seeded([UserFlow.initial]);
   bool isTourStarted = false;
   set userFlow(UserFlow flow) {
+    if (_stream.isClosed) return;
     if (!_isInitiated) return;
     if (_stream.value.contains(flow)) return;
     _stream.add([..._stream.value, flow]);
@@ -219,8 +221,8 @@ class StartTourDialog extends StatelessWidget {
                 SizedBox(
                   height: SizeConfig.padding16,
                 ),
-                Image.asset(
-                  'assets/images/tour.webp',
+                SvgPicture.asset(
+                  'assets/svg/tour_svg.svg',
                   height: SizeConfig.screenHeight! * 0.5,
                 ),
                 SizedBox(
@@ -261,7 +263,10 @@ class StartTourDialog extends StatelessWidget {
                           UserFlow.onSaveTab;
                     },
                   ),
-                )
+                ),
+                SizedBox(
+                  height: SizeConfig.padding12,
+                ),
               ],
             ),
           ),

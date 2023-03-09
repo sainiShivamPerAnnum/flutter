@@ -279,18 +279,11 @@ class WithDrawWarningScreen extends StatelessWidget {
               child: AppPositiveBtn(
                 btnText: 'PLAY GAMES NOW',
                 onPressed: () {
-                  AppState.backButtonDispatcher!.didPopRoute().then(
-                        (value) => AppState.backButtonDispatcher!
-                            .didPopRoute()
-                            .then(
-                              (value) => AppState.backButtonDispatcher!
-                                  .didPopRoute()
-                                  .then((value) => AppState.delegate!.appState
-                                      .onItemTapped(DynamicUiUtils.navBar
-                                          .indexWhere(
-                                              (element) => element == 'PL'))),
-                            ),
-                      );
+                  AppState.backButtonDispatcher!.didPopRoute();
+                  AppState.backButtonDispatcher!.didPopRoute();
+
+                  AppState.delegate!.appState.onItemTapped(DynamicUiUtils.navBar
+                      .indexWhere((element) => element == 'PL'));
                 },
               ),
             ),

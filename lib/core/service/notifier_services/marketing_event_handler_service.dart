@@ -65,9 +65,12 @@ class MarketingEventHandlerService
   //   await checkUserDailyAppCheckInStatus();
   // }
 
+  void removeHappyHourBanner() {
+    showHappyHourBanner = false;
+    notifyListeners(MarketingEventsHandlerProperties.HappyHour);
+  }
+
   late bool showHappyHourBanner = false;
-
-
 
   Future<void> getHappyHourCampaign() async {
     showHappyHourBanner = false;
@@ -78,7 +81,7 @@ class MarketingEventHandlerService
       //[Not Started]
       if (data.happyHourType == HappyHourType.notStarted) return;
 
-    if (locator.isRegistered<HappyHourCampign>()) {
+      if (locator.isRegistered<HappyHourCampign>()) {
         locator.unregister<HappyHourCampign>();
       }
       locator.registerSingleton<HappyHourCampign>(campaign.model!);
