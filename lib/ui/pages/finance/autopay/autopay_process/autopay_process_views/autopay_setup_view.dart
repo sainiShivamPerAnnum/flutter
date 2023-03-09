@@ -18,7 +18,7 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
       required this.isSetup,
       required this.onCtaTapped,
       required this.isDaily,
-      required this.onAmountValueChanged,
+      // required this.onAmountValueChanged,
       required this.onChipsTapped,
       required this.onFrequencyTapped,
       required this.amountFieldController,
@@ -28,7 +28,7 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
   final Function onCtaTapped;
   final S locale = locator<S>();
   final bool isDaily;
-  final Function onAmountValueChanged;
+  // final Function onAmountValueChanged;
   final Function onChipsTapped;
   final Function onFrequencyTapped;
   final TextEditingController amountFieldController;
@@ -121,65 +121,11 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
         SizedBox(
           height: SizeConfig.screenWidth! * 0.0693,
         ),
-        Container(
-          width: SizeConfig.screenWidth! * 0.784,
-          decoration: BoxDecoration(
-            color: UiConstants.kTextFieldColor,
-            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-            border: Border.all(
-              color: UiConstants.kTextColor.withOpacity(0.1),
-              width: SizeConfig.border1,
-            ),
-          ),
-          child: Stack(
-            children: [
-              Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "₹",
-                      style: TextStyles.rajdhaniB
-                          .size(SizeConfig.screenWidth! * 0.1067),
-                    ),
-                    SizedBox(
-                      width: ((SizeConfig.screenWidth! * 0.065) *
-                          amountFieldController.text.length.toDouble()),
-                      child: AppTextField(
-                        textEditingController: amountFieldController,
-                        isEnabled: true,
-                        validator: (val) => null,
-                        autoFocus: true,
-                        onChanged: (val) => onAmountValueChanged(val),
-                        keyboardType: TextInputType.number,
-                        inputDecoration: InputDecoration(
-                          focusedBorder: InputBorder.none,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          // isCollapse: true,
-                          isDense: true,
-                        ),
-                        textAlign: TextAlign.center,
-                        textStyle: TextStyles.rajdhaniB
-                            .size(SizeConfig.screenWidth! * 0.1067),
-                        // height: SizeConfig.screenWidth * 0.1706,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: SizeConfig.screenWidth! * 0.0666,
-                right: SizeConfig.screenWidth! * 0.0666,
-                child: Text(
-                  isDaily ? locale.daily : locale.weekly,
-                  style: TextStyles.sourceSans.body4.setOpacity(0.4),
-                ),
-              ),
-            ],
-          ),
-        ),
+        CenterTextField(
+            amountFieldController: amountFieldController,
+            // onAmountValueChanged: onAmountValueChanged,
+            isDaily: isDaily,
+            locale: locale),
         SizedBox(
           height: SizeConfig.padding32,
         ),
@@ -242,7 +188,7 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
             // } else {
             //   trackSIPUpdateEvent();
             // }
-            onCtaTapped(isSetup);
+            await onCtaTapped(isSetup);
             // model.setSubscriptionAmount(
             //   int.tryParse(
             //     model.amountFieldController == null ||
@@ -261,6 +207,136 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
           height: SizeConfig.pageHorizontalMargins,
         ),
       ],
+    );
+  }
+}
+
+class CenterTextField extends StatefulWidget {
+  const CenterTextField({
+    super.key,
+    required this.amountFieldController,
+    // required this.onAmountValueChanged,
+    required this.isDaily,
+    required this.locale,
+  });
+
+  final TextEditingController amountFieldController;
+  // final Function onAmountValueChanged;
+  final bool isDaily;
+  final S locale;
+
+  @override
+  State<CenterTextField> createState() => _CenterTextFieldState();
+}
+
+class _CenterTextFieldState extends State<CenterTextField> {
+  double? _fieldWidth;
+
+  double? get fieldWidth => this._fieldWidth;
+
+  set fieldWidth(double? value) {
+    setState(() {
+      this._fieldWidth = value;
+    });
+  }
+
+  @override
+  initState() {
+    super.initState();
+    _fieldWidth = ((SizeConfig.screenWidth! * 0.08) *
+        widget.amountFieldController.text.length.toDouble());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth! * 0.784,
+      decoration: BoxDecoration(
+        color: UiConstants.kTextFieldColor,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+        border: Border.all(
+          color: UiConstants.kTextColor.withOpacity(0.1),
+          width: SizeConfig.border1,
+        ),
+      ),
+      child: Stack(
+        children: [
+          Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "₹",
+                  style: TextStyles.rajdhaniB
+                      .size(SizeConfig.screenWidth! * 0.1067),
+                ),
+                SizedBox(
+                    width: fieldWidth,
+                    child: TextField(
+                      controller: widget.amountFieldController,
+                      keyboardType: TextInputType.number,
+                      autofocus: true,
+                      style: TextStyles.rajdhaniB
+                          .size(SizeConfig.screenWidth! * 0.1067),
+                      decoration: InputDecoration(
+                        focusedBorder: InputBorder.none,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        // isCollapse: true,
+                        isDense: true,
+                      ),
+                      onChanged: (String? val) {
+                        // widget.onAmountValueChanged(val);
+                        if ((val ?? '').isEmpty)
+                          fieldWidth = 10.0;
+                        else
+                          fieldWidth = ((SizeConfig.screenWidth! * 0.075) *
+                              widget.amountFieldController.text.length
+                                  .toDouble());
+                      },
+                    )
+                    // AppTextField(
+                    //   textEditingController: widget.amountFieldController,
+                    //   isEnabled: true,
+                    //   validator: (val) => null,
+                    //   autoFocus: true,
+                    //   onChanged: (String? val) {
+                    //     // widget.onAmountValueChanged(val);
+                    //     if ((val ?? '').isEmpty)
+                    //       fieldWidth = 10;
+                    //     else
+                    //       fieldWidth = ((SizeConfig.screenWidth! * 0.065) *
+                    //           widget.amountFieldController.text.length
+                    //               .toDouble());
+                    //   },
+                    //   keyboardType: TextInputType.number,
+                    //   inputDecoration: InputDecoration(
+                    //     focusedBorder: InputBorder.none,
+                    //     border: InputBorder.none,
+                    //     enabledBorder: InputBorder.none,
+                    //     // isCollapse: true,
+                    //     isDense: true,
+                    //   ),
+                    //   textAlign: TextAlign.center,
+                    //   textStyle: TextStyles.rajdhaniB
+                    //       .size(SizeConfig.screenWidth! * 0.1067),
+                    //   // height: SizeConfig.screenWidth * 0.1706,
+                    // ),
+                    ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: SizeConfig.screenWidth! * 0.0666,
+            right: SizeConfig.screenWidth! * 0.0666,
+            child: Text(
+              widget.isDaily ? widget.locale.daily : widget.locale.weekly,
+              style: TextStyles.sourceSans.body4.setOpacity(0.4),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

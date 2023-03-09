@@ -220,6 +220,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   checkAutoPayState() async {
     await _subService.getSubscription();
+    amountFieldController.text = '100';
     autosaveState = _subService.autosaveState;
     await getChipAmounts();
     if (autosaveState == AutosaveState.IDLE) await getAvailableUpiApps();

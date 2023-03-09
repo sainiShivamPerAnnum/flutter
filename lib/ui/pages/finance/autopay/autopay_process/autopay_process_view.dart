@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -68,16 +66,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                     const NewSquareBackground(),
                     SafeArea(
                       child: model.autosaveState == AutosaveState.INIT
-                          ? Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  CircularProgressIndicator.adaptive(),
-                                  Text(
-                                      "Your Autosave is progress, come back later.")
-                                ],
-                              ),
-                            )
+                          ? _buildPendingUI(model)
                           : model.autosaveState == AutosaveState.IDLE
                               ? PageView(
                                   controller: model.pageController,
@@ -97,20 +86,17 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                                         }),
                                     AutoPaySetupOrUpdateView(
                                         isSetup: true,
-                                        onCtaTapped: (_) {
-                                          model.createSubscription();
+                                        onCtaTapped: (_) async {
+                                          Haptic.vibrate();
+                                          await model.createSubscription();
                                         },
                                         isDaily: model.isDaily,
-                                        onAmountValueChanged: (val) {
-                                          model.amountFieldController.text =
-                                              val.toString();
-                                          model.notifyListeners();
-                                        },
                                         onChipsTapped: (int val) {
                                           FocusScope.of(context).unfocus();
                                           Haptic.vibrate();
                                           model.amountFieldController.text =
                                               val.toString();
+                                          model.notifyListeners();
                                         },
                                         onFrequencyTapped: (FREQUENCY freq) {
                                           Haptic.vibrate();
@@ -139,23 +125,23 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                                   ),
                                 ),
                     ),
-                    FutureBuilder(
-                      future: Future.value(true),
-                      builder:
-                          (BuildContext context, AsyncSnapshot<void> snap) {
-                        //If we do not have data as we wait for the future to complete,
-                        //show any widget, eg. empty Container
-                        if (!snap.hasData) {
-                          return Container();
-                        }
+                    // FutureBuilder(
+                    //   future: Future.value(true),
+                    //   builder:
+                    //       (BuildContext context, AsyncSnapshot<void> snap) {
+                    //     //If we do not have data as we wait for the future to complete,
+                    //     //show any widget, eg. empty Container
+                    //     if (!snap.hasData) {
+                    //       return Container();
+                    //     }
 
-                        //Otherwise the future completed, so we can now safely use the controller.page
-                        if (model.pageController.page == 2)
-                          return CustomKeyboardSubmitButton(onSubmit: () {});
-                        else
-                          return SizedBox();
-                      },
-                    ),
+                    //     //Otherwise the future completed, so we can now safely use the controller.page
+                    //     if (model.pageController.page == 2)
+                    //       return CustomKeyboardSubmitButton(onSubmit: () {});
+                    //     else
+                    //       return SizedBox();
+                    //   },
+                    // ),
                   ],
                 ),
         );
@@ -166,78 +152,47 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   Widget _buildPendingUI(AutosaveProcessViewModel model) {
     S locale = S.of(context);
     final AnalyticsService? _analyticService = locator<AnalyticsService>();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: SizeConfig.screenWidth! * 0.12,
-        ),
-        Text(
-          locale.setUpAutoSave,
-          style: TextStyles.sourceSans.body3.setOpacity(0.5),
-        ),
-        SizedBox(
-          height: SizeConfig.padding10,
-        ),
-        Text(
-          locale.autoPayApproveReq,
-          style: TextStyles.rajdhaniSB.title4,
-        ),
-        SizedBox(
-          height: SizeConfig.screenWidth! * 0.1,
-        ),
-
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
-        Text(
-          locale.txnApprovePaymentReq,
-          style: TextStyles.sourceSans.body1,
-          textAlign: TextAlign.center,
-        ),
-        Spacer(),
-        Text(
-          locale.txnDontPressBack,
-          style: TextStyles.sourceSansL.body4.colour(Colors.red),
-        ),
-        SizedBox(
-          height: SizeConfig.padding24,
-        ),
-        // if (model.showAppLaunchButton && PlatformUtils.isAndroid)
-
-        SizedBox(
-          height: SizeConfig.padding24,
-        ),
-        // if (model.pageController != null && model.pageController.page == 1.0)
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              locale.txnPageExpiresIn,
-              style: TextStyles.sourceSansL.body4,
-            ),
-            TweenAnimationBuilder<Duration>(
-              duration: Duration(minutes: 8),
-              tween: Tween(begin: Duration(minutes: 8), end: Duration.zero),
-              onEnd: () {
-                log('Timer ended');
-              },
-              builder: (BuildContext context, Duration value, Widget? child) {
-                final minutes = value.inMinutes;
-                final seconds = value.inSeconds % 60;
-                return Text(
-                  " ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}s",
-                  style: TextStyles.sourceSans.body4,
-                );
-              },
-            ),
-          ],
-        ),
-        SizedBox(
-          height: SizeConfig.padding32,
-        ),
-      ],
+    return Container(
+      width: SizeConfig.screenWidth,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.screenWidth! * 0.12,
+          ),
+          Text(
+            locale.setUpAutoSave,
+            style: TextStyles.sourceSans.body3.setOpacity(0.5),
+          ),
+          SizedBox(
+            height: SizeConfig.padding10,
+          ),
+          Text(
+            locale.autoPayApproveReq,
+            style: TextStyles.rajdhaniSB.title4,
+          ),
+          SizedBox(
+            height: SizeConfig.screenWidth! * 0.1,
+          ),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
+          Text(
+            locale.txnApprovePaymentReq,
+            style: TextStyles.sourceSans.body1,
+            textAlign: TextAlign.center,
+          ),
+          Spacer(),
+          Text(
+            "We'll notify you once your autosave is confirmed",
+            style: TextStyles.sourceSansL.body4.colour(Colors.amber),
+          ),
+          SizedBox(
+            height: SizeConfig.pageHorizontalMargins,
+          ),
+        ],
+      ),
     );
   }
 
