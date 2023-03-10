@@ -38,18 +38,19 @@ class Win extends StatelessWidget {
                       children: [
                         const Salutation(),
                         AccountInfoTiles(
-                            title: locale.abMyProfile, uri: "/profile"),
-                        AccountInfoTiles(
-                            title: locale.kycTitle, uri: "/kycVerify"),
-                        AccountInfoTiles(
-                          title: 'Quick Tour',
+                          title: 'App Walkthrough',
                           uri: "",
                           onTap: () {
                             locator<AnalyticsService>()
-                                .track(eventName: 'Quick tour Click');
+                                .track(eventName: 'App Walkthrough');
                             SpotLightController.instance.startQuickTour();
                           },
                         ),
+                        AccountInfoTiles(
+                            title: locale.abMyProfile, uri: "/profile"),
+                        AccountInfoTiles(
+                            title: locale.kycTitle, uri: "/kycVerify"),
+
                         AccountInfoTiles(
                             title: locale.bankAccDetails, uri: "/bankDetails"),
                         //Scratch Cards count and navigation
