@@ -229,8 +229,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   Future<void> init() async {
     pageWidth = SizeConfig.screenWidth;
     pageHeight = pageWidth! * 2.165;
-    await getJourneyLevels();
     await updateUserJourneyStats();
+    await getJourneyLevels();
     await fetchNetworkPages();
     checkIfJourneyOnboardingRequried();
   }
@@ -318,13 +318,16 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //Fetching journeypages from Journey Repository
   Future<void> fetchNetworkPages() async {
     JourneyLevel currentLevel = levels!.firstWhere(
-        (levelData) => levelData.level == _userService.userJourneyStats!.level);
+        (levelData) => levelData.level == _userService.userJourneyStats!.level,
+        orElse: () => levels![0]);
     final int fetches = (currentLevel.pageEnd! / 2).ceil();
     for (int i = 0; i < fetches; i++) {
       //fetch all the pages till where user is currently on
       ApiResponse<List<JourneyPage>> response =
-          await _journeyRepo.fetchJourneyPages(
-              pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
+          await _journeyRepo.fetchNewJourneyPages(
+              pageCount + 1,
+              JourneyRepository.PAGE_DIRECTION_UP,
+              _userService.userJourneyStats!.version);
       if (!response.isSuccess()) {
         _internalOpsService.logFailure(
           _userService.baseUser?.uid ?? '',
@@ -349,8 +352,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //Fetching additional journeypages from Journey Repository
   Future<void> fetchMoreNetworkPages() async {
-    ApiResponse<List<JourneyPage>> response = await _journeyRepo
-        .fetchJourneyPages(pageCount + 1, JourneyRepository.PAGE_DIRECTION_UP);
+    ApiResponse<List<JourneyPage>> response =
+        await _journeyRepo.fetchNewJourneyPages(
+            pageCount + 1,
+            JourneyRepository.PAGE_DIRECTION_UP,
+            _userService.userJourneyStats!.version);
     if (!response.isSuccess()) {
       if (response.code == 500) return;
       _internalOpsService.logFailure(
@@ -360,6 +366,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       );
       return BaseUtil.showNegativeAlert("", response.errorMessage);
     } else {
+      if ((response.model ?? []).isEmpty) return;
       if (pages == null || pages!.isEmpty)
         pages = response.model;
       else
@@ -392,7 +399,8 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //Fetch Levels of Journey
   getJourneyLevels() async {
-    final res = await _journeyRepo.getJourneyLevels();
+    final res = await _journeyRepo
+        .getJourneyLevels(_userService.userJourneyStats?.version ?? 'v1');
     if (res.isSuccess())
       levels = res.model;
     else {

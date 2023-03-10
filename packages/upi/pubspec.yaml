@@ -1,7 +1,7 @@
 name: upi_pay
 description: A new Flutter package project.
 version: 0.0.1
-homepage:
+homepage: http://www.google.com
 
 environment:
   sdk: '>=2.18.4 <3.0.0'

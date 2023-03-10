@@ -30,7 +30,7 @@ class GetterRepository extends BaseRepo {
 
   final _cdnBaseUrl = FlavorConfig.isDevelopment()
       ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
-      : 'https://vbbe56oey5.execute-api.ap-south-1.amazonaws.com/prod';
+      : 'https://d11q4cti75qmcp.cloudfront.net/';
 
   Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
     String? type,

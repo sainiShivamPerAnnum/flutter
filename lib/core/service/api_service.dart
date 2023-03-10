@@ -9,7 +9,6 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 abstract class API {
@@ -81,16 +80,13 @@ class APIService implements API {
       logger!.d("Full url: $finalPath");
       logger!.d("Get Response: ${response.statusCode}");
       logger!.d("Get Response: ${response.body}");
-      Response res = response;
       if (decryptData) {
         final data = await _decryptData(response.body);
         log(data!);
 
-        final finalData = data.replaceAll(RegExp('[\u0002]+'), '');
-        log(finalData);
-        return json.decode(finalData);
+        return json.decode(data);
       }
-      responseJson = returnResponse(res);
+      responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     } on UnauthorizedException {
@@ -320,15 +316,15 @@ class APIService implements API {
         throw UnauthorizedException(response.body.toString());
       case 500:
       default:
-                            throw FetchDataException(responseJson["message"]);
+        throw FetchDataException(responseJson["message"]);
     }
   }
 
   Future<String?> _decryptData(String data) async {
     final encrypter = Encrypter(AES(
-        Key.fromUtf8(utf8.decode(_CACHE_ENCRYPTION_KEY.codeUnits)),
-        mode: AESMode.cbc,
-        padding: null));
+      Key.fromUtf8(utf8.decode(_CACHE_ENCRYPTION_KEY.codeUnits)),
+      mode: AESMode.cbc,
+    ));
 
     final _data = encrypter.decrypt16(
       data,

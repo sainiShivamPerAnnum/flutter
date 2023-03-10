@@ -1,4 +1,3 @@
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:logger/logger.dart';
 
 class CustomLogger {

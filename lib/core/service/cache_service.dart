@@ -55,11 +55,11 @@ class CacheService {
   }
 
   Future<ApiResponse<T>> cachedApi<T>(
-    String key,
-    int ttl,
-    Future<dynamic> Function() apiReq,
-    ApiResponse<T> Function(dynamic) parseData,
-  ) async {
+      String key,
+      int ttl,
+      Future<dynamic> Function() apiReq,
+      ApiResponse<T> Function(dynamic) parseData,
+      {bool isFromCdn = false}) async {
     final cachedData = await getData(key);
 
     if (cachedData != null && ttl != 0) {
@@ -71,29 +71,28 @@ class CacheService {
         _logger!.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);
         await invalidateByKey(key);
-        return await _processApiAndSaveToCache(
-          key,
-          ttl,
-          apiReq,
-          parseData,
-        );
+        return await _processApiAndSaveToCache(key, ttl, apiReq, parseData,
+            isFromCdn: isFromCdn);
       }
     }
 
-    return await _processApiAndSaveToCache(key, ttl, apiReq, parseData);
+    return await _processApiAndSaveToCache(key, ttl, apiReq, parseData,
+        isFromCdn: isFromCdn);
   }
 
   Future<ApiResponse<T>> _processApiAndSaveToCache<T>(
-    String key,
-    int ttl,
-    Future<dynamic> Function() apiReq,
-    ApiResponse<T> Function(dynamic) parseData,
-  ) async {
+      String key,
+      int ttl,
+      Future<dynamic> Function() apiReq,
+      ApiResponse<T> Function(dynamic) parseData,
+      {bool isFromCdn = false}) async {
     final response = await apiReq();
 
     final res = parseData(response);
     try {
-      if (response != null &&
+      if (isFromCdn) {
+        if (response != null) await writeMap(key, ttl, response);
+      } else if (response != null &&
           response['data'] != null &&
           response['data'].isNotEmpty &&
           ttl != 0) await writeMap(key, ttl, response);
