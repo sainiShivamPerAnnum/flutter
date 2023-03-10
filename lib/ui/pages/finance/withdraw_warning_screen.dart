@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/game_tier_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
@@ -291,6 +292,8 @@ class WithDrawWarningScreen extends StatelessWidget {
               child: AppPositiveBtn(
                 btnText: 'PLAY GAMES NOW',
                 onPressed: () {
+                    locator<AnalyticsService>()
+                        .track(eventName: 'Withdraw screen play games click');
                   while (AppState.screenStack.length > 1) {
                     AppState.backButtonDispatcher!.didPopRoute();
                   }

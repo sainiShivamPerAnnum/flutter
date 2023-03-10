@@ -288,6 +288,7 @@ class StartTourDialog extends StatelessWidget {
                   child: AppPositiveBtn(
                     btnText: 'Start Tour',
                     onPressed: () {
+                      
                       AppState.backButtonDispatcher!.didPopRoute();
                       SpotLightController.instance.init();
 

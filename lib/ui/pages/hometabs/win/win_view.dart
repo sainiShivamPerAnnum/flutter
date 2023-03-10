@@ -1,3 +1,4 @@
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/news_component.dart';
@@ -56,6 +57,8 @@ class Win extends StatelessWidget {
                             title: 'Quick Tour',
                             uri: "",
                             onTap: () {
+                              locator<AnalyticsService>()
+                                  .track(eventName: 'Quick tour Click');
                               SpotLightController.instance.startQuickTour();
                             },
                           ),
