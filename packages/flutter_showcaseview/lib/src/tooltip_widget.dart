@@ -164,7 +164,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
     if (maxTextWidth > widget.screenSize!.width - tooltipScreenEdgePadding) {
       tooltipWidth = widget.screenSize!.width - tooltipScreenEdgePadding;
     } else {
-      tooltipWidth = maxTextWidth + tooltipTextPadding;
+      tooltipWidth = maxTextWidth * 1.0;
     }
   }
 
@@ -194,9 +194,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
         final rightPosition = widget.position!.getCenter() + (width * 0.5);
 
         return (rightPosition + width) > MediaQuery.of(context).size.width
-            ? _kDefaultPaddingFromParent <= 20
-                ? _kDefaultPaddingFromParent
-                : _kDefaultPaddingFromParent - 20
+            ? 0
             : null;
       } else {
         return null;
@@ -375,7 +373,6 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
               child: Material(
                 type: MaterialType.transparency,
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
                   padding: widget.showArrow
                       ? EdgeInsets.only(
                           top: paddingTop - (isArrowUp ? arrowHeight : 0),
@@ -471,7 +468,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                       child: MaterialButton(
                                         onPressed: () {
                                           widget.onTooltipTap?.call();
-                                          HapticFeedback.mediumImpact();
+                                          HapticFeedback.vibrate();
                                         },
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
