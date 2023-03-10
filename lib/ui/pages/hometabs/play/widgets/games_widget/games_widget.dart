@@ -10,7 +10,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:showcaseview/showcaseview.dart';
 
@@ -47,9 +46,8 @@ class GamesWidget extends StatelessWidget {
                   mainAxisSpacing: 12),
             ),
           );
-
+        
         if (model.gameTier == null) return SizedBox();
-
         final _viewModel = GameViewModel.fromGameTier(model.gameTier!)
           ..processData();
         return Container(
