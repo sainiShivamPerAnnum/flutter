@@ -76,7 +76,8 @@ class CacheService {
       }
     }
 
-    return await _processApiAndSaveToCache(key, ttl, apiReq, parseData);
+    return await _processApiAndSaveToCache(key, ttl, apiReq, parseData,
+        isFromCdn: isFromCdn);
   }
 
   Future<ApiResponse<T>> _processApiAndSaveToCache<T>(

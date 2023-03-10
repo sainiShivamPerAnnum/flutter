@@ -230,48 +230,48 @@ class JourneyRepository extends BaseRepo {
                 model: journeyPages.sublist(startPage), code: 200);
         }
       }
-      final response = await APIService.instance.getData(
-          "journey_${version.toLowerCase()}.txt",
-          token: token,
-          cBaseUrl: _cdnBaseUrl,
-          queryParams: queryParams,
-          decryptData: true);
+      // final response = await APIService.instance.getData(
+      //     "journey_${version.toLowerCase()}.txt",
+      //     token: token,
+      //     cBaseUrl: _cdnBaseUrl,
+      //     queryParams: queryParams,
+      //     decryptData: true);
 
-      List<dynamic>? items = response;
+      // List<dynamic>? items = response;
 
-      if (items!.isEmpty)
-        return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+      // if (items!.isEmpty)
+      //   return ApiResponse<List<JourneyPage>>(model: [], code: 200);
 
-      for (int i = 0; i < items.length; i++) {
-        journeyPages.add(JourneyPage.fromMap(items[i], i + 1));
-      }
+      // for (int i = 0; i < items.length; i++) {
+      //   journeyPages.add(JourneyPage.fromMap(items[i], i + 1));
+      // }
 
-      return ApiResponse<List<JourneyPage>>(
-          model: [journeyPages[0], journeyPages[1]], code: 200);
+      // return ApiResponse<List<JourneyPage>>(
+      //     model: [journeyPages[0], journeyPages[1]], code: 200);
 
-      // return await _cacheService.cachedApi(
-      //     CacheKeys.JOURNEY_PAGE,
-      //     TTL.ONE_DAY,
-      //         isFromCdn: true,
-      //     () => APIService.instance.getData(
-      //         "journey${version.toUpperCase()}.txt",
-      //         token: token,
-      //         cBaseUrl: _cdnBaseUrl,
-      //         queryParams: queryParams,
+      return await _cacheService.cachedApi(
+          CacheKeys.JOURNEY_PAGE,
+          TTL.ONE_DAY,
+          isFromCdn: true,
+          () => APIService.instance.getData(
+                "journey_${version.toLowerCase()}.txt",
+                token: token,
+                cBaseUrl: _cdnBaseUrl,
+                queryParams: queryParams,
+                decryptData: true,
+              ), (responseData) {
+        List<dynamic>? items = responseData;
 
-      //         decryptData: true), (responseData) {
-      //   List<dynamic>? items = responseData;
+        if (items!.isEmpty)
+          return ApiResponse<List<JourneyPage>>(model: [], code: 200);
 
-      //   if (items!.isEmpty)
-      //     return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+        for (int i = 0; i < items.length; i++) {
+          journeyPages.add(JourneyPage.fromMap(items[i], i + 1));
+        }
 
-      //   for (int i = 0; i <= items.length; i++) {
-      //     journeyPages.add(JourneyPage.fromMap(items[i], i));
-      //   }
-
-      //   return ApiResponse<List<JourneyPage>>(
-      //       model: [journeyPages[0], journeyPages[1]], code: 200);
-      // });
+        return ApiResponse<List<JourneyPage>>(
+            model: [journeyPages[0], journeyPages[1]], code: 200);
+      });
     } on FetchDataException catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 500);
