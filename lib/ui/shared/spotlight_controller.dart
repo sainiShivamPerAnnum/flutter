@@ -28,6 +28,8 @@ class SpotLightController {
   late BuildContext _currentContext;
 
   BuildContext? saveViewContext;
+  BuildContext? playViewContext;
+  BuildContext? accountContext;
   BuildContext get currentContext => _currentContext;
 
   BehaviorSubject<List<UserFlow>> _stream =
@@ -139,7 +141,11 @@ class SpotLightController {
   Future<void> startPlayFlow({void Function()? onFinish}) async {
     await startShowcase([
       ShowCaseKeys.floCoinsKey,
+    ]);
+    await startShowcase([
       ShowCaseKeys.GamesKey,
+    ], playViewContext);
+    await startShowcase([
       ShowCaseKeys.AccountKey,
     ]);
   }
@@ -166,7 +172,7 @@ class SpotLightController {
     await startShowcase([
       ShowCaseKeys.ScratchCardKey,
       ShowCaseKeys.CurrentWinnings,
-    ]);
+    ], accountContext);
     if (!isSkipButtonClicked) {
       BaseUtil.openDialog(
           isBarrierDismissible: false,
