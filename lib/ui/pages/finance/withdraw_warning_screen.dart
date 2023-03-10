@@ -39,7 +39,7 @@ class WithDrawWarningScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       appBar: FAppBar(
-        title: 'Are you really sure?',
+        title: 'Confirm your action',
         leading: BackButton(
           onPressed: () => onClose.call(),
         ),
