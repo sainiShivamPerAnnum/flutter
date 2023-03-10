@@ -773,7 +773,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     );
   }
 
-  void screenCheck(String screenKey) async {
+  void screenCheck(String screenKey) {
     PageConfiguration? pageConfiguration;
     switch (screenKey) {
       case 'journey':
@@ -817,8 +817,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = LendboxDetailsPageConfig;
         break;
       case 'quickTour':
-        await Future.delayed(Duration(seconds: 2));
-        SpotLightController.instance.startQuickTour();
+        Future.delayed(Duration(seconds: 2), () {
+          SpotLightController.instance.startQuickTour();
+        });
+
         break;
       case 'lendboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;
