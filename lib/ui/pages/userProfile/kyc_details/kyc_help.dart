@@ -1,5 +1,7 @@
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/locator.dart';
 
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -117,6 +119,9 @@ class KycHelpView extends StatelessWidget {
               width: SizeConfig.screenWidth! * 0.8,
               btnText: 'PROCEED TO KYC',
               onPressed: () {
+                locator<AnalyticsService>().track(
+                  eventName: 'Proceed to kyc',
+                );
                 callBack.call();
               },
             ),

@@ -1,5 +1,7 @@
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -90,6 +92,9 @@ class BankDetailsHelpView extends StatelessWidget {
             AppPositiveBtn(
               btnText: 'PROCEED TO Add Bank Details',
               onPressed: () {
+                locator<AnalyticsService>().track(
+                  eventName: 'proceed to bank account tapped',
+                );
                 changeView.call();
               },
             ),

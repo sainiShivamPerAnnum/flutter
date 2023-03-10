@@ -1,10 +1,12 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/games_widget/game_view_model.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -171,11 +173,17 @@ class _LockedState extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (gameTier.showProgressIndicator)
+        if (gameTier.showProgressIndicator) {
+          locator<AnalyticsService>()
+              .track(eventName: 'Gaming tier tap', properties: {
+            'savings required to unlock':
+                gameTier.amountToCompleteLevel.round(),
+          });
           BaseUtil().openDepositOptionsModalSheet(
               amount: gameTier.amountToCompleteLevel.round(),
               title: "Save in any asset to unlock ${gameTier.title}",
               subtitle: 'Earn 1 token with every Rupee saved');
+        }
       },
       child: Container(
         decoration: BoxDecoration(
