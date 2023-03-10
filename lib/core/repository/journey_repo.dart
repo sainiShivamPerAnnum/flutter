@@ -56,6 +56,7 @@ class JourneyRepository extends BaseRepo {
   }
 
   void dump() {
+    journeyPages.clear();
     if (Directory(_filePathDirectory!).existsSync()) {
       Directory(_filePathDirectory!).deleteSync(recursive: true);
     }
@@ -203,39 +204,74 @@ class JourneyRepository extends BaseRepo {
   Future<ApiResponse<List<JourneyPage>>> fetchNewJourneyPages(
     int page,
     String direction,
+    String version,
   ) async {
     try {
-      final isUp = direction == PAGE_DIRECTION_UP;
-      final limit = 1; // inclusive limit so actually 2 pages are returned
+      // final isUp = direction == PAGE_DIRECTION_UP;
+      // final limit = 1; // inclusive limit so actually 2 pages are returned
 
-      final startPage = max(isUp ? page : page - limit, 1);
-      final endPage = isUp ? page + limit : page;
+      final startPage = page - 1; // max(isUp ? page : page - limit, 1);
+      final endPage = page; // isUp ? page + limit : page;
 
       final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
+      print(journeyPages.length);
 
-      return await _cacheService.cachedApi(
-          CacheKeys.JOURNEY_PAGE,
-          TTL.ONE_DAY,
-          () => APIService.instance.getData(
-                ApiPath.kJourney,
-                token: token,
-                cBaseUrl: _baseUrlJourney,
-                queryParams: queryParams,
-              ), (responseData) {
-        final start = responseData["start"];
-        final end = responseData["end"];
-        List<dynamic>? items = responseData["items"];
-        if (items!.isEmpty)
-          return ApiResponse<List<JourneyPage>>(model: [], code: 200);
-
-        for (int i = start; i <= end; i++) {
-          journeyPages.add(JourneyPage.fromMap(items[i - start as int], i));
+      if (journeyPages.isNotEmpty) {
+        if (journeyPages.length - 1 >= endPage)
+          return ApiResponse(
+              model: [journeyPages[startPage], journeyPages[endPage]],
+              code: 200);
+        else {
+          if (page > journeyPages.length)
+            return ApiResponse(model: [], code: 200);
+          else
+            return ApiResponse(
+                model: journeyPages.sublist(startPage), code: 200);
         }
+      }
+      final response = await APIService.instance.getData(
+          "journey_${version.toLowerCase()}.txt",
+          token: token,
+          cBaseUrl: _cdnBaseUrl,
+          queryParams: queryParams,
+          decryptData: true);
 
-        return ApiResponse<List<JourneyPage>>(
-            model: journeyPages.sublist(page - 1, page + 1), code: 200);
-      });
+      List<dynamic>? items = response;
+
+      if (items!.isEmpty)
+        return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+
+      for (int i = 0; i < items.length; i++) {
+        journeyPages.add(JourneyPage.fromMap(items[i], i + 1));
+      }
+
+      return ApiResponse<List<JourneyPage>>(
+          model: [journeyPages[0], journeyPages[1]], code: 200);
+
+      // return await _cacheService.cachedApi(
+      //     CacheKeys.JOURNEY_PAGE,
+      //     TTL.ONE_DAY,
+      //         isFromCdn: true,
+      //     () => APIService.instance.getData(
+      //         "journey${version.toUpperCase()}.txt",
+      //         token: token,
+      //         cBaseUrl: _cdnBaseUrl,
+      //         queryParams: queryParams,
+
+      //         decryptData: true), (responseData) {
+      //   List<dynamic>? items = responseData;
+
+      //   if (items!.isEmpty)
+      //     return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+
+      //   for (int i = 0; i <= items.length; i++) {
+      //     journeyPages.add(JourneyPage.fromMap(items[i], i));
+      //   }
+
+      //   return ApiResponse<List<JourneyPage>>(
+      //       model: [journeyPages[0], journeyPages[1]], code: 200);
+      // });
     } on FetchDataException catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 500);
@@ -273,23 +309,21 @@ class JourneyRepository extends BaseRepo {
     try {
       List<JourneyLevel> journeyLevels = [];
       final _token = await getBearerToken();
-      // final response = await APIService.instance.getData(
-      //     "journeyLevels${version.toUpperCase()}.txt",
-      //     token: _token,
-      //     cBaseUrl: _cdnBaseUrl,
-      //     decryptData: true);
-
       final response = await APIService.instance.getData(
-        ApiPath.kJourneyLevel,
-        token: _token,
-        cBaseUrl: _baseUrlJourney,
-      );
+          "journeyLevels${version.toUpperCase()}.txt",
+          token: _token,
+          cBaseUrl: _cdnBaseUrl,
+          decryptData: true);
 
-      final responseData = response["data"];
-      // journeyLevels = JourneyLevel.helper.fromMapArray(responseData);
-      responseData.forEach((level, levelDetails) {
-        journeyLevels.add(JourneyLevel.fromMap(levelDetails));
-      });
+      // final response = await APIService.instance.getData(
+      //   ApiPath.kJourneyLevel,
+      //   token: _token,
+      //   cBaseUrl: _baseUrlJourney,
+      // );
+
+      // final responseData = response["data"];
+      journeyLevels = JourneyLevel.helper.fromMapArray(response);
+
       logger.d("Response from get Journey Level: $response");
       return ApiResponse(model: journeyLevels, code: 200);
     } catch (e) {

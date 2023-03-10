@@ -84,9 +84,7 @@ class APIService implements API {
         final data = await _decryptData(response.body);
         log(data!);
 
-        final finalData = data.replaceAll(RegExp('[\u0002]+'), '').trim();
-        log(finalData);
-        return json.decode(finalData);
+        return json.decode(data);
       }
       responseJson = returnResponse(response);
     } on SocketException {
@@ -324,9 +322,9 @@ class APIService implements API {
 
   Future<String?> _decryptData(String data) async {
     final encrypter = Encrypter(AES(
-        Key.fromUtf8(utf8.decode(_CACHE_ENCRYPTION_KEY.codeUnits)),
-        mode: AESMode.cbc,
-        padding: null));
+      Key.fromUtf8(utf8.decode(_CACHE_ENCRYPTION_KEY.codeUnits)),
+      mode: AESMode.cbc,
+    ));
 
     final _data = encrypter.decrypt16(
       data,
