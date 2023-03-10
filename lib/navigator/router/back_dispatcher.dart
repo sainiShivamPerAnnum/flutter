@@ -69,6 +69,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     //   _journeyService!.isUserJourneyOnboarded = true;
     // }
 
+    if (SpotLightController.instance.startShowCase) {
+      SpotLightController.instance.startShowCase = false;
+      SpotLightController.instance.init();
+
+      SpotLightController.instance.userFlow = UserFlow.onSaveTab;
+    }
+
     if (locator<BackButtonActions>().isTransactionCancelled) {
       if (AppState.onTap != null &&
           AppState.type != null &&

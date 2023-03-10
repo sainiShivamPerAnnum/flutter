@@ -98,7 +98,7 @@ class NavBarIcon extends StatelessWidget {
           ? 'Tap on the Play section'
           : item.title == 'Save'
               ? 'What are you waiting for?\nStart your savings journey now!'
-              : 'You can find your scratch cards here. Tap on Account tab',
+              : 'You can find your scratch cards here. Tap on Account Section',
       child: Container(
           key: key,
           alignment: Alignment.center,

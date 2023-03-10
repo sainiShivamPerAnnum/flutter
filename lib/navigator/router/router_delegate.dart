@@ -817,7 +817,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = LendboxDetailsPageConfig;
         break;
       case 'quickTour':
-        SpotLightController.instance.startQuickTour();
+        Future.delayed(Duration(seconds: 2), () {
+          SpotLightController.instance.startQuickTour();
+        });
+
         break;
       case 'lendboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;

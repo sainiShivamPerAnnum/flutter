@@ -66,7 +66,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
               Showcase(
                 key: ShowCaseKeys.floCoinsKey,
                 description:
-                    'You get 1 token for every rupee you save in Digital Gold or Fello Flo',
+                    'For every rupee saved in Digital Gold or Fello Flo, you get 1 Fello token',
                 child: FelloCoinBar(
                     svgAsset: Assets.token,
                     key: ValueKey(Constants.FELLO_COIN_BAR)),
