@@ -168,10 +168,17 @@ class SpotLightController {
       ShowCaseKeys.CurrentWinnings,
     ]);
     if (!isSkipButtonClicked) {
+      BaseUtil.openDialog(
+          isBarrierDismissible: false,
+          addToScreenStack: true,
+          barrierColor: Colors.black.withOpacity(0.5),
+          content: Center(child: CircularProgressIndicator.adaptive()));
+
       if (await locator<ScratchCardService>().fetchAndVerifyScratchCardByID()) {
         await locator<ScratchCardService>()
             .showInstantScratchCardView(source: GTSOURCE.newuser);
       }
+      AppState.backButtonDispatcher!.didPopRoute();
       await startShowcase([ShowCaseKeys.SaveKey]);
     }
   }
