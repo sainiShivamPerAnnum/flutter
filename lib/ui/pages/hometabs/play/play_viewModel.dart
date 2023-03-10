@@ -14,18 +14,14 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/more_games_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/games_widget/games_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/pages/static/app_footer.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -42,9 +38,10 @@ class PlayViewModel extends BaseViewModel {
     locale = locator<S>();
     boxHeading = locale!.howGamesWork;
     boxTitles.addAll([
-      locale!.boxPlayTitle1,
-      locale!.boxPlayTitle2,
-      "Win scratch cards everytime you score",
+      'Earn tokens by saving in Gold or Flo',
+      'Use Fello tokens to play different games',
+      "Win scratch cards for every high score!",
+      "Save and maintain savings to play all games"
     ]);
   }
   final GetterRepository? _getterRepo = locator<GetterRepository>();
@@ -74,6 +71,7 @@ class PlayViewModel extends BaseViewModel {
     Assets.ludoGameAsset,
     Assets.token,
     Assets.gift,
+    "assets/svg/piggy_bank.svg",
   ];
   List<String> boxTitles = [];
   ////////////////////////////////////////////
@@ -176,7 +174,7 @@ class PlayViewModel extends BaseViewModel {
             heading: model.boxHeading,
             assetList: model.boxAssets,
             titleList: model.boxTitles,
-            height: SizeConfig.screenWidth! * 0.3,
+            height: SizeConfig.screenWidth! * 0.25,
           ));
           break;
         case 'GOW':

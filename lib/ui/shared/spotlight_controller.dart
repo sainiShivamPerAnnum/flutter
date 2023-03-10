@@ -42,6 +42,7 @@ class SpotLightController {
 
   bool isSkipButtonClicked = false;
   bool isQuickTour = false;
+  bool startShowCase = false;
 
   void init() {
     _isInitiated = true;
@@ -144,6 +145,7 @@ class SpotLightController {
   }
 
   Future<void> showTourDialog() async {
+    startShowCase = true;
     await BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissible: false,
@@ -193,7 +195,6 @@ class SpotLightController {
   }
 
   void startQuickTour() async {
-    await Future.delayed(Duration(seconds: 2));
     if (AppState.screenStack.last != ScreenItem.dialog &&
         AppState.screenStack.last != ScreenItem.modalsheet) {
       AppState.delegate!.appState.setCurrentTabIndex = locator<RootController>()
@@ -226,12 +227,12 @@ class StartTourDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
       ),
       elevation: 0.0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black.withOpacity(0.5),
       insetPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+          filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
           child: Container(
             child: Column(
               mainAxisSize: MainAxisSize.min,

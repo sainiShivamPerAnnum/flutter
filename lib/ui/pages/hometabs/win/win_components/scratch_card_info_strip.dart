@@ -34,7 +34,7 @@ class ScratchCardsInfoStrip extends StatelessWidget {
         Showcase(
           key: ShowCaseKeys.ScratchCardKey,
           description:
-              'All your Scratch cards go here. You can visit this section to see the list of scratch cards you have',
+              'All your scratch cards go here. You can win upto ₹25 and 200 Fello tokens on every scratch card!',
           child: Container(
             margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.pageHorizontalMargins,

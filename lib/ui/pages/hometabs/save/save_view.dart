@@ -36,9 +36,12 @@ class Save extends StatelessWidget {
               onFinish: () {
                 SpotLightController.instance.completer.complete();
                 SpotLightController.instance.isTourStarted = false;
+                SpotLightController.instance.startShowCase = false;
               },
-              onSkipButtonClicked: () =>
-                  SpotLightController.instance.isSkipButtonClicked = true,
+              onSkipButtonClicked: () {
+                SpotLightController.instance.isSkipButtonClicked = true;
+                SpotLightController.instance.startShowCase = false;
+              },
               builder: Builder(builder: (context) {
                 SpotLightController.instance.saveViewContext = context;
                 return SaveViewWrapper(model: model);

@@ -465,6 +465,7 @@ class _ShowcaseState extends State<Showcase> {
     if (!_showShowCase) return const SizedBox.shrink();
 
     return Stack(
+      
       children: [
         AbsorbPointer(
           absorbing: true,
@@ -554,8 +555,12 @@ class _ShowcaseState extends State<Showcase> {
             onPressed: () {
               showCaseWidgetState.skipButtonClicked();
             },
+            padding: EdgeInsets.zero,
+            minWidth: 70,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             child: const Text(
-              'SKIP >>',
+              'SKIP',
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 15,

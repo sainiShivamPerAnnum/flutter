@@ -68,7 +68,7 @@ class GamesWidget extends StatelessWidget {
                     return Showcase(
                       key: ShowCaseKeys.GamesKey,
                       description:
-                          'Use these tokens to Play games. For every score that beats the threshold, you get a scratch card',
+                          'Use these tokens to play games. Each time you score above a minimum score, you get a scratch card!',
                       child: child,
                     );
                   return child;

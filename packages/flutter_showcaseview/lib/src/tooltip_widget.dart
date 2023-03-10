@@ -23,6 +23,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'enum.dart';
 import 'get_position.dart';
@@ -193,7 +194,9 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
         final rightPosition = widget.position!.getCenter() + (width * 0.5);
 
         return (rightPosition + width) > MediaQuery.of(context).size.width
-            ? _kDefaultPaddingFromParent
+            ? _kDefaultPaddingFromParent <= 20
+                ? _kDefaultPaddingFromParent
+                : _kDefaultPaddingFromParent - 20
             : null;
       } else {
         return null;
@@ -348,6 +351,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
     if (!widget.disableScaleAnimation && widget.isTooltipDismissed) {
       _scaleAnimationController.reverse();
     }
+    final width = MediaQuery.of(context).size.width;
 
     if (widget.container == null) {
       return Positioned(
@@ -371,6 +375,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
               child: Material(
                 type: MaterialType.transparency,
                 child: Container(
+                  width: MediaQuery.of(context).size.width,
                   padding: widget.showArrow
                       ? EdgeInsets.only(
                           top: paddingTop - (isArrowUp ? arrowHeight : 0),
@@ -410,11 +415,15 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                           borderRadius: widget.tooltipBorderRadius ??
                               BorderRadius.circular(8.0),
                           child: GestureDetector(
-                            onTap: widget.onTooltipTap,
+                            onTap: () {
+                              widget.onTooltipTap?.call();
+                              HapticFeedback.mediumImpact();
+                            },
                             child: Container(
-                              width: tooltipWidth,
+                              width: tooltipWidth.clamp(
+                                  0, MediaQuery.of(context).size.width),
                               padding: widget.tooltipPadding,
-                              color: widget.tooltipBackgroundColor,
+                              color: const Color(0xffFAF9F6),
                               child: Column(
                                 crossAxisAlignment: widget.title != null
                                     ? CrossAxisAlignment.start
@@ -439,8 +448,8 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                       ),
                                     ),
                                   Padding(
-                                    padding: widget.descriptionPadding ??
-                                        EdgeInsets.zero,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6),
                                     child: Text(
                                       widget.description!,
                                       textAlign: widget.descriptionAlignment,
@@ -462,13 +471,17 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                       child: MaterialButton(
                                         onPressed: () {
                                           widget.onTooltipTap?.call();
+                                          HapticFeedback.mediumImpact();
                                         },
-                                        color: Colors.black,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(6)),
+                                        color: const Color(0xFF23272B),
                                         child: const Text(
                                           'NEXT',
                                           style: TextStyle(
                                             color: Colors.white,
-                                            fontWeight: FontWeight.w600,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
