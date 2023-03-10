@@ -41,7 +41,7 @@ class PlayViewModel extends BaseViewModel {
       'Earn tokens by saving in Gold or Flo',
       'Use Fello tokens to play different games',
       "Win scratch cards for every high score!",
-      "Save and maintain savings to play all games"
+      "Maintain savings to play all games"
     ]);
   }
   final GetterRepository? _getterRepo = locator<GetterRepository>();

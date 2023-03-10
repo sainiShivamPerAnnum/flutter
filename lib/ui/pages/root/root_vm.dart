@@ -107,7 +107,7 @@ class RootViewModel extends BaseViewModel {
         await verifyUserBootupDetails();
         await checkForBootUpAlerts();
         await _userService.getUserFundWalletData();
-        if (AppState.isFirstTime)
+        if (AppState.isFirstTime)                              
           Future.delayed(Duration(seconds: 1), () {
             SpotLightController.instance.showTourDialog();
           });

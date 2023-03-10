@@ -162,9 +162,9 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
             (widget.descriptionPadding?.left ?? 0));
     var maxTextWidth = max(titleLength, descriptionLength);
     if (maxTextWidth > widget.screenSize!.width - tooltipScreenEdgePadding) {
-      tooltipWidth = widget.screenSize!.width - tooltipScreenEdgePadding;
+      tooltipWidth = widget.screenSize!.width - tooltipScreenEdgePadding - 60;
     } else {
-      tooltipWidth = maxTextWidth * 1.0;
+      tooltipWidth = maxTextWidth * 1.0 + tooltipTextPadding;
     }
   }
 
@@ -194,7 +194,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
         final rightPosition = widget.position!.getCenter() + (width * 0.5);
 
         return (rightPosition + width) > MediaQuery.of(context).size.width
-            ? 0
+            ? _kDefaultPaddingFromParent - 4
             : null;
       } else {
         return null;
@@ -349,7 +349,6 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
     if (!widget.disableScaleAnimation && widget.isTooltipDismissed) {
       _scaleAnimationController.reverse();
     }
-    final width = MediaQuery.of(context).size.width;
 
     if (widget.container == null) {
       return Positioned(

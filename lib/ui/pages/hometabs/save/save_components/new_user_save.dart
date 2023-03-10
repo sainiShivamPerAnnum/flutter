@@ -100,7 +100,7 @@ class NewUserSaveView extends StatelessWidget {
             Showcase(
               key: ShowCaseKeys.LendBoxAssetKey,
               description:
-                  'You can invest in Fello Flo, our peer-to-peer asset, which gives 10% annual returns!',
+                  'You can also invest in Fello Flo, our peer-to-peer asset, which gives 10% annual returns!',
               child: SaveContainer(
                 bottomStrip: [
                   "750+ users deposited in Gold today!",
