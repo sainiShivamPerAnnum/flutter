@@ -19,7 +19,7 @@ class AppConfig {
   factory AppConfig._fromJson(Map<String, dynamic> json) {
     final mapOFData = <AppConfigKey, Object>{};
     final _message = json['message'] ?? '';
-    final _data = json['data'] as Map;
+    final _data = json;
 
     _data.forEach(
       (key, value) {
