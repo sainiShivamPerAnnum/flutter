@@ -142,12 +142,14 @@ class SpotLightController {
     await startShowcase([
       ShowCaseKeys.floCoinsKey,
     ]);
-    await startShowcase([
-      ShowCaseKeys.GamesKey,
-    ], playViewContext);
-    await startShowcase([
-      ShowCaseKeys.AccountKey,
-    ]);
+    if (!isSkipButtonClicked)
+      await startShowcase([
+        ShowCaseKeys.GamesKey,
+      ], playViewContext);
+    if (!isSkipButtonClicked)
+      await startShowcase([
+        ShowCaseKeys.AccountKey,
+      ]);
   }
 
   Future<void> showTourDialog() async {
@@ -172,7 +174,7 @@ class SpotLightController {
     await startShowcase([
       ShowCaseKeys.ScratchCardKey,
       ShowCaseKeys.CurrentWinnings,
-    ], accountContext);
+    ]);
     if (!isSkipButtonClicked) {
       BaseUtil.openDialog(
           isBarrierDismissible: false,
@@ -198,7 +200,6 @@ class SpotLightController {
       ShowCaseWidget.of(currentContext).dismiss();
       ShowCaseWidget.of(saveViewContext!).dismiss();
       ShowCaseWidget.of(playViewContext!).dismiss();
-      ShowCaseWidget.of(accountContext!).dismiss();
     }
   }
 
