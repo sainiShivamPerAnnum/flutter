@@ -47,6 +47,7 @@ class WithDrawWarningScreen extends StatelessWidget {
         showCoinBar: false,
       ),
       body: SafeArea(
+        top: false,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,8 +293,8 @@ class WithDrawWarningScreen extends StatelessWidget {
               child: AppPositiveBtn(
                 btnText: 'PLAY GAMES NOW',
                 onPressed: () {
-                    locator<AnalyticsService>()
-                        .track(eventName: 'Withdraw screen play games click');
+                  locator<AnalyticsService>()
+                      .track(eventName: 'Withdraw screen play games click');
                   while (AppState.screenStack.length > 1) {
                     AppState.backButtonDispatcher!.didPopRoute();
                   }
@@ -306,17 +307,22 @@ class WithDrawWarningScreen extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding16,
             ),
-            Center(
-              child: AppNegativeBtn(
-                onPressed: () {
-                  // AppState.backButtonDispatcher!.didPopRoute();
-                  onWithDrawAnyWay.call();
-                },
-                btnText: 'WITHDRAW ANYWAY',
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins),
+                child: AppNegativeBtn(
+                  onPressed: () {
+                    // AppState.backButtonDispatcher!.didPopRoute();
+                    onWithDrawAnyWay.call();
+                  },
+                  btnText: 'WITHDRAW ANYWAY',
+                ),
               ),
             ),
             SizedBox(
-              height: SizeConfig.padding10,
+              height: SizeConfig.padding20,
             ),
           ],
         ),
@@ -333,7 +339,8 @@ class WithDrawGameViewModel {
   factory WithDrawGameViewModel.fromGames(
       GameTiers model, double withDrawingAmount) {
     final gamesWillBeLocked = <GameModel?>[];
-    final netWorth = locator<UserService>().userFundWallet!.netWorth!;
+    final _wallet = locator<UserService>().userFundWallet!;
+    final netWorth = _wallet.augGoldPrinciple + (_wallet.wLbPrinciple ?? 0.0);
     final finalAmount = netWorth - withDrawingAmount;
 
     for (var i in model.data) {
