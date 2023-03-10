@@ -197,6 +197,8 @@ class SpotLightController {
       isSkipButtonClicked = true;
       ShowCaseWidget.of(currentContext).dismiss();
       ShowCaseWidget.of(saveViewContext!).dismiss();
+      ShowCaseWidget.of(playViewContext!).dismiss();
+      ShowCaseWidget.of(accountContext!).dismiss();
     }
   }
 
@@ -288,7 +290,6 @@ class StartTourDialog extends StatelessWidget {
                   child: AppPositiveBtn(
                     btnText: 'Start Tour',
                     onPressed: () {
-                      
                       AppState.backButtonDispatcher!.didPopRoute();
                       SpotLightController.instance.init();
 
