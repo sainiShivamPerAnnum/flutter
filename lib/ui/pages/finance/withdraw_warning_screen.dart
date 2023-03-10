@@ -1,4 +1,6 @@
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/game_tier_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -161,7 +163,11 @@ class WithDrawWarningScreen extends StatelessWidget {
                                 width: SizeConfig.padding4,
                               ),
                               Text(
-                                (totalAmount / 500).round().toString(),
+                                (totalAmount /
+                                        AppConfig.getValue(
+                                            AppConfigKey.tambola_cost))
+                                    .round()
+                                    .toString(),
                                 style: TextStyles.rajdhaniSB.body2,
                               ),
                             ],
@@ -170,7 +176,11 @@ class WithDrawWarningScreen extends StatelessWidget {
                             width: SizeConfig.padding4,
                           ),
                           Text(
-                            (totalAmount / 500).round() > 1
+                            (totalAmount /
+                                            AppConfig.getValue(
+                                                AppConfigKey.tambola_cost))
+                                        .round() >
+                                    1
                                 ? "Tambola Tickets"
                                 : "Tambola Ticket",
                             textAlign: TextAlign.center,
