@@ -46,6 +46,7 @@ class GamesWidget extends StatelessWidget {
                   mainAxisSpacing: 12),
             ),
           );
+        
         if (model.gameTier == null) return SizedBox();
         final _viewModel = GameViewModel.fromGameTier(model.gameTier!)
           ..processData();
