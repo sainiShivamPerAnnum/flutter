@@ -170,7 +170,9 @@ class WithDrawWarningScreen extends StatelessWidget {
                             width: SizeConfig.padding4,
                           ),
                           Text(
-                            "Tambola Ticket",
+                            (totalAmount / 500).round() > 1
+                                ? "Tambola Tickets"
+                                : "Tambola Ticket",
                             textAlign: TextAlign.center,
                             style: TextStyles.rajdhaniSB.body4,
                           ),
@@ -292,15 +294,12 @@ class WithDrawWarningScreen extends StatelessWidget {
               height: SizeConfig.padding16,
             ),
             Center(
-              child: TextButton(
+              child: AppNegativeBtn(
                 onPressed: () {
                   // AppState.backButtonDispatcher!.didPopRoute();
                   onWithDrawAnyWay.call();
                 },
-                child: Text(
-                  'WITHDRAW ANYWAY',
-                  style: TextStyles.sourceSansSB.body2,
-                ),
+                btnText: 'WITHDRAW ANYWAY',
               ),
             ),
             SizedBox(
