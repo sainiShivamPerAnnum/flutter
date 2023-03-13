@@ -31,14 +31,12 @@ import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
@@ -107,7 +105,7 @@ class RootViewModel extends BaseViewModel {
         await verifyUserBootupDetails();
         await checkForBootUpAlerts();
         await _userService.getUserFundWalletData();
-        if (AppState.isFirstTime)                              
+        if (AppState.isFirstTime)
           Future.delayed(Duration(seconds: 1), () {
             SpotLightController.instance.showTourDialog();
           });
@@ -276,159 +274,9 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  Future<dynamic> _verifyReferral(BuildContext? context) async {
-    if (BaseUtil.referrerUserId != null) {
-      // when referrer id is fetched from one-link
-      if (PreferenceHelper.getBool(
-        PreferenceHelper.REFERRAL_PROCESSED,
-        def: false,
-      )) return;
-
-      await _refRepo.createReferral(
-        _userService.baseUser!.uid,
-        BaseUtil.referrerUserId,
-      );
-
-      _logger!.d('referral processed from link');
-      PreferenceHelper.setBool(PreferenceHelper.REFERRAL_PROCESSED, true);
-    } else if (BaseUtil.manualReferralCode != null) {
-      if (BaseUtil.manualReferralCode!.length == 4) {
-        _verifyFirebaseManualReferral(context);
-      } else {
-        _verifyOneLinkManualReferral();
-      }
-    }
-  }
-
-  Future<dynamic> _verifyOneLinkManualReferral() async {
-    final referrerId = await _refRepo
-        .getUserIdByRefCode(BaseUtil.manualReferralCode!.toUpperCase());
-
-    if (referrerId.code == 200) {
-      await _refRepo.createReferral(
-        _userService.baseUser!.uid,
-        referrerId.model,
-      );
-    } else {
-      BaseUtil.showNegativeAlert(referrerId.errorMessage, '');
-    }
-  }
-
-  Future<dynamic> _verifyFirebaseManualReferral(BuildContext? context) async {
-    try {
-      PendingDynamicLinkData? dynamicLinkData =
-          await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(
-              '${FlavorConfig.instance!.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}'));
-      Uri? deepLink = dynamicLinkData?.link;
-      _logger!.d(deepLink.toString());
-      if (deepLink != null)
-        return _processDynamicLink(
-          _userService.baseUser!.uid,
-          deepLink,
-          context,
-        );
-    } catch (e) {
-      _logger!.e(e.toString());
-    }
-  }
-
-  Future<dynamic> _initDynamicLinks(BuildContext? context) async {
-    FirebaseDynamicLinks.instance.onLink.distinct().listen((event) {
-      final Uri? deepLink = event.link;
-      if (deepLink == null) return null;
-      _logger!.d('Received deep link. Process the referral');
-      return _processDynamicLink(_userService.baseUser!.uid, deepLink, context);
-    }).onError((e) {
-      _logger!.d('Error');
-      _logger!.d(e.toString());
-    });
-
-    final PendingDynamicLinkData? data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri? deepLink = data?.link;
-    if (deepLink != null) {
-      _logger!.d('Received deep link. Process the referral');
-      return _processDynamicLink(_userService.baseUser!.uid, deepLink, context);
-    }
-  }
-
   void setShowHappyHour(bool showHappyHour) {
     showHappyHourBanner = showHappyHour;
     notifyListeners();
-  }
-
-  _processDynamicLink(
-      String? userId, Uri deepLink, BuildContext? context) async {
-    String _uri = deepLink.toString();
-
-    if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
-      _submitTrack(_uri);
-    } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
-      try {
-        final path =
-            _uri.substring(Constants.APP_NAVIGATION_LINK.length, _uri.length);
-        AppState.delegate!.parseRoute(Uri.parse(path));
-      } catch (error) {
-        _logger!.e(error);
-      }
-    } else {
-      BaseUtil.manualReferralCode =
-          null; //make manual Code null in case user used both link and code
-
-      //Referral dynamic link
-      bool _flag = await _submitReferral(
-        _userService.baseUser!.uid,
-        _userService.myUserName,
-        _uri,
-      );
-
-      if (_flag) {
-        _logger!.d('Rewards added');
-        refresh();
-      } else {
-        // _logger.d('$addUserTicketCount tickets need to be added for the user');
-      }
-    }
-  }
-
-  bool _submitTrack(String deepLink) {
-    try {
-      String prefix = '${Constants.APP_DOWNLOAD_LINK}/campaign/';
-      if (deepLink.startsWith(prefix)) {
-        String campaignId = deepLink.replaceAll(prefix, '');
-        if (campaignId.isNotEmpty) {
-          _logger!.d(campaignId);
-          _analyticsService.trackInstall(campaignId);
-          return true;
-        }
-      }
-      return false;
-    } catch (e) {
-      _logger!.e(e);
-      return false;
-    }
-  }
-
-  Future<bool> _submitReferral(
-      String? userId, String? userName, String deepLink) async {
-    try {
-      String prefix = 'https://fello.in/';
-      if (deepLink.startsWith(prefix)) {
-        String referee = deepLink.replaceAll(prefix, '');
-        _logger!.d(referee);
-        if (prefix.length > 0 && prefix != userId) {
-          return _refRepo.createReferral(userId, referee).then((res) {
-            // _logger.d('User deserves $userTicketUpdateCount more tickets');
-            return res.model!;
-          });
-        } else
-          return false;
-      } else
-        return false;
-    } catch (e) {
-      _logger!.e(e);
-      return false;
-    }
   }
 
   Future<void> verifyUserBootupDetails() async {

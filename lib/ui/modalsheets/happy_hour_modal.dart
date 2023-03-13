@@ -4,9 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/buttons/black_white_button/black_white_button.dart';
 import 'package:felloapp/ui/elements/buttons/solid_button.dart';
-import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -114,12 +112,18 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                   SizedBox(
                     height: SizeConfig.padding16,
                   ),
-                  subtitle.beautify(
-                    style: TextStyles.sourceSans.body2.colour(
-                      Colors.white,
-                    ),
-                    boldStyle: TextStyles.sourceSansSB.body2.colour(
-                      Color(0xffA5FCE7),
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    alignment: Alignment.center,
+                    child: subtitle.beautify(
+                      style: TextStyles.sourceSans.body2.colour(
+                        Colors.white,
+                      ),
+                      alignment: TextAlign.center,
+                      boldStyle: TextStyles.sourceSansSB.body2.colour(
+                        Color(0xffA5FCE7),
+                      ),
                     ),
                   ),
                   SizedBox(
