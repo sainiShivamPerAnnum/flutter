@@ -30,62 +30,6 @@ class _AutosaveCardState extends State<AutosaveCard> {
 
   @override
   Widget build(BuildContext context) {
-    // getTrailingWidget(SubscriptionService service) {
-    //   switch (service.autosaveState) {
-    //     case AutosaveState.INIT:
-    //       return Row(
-    //         mainAxisSize: MainAxisSize.min,
-    //         children: [
-    //           Text(
-    //             "PROCESSING  ",
-    //             style: TextStyles.sourceSansL.body3
-    //                 .colour(UiConstants.primaryColor),
-    //           ),
-    //           Container(
-    //             height: SizeConfig.padding14,
-    //             width: SizeConfig.padding14,
-    //             child: CircularProgressIndicator(
-    //               strokeWidth: 1,
-    //             ),
-    //           ),
-    //         ],
-    //       );
-    //     case AutosaveState.ACTIVE:
-    //       return Container(
-    //         padding: EdgeInsets.all(SizeConfig.padding10),
-    //         decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-    //         child: Text(
-    //           'UPDATE',
-    //           style: TextStyles.sourceSansB.body3.colour(Colors.white),
-    //         ),
-    //       );
-    //     case AutosaveState.IDLE:
-    //       return Container(
-    //         padding: EdgeInsets.all(SizeConfig.padding10),
-    //         decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-    //         child: Text(
-    //           'SETUP',
-    //           style: TextStyles.sourceSansB.body3.colour(Colors.white),
-    //         ),
-    //       );
-    //     case AutosaveState.PAUSED:
-    //     case AutosaveState.PAUSED_FOREVER:
-    //       return Container(
-    //         padding: EdgeInsets.all(SizeConfig.padding10),
-    //         decoration: BoxDecoration(
-    //           border: Border.all(color: UiConstants.primaryColor),
-    //         ),
-    //         child: Text(
-    //           'RESUME',
-    //           style:
-    //               TextStyles.sourceSansB.body3.colour(UiConstants.primaryColor),
-    //         ),
-    //       );
-    //     default:
-    //       return SizedBox();
-    //   }
-    // }
-
     return Consumer<SubService>(
       builder: (context, service, child) => service.autosaveVisible
           ? GestureDetector(

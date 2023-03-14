@@ -1,12 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -29,7 +27,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 class UserAutosaveDetailsView extends StatelessWidget {
   const UserAutosaveDetailsView({Key? key}) : super(key: key);
@@ -231,8 +229,8 @@ class UserAutosaveDetailsView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: (model.activeSubscription!.status ==
                                         Constants.SUBSCRIPTION_INACTIVE &&
-                                    model.activeSubscription!.resumeDate!
-                                        .isEmpty)
+                                    model.activeSubscription!.resumeDate ==
+                                        null)
                                 ? _buildRestartAutoPay()
                                 : _buildUpdateAutoPay(model),
                           ),
@@ -289,10 +287,6 @@ class UserAutosaveDetailsView extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        model.activeSubscription!.vpa ?? "hello@upi",
-                        style: TextStyles.sourceSans.body1,
-                      ),
                       SizedBox(
                         width: SizeConfig.padding8,
                       ),
@@ -337,12 +331,11 @@ class UserAutosaveDetailsView extends StatelessWidget {
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.padding16,
       ),
-      child: PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
-        properties: [PaytmServiceProperties.ActiveSubscription],
-        builder: (context, m, property) {
-          return (m!.activeSubscription!.status ==
+      child: Consumer<SubService>(
+        builder: (context, _subService, property) {
+          return (_subService.subscriptionData!.status ==
                       Constants.SUBSCRIPTION_INACTIVE &&
-                  m.activeSubscription!.resumeDate!.isEmpty)
+                  _subService.subscriptionData!.resumeDate == null)
               ? Center(
                   child: Text(
                     locale.autoSaveInActive,
@@ -372,12 +365,12 @@ class UserAutosaveDetailsView extends StatelessWidget {
                     ),
                     RichText(
                       text: TextSpan(
-                          text: '₹${m.activeSubscription!.autoAmount!.toInt()}',
+                          text: '₹${_subService.subscriptionData!.amount}',
                           style: TextStyles.rajdhaniB.title1,
                           children: [
                             TextSpan(
                                 text:
-                                    '${getFreq(m.activeSubscription!.autoFrequency)}',
+                                    '${getFreq(_subService.subscriptionData!.frequency)}',
                                 style: TextStyles.rajdhaniT.title2)
                           ]),
                     ),

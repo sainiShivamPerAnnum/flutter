@@ -7,12 +7,14 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
@@ -28,12 +30,13 @@ import 'package:flutter/material.dart';
 class UserAutosaveDetailsViewModel extends BaseViewModel {
   final UserService? _userService = locator<UserService>();
   final PaytmService? _paytmService = locator<PaytmService>();
+  final SubService _subService = locator<SubService>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final SubscriptionRepo? _subcriptionRepo = locator<SubscriptionRepo>();
   S locale = locator<S>();
 
-  ActiveSubscriptionModel? _activeSubscription;
+  SubscriptionModel? _activeSubscription;
   List<AutosaveTransactionModel>? _filteredList;
   int lastTappedChipIndex = 1;
 
@@ -44,7 +47,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  ActiveSubscriptionModel? get activeSubscription => this._activeSubscription;
+  SubscriptionModel? get activeSubscription => this._activeSubscription;
 
   set activeSubscription(value) {
     this._activeSubscription = value;
@@ -126,7 +129,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
 
   init() async {
     setState(ViewState.Busy);
-    _paytmService!.isOnSubscriptionFlow = false;
+    // _paytmService!.isOnSubscriptionFlow = false;
     subIdController = new TextEditingController();
     pUpiController = new TextEditingController();
     subAmountController = new TextEditingController();
@@ -139,24 +142,23 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   }
 
   findActiveSubscription() async {
-    activeSubscription = _paytmService!.activeSubscription;
+    activeSubscription = _subService.subscriptionData;
     if (activeSubscription != null) {
-      subIdController!.text = activeSubscription!.subscriptionId!;
-      pUpiController!.text = activeSubscription!.vpa!;
+      subIdController!.text = activeSubscription!.id!;
+      // pUpiController!.text = activeSubscription!.vpa!;
       subAmountController!.text =
-          "${activeSubscription!.autoAmount.toString()}/${activeSubscription!.autoFrequency}";
+          "${activeSubscription!.amount.toString()}/${activeSubscription!.frequency}";
       subStatusController!.text = activeSubscription!.status!;
-      amountFieldController!.text =
-          activeSubscription!.autoAmount!.toInt().toString();
-      isDaily = activeSubscription!.autoFrequency == "DAILY" ? true : false;
+      amountFieldController!.text = activeSubscription!.amount!.toString();
+      isDaily = activeSubscription!.frequency == "DAILY" ? true : false;
       isDaily ? minValue = 25 : minValue = 100;
       onAmountValueChanged(amountFieldController!.text);
     }
   }
 
   pauseSubscription(int? pauseValue) async {
-    bool response = await (_paytmService!
-        .pauseSubscription(getResumeDate(pauseValue)) as Future<bool>);
+    final bool response =
+        await _subService.pauseSubscription(AutosavePauseOption.ONE_MONTH);
 
     isPausingInProgress = false;
     if (response) {
@@ -164,8 +166,8 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
           "For more details check Autosave section");
       if (pauseValue == 4 &&
           !(AppConfig.getValue(AppConfigKey.autosaveActive) as bool))
-        _paytmService!.autosaveVisible = false;
-      AppState.backButtonDispatcher!.didPopRoute();
+        // _paytmService!.autosaveVisible = false;
+        AppState.backButtonDispatcher!.didPopRoute();
       AppState.backButtonDispatcher!.didPopRoute();
     }
   }
@@ -257,7 +259,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     } else {
       val = '0';
     }
-    saveAmount = calculateSaveAmount(int.tryParse(val ?? '0')!);
+    saveAmount = calculateSaveAmount(int.tryParse(val)!);
     notifyListeners();
   }
 
@@ -285,7 +287,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     if (activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE)
       return "verified and active";
     else if (activeSubscription!.status == Constants.SUBSCRIPTION_INACTIVE) {
-      if (activeSubscription!.resumeDate!.isEmpty) {
+      if (activeSubscription!.resumeDate == null) {
         return "currently inactive";
       } else {
         return "verified and paused";
@@ -297,7 +299,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     if (activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE)
       return UiConstants.primaryColor;
     else if (activeSubscription!.status == Constants.SUBSCRIPTION_INACTIVE) {
-      if (activeSubscription!.resumeDate!.isEmpty) {
+      if (activeSubscription!.resumeDate == null) {
         return Colors.red;
       } else {
         return UiConstants.tertiarySolid;
@@ -313,27 +315,24 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
       );
     }
 
-    if (amount == _paytmService!.activeSubscription!.autoAmount) {
-      if (isDaily &&
-          _paytmService!.activeSubscription!.autoFrequency == "DAILY") {
+    if (amount == _subService.subscriptionData!.amount) {
+      if (isDaily && _subService.subscriptionData!.frequency == "DAILY") {
         return AppState.backButtonDispatcher!.didPopRoute();
       }
-      if (!isDaily &&
-          _paytmService!.activeSubscription!.autoFrequency == "WEEKLY") {
+      if (!isDaily && _subService.subscriptionData!.frequency == "WEEKLY") {
         return AppState.backButtonDispatcher!.didPopRoute();
       }
     }
 
-    if (isDaily && _paytmService!.activeSubscription!.autoFrequency == "WEEKLY")
-      _analyticsService!
-          .track(eventName: AnalyticsEvents.autosaveWeeklyToDailySaver);
-    if (!isDaily && _paytmService!.activeSubscription!.autoFrequency == "DAILY")
-      _analyticsService!
-          .track(eventName: AnalyticsEvents.autosaveDailyToWeeklySaver);
+    if (isDaily && _subService.subscriptionData!.frequency == "WEEKLY")
+      _analyticsService.track(
+          eventName: AnalyticsEvents.autosaveWeeklyToDailySaver);
+    if (!isDaily && _subService.subscriptionData!.frequency == "DAILY")
+      _analyticsService.track(
+          eventName: AnalyticsEvents.autosaveDailyToWeeklySaver);
 
     isSubscriptionAmountUpdateInProgress = true;
-    final res = await (_paytmService!.updateDailySubscriptionAmount(
-        amount: amount, freq: isDaily ? "DAILY" : "WEEKLY") as Future<bool>);
+    final res = await (_subService.updateSubscription(amount.toInt(), isDaily));
     isSubscriptionAmountUpdateInProgress = false;
     if (res) {
       // _paytmService!.getActiveSubscriptionDetails();
@@ -345,14 +344,14 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   }
 
   pauseResume(model) async {
-    if (_paytmService!.activeSubscription!.status ==
+    if (_subService.subscriptionData!.status ==
         Constants.SUBSCRIPTION_INACTIVE) {
       if (model.isResumingInProgress) return;
       isResumingInProgress = true;
-      _analyticsService!
+      _analyticsService
           .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
-        "frequency": activeSubscription!.autoFrequency,
-        "amount": activeSubscription!.autoAmount,
+        "frequency": activeSubscription!.frequency,
+        "amount": activeSubscription!.amount,
         "SIP deducted Count": filteredList != null ? filteredList!.length : 0,
         "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
             activeSubscription!.createdOn!.microsecondsSinceEpoch),
@@ -362,8 +361,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
         "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
       });
 
-      bool response =
-          await (_paytmService!.resumeSubscription() as Future<bool>);
+      bool response = await _subService.resumeSubscription();
       if (!response) {
         isResumingInProgress = false;
         BaseUtil.showNegativeAlert(
@@ -374,10 +372,10 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
         AppState.backButtonDispatcher!.didPopRoute();
       }
     } else {
-      _analyticsService!
+      _analyticsService
           .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
-        "frequency": activeSubscription!.autoFrequency,
-        "amount": activeSubscription!.autoAmount,
+        "frequency": activeSubscription!.frequency,
+        "amount": activeSubscription!.amount,
         "SIP deducted Count": filteredList != null ? filteredList!.length : 0,
         "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
             activeSubscription!.createdOn!.microsecondsSinceEpoch),
@@ -407,8 +405,8 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   trackPauseAnalytics(int value) {
     _analyticsService
         .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
-      "frequency": activeSubscription?.autoFrequency,
-      "amount": activeSubscription?.autoAmount,
+      "frequency": activeSubscription?.frequency,
+      "amount": activeSubscription?.amount,
       "SIP deducted Count": filteredList != null ? filteredList?.length : 0,
       "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
           activeSubscription?.createdOn?.microsecondsSinceEpoch ?? 0),

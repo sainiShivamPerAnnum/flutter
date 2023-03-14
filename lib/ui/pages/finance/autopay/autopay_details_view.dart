@@ -27,8 +27,8 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   @override
   void initState() {
-    _analyticsService!.track(
-        eventName: AnalyticsEvents.autosaveDetailsScreenView);
+    _analyticsService!
+        .track(eventName: AnalyticsEvents.autosaveDetailsScreenView);
     super.initState();
   }
 
@@ -59,7 +59,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
             ),
             Center(
               child: Text(
-               locale.howItworks,
+                locale.howItworks,
                 style: TextStyles.rajdhaniSB.title4,
               ),
             ),
@@ -110,7 +110,7 @@ class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text:locale.checkYour,
+                      text: locale.checkYour,
                       style: TextStyles.sourceSans.body4.colour(
                         UiConstants.kTextColor2,
                       ),

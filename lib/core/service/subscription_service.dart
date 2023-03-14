@@ -10,7 +10,6 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/subscription_update_dialog.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +82,7 @@ class SubService extends ChangeNotifier {
     this._subscriptionData = value;
     if (value == null) return;
     amountController.text = subscriptionData!.amount.toString();
-    setSubscriptionState(subscriptionData!.status!);
+    setSubscriptionState();
   }
 
   Timer? timer;
@@ -104,7 +103,7 @@ class SubService extends ChangeNotifier {
     autosaveState = AutosaveState.IDLE;
   }
 
-  Future<void> createSubscription(
+  Future<bool> createSubscription(
       {required String freq,
       required int amount,
       required String package,
@@ -116,21 +115,15 @@ class SubService extends ChangeNotifier {
         freq: freq, amount: amount, package: package, asset: asset);
     if (res.isSuccess()) {
       // try {
+      getSubscription();
       const platform = MethodChannel("methodChannel/upiIntent");
-
+      autosaveState = AutosaveState.INIT;
       final result = await platform.invokeMethod(
           'initiatePsp', {'redirectUrl': res.model, 'packageName': package});
-      // platform.setMethodCallHandler((call) {
-      //   final String argument = call.arguments;
-      //   switch (call.method) {
-      //     case "onSuccess":
-      //       log("Result from call handler $argument");
-      //       break;
-      //   }
-      //   return Future.value();
-      // });
       log("Result from initiatePsp: $result");
+      if (subscriptionData != null) startPollingForResponse();
 
+      return true;
       // version = result;
       // return ApiResponse(model: version, code: 200);
       // } catch (e) {
@@ -142,11 +135,11 @@ class SubService extends ChangeNotifier {
       // if (!launchRes) {
       // } else {
       //   autosaveState = AutosaveState.INIT;
-      //   startPollingForResponse();
       // }
     } else {
       autosaveState = AutosaveState.IDLE;
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try after sometime");
+      return false;
     }
   }
 
@@ -181,12 +174,12 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
     } else {
-      autosaveState = AutosaveState.IDLE;
       subscriptionData = null;
+      autosaveState = AutosaveState.IDLE;
     }
   }
 
-  Future<void> updateSubscription() async {
+  Future<bool> updateSubscription(int amount, bool isD) async {
     if (amountController.text.isEmpty)
       return BaseUtil.showNegativeAlert(
           "Please enter some amount", "No amount entered");
@@ -200,8 +193,10 @@ class SubService extends ChangeNotifier {
         BaseUtil.showPositiveAlert("Subscription updated successfully",
             "Effective changes will take place from tomorrow");
       });
+      return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+      return false;
     }
   }
 
@@ -221,9 +216,11 @@ class SubService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> pauseSubscription(AutosavePauseOption option) async {
+  Future<bool> pauseSubscription(AutosavePauseOption option) async {
+    if (isPausing) return false;
     isPausing = true;
     final res = await _subscriptionRepo.pauseSubscription(option: option);
+    isPausing = false;
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
@@ -231,15 +228,18 @@ class SubService extends ChangeNotifier {
         BaseUtil.showPositiveAlert("Subscription paused successfully",
             "Effective changes will take place from tomorrow");
       });
+      return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+      return false;
     }
-    isPausing = false;
   }
 
-  Future<void> resumeSubscription() async {
+  Future<bool> resumeSubscription() async {
+    if (isPausing) return false;
     isPausing = true;
     final res = await _subscriptionRepo.resumeSubscription();
+    isPausing = false;
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
@@ -247,10 +247,11 @@ class SubService extends ChangeNotifier {
         BaseUtil.showPositiveAlert("Subscription resumed successfully",
             "Effective changes will take place from tomorrow");
       });
+      return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+      return false;
     }
-    isPausing = false;
   }
 
   Future<void> getSubscriptionTransactionHistory(
@@ -317,8 +318,8 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  setSubscriptionState(String status) {
-    switch (status) {
+  setSubscriptionState() {
+    switch (subscriptionData!.status) {
       case "INIT":
         autosaveState = AutosaveState.INIT;
         break;
@@ -326,9 +327,6 @@ class SubService extends ChangeNotifier {
         timer?.cancel();
         autosaveState = AutosaveState.ACTIVE;
         break;
-      // case "PROCESSING":
-      //   autosaveState = AutosaveState.PROCESSING;
-      //   break;
       case "PAUSE_FROM_APP":
         autosaveState = AutosaveState.PAUSED;
         break;
@@ -354,16 +352,20 @@ class SubService extends ChangeNotifier {
         return BaseUtil.showNegativeAlert(
             "Subscription in processing", "please check back after sometime");
       case AutosaveState.ACTIVE:
-        amountController.text = subscriptionData?.amount?.toString() ?? '25';
-        return BaseUtil.openDialog(
-            isBarrierDismissible: false,
-            addToScreenStack: true,
-            hapticVibrate: true,
-            content: EditSubscriptionDialog());
+        // amountController.text = subscriptionData?.amount?.toString() ?? '25';
+        // return BaseUtil.openDialog(
+        //     isBarrierDismissible: false,
+        //     addToScreenStack: true,
+        //     hapticVibrate: true,
+        //     content: EditSubscriptionDialog());
+        return AppState.delegate!.appState.currentAction = PageAction(
+          page: UserAutosaveDetailsViewPageConfig,
+          state: PageState.addPage,
+        );
       case AutosaveState.IDLE:
         // return getUserUpiAppChoice();
         return AppState.delegate!.appState.currentAction = PageAction(
-          page: AutosaveProcessViewPageConfig,
+          page: AutosaveDetailsViewPageConfig,
           state: PageState.addPage,
         );
       // return createSubscription(

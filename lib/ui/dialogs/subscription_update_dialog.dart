@@ -178,7 +178,7 @@ class EditSubscriptionDialog extends StatelessWidget {
                 child: ReactivePositiveAppButton(
                     btnText: "Update",
                     onPressed: () async {
-                      await service.updateSubscription();
+                      await service.updateSubscription(123, false);
                     })),
             TextButton(
               onPressed: () {

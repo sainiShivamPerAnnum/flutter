@@ -17,7 +17,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 class AutosaveProcessView extends StatefulWidget {
@@ -31,60 +32,64 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return BaseView<AutosaveProcessViewModel>(
-      onModelReady: (model) => model.init(),
-      onModelDispose: (model) => model.dump(),
-      builder: (context, model, child) {
-        return Scaffold(
-          backgroundColor: UiConstants.kBackgroundColor,
-          appBar: AppBar(
+    return Selector<SubService, AutosaveState>(
+      selector: (_, _subService) => _subService.autosaveState,
+      builder: (context, autosaveState, child) =>
+          BaseView<AutosaveProcessViewModel>(
+        onModelReady: (model) => model.init(),
+        onModelDispose: (model) => model.dump(),
+        builder: (context, model, child) {
+          return Scaffold(
             backgroundColor: UiConstants.kBackgroundColor,
-            elevation: 0.0,
-            title: model.currentPage <= 2
-                ? Text(
-                    "${model.currentPage + 1}/3",
-                    style: TextStyles.sourceSansL.body3,
-                  )
-                : Container(),
-            centerTitle: true,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: UiConstants.kTextColor,
+            appBar: AppBar(
+              backgroundColor: UiConstants.kBackgroundColor,
+              elevation: 0.0,
+              title: model.currentPage <= 2
+                  ? Text(
+                      "${model.currentPage + 1}/3",
+                      style: TextStyles.sourceSansL.body3,
+                    )
+                  : Container(),
+              centerTitle: true,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: UiConstants.kTextColor,
+                ),
+                onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
               ),
-              onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
+              actions: [],
             ),
-            actions: [],
-          ),
-          resizeToAvoidBottomInset: false,
-          body: model.state == ViewState.Busy
-              ? Center(
-                  child: FullScreenLoader(),
-                )
-              : Stack(
-                  children: [
-                    const NewSquareBackground(),
-                    SafeArea(
-                      child: model.autosaveState == AutosaveState.INIT
-                          ? _buildPendingUI(model)
-                          : model.autosaveState == AutosaveState.IDLE
-                              ? PageView(
-                                  controller: model.pageController,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  children: [
-                                    UpiAppSelectView(
-                                        appList: model.appsList,
-                                        onAppSelect: (ApplicationMeta app) {
-                                          Haptic.vibrate();
-                                          model.selectedUpiApp = app;
-                                        },
-                                        selectedApp: model.selectedUpiApp,
-                                        onCtaPressed: () {
-                                          model.pageController.animateToPage(1,
-                                              duration: Duration(seconds: 1),
-                                              curve: Curves.decelerate);
-                                        }),
-                                    AutoPaySetupOrUpdateView(
+            resizeToAvoidBottomInset: false,
+            body: model.state == ViewState.Busy
+                ? Center(
+                    child: FullScreenLoader(),
+                  )
+                : Stack(
+                    children: [
+                      const NewSquareBackground(),
+                      SafeArea(
+                        child: autosaveState == AutosaveState.INIT
+                            ? _buildPendingUI(model)
+                            : autosaveState == AutosaveState.IDLE
+                                ? PageView(
+                                    controller: model.pageController,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    children: [
+                                      UpiAppSelectView(
+                                          appList: model.appsList,
+                                          onAppSelect: (ApplicationMeta app) {
+                                            Haptic.vibrate();
+                                            model.selectedUpiApp = app;
+                                          },
+                                          selectedApp: model.selectedUpiApp,
+                                          onCtaPressed: () {
+                                            model.pageController.animateToPage(
+                                                1,
+                                                duration: Duration(seconds: 1),
+                                                curve: Curves.decelerate);
+                                          }),
+                                      AutoPaySetupOrUpdateView(
                                         isSetup: true,
                                         onCtaTapped: (_) async {
                                           Haptic.vibrate();
@@ -108,44 +113,48 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                                         amountFieldController:
                                             model.amountFieldController,
                                         dailyChips: model.dailyChips,
-                                        weeklyChips: model.weeklyChips),
-                                    _buildPendingUI(model),
-                                    _buildCompleteUI(model),
-                                    Center(
-                                      child: Text(locale.cancelledUi,
-                                          style: TextStyles.rajdhaniSB.title4),
-                                    ),
-                                  ],
-                                )
-                              : SizedBox(
-                                  child: Text(
-                                    "Autosave Active",
-                                    style:
-                                        TextStyles.body2.colour(Colors.white),
-                                  ),
-                                ),
-                    ),
-                    // FutureBuilder(
-                    //   future: Future.value(true),
-                    //   builder:
-                    //       (BuildContext context, AsyncSnapshot<void> snap) {
-                    //     //If we do not have data as we wait for the future to complete,
-                    //     //show any widget, eg. empty Container
-                    //     if (!snap.hasData) {
-                    //       return Container();
-                    //     }
+                                        weeklyChips: model.weeklyChips,
+                                      ),
+                                      // _buildPendingUI(model),
+                                      // Center(
+                                      //   child: Text(locale.cancelledUi,
+                                      //       style:
+                                      //           TextStyles.rajdhaniSB.title4),
+                                      // ),
+                                    ],
+                                  )
+                                : autosaveState == AutosaveState.ACTIVE
+                                    ? _buildCompleteUI(model)
+                                    : SizedBox(
+                                        child: Text(
+                                          "Autosave Active",
+                                          style: TextStyles.body2
+                                              .colour(Colors.white),
+                                        ),
+                                      ),
+                      ),
+                      // FutureBuilder(
+                      //   future: Future.value(true),
+                      //   builder:
+                      //       (BuildContext context, AsyncSnapshot<void> snap) {
+                      //     //If we do not have data as we wait for the future to complete,
+                      //     //show any widget, eg. empty Container
+                      //     if (!snap.hasData) {
+                      //       return Container();
+                      //     }
 
-                    //     //Otherwise the future completed, so we can now safely use the controller.page
-                    //     if (model.pageController.page == 2)
-                    //       return CustomKeyboardSubmitButton(onSubmit: () {});
-                    //     else
-                    //       return SizedBox();
-                    //   },
-                    // ),
-                  ],
-                ),
-        );
-      },
+                      //     //Otherwise the future completed, so we can now safely use the controller.page
+                      //     if (model.pageController.page == 2)
+                      //       return CustomKeyboardSubmitButton(onSubmit: () {});
+                      //     else
+                      //       return SizedBox();
+                      //   },
+                      // ),
+                    ],
+                  ),
+          );
+        },
+      ),
     );
   }
 
@@ -169,7 +178,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             height: SizeConfig.padding10,
           ),
           Text(
-            locale.autoPayApproveReq,
+            "Request Pending",
             style: TextStyles.rajdhaniSB.title4,
           ),
           SizedBox(
@@ -183,7 +192,13 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             style: TextStyles.sourceSans.body1,
             textAlign: TextAlign.center,
           ),
-          Spacer(),
+          Expanded(
+              child: Center(
+            child: LottieBuilder.asset(
+              "assets/lotties/loader.json",
+              width: SizeConfig.screenWidth! * 0.5,
+            ),
+          )),
           Text(
             "We'll notify you once your autosave is confirmed",
             style: TextStyles.sourceSansL.body4.colour(Colors.amber),
@@ -279,35 +294,6 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // SizedBox(
-                    //   width: SizeConfig.padding40,
-                    // ),
-                    Container(
-                      width: SizeConfig.screenWidth! * 0.05866,
-                      height: SizeConfig.screenWidth! * 0.05866,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness24),
-                      ),
-                      child: Center(
-                        child: SvgPicture.asset(
-                          Assets.upiIcon,
-                          width: SizeConfig.screenWidth! * 0.032,
-                          height: SizeConfig.screenWidth! * 0.032,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding12,
-                    ),
-                  ],
-                ),
                 SizedBox(
                   height: SizeConfig.padding12,
                 ),

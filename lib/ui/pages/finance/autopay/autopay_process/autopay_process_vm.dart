@@ -10,6 +10,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   final SubService _subService = locator<SubService>();
   S locale = locator<S>();
 
-  AutosaveState autosaveState = AutosaveState.IDLE;
+  // AutosaveState autosaveState = AutosaveState.IDLE;
   late List<ApplicationMeta> appsList;
   ApplicationMeta? _selectedUpiApp;
 
@@ -221,22 +222,26 @@ class AutosaveProcessViewModel extends BaseViewModel {
   checkAutoPayState() async {
     await _subService.getSubscription();
     amountFieldController.text = '100';
-    autosaveState = _subService.autosaveState;
+    // autosaveState = _subService.autosaveState;
     await getChipAmounts();
-    if (autosaveState == AutosaveState.IDLE) await getAvailableUpiApps();
+    // if (autosaveState == AutosaveState.IDLE)
+    await getAvailableUpiApps();
     //If no data exists -> Upi apps screen
     //If state is INIT -> Processing screen
     //If State is active/paused -> show AutoPay details screen with pause/resume option
   }
 
   Future<void> createSubscription() async {
-    _subService.createSubscription(
+    final res = await _subService.createSubscription(
         freq: isDaily
             ? FREQUENCY.daily.name.toUpperCase()
             : FREQUENCY.weekly.name.toUpperCase(),
         amount: int.tryParse(amountFieldController.text)!,
-        package: selectedUpiApp!.packageName,
+        package: FlavorConfig.isDevelopment()
+            ? "com.phonepe.app.preprod"
+            : selectedUpiApp!.packageName,
         asset: "AUGGOLD99");
+    // if (res) autosaveState = AutosaveState.IDLE;
   }
   // trackSIPUpdateEvent() {
   //   bool isSuggested = false;

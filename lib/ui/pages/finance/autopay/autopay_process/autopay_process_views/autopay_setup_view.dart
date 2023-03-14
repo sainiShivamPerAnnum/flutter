@@ -4,6 +4,7 @@ import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_proces
 import 'package:felloapp/ui/pages/finance/autopay/segmate_chip.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -182,7 +183,7 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
         ReactivePositiveAppButton(
           btnText: isSetup ? locale.setUpText : locale.btnUpdate,
           onPressed: () async {
-            // Haptic.vibrate();
+            Haptic.vibrate();
             // if (isSetup) {
             //   trackSIPSetUpEvent();
             // } else {
@@ -235,9 +236,9 @@ class _CenterTextFieldState extends State<CenterTextField> {
   double? get fieldWidth => this._fieldWidth;
 
   set fieldWidth(double? value) {
-    setState(() {
-      this._fieldWidth = value;
-    });
+    // setState(() {
+    this._fieldWidth = value;
+    // });
   }
 
   @override
@@ -291,9 +292,10 @@ class _CenterTextFieldState extends State<CenterTextField> {
                         if ((val ?? '').isEmpty)
                           fieldWidth = 10.0;
                         else
-                          fieldWidth = ((SizeConfig.screenWidth! * 0.075) *
+                          fieldWidth = ((SizeConfig.screenWidth! * 0.08) *
                               widget.amountFieldController.text.length
                                   .toDouble());
+                        setState(() {});
                       },
                     )
                     // AppTextField(
