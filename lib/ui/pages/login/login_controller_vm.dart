@@ -39,10 +39,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
-
-import '../../../util/haptic.dart';
 
 enum LoginSource { FIREBASE, TRUECALLER }
 
@@ -636,9 +635,31 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   void onTermsAndConditionsClicked() {
-    Haptic.vibrate();
-    BaseUtil.launchUrl('https://fello.in/policy/tnc');
-    _analyticsService!.track(eventName: AnalyticsEvents.termsAndConditions);
+    // Haptic.vibrate();
+    // BaseUtil.launchUrl('https://fello.in/policy/tnc');
+    // _analyticsService!.track(eventName: AnalyticsEvents.termsAndConditions);
+    getReferralData();
+  }
+
+  Future<String> getReferralData() async {
+    // String deviceId = "";
+    HapticFeedback.vibrate();
+    try {
+      log("calling referrer data");
+      const _channel = MethodChannel('my_plugin');
+      final String installReferrer =
+          await _channel.invokeMethod('getInstallReferrer');
+      // return installReferrer;
+      ScaffoldMessenger.of(AppState.delegate!.navigatorKey.currentContext!)
+          .showSnackBar(SnackBar(content: Text(installReferrer)));
+      // BaseUtil.showPositiveAlert(installReferrer, "Install referrer data");
+      log(installReferrer.toString());
+    } catch (e) {
+      // debugPrint(e.toString());
+      // deviceId = "";
+      BaseUtil.showNegativeAlert(e.toString(), "error!");
+    }
+    return "";
   }
 
   exit() {
