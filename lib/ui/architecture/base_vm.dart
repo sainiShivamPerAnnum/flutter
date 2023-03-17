@@ -1,6 +1,5 @@
 //Project Imports
 import 'package:felloapp/core/enums/view_state_enum.dart';
-
 //Flutter Imports
 import 'package:flutter/material.dart';
 
@@ -10,6 +9,7 @@ class BaseViewModel extends ChangeNotifier {
 
   bool _disposed = false;
 
+  set state(ViewState st) => state = st;
   void setState(ViewState viewState) {
     _state = viewState;
     notifyListeners();

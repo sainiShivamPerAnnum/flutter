@@ -19,6 +19,8 @@ class FelloTheme {
         backgroundColor: UiConstants.primaryLight.withOpacity(0.4),
       ),
       listTileTheme: ListTileThemeData().copyWith(iconColor: Colors.white),
+      expansionTileTheme: ExpansionTileThemeData()
+          .copyWith(iconColor: Colors.white, collapsedIconColor: Colors.white),
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
