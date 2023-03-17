@@ -19,6 +19,7 @@ class FelloTheme {
         backgroundColor: UiConstants.primaryLight.withOpacity(0.4),
       ),
       listTileTheme: ListTileThemeData().copyWith(iconColor: Colors.white),
+      unselectedWidgetColor: Colors.white,
       expansionTileTheme: ExpansionTileThemeData()
           .copyWith(iconColor: Colors.white, collapsedIconColor: Colors.white),
       inputDecorationTheme: InputDecorationTheme(
@@ -57,10 +58,10 @@ class FelloTheme {
   }
 }
 
-extension TextStyleHelpers on TextStyle {
-  TextStyle get bold => copyWith(fontWeight: FontWeight.bold);
-  TextStyle get italic => copyWith(fontStyle: FontStyle.italic);
-  TextStyle letterSpace(double value) => copyWith(letterSpacing: value);
-  TextStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
-  TextStyle colour(Color color) => copyWith(color: color);
-}
+// extension TextStyleHelpers on TextStyle {
+//   TextStyle get bold => copyWith(fontWeight: FontWeight.bold);
+//   TextStyle get italic => copyWith(fontStyle: FontStyle.italic);
+//   TextStyle letterSpace(double value) => copyWith(letterSpacing: value);
+//   TextStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
+//   TextStyle colour(Color color) => copyWith(color: color);
+// }

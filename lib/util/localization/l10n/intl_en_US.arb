@@ -322,7 +322,7 @@
   "txnBankDetailsLabel": "Bank Account Details",
   "txnHistoryLabel": "Transaction History",
   "-----------------------------": "----------------------------",
-  "btnSumbit": "Submit",
+  "btnSubmit": "Submit",
   "btnYes": "Yes",
   "btnNo": "No",
   "btnSave": "Save",

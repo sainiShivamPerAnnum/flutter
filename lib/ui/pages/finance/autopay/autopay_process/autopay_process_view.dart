@@ -204,7 +204,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
         model.isSubscriptionInProgress
             ? SubProcessText()
             : AppPositiveBtn(
-                btnText: locale.btnSumbit,
+                btnText: locale.btnSubmit,
                 onPressed: () {
                   Haptic.vibrate();
                   model.initiateCustomSubscription();
