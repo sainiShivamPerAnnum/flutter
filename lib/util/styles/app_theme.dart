@@ -18,6 +18,7 @@ class FelloTheme {
       chipTheme: ChipThemeData(
         backgroundColor: UiConstants.primaryLight.withOpacity(0.4),
       ),
+      listTileTheme: ListTileThemeData().copyWith(iconColor: Colors.white),
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(

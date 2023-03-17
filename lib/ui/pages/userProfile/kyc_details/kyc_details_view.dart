@@ -5,8 +5,8 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_help.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
+import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_help.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_verification_views.dart/kyc_error.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_verification_views.dart/kyc_success.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_verification_views.dart/kyc_unverifed.dart';
@@ -42,7 +42,6 @@ class KYCDetailsView extends StatelessWidget {
         return KycSuccessView(model: model);
       case KycVerificationStatus.UNVERIFIED:
         return KycUnVerifiedView(model: model);
-
       case KycVerificationStatus.FAILED:
         return KycUnVerifiedView(model: model);
       case KycVerificationStatus.NONE:
@@ -86,67 +85,112 @@ class KYCDetailsView extends StatelessWidget {
                       child: FullScreenLoader(),
                     )
                   : Padding(
-                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      child: ListView(
+                        padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.pageHorizontalMargins),
                         children: [
-                          getKycView(model),
-                          Spacer(),
-                          model.kycVerificationStatus ==
-                                      KycVerificationStatus.UNVERIFIED ||
-                                  model.kycVerificationStatus ==
-                                      KycVerificationStatus.FAILED
-                              ? Column(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                          vertical:
-                                              SizeConfig.pageHorizontalMargins),
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: SizeConfig.padding16,
-                                          horizontal: SizeConfig.padding20),
-                                      decoration: BoxDecoration(
-                                        color: UiConstants.kBackgroundColor3,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                SizeConfig.roundness12)),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/svg/safety_asset.svg",
-                                            width: SizeConfig.padding24,
+                          ExpansionTile(
+                            initiallyExpanded: true,
+                            iconColor: Colors.white,
+                            collapsedIconColor: Colors.white,
+                            title: Text(
+                              "STEP 1: VERIFY PAN",
+                              style: TextStyles.rajdhaniM.title4,
+                            ),
+                            children: [
+                              getKycView(model),
+                              SizedBox(height: SizeConfig.padding90),
+                              model.kycVerificationStatus ==
+                                          KycVerificationStatus.UNVERIFIED ||
+                                      model.kycVerificationStatus ==
+                                          KycVerificationStatus.FAILED
+                                  ? Column(
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: SizeConfig
+                                                  .pageHorizontalMargins),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: SizeConfig.padding16,
+                                              horizontal: SizeConfig.padding20),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                UiConstants.kBackgroundColor3,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                    SizeConfig.roundness12)),
                                           ),
-                                          SizedBox(
-                                            width: SizeConfig.padding14,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/svg/safety_asset.svg",
+                                                width: SizeConfig.padding24,
+                                              ),
+                                              SizedBox(
+                                                width: SizeConfig.padding14,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  'Name on your PAN Card should be the same as Name on your Bank Account',
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor2),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Expanded(
-                                            child: Text(
-                                              'Name on your PAN Card should be the same as Name on your Bank Account',
-                                              style: TextStyles.sourceSans.body3
-                                                  .colour(
-                                                      UiConstants.kTextColor2),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
+                                        model.isUpdatingKycDetails
+                                            ? LinearProgressIndicator(
+                                                backgroundColor: Colors.black,
+                                              )
+                                            : AppPositiveBtn(
+                                                onPressed: () async {
+                                                  await model.onSubmit(context);
+                                                },
+                                                btnText: locale.btnSumbit,
+                                                width: SizeConfig.screenWidth,
+                                              ),
+                                      ],
+                                    )
+                                  : SizedBox(),
+                              SizedBox(height: SizeConfig.padding16),
+                            ],
+                          ),
+                          Divider(
+                            color: Colors.white24,
+                          ),
+                          ExpansionTile(
+                            iconColor: Colors.white,
+                            collapsedIconColor: Colors.white,
+                            title: Text(
+                              "STEP 2: VERIFY EMAIL",
+                              style: TextStyles.rajdhaniM.title4,
+                            ),
+                            children: [
+                              KycBriefTile(
+                                  model: model,
+                                  leading: Assets.google,
+                                  trailing: Padding(
+                                    padding: EdgeInsets.only(
+                                        right: SizeConfig.padding10),
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    model.isUpdatingKycDetails
-                                        ? LinearProgressIndicator(
-                                            backgroundColor: Colors.black,
-                                          )
-                                        : AppPositiveBtn(
-                                            onPressed: () async {
-                                              await model.onSubmit(context);
-                                            },
-                                            btnText: locale.btnSumbit,
-                                            width: SizeConfig.screenWidth,
-                                          ),
-                                  ],
-                                )
-                              : SizedBox(),
-                          SizedBox(height: SizeConfig.padding10),
+                                  ),
+                                  subtitle: "to verify email",
+                                  label: "Choose a google account",
+                                  title: "Select an account")
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -162,6 +206,7 @@ class KycBriefTile extends StatelessWidget {
       required this.trailing,
       required this.label,
       this.subtitle,
+      this.leading,
       required this.title})
       : super(key: key);
 
@@ -170,6 +215,7 @@ class KycBriefTile extends StatelessWidget {
   final String title;
   final String label;
   final String? subtitle;
+  final String? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +243,8 @@ class KycBriefTile extends StatelessWidget {
                   color: Colors.black,
                 ),
                 child: SvgPicture.asset(
-                  Assets.ic_upload_success,
+                  leading ?? Assets.ic_upload_success,
+                  width: SizeConfig.padding20,
                 ),
               ),
               Expanded(
