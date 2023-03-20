@@ -13,11 +13,10 @@ import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
+import 'package:felloapp/ui/modalsheets/pause_autosave_modalsheet.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -27,9 +26,9 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 //TODO Pause autosave analytics not showing up
-class UserAutosaveDetailsViewModel extends BaseViewModel {
+class AutosaveDetailsViewModel extends BaseViewModel {
   final UserService? _userService = locator<UserService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
   final SubService _subService = locator<SubService>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
@@ -136,7 +135,7 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
     amountFieldController = new TextEditingController();
     subStatusController = new TextEditingController(text: "Active");
     await findActiveSubscription();
-    await getChipAmounts();
+    // await getChipAmounts();
     // if (activeSubscription != null) await getLatestTransactions();
     setState(ViewState.Idle);
   }
@@ -205,14 +204,14 @@ class UserAutosaveDetailsViewModel extends BaseViewModel {
   //   }
   // }
 
-  getChipAmounts() async {
-    dailyChips = await _paytmService!.getAmountChips(
-      freq: Constants.DOC_IAR_DAILY_CHIPS,
-    );
-    weeklyChips = await _paytmService!.getAmountChips(
-      freq: Constants.DOC_IAR_WEEKLY_CHIPS,
-    );
-  }
+  // getChipAmounts() async {
+  //   dailyChips = await _paytmService!.getAmountChips(
+  //     freq: Constants.DOC_IAR_DAILY_CHIPS,
+  //   );
+  //   weeklyChips = await _paytmService!.getAmountChips(
+  //     freq: Constants.DOC_IAR_WEEKLY_CHIPS,
+  //   );
+  // }
 
   //==========================UPDATE METHODS==============================//
 

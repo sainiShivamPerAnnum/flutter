@@ -20,18 +20,15 @@ const HtmlEscape htmlEscape = HtmlEscape();
 class Save extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeProvider<PaytmService, PaytmServiceProperties>(
-      value: locator<PaytmService>(),
-      child: PropertyChangeProvider<BankAndPanService,
-          BankAndPanServiceProperties>(
-        value: locator<BankAndPanService>(),
-        child: BaseView<SaveViewModel>(
-          onModelReady: (model) => model.init(),
-          builder: (ctx, model, child) {
-            log("ROOT: Save view baseview build called");
-            return SaveViewWrapper(model: model);
-          },
-        ),
+    return PropertyChangeProvider<BankAndPanService,
+        BankAndPanServiceProperties>(
+      value: locator<BankAndPanService>(),
+      child: BaseView<SaveViewModel>(
+        onModelReady: (model) => model.init(),
+        builder: (ctx, model, child) {
+          log("ROOT: Save view baseview build called");
+          return SaveViewWrapper(model: model);
+        },
       ),
     );
   }

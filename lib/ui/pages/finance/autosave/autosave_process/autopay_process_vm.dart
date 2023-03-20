@@ -4,11 +4,9 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -22,7 +20,7 @@ enum STATUS { Pending, Complete, Init }
 
 //TODO add chip tap to Enter amount setup
 class AutosaveProcessViewModel extends BaseViewModel {
-  final PaytmService? _paytmService = locator<PaytmService>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final UserService? _userService = locator<UserService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
@@ -223,7 +221,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
     await _subService.getSubscription();
     amountFieldController.text = '100';
     // autosaveState = _subService.autosaveState;
-    await getChipAmounts();
+    // await getChipAmounts();
     // if (autosaveState == AutosaveState.IDLE)
     await getAvailableUpiApps();
     //If no data exists -> Upi apps screen
@@ -278,16 +276,16 @@ class AutosaveProcessViewModel extends BaseViewModel {
   //       }));
   // }
 
-  getChipAmounts() async {
-    dailyChips = await _paytmService!.getAmountChips(
-          freq: Constants.DOC_IAR_DAILY_CHIPS,
-        ) ??
-        [];
-    weeklyChips = await _paytmService!.getAmountChips(
-          freq: Constants.DOC_IAR_WEEKLY_CHIPS,
-        ) ??
-        [];
-  }
+  // getChipAmounts() async {
+  //   dailyChips = await _paytmService!.getAmountChips(
+  //         freq: Constants.DOC_IAR_DAILY_CHIPS,
+  //       ) ??
+  //       [];
+  //   weeklyChips = await _paytmService!.getAmountChips(
+  //         freq: Constants.DOC_IAR_WEEKLY_CHIPS,
+  //       ) ??
+  //       [];
+  // }
 
   // tryAgain() {
   //   _paytmService!.jumpToSubPage(0);

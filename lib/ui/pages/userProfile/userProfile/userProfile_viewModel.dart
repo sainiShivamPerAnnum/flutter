@@ -21,7 +21,6 @@ import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -75,7 +74,6 @@ class UserProfileVM extends BaseViewModel {
   final AppState _appstate = locator<AppState>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
   final S? _locale = locator<S>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
@@ -541,7 +539,6 @@ class UserProfileVM extends BaseViewModel {
                 _txnHistoryService!.signOut();
                 _tambolaService!.signOut();
                 _analyticsService!.signOut();
-                _paytmService!.signout();
                 _bankAndKycService!.dump();
                 ScratchCardService.dump();
                 _tambolaRepo.dump();

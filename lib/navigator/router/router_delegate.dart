@@ -16,9 +16,9 @@ import 'package:felloapp/ui/elements/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/finance/augmont/augmont_gold_details/save_assets_view.dart';
-import 'package:felloapp/ui/pages/finance/autopay/autopay_details_view.dart';
-import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_view.dart';
-import 'package:felloapp/ui/pages/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
@@ -26,7 +26,6 @@ import 'package:felloapp/ui/pages/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
@@ -70,7 +69,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
-  
+
   CustomLogger _logger = locator<CustomLogger>();
   BaseUtil? _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final AppState appState;
@@ -170,7 +169,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       {int? index}) {
     AppState.screenStack
         .insert(index ?? AppState.screenStack.length, ScreenItem.page);
-    print("Inseted a page ${pageConfig.key} to Index $index");
+    print("Inserted a page ${pageConfig.key} to Index $index");
     log("Current Stack: ${AppState.screenStack}");
     _analytics!.trackScreen(screen: pageConfig.name);
     _pages.insert(
@@ -222,13 +221,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BankDetails:
           _addPageData(BankDetailsView(), BankDetailsPageConfig);
           break;
-        // case Pages.TExistingUser:
-        //   _addPageData(TambolaExistingUserPage(), TambolaExistingUser);
-        //   break;
-        // case Pages.TNewUser:
-        //   _addPageData(TambolaNewUserPage(), TambolaNewUser);
-        //   break;
-
         case Pages.UpdateRequired:
           _addPageData(UpdateRequiredScreen(), UpdateRequiredConfig);
           break;
@@ -245,25 +237,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.THome:
           _addPageData(TambolaWrapper(), THomePageConfig);
           break;
-        // case Pages.TGame: //
-        //   _addPageData(TambolaGameView(), TGamePageConfig);
-        //   break;
-        // case Pages.TExistingUser:
-        //   _addPageData(TambolaExistingUserPage(), TambolaExistingUser);
-        //   break;
-        // case Pages.TNewUser:
-        //   _addPageData(TambolaNewUserPage(), TambolaNewUser);
-        //   break;
         case Pages.TPickDraw:
           _addPageData(PicksDraw(), TPickDrawPageConfig);
           break;
         case Pages.TShowAllTickets:
           _addPageData(ShowAllTickets(), TShowAllTicketsPageConfig);
           break;
-        // case Pages.TWalkthrough:
-        //   _addPageData(Walkthrough(), TWalkthroughPageConfig);
-        //   break;
-
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
           break;
@@ -290,15 +269,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.ScratchCardsView:
           _addPageData(ScratchCardsView(), ScratchCardsViewPageConfig);
           break;
-        case Pages.AutosaveDetailsView:
-          _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
+        case Pages.AutosaveOnboardingView:
+          _addPageData(
+              AutosaveOnboardingView(), AutosaveOnboardingViewPageConfig);
           break;
         case Pages.AutosaveProcessView:
           _addPageData(AutosaveProcessView(), AutosaveProcessViewPageConfig);
           break;
-        case Pages.UserAutosaveDetailsView:
-          _addPageData(
-              UserAutosaveDetailsView(), UserAutosaveDetailsViewPageConfig);
+        case Pages.AutosaveDetailsView:
+          _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
           break;
 
         case Pages.TopPlayerLeaderboard:
@@ -549,20 +528,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.WebGameView:
         WebGameViewPageConfig.currentPageAction = action;
         break;
-      case Pages.AutosaveDetailsView:
-        AutosaveDetailsViewPageConfig.currentPageAction = action;
+      case Pages.AutosaveOnboardingView:
+        AutosaveOnboardingViewPageConfig.currentPageAction = action;
         break;
       case Pages.AutosaveProcessView:
         AutosaveProcessViewPageConfig.currentPageAction = action;
         break;
-      case Pages.UserAutosaveDetailsView:
-        UserAutosaveDetailsViewPageConfig.currentPageAction = action;
+      case Pages.AutosaveDetailsView:
+        AutosaveDetailsViewPageConfig.currentPageAction = action;
         break;
       case Pages.AutosaveTransactionsView:
         AutosaveTransactionsViewPageConfig.currentPageAction = action;
-        break;
-      case Pages.AutosaveWalkthrough:
-        AutosaveWalkThroughConfig.currentPageAction = action;
         break;
       case Pages.NewWebHomeView:
         NewWebHomeViewPageConfig.currentPageAction = action;
@@ -918,8 +894,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
-      case 'userAutosaveDetails':
-        pageConfiguration = UserAutosaveDetailsViewPageConfig;
+      case 'autosaveDetails':
+        pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
       case 'autosaveTxns':
         openTransactions(InvestmentType.AUGGOLD99);

@@ -89,7 +89,8 @@ class SubService extends ChangeNotifier {
   int pollCount = 0;
 
   init() {
-    getSubscription();
+    autosaveVisible = AppConfig.getValue(AppConfigKey.autosaveActive) as bool;
+    if (autosaveVisible) getSubscription();
   }
 
   dump() {
@@ -359,7 +360,7 @@ class SubService extends ChangeNotifier {
         //     hapticVibrate: true,
         //     content: EditSubscriptionDialog());
         return AppState.delegate!.appState.currentAction = PageAction(
-          page: UserAutosaveDetailsViewPageConfig,
+          page: AutosaveDetailsViewPageConfig,
           state: PageState.addPage,
         );
       case AutosaveState.IDLE:

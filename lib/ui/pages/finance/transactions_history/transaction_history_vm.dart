@@ -5,7 +5,6 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -18,7 +17,7 @@ enum TranFilterType { Type, Subtype }
 class TransactionsHistoryViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final UserService? _userService = locator<UserService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
   final SubService _subscriptionService = locator<SubService>();
 
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();

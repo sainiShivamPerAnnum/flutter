@@ -1,11 +1,10 @@
-import 'package:felloapp/core/enums/paytm_service_enums.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 class AutosaveStatusText extends StatelessWidget {
   const AutosaveStatusText({Key? key}) : super(key: key);
@@ -13,10 +12,10 @@ class AutosaveStatusText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
+    return Consumer<SubService>(
       builder: (context, model, property) => Container(
-        child: model!.activeSubscription != null &&
-                model.activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE
+        child: model.subscriptionData != null &&
+                model.subscriptionData!.status == Constants.SUBSCRIPTION_ACTIVE
             ? Text(
                 locale.autoSIP,
                 style:

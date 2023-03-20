@@ -1,7 +1,7 @@
 import 'package:felloapp/core/model/amount_chips_model.dart';
-import 'package:felloapp/ui/pages/finance/autopay/amount_chips.dart';
-import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_vm.dart';
-import 'package:felloapp/ui/pages/finance/autopay/segmate_chip.dart';
+import 'package:felloapp/ui/pages/finance/autosave/amount_chips.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autopay_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/segmate_chip.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';

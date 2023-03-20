@@ -34,7 +34,7 @@ class RazorpayService extends ChangeNotifier {
   UserTransaction? _currentTxn;
   ValueChanged<UserTransaction?>? _txnUpdateListener;
   Razorpay? _razorpay;
-  PaytmService? _paytmService;
+  // PaytmService? _paytmService;
   PaytmRepository? _paytmRepo;
   AugmontTransactionService? _augTxnService;
   BaseTransactionService? _txnService;
@@ -46,7 +46,7 @@ class RazorpayService extends ChangeNotifier {
   bool init(InvestmentType investmentType) {
     _razorpay = Razorpay();
     _logger = locator<CustomLogger>();
-    _paytmService = locator<PaytmService>();
+    // _paytmService = locator<PaytmService>();
     _analyticsService = locator<AnalyticsService>();
 
     _paytmRepo = locator<PaytmRepository>();

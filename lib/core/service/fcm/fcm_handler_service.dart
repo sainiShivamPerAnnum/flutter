@@ -9,7 +9,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
-import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -28,7 +28,7 @@ class FcmHandler extends ChangeNotifier {
   final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
   final AutosaveProcessViewModel? _autosaveProcessViewModel =
       locator<AutosaveProcessViewModel>();
-  final PaytmService? _paytmService = locator<PaytmService>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
   final AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
 

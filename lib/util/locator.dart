@@ -47,7 +47,6 @@ import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -60,8 +59,8 @@ import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_vm.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
-import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_vm.dart';
-import 'package:felloapp/ui/pages/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autopay_process_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
@@ -118,8 +117,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => FcmHandlerDataPayloads());
   locator.registerLazySingleton(() => FcmHandler());
   locator.registerLazySingleton(() => FcmListener(locator()));
-
-  locator.registerLazySingleton(() => PaytmService());
 
   locator.registerLazySingleton(() => AnalyticsProperties());
   locator.registerLazySingleton(() => AnalyticsService());
@@ -211,7 +208,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => MultipleScratchCardsViewModel());
   locator.registerFactory(() => TopSaverViewModel());
   locator.registerFactory(() => AutosaveProcessViewModel());
-  locator.registerFactory(() => UserAutosaveDetailsViewModel());
+  locator.registerFactory(() => AutosaveDetailsViewModel());
   locator.registerFactory(() => CampaignRepo());
   locator.registerFactory(() => OnboardingViewModel());
   locator.registerFactory(() => JourneyBannersViewModel());

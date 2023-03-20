@@ -12,7 +12,6 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -46,7 +45,6 @@ class LauncherViewModel extends BaseViewModel {
   // final TambolaService _tambolaService = locator<TambolaService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final UserRepository _userRepo = locator<UserRepository>();
-  final PaytmService _paytmService = locator<PaytmService>();
   final JourneyService _journeyService = locator<JourneyService>();
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final UserCoinService _userCoinService = locator<UserCoinService>();

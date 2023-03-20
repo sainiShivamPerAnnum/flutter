@@ -1,4 +1,3 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -9,9 +8,7 @@ import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_view.dart';
-import 'package:felloapp/ui/pages/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autopay_process_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
@@ -29,8 +26,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class UserAutosaveDetailsView extends StatelessWidget {
-  const UserAutosaveDetailsView({Key? key}) : super(key: key);
+import './autosave_details_vm.dart';
+
+class AutosaveDetailsView extends StatelessWidget {
+  const AutosaveDetailsView({Key? key}) : super(key: key);
 
   getFreq(String? freq) {
     if (freq == "DAILY") return "/day";
@@ -41,7 +40,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return BaseView<UserAutosaveDetailsViewModel>(
+    return BaseView<AutosaveDetailsViewModel>(
       onModelReady: (model) {
         model.init();
       },
@@ -244,7 +243,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
   }
 
   Padding _buildPaymentMethod(
-      UserAutosaveDetailsViewModel model, BuildContext context) {
+      AutosaveDetailsViewModel model, BuildContext context) {
     S locale = S.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -314,7 +313,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
   }
 
   Widget _buildAmountSavedCard(
-      UserAutosaveDetailsViewModel model, BuildContext context) {
+      AutosaveDetailsViewModel model, BuildContext context) {
     S locale = S.of(context);
     return Container(
       // height: SizeConfig.screenWidth * 0.5433,
@@ -439,7 +438,7 @@ class UserAutosaveDetailsView extends StatelessWidget {
     ];
   }
 
-  _buildUpdateAutoPay(UserAutosaveDetailsViewModel model) {
+  _buildUpdateAutoPay(AutosaveDetailsViewModel model) {
     S locale = locator<S>();
     return [
       if (model.activeSubscription!.status == Constants.SUBSCRIPTION_ACTIVE)
@@ -552,175 +551,6 @@ class TransationTile extends StatelessWidget {
             color: UiConstants.kTextColor.withOpacity(0.4),
           ),
       ],
-    );
-  }
-}
-
-class PauseAutosaveModal extends StatefulWidget {
-  final SubService? model;
-
-  const PauseAutosaveModal({Key? key, this.model}) : super(key: key);
-
-  @override
-  State<PauseAutosaveModal> createState() => _PauseAutosaveModalState();
-}
-
-class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
-  AutosavePauseOption pauseValue = AutosavePauseOption.ONE_WEEK;
-  int pauseInt = 0;
-  setPauseValue(AutosavePauseOption value, int val) {
-    setState(() {
-      pauseValue = value;
-      pauseInt = val;
-    });
-  }
-
-  bool isPausing = false;
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Container(
-      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-      child: Wrap(
-        //shrinkWrap: true,
-        // mainAxisSize: MainAxisSize.min,
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(locale.pauseAutoSave, style: TextStyles.rajdhaniB.title3),
-              Spacer(),
-              CircleAvatar(
-                backgroundColor: Colors.transparent,
-                child: IconButton(
-                  onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  },
-                  icon: Icon(
-                    Icons.close,
-                    size: SizeConfig.iconSize1,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: SizeConfig.padding16),
-          pauseOptionTile(
-            text: "1 Week",
-            radioValue: 1,
-            option: AutosavePauseOption.ONE_WEEK,
-          ),
-          pauseOptionTile(
-            text: "2 Weeks",
-            radioValue: 2,
-            option: AutosavePauseOption.TWO_WEEK,
-          ),
-          pauseOptionTile(
-            text: "1 Month",
-            radioValue: 3,
-            option: AutosavePauseOption.ONE_MONTH,
-          ),
-          pauseOptionTile(
-            text: "Forever",
-            radioValue: 4,
-            option: AutosavePauseOption.FOREVER,
-          ),
-          Container(height: SizeConfig.padding16),
-          AppPositiveCustomChildBtn(
-            child: isPausing
-                ? SpinKitThreeBounce(
-                    color: Colors.white,
-                    size: SizeConfig.padding16,
-                  )
-                : Text(
-                    locale.btnPause.toUpperCase(),
-                    style: TextStyles.rajdhaniB.body1.bold.colour(Colors.white),
-                  ),
-            onPressed: () async {
-              if (pauseValue == 4) {
-                BaseUtil.openDialog(
-                  addToScreenStack: true,
-                  isBarrierDismissible: false,
-                  hapticVibrate: true,
-                  content: ConfirmationDialog(
-                    title: locale.areYouSure,
-                    description: locale.loseAutoSave,
-                    cancelBtnText: locale.btnNo,
-                    cancelAction: () {
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                    buttonText: locale.btnYes,
-                    confirmAction: () async {
-                      if (isPausing) return;
-                      setState(() {
-                        isPausing = false;
-                      });
-                      await widget.model!.pauseSubscription(pauseValue);
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                  ),
-                );
-              } else {
-                if (isPausing) return;
-                setState(() {
-                  isPausing = true;
-                });
-                await widget.model!.pauseSubscription(pauseValue);
-                setState(() {
-                  isPausing = false;
-                });
-              }
-            },
-          ),
-          SizedBox(height: SizeConfig.pageHorizontalMargins / 2),
-        ],
-      ),
-    );
-  }
-
-  pauseOptionTile(
-      {required String text,
-      required int radioValue,
-      required AutosavePauseOption option}) {
-    return InkWell(
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onTap: () {
-        setPauseValue(option, radioValue);
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-        decoration: BoxDecoration(
-            border: Border.all(
-              width: pauseValue == radioValue ? 0.5 : 0,
-              color: pauseValue == radioValue
-                  ? UiConstants.primaryColor
-                  : UiConstants.kTextColor2,
-            ),
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            color: pauseValue == radioValue
-                ? UiConstants.kTealTextColor.withOpacity(0.1)
-                : Colors.transparent),
-        padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding4,
-        ),
-        child: ListTile(
-          title: Text(
-            text,
-            style: TextStyles.sourceSans.body2,
-          ),
-          trailing: Radio(
-            value: radioValue,
-            groupValue: pauseInt,
-            onChanged: (dynamic value) {
-              setPauseValue(option, radioValue);
-            },
-            activeColor: UiConstants.primaryColor,
-          ),
-        ),
-      ),
     );
   }
 }

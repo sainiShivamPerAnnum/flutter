@@ -16,14 +16,14 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class AutosaveDetailsView extends StatefulWidget {
-  const AutosaveDetailsView({Key? key}) : super(key: key);
+class AutosaveOnboardingView extends StatefulWidget {
+  const AutosaveOnboardingView({Key? key}) : super(key: key);
 
   @override
-  State<AutosaveDetailsView> createState() => _AutosaveDetailsViewState();
+  State<AutosaveOnboardingView> createState() => _AutosaveOnboardingViewState();
 }
 
-class _AutosaveDetailsViewState extends State<AutosaveDetailsView> {
+class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   @override
   void initState() {

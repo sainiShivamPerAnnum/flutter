@@ -22,7 +22,6 @@ const String VerifyEmailPath = '/verifyEmail';
 const String SupportPath = '/support';
 const String UpdateRequiredPath = '/updateRequired';
 const String WalkThroughPath = '/walkThrough';
-const String AutosaveWalkThroughPath = '/autosaveWalkThrough';
 const String YourFundsPath = '/yourFunds';
 const String NotificationsPath = '/notifications';
 const String THome = '/tHome';
@@ -51,9 +50,9 @@ const String AllParticipantsViewPath = '/allParticipantsView';
 const String PoolViewPath = "/poolView";
 const String WebHomeViewPath = "/webHomeView";
 const String WebGameViewPath = "/webGameView";
-const String AutosaveDetailsViewPath = '/autosaveDetailsView';
+const String AutosaveOnboardingViewPath = '/autosaveOnboardingView';
 const String AutosaveProcessViewPath = '/autosaveProcessView';
-const String UserAutosaveDetailsViewPath = '/userAutosaveDetailsView';
+const String AutosaveDetailsViewPath = '/autosaveDetailsView';
 const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
 const String NewGameHomeViewPath = '/newGameHome';
 const String NewWebHomeViewPath = '/newWebHomeView';
@@ -101,7 +100,6 @@ enum Pages {
   VerifyEmail,
   Support,
   WalkThrough,
-  AutosaveWalkthrough,
   YourFunds,
   THome,
   TNewUser,
@@ -133,9 +131,9 @@ enum Pages {
   PoolView,
   WebHomeView,
   WebGameView,
-  AutosaveDetailsView,
+  AutosaveOnboardingView,
   AutosaveProcessView,
-  UserAutosaveDetailsView,
+  AutosaveDetailsView,
   AutosaveTransactionsView,
   NewWebHomeView,
   TopPlayerLeaderboard,
@@ -351,13 +349,6 @@ PageConfiguration WalkThroughConfig = PageConfiguration(
   name: 'Walk Thorugh Screen',
 );
 
-PageConfiguration AutosaveWalkThroughConfig = PageConfiguration(
-  key: 'AutosaveWalkThrough',
-  path: AutosaveWalkThroughPath,
-  uiPage: Pages.AutosaveWalkthrough,
-  name: 'Autosave Walk Thorugh Screen',
-);
-
 PageConfiguration YourFundsConfig = PageConfiguration(
   key: 'YourFunds',
   path: YourFundsPath,
@@ -543,11 +534,11 @@ PageConfiguration PoolViewPageConfig = PageConfiguration(
   name: 'Pool View Screen',
 );
 
-PageConfiguration AutosaveDetailsViewPageConfig = PageConfiguration(
-  key: 'AutosaveDetailsView',
-  path: AutosaveDetailsViewPath,
-  uiPage: Pages.AutosaveDetailsView,
-  name: 'Autosave Details Screen',
+PageConfiguration AutosaveOnboardingViewPageConfig = PageConfiguration(
+  key: 'AutosaveOnboardingView',
+  path: AutosaveOnboardingViewPath,
+  uiPage: Pages.AutosaveOnboardingView,
+  name: 'Autosave Onboarding Screen',
 );
 
 PageConfiguration AutosaveProcessViewPageConfig = PageConfiguration(
@@ -556,10 +547,10 @@ PageConfiguration AutosaveProcessViewPageConfig = PageConfiguration(
   uiPage: Pages.AutosaveProcessView,
 );
 
-PageConfiguration UserAutosaveDetailsViewPageConfig = PageConfiguration(
-  key: 'UserAutosaveDetailsView',
-  path: UserAutosaveDetailsViewPath,
-  uiPage: Pages.UserAutosaveDetailsView,
+PageConfiguration AutosaveDetailsViewPageConfig = PageConfiguration(
+  key: 'AutosaveDetailsView',
+  path: AutosaveDetailsViewPath,
+  uiPage: Pages.AutosaveDetailsView,
 );
 
 PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(

@@ -1,8 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -12,11 +11,11 @@ import 'package:felloapp/util/locator.dart';
 import 'package:intl/intl.dart';
 
 class SubscriptionCardViewModel extends BaseViewModel {
-  final PaytmService? _paytmService = locator<PaytmService>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
+  final SubService _subService = locator<SubService>();
   final UserService? _userService = locator<UserService>();
   bool _isResumingInProgress = false;
   bool _isLoading = false;
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   S locale = locator<S>();
 
   bool get isResumingInProcess => _isResumingInProgress;
@@ -154,14 +153,9 @@ class SubscriptionCardViewModel extends BaseViewModel {
   // }
 
   String getResumeDate() {
-    if (_paytmService!.activeSubscription!.resumeDate != null) {
-      List<String> dateSplitList =
-          _paytmService!.activeSubscription!.resumeDate!.split('-');
-      int day = int.tryParse(dateSplitList[0])!;
-      int month = int.tryParse(dateSplitList[1])!;
-      int year = int.tryParse(dateSplitList[2])!;
-      final resumeDate = DateTime(year, month, day);
-      return DateFormat("dd MMM yyyy").format(resumeDate);
+    if (_subService.subscriptionData!.resumeDate != null) {
+      return DateFormat("dd MMM yyyy")
+          .format(_subService.subscriptionData!.resumeDate!.toDate());
     } else {
       return "Forever";
     }
@@ -226,14 +220,13 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   navigateToAutoSave() {
-    if (_paytmService!.activeSubscription != null &&
-        _paytmService!.activeSubscription!.status !=
-            Constants.SUBSCRIPTION_INIT &&
-        _paytmService!.activeSubscription!.status !=
+    if (_subService.subscriptionData != null &&
+        _subService.subscriptionData!.status != Constants.SUBSCRIPTION_INIT &&
+        _subService.subscriptionData!.status !=
             Constants.SUBSCRIPTION_CANCELLED)
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addPage,
-        page: UserAutosaveDetailsViewPageConfig,
+        page: AutosaveDetailsViewPageConfig,
       );
     else
       AppState.delegate!.appState.currentAction = PageAction(
