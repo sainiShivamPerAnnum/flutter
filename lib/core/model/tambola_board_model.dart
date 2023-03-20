@@ -8,7 +8,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 
 class TambolaBoard {
-  static Log log = new Log('TambolaBoard');
+  static Log log = const Log('TambolaBoard');
   final _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final _tambolaService = locator<TambolaService>();
 
@@ -16,18 +16,18 @@ class TambolaBoard {
   final String? val;
   final String? id;
   final int? week_code;
-  static final String fldAssignedTime = 'assigned_time';
-  static final String fldId = 'id';
-  static final String fldBoardValue = 'val';
-  static final String fldWeekCode = 'week_code';
+  static const String fldAssignedTime = 'assigned_time';
+  static const String fldId = 'id';
+  static const String fldBoardValue = 'val';
+  static const String fldWeekCode = 'week_code';
 
-  static final int boardHeight = 3;
-  static final int boardLength = 9;
+  static const int boardHeight = 3;
+  static const int boardLength = 9;
   List<String>? encodedTambolaList;
-  List<List<int>>? tambolaBoard = new List.generate(
-      boardHeight, (_) => new List.generate(boardLength, (i) => 0));
+  List<List<int>>? tambolaBoard = List.generate(
+      boardHeight, (_) => List.generate(boardLength, (i) => 0));
 
-  Map<int, int> indexValueMap = new HashMap();
+  Map<int, int> indexValueMap = HashMap();
 
   TambolaBoard(this.assigned_time, this.val, this.id, this.week_code) {
     if (this.val != null) decodeBoard(this.val!);
@@ -73,14 +73,15 @@ class TambolaBoard {
   }
 
   Map<int, int> compileEncodedArrayToMap() {
-    Map<int, int> map = new HashMap();
+    Map<int, int> map = HashMap();
     encodedTambolaList!.forEach((val) {
-      TambolaValueObject obj = new TambolaValueObject(val);
+      TambolaValueObject obj = TambolaValueObject(val);
       if (obj.index != TambolaValueObject.INVALID &&
-          obj.value != TambolaValueObject.INVALID)
+          obj.value != TambolaValueObject.INVALID) {
         map[obj.index] = obj.value;
-      else
+      } else {
         log.error("Error while inserting Tambola item value: $val");
+      }
     });
 
     return map;
@@ -228,12 +229,12 @@ class TambolaBoard {
 }
 
 class TambolaValueObject {
-  Log log = new Log("TambolaValueObject");
+  Log log = const Log("TambolaValueObject");
   int _value = 0;
   int _index = 0;
   bool _valueInvalid = false;
   bool _indexInvalid = false;
-  static final int INVALID = -1;
+  static const int INVALID = -1;
 
   TambolaValueObject(String val) {
     String int_part = val.replaceAll(RegExp('[^0-9]'), '');
@@ -242,17 +243,18 @@ class TambolaValueObject {
 
     try {
       int bval = int.parse(int_part);
-      if (bval < 1 || bval > 90)
+      if (bval < 1 || bval > 90) {
         _valueInvalid = true;
-      else
+      } else {
         _value = bval;
+      }
     } catch (e) {
       _valueInvalid = true;
     }
 
-    if (char_part.length != 1)
+    if (char_part.length != 1) {
       _indexInvalid = true;
-    else {
+    } else {
       int bindex = char_part.codeUnitAt(0);
       if (bindex > 96 && bindex < 123) {
         _index = bindex - 97;

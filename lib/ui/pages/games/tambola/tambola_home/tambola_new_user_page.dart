@@ -9,9 +9,9 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_existing_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_existing_user_landing_page.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -42,7 +42,7 @@ class TambolaWrapper extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         if (model.state == ViewState.Busy) {
-          return Scaffold(
+          return const Scaffold(
             body: Center(child: FullScreenLoader()),
             backgroundColor: UiConstants.kBackgroundColor,
           );
@@ -53,7 +53,7 @@ class TambolaWrapper extends StatelessWidget {
           onRefresh: model.refreshTambolaTickets,
           child: Scaffold(
             body: (model.activeTambolaCardCount ?? 0) > 0
-                ? TambolaExistingUserPage(
+                ? TambolaExistingUserScreen(
                     model: model,
                   )
                 : TambolaNewUserPage(

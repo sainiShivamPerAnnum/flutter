@@ -23,7 +23,9 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class TambolaExistingUserPage extends StatefulWidget {
-  TambolaExistingUserPage({Key? key, required this.model}) : super(key: key);
+  const TambolaExistingUserPage({Key? key, required this.model})
+      : super(key: key);
+
   final TambolaHomeViewModel model;
 
   @override
@@ -41,7 +43,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
   void initState() {
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
     super.initState();
   }
@@ -78,7 +80,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
               style: TextButton.styleFrom(
                 primary: Colors.white,
                 onSurface: Colors.white,
-                side: BorderSide(color: Colors.white, width: 1),
+                side: const BorderSide(color: Colors.white, width: 1),
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25))),
               ),
@@ -108,9 +110,9 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
               child: Container(
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(0xff1a1a1a),
+                    color: const Color(0xff1a1a1a),
                     border: Border.all(color: Colors.white)),
-                padding: EdgeInsets.all(6),
+                padding: const EdgeInsets.all(6),
                 child: Icon(
                   Icons.question_mark,
                   color: Colors.white,
@@ -197,7 +199,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                           onTap: () {
                             _scrollController.animateTo(
                                 _scrollController.position.maxScrollExtent,
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 curve: Curves.fastOutSlowIn);
                             animationController
                                 .forward()
@@ -217,7 +219,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                             child: Text(
                               locale.tGetTickets,
                               style: TextStyles.rajdhaniSB.body2,
-                              key: ValueKey(Constants.GET_TAMBOLA_TICKETS),
+                              key: const ValueKey(Constants.GET_TAMBOLA_TICKETS),
                             ),
                           ),
                         ),
@@ -236,7 +238,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        FullScreenLoader(),
+                        const FullScreenLoader(),
                         SizedBox(height: SizeConfig.padding20),
                         Text(
                           locale.tFetch,
@@ -258,10 +260,10 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                   child: Container(
                     margin: EdgeInsets.symmetric(
                         horizontal: SizeConfig.screenWidth! * 0.06),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Color(0xff627F8E).withOpacity(0.2),
-                      border: Border.all(color: Color(0xff627F8E)),
+                      color: const Color(0xff627F8E).withOpacity(0.2),
+                      border: Border.all(color: const Color(0xff627F8E)),
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness12),
                     ),
@@ -298,10 +300,10 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                   child: Container(
                     margin: EdgeInsets.symmetric(
                         horizontal: SizeConfig.screenWidth! * 0.06),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Color(0xff627F8E).withOpacity(0.2),
-                      border: Border.all(color: Color(0xff627F8E)),
+                      color: const Color(0xff627F8E).withOpacity(0.2),
+                      border: Border.all(color: const Color(0xff627F8E)),
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness12),
                     ),
@@ -321,7 +323,7 @@ class _TambolaExistingUserPageState extends State<TambolaExistingUserPage>
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 32,
                 ),
                 AnimatedBuilder(

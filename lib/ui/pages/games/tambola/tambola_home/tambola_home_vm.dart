@@ -54,7 +54,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
   int? currentPage = 0;
-  PageController pageController = new PageController(initialPage: 0);
+  PageController pageController = PageController(initialPage: 0);
   LeaderboardModel? _tLeaderBoard;
   late ScrollController scrollController;
   double cardOpacity = 1;
@@ -81,13 +81,13 @@ class TambolaHomeViewModel extends BaseViewModel {
   bool _showWinCard = false;
   Map<String, int> ticketCodeWinIndex = {};
   bool _isEligible = false;
-  get isEligible => this._isEligible;
+  get isEligible => _isEligible;
 
-  set isEligible(value) => this._isEligible = value;
-  get showWinCard => this._showWinCard;
+  set isEligible(value) => _isEligible = value;
+  get showWinCard => _showWinCard;
 
   set showWinCard(value) {
-    this._showWinCard = value;
+    _showWinCard = value;
     notifyListeners();
   }
 
@@ -102,11 +102,13 @@ class TambolaHomeViewModel extends BaseViewModel {
   };
 
   List<String> tabList = [
+
     "All",
-    "Corners",
-    "One Row",
-    "Two Rows",
     "Full House",
+    "1st Row",
+    "2nd Row",
+    "3rd Row",
+    "Corner",
   ];
 
   String boxHeading = "How to Play";
@@ -145,23 +147,23 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   List<TambolaBoard?>? get userWeeklyBoards => tambolaService!.userWeeklyBoards;
 
-  List<Ticket>? get tambolaBoardViews => this._tambolaBoardViews;
+  List<Ticket>? get tambolaBoardViews => _tambolaBoardViews;
 
   set tambolaBoardViews(List<Ticket>? value) {
-    this._tambolaBoardViews = value;
+    _tambolaBoardViews = value;
   }
 
-  get ticketsBeingGenerated => this._ticketsBeingGenerated;
+  get ticketsBeingGenerated => _ticketsBeingGenerated;
 
   set ticketsBeingGenerated(value) {
-    this._ticketsBeingGenerated = value;
+    _ticketsBeingGenerated = value;
     notifyListeners();
   }
 
-  get weeklyDrawFetched => this._weeklyDrawFetched;
+  get weeklyDrawFetched => _weeklyDrawFetched;
 
   set weeklyDrawFetched(value) {
-    this._weeklyDrawFetched = value;
+    _weeklyDrawFetched = value;
     notifyListeners();
   }
 
@@ -215,7 +217,7 @@ class TambolaHomeViewModel extends BaseViewModel {
 
     //Tambola services
     ticketCountController =
-        new TextEditingController(text: buyTicketCount.toString());
+        TextEditingController(text: buyTicketCount.toString());
     updateTicketSavedAmount(buyTicketCount);
 
     // Ticket wallet check
@@ -225,8 +227,9 @@ class TambolaHomeViewModel extends BaseViewModel {
     if (weeklyDigits == null) {
       await tambolaService!.fetchWeeklyPicks();
       weeklyDrawFetched = true;
-    } else
+    } else {
       weeklyDrawFetched = true;
+    }
 
     ///next get the tambola tickets of this week
 
@@ -250,8 +253,9 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   Future<void> fetchTambola() async {
     ticketsLoaded = false;
-    if (!tambolaService!.weeklyTicksFetched)
+    if (!tambolaService!.weeklyTicksFetched) {
       tambolaService!.fetchTambolaBoard();
+    }
 
     await tambolaService!.completer.future;
 
@@ -294,8 +298,9 @@ class TambolaHomeViewModel extends BaseViewModel {
     isPrizesLoading = true;
     notifyListeners();
     await _prizeService!.fetchPrizeByGameType(Constants.GAME_TYPE_TAMBOLA);
-    if (tPrizes == null)
+    if (tPrizes == null) {
       BaseUtil.showNegativeAlert(locale.prizeFetchFailed, locale.tryLater);
+    }
     isPrizesLoading = false;
     notifyListeners();
   }
@@ -327,8 +332,9 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   int? get activeTambolaCardCount {
-    if (tambolaService == null || tambolaService!.userWeeklyBoards == null)
+    if (tambolaService == null || tambolaService!.userWeeklyBoards == null) {
       return 0;
+    }
     return tambolaService!.userWeeklyBoards!.length;
   }
 
@@ -338,11 +344,12 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   void increaseTicketCount() {
-    if (buyTicketCount < 30)
+    if (buyTicketCount < 30) {
       buyTicketCount += 1;
-    else
+    } else {
       BaseUtil.showNegativeAlert(
           locale.ticketsExceeded, locale.tktsPurchaseLimit);
+    }
     ticketCountController!.text = buyTicketCount.toString();
     updateTicketSavedAmount(buyTicketCount);
 
@@ -431,13 +438,13 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   Ticket? buildBoardView(TambolaBoard board) {
-    if (board == null || !board.isValid()) return null;
+    if (!board.isValid()) return null;
     List<int> _calledDigits;
     if (!tambolaService!.weeklyDrawFetched ||
         weeklyDigits == null ||
-        weeklyDigits!.toList().isEmpty)
+        weeklyDigits!.toList().isEmpty) {
       _calledDigits = [];
-    else {
+    } else {
       _calledDigits = weeklyDigits!.getPicksPostDate(DateTime.monday);
     }
 
@@ -449,7 +456,7 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   List<TambolaBoard?>? refreshBestBoards() {
     if (userWeeklyBoards == null || userWeeklyBoards!.isEmpty) {
-      return new List<TambolaBoard?>.filled(5, null);
+      return List<TambolaBoard?>.filled(5, null);
     }
     _bestTambolaBoards = [];
     for (int i = 0; i < 4; i++) {
@@ -501,30 +508,34 @@ class TambolaHomeViewModel extends BaseViewModel {
       if (boardObj!
               .getCornerOdds(weeklyDigits!.getPicksPostDate(DateTime.monday)) ==
           0) {
-        if (boardObj.getTicketNumber() != 'NA')
+        if (boardObj.getTicketNumber() != 'NA') {
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.CORNERS_COMPLETED;
+        }
       }
       if (boardObj
               .getOneRowOdds(weeklyDigits!.getPicksPostDate(DateTime.monday)) ==
           0) {
-        if (boardObj.getTicketNumber() != 'NA')
+        if (boardObj.getTicketNumber() != 'NA') {
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.ONE_ROW_COMPLETED;
+        }
       }
       if (boardObj
               .getTwoRowOdds(weeklyDigits!.getPicksPostDate(DateTime.monday)) ==
           0) {
-        if (boardObj.getTicketNumber() != 'NA')
+        if (boardObj.getTicketNumber() != 'NA') {
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.TWO_ROWS_COMPLETED;
+        }
       }
       if (boardObj.getFullHouseOdds(
               weeklyDigits!.getPicksPostDate(DateTime.monday)) ==
           0) {
-        if (boardObj.getTicketNumber() != 'NA')
+        if (boardObj.getTicketNumber() != 'NA') {
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.FULL_HOUSE_COMPLETED;
+        }
       }
     });
 
