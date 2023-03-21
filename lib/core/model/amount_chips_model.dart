@@ -23,7 +23,7 @@ class AmountChipsModel {
     @required this.order,
     @required this.value,
     @required this.best,
-    @required this.isSelected,
+    this.isSelected,
   });
 
   factory AmountChipsModel.fromMap(Map<String, dynamic> map) {

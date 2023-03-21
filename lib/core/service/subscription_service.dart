@@ -4,14 +4,20 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_vm.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
@@ -25,12 +31,39 @@ enum AutosavePauseOption {
   ONE_MONTH,
 }
 
+List<AmountChipsModel> defaultAmountChipList = [
+  AmountChipsModel(order: 0, value: 100, best: false, isSelected: false),
+  AmountChipsModel(order: 0, value: 250, best: true, isSelected: false),
+  AmountChipsModel(order: 0, value: 500, best: false, isSelected: false),
+  AmountChipsModel(order: 0, value: 750, best: false, isSelected: false),
+  AmountChipsModel(order: 0, value: 1000, best: false, isSelected: false),
+];
+
 class SubService extends ChangeNotifier {
+  //DEPENDENCY - START
+
   final SubscriptionRepo _subscriptionRepo = locator<SubscriptionRepo>();
-  AutosaveState _autosaveState = AutosaveState.IDLE;
-  TextEditingController amountController = TextEditingController();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
+
+  //DEPENDENCY - END
+
+  //LOCAL VARIABLES - START
+  List suggestions = [];
   int minValue = 25;
   int maxValue = 5000;
+  Timer? timer;
+  int pollCount = 0;
+
+  //LOCAL VARIABLES - END
+
+  //GETTERS & SETTERS - START
+
+  List<SubscriptionTransactionModel> subscriptionTxnsHistoryList = [];
+  bool hasNoMoreSubsTxns = false;
+  UpiApplication? upiApplication;
+  String? selectedUpiApplicationName;
+
   bool _autosaveVisible = true;
   bool get autosaveVisible => this._autosaveVisible;
   set autosaveVisible(bool value) {
@@ -38,55 +71,31 @@ class SubService extends ChangeNotifier {
     notifyListeners();
   }
 
-  String minAlert = "A minimum of Rs 25 is required";
-  String maxAlert = "A maximum of Rs 5000 is allowed";
-  bool _showMinAlert = false;
-  bool _showMaxAlert = false;
-  bool _isDaily = true;
-  List<SubscriptionTransactionModel> subscriptionTxnsHistoryList = [];
-  bool hasNoMoreSubsTxns = false;
-  get isDaily => this._isDaily;
-  UpiApplication? upiApplication;
-  String? selectedUpiApplicationName;
-  set isDaily(value) {
-    this._isDaily = value;
-    notifyListeners();
-  }
-
-  get showMinAlert => this._showMinAlert;
-
-  set showMinAlert(value) {
-    this._showMinAlert = value;
-    notifyListeners();
-  }
-
-  get showMaxAlert => this._showMaxAlert;
-
-  set showMaxAlert(value) {
-    this._showMaxAlert = value;
-    notifyListeners();
-  }
-
-  get autosaveState => this._autosaveState;
-
-  set autosaveState(value) {
+  AutosaveState _autosaveState = AutosaveState.IDLE;
+  AutosaveState get autosaveState => this._autosaveState;
+  set autosaveState(AutosaveState value) {
     this._autosaveState = value;
     notifyListeners();
   }
 
   SubscriptionModel? _subscriptionData;
-
   SubscriptionModel? get subscriptionData => this._subscriptionData;
-
   set subscriptionData(value) {
     this._subscriptionData = value;
     if (value == null) return;
-    amountController.text = subscriptionData!.amount.toString();
     setSubscriptionState();
   }
 
-  Timer? timer;
-  int pollCount = 0;
+  bool _isPauseOrResuming = false;
+  get isPauseOrResuming => this._isPauseOrResuming;
+  set isPauseOrResuming(value) {
+    this._isPauseOrResuming = value;
+    notifyListeners();
+  }
+
+  //GETTERS & SETTERS - END
+
+  // SUBSCRIPTION SERVICE CORE METHODS - START
 
   init() {
     autosaveVisible = AppConfig.getValue(AppConfigKey.autosaveActive) as bool;
@@ -97,46 +106,40 @@ class SubService extends ChangeNotifier {
     pollCount = 0;
     _subscriptionData = null;
     hasNoMoreSubsTxns = false;
-    _isDaily = true;
     timer?.cancel();
-
     subscriptionTxnsHistoryList = [];
     autosaveState = AutosaveState.IDLE;
   }
 
-  Future<bool> createSubscription(
-      {required String freq,
-      required int amount,
-      required String package,
-      required String asset}) async {
+  // SUBSCRIPTION SERVICE CORE METHODS - END
+
+  // SUBSCRIPTION CORE METHODS - START
+
+  Future<bool> createSubscription({
+    required String freq,
+    required int lbAmt,
+    required int augAmt,
+    required String package,
+  }) async {
     pollCount = 0;
     autosaveState = AutosaveState.IDLE;
-
     final res = await _subscriptionRepo.createSubscription(
-        freq: freq, amount: amount, package: package, asset: asset);
+        freq: freq, lbAmt: lbAmt, package: package, augAmt: augAmt);
     if (res.isSuccess()) {
-      // try {
-      getSubscription();
-      const platform = MethodChannel("methodChannel/upiIntent");
-      autosaveState = AutosaveState.INIT;
-      final result = await platform.invokeMethod(
-          'initiatePsp', {'redirectUrl': res.model, 'packageName': package});
-      log("Result from initiatePsp: $result");
-      if (subscriptionData != null) startPollingForResponse();
-
-      return true;
-      // version = result;
-      // return ApiResponse(model: version, code: 200);
-      // } catch (e) {
-      //   debugPrint(e.toString());
-      //   // version = 0;
-      //   // return ApiResponse.withError("Unable to get PhonePe version code", 400);
-      // }
-      // bool launchRes = await BaseUtil.launchUrl(res.model!);
-      // if (!launchRes) {
-      // } else {
-      //   autosaveState = AutosaveState.INIT;
-      // }
+      try {
+        getSubscription();
+        const platform = MethodChannel("methodChannel/upiIntent");
+        autosaveState = AutosaveState.INIT;
+        final result = await platform.invokeMethod(
+            'initiatePsp', {'redirectUrl': res.model, 'packageName': package});
+        log("Result from initiatePsp: $result");
+        if (subscriptionData != null)
+          startPollingForCreateSubscriptionResponse();
+        return true;
+      } catch (e) {
+        _logger.e("Create subscription failed: Platform Exception");
+        return false;
+      }
     } else {
       autosaveState = AutosaveState.IDLE;
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try after sometime");
@@ -144,30 +147,24 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  startPollingForResponse() {
-    timer = Timer.periodic(Duration(seconds: 10), (t) {
-      pollCount++;
-      if (pollCount > 100) {
-        t.cancel();
-        autosaveState = AutosaveState.IDLE;
-      }
-      getSubscription().then((_) {
-        if (subscriptionData!.status != AutosaveState.INIT.name &&
-            subscriptionData!.status != AutosaveState.CANCELLED.name) {
-          print("reached here too");
+  startPollingForCreateSubscriptionResponse() {
+    timer = Timer.periodic(
+      Duration(seconds: 10),
+      (t) {
+        pollCount++;
+        if (pollCount > 100) {
           t.cancel();
+          autosaveState = AutosaveState.IDLE;
         }
-      });
-    });
-  }
-
-  Future<int> getPhonePeVersionCode() async {
-    final res = await _subscriptionRepo.getPhonepeVersionCode();
-    if (res.isSuccess()) {
-      return res.model!;
-    } else {
-      return 0;
-    }
+        getSubscription().then((_) {
+          if (subscriptionData!.status != AutosaveState.INIT.name &&
+              subscriptionData!.status != AutosaveState.CANCELLED.name) {
+            print("reached here too");
+            t.cancel();
+          }
+        });
+      },
+    );
   }
 
   Future<void> getSubscription() async {
@@ -180,13 +177,9 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateSubscription(int amount, bool isD) async {
-    if (amountController.text.isEmpty)
-      return BaseUtil.showNegativeAlert(
-          "Please enter some amount", "No amount entered");
+  Future<bool> updateSubscription(int amount, FREQUENCY freq) async {
     final res = await _subscriptionRepo.updateSubscription(
-        freq: isDaily ? "DAILY" : "WEEKLY",
-        amount: int.tryParse(amountController.text)!);
+        freq: freq.name, amount: amount);
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
@@ -201,27 +194,11 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  bool _isPausing = false;
-  bool _isResuming = false;
-
-  get isResuming => this._isResuming;
-
-  set isResuming(value) {
-    this._isResuming = value;
-    notifyListeners();
-  }
-
-  get isPausing => this._isPausing;
-  set isPausing(value) {
-    this._isPausing = value;
-    notifyListeners();
-  }
-
   Future<bool> pauseSubscription(AutosavePauseOption option) async {
-    if (isPausing) return false;
-    isPausing = true;
+    if (isPauseOrResuming) return false;
+    isPauseOrResuming = true;
     final res = await _subscriptionRepo.pauseSubscription(option: option);
-    isPausing = false;
+    isPauseOrResuming = false;
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
@@ -237,10 +214,10 @@ class SubService extends ChangeNotifier {
   }
 
   Future<bool> resumeSubscription() async {
-    if (isPausing) return false;
-    isPausing = true;
+    if (isPauseOrResuming) return false;
+    isPauseOrResuming = true;
     final res = await _subscriptionRepo.resumeSubscription();
-    isPausing = false;
+    isPauseOrResuming = false;
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
@@ -266,21 +243,42 @@ class SubService extends ChangeNotifier {
       subscriptionTxnsHistoryList.addAll(res.model!);
     }
   }
+  // SUBSCRIPTION CORE METHODS - END
 
-  // Future<void> getUserUpiAppChoice() async {
-  //   await getUPIApps();
-  //   BaseUtil.openModalBottomSheet(
-  //     addToScreenStack: true,
-  //     backgroundColor: UiConstants.kBackgroundColor,
-  //     isBarrierDismissible: false,
-  //     isScrollControlled: true,
-  //     borderRadius: BorderRadius.only(
-  //       topLeft: Radius.circular(SizeConfig.roundness12),
-  //       topRight: Radius.circular(SizeConfig.roundness12),
-  //     ),
-  //     content: SubsUPIAppsBottomSheet(subscriptionService: this),
-  //   );
-  // }
+  //Helpers
+
+  Future<void> getAutosaveSuggestions() async {
+    //Get single asset chips
+    List<List<AmountChipsModel>> suggestionAmountChipsCategories = [];
+    suggestionAmountChipsCategories
+        .add(await _getAmountChips(freq: FREQUENCY.daily.name));
+    suggestionAmountChipsCategories
+        .add(await _getAmountChips(freq: FREQUENCY.weekly.name));
+    suggestionAmountChipsCategories
+        .add(await _getAmountChips(freq: FREQUENCY.monthly.name));
+
+    //Get combo asset chips
+
+    suggestions.add(suggestionAmountChipsCategories);
+  }
+
+  Future<List<AmountChipsModel>> _getAmountChips({required String freq}) async {
+    ApiResponse<List<AmountChipsModel>> data =
+        await _getterRepo.getAmountChips(freq: freq);
+    if (data.isSuccess())
+      return data.model!;
+    else
+      return defaultAmountChipList;
+  }
+
+  Future<int> getPhonePeVersionCode() async {
+    final res = await _subscriptionRepo.getPhonepeVersionCode();
+    if (res.isSuccess()) {
+      return res.model!;
+    } else {
+      return 0;
+    }
+  }
 
   Future<List<ApplicationMeta>> getUPIApps() async {
     S locale = locator<S>();
@@ -352,53 +350,43 @@ class SubService extends ChangeNotifier {
       case AutosaveState.INIT:
         return BaseUtil.showNegativeAlert(
             "Subscription in processing", "please check back after sometime");
-      case AutosaveState.ACTIVE:
-        // amountController.text = subscriptionData?.amount?.toString() ?? '25';
-        // return BaseUtil.openDialog(
-        //     isBarrierDismissible: false,
-        //     addToScreenStack: true,
-        //     hapticVibrate: true,
-        //     content: EditSubscriptionDialog());
-        return AppState.delegate!.appState.currentAction = PageAction(
-          page: AutosaveDetailsViewPageConfig,
-          state: PageState.addPage,
-        );
       case AutosaveState.IDLE:
-        // return getUserUpiAppChoice();
+        return AppState.delegate!.appState.currentAction = PageAction(
+          page: (PreferenceHelper.getBool(
+                  PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME,
+                  def: true))
+              ? AutosaveOnboardingViewPageConfig
+              : AutosaveProcessViewPageConfig,
+          state: PageState.addPage,
+        );
+      case AutosaveState.PAUSED:
+      case AutosaveState.PAUSED_FOREVER:
+      case AutosaveState.ACTIVE:
         return AppState.delegate!.appState.currentAction = PageAction(
           page: AutosaveDetailsViewPageConfig,
           state: PageState.addPage,
         );
-      // return createSubscription(
-      //     freq: "DAILY",
-      //     amount: 100,
-      //     package: "com.phonepe.app",
-      //     asset: "AUGGOLD99");
-      case AutosaveState.PAUSED:
-        return resumeSubscription();
-      case AutosaveState.PAUSED_FOREVER:
-        return resumeSubscription();
       default:
         return;
     }
   }
 
-  onAmountValueChanged(String val) {
-    if (val == "00000") amountController.text = '0';
-    if (val != null && val.isNotEmpty) {
-      if (int.tryParse(val)! < minValue)
-        showMinAlert = true;
-      else
-        showMinAlert = false;
-      if (int.tryParse(val)! > maxValue) {
-        amountController.text = maxValue.toString();
-        val = maxValue.toString();
-        FocusManager.instance.primaryFocus!.unfocus();
-      }
-    } else {
-      val = '0';
-    }
-    // saveAmount = calculateSaveAmount(int.tryParse(val ?? '0')!);
-    notifyListeners();
-  }
+  // onAmountValueChanged(String val) {
+  //   if (val == "00000") amountController.text = '0';
+  //   if (val != null && val.isNotEmpty) {
+  //     if (int.tryParse(val)! < minValue)
+  //       showMinAlert = true;
+  //     else
+  //       showMinAlert = false;
+  //     if (int.tryParse(val)! > maxValue) {
+  //       amountController.text = maxValue.toString();
+  //       val = maxValue.toString();
+  //       FocusManager.instance.primaryFocus!.unfocus();
+  //     }
+  //   } else {
+  //     val = '0';
+  //   }
+  //   // saveAmount = calculateSaveAmount(int.tryParse(val ?? '0')!);
+  //   notifyListeners();
+  // }
 }

@@ -18,7 +18,7 @@ import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autopay_process_view.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';

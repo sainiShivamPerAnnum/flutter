@@ -1,20 +1,12 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class AutosaveOnboardingView extends StatefulWidget {
   const AutosaveOnboardingView({Key? key}) : super(key: key);
@@ -27,6 +19,8 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   @override
   void initState() {
+    PreferenceHelper.setBool(
+        PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME, false);
     _analyticsService!
         .track(eventName: AnalyticsEvents.autosaveDetailsScreenView);
     super.initState();
@@ -36,183 +30,24 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: UiConstants.kBackgroundColor,
-      appBar: AppBar(
+        resizeToAvoidBottomInset: false,
         backgroundColor: UiConstants.kBackgroundColor,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: UiConstants.kTextColor,
+        appBar: AppBar(
+          backgroundColor: UiConstants.kBackgroundColor,
+          elevation: 0.0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: UiConstants.kTextColor,
+            ),
+            onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
           ),
-          onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
         ),
-      ),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: SizeConfig.screenWidth! * 0.2747,
-            ),
-            Center(
-              child: Text(
-                locale.howItworks,
-                style: TextStyles.rajdhaniSB.title4,
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.screenWidth! * 0.12,
-            ),
-            _buildAutosaveStepTile(
-              image: SvgPicture.asset(
-                Assets.upiIcon,
-                height: SizeConfig.screenWidth! * 0.0667,
-                width: SizeConfig.screenWidth! * 0.0667,
-              ),
-              title: locale.txnEnterUPI,
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    locale.autopayBankSupport,
-                    style: TextStyles.sourceSans.body4.colour(
-                      UiConstants.kTextColor2,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Haptic.vibrate();
-                      BaseUtil.launchUrl(
-                        'https://www.npci.org.in/what-we-do/autopay/list-of-banks-and-apps-live-on-autopay',
-                      );
-                    },
-                    child: Text(
-                      locale.btnCheckHere,
-                      style: TextStyles.sourceSans.body4.colour(
-                        UiConstants.kTabBorderColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            _buildAutosaveStepTile(
-              image: Icon(
-                Icons.verified,
-                color: UiConstants.primaryColor,
-                size: SizeConfig.screenWidth! * 0.112,
-              ),
-              title: locale.txnApproveUPIReq,
-              subtitle: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: locale.checkYour,
-                      style: TextStyles.sourceSans.body4.colour(
-                        UiConstants.kTextColor2,
-                      ),
-                    ),
-                    TextSpan(
-                      text: locale.txnsPendingUPI,
-                      style: TextStyles.sourceSansSB.body4.colour(
-                        UiConstants.kTextColor2,
-                      ),
-                    ),
-                    TextSpan(
-                      text: locale.forTheRequest,
-                      style: TextStyles.sourceSans.body4.colour(
-                        UiConstants.kTextColor2,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            _buildAutosaveStepTile(
-              image: SvgPicture.asset(
-                Assets.rupee,
-                height: SizeConfig.screenWidth! * 0.064,
-                width: SizeConfig.screenWidth! * 0.064,
-              ),
-              title: locale.setAutoPayAmount,
-              subtitle: Text(
-                locale.amountChangeTxt,
-                style: TextStyles.sourceSans.body4.colour(
-                  UiConstants.kTextColor2,
-                ),
-              ),
-            ),
-            Spacer(),
-            AppPositiveBtn(
-              btnText: locale.btnGetStarted,
-              onPressed: () {
-                Haptic.vibrate();
-                _analyticsService!.track(
-                  eventName: AnalyticsEvents.autosaveSetupViewed,
-                );
-                _analyticsService!.track(
-                    eventName: AnalyticsEvents.getStartTapped,
-                    properties: AnalyticsProperties.getDefaultPropertiesMap());
-                AppState.delegate!.appState.currentAction = PageAction(
-                  page: AutosaveProcessViewPageConfig,
-                  state: PageState.replace,
-                );
-              },
-              width: SizeConfig.screenWidth! * 0.784,
-            ),
-            SizedBox(
-              height: SizeConfig.screenWidth! * 0.1893,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAutosaveStepTile({
-    Widget? image,
-    required String title,
-    Widget? subtitle,
-  }) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.screenWidth! * 0.08,
-        vertical: SizeConfig.screenWidth! * 0.0533,
-      ),
-      child: Row(
-        children: [
-          ClipOval(
-            child: Container(
-              width: SizeConfig.screenWidth! * 0.1307,
-              height: SizeConfig.screenWidth! * 0.1307,
-              color: Colors.black38,
-              child: Center(child: image),
-            ),
+        body: Center(
+          child: Text(
+            "Fancy Autosave Page",
+            style: TextStyles.rajdhaniB.title4,
           ),
-          SizedBox(
-            width: SizeConfig.padding24,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyles.sourceSans.body2,
-              ),
-              SizedBox(
-                height: SizeConfig.padding4,
-              ),
-              SizedBox(
-                width: SizeConfig.screenWidth! * 0.6,
-                child: subtitle,
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+        ));
   }
 }

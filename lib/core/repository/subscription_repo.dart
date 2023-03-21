@@ -50,16 +50,16 @@ class SubscriptionRepo extends BaseRepo {
 
   Future<ApiResponse<String>> createSubscription({
     required String freq,
-    required int amount,
+    required int lbAmt,
+    required int augAmt,
     required String package,
-    required String asset,
   }) async {
     try {
       Map<String, dynamic> _body = {
-        "amount": amount,
+        "lbAmt": lbAmt,
+        "augAmt": augAmt,
         "frequency": freq,
         "pspPackage": package,
-        "asset": asset
       };
 
       if (package.toLowerCase().contains('phonepe')) {

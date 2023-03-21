@@ -7,7 +7,6 @@ import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/dev_rel.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -50,7 +49,7 @@ class Win extends StatelessWidget {
                       //Fello News
                       FelloNewsComponent(model: model),
                       // DEV PURPOSE ONLY
-                      // const CacheClearWidget(),
+                      const CacheClearWidget(),
                       SizedBox(
                         height: SizeConfig.padding10,
                       ),

@@ -91,6 +91,7 @@ class Assets {
   static final String couponIcon = "assets/vectors/coupon.svg";
   static final String digitalGoldBar = 'assets/vectors/gold_bar.webp';
   static final String felloFlo = 'assets/vectors/stable_fello.webp';
+  static final String floGold = "assets/images/flogold.webp";
   static final String saveDartBoard = 'assets/svg/save_dart_board.svg';
   static final String saveViewInfo = 'assets/svg/save_screen_info.svg';
   static final String iciciLogo = 'assets/vectors/icici_bank_logo.png';

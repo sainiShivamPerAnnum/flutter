@@ -386,14 +386,7 @@
 //   //   subscriptionFlowPageController.jumpToPage(index);
 //   // }
 
-//   // Future<List<AmountChipsModel>?> getAmountChips({required String freq}) async {
-//   //   ApiResponse<List<AmountChipsModel>> data =
-//   //       await _getterRepo!.getAmountChips(freq: freq);
-//   //   if (data != null && data.code == 200)
-//   //     return data.model;
-//   //   else
-//   //     return defaultAmountChipList;
-//   // }
+
 //   //HELPER METHODS -- END
 
 //   // UPI METHODS -- START

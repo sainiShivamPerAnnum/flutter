@@ -1,35 +1,35 @@
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_vm.dart';
+import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class SegmentChips extends StatelessWidget {
-  bool isDaily;
-  final String? text;
+  final FREQUENCY frequency;
+  final AutosaveProcessViewModel model;
 
-  SegmentChips({required this.isDaily, this.text});
+  const SegmentChips({required this.frequency, required this.model});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        text!,
-        style: TextStyles.body3.bold.colour(
-          getBorder(),
+    return GestureDetector(
+      onTap: () {
+        Haptic.vibrate();
+        model.selectedFrequency = frequency;
+      },
+      child: Container(
+        width: SizeConfig.screenWidth! * 0.24,
+        alignment: Alignment.center,
+        child: Text(
+          frequency.name,
+          style: TextStyles.body3.bold.colour(
+            getColor(),
+          ),
         ),
       ),
     );
   }
 
-  getBorder() {
-    if (isDaily) {
-      if (text == "Daily")
-        return Colors.white;
-      else
-        return Colors.grey;
-    } else {
-      if (text == "Daily")
-        return Colors.grey;
-      else
-        return Colors.white;
-    }
-  }
+  Color getColor() =>
+      frequency == model.selectedFrequency ? Colors.white : Colors.grey;
 }

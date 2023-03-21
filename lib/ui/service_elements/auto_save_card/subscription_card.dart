@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
@@ -16,17 +14,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-class AutosaveCard extends StatefulWidget {
+class AutosaveCard extends StatelessWidget {
   final ValueKey locationKey;
   AutosaveCard({required this.locationKey});
-
-  @override
-  State<AutosaveCard> createState() => _AutosaveCardState();
-}
-
-class _AutosaveCardState extends State<AutosaveCard> {
-  bool isResumingInProgress = false;
-  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +27,6 @@ class _AutosaveCardState extends State<AutosaveCard> {
                 if (context.read<ConnectivityService>().connectivityStatus ==
                     ConnectivityStatus.Offline)
                   return BaseUtil.showNoInternetAlert();
-                log((await service.getPhonePeVersionCode()).toString());
                 await service.handleTap();
               },
               child: (service.subscriptionData != null)
@@ -49,133 +38,7 @@ class _AutosaveCardState extends State<AutosaveCard> {
                     ),
             )
           : SizedBox(),
-      //  Container(
-      //   child:
-
-      //   Card(
-      //     elevation: 2,
-      //     color: Colors.black,
-      //     margin: EdgeInsets.symmetric(
-      //       horizontal: SizeConfig.padding16,
-      //       vertical: SizeConfig.padding10,
-      //     ),
-      //     child: Column(
-      //       children: [
-      //         ListTile(
-      //           contentPadding: EdgeInsets.only(
-      //               left: SizeConfig.padding12,
-      //               right: SizeConfig.padding12,
-      //               top: SizeConfig.padding14),
-      //           leading: SvgPicture.asset(
-      //             Assets.autoSaveDefault,
-      //             width: SizeConfig.padding40,
-      //           ),
-      //           title: Row(
-      //             crossAxisAlignment: CrossAxisAlignment.center,
-      //             children: [
-      //               Text(
-      //                 "Amount: " + (service.subscriptionData?.amount ?? '0'),
-      //                 style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
-      //               ),
-      //               Text(
-      //                 "  ${service.autosaveState == AutosaveState.ACTIVE ? "[ACTIVE]" : ""}",
-      //                 style: TextStyles.sourceSansB.body4
-      //                     .colour(UiConstants.primaryColor),
-      //               )
-      //             ],
-      //           ),
-      //           subtitle: Text(
-      //             "Frequency: ${service.subscriptionData?.frequency}",
-      //             style: TextStyles.rajdhani.colour(UiConstants.kTextColor2),
-      //           ),
-      //           trailing: Container(
-      //               margin: EdgeInsets.only(right: SizeConfig.padding12),
-      //               child: getTrailingWidget(service)),
-      //           onTap: service.handleTap,
-      //         ),
-      //         // if (service.autosaveState != AutosaveState.INIT)
-      //         Row(
-      //           mainAxisAlignment: MainAxisAlignment.center,
-      //           children: [
-      //             TextButton(
-      //                 onPressed: () {
-      //                   // SubscriptionRepo
-      //                   // locator<SubscriptionRepo>()
-      //                   //     .getSubscriptionTransactionHistory(
-      //                   //         offset: 1, limit: 30);
-      //                   AppState.delegate!.appState.currentAction = PageAction(
-      //                       page: TransactionsHistoryPageConfig,
-      //                       state: PageState.addPage);
-      //                 },
-      //                 child: Text(
-      //                   "Transaction History",
-      //                   style: TextStyles.body3.colour(UiConstants.kTextColor2),
-      //                 )),
-      //             // TextButton(
-      //             //     onPressed: () async {
-      //             //       final res = await service.getPhonePeVersionCode();
-      //             //       BaseUtil.showPositiveAlert(
-      //             //           res.toString(), "is Phonepe Version code");
-      //             //     },
-      //             //     child: Text(
-      //             //       "Phonepe Version",
-      //             //       style: TextStyles.body3.colour(UiConstants.kTextColor2),
-      //             //     )),
-      //           ],
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
-
-    // BaseView<SubscriptionCardViewModel>(
-    //   onModelReady: (model) async => await model.init(),
-    //   builder: (context, subscriptionModel, child) =>
-    //       PropertyChangeConsumer<PaytmService, PaytmServiceProperties>(
-    //     builder: (context, model, property) =>
-    // model!.autosaveVisible
-    //         ? GestureDetector(
-    //             onTap: () async {
-    //               if (connectivityStatus == ConnectivityStatus.Offline)
-    //                 return BaseUtil.showNoInternetAlert();
-    //               // if (!subscriptionModel.isUserProfileComplete())
-    //               //   return BaseUtil.openDialog(
-    //               //       addToScreenStack: true,
-    //               //       isBarrierDismissible: true,
-    //               //       hapticVibrate: false,
-    //               //       content: CompleteProfileDialog(
-    //               //         subtitle:
-    //               //             'Please complete your profile to win your first reward and to start autosaving',
-    //               //       ));
-    //               if (isLoading) return;
-    //               setState(() {
-    //                 isLoading = true;
-    //               });
-    //               await subscriptionModel.getActiveButtonAction();
-    //               setState(() {
-    //                 isLoading = false;
-    //               });
-    //             },
-    //             child: (model.activeSubscription != null &&
-    //                     model.activeSubscription!.status ==
-    //                         Constants.SUBSCRIPTION_ACTIVE)
-    //                 ? (widget.locationKey.value == 'save'
-    //                     ? SizedBox()
-    //                     : ActiveOrPausedAutosaveCard(
-    //                         isLoading: isLoading,
-    //                         isResumingInProgress: isResumingInProgress,
-    //                         subscriptionModel: subscriptionModel,
-    //                       ))
-    //                 : InitAutosaveCard(
-    //                     onTap: () {
-    //                       subscriptionModel.getActiveButtonAction();
-    //                     },
-    //                   ),
-    //           )
-    //         : SizedBox(),
-    //   ),
-    // );
   }
 }
 
@@ -293,124 +156,87 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                 color: UiConstants.kSecondaryBackgroundColor,
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
             child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding14),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          service.subscriptionData != null &&
-                                  service.subscriptionData!.status ==
-                                      Constants.SUBSCRIPTION_ACTIVE
-                              ? Assets.autoSaveOngoing
-                              : Assets.autoSavePaused,
-                          height: SizeConfig.padding80,
-                          width: SizeConfig.padding80,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding24,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                service.subscriptionData?.status
-                                        ?.toUpperCase() ??
-                                    "N/A",
-                                style: TextStyles.sourceSansSB.body3
-                                    .colour(UiConstants.primaryColor),
-                                textAlign: TextAlign.left,
-                              ),
-                              SizedBox(height: SizeConfig.padding12),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Investing',
-                                        style: TextStyles.sourceSans.body4
-                                            .colour(UiConstants.kTextColor2),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding14),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        service.subscriptionData != null &&
+                                service.subscriptionData!.status ==
+                                    Constants.SUBSCRIPTION_ACTIVE
+                            ? Assets.autoSaveOngoing
+                            : Assets.autoSavePaused,
+                        height: SizeConfig.padding80,
+                        width: SizeConfig.padding80,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding24,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              service.subscriptionData?.status?.toUpperCase() ??
+                                  "N/A",
+                              style: TextStyles.sourceSansSB.body3
+                                  .colour(UiConstants.primaryColor),
+                              textAlign: TextAlign.left,
+                            ),
+                            SizedBox(height: SizeConfig.padding12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Investing',
+                                      style: TextStyles.sourceSans.body4
+                                          .colour(UiConstants.kTextColor2),
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: '₹ ',
+                                        style: TextStyles.sourceSansSB.body0
+                                            .colour(UiConstants.kTextColor),
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                "${service.subscriptionData?.amount ?? 0} ",
+                                            style: TextStyles.sourceSansSB.body0
+                                                .colour(UiConstants.kTextColor),
+                                          ),
+                                          TextSpan(
+                                            text: service.subscriptionData
+                                                    ?.frequency ??
+                                                "",
+                                            style: TextStyles.sourceSans.body4
+                                                .colour(
+                                                    UiConstants.kTextColor2),
+                                          ),
+                                        ],
                                       ),
-                                      RichText(
-                                        text: TextSpan(
-                                          text: '₹ ',
-                                          style: TextStyles.sourceSansSB.body0
-                                              .colour(UiConstants.kTextColor),
-                                          children: [
-                                            TextSpan(
-                                              text:
-                                                  "${service.subscriptionData?.amount ?? 0} ",
-                                              style: TextStyles
-                                                  .sourceSansSB.body0
-                                                  .colour(
-                                                      UiConstants.kTextColor),
-                                            ),
-                                            TextSpan(
-                                              text: service.subscriptionData
-                                                      ?.frequency ??
-                                                  "",
-                                              style: TextStyles.sourceSans.body4
-                                                  .colour(
-                                                      UiConstants.kTextColor2),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  // FittedBox(
-                  //   fit: BoxFit.scaleDown,
-                  //   child: isResumingInProgress || isLoading
-                  //       ? Container(
-                  //           height: SizeConfig.body2,
-                  //           child: SpinKitThreeBounce(
-                  //             color: Colors.white,
-                  //             size: SizeConfig.padding12,
-                  //           ),
-                  //         )
-                  //       : model.activeSubscription != null &&
-                  //               model.activeSubscription.status ==
-                  //                   Constants.SUBSCRIPTION_ACTIVE
-                  //           ? SvgPicture.asset(
-                  //               Assets.chevRonRightArrow,
-                  //               width: SizeConfig.padding34,
-                  //             )
-                  //           : Row(
-                  //               children: [
-                  //                 Text(
-                  //                   subscriptionModel.getActiveButtonText(
-                  //                       model.activeSubscription),
-                  //                   style: TextStyles.body2
-                  //                       .colour(Colors.white),
-                  //                 ),
-                  //                 SizedBox(
-                  //                   width: SizeConfig.padding6,
-                  //                 ),
-                  //                 SvgPicture.asset(
-                  //                     Assets.chevRonRightArrow),
-                  //               ],
-                  //             ),
-                  // ),
-                ]),
+                ),
+              ],
+            ),
           ),
           Positioned(
             top: 0,

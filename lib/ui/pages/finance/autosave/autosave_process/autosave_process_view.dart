@@ -3,14 +3,13 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autopay_process_slides/autopay_setup_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autopay_process_slides/autopay_upi_app-select_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autopay_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_slides/autosave_setup_view.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_slides/autosave_upi_app-select_view.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -19,7 +18,9 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:upi_pay/upi_pay.dart';
+
+import './autosave_process_slides/autosave_asset_choice_view.dart';
+import './autosave_process_slides/autosave_steps_view.dart';
 
 class AutosaveProcessView extends StatefulWidget {
   const AutosaveProcessView({Key? key}) : super(key: key);
@@ -44,9 +45,9 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
             appBar: AppBar(
               backgroundColor: UiConstants.kBackgroundColor,
               elevation: 0.0,
-              title: model.currentPage <= 2
+              title: model.currentPage <= 3
                   ? Text(
-                      "${model.currentPage + 1}/3",
+                      "${model.currentPage + 1}/4",
                       style: TextStyles.sourceSansL.body3,
                     )
                   : Container(),
@@ -74,53 +75,15 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                             : autosaveState == AutosaveState.IDLE
                                 ? PageView(
                                     controller: model.pageController,
-                                    physics: NeverScrollableScrollPhysics(),
+                                    physics:
+                                        model.isSubscriptionCreationInProgress
+                                            ? NeverScrollableScrollPhysics()
+                                            : ClampingScrollPhysics(),
                                     children: [
-                                      UpiAppSelectView(
-                                          appList: model.appsList,
-                                          onAppSelect: (ApplicationMeta app) {
-                                            Haptic.vibrate();
-                                            model.selectedUpiApp = app;
-                                          },
-                                          selectedApp: model.selectedUpiApp,
-                                          onCtaPressed: () {
-                                            model.pageController.animateToPage(
-                                                1,
-                                                duration: Duration(seconds: 1),
-                                                curve: Curves.decelerate);
-                                          }),
-                                      AutoPaySetupOrUpdateView(
-                                        isSetup: true,
-                                        onCtaTapped: (_) async {
-                                          Haptic.vibrate();
-                                          await model.createSubscription();
-                                        },
-                                        isDaily: model.isDaily,
-                                        onChipsTapped: (int val) {
-                                          FocusScope.of(context).unfocus();
-                                          Haptic.vibrate();
-                                          model.amountFieldController.text =
-                                              val.toString();
-                                          model.notifyListeners();
-                                        },
-                                        onFrequencyTapped: (FREQUENCY freq) {
-                                          Haptic.vibrate();
-                                          if (freq == FREQUENCY.daily)
-                                            model.isDaily = true;
-                                          else
-                                            model.isDaily = false;
-                                        },
-                                        amountFieldController:
-                                            model.amountFieldController,
-                                        dailyChips: model.dailyChips,
-                                        weeklyChips: model.weeklyChips,
-                                      ),
-                                      // _buildPendingUI(model),
-                                      // Center(
-                                      //   child: Text(locale.cancelledUi,
-                                      //       style:
-                                      //           TextStyles.rajdhaniSB.title4),
-                                      // ),
+                                      AutosaveStepsView(model: model),
+                                      UpiAppSelectView(model: model),
+                                      AutosaveAssetChoiceView(model: model),
+                                      AutoPaySetupOrUpdateView(model: model),
                                     ],
                                   )
                                 : autosaveState == AutosaveState.ACTIVE
@@ -133,23 +96,6 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                                         ),
                                       ),
                       ),
-                      // FutureBuilder(
-                      //   future: Future.value(true),
-                      //   builder:
-                      //       (BuildContext context, AsyncSnapshot<void> snap) {
-                      //     //If we do not have data as we wait for the future to complete,
-                      //     //show any widget, eg. empty Container
-                      //     if (!snap.hasData) {
-                      //       return Container();
-                      //     }
-
-                      //     //Otherwise the future completed, so we can now safely use the controller.page
-                      //     if (model.pageController.page == 2)
-                      //       return CustomKeyboardSubmitButton(onSubmit: () {});
-                      //     else
-                      //       return SizedBox();
-                      //   },
-                      // ),
                     ],
                   ),
           );
@@ -211,36 +157,6 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
     );
   }
 
-  // String getUpiAppName(AutosaveProcessViewModel model) {
-  //   final String upi = model.vpaController.text.split('@').last;
-  //   switch (upi) {
-  //     case 'upi':
-  //       return 'BHIM';
-  //     case 'paytm':
-  //       return "Paytm";
-  //     case 'ybl':
-  //       return "PhonePe";
-  //     case 'ibl':
-  //       return "PhonePe";
-  //     case 'axl':
-  //       return "PhonePe";
-  //     case 'okhdfcbank':
-  //       return "Google Pay";
-  //     case 'okaksix':
-  //       return "Google Pay";
-  //     case 'apl':
-  //       return "Amazon Pay";
-  //     case 'indus':
-  //       return "BHIM Indus Pay";
-  //     case 'boi':
-  //       return "BHIM BOI UPI";
-  //     case 'cnrb':
-  //       return "BHIM Canara";
-  //     default:
-  //       return "preferred UPI App";
-  //   }
-  // }
-
   Widget _buildCompleteUI(AutosaveProcessViewModel model) {
     S locale = S.of(context);
     return Container(
@@ -301,12 +217,12 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "₹${model.amountFieldController.text}/",
+                        text: "₹${model.totalInvestingAmount}/",
                         style: TextStyles.rajdhaniB
                             .size(SizeConfig.screenWidth! * 0.1067),
                       ),
                       TextSpan(
-                        text: "${model.isDaily ? locale.daily : locale.weekly}",
+                        text: model.selectedFrequency.name,
                         style: TextStyles.sourceSansSB.body1.setOpacity(0.5),
                       ),
                     ],
