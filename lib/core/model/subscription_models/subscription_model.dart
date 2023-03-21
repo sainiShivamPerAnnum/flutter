@@ -5,6 +5,8 @@ class SubscriptionModel {
   String? uid;
   String? merchantSubId;
   String? amount;
+  String? augAmt;
+  String? lbAmt;
   String? authTxnId;
   String? frequency;
   String? recurringCount;
@@ -22,6 +24,8 @@ class SubscriptionModel {
       this.uid,
       this.merchantSubId,
       this.amount,
+      this.augAmt,
+      this.lbAmt,
       this.authTxnId,
       this.frequency,
       this.recurringCount,
@@ -39,6 +43,8 @@ class SubscriptionModel {
     uid = map['uid'];
     merchantSubId = map['merchantSubId'];
     amount = map['amount'];
+    augAmt = map['AUGGOLD99'];
+    lbAmt = map['LENDBOXP2P'];
     authTxnId = map['authTxnId'];
     frequency = map['frequency'];
     recurringCount = map['recurringCount'];

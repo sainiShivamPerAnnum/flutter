@@ -19,10 +19,8 @@ class SubscriptionRepo extends BaseRepo {
       : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
 
   Future<ApiResponse<List<SubscriptionTransactionModel>>>
-      getSubscriptionTransactionHistory({
-    int? offset,
-    int? limit,
-  }) async {
+      getSubscriptionTransactionHistory(
+          {int? offset, int? limit, String? asset}) async {
     try {
       final String token = await getBearerToken();
       final res = await APIService.instance.getData(
@@ -31,6 +29,7 @@ class SubscriptionRepo extends BaseRepo {
         queryParams: {
           "offset": offset.toString(),
           "limit": limit.toString(),
+          "asset": asset ?? ''
         },
         token: token,
       );
@@ -50,12 +49,14 @@ class SubscriptionRepo extends BaseRepo {
 
   Future<ApiResponse<String>> createSubscription({
     required String freq,
+    required int amount,
     required int lbAmt,
     required int augAmt,
     required String package,
   }) async {
     try {
       Map<String, dynamic> _body = {
+        "amount": amount,
         "lbAmt": lbAmt,
         "augAmt": augAmt,
         "frequency": freq,
@@ -112,11 +113,15 @@ class SubscriptionRepo extends BaseRepo {
 
   Future<ApiResponse<SubscriptionModel>> updateSubscription({
     required String freq,
+    required int lbAmt,
+    required int augAmt,
     required int amount,
   }) async {
     try {
       Map<String, dynamic> _body = {
         "amount": amount,
+        "lbAmt": lbAmt,
+        "augAmt": augAmt,
         "frequency": freq,
       };
 

@@ -18,7 +18,8 @@ import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_view.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_update/autosave_update_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
@@ -279,6 +280,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.AutosaveDetailsView:
           _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
           break;
+        case Pages.AutosaveUpdateView:
+          _addPageData(AutosaveUpdateView(), AutosaveUpdateViewPageConfig);
+          break;
 
         case Pages.TopPlayerLeaderboard:
           _addPageData(
@@ -536,6 +540,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.AutosaveDetailsView:
         AutosaveDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.AutosaveUpdateView:
+        AutosaveUpdateViewPageConfig.currentPageAction = action;
         break;
       case Pages.AutosaveTransactionsView:
         AutosaveTransactionsViewPageConfig.currentPageAction = action;

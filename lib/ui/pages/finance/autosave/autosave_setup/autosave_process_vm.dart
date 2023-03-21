@@ -38,12 +38,33 @@ class AutosaveProcessViewModel extends BaseViewModel {
   String finalButtonCta = "SETUP";
 
   int _selectedAssetOption = 2;
-  int totalInvestingAmount = 0;
+  int _totalInvestingAmount = 0;
+  bool isUpdateFlow = false;
+
+  get totalInvestingAmount => this._totalInvestingAmount;
+
+  set totalInvestingAmount(value) {
+    this._totalInvestingAmount = value;
+    notifyListeners();
+  }
 
   int get selectedAssetOption => this._selectedAssetOption;
 
   set selectedAssetOption(int value) {
     this._selectedAssetOption = value;
+    if (value == 0) {
+      floAmountFieldController!.text = '100';
+      goldAmountFieldController!.text = '100';
+      _totalInvestingAmount = 200;
+    } else if (value == 1) {
+      floAmountFieldController!.text = '100';
+      goldAmountFieldController!.text = '0';
+      _totalInvestingAmount = 100;
+    } else {
+      floAmountFieldController!.text = '0';
+      goldAmountFieldController!.text = '100';
+      _totalInvestingAmount = 100;
+    }
     notifyListeners();
   }
 
@@ -161,22 +182,86 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   dump() {
     pageController.dispose();
+    optionsController?.dispose();
     goldAmountFieldController?.dispose();
     floAmountFieldController?.dispose();
   }
 
-  Future<void> createSubscription() async {
+  updateInit() {
+    isUpdateFlow = true;
+    finalButtonCta = "UPDATE";
+    state = ViewState.Busy;
+    // if (_subService.autosaveState == AutosaveState.IDLE) {
+    goldAmountFieldController = TextEditingController(
+        text: _subService.subscriptionData!.augAmt ?? '100');
+    _subService.getAutosaveSuggestions().then((suggestions) {
+      dailyChips = _subService.suggestions[0][0];
+      dailyChips = _subService.suggestions[0][1];
+      dailyChips = _subService.suggestions[0][2];
+    });
+    autosaveAssetOptionList = [
+      AutosaveAssetModel(
+        asset: "assets/vectors/flogold.svg",
+        title: "Flo + Gold",
+        subtitle: "a cocktail you need in your portfolio",
+        isPopular: true,
+        isEnabled: _userService!.isSimpleKycVerified,
+      ),
+      AutosaveAssetModel(
+        asset: Assets.felloFlo,
+        title: "Fello Flo",
+        subtitle: "10% returns, I myself have invested there",
+        isEnabled: _userService!.isSimpleKycVerified,
+      ),
+      AutosaveAssetModel(
+          asset: Assets.digitalGoldBar,
+          title: "Digital Gold",
+          subtitle: "stable returns last 6 months were lit",
+          isEnabled: true)
+    ];
+    // if (_userService!.isSimpleKycVerified) {
+    floAmountFieldController = TextEditingController(
+        text: _subService.subscriptionData!.lbAmt ?? '100');
+    selectedAssetOption = _userService!.isSimpleKycVerified ? 0 : 2;
+    // }
+    pageController.addListener(
+      () {
+        if ((pageController.page ?? 0).toInt() != currentPage) {
+          currentPage = pageController.page!.toInt();
+        }
+      },
+    );
+
+    setState(ViewState.Idle);
+  }
+
+  updateDump() {
+    pageController.dispose();
+    optionsController?.dispose();
+    goldAmountFieldController?.dispose();
+    floAmountFieldController?.dispose();
+  }
+
+  Future<void> createOrUpdateSubscription() async {
     if (isSubscriptionCreationInProgress) return;
     if (checkForLowAmount()) return;
     isSubscriptionCreationInProgress = true;
-    final res = await _subService.createSubscription(
-      freq: selectedFrequency.name.toUpperCase(),
-      lbAmt: int.tryParse(floAmountFieldController?.text ?? '0')!,
-      augAmt: int.tryParse(goldAmountFieldController?.text ?? '0')!,
-      package: FlavorConfig.isDevelopment()
-          ? "com.phonepe.app.preprod"
-          : selectedUpiApp!.packageName,
-    );
+    if (isUpdateFlow)
+      await _subService.updateSubscription(
+          freq: selectedFrequency.name.toUpperCase(),
+          amount: totalInvestingAmount,
+          lbAmt: int.tryParse(floAmountFieldController?.text ?? '0')!,
+          augAmt: int.tryParse(goldAmountFieldController?.text ?? '0')!);
+    else
+      await _subService.createSubscription(
+        amount: totalInvestingAmount,
+        freq: selectedFrequency.name.toUpperCase(),
+        lbAmt: int.tryParse(floAmountFieldController?.text ?? '0')!,
+        augAmt: int.tryParse(goldAmountFieldController?.text ?? '0')!,
+        package: FlavorConfig.isDevelopment()
+            ? "com.phonepe.app.preprod"
+            : selectedUpiApp!.packageName,
+      );
     isSubscriptionCreationInProgress = false;
   }
 
@@ -214,6 +299,9 @@ class AutosaveProcessViewModel extends BaseViewModel {
     if (selectedAssetOption == 2) {
       goldAmountFieldController!.text = val.toString();
     }
+    totalInvestingAmount =
+        int.tryParse(goldAmountFieldController?.text ?? '0')! +
+            int.tryParse(floAmountFieldController?.text ?? '0')!;
     _deselectOtherChipIfAny();
     switch (selectedFrequency) {
       case FREQUENCY.daily:

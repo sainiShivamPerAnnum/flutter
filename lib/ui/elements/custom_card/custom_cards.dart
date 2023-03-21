@@ -90,9 +90,7 @@ class SaveCustomCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    if (key ==
-                                        ValueKey(Constants.ASSET_TYPE_AUGMONT))
-                                      AutosaveStatusText(),
+                                    AutosaveStatusText(asset: title!),
                                     Text(
                                       title!,
                                       style: TextStyles.rajdhaniSB.title5,

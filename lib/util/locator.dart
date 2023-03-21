@@ -60,7 +60,7 @@ import 'package:felloapp/ui/pages/campaigns/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_vm.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';

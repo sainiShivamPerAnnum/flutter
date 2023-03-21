@@ -12,8 +12,9 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -59,8 +60,13 @@ class SubService extends ChangeNotifier {
 
   //GETTERS & SETTERS - START
 
-  List<SubscriptionTransactionModel> subscriptionTxnsHistoryList = [];
+  List<SubscriptionTransactionModel> allSubTxnList = [];
+  List<SubscriptionTransactionModel> lbSubTxnList = [];
+  List<SubscriptionTransactionModel> augSubTxnList = [];
+
   bool hasNoMoreSubsTxns = false;
+  bool hasNoMoreLbSubsTxns = false;
+  bool hasNoMoreAugSubsTxns = false;
   UpiApplication? upiApplication;
   String? selectedUpiApplicationName;
 
@@ -107,7 +113,7 @@ class SubService extends ChangeNotifier {
     _subscriptionData = null;
     hasNoMoreSubsTxns = false;
     timer?.cancel();
-    subscriptionTxnsHistoryList = [];
+    allSubTxnList = [];
     autosaveState = AutosaveState.IDLE;
   }
 
@@ -119,12 +125,17 @@ class SubService extends ChangeNotifier {
     required String freq,
     required int lbAmt,
     required int augAmt,
+    required int amount,
     required String package,
   }) async {
     pollCount = 0;
     autosaveState = AutosaveState.IDLE;
     final res = await _subscriptionRepo.createSubscription(
-        freq: freq, lbAmt: lbAmt, package: package, augAmt: augAmt);
+        amount: amount,
+        freq: freq,
+        lbAmt: lbAmt,
+        package: package,
+        augAmt: augAmt);
     if (res.isSuccess()) {
       try {
         getSubscription();
@@ -177,9 +188,14 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateSubscription(int amount, FREQUENCY freq) async {
+  Future<bool> updateSubscription({
+    required String freq,
+    required int lbAmt,
+    required int augAmt,
+    required int amount,
+  }) async {
     final res = await _subscriptionRepo.updateSubscription(
-        freq: freq.name, amount: amount);
+        freq: freq, lbAmt: lbAmt, augAmt: augAmt, amount: amount);
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
@@ -233,14 +249,36 @@ class SubService extends ChangeNotifier {
   }
 
   Future<void> getSubscriptionTransactionHistory(
-      {bool firstFetch = false}) async {
-    if (firstFetch) subscriptionTxnsHistoryList = [];
-    if (hasNoMoreSubsTxns) return;
-    final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
-        limit: 30, offset: firstFetch ? 1 : subscriptionTxnsHistoryList.length);
-    if (res.isSuccess()) {
-      if (res.model!.length < 30) hasNoMoreSubsTxns = true;
-      subscriptionTxnsHistoryList.addAll(res.model!);
+      {bool firstFetch = false, String asset = ''}) async {
+    if (asset.isEmpty) {
+      if (firstFetch) allSubTxnList = [];
+      if (hasNoMoreSubsTxns) return;
+      final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
+          limit: 30, offset: allSubTxnList.isEmpty ? 1 : allSubTxnList.length);
+      if (res.isSuccess()) {
+        if (res.model!.length < 30) hasNoMoreSubsTxns = true;
+        allSubTxnList.addAll(res.model!);
+      }
+    } else if (asset == Constants.ASSET_TYPE_AUGMONT) {
+      if (firstFetch) augSubTxnList = [];
+      if (hasNoMoreSubsTxns || hasNoMoreAugSubsTxns) return;
+      final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
+          limit: 30,
+          offset: augSubTxnList.isEmpty ? 1 : augSubTxnList.length,
+          asset: asset);
+      if (res.isSuccess()) {
+        if (res.model!.length < 30) hasNoMoreAugSubsTxns = true;
+        augSubTxnList.addAll(res.model!);
+      }
+    } else if (asset == Constants.ASSET_TYPE_LENDBOX) {
+      if (firstFetch) lbSubTxnList = [];
+      if (hasNoMoreSubsTxns || hasNoMoreLbSubsTxns) return;
+      final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
+          limit: 30, offset: lbSubTxnList.isEmpty ? 1 : lbSubTxnList.length);
+      if (res.isSuccess()) {
+        if (res.model!.length < 30) hasNoMoreLbSubsTxns = true;
+        lbSubTxnList.addAll(res.model!);
+      }
     }
   }
   // SUBSCRIPTION CORE METHODS - END
@@ -250,6 +288,7 @@ class SubService extends ChangeNotifier {
   Future<void> getAutosaveSuggestions() async {
     //Get single asset chips
     List<List<AmountChipsModel>> suggestionAmountChipsCategories = [];
+    if (suggestionAmountChipsCategories.isNotEmpty) return;
     suggestionAmountChipsCategories
         .add(await _getAmountChips(freq: FREQUENCY.daily.name));
     suggestionAmountChipsCategories

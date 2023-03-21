@@ -52,6 +52,7 @@ const String WebHomeViewPath = "/webHomeView";
 const String WebGameViewPath = "/webGameView";
 const String AutosaveOnboardingViewPath = '/autosaveOnboardingView';
 const String AutosaveProcessViewPath = '/autosaveProcessView';
+const String AutosaveUpdateViewPath = '/autosaveUpdateView';
 const String AutosaveDetailsViewPath = '/autosaveDetailsView';
 const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
 const String NewGameHomeViewPath = '/newGameHome';
@@ -135,6 +136,7 @@ enum Pages {
   AutosaveProcessView,
   AutosaveDetailsView,
   AutosaveTransactionsView,
+  AutosaveUpdateView,
   NewWebHomeView,
   TopPlayerLeaderboard,
   JourneyView,
@@ -545,6 +547,12 @@ PageConfiguration AutosaveProcessViewPageConfig = PageConfiguration(
   key: 'AutosaveProcessView',
   path: AutosaveProcessViewPath,
   uiPage: Pages.AutosaveProcessView,
+);
+
+PageConfiguration AutosaveUpdateViewPageConfig = PageConfiguration(
+  key: 'AutosaveUpdateView',
+  path: AutosaveProcessViewPath,
+  uiPage: Pages.AutosaveUpdateView,
 );
 
 PageConfiguration AutosaveDetailsViewPageConfig = PageConfiguration(

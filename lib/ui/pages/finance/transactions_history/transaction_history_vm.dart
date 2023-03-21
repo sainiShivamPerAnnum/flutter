@@ -257,7 +257,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     await _subscriptionService.getSubscriptionTransactionHistory(
         firstFetch: firstFetch);
 
-    filteredSIPList = _subscriptionService.subscriptionTxnsHistoryList;
+    filteredSIPList = _subscriptionService.allSubTxnList;
     if (filteredSIPList!.isNotEmpty && filteredSIPList!.length == 30) {
       _hasMoreSIPTxns = true;
       lastSipTxnDocId = filteredSIPList!.last.id;

@@ -1,4 +1,4 @@
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';

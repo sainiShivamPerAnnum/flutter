@@ -1,5 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';

@@ -1,11 +1,10 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_slides/autosave_setup_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_slides/autosave_upi_app-select_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_setup_view.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_upi_app-select_view.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -71,30 +70,12 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                       const NewSquareBackground(),
                       SafeArea(
                         child: autosaveState == AutosaveState.INIT
-                            ? _buildPendingUI(model)
+                            ? AutosavePendingView()
                             : autosaveState == AutosaveState.IDLE
-                                ? PageView(
-                                    controller: model.pageController,
-                                    physics:
-                                        model.isSubscriptionCreationInProgress
-                                            ? NeverScrollableScrollPhysics()
-                                            : ClampingScrollPhysics(),
-                                    children: [
-                                      AutosaveStepsView(model: model),
-                                      UpiAppSelectView(model: model),
-                                      AutosaveAssetChoiceView(model: model),
-                                      AutoPaySetupOrUpdateView(model: model),
-                                    ],
-                                  )
+                                ? AutosaveSetupView(model: model)
                                 : autosaveState == AutosaveState.ACTIVE
-                                    ? _buildCompleteUI(model)
-                                    : SizedBox(
-                                        child: Text(
-                                          "Autosave Active",
-                                          style: TextStyles.body2
-                                              .colour(Colors.white),
-                                        ),
-                                      ),
+                                    ? AutosaveSuccessView(model: model)
+                                    : SizedBox(),
                       ),
                     ],
                   ),
@@ -103,62 +84,39 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
       ),
     );
   }
+}
 
-  Widget _buildPendingUI(AutosaveProcessViewModel model) {
-    S locale = S.of(context);
-    final AnalyticsService? _analyticService = locator<AnalyticsService>();
-    return Container(
-      width: SizeConfig.screenWidth,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: SizeConfig.screenWidth! * 0.12,
-          ),
-          Text(
-            locale.setUpAutoSave,
-            style: TextStyles.sourceSans.body3.setOpacity(0.5),
-          ),
-          SizedBox(
-            height: SizeConfig.padding10,
-          ),
-          Text(
-            "Request Pending",
-            style: TextStyles.rajdhaniSB.title4,
-          ),
-          SizedBox(
-            height: SizeConfig.screenWidth! * 0.1,
-          ),
-          SizedBox(
-            height: SizeConfig.padding32,
-          ),
-          Text(
-            locale.txnApprovePaymentReq,
-            style: TextStyles.sourceSans.body1,
-            textAlign: TextAlign.center,
-          ),
-          Expanded(
-              child: Center(
-            child: LottieBuilder.asset(
-              "assets/lotties/loader.json",
-              width: SizeConfig.screenWidth! * 0.5,
-            ),
-          )),
-          Text(
-            "We'll notify you once your autosave is confirmed",
-            style: TextStyles.sourceSansL.body4.colour(Colors.amber),
-          ),
-          SizedBox(
-            height: SizeConfig.pageHorizontalMargins,
-          ),
-        ],
-      ),
+class AutosaveSetupView extends StatelessWidget {
+  final AutosaveProcessViewModel model;
+  const AutosaveSetupView({
+    required this.model,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      controller: model.pageController,
+      physics: model.isSubscriptionCreationInProgress
+          ? NeverScrollableScrollPhysics()
+          : ClampingScrollPhysics(),
+      children: [
+        AutosaveStepsView(model: model),
+        UpiAppSelectView(model: model),
+        AutosaveAssetChoiceView(model: model),
+        AutoPaySetupOrUpdateView(model: model),
+      ],
     );
   }
+}
 
-  Widget _buildCompleteUI(AutosaveProcessViewModel model) {
-    S locale = S.of(context);
+class AutosaveSuccessView extends StatelessWidget {
+  final AutosaveProcessViewModel model;
+  const AutosaveSuccessView({super.key, required this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = locator<S>();
     return Container(
       height: SizeConfig.screenHeight,
       child: Column(
@@ -244,6 +202,63 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               },
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class AutosavePendingView extends StatelessWidget {
+  const AutosavePendingView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = locator<S>();
+    return Container(
+      width: SizeConfig.screenWidth,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.screenWidth! * 0.12,
+          ),
+          Text(
+            locale.setUpAutoSave,
+            style: TextStyles.sourceSans.body3.setOpacity(0.5),
+          ),
+          SizedBox(
+            height: SizeConfig.padding10,
+          ),
+          Text(
+            "Request Pending",
+            style: TextStyles.rajdhaniSB.title4,
+          ),
+          SizedBox(
+            height: SizeConfig.screenWidth! * 0.1,
+          ),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
+          Text(
+            locale.txnApprovePaymentReq,
+            style: TextStyles.sourceSans.body1,
+            textAlign: TextAlign.center,
+          ),
+          Expanded(
+              child: Center(
+            child: LottieBuilder.asset(
+              "assets/lotties/loader.json",
+              width: SizeConfig.screenWidth! * 0.5,
+            ),
+          )),
+          Text(
+            "We'll notify you once your autosave is confirmed",
+            style: TextStyles.sourceSansL.body4.colour(Colors.amber),
+          ),
+          SizedBox(
+            height: SizeConfig.pageHorizontalMargins,
+          ),
         ],
       ),
     );

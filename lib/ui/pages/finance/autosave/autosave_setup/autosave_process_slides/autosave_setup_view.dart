@@ -1,6 +1,6 @@
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/ui/pages/finance/autosave/amount_chips.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_process/autosave_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/finance/autosave/segmate_chip.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -136,7 +136,11 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
                     title: model.autosaveAssetOptionList[1].title,
                     subtitle: "10% Returns P.A",
                     controller: model.floAmountFieldController!,
-                    onValueChanged: (_) {},
+                    onValueChanged: (val) {
+                      model.totalInvestingAmount = int.tryParse(val ?? '0')! +
+                          int.tryParse(
+                              model.goldAmountFieldController?.text ?? '0')!;
+                    },
                   ),
                 if (model.selectedAssetOption == 0 ||
                     model.selectedAssetOption == 2)
@@ -145,7 +149,11 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
                     title: model.autosaveAssetOptionList[2].title,
                     subtitle: "Stable Returns",
                     controller: model.goldAmountFieldController!,
-                    onValueChanged: (_) {},
+                    onValueChanged: (val) {
+                      model.totalInvestingAmount = int.tryParse(val ?? '0')! +
+                          int.tryParse(
+                              model.floAmountFieldController?.text ?? '0')!;
+                    },
                   ),
                 Divider(
                   color: Colors.grey.withOpacity(0.4),
@@ -237,7 +245,7 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
               btnText: model.finalButtonCta,
               onPressed: () async {
                 Haptic.vibrate();
-                await model.createSubscription();
+                await model.createOrUpdateSubscription();
               },
               width: SizeConfig.screenWidth! * 0.8,
             ),
@@ -328,6 +336,7 @@ class AutosaveAmountInputTile extends StatelessWidget {
             prefixText: "₹ ",
             textAlign: TextAlign.center,
             prefixTextStyle: TextStyles.rajdhaniB.body1,
+            onChanged: onValueChanged,
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
             ],
