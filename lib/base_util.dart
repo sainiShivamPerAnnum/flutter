@@ -237,8 +237,9 @@ class BaseUtil extends ChangeNotifier {
     return _userRepo!.getFundBalance().then((aValue) {
       if (aValue.code == 200) {
         userFundWallet = aValue.model;
-        if (userFundWallet!.augGoldQuantity > 0)
+        if (userFundWallet!.augGoldQuantity > 0) {
           _updateAugmontBalance(); //setstate call in method
+        }
       }
       notifyListeners();
     });
@@ -490,8 +491,9 @@ class BaseUtil extends ChangeNotifier {
     ValueChanged<dynamic>? callback,
     Color? barrierColor,
   }) async {
-    if (addToScreenStack != null && addToScreenStack == true)
+    if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
+    }
     print("Current Stack: ${AppState.screenStack}");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     await showDialog(
@@ -514,8 +516,9 @@ class BaseUtil extends ChangeNotifier {
     BoxConstraints? boxContraints,
     bool enableDrag = false,
   }) async {
-    if (addToScreenStack != null && addToScreenStack == true)
+    if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
+    }
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     print("Current Stack: ${AppState.screenStack}");
     await showModalBottomSheet(
@@ -538,15 +541,15 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {
-    logger.d("Verification credetials: " + credential.toString());
+    logger.d("Verification credetials: $credential");
     // FirebaseAuth.instance.signInWithCustomToken(token)
     return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
-      this.firebaseUser = res.user;
+      firebaseUser = res.user;
       logger.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
       return true;
     }).catchError((e) {
       logger.e(
-          "User Authentication failed with credential: Error: " + e.toString());
+          "User Authentication failed with credential: Error: $e");
       return false;
     });
   }
@@ -605,7 +608,7 @@ class BaseUtil extends ChangeNotifier {
 
       return true;
     } catch (e) {
-      logger.e('Failed to clear data/sign out user: ' + e.toString());
+      logger.e('Failed to clear data/sign out user: $e');
       return false;
     }
   }
@@ -631,18 +634,19 @@ class BaseUtil extends ChangeNotifier {
   // }
 
   static int getRandomRewardAmount(index) {
-    if (index < 5)
+    if (index < 5) {
       return 50;
-    else if (index < 10)
+    } else if (index < 10) {
       return 100;
-    else if (index < 15)
+    } else if (index < 15) {
       return 150;
-    else if (index < 20)
+    } else if (index < 20) {
       return 200;
-    else if (index < 50)
+    } else if (index < 50) {
       return 500;
-    else
+    } else {
       return 100;
+    }
   }
 
   bool isOldCustomer() {
@@ -718,10 +722,11 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static getIntOrDouble(double x) {
-    if (x - x.round() != 0)
+    if (x - x.round() != 0) {
       return x;
-    else
+    } else {
       return x.toInt();
+    }
   }
 
   static double digitPrecision(double x, [int offset = 2, bool round = true]) {
@@ -921,10 +926,10 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  get isGoogleSignInProgress => this._isGoogleSignInProgress;
+  get isGoogleSignInProgress => _isGoogleSignInProgress;
 
   set isGoogleSignInProgress(value) {
-    this._isGoogleSignInProgress = value;
+    _isGoogleSignInProgress = value;
     notifyListeners();
   }
 
@@ -935,10 +940,10 @@ class BaseUtil extends ChangeNotifier {
     return "$y$m$d";
   }
 
-  bool? get isUpiInfoMissing => this._isUpiInfoMissing;
+  bool? get isUpiInfoMissing => _isUpiInfoMissing;
 
   set isUpiInfoMissing(bool? value) {
-    this._isUpiInfoMissing = value;
+    _isUpiInfoMissing = value;
     notifyListeners();
   }
 
@@ -975,8 +980,9 @@ class CompleteProfileDialog extends StatelessWidget {
         imagePath: Assets.completeProfile,
         btnText: locale.btnComplete.toUpperCase(),
         onPressed: () {
-          while (AppState.screenStack.length > 1)
+          while (AppState.screenStack.length > 1) {
             AppState.backButtonDispatcher!.didPopRoute();
+          }
           AppState.delegate!.appState.setCurrentTabIndex = 0;
         },
       ),

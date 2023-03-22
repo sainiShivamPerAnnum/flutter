@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/games/tambola/tambola_home/all_tambola_tickets
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/buy_ticket_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/sticky_widget.dart';

@@ -95,7 +95,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
     if (widget.showPrizeSection) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         _scrollController?.animateTo(SizeConfig.screenWidth! * 1.7,
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             curve: Curves.fastLinearToSlowEaseIn);
       });
     }
@@ -103,7 +103,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
     if (widget.showWinners) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         _scrollController?.animateTo(SizeConfig.screenWidth! * 2.6,
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             curve: Curves.fastLinearToSlowEaseIn);
       });
     }
@@ -123,7 +123,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
         showHelpButton: isFromNavigation,
         title: isFromNavigation ? null : locale.tTicket,
         type: FaqsType.play,
-        backgroundColor: Color(0XFF141414),
+        backgroundColor: const Color(0XFF141414),
       ),
       backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(
@@ -138,7 +138,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                 Container(
                   // margin: EdgeInsets.only(top: SizeConfig.padding14),
                   padding: EdgeInsets.only(top: SizeConfig.padding20),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Color(0XFF141414),
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(18),
@@ -164,7 +164,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-                  child: TambolaTicketInfo(),
+                  child: const TambolaTicketInfo(),
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
@@ -173,7 +173,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                     widget.model.game!.description!,
                     textAlign: TextAlign.center,
                     style: TextStyles.rajdhaniSB.body2
-                        .colour(Color(0xffD9D9D9).withOpacity(0.41)),
+                        .colour(const Color(0xffD9D9D9).withOpacity(0.41)),
                   ),
                 ),
                 SizedBox(height: SizeConfig.padding20),
@@ -183,7 +183,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                 TambolaLeaderBoard(
                   model: widget.model,
                 ),
-                TermsAndConditions(url: Constants.tambolatnc),
+                const TermsAndConditions(url: Constants.tambolatnc),
                 SizedBox(
                   height: SizeConfig.screenHeight! * 0.25,
                 )
@@ -194,7 +194,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
             alignment: Alignment.bottomCenter,
             child: Container(
               padding:
-                  EdgeInsets.only(top: 14, bottom: 24, left: 32, right: 32),
+                  const EdgeInsets.only(top: 14, bottom: 24, left: 32, right: 32),
               width: double.infinity,
               color: UiConstants.kBackgroundColor,
               // height: SizeConfig.screenHeight! * 0.17,
@@ -208,13 +208,13 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SvgPicture.asset(Assets.sparklingStar),
-                        SizedBox(
+                        const SizedBox(
                           width: 4,
                         ),
                         Text(
                           widget.model.game?.highLight ?? '',
                           style: TextStyles.sourceSans.body4
-                              .colour(Color(0xffA7A7A8)),
+                              .colour(const Color(0xffA7A7A8)),
                         ),
                       ],
                     ),
@@ -287,7 +287,7 @@ class TambolaHeader extends StatelessWidget {
               return TambolaVideoPlayer(link: model.game!.walkThroughUri!);
 
             default:
-              return SizedBox();
+              return const SizedBox();
           }
         },
       ),
@@ -305,18 +305,18 @@ class TambolaTicketInfo extends StatelessWidget {
       height: SizeConfig.screenHeight! * 0.10,
       width: SizeConfig.screenWidth! * 0.80,
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff627F8E)),
+        border: Border.all(color: const Color(0xff627F8E)),
         borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         gradient: LinearGradient(
           begin: Alignment.centerLeft,
           tileMode: TileMode.mirror,
           end: Alignment.centerRight,
-          stops: [0, 0.5, 0.5, 1],
+          stops: const [0, 0.5, 0.5, 1],
           colors: [
-            Color(
+            const Color(
               0xff627F8E,
             ).withOpacity(0.2),
-            Color(
+            const Color(
               0xff627F8E,
             ).withOpacity(0.2),
             Colors.transparent,

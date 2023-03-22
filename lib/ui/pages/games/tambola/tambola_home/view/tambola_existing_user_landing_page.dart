@@ -1,11 +1,18 @@
 import 'dart:math';
 
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/all_tambola_tickets.dart';
@@ -13,6 +20,7 @@ import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.d
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_ticket.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/buy_ticket_widget.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_top_banner.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/ticket_painter.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -21,10 +29,12 @@ import 'package:felloapp/ui/pages/static/sticky_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
@@ -139,7 +149,9 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const TambolaTopBanner(),
+                 TodayWeeklyPicksCard(
+                  model: widget.model,
+                ),
                 SizedBox(
                   height: SizeConfig.padding20,
                 ),
@@ -268,47 +280,6 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                 SizedBox(
                   height: SizeConfig.padding14,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    AppState.delegate!.appState.currentAction = PageAction(
-                      state: PageState.addWidget,
-                      page: TambolaNewUser,
-                      widget: TambolaNewUserPage(
-                        model: widget.model,
-                        showWinners: true,
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.screenWidth! * 0.06),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff627F8E).withOpacity(0.2),
-                      border: Border.all(color: const Color(0xff627F8E)),
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Last week Winners",
-                          style: TextStyles.rajdhaniSB.body1,
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                          size: SizeConfig.padding16,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 32,
-                ),
                 AnimatedBuilder(
                   animation: animationController,
                   builder: (ctx, child) {
@@ -334,6 +305,14 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                 SizedBox(
                   height: SizeConfig.navBarHeight + SizeConfig.padding16,
                 ),
+
+                TambolaLeaderBoard(
+                  model: widget.model,
+                ),
+
+                SizedBox(
+                  height: SizeConfig.navBarHeight + SizeConfig.padding16,
+                ),
               ],
             ),
           ),
@@ -342,7 +321,6 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
     );
   }
 }
-
 
 /// TODO: After refactoring update the original widget with this widget
 class _TicketsView extends StatelessWidget {
@@ -407,7 +385,7 @@ class _TicketsView extends StatelessWidget {
     } else if (model!.activeTambolaCardCount == 1) {
       //One tambola ticket
       model!.tambolaBoardViews = [];
-      model!.tambolaBoardViews!.add(Ticket(
+      model!.tambolaBoardViews!.add(TambolaTicket(
         bestBoards: model!.refreshBestBoards(),
         dailyPicks: model!.weeklyDigits,
         board: model!.userWeeklyBoards![0],
@@ -431,7 +409,7 @@ class _TicketsView extends StatelessWidget {
 
         for (final board in model!.userWeeklyBoards!) {
           model!.tambolaBoardViews!.add(
-            Ticket(
+            TambolaTicket(
               bestBoards: model!.refreshBestBoards(),
               dailyPicks: model!.weeklyDigits,
               board: board,
@@ -618,74 +596,49 @@ class _TabViewGeneratorState extends State<_TabViewGenerator>
                   ///Corner
                   widget.model!.userWeeklyBoards != null &&
                           widget.model!.userWeeklyBoards!.isNotEmpty
-                      ? Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins,
-                              ),
-                              child: TambolaTicket(
-                                child: Container(),
-                              )
-                            ),
-
-                            // Ticket(
-                            //     dailyPicks: widget.model!.weeklyDigits,
-                            //     bestBoards: _bestBoards,
-                            //     board: _bestBoards![0],
-                            //     showBestOdds: false,
-                            //     calledDigits:
-                            //         widget.model!.weeklyDigits!.toList()),
-                          ],
-                        )
+                      ? TambolaTicket(
+                        dailyPicks: widget.model!.weeklyDigits,
+                        bestBoards: _bestBoards,
+                        board: _bestBoards![0],
+                        showBestOdds: false,
+                        calledDigits: widget.model!.weeklyDigits!.toList(),
+                      )
                       : const NoTicketWidget(),
 
                   ///Top row
                   widget.model!.userWeeklyBoards != null &&
                           widget.model!.userWeeklyBoards!.isNotEmpty
-                      ? Column(
-                          children: [
-                            Ticket(
-                                dailyPicks: widget.model!.weeklyDigits,
-                                bestBoards: _bestBoards,
-                                board: _bestBoards![1],
-                                showBestOdds: false,
-                                calledDigits:
-                                    widget.model!.weeklyDigits!.toList()),
-                          ],
-                        )
+                      ? TambolaTicket(
+                          dailyPicks: widget.model!.weeklyDigits,
+                          bestBoards: _bestBoards,
+                          board: _bestBoards![1],
+                          showBestOdds: false,
+                          calledDigits:
+                              widget.model!.weeklyDigits!.toList())
                       : const NoTicketWidget(),
 
                   /// Mid Row
                   widget.model!.userWeeklyBoards != null &&
                           widget.model!.userWeeklyBoards!.isNotEmpty
-                      ? Column(
-                          children: [
-                            Ticket(
-                                dailyPicks: widget.model!.weeklyDigits,
-                                bestBoards: _bestBoards,
-                                board: _bestBoards![2],
-                                showBestOdds: false,
-                                calledDigits:
-                                    widget.model!.weeklyDigits!.toList()),
-                          ],
-                        )
+                      ? TambolaTicket(
+                          dailyPicks: widget.model!.weeklyDigits,
+                          bestBoards: _bestBoards,
+                          board: _bestBoards![2],
+                          showBestOdds: false,
+                          calledDigits:
+                              widget.model!.weeklyDigits!.toList())
                       : const NoTicketWidget(),
 
                   /// Last Row
                   widget.model!.userWeeklyBoards != null &&
                           widget.model!.userWeeklyBoards!.isNotEmpty
-                      ? Column(
-                          children: [
-                            Ticket(
-                                dailyPicks: widget.model!.weeklyDigits,
-                                bestBoards: _bestBoards,
-                                board: _bestBoards![3],
-                                showBestOdds: false,
-                                calledDigits:
-                                    widget.model!.weeklyDigits!.toList()),
-                          ],
-                        )
+                      ? TambolaTicket(
+                          dailyPicks: widget.model!.weeklyDigits,
+                          bestBoards: _bestBoards,
+                          board: _bestBoards![3],
+                          showBestOdds: false,
+                          calledDigits:
+                              widget.model!.weeklyDigits!.toList())
                       : const NoTicketWidget(),
 
                   /// Corner
@@ -695,37 +648,5 @@ class _TabViewGeneratorState extends State<_TabViewGenerator>
             )
           ],
         ));
-  }
-}
-
-class MySeparator extends StatelessWidget {
-  const MySeparator({Key? key, this.height = 1, this.color = Colors.black})
-      : super(key: key);
-  final double height;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final boxWidth = constraints.constrainWidth();
-        const dashWidth = 8.0;
-        final dashHeight = height;
-        final dashCount = (boxWidth / (2 * dashWidth)).floor();
-        return Flex(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          direction: Axis.horizontal,
-          children: List.generate(dashCount, (_) {
-            return SizedBox(
-              width: dashWidth,
-              height: dashHeight,
-              child: DecoratedBox(
-                decoration: BoxDecoration(color: color),
-              ),
-            );
-          }),
-        );
-      },
-    );
   }
 }

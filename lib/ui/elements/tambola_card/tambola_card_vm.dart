@@ -8,8 +8,8 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 
 class TambolaCardModel extends BaseViewModel {
-  final GameRepo? _gamesRepo = locator<GameRepo>();
-  final TambolaService? _tambolaService = locator<TambolaService>();
+  final GameRepo _gamesRepo = locator<GameRepo>();
+  final TambolaService _tambolaService = locator<TambolaService>();
 
   //VARIABLES
   GameModel? _game;
@@ -22,12 +22,12 @@ class TambolaCardModel extends BaseViewModel {
 
   GameModel? get game => _game;
   set game(value) {
-    this._game = value;
+    _game = value;
   }
 
   bool get isGameModelLoading => _isGameModelLoading;
   set isGameModelLoading(value) {
-    this._isGameModelLoading = _isGameModelLoading;
+    _isGameModelLoading = _isGameModelLoading;
   }
 
   int? get dailyPicksCount => _dailyPicksCount;

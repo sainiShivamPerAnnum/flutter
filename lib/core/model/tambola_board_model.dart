@@ -30,7 +30,7 @@ class TambolaBoard {
   Map<int, int> indexValueMap = HashMap();
 
   TambolaBoard(this.assigned_time, this.val, this.id, this.week_code) {
-    if (this.val != null) decodeBoard(this.val!);
+    if (val != null) decodeBoard(val!);
   }
 
   factory TambolaBoard.fromMap(Map<String, dynamic> map) {
@@ -61,7 +61,7 @@ class TambolaBoard {
   }
 
   bool isValid() {
-    return (val != null); //TODO
+    return val != null; //TODO
   }
 
   List<String> encodedStringToArray(String cde) {

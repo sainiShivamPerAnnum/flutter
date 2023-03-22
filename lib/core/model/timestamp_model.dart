@@ -5,7 +5,7 @@ class TimestampModel extends Timestamp {
       : super(seconds, nanoseconds);
 
   factory TimestampModel.fromMap(dynamic map) {
-    if (map == null) return new TimestampModel(seconds: 0, nanoseconds: 0);
+    if (map == null) return TimestampModel(seconds: 0, nanoseconds: 0);
 
     if (map.runtimeType == String) return TimestampModel.fromIsoString(map);
 
@@ -30,7 +30,7 @@ class TimestampModel extends Timestamp {
     );
   }
 
-  static toIsoString(TimestampModel date) {
+  static String toIsoString(TimestampModel date) {
     return date.toDate().toUtc().toIso8601String();
   }
 

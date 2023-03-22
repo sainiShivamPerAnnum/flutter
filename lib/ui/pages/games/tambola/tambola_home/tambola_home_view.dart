@@ -22,6 +22,8 @@ import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_ticket.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/buy_ticket_widget.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
@@ -208,7 +210,7 @@ class TicketsView extends StatelessWidget {
     } else if (model!.activeTambolaCardCount == 1) {
       //One tambola ticket
       model!.tambolaBoardViews = [];
-      model!.tambolaBoardViews!.add(Ticket(
+      model!.tambolaBoardViews!.add(TambolaTicket(
         bestBoards: model!.refreshBestBoards(),
         dailyPicks: model!.weeklyDigits,
         board: model!.userWeeklyBoards![0],
@@ -232,7 +234,7 @@ class TicketsView extends StatelessWidget {
 
         model!.userWeeklyBoards!.forEach((board) {
           model!.tambolaBoardViews!.add(
-            Ticket(
+            TambolaTicket(
               bestBoards: model!.refreshBestBoards(),
               dailyPicks: model!.weeklyDigits,
               board: board,
@@ -649,214 +651,212 @@ class Odds extends StatelessWidget {
   }
 }
 
-class ButTicketsComponent extends StatelessWidget {
-  ButTicketsComponent({
-    Key? key,
-    required this.model,
-  }) : super(key: key);
-
-  final TambolaHomeViewModel model;
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Container(
-      width: SizeConfig.screenWidth,
-      margin: const EdgeInsets.symmetric(horizontal: 18),
-      padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.pageHorizontalMargins,
-          vertical: SizeConfig.pageHorizontalMargins),
-      decoration: BoxDecoration(
-        color: UiConstants.kSecondaryBackgroundColor,
-        borderRadius: BorderRadius.all(
-          Radius.circular(SizeConfig.roundness16),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      locale.tGetMore,
-                      textAlign: TextAlign.left,
-                      style: TextStyles.rajdhaniSB.body1,
-                    ),
-                    Text(
-                      locale.get1Ticket(
-                          (AppConfig.getValue(AppConfigKey.tambola_cost)
-                                  .toString()
-                                  .isEmpty
-                              ? '500'
-                              : AppConfig.getValue(AppConfigKey.tambola_cost))),
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kTextColor2),
-                    ),
-                  ]),
-              GestureDetector(
-                onTap: () {
-                  // AppState.screenStack.add(ScreenItem.dialog);
-                  // _analyticsService.track(
-                  //     eventName: AnalyticsEvents.tambolaHelpTapped,
-                  //     properties: AnalyticsProperties.getDefaultPropertiesMap(
-                  //         extraValuesMap: {
-                  //           "Time left for draw Tambola (mins)":
-                  //               AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                  //           "Tambola Tickets Owned":
-                  //               AnalyticsProperties.getTabolaTicketCount(),
-                  //         }));
-                  // Navigator.of(AppState.delegate.navigatorKey.currentContext)
-                  //     .push(
-                  //   PageRouteBuilder(
-                  //     pageBuilder: (context, animation, anotherAnimation) {
-                  //       return InfoStories(
-                  //         topic: 'tambola',
-                  //       );
-                  //     },
-                  //     transitionDuration: Duration(milliseconds: 500),
-                  //     transitionsBuilder:
-                  //         (context, animation, anotherAnimation, child) {
-                  //       animation = CurvedAnimation(
-                  //           curve: Curves.easeInCubic, parent: animation);
-                  //       return Align(
-                  //         child: SizeTransition(
-                  //           sizeFactor: animation,
-                  //           child: child,
-                  //           axisAlignment: 0.0,
-                  //         ),
-                  //       );
-                  //     },
-                  //   ),
-                  // );
-                  AppState.delegate!.appState.currentAction = PageAction(
-                    state: PageState.addWidget,
-                    page: TambolaNewUser,
-                    widget: TambolaNewUserPage(
-                      model: model,
-                      showPrizeSection: true,
-                    ),
-                  );
-                },
-                child: Text(
-                  locale.viewPrizes,
-                  style: TextStyles.rajdhaniSB.body3.copyWith(
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          Row(
-            children: [
-              Container(
-                width: SizeConfig.screenWidth! * 0.25,
-                decoration: BoxDecoration(
-                  color: const Color(0xff000000).withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap: model.decreaseTicketCount,
-                      child: Icon(
-                        Icons.remove,
-                        color: Colors.white,
-                        size: SizeConfig.padding16,
-                      ),
-
-                      // iconSize: SizeConfig.padding16,
-                      // color: Colors.white,
-                      // onPressed: model.decreaseTicketCount,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.screenHeight! * 0.03,
-                      height: SizeConfig.padding35,
-                      child: Center(
-                        child: TextField(
-                          style: TextStyles.sourceSans.body2.setHeight(2),
-                          textAlign: TextAlign.center,
-                          controller: model.ticketCountController,
-                          enableInteractiveSelection: false,
-                          enabled: false,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              signed: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          onChanged: (String text) {
-                            model.updateTicketCount();
-                          },
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      child: Icon(
-                        Icons.add,
-                        size: SizeConfig.padding16,
-                        color: Colors.white,
-                      ),
-                      // iconSize: SizeConfig.padding16,
-                      // color: Colors.white,
-                      onTap: model.increaseTicketCount,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: SizeConfig.padding8,
-              ),
-              Text(
-                "= ₹ ${model.ticketSavedAmount.toString()}",
-                style: TextStyles.sourceSansB.body2.colour(Colors.white),
-              ),
-              const Spacer(),
-              CustomSaveButton(
-                  width: SizeConfig.screenWidth! * 0.25,
-                  height: SizeConfig.screenHeight! * 0.05,
-                  color: const Color(0xff000000).withOpacity(0.5),
-                  onTap: () {
-                    _analyticsService.track(
-                        eventName: AnalyticsEvents.tambolaSaveTapped,
-                        properties: AnalyticsProperties
-                            .getDefaultPropertiesMap(extraValuesMap: {
-                          "Time left for draw Tambola (mins)":
-                              AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                          "Tambola Tickets Owned":
-                              AnalyticsProperties.getTambolaTicketCount(),
-                          "Number of Tickets":
-                              model.ticketCountController!.text ?? "",
-                          "Amount": model.ticketSavedAmount,
-                        }));
-                    BaseUtil().openDepositOptionsModalSheet(
-                        amount: model.ticketSavedAmount);
-                  },
-                  title: 'SAVE')
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+// class ButTicketsComponent extends StatelessWidget {
+//   ButTicketsComponent({
+//     Key? key,
+//     required this.model,
+//   }) : super(key: key);
+//
+//   final TambolaHomeViewModel model;
+//   final AnalyticsService _analyticsService = locator<AnalyticsService>();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     S locale = S.of(context);
+//     return Container(
+//       width: SizeConfig.screenWidth,
+//       margin: const EdgeInsets.symmetric(horizontal: 18),
+//       padding: EdgeInsets.symmetric(
+//           horizontal: SizeConfig.pageHorizontalMargins,
+//           vertical: SizeConfig.pageHorizontalMargins),
+//       decoration: BoxDecoration(
+//         color: const Color(0xff30363C),
+//         borderRadius: BorderRadius.all(
+//           Radius.circular(SizeConfig.roundness16),
+//         ),
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Column(
+//                   mainAxisAlignment: MainAxisAlignment.start,
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       locale.tGetMore,
+//                       textAlign: TextAlign.left,
+//                       style: TextStyles.rajdhaniSB.body1,
+//                     ),
+//                     Text(
+//                       locale.get1Ticket(
+//                           AppConfig.getValue(AppConfigKey.tambola_cost)
+//                                   .toString()
+//                                   .isEmpty
+//                               ? '500'
+//                               : AppConfig.getValue(AppConfigKey.tambola_cost)),
+//                       style: TextStyles.sourceSans.body4
+//                           .colour(UiConstants.kTextColor2),
+//                     ),
+//                   ]),
+//               GestureDetector(
+//                 onTap: () {
+//                   // AppState.screenStack.add(ScreenItem.dialog);
+//                   // _analyticsService.track(
+//                   //     eventName: AnalyticsEvents.tambolaHelpTapped,
+//                   //     properties: AnalyticsProperties.getDefaultPropertiesMap(
+//                   //         extraValuesMap: {
+//                   //           "Time left for draw Tambola (mins)":
+//                   //               AnalyticsProperties.getTimeLeftForTambolaDraw(),
+//                   //           "Tambola Tickets Owned":
+//                   //               AnalyticsProperties.getTabolaTicketCount(),
+//                   //         }));
+//                   // Navigator.of(AppState.delegate.navigatorKey.currentContext)
+//                   //     .push(
+//                   //   PageRouteBuilder(
+//                   //     pageBuilder: (context, animation, anotherAnimation) {
+//                   //       return InfoStories(
+//                   //         topic: 'tambola',
+//                   //       );
+//                   //     },
+//                   //     transitionDuration: Duration(milliseconds: 500),
+//                   //     transitionsBuilder:
+//                   //         (context, animation, anotherAnimation, child) {
+//                   //       animation = CurvedAnimation(
+//                   //           curve: Curves.easeInCubic, parent: animation);
+//                   //       return Align(
+//                   //         child: SizeTransition(
+//                   //           sizeFactor: animation,
+//                   //           child: child,
+//                   //           axisAlignment: 0.0,
+//                   //         ),
+//                   //       );
+//                   //     },
+//                   //   ),
+//                   // );
+//                   AppState.delegate!.appState.currentAction = PageAction(
+//                     state: PageState.addWidget,
+//                     page: TambolaNewUser,
+//                     widget: TambolaNewUserPage(
+//                       model: model,
+//                       showPrizeSection: true,
+//                     ),
+//                   );
+//                 },
+//                 child: Text(
+//                   locale.viewPrizes,
+//                   style: TextStyles.rajdhaniSB.body3.copyWith(
+//                     decoration: TextDecoration.underline,
+//                   ),
+//                 ),
+//               )
+//             ],
+//           ),
+//           SizedBox(
+//             height: SizeConfig.padding16,
+//           ),
+//           Row(
+//             children: [
+//               Container(
+//                 width: SizeConfig.screenWidth! * 0.25,
+//                 decoration: BoxDecoration(
+//                   color: const Color(0xff000000).withOpacity(0.5),
+//                   borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+//                 ),
+//                 child: Row(
+//                   mainAxisSize: MainAxisSize.min,
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   children: [
+//                     GestureDetector(
+//                       onTap: model.decreaseTicketCount,
+//                       child: Icon(
+//                         Icons.remove,
+//                         color: Colors.white,
+//                         size: SizeConfig.padding16,
+//                       ),
+//
+//                       // iconSize: SizeConfig.padding16,
+//                       // color: Colors.white,
+//                       // onPressed: model.decreaseTicketCount,
+//                     ),
+//                     SizedBox(
+//                       width: SizeConfig.screenHeight! * 0.03,
+//                       height: SizeConfig.padding35,
+//                       child: Center(
+//                         child: TextField(
+//                           style: TextStyles.sourceSans.body2.setHeight(2),
+//                           textAlign: TextAlign.center,
+//                           controller: model.ticketCountController,
+//                           enableInteractiveSelection: false,
+//                           enabled: false,
+//                           keyboardType: const TextInputType.numberWithOptions(
+//                               signed: true),
+//                           inputFormatters: [
+//                             FilteringTextInputFormatter.digitsOnly,
+//                           ],
+//                           onChanged: (String text) {
+//                             model.updateTicketCount();
+//                           },
+//                           decoration: const InputDecoration(
+//                             border: InputBorder.none,
+//                             focusedBorder: InputBorder.none,
+//                             enabledBorder: InputBorder.none,
+//                             errorBorder: InputBorder.none,
+//                             disabledBorder: InputBorder.none,
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                     GestureDetector(
+//                       onTap: model.increaseTicketCount,
+//                       child: Icon(
+//                         Icons.add,
+//                         size: SizeConfig.padding16,
+//                         color: Colors.white,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               SizedBox(
+//                 width: SizeConfig.padding8,
+//               ),
+//               Text(
+//                 "= ₹ ${model.ticketSavedAmount.toString()}",
+//                 style: TextStyles.sourceSansB.body2.colour(Colors.white),
+//               ),
+//               const Spacer(),
+//               CustomSaveButton(
+//                   width: SizeConfig.screenWidth! * 0.25,
+//                   height: SizeConfig.screenHeight! * 0.05,
+//                   color: const Color(0xff000000).withOpacity(0.5),
+//                   onTap: () {
+//                     _analyticsService.track(
+//                         eventName: AnalyticsEvents.tambolaSaveTapped,
+//                         properties: AnalyticsProperties
+//                             .getDefaultPropertiesMap(extraValuesMap: {
+//                           "Time left for draw Tambola (mins)":
+//                               AnalyticsProperties.getTimeLeftForTambolaDraw(),
+//                           "Tambola Tickets Owned":
+//                               AnalyticsProperties.getTambolaTicketCount(),
+//                           "Number of Tickets":
+//                               model.ticketCountController!.text ?? "",
+//                           "Amount": model.ticketSavedAmount,
+//                         }));
+//                     BaseUtil().openDepositOptionsModalSheet(
+//                         amount: model.ticketSavedAmount);
+//                   },
+//                   title: 'SAVE')
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class PageViewWithIndicator extends StatefulWidget {
   const PageViewWithIndicator(

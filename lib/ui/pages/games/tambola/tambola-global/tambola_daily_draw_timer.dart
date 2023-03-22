@@ -15,7 +15,7 @@ class DailyPicksTimer extends StatefulWidget {
   final Color? bgColor;
   final MainAxisAlignment? alignment;
 
-  DailyPicksTimer({
+  const DailyPicksTimer({super.key,
     required this.replacementWidget,
     this.bgColor,
     this.alignment,
@@ -30,17 +30,18 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   bool showClock = true;
   bool countDown = true;
   BaseUtil? baseProvider;
-  TambolaService? _tambolaService = locator<TambolaService>();
+  final TambolaService _tambolaService = locator<TambolaService>();
 
   @override
   void initState() {
     if (getDifferance().isNegative) {
       duration = getDifferance().abs();
-      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-        timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
       });
-    } else
+    } else {
       showClock = false;
+    }
     super.initState();
   }
 
@@ -53,9 +54,9 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
     return timeDiff;
   }
 
-  void addTime() async {
+  Future<void> addTime() async {
     if (!getDifferance().isNegative) {
-      await _tambolaService?.fetchWeeklyPicks(forcedRefresh: true);
+      await _tambolaService.fetchWeeklyPicks(forcedRefresh: true);
       setState(() {
         showClock = false;
         timer?.cancel();
@@ -82,7 +83,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
-    if (showClock) {
+    if (!showClock) {
       final hours = twoDigits(duration.inHours);
       final minutes = twoDigits(duration.inMinutes.remainder(60));
       final seconds = twoDigits(duration.inSeconds.remainder(60));
@@ -90,9 +91,9 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
           mainAxisAlignment: widget.alignment ?? MainAxisAlignment.center,
           children: [
             buildTimeCard(time: hours),
-            TimerDots(),
+            const TimerDots(),
             buildTimeCard(time: minutes),
-            TimerDots(),
+            const TimerDots(),
             buildTimeCard(time: seconds),
           ]);
     }
@@ -103,7 +104,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
         height: SizeConfig.screenWidth! * 0.16,
         width: SizeConfig.screenWidth! * 0.16,
         // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: UiConstants.kBackgroundColor,
           shape: BoxShape.circle,
         ),

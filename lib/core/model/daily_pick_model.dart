@@ -1,7 +1,7 @@
 import 'package:felloapp/util/logger.dart';
 
 class DailyPick {
-  static Log log = new Log('DailyPick');
+  static Log log = const Log('DailyPick');
   List<int>? mon;
   List<int>? tue;
   List<int>? wed;
@@ -35,7 +35,7 @@ class DailyPick {
 
   factory DailyPick.fromMap(Map<String, dynamic> picksData) {
     final Map<String, dynamic> data  = Map.from(picksData);
-    if (data.isNotEmpty)
+    if (data.isNotEmpty) {
       return DailyPick(
         // weekCode: data[fldWeekCode],
         mon: (data[fldWeekDay[0]] != null)
@@ -60,7 +60,7 @@ class DailyPick {
             ? List.from(data[fldWeekDay[6]])
             : null,
       );
-    else
+    } else {
       return DailyPick(
         mon: [-1, -1, -1],
         thu: [-1, -1, -1],
@@ -70,6 +70,7 @@ class DailyPick {
         tue: [-1, -1, -1],
         wed: [-1, -1, -1],
       );
+    }
   }
 
   factory DailyPick.noPicks() {
