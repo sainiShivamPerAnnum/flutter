@@ -2,6 +2,7 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_proce
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class SegmentChips extends StatelessWidget {
@@ -19,9 +20,24 @@ class SegmentChips extends StatelessWidget {
       },
       child: Container(
         width: SizeConfig.screenWidth! * 0.24,
+        decoration: BoxDecoration(
+            color: model.selectedFrequency != frequency
+                ? UiConstants.kBackgroundColor3
+                : Colors.transparent,
+            borderRadius: frequency == FREQUENCY.daily
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness5),
+                    bottomLeft: Radius.circular(SizeConfig.roundness5),
+                  )
+                : frequency == FREQUENCY.monthly
+                    ? BorderRadius.only(
+                        topRight: Radius.circular(SizeConfig.roundness5),
+                        bottomRight: Radius.circular(SizeConfig.roundness5),
+                      )
+                    : BorderRadius.zero),
         alignment: Alignment.center,
         child: Text(
-          frequency.name,
+          frequency.name.toCamelCase(),
           style: TextStyles.body3.bold.colour(
             getColor(),
           ),
@@ -31,5 +47,15 @@ class SegmentChips extends StatelessWidget {
   }
 
   Color getColor() =>
-      frequency == model.selectedFrequency ? Colors.white : Colors.grey;
+      frequency == model.selectedFrequency ? Colors.black : Colors.grey;
+}
+
+extension Cases on String? {
+  String toCamelCase() {
+    if (this == null)
+      return "";
+    else
+      return (this!.split('').first.toUpperCase() +
+          this!.split('').toList().sublist(1).join('').toLowerCase());
+  }
 }

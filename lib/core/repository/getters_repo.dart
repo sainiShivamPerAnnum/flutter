@@ -13,6 +13,7 @@ import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
+import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -178,6 +179,27 @@ class GetterRepository extends BaseRepo {
           AmountChipsModel.helper.fromMapArray(amountChipsResponse["data"]);
 
       return ApiResponse(model: amountChipsModel, code: 200);
+    } catch (e) {
+      logger!.e(e.toString());
+      return ApiResponse.withError("Unable to fetch statistics", 400);
+    }
+  }
+
+  Future<ApiResponse<List<SubComboModel>>> getSubCombos({
+    required String freq,
+  }) async {
+    try {
+      final token = await getBearerToken();
+      final subComboResponse = await APIService.instance.getData(
+        ApiPath.getSubCombos(freq.toUpperCase()),
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      final subComboModelData =
+          SubComboModel.helper.fromMapArray(subComboResponse["data"]["combos"]);
+
+      return ApiResponse(model: subComboModelData, code: 200);
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);

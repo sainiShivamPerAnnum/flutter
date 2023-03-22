@@ -1,13 +1,14 @@
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
-import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/helpers/height_adaptive_pageview.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
@@ -23,6 +24,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import './autosave_details_vm.dart';
@@ -86,15 +88,15 @@ class AutosaveDetailsView extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                    left: SizeConfig.padding20,
-                                    top: SizeConfig.padding20,
-                                    bottom: SizeConfig.padding20,
+                                    left: SizeConfig.padding24,
+                                    top: SizeConfig.padding32,
+                                    bottom: SizeConfig.padding10,
                                   ),
                                   child: Row(
                                     children: [
                                       Text(
                                         locale.txnRecent,
-                                        style: TextStyles.rajdhaniSB.body1,
+                                        style: TextStyles.rajdhaniSB.title3,
                                       ),
                                       Spacer(),
                                       if (model.hasMoreTxns)
@@ -139,41 +141,218 @@ class AutosaveDetailsView extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                model.filteredList == null
+                                model.isFetchingTransactions
                                     ? Center(
                                         child: FullScreenLoader(
-                                        size: SizeConfig.padding80,
-                                      ))
-                                    : model.filteredList?.length == 0
-                                        ? Center(
-                                            child: NoRecordDisplayWidget(
-                                            assetSvg: Assets.noTransactionAsset,
-                                            text: locale.txnsEmpty,
-                                          ))
-                                        : Container(
-                                            color: Color(0xFF595F5F)
-                                                .withOpacity(0.14),
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig.padding20,
+                                          size: SizeConfig.padding80,
+                                        ),
+                                      )
+                                    : Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: SizeConfig
+                                                .pageHorizontalMargins),
+                                        child: Column(
+                                          children: [
+                                            Divider(color: Colors.white30),
+                                            Container(
+                                              height: SizeConfig.padding70,
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        Haptic.vibrate();
+                                                        if (model.currentPage !=
+                                                            0) {
+                                                          model
+                                                              .txnPageController!
+                                                              .animateToPage(0,
+                                                                  duration:
+                                                                      Duration(
+                                                                          seconds:
+                                                                              1),
+                                                                  curve: Curves
+                                                                      .decelerate);
+                                                          model.currentPage = 0;
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text(
+                                                          "Digital Gold",
+                                                          style: TextStyles
+                                                              .sourceSansSB
+                                                              .body1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  VerticalDivider(
+                                                    color: Colors.white30,
+                                                  ),
+                                                  Expanded(
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        Haptic.vibrate();
+                                                        if (model.currentPage !=
+                                                            1) {
+                                                          model
+                                                              .txnPageController!
+                                                              .animateToPage(1,
+                                                                  duration:
+                                                                      Duration(
+                                                                          seconds:
+                                                                              1),
+                                                                  curve: Curves
+                                                                      .decelerate);
+                                                          model.currentPage = 1;
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text(
+                                                          "Fello Flo",
+                                                          style: TextStyles
+                                                              .sourceSansSB
+                                                              .body1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                            child: ListView.builder(
-                                              itemCount:
-                                                  model.filteredList?.length,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              itemBuilder: (context, index) {
-                                                return TransactionTile(
-                                                  isLast: index ==
-                                                      model.filteredList!
-                                                              .length -
-                                                          1,
-                                                  txn: model
-                                                      .filteredList![index],
-                                                );
-                                              },
+                                            Row(
+                                              children: [
+                                                AnimatedContainer(
+                                                  duration:
+                                                      Duration(seconds: 1),
+                                                  height: 4,
+                                                  width: ((SizeConfig
+                                                                  .screenWidth! -
+                                                              SizeConfig
+                                                                      .pageHorizontalMargins *
+                                                                  2) /
+                                                          2) *
+                                                      model.currentPage,
+                                                  curve: Curves.decelerate,
+                                                ),
+                                                Container(
+                                                  width: (SizeConfig
+                                                              .screenWidth! -
+                                                          SizeConfig
+                                                                  .pageHorizontalMargins *
+                                                              2) /
+                                                      2,
+                                                  color:
+                                                      UiConstants.primaryColor,
+                                                  height: 4,
+                                                )
+                                              ],
                                             ),
-                                          ),
+                                            HeightAdaptivePageView(
+                                                controller:
+                                                    model.txnPageController,
+                                                onPageChanged: (val) {
+                                                  model.currentPage = val;
+                                                },
+                                                children: [
+                                                  model.augTxnList?.length == 0
+                                                      ? Center(
+                                                          child:
+                                                              NoRecordDisplayWidget(
+                                                          assetSvg: Assets
+                                                              .noTransactionAsset,
+                                                          text:
+                                                              locale.txnsEmpty,
+                                                        ))
+                                                      : Container(
+                                                          color:
+                                                              Color(0xFF595F5F)
+                                                                  .withOpacity(
+                                                                      0.14),
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal:
+                                                                SizeConfig
+                                                                    .padding20,
+                                                          ),
+                                                          child:
+                                                              ListView.builder(
+                                                            itemCount: model
+                                                                .augTxnList
+                                                                ?.length,
+                                                            shrinkWrap: true,
+                                                            physics:
+                                                                NeverScrollableScrollPhysics(),
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return SubTxnTile(
+                                                                isLast: index ==
+                                                                    model.augTxnList!
+                                                                            .length -
+                                                                        1,
+                                                                txn: model
+                                                                        .augTxnList![
+                                                                    index],
+                                                                type: Constants
+                                                                    .ASSET_TYPE_AUGMONT,
+                                                              );
+                                                            },
+                                                          ),
+                                                        ),
+                                                  model.lbTxnList?.length == 0
+                                                      ? Center(
+                                                          child:
+                                                              NoRecordDisplayWidget(
+                                                          assetSvg: Assets
+                                                              .noTransactionAsset,
+                                                          text:
+                                                              locale.txnsEmpty,
+                                                        ))
+                                                      : Container(
+                                                          color:
+                                                              Color(0xFF595F5F)
+                                                                  .withOpacity(
+                                                                      0.14),
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal:
+                                                                SizeConfig
+                                                                    .padding20,
+                                                          ),
+                                                          child:
+                                                              ListView.builder(
+                                                            itemCount: model
+                                                                .lbTxnList
+                                                                ?.length,
+                                                            shrinkWrap: true,
+                                                            physics:
+                                                                NeverScrollableScrollPhysics(),
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return SubTxnTile(
+                                                                isLast: index ==
+                                                                    model.lbTxnList!
+                                                                            .length -
+                                                                        1,
+                                                                txn: model
+                                                                        .lbTxnList![
+                                                                    index],
+                                                                type: Constants
+                                                                    .ASSET_TYPE_LENDBOX,
+                                                              );
+                                                            },
+                                                          ),
+                                                        ),
+                                                ]),
+                                          ],
+                                        ),
+                                      ),
                                 SizedBox(
                                   height: SizeConfig.padding80 * 2,
                                 ),
@@ -283,9 +462,7 @@ class AutosaveDetailsView extends StatelessWidget {
                   ))
             : ReactivePositiveAppButton(
                 onPressed: () => model.pauseResume(),
-                btnText: subService.autosaveState == AutosaveState.PAUSED
-                    ? locale.resumeAutoSave
-                    : locale.pauseAutoSave,
+                btnText: locale.resumeAutoSave,
               ),
       ),
     ];
@@ -354,15 +531,17 @@ class AutosaveAssetDetailTile extends StatelessWidget {
   }
 }
 
-class TransactionTile extends StatelessWidget {
-  TransactionTile({
+class SubTxnTile extends StatelessWidget {
+  SubTxnTile({
     Key? key,
     required this.txn,
     required this.isLast,
+    required this.type,
   }) : super(key: key);
   final bool isLast;
   final SubscriptionTransactionModel txn;
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final String type;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -378,9 +557,9 @@ class TransactionTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    _txnHistoryService!.getTileTitle(
-                      UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD,
-                    ),
+                    type == Constants.ASSET_TYPE_AUGMONT
+                        ? "Digital Gold"
+                        : "Fello Flo",
                     style: TextStyles.rajdhaniM.body2,
                   ),
                   SizedBox(
@@ -397,7 +576,7 @@ class TransactionTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "₹${txn.amount!}",
+                    "₹${type == Constants.ASSET_TYPE_AUGMONT ? (txn.augMap?.amount ?? '0') : (txn.lbMap!.amount ?? '0')}",
                     style: TextStyles.rajdhaniSB.body2,
                   ),
                   SizedBox(
@@ -520,7 +699,8 @@ class AutoSaveDetailsCard extends StatelessWidget {
                                 .copyWith(fontStyle: FontStyle.italic),
                           ),
                           TextSpan(
-                            text: getRichText(_subService.autosaveState),
+                            text: getRichText(_subService.autosaveState,
+                                _subService.subscriptionData!),
                             style: TextStyles.sourceSans.body4
                                 .colour(
                                   getRichTextColor(_subService.autosaveState),
@@ -547,11 +727,11 @@ class AutoSaveDetailsCard extends StatelessWidget {
     }
   }
 
-  getRichText(AutosaveState autosaveState) {
+  getRichText(AutosaveState autosaveState, SubscriptionModel subdata) {
     if (autosaveState == AutosaveState.ACTIVE)
       return "verified and active";
     else if (autosaveState == AutosaveState.PAUSED) {
-      return "verified and paused";
+      return "verified and paused ${subdata.resumeDate != null ? "till " + DateFormat.MMMEd().format(subdata.resumeDate!.toDate()) : "forever"} ";
     } else
       return "currently inactive";
   }

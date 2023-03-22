@@ -805,7 +805,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = KycDetailsPageConfig;
         break;
       case 'assetBuy':
-        BaseUtil().openDepositOptionsModalSheet();
+        BaseUtil.openDepositOptionsModalSheet();
         break;
       case 'augBuy':
         BaseUtil()

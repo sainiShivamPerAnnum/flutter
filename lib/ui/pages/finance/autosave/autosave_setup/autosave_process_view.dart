@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -5,6 +6,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_setup_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_upi_app-select_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -58,7 +60,11 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 ),
                 onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
               ),
-              actions: [],
+              actions: [
+                Row(
+                  children: [FaqPill(type: FaqsType.autosave)],
+                )
+              ],
             ),
             resizeToAvoidBottomInset: false,
             body: model.state == ViewState.Busy
@@ -102,9 +108,9 @@ class AutosaveSetupView extends StatelessWidget {
           : ClampingScrollPhysics(),
       children: [
         AutosaveStepsView(model: model),
-        UpiAppSelectView(model: model),
         AutosaveAssetChoiceView(model: model),
         AutoPaySetupOrUpdateView(model: model),
+        UpiAppSelectView(model: model),
       ],
     );
   }
@@ -126,10 +132,10 @@ class AutosaveSuccessView extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding20,
           ),
-          Image.asset(
-            Assets.completeCheck,
-            width: SizeConfig.screenWidth! * 0.5333,
-            height: SizeConfig.screenWidth! * 0.5333,
+          Expanded(
+            child: Image.asset(
+              Assets.completeCheck,
+            ),
           ),
           SizedBox(
             height: SizeConfig.padding10,
@@ -155,7 +161,6 @@ class AutosaveSuccessView extends StatelessWidget {
             ),
             padding: EdgeInsets.symmetric(vertical: SizeConfig.padding40),
             width: double.infinity,
-            // height: 157,
             decoration: BoxDecoration(
               color: Color(0xFF57A6B0).withOpacity(0.22),
               borderRadius: BorderRadius.circular(SizeConfig.roundness12),
@@ -168,24 +173,14 @@ class AutosaveSuccessView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: SizeConfig.padding12,
-                ),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "₹${model.totalInvestingAmount}/",
-                        style: TextStyles.rajdhaniB
-                            .size(SizeConfig.screenWidth! * 0.1067),
-                      ),
-                      TextSpan(
-                        text: model.selectedFrequency.name,
-                        style: TextStyles.sourceSansSB.body1.setOpacity(0.5),
-                      ),
-                    ],
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                  child: AutosaveSummary(
+                    model: model,
+                    showTopDivider: false,
                   ),
-                ),
+                )
               ],
             ),
           ),
@@ -231,7 +226,7 @@ class AutosavePendingView extends StatelessWidget {
             height: SizeConfig.padding10,
           ),
           Text(
-            "Request Pending",
+            "Processing Autosave",
             style: TextStyles.rajdhaniSB.title4,
           ),
           SizedBox(

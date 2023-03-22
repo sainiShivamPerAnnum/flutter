@@ -146,7 +146,7 @@ class RPSCustomPainter extends CustomPainter {
     path_0.close();
 
     Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Color(0xffF7C780).withOpacity(1.0);
+    paint_0_fill.color = Color(0xffF7C780);
     canvas.drawPath(path_0, paint_0_fill);
 
     final textStyle = TextStyle(

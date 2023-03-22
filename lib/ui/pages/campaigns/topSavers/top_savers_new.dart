@@ -184,7 +184,7 @@ class CampaignView extends StatelessWidget {
                   child: ReactivePositiveAppButton(
                     btnText: locale.startSaving,
                     onPressed: () {
-                      BaseUtil().openDepositOptionsModalSheet();
+                      BaseUtil.openDepositOptionsModalSheet();
                     },
                   ),
                 ),

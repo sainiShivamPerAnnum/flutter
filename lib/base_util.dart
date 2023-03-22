@@ -236,7 +236,6 @@ class BaseUtil extends ChangeNotifier {
         userFundWallet = aValue.model;
         if (userFundWallet!.augGoldQuantity > 0)
           _updateAugmontBalance(); //setstate call in method
-
       }
       notifyListeners();
     });
@@ -427,29 +426,31 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  openDepositOptionsModalSheet({int? amount, bool isSkipMl = false}) {
+  static openDepositOptionsModalSheet({int? amount, bool isSkipMl = false}) {
     // if (_userService!.userJourneyStats!.mlIndex == 1)
     //   return BaseUtil.openDialog(
     //       addToScreenStack: true,
     //       isBarrierDismissible: true,
     //       hapticVibrate: false,
     //       content: CompleteProfileDialog());
-    _analyticsService!
+    locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
-    return BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        enableDrag: false,
-        hapticVibrate: true,
-        backgroundColor:
-            UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-        isBarrierDismissible: true,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(
-            SizeConfig.roundness12,
+    Future.delayed(Duration(milliseconds: 500), () {
+      return openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          backgroundColor:
+              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+          isBarrierDismissible: true,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(
+              SizeConfig.roundness12,
+            ),
+            topRight: Radius.circular(SizeConfig.roundness24),
           ),
-          topRight: Radius.circular(SizeConfig.roundness24),
-        ),
-        content: DepositOptionModalSheet(amount: amount, isSkipMl: isSkipMl));
+          content: DepositOptionModalSheet(amount: amount, isSkipMl: isSkipMl));
+    });
   }
 
   static showPositiveAlert(String? title, String? message, {int seconds = 2}) {

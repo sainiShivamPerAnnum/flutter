@@ -10,6 +10,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modalsheets/pause_autosave_modalsheet.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -25,12 +26,22 @@ class AutosaveDetailsViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final SubscriptionRepo? _subcriptionRepo = locator<SubscriptionRepo>();
+  PageController? txnPageController;
   S locale = locator<S>();
 
   SubscriptionModel? _activeSubscription;
-  List<SubscriptionTransactionModel>? filteredList;
-  int lastTappedChipIndex = 1;
+  List<SubscriptionTransactionModel>? augTxnList;
+  List<SubscriptionTransactionModel>? lbTxnList;
   bool hasMoreTxns = false;
+
+  int _currentPage = 0;
+  int get currentPage => this._currentPage;
+
+  set currentPage(int value) {
+    this._currentPage = value;
+    notifyListeners();
+  }
+
   bool _isFetchingTransactions = false;
   bool get isFetchingTransactions => this._isFetchingTransactions;
 
@@ -61,20 +72,25 @@ class AutosaveDetailsViewModel extends BaseViewModel {
 
   Future<void> fetchAutosaveTransactions() async {
     isFetchingTransactions = true;
-    await _subService.getSubscriptionTransactionHistory();
-    filteredList = _subService.allSubTxnList;
+    await _subService.getSubscriptionTransactionHistory(
+        asset: Constants.ASSET_TYPE_AUGMONT);
+    await _subService.getSubscriptionTransactionHistory(
+        asset: Constants.ASSET_TYPE_LENDBOX);
+    lbTxnList = _subService.lbSubTxnList;
+    augTxnList = _subService.augSubTxnList;
+    txnPageController = PageController();
     isFetchingTransactions = false;
   }
 
   pauseResume() async {
     if (_subService.autosaveState == AutosaveState.PAUSED ||
-        _subService.autosaveState == AutosaveState.PAUSED_FOREVER) {
+        _subService.autosaveState == AutosaveState.INACTIVE) {
       if (_subService.isPauseOrResuming) return;
       _analyticsService
           .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
         "frequency": activeSubscription!.frequency,
         "amount": activeSubscription!.amount,
-        "SIP deducted Count": filteredList != null ? filteredList!.length : 0,
+        // "SIP deducted Count": filteredList != null ? filteredList!.length : 0,
         // "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
         //     activeSubscription!.createdOn!.microsecondsSinceEpoch),
         "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
@@ -96,7 +112,7 @@ class AutosaveDetailsViewModel extends BaseViewModel {
           .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
         "frequency": activeSubscription!.frequency,
         "amount": activeSubscription!.amount,
-        "SIP deducted Count": filteredList != null ? filteredList!.length : 0,
+        // "SIP deducted Count": filteredList != null ? filteredList!.length : 0,
         // "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
         //     activeSubscription!.createdOn!.microsecondsSinceEpoch),
         "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
@@ -127,14 +143,14 @@ class AutosaveDetailsViewModel extends BaseViewModel {
         .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
       "frequency": activeSubscription?.frequency,
       "amount": activeSubscription?.amount,
-      "SIP deducted Count": filteredList != null ? filteredList?.length : 0,
+      // "SIP deducted Count": filteredList != null ? filteredList?.length : 0,
       "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
           activeSubscription?.createdOn?.microsecondsSinceEpoch ?? 0),
       "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
           AnalyticsProperties.getFelloFloAmount(),
       "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
       "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
-      "Amount Chip Selected": lastTappedChipIndex,
+      // "Amount Chip Selected": lastTappedChipIndex,
       "Pause Value": value,
     });
   }

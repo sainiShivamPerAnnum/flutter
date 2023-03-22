@@ -91,7 +91,7 @@ class Assets {
   static final String couponIcon = "assets/vectors/coupon.svg";
   static final String digitalGoldBar = 'assets/vectors/gold_bar.webp';
   static final String felloFlo = 'assets/vectors/stable_fello.webp';
-  static final String floGold = "assets/images/flogold.webp";
+  static final String floGold = "assets/vectors/flogold.svg";
   static final String saveDartBoard = 'assets/svg/save_dart_board.svg';
   static final String saveViewInfo = 'assets/svg/save_screen_info.svg';
   static final String iciciLogo = 'assets/vectors/icici_bank_logo.png';
@@ -286,6 +286,14 @@ class Assets {
     "assets/vectors/icons/one_row.svg",
     "assets/vectors/icons/corners.svg",
   ];
+
+  static List<String> autosaveBenefitsAssets = [
+    "assets/vectors/aus1.svg",
+    "assets/vectors/aus2.svg",
+    "assets/vectors/aus3.svg",
+  ];
+
+  static String multiAvatars = "assets/vectors/multiAvatars.svg";
   static final String infoWhyPan =
       'Your PAN Card is used as your unique ID to set up your investment profile in different assets';
 

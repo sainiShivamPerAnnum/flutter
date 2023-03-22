@@ -238,7 +238,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                             "Amount": widget.model.ticketSavedAmount,
                           }));
                       widget.model.updateTicketSavedAmount(1);
-                      BaseUtil().openDepositOptionsModalSheet(
+                      BaseUtil.openDepositOptionsModalSheet(
                           amount: widget.model.ticketSavedAmount);
                     },
                   ),

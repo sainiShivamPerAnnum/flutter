@@ -27,9 +27,11 @@ class SubscriptionRepo extends BaseRepo {
         ApiPath.txnsSubscription(userService.baseUser!.uid!),
         cBaseUrl: baseUrl,
         queryParams: {
-          "offset": offset.toString(),
           "limit": limit.toString(),
-          "asset": asset ?? ''
+          "asset": asset ?? '',
+          if (offset != null) ...{
+            "offset": offset.toString(),
+          }
         },
         token: token,
       );

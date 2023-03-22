@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/ui/pages/finance/autosave/segmate_chip.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -184,13 +185,17 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              service.subscriptionData?.status?.toUpperCase() ??
+                              "AUTOSAVE " +
+                                      service.autosaveState.name
+                                          .toUpperCase() ??
                                   "N/A",
-                              style: TextStyles.sourceSansSB.body3
-                                  .colour(UiConstants.primaryColor),
+                              style: TextStyles.sourceSansB.body0.colour(
+                                  service.autosaveState == AutosaveState.ACTIVE
+                                      ? UiConstants.primaryColor
+                                      : UiConstants.tertiarySolid),
                               textAlign: TextAlign.left,
                             ),
-                            SizedBox(height: SizeConfig.padding12),
+                            SizedBox(height: SizeConfig.padding6),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -215,9 +220,11 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                                 .colour(UiConstants.kTextColor),
                                           ),
                                           TextSpan(
-                                            text: service.subscriptionData
-                                                    ?.frequency ??
-                                                "",
+                                            text: "/" +
+                                                (service.subscriptionData
+                                                        ?.frequency
+                                                        .toCamelCase() ??
+                                                    ""),
                                             style: TextStyles.sourceSans.body4
                                                 .colour(
                                                     UiConstants.kTextColor2),

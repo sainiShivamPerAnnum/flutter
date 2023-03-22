@@ -1,6 +1,5 @@
 //Project Imports
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/base_util.dart';
@@ -13,6 +12,7 @@ import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
@@ -22,8 +22,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter Imports
 import 'package:flutter/material.dart';
-
-import '../../core/repository/user_stats_repo.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate? _routerDelegate;
@@ -65,11 +63,22 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   @override
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
-    // _journeyService!.checkForMilestoneLevelChange();
-    // if (_journeyService!.isJourneyOnboardingInView) {
-    //   _journeyService!.isJourneyOnboardingInView = false;
-    //   _journeyService!.isUserJourneyOnboarded = true;
-    // }
+
+    if (AppState.showAutosaveBt) {
+      AppState.showAutosaveBt = false;
+      BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          backgroundColor: UiConstants.kBackgroundColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness32),
+            topRight: Radius.circular(SizeConfig.roundness32),
+          ),
+          isScrollControlled: true,
+          hapticVibrate: true,
+          content: AutosaveConfirmExitModalSheet());
+      return Future.value(true);
+    }
 
     if (locator<BackButtonActions>().isTransactionCancelled) {
       if (AppState.onTap != null &&

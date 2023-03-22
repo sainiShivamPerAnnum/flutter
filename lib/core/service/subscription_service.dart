@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -23,7 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-enum AutosaveState { IDLE, INIT, ACTIVE, PAUSED, PAUSED_FOREVER, CANCELLED }
+enum AutosaveState { IDLE, INIT, ACTIVE, PAUSED, INACTIVE, CANCELLED }
 
 enum AutosavePauseOption {
   FOREVER,
@@ -40,6 +41,36 @@ List<AmountChipsModel> defaultAmountChipList = [
   AmountChipsModel(order: 0, value: 1000, best: false, isSelected: false),
 ];
 
+List<SubComboModel> defaultSipComboList = [
+  SubComboModel(
+    order: 0,
+    title: "Balanced",
+    popular: true,
+    AUGGOLD99: 100,
+    LENDBOXP2P: 1000,
+    icon: '',
+    isSelected: false,
+  ),
+  SubComboModel(
+    order: 1,
+    title: "Gamer",
+    popular: false,
+    AUGGOLD99: 50,
+    LENDBOXP2P: 100,
+    icon: '',
+    isSelected: false,
+  ),
+  SubComboModel(
+    order: 2,
+    title: "Beginner",
+    popular: false,
+    AUGGOLD99: 500,
+    LENDBOXP2P: 500,
+    icon: '',
+    isSelected: false,
+  ),
+];
+
 class SubService extends ChangeNotifier {
   //DEPENDENCY - START
 
@@ -51,15 +82,8 @@ class SubService extends ChangeNotifier {
 
   //LOCAL VARIABLES - START
   List suggestions = [];
-  int minValue = 25;
-  int maxValue = 5000;
   Timer? timer;
   int pollCount = 0;
-
-  //LOCAL VARIABLES - END
-
-  //GETTERS & SETTERS - START
-
   List<SubscriptionTransactionModel> allSubTxnList = [];
   List<SubscriptionTransactionModel> lbSubTxnList = [];
   List<SubscriptionTransactionModel> augSubTxnList = [];
@@ -69,6 +93,10 @@ class SubService extends ChangeNotifier {
   bool hasNoMoreAugSubsTxns = false;
   UpiApplication? upiApplication;
   String? selectedUpiApplicationName;
+
+  //LOCAL VARIABLES - END
+
+  //GETTERS & SETTERS - START
 
   bool _autosaveVisible = true;
   bool get autosaveVisible => this._autosaveVisible;
@@ -115,6 +143,14 @@ class SubService extends ChangeNotifier {
     timer?.cancel();
     allSubTxnList = [];
     autosaveState = AutosaveState.IDLE;
+    allSubTxnList = [];
+    lbSubTxnList = [];
+    augSubTxnList = [];
+
+    hasNoMoreLbSubsTxns = false;
+    hasNoMoreAugSubsTxns = false;
+    upiApplication = null;
+    selectedUpiApplicationName = null;
   }
 
   // SUBSCRIPTION SERVICE CORE METHODS - END
@@ -249,32 +285,52 @@ class SubService extends ChangeNotifier {
   }
 
   Future<void> getSubscriptionTransactionHistory(
-      {bool firstFetch = false, String asset = ''}) async {
+      {bool paginate = false, String asset = ''}) async {
     if (asset.isEmpty) {
-      if (firstFetch) allSubTxnList = [];
+      if (allSubTxnList.isNotEmpty && !paginate) return;
       if (hasNoMoreSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
-          limit: 30, offset: allSubTxnList.isEmpty ? 1 : allSubTxnList.length);
+          limit: 30,
+          offset: allSubTxnList.isEmpty ? null : allSubTxnList.length);
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreSubsTxns = true;
         allSubTxnList.addAll(res.model!);
       }
     } else if (asset == Constants.ASSET_TYPE_AUGMONT) {
-      if (firstFetch) augSubTxnList = [];
-      if (hasNoMoreSubsTxns || hasNoMoreAugSubsTxns) return;
+      if (augSubTxnList.isNotEmpty && !paginate) return;
+
+      if (hasNoMoreSubsTxns) {
+        augSubTxnList.clear();
+        allSubTxnList.map((txn) {
+          if (txn.augMap != null) return txn;
+        }).forEach((txn) {
+          if (txn != null) augSubTxnList.add(txn);
+        });
+        return;
+      }
+      if (hasNoMoreAugSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
           limit: 30,
-          offset: augSubTxnList.isEmpty ? 1 : augSubTxnList.length,
+          offset: augSubTxnList.isEmpty ? null : augSubTxnList.length,
           asset: asset);
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreAugSubsTxns = true;
         augSubTxnList.addAll(res.model!);
       }
     } else if (asset == Constants.ASSET_TYPE_LENDBOX) {
-      if (firstFetch) lbSubTxnList = [];
-      if (hasNoMoreSubsTxns || hasNoMoreLbSubsTxns) return;
+      if (lbSubTxnList.isNotEmpty && !paginate) return;
+      if (hasNoMoreSubsTxns) {
+        lbSubTxnList.clear();
+        allSubTxnList.map((txn) {
+          if (txn.augMap != null) return txn;
+        }).forEach((txn) {
+          if (txn != null) lbSubTxnList.add(txn);
+        });
+        return;
+      }
+      if (hasNoMoreLbSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
-          limit: 30, offset: lbSubTxnList.isEmpty ? 1 : lbSubTxnList.length);
+          limit: 30, offset: lbSubTxnList.isEmpty ? null : lbSubTxnList.length);
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreLbSubsTxns = true;
         lbSubTxnList.addAll(res.model!);
@@ -286,9 +342,10 @@ class SubService extends ChangeNotifier {
   //Helpers
 
   Future<void> getAutosaveSuggestions() async {
+    if (suggestions.isNotEmpty) return;
+
     //Get single asset chips
     List<List<AmountChipsModel>> suggestionAmountChipsCategories = [];
-    if (suggestionAmountChipsCategories.isNotEmpty) return;
     suggestionAmountChipsCategories
         .add(await _getAmountChips(freq: FREQUENCY.daily.name));
     suggestionAmountChipsCategories
@@ -296,9 +353,20 @@ class SubService extends ChangeNotifier {
     suggestionAmountChipsCategories
         .add(await _getAmountChips(freq: FREQUENCY.monthly.name));
 
+    suggestions.add(suggestionAmountChipsCategories);
+
     //Get combo asset chips
 
-    suggestions.add(suggestionAmountChipsCategories);
+    List<List<SubComboModel>> comboAmountChipsCategories = [];
+    if (comboAmountChipsCategories.isNotEmpty) return;
+    comboAmountChipsCategories
+        .add(await getSipCombos(freq: FREQUENCY.daily.name));
+    comboAmountChipsCategories
+        .add(await getSipCombos(freq: FREQUENCY.weekly.name));
+    comboAmountChipsCategories
+        .add(await getSipCombos(freq: FREQUENCY.monthly.name));
+
+    suggestions.add(comboAmountChipsCategories);
   }
 
   Future<List<AmountChipsModel>> _getAmountChips({required String freq}) async {
@@ -308,6 +376,15 @@ class SubService extends ChangeNotifier {
       return data.model!;
     else
       return defaultAmountChipList;
+  }
+
+  Future<List<SubComboModel>> getSipCombos({required String freq}) async {
+    ApiResponse<List<SubComboModel>> data =
+        await _getterRepo.getSubCombos(freq: freq);
+    if (data.isSuccess())
+      return data.model!;
+    else
+      return defaultSipComboList;
   }
 
   Future<int> getPhonePeVersionCode() async {
@@ -369,7 +446,7 @@ class SubService extends ChangeNotifier {
         autosaveState = AutosaveState.PAUSED;
         break;
       case "PAUSE_FROM_APP_FOREVER":
-        autosaveState = AutosaveState.PAUSED_FOREVER;
+        autosaveState = AutosaveState.INACTIVE;
         break;
       case "PAUSE_FROM_PSP":
         autosaveState = AutosaveState.PAUSED;
@@ -399,7 +476,7 @@ class SubService extends ChangeNotifier {
           state: PageState.addPage,
         );
       case AutosaveState.PAUSED:
-      case AutosaveState.PAUSED_FOREVER:
+      case AutosaveState.INACTIVE:
       case AutosaveState.ACTIVE:
         return AppState.delegate!.appState.currentAction = PageAction(
           page: AutosaveDetailsViewPageConfig,

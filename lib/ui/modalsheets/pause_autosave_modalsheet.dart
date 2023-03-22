@@ -8,7 +8,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PauseAutosaveModal extends StatefulWidget {
   final SubService? model;
@@ -20,7 +19,7 @@ class PauseAutosaveModal extends StatefulWidget {
 }
 
 class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
-  AutosavePauseOption pauseValue = AutosavePauseOption.ONE_WEEK;
+  AutosavePauseOption? pauseValue;
   int pauseInt = 0;
   setPauseValue(AutosavePauseOption value, int val) {
     setState(() {
@@ -82,18 +81,23 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             option: AutosavePauseOption.FOREVER,
           ),
           Container(height: SizeConfig.padding16),
-          AppPositiveCustomChildBtn(
-            child: isPausing
-                ? SpinKitThreeBounce(
-                    color: Colors.white,
-                    size: SizeConfig.padding16,
-                  )
-                : Text(
-                    locale.btnPause.toUpperCase(),
-                    style: TextStyles.rajdhaniB.body1.bold.colour(Colors.white),
-                  ),
+          ReactivePositiveAppButton(
+            btnText: locale.btnPause.toUpperCase(),
+            // child:
+            // isPausing
+            //     ? SpinKitThreeBounce(
+            //         color: Colors.white,
+            //         size: SizeConfig.padding16,
+            //       )
+            //     : Text(
+            //         locale.btnPause.toUpperCase(),
+            //         style: TextStyles.rajdhaniB.body1.bold.colour(Colors.white),
+            //       ),
             onPressed: () async {
-              if (pauseValue == 4) {
+              if (pauseValue == null)
+                return BaseUtil.showNegativeAlert("No duration selected",
+                    "Please select a duration to pause");
+              if (pauseValue == 3) {
                 BaseUtil.openDialog(
                   addToScreenStack: true,
                   isBarrierDismissible: false,
@@ -107,24 +111,13 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                     },
                     buttonText: locale.btnYes,
                     confirmAction: () async {
-                      if (isPausing) return;
-                      setState(() {
-                        isPausing = false;
-                      });
-                      await widget.model!.pauseSubscription(pauseValue);
+                      await widget.model!.pauseSubscription(pauseValue!);
                       AppState.backButtonDispatcher!.didPopRoute();
                     },
                   ),
                 );
               } else {
-                if (isPausing) return;
-                setState(() {
-                  isPausing = true;
-                });
-                await widget.model!.pauseSubscription(pauseValue);
-                setState(() {
-                  isPausing = false;
-                });
+                await widget.model!.pauseSubscription(pauseValue!);
               }
             },
           ),

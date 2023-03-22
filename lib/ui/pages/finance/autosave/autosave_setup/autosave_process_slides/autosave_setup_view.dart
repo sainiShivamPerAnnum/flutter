@@ -1,4 +1,8 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
+import 'package:felloapp/core/model/sub_combos_model.dart';
+import 'package:felloapp/ui/elements/helpers/height_adaptive_pageview.dart';
+import 'package:felloapp/ui/modalsheets/autosave_combo_input_modalsheet.dart';
 import 'package:felloapp/ui/pages/finance/autosave/amount_chips.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/finance/autosave/segmate_chip.dart';
@@ -17,28 +21,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 class AutoPaySetupOrUpdateView extends StatelessWidget {
   AutoPaySetupOrUpdateView({
     super.key,
-    // required this.isSetup,
     required this.model,
-    // required this.onCtaTapped,
-    // required this.isDaily,
-    // // required this.onAmountValueChanged,
-    // required this.onChipsTapped,
-    // required this.onFrequencyTapped,
-    // required this.amountFieldController,
-    // required this.dailyChips,
-    // required this.weeklyChips,
   });
-  // final bool isSetup;
   final AutosaveProcessViewModel model;
-  // final Function onCtaTapped;
-  // final S locale = locator<S>();
-  // final bool isDaily;
-  // // final Function onAmountValueChanged;
-  // final Function onChipsTapped;
-  // final Function onFrequencyTapped;
-  // final TextEditingController amountFieldController;
-  // final List<AmountChipsModel> dailyChips;
-  // final List<AmountChipsModel> weeklyChips;
+
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
@@ -54,188 +40,95 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text("Select amount & frequency",
+                Text(
+                    model.selectedAssetOption == 0
+                        ? "Select amount & frequency"
+                        : model.selectedAssetOption == 1
+                            ? "Fello Flo Autosave"
+                            : "Digital Gold Autosave",
                     style: TextStyles.rajdhaniSB.title3),
-                SizedBox(height: SizeConfig.padding24),
-                Container(
-                  decoration: BoxDecoration(
-                    color: UiConstants.kAutopayAmountDeactiveTabColor,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                    border: Border.all(
-                      color: UiConstants.kBorderColor.withOpacity(0.22),
-                      width: SizeConfig.border1,
-                    ),
-                  ),
-                  width: SizeConfig.screenWidth! * 0.7248,
-                  height: SizeConfig.screenWidth! * 0.0987,
-                  child: Stack(
-                    children: [
-                      AnimatedPositioned(
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.decelerate,
-                        left: model.selectedFrequency == FREQUENCY.daily
-                            ? 0
-                            : model.selectedFrequency == FREQUENCY.weekly
-                                ? SizeConfig.screenWidth! * 0.24
-                                : SizeConfig.screenWidth! * 0.48,
-                        child: AnimatedContainer(
-                          width: SizeConfig.screenWidth! * 0.24,
-                          height: SizeConfig.screenWidth! * 0.094,
-                          decoration: BoxDecoration(
-                            color: UiConstants.kAutopayAmountActiveTabColor
-                                .withOpacity(0.45),
-                            borderRadius: model.selectedFrequency ==
-                                    FREQUENCY.daily
-                                ? BorderRadius.only(
-                                    topLeft:
-                                        Radius.circular(SizeConfig.roundness5),
-                                    bottomLeft:
-                                        Radius.circular(SizeConfig.roundness5),
-                                  )
-                                : model.selectedFrequency == FREQUENCY.weekly
-                                    ? BorderRadius.zero
-                                    : BorderRadius.only(
-                                        topRight: Radius.circular(
-                                            SizeConfig.roundness5),
-                                        bottomRight: Radius.circular(
-                                            SizeConfig.roundness5),
-                                      ),
-                          ),
-                          duration: Duration(milliseconds: 500),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          SegmentChips(
-                            frequency: FREQUENCY.daily,
-                            model: model,
-                          ),
-                          SegmentChips(
-                            frequency: FREQUENCY.weekly,
-                            model: model,
-                          ),
-                          SegmentChips(
-                            frequency: FREQUENCY.monthly,
-                            model: model,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: SizeConfig.padding24),
                 Padding(
-                  padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                  child: Text("Enter an amount to SIP or choose a combo",
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding10,
+                      horizontal: SizeConfig.padding16),
+                  child: Text(
+                      model.selectedAssetOption == 0
+                          ? "Enter an amount to SIP or choose a combo"
+                          : model.selectedAssetOption == 1
+                              ? "Select amount & frequency for Fello flo"
+                              : "Select amount & frequency for Digital gold",
+                      textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body2),
                 ),
-                if (model.selectedAssetOption == 0 ||
-                    model.selectedAssetOption == 1)
-                  AutosaveAmountInputTile(
-                    asset: model.autosaveAssetOptionList[1].asset,
-                    title: model.autosaveAssetOptionList[1].title,
-                    subtitle: "10% Returns P.A",
-                    controller: model.floAmountFieldController!,
-                    onValueChanged: (val) {
-                      model.totalInvestingAmount = int.tryParse(val ?? '0')! +
-                          int.tryParse(
-                              model.goldAmountFieldController?.text ?? '0')!;
-                    },
-                  ),
-                if (model.selectedAssetOption == 0 ||
-                    model.selectedAssetOption == 2)
-                  AutosaveAmountInputTile(
-                    asset: model.autosaveAssetOptionList[2].asset,
-                    title: model.autosaveAssetOptionList[2].title,
-                    subtitle: "Stable Returns",
-                    controller: model.goldAmountFieldController!,
-                    onValueChanged: (val) {
+                SizedBox(height: SizeConfig.padding24),
+                AutosaveFrequencyBar(model: model),
+                if (model.selectedAssetOption == 1)
+                  CenterTextField(
+                    amountFieldController: model.floAmountFieldController!,
+                    onChanged: (val) {
                       model.totalInvestingAmount = int.tryParse(val ?? '0')! +
                           int.tryParse(
                               model.floAmountFieldController?.text ?? '0')!;
                     },
                   ),
-                Divider(
-                  color: Colors.grey.withOpacity(0.4),
-                  height: SizeConfig.padding32,
-                ),
-                Row(
-                  children: [
-                    Text("Total SIP Amount",
-                        style: TextStyles.rajdhaniSB.body0),
-                    Spacer(),
-                    Text(
-                      "₹${model.totalInvestingAmount}  ",
-                      style: TextStyles.sourceSans.body1,
-                    )
-                  ],
-                ),
-                Divider(
-                  color: Colors.grey.withOpacity(0.4),
-                  height: SizeConfig.padding32,
-                ),
-                // AnimatedBuilder(animation: animation, builder: builder)
-
-                AnimatedSwitcher(
-                  // controller: model.optionsController,
-                  // physics: NeverScrollableScrollPhysics(),
-                  duration: Duration(seconds: 1),
-                  child: model.selectedAssetOption == 0
-                      ? Column(
-                          children: [
-                            Text("Popular SIP Combos",
-                                style: TextStyles.rajdhaniSB.title3),
-                            GridView.builder(
-                              shrinkWrap: true,
-                              itemCount: 3,
+                if (model.selectedAssetOption == 2)
+                  CenterTextField(
+                    amountFieldController: model.goldAmountFieldController!,
+                    onChanged: (val) {
+                      model.totalInvestingAmount = int.tryParse(val ?? '0')! +
+                          int.tryParse(
+                              model.goldAmountFieldController?.text ?? '0')!;
+                    },
+                  ),
+                Container(
+                  margin: EdgeInsets.only(top: SizeConfig.padding16),
+                  child: AnimatedSwitcher(
+                    duration: Duration(seconds: 1),
+                    child: model.selectedAssetOption == 0
+                        ? Container(
+                            margin: EdgeInsets.symmetric(
+                                vertical: SizeConfig.padding16),
+                            child: HeightAdaptivePageView(
                               physics: NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                mainAxisSpacing: SizeConfig.padding10,
-                                crossAxisSpacing: SizeConfig.padding10,
-                                mainAxisExtent: SizeConfig.screenWidth! * 0.4,
-                              ),
-                              itemBuilder: (ctx, i) {
-                                return Container(
-                                  color: Colors.amber,
-                                );
-                              },
+                              controller: model.comboController,
+                              children: [
+                                AutosaveComboGrid(
+                                    model: model, frequency: FREQUENCY.daily),
+                                AutosaveComboGrid(
+                                    model: model, frequency: FREQUENCY.weekly),
+                                AutosaveComboGrid(
+                                    model: model, frequency: FREQUENCY.monthly),
+                              ],
                             ),
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            Text("Popular SIP options",
-                                style: TextStyles.rajdhaniSB.title3),
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding16),
-                              width: SizeConfig.screenWidth,
-                              height: SizeConfig.padding70,
-                              child: PageView(
-                                controller: model.chipsController,
-                                children: [
-                                  AutosaveSuggestionChipsRow(
-                                      model: model, frequency: FREQUENCY.daily),
-                                  AutosaveSuggestionChipsRow(
-                                      model: model,
-                                      frequency: FREQUENCY.weekly),
-                                  AutosaveSuggestionChipsRow(
-                                      model: model,
-                                      frequency: FREQUENCY.monthly),
-                                ],
-                              ),
+                          )
+                        : Container(
+                            width: SizeConfig.screenWidth,
+                            height: SizeConfig.padding70,
+                            child: PageView(
+                              controller: model.chipsController,
+                              children: [
+                                AutosaveSuggestionChipsRow(
+                                    model: model, frequency: FREQUENCY.daily),
+                                AutosaveSuggestionChipsRow(
+                                    model: model, frequency: FREQUENCY.weekly),
+                                AutosaveSuggestionChipsRow(
+                                    model: model, frequency: FREQUENCY.monthly),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                  ),
                 ),
-                SizedBox(
-                  height: SizeConfig.padding90,
-                ),
+                if (model.selectedAssetOption == 0)
+                  AutosaveSummary(model: model),
+                SizedBox(height: SizeConfig.padding90)
               ],
             ),
           ),
+        ),
+        CustomKeyboardSubmitButton(
+          onSubmit: () {
+            FocusScope.of(context).unfocus();
+          },
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -245,13 +138,440 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
               btnText: model.finalButtonCta,
               onPressed: () async {
                 Haptic.vibrate();
-                await model.createOrUpdateSubscription();
+                await model.updateSubscription();
               },
               width: SizeConfig.screenWidth! * 0.8,
             ),
           ),
         )
       ],
+    );
+  }
+}
+
+class AutosaveSummary extends StatelessWidget {
+  const AutosaveSummary({
+    super.key,
+    this.showTopDivider = true,
+    required this.model,
+  });
+
+  final AutosaveProcessViewModel model;
+  final bool showTopDivider;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (showTopDivider)
+          Divider(
+            height: SizeConfig.padding12,
+            color: Colors.white24,
+          ),
+        Text("Autosave Summary", style: TextStyles.rajdhaniSB.title3),
+        SizedBox(height: SizeConfig.padding16),
+        if (model.goldAmountFieldController!.text.isNotEmpty &&
+            int.tryParse(model.goldAmountFieldController!.text) != 0)
+          ListTile(
+            leading: Image.asset(
+              Assets.digitalGoldBar,
+              width: SizeConfig.padding44,
+            ),
+            title: Text(
+              "Digital Gold",
+              style: TextStyles.sourceSans.body1,
+            ),
+            trailing: Text(
+              "₹" + model.goldAmountFieldController!.text,
+              style: TextStyles.sourceSansB.body1,
+            ),
+          ),
+        if (model.floAmountFieldController!.text.isNotEmpty &&
+            int.tryParse(model.floAmountFieldController!.text) != 0)
+          ListTile(
+            leading: Image.asset(
+              Assets.felloFlo,
+              width: SizeConfig.padding44,
+            ),
+            title: Text(
+              "Fello Flo",
+              style: TextStyles.sourceSans.body1,
+            ),
+            trailing: Text(
+              "₹" + model.floAmountFieldController!.text,
+              style: TextStyles.sourceSansB.body1,
+            ),
+          ),
+        Divider(
+          color: Colors.white24,
+        ),
+        ListTile(
+          // leading: SvgPicture.asset(
+          //   Assets.floGold,
+          //   width: SizeConfig.padding44,
+          // ),
+          title: Text(
+            "Total Amount",
+            style: TextStyles.sourceSans.body1,
+          ),
+          trailing: Text(
+            "₹" +
+                model.totalInvestingAmount.toString() +
+                "/${model.selectedFrequency.name}",
+            style: TextStyles.sourceSansB.body1,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class AutosaveFrequencyBar extends StatelessWidget {
+  const AutosaveFrequencyBar({
+    super.key,
+    required this.model,
+  });
+
+  final AutosaveProcessViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: UiConstants.kBackgroundColor3,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+        border: Border.all(
+          color: UiConstants.kBorderColor.withOpacity(0.22),
+          width: SizeConfig.border1,
+        ),
+      ),
+      width: SizeConfig.screenWidth! * 0.7248,
+      height: SizeConfig.screenWidth! * 0.0987,
+      child: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.decelerate,
+            left: model.selectedFrequency == FREQUENCY.daily
+                ? 0
+                : model.selectedFrequency == FREQUENCY.weekly
+                    ? SizeConfig.screenWidth! * 0.24
+                    : SizeConfig.screenWidth! * 0.48,
+            child: AnimatedContainer(
+              width: SizeConfig.screenWidth! * 0.24,
+              height: SizeConfig.screenWidth! * 0.094,
+              decoration: BoxDecoration(
+                color: UiConstants.kAutopayAmountActiveTabColor,
+                borderRadius: model.selectedFrequency == FREQUENCY.daily
+                    ? BorderRadius.only(
+                        topLeft: Radius.circular(SizeConfig.roundness5),
+                        bottomLeft: Radius.circular(SizeConfig.roundness5),
+                      )
+                    : model.selectedFrequency == FREQUENCY.weekly
+                        ? BorderRadius.zero
+                        : BorderRadius.only(
+                            topRight: Radius.circular(SizeConfig.roundness5),
+                            bottomRight: Radius.circular(SizeConfig.roundness5),
+                          ),
+              ),
+              duration: Duration(milliseconds: 500),
+            ),
+          ),
+          Row(
+            children: [
+              SegmentChips(
+                frequency: FREQUENCY.daily,
+                model: model,
+              ),
+              SegmentChips(
+                frequency: FREQUENCY.weekly,
+                model: model,
+              ),
+              SegmentChips(
+                frequency: FREQUENCY.monthly,
+                model: model,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AutosaveComboGrid extends StatelessWidget {
+  const AutosaveComboGrid({
+    super.key,
+    required this.frequency,
+    required this.model,
+  });
+
+  final AutosaveProcessViewModel model;
+  final FREQUENCY frequency;
+
+  @override
+  Widget build(BuildContext context) {
+    List<SubComboModel> combo = model.getCombos(frequency);
+    return GridView.builder(
+      shrinkWrap: true,
+      itemCount: combo.length + 1,
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: SizeConfig.padding24,
+        mainAxisSpacing: SizeConfig.padding10,
+        mainAxisExtent: SizeConfig.screenWidth! * 0.42,
+      ),
+      itemBuilder: (ctx, i) {
+        return i == combo.length
+            ? (model.customComboModel != null
+                ? GestureDetector(
+                    onTap: () => model.openCustomInputModalSheet(model),
+                    child: ComboCard(
+                      combo: model.customComboModel!,
+                      isCustomCreated: true,
+                    ))
+                : CustomComboCard(
+                    model: model,
+                  ))
+            : GestureDetector(
+                onTap: () => model.onComboTapped(i),
+                child: ComboCard(
+                  combo: combo[i],
+                ),
+              );
+      },
+    );
+  }
+}
+
+class ComboCard extends StatelessWidget {
+  const ComboCard({
+    super.key,
+    this.isCustomCreated = false,
+    required this.combo,
+  });
+
+  final SubComboModel combo;
+  final bool isCustomCreated;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        combo.popular
+            ? Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(
+                        SizeConfig.roundness5,
+                      ),
+                      topRight: Radius.circular(SizeConfig.roundness5)),
+                  color: Color(0xffF7C780),
+                ),
+                height: SizeConfig.padding16,
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
+                child: Text(
+                  "POPULAR",
+                  style: TextStyles.body4,
+                ),
+              )
+            : SizedBox(
+                height: SizeConfig.padding16,
+              ),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    UiConstants.darkPrimaryColor.withOpacity(0.3),
+                    Color(0xffF7C780).withOpacity(0.3),
+                  ],
+                ),
+                border: Border.all(
+                    width: 1,
+                    color: combo.isSelected
+                        ? UiConstants.primaryColor
+                        : combo.popular
+                            ? Color(0xffF7C780)
+                            : Colors.grey),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                color: UiConstants.kBackgroundColor2),
+            padding: EdgeInsets.only(top: SizeConfig.padding10),
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.network(
+                    combo.icon.isNotEmpty
+                        ? combo.icon
+                        : "https://d37gtxigg82zaw.cloudfront.net/game-icons/knife-hit-icon.svg",
+                    height: SizeConfig.padding20,
+                  ),
+                  Text(
+                    "  " + combo.title,
+                    style: TextStyles.sourceSansM.body2,
+                  ),
+                ],
+              ),
+              Divider(
+                color: Colors.white.withOpacity(0.2),
+                thickness: 0.5,
+                height: SizeConfig.padding12,
+              ),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "₹${combo.LENDBOXP2P}",
+                            style: TextStyles.sourceSansB.body1,
+                          ),
+                          Text(
+                            "Flo",
+                            style: TextStyles.body3
+                                .colour(UiConstants.kTextColor3),
+                          )
+                        ],
+                      ),
+                    ),
+                    Text(
+                      "+",
+                      style: TextStyles.rajdhaniB.title2
+                          .colour(UiConstants.kTextColor),
+                    ),
+                    Expanded(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹${combo.AUGGOLD99}",
+                          style: TextStyles.sourceSansB.body1,
+                        ),
+                        Text(
+                          "Gold",
+                          style:
+                              TextStyles.body3.colour(UiConstants.kTextColor3),
+                        )
+                      ],
+                    )),
+                  ],
+                ),
+              ),
+              SizedBox(height: SizeConfig.padding16),
+              Container(
+                height: SizeConfig.padding40,
+                decoration: BoxDecoration(
+                    color: UiConstants.kBackgroundColor,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(
+                          SizeConfig.roundness8,
+                        ),
+                        bottomRight: Radius.circular(SizeConfig.roundness8))),
+                alignment: Alignment.center,
+                child: Text(
+                  combo.isSelected
+                      ? "SELECTED"
+                      : isCustomCreated
+                          ? "UPDATE"
+                          : "SELECT",
+                  style: TextStyles.body3.colour(combo.isSelected
+                      ? UiConstants.primaryColor
+                      : Colors.white),
+                ),
+              )
+            ]),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CustomComboCard extends StatelessWidget {
+  const CustomComboCard({super.key, required this.model});
+
+  final AutosaveProcessViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          backgroundColor: UiConstants.kBackgroundColor,
+          isScrollControlled: true,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.roundness32),
+              topRight: Radius.circular(SizeConfig.roundness32)),
+          hapticVibrate: true,
+          content: AutosaveComboInputFieldsModalSheet(model: model),
+        );
+      },
+      child: Column(
+        children: [
+          SizedBox(height: SizeConfig.padding16),
+          Container(
+            height: SizeConfig.screenWidth! * 0.38,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    UiConstants.darkPrimaryColor.withOpacity(0.3),
+                    Color(0xffF7C780).withOpacity(0.3),
+                  ],
+                ),
+                border: Border.all(width: 1, color: Colors.grey),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                color: UiConstants.kBackgroundColor2),
+            padding: EdgeInsets.only(top: SizeConfig.padding10),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Create your own",
+                      style: TextStyles.sourceSansM.body2,
+                    ),
+                  ],
+                ),
+                Divider(
+                  color: Colors.white.withOpacity(0.2),
+                  thickness: 0.5,
+                  height: SizeConfig.padding12,
+                ),
+                Expanded(
+                  child: Icon(
+                    Icons.add_rounded,
+                    color: Colors.white.withOpacity(0.5),
+                    size: SizeConfig.padding64,
+                  ),
+                ),
+                Container(
+                  height: SizeConfig.padding40,
+                  decoration: BoxDecoration(
+                      color: UiConstants.kBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(
+                            SizeConfig.roundness8,
+                          ),
+                          bottomRight: Radius.circular(SizeConfig.roundness8))),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "CREATE",
+                    style: TextStyles.body3.colour(Colors.white),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -270,10 +590,11 @@ class AutosaveSuggestionChipsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     List<AmountChipsModel> chipsData = model.getChips(frequency);
     print(chipsData.map((e) => e.toString()).toList());
-    return ListView(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        // shrinkWrap: true,
+        // scrollDirection: Axis.horizontal,
+        // physics: BouncingScrollPhysics(),
         children: List.generate(
           model.getChipsLength(),
           (index) => AmountChips(
@@ -291,17 +612,55 @@ class AutosaveSuggestionChipsRow extends StatelessWidget {
   }
 }
 
+// class AutosaveSingleAssetDetails extends StatelessWidget {
+//   const AutosaveSingleAssetDetails({
+//     super.key,
+//     required this.title,
+//     required this.subtitle,
+//     required this.asset,
+//   });
+//   final String title, subtitle, asset;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       margin: EdgeInsets.only(
+//           top: SizeConfig.padding12, bottom: SizeConfig.padding24),
+//       width: SizeConfig.screenWidth,
+//       child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text(
+//               title,
+//               style: TextStyles.sourceSansB.body1,
+//             ),
+//             Text(subtitle,
+//                 style: TextStyles.sourceSans.body3.colour(Colors.grey)),
+//           ],
+//         ),
+//       ]),
+//     );
+//   }
+// }
+
 class AutosaveAmountInputTile extends StatelessWidget {
-  const AutosaveAmountInputTile(
-      {super.key,
-      required this.title,
-      required this.subtitle,
-      required this.asset,
-      required this.controller,
-      required this.onValueChanged});
+  const AutosaveAmountInputTile({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    this.autoFocus = false,
+    required this.asset,
+    required this.controller,
+    required this.onValueChanged,
+    required this.validator,
+  });
   final String title, subtitle, asset;
   final TextEditingController controller;
   final Function onValueChanged;
+  final bool autoFocus;
+  final Function validator;
 
   @override
   Widget build(BuildContext context) {
@@ -322,6 +681,7 @@ class AutosaveAmountInputTile extends StatelessWidget {
               title,
               style: TextStyles.sourceSansB.body1,
             ),
+            SizedBox(height: SizeConfig.padding4),
             Text(subtitle,
                 style: TextStyles.sourceSans.body3.colour(Colors.grey)),
           ],
@@ -337,13 +697,11 @@ class AutosaveAmountInputTile extends StatelessWidget {
             textAlign: TextAlign.center,
             prefixTextStyle: TextStyles.rajdhaniB.body1,
             onChanged: onValueChanged,
+            autoFocus: autoFocus,
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
             ],
-            validator: (value) {
-              if (value != null && value.isEmpty)
-                return "Field cannot be empty";
-            },
+            validator: (val) => validator(val),
           ),
         ),
       ]),
@@ -355,9 +713,11 @@ class CenterTextField extends StatefulWidget {
   const CenterTextField({
     super.key,
     required this.amountFieldController,
+    required this.onChanged,
   });
 
   final TextEditingController amountFieldController;
+  final Function onChanged;
 
   @override
   State<CenterTextField> createState() => _CenterTextFieldState();
@@ -377,7 +737,7 @@ class _CenterTextFieldState extends State<CenterTextField> {
   @override
   initState() {
     super.initState();
-    _fieldWidth = ((SizeConfig.screenWidth! * 0.08) *
+    _fieldWidth = ((SizeConfig.screenWidth! * 0.07) *
         widget.amountFieldController.text.length.toDouble());
   }
 
@@ -385,6 +745,7 @@ class _CenterTextFieldState extends State<CenterTextField> {
   Widget build(BuildContext context) {
     return Container(
       width: SizeConfig.screenWidth! * 0.784,
+      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
       decoration: BoxDecoration(
         color: UiConstants.kTextFieldColor,
         borderRadius: BorderRadius.circular(SizeConfig.roundness5),
@@ -403,58 +764,26 @@ class _CenterTextFieldState extends State<CenterTextField> {
             style: TextStyles.rajdhaniB.size(SizeConfig.screenWidth! * 0.1067),
           ),
           SizedBox(
-              width: fieldWidth,
-              child: TextField(
-                controller: widget.amountFieldController,
-                keyboardType: TextInputType.number,
-                autofocus: true,
-                style:
-                    TextStyles.rajdhaniB.size(SizeConfig.screenWidth! * 0.1067),
-                decoration: InputDecoration(
-                  focusedBorder: InputBorder.none,
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  // isCollapse: true,
-                  isDense: true,
-                ),
-                onChanged: (String? val) {
-                  // widget.onAmountValueChanged(val);
-                  if ((val ?? '').isEmpty)
-                    fieldWidth = 10.0;
-                  else
-                    fieldWidth = ((SizeConfig.screenWidth! * 0.08) *
-                        widget.amountFieldController.text.length.toDouble());
-                  setState(() {});
-                },
-              )
-              // AppTextField(
-              //   textEditingController: widget.amountFieldController,
-              //   isEnabled: true,
-              //   validator: (val) => null,
-              //   autoFocus: true,
-              //   onChanged: (String? val) {
-              //     // widget.onAmountValueChanged(val);
-              //     if ((val ?? '').isEmpty)
-              //       fieldWidth = 10;
-              //     else
-              //       fieldWidth = ((SizeConfig.screenWidth! * 0.065) *
-              //           widget.amountFieldController.text.length
-              //               .toDouble());
-              //   },
-              //   keyboardType: TextInputType.number,
-              //   inputDecoration: InputDecoration(
-              //     focusedBorder: InputBorder.none,
-              //     border: InputBorder.none,
-              //     enabledBorder: InputBorder.none,
-              //     // isCollapse: true,
-              //     isDense: true,
-              //   ),
-              //   textAlign: TextAlign.center,
-              //   textStyle: TextStyles.rajdhaniB
-              //       .size(SizeConfig.screenWidth! * 0.1067),
-              //   // height: SizeConfig.screenWidth * 0.1706,
-              // ),
+            width: fieldWidth,
+            child: TextField(
+              controller: widget.amountFieldController,
+              keyboardType: TextInputType.number,
+              style:
+                  TextStyles.rajdhaniB.size(SizeConfig.screenWidth! * 0.1067),
+              decoration: InputDecoration(
+                focusedBorder: InputBorder.none,
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                // isCollapse: true,
+                isDense: true,
               ),
+              onChanged: (val) {
+                widget.onChanged(val);
+                fieldWidth = ((SizeConfig.screenWidth! * 0.07) *
+                    widget.amountFieldController.text.length.toDouble());
+              },
+            ),
+          ),
         ],
       ),
     );

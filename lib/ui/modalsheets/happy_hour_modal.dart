@@ -178,7 +178,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                         onTap: () {
                           if (!isHappyHourEnded) {
                             AppState.backButtonDispatcher!.didPopRoute();
-                            locator<BaseUtil>().openDepositOptionsModalSheet();
+                            BaseUtil.openDepositOptionsModalSheet();
                             locator<MixpanelAnalytics>().track(
                                 eventName: "Happy Hour CTA Tapped ",
                                 properties: {

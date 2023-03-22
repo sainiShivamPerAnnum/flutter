@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_setup_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -8,6 +10,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class UpiAppSelectView extends StatelessWidget {
   UpiAppSelectView({super.key, required this.model
@@ -29,21 +32,22 @@ class UpiAppSelectView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Spacer(),
-              Text(
-                locale.setUpAutoSave,
-                style: TextStyles.sourceSans.body3.setOpacity(0.5),
+              Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  child: AutosaveSummary(model: model)),
+              Divider(
+                height: SizeConfig.padding16,
+                color: Colors.white30,
+                indent: SizeConfig.pageHorizontalMargins,
+                endIndent: SizeConfig.pageHorizontalMargins,
               ),
-              SizedBox(
-                height: SizeConfig.padding10,
-              ),
+              SizedBox(height: SizeConfig.padding32),
               Text(
-                "Select a UPI App",
+                "Select a UPI App to setup",
                 style: TextStyles.rajdhaniSB.title4,
               ),
-              SizedBox(
-                height: SizeConfig.screenWidth! * 0.1,
-              ),
+              SizedBox(height: SizeConfig.padding20),
               Padding(
                 padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                 child: GridView.builder(
@@ -53,11 +57,24 @@ class UpiAppSelectView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
+                        Haptic.vibrate();
                         model.selectedUpiApp = model.appsList[index];
                       },
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
+                          color: UiConstants.kBackgroundColor3,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black,
+                                offset: model.selectedUpiApp != null &&
+                                        model.selectedUpiApp ==
+                                            model.appsList[index]
+                                    ? Offset(1, 1)
+                                    : Offset(4, 4),
+                                blurRadius: 2,
+                                spreadRadius: 2)
+                          ],
                           border: Border.all(
                               color: model.selectedUpiApp != null &&
                                       model.selectedUpiApp ==
@@ -98,19 +115,43 @@ class UpiAppSelectView extends StatelessWidget {
                   ),
                 ),
               ),
-              Spacer(
-                flex: 2,
+              Container(
+                margin: EdgeInsets.symmetric(
+                  vertical: SizeConfig.padding32,
+                  horizontal: SizeConfig.pageHorizontalMargins,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white54, width: 0.5),
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                  ),
+                  padding: EdgeInsets.all(SizeConfig.padding16),
+                  child: Row(children: [
+                    SvgPicture.asset(
+                      Assets.securityCheck,
+                      width: SizeConfig.padding54,
+                    ),
+                    SizedBox(width: SizeConfig.padding12),
+                    Expanded(
+                      child: Text(
+                        "You will receive a mandate for ₹2000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.",
+                        style: TextStyles.body3.colour(UiConstants.kTextColor2),
+                      ),
+                    )
+                  ]),
+                ),
               ),
-              AppPositiveBtn(
+              Spacer(),
+              ReactivePositiveAppButton(
                 btnText: locale.btnSumbit,
-                onPressed: () {
+                onPressed: () async {
                   Haptic.vibrate();
                   if (model.selectedUpiApp == null)
                     return BaseUtil.showNegativeAlert("No app selected",
                         'Please choose a upi app to continue');
-                  model.proceed();
+                  await model.createSubscription();
                 },
-                width: SizeConfig.screenWidth! * 0.8,
+                width: SizeConfig.screenWidth! * 0.88,
               ),
               SizedBox(
                 height: SizeConfig.padding16,

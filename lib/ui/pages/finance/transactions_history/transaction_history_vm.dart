@@ -7,6 +7,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
@@ -156,7 +157,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
       }
     });
 
-    getLatestSIPTransactions(firstFetch: true);
+    getLatestSIPTransactions();
   }
 
   Future getTransactions() async {
@@ -247,7 +248,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     if (update && filteredList!.length < 30) getMoreTransactions();
   }
 
-  getLatestSIPTransactions({bool firstFetch = false}) async {
+  getLatestSIPTransactions() async {
     setState(ViewState.Busy);
     activeSubscription = _subscriptionService.subscriptionData;
     if (activeSubscription == null) {
@@ -255,9 +256,9 @@ class TransactionsHistoryViewModel extends BaseViewModel {
       return;
     }
     await _subscriptionService.getSubscriptionTransactionHistory(
-        firstFetch: firstFetch);
+        asset: Constants.ASSET_TYPE_AUGMONT);
 
-    filteredSIPList = _subscriptionService.allSubTxnList;
+    filteredSIPList = _subscriptionService.augSubTxnList;
     if (filteredSIPList!.isNotEmpty && filteredSIPList!.length == 30) {
       _hasMoreSIPTxns = true;
       lastSipTxnDocId = filteredSIPList!.last.id;

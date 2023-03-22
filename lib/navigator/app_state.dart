@@ -46,6 +46,7 @@ class AppState extends ChangeNotifier {
   static Map<String, dynamic>? startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String? _fcmData;
+  static bool showAutosaveBt = false;
   static bool isFirstTime = false;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
@@ -141,7 +142,7 @@ class AppState extends ChangeNotifier {
   void onItemTapped(int index) {
     final JourneyService _journeyService = locator<JourneyService>();
     if (JourneyService.isAvatarAnimationInProgress) return;
-  _rootController.onChange(_rootController.navItems.values.toList()[index]);
+    _rootController.onChange(_rootController.navItems.values.toList()[index]);
     AppState.delegate!.appState.setCurrentTabIndex = index;
     trackEvent(index);
     Haptic.vibrate();
