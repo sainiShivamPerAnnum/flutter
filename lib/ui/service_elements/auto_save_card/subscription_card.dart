@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
@@ -33,6 +34,7 @@ class AutosaveCard extends StatelessWidget {
               child: (service.subscriptionData != null)
                   ? ActiveOrPausedAutosaveCard(
                       service: service,
+                      innerTapActive: false,
                     )
                   : InitAutosaveCard(
                       service: service,
@@ -139,8 +141,10 @@ class InitAutosaveCard extends StatelessWidget {
 
 class ActiveOrPausedAutosaveCard extends StatelessWidget {
   final SubService service;
-
-  const ActiveOrPausedAutosaveCard({Key? key, required this.service})
+  final InvestmentType? asset;
+  final bool innerTapActive;
+  const ActiveOrPausedAutosaveCard(
+      {Key? key, required this.service, this.asset, this.innerTapActive = true})
       : super(key: key);
 
   getAutosaveStatusText(AutosaveState state) {
@@ -158,116 +162,79 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding24, vertical: SizeConfig.padding20),
-      child: Stack(
-        children: [
-          Container(
-            height: SizeConfig.screenWidth! * 0.38,
-            width: SizeConfig.screenWidth,
-            decoration: BoxDecoration(
-                color: UiConstants.kSecondaryBackgroundColor,
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding14),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        service.subscriptionData != null &&
-                                service.subscriptionData!.status ==
-                                    Constants.SUBSCRIPTION_ACTIVE
-                            ? Assets.autoSaveOngoing
-                            : Assets.autoSavePaused,
-                        height: SizeConfig.padding80,
-                        width: SizeConfig.padding80,
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding24,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              getAutosaveStatusText(service.autosaveState),
-                              style: TextStyles.sourceSansB.body0.colour(
-                                  service.autosaveState == AutosaveState.ACTIVE
-                                      ? UiConstants.primaryColor
-                                      : UiConstants.tertiarySolid),
-                              textAlign: TextAlign.left,
-                            ),
-                            SizedBox(height: SizeConfig.padding6),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Investing',
-                                      style: TextStyles.sourceSans.body4
-                                          .colour(UiConstants.kTextColor2),
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                        text: '₹ ',
-                                        style: TextStyles.sourceSansSB.body0
-                                            .colour(UiConstants.kTextColor),
-                                        children: [
-                                          TextSpan(
-                                            text:
-                                                "${service.subscriptionData?.amount ?? 0} ",
-                                            style: TextStyles.sourceSansSB.body0
-                                                .colour(UiConstants.kTextColor),
-                                          ),
-                                          TextSpan(
-                                            text: "/" +
-                                                (service.subscriptionData
-                                                        ?.frequency
-                                                        .toCamelCase() ??
-                                                    ""),
-                                            style: TextStyles.sourceSans.body4
-                                                .colour(
-                                                    UiConstants.kTextColor2),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+    return GestureDetector(
+      onTap: () {
+        if (innerTapActive) service.handleTap();
+      },
+      child: Container(
+        height: SizeConfig.screenWidth! * 0.20,
+        width: SizeConfig.screenWidth,
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
+        margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+        decoration: BoxDecoration(
+          color: UiConstants.kBackgroundColor2,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+          border: Border.all(color: Colors.white30),
+        ),
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              service.subscriptionData != null &&
+                      service.subscriptionData!.status ==
+                          Constants.SUBSCRIPTION_ACTIVE
+                  ? Assets.autoSaveOngoing
+                  : Assets.autoSavePaused,
+              height: SizeConfig.padding44,
+              width: SizeConfig.padding44,
             ),
-          ),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              margin: EdgeInsets.all(SizeConfig.padding12),
-              child: Icon(
-                Icons.keyboard_arrow_right,
-                color: Colors.white,
-                size: SizeConfig.padding24,
+            SizedBox(
+              width: SizeConfig.padding6,
+            ),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "Autosave " + getAutosaveStatusText(service.autosaveState),
+                style: TextStyles.sourceSansB.body1.colour(
+                    service.autosaveState == AutosaveState.ACTIVE
+                        ? UiConstants.primaryColor
+                        : UiConstants.tertiarySolid),
+                textAlign: TextAlign.left,
               ),
             ),
-          )
-        ],
+            Spacer(),
+            RichText(
+              text: TextSpan(
+                text: '₹',
+                style: TextStyles.sourceSansSB.body0
+                    .colour(UiConstants.kTextColor),
+                children: [
+                  TextSpan(
+                    text:
+                        "${asset == InvestmentType.AUGGOLD99 ? service.subscriptionData?.augAmt : asset == InvestmentType.LENDBOXP2P ? service.subscriptionData?.lbAmt : service.subscriptionData?.amount ?? 0} ",
+                    style: TextStyles.sourceSansSB.body0
+                        .colour(UiConstants.kTextColor),
+                  ),
+                  TextSpan(
+                    text: "/" +
+                        (service.subscriptionData?.frequency.toCamelCase() ??
+                            ""),
+                    style: TextStyles.sourceSans.body4
+                        .colour(UiConstants.kTextColor2),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                service.handleTap();
+              },
+              icon: Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

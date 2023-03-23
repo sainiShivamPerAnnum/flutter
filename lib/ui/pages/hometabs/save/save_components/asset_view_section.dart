@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_pa
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -172,6 +174,16 @@ class AssetSectionView extends StatelessWidget {
                                 ),
                               ],
                               if (!isNewUser) ...[
+                                if (locator<SubService>().subscriptionData !=
+                                    null)
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding16),
+                                    child: ActiveOrPausedAutosaveCard(
+                                      service: locator<SubService>(),
+                                      asset: type,
+                                    ),
+                                  ),
                                 MiniTransactionCard(investmentType: type),
                                 if (balance != 0) ...[
                                   Align(
