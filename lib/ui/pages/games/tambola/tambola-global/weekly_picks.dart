@@ -1,16 +1,18 @@
 import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class WeeklyPicks extends StatelessWidget {
   final DailyPick? weeklyDraws;
-
-  // BaseUtil baseProvider;
+  final PicksCardViewModel model;
 
   const WeeklyPicks({
     this.weeklyDraws,
     Key? key,
+    required this.model,
   }) : super(key: key);
 
   String getDayName(int weekday) {
@@ -62,8 +64,10 @@ class WeeklyPicks extends StatelessWidget {
       width: SizeConfig.screenWidth! * 0.07,
       height: SizeConfig.screenWidth! * 0.07,
       decoration: BoxDecoration(
-        color: isToday ? Colors.black : Colors.white.withOpacity(0.3),
-        border: isToday ? Border.all(color: const Color(0xffFFD979)) : null,
+        color: isToday ? UiConstants.darkPrimaryColor : Colors.white.withOpacity(0.1),
+        border: model.isNumberPresent(digit)
+            ? Border.all(color: const Color(0xffFFD979))
+            : null,
         shape: BoxShape.circle,
       ),
       child: Center(
@@ -80,49 +84,6 @@ class WeeklyPicks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("TEsting mon: ${weeklyDraws!.mon}");
-    debugPrint("TEsting tue: ${weeklyDraws!.tue}");
-    debugPrint("TEsting wed: ${weeklyDraws!.wed}");
-    debugPrint("TEsting thu: ${weeklyDraws!.thu}");
-    debugPrint("TEsting fri: ${weeklyDraws!.fri}");
-    debugPrint("TEsting sat: ${weeklyDraws!.sat}");
-    debugPrint("TEsting sun: ${weeklyDraws!.sun}");
-    // print("TEsting wekkcode: ${weeklyDraws.weekCode}");
-    // if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
-    //   return Container(
-    //     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-    //     height: SizeConfig.screenWidth * 0.5,
-    //     decoration: BoxDecoration(
-    //       color: UiConstants.kArowButtonBackgroundColor,
-    //       border: Border.all(
-    //         color: Colors.white.withOpacity(0.5),
-    //         width: 0.5,
-    //       ),
-    //       borderRadius: BorderRadius.all(
-    //         Radius.circular(SizeConfig.roundness16),
-    //       ),
-    //     ),
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         SvgPicture.asset(
-    //           Assets.noTickets,
-    //           width: SizeConfig.screenWidth * 0.2,
-    //         ),
-    //         Padding(
-    //           padding: EdgeInsets.all(10),
-    //           child: Text(
-    //             'This week\'s numbers have not been drawn yet.',
-    //             textAlign: TextAlign.center,
-    //             style: TextStyles.sourceSans.body3.colour(
-    //               Colors.white.withOpacity(0.5),
-    //             ),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
     DateTime today = DateTime.now();
     List<Widget> colElems = [];
     int colCount = today.weekday;
@@ -131,8 +92,7 @@ class WeeklyPicks extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(getDayName(i + 1).toUpperCase(),
-              style: TextStyles.sourceSans.body3
-                  .colour(Colors.white)),
+              style: TextStyles.sourceSans.body3.colour(Colors.white)),
           SizedBox(
             width: SizeConfig.padding12,
           ),

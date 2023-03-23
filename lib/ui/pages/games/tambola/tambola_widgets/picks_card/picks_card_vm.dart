@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 class PicksCardViewModel extends BaseViewModel {
   final TambolaService _tambolaService = locator<TambolaService>();
+
   int get dailyPicksCount => _tambolaService!.dailyPicksCount ?? 3;
   PageController? _pageController;
 
@@ -17,9 +18,12 @@ class PicksCardViewModel extends BaseViewModel {
   double? _titleOpacity;
   List<int>? _todaysPicks;
   DailyPick? _weeklyDigits;
+
   List<int>? get todaysPicks => _todaysPicks;
+
   DailyPick? get weeklyDigits => _weeklyDigits;
   int _tabNo = 0;
+
   get tabNo => _tabNo;
   double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
 
@@ -67,7 +71,7 @@ class PicksCardViewModel extends BaseViewModel {
 
   PageController? get pageController => _pageController;
 
-  init() async {
+  Future<void> init() async {
     _pageController = PageController(initialPage: 0);
 
     isShowingAllPicks = false;
@@ -78,7 +82,7 @@ class PicksCardViewModel extends BaseViewModel {
     fetchTodaysPicks();
   }
 
-  fetchTodaysPicks() {
+  void fetchTodaysPicks() {
     _todaysPicks = _tambolaService!.todaysPicks;
     _weeklyDigits = _tambolaService!.weeklyDigits;
 
@@ -114,5 +118,15 @@ class PicksCardViewModel extends BaseViewModel {
       curve: Curves.linear,
     );
     tabNo = tab;
+  }
+
+  bool isNumberPresent(String dailyNumber) {
+    var data = _tambolaService.ticketsNumbers;
+    bool exist = false;
+    data.forEach((element) {
+      exist = element.contains(int.tryParse(dailyNumber));
+    });
+
+    return exist;
   }
 }

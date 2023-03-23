@@ -122,20 +122,27 @@ class DailyPick {
   ///if dayCode = 4, return picks from thu,fri,sat,sun
   List<int> getPicksPostDate(int dayCode) {
     List<int> relevantDigits = [];
-    if (mon != null && mon!.isNotEmpty && dayCode == DateTime.monday)
+    if (mon != null && mon!.isNotEmpty && dayCode == DateTime.monday) {
       relevantDigits.addAll(mon!);
-    if (tue != null && tue!.isNotEmpty && dayCode <= DateTime.tuesday)
+    }
+    if (tue != null && tue!.isNotEmpty && dayCode <= DateTime.tuesday) {
       relevantDigits.addAll(tue!);
-    if (wed != null && wed!.isNotEmpty && dayCode <= DateTime.wednesday)
+    }
+    if (wed != null && wed!.isNotEmpty && dayCode <= DateTime.wednesday) {
       relevantDigits.addAll(wed!);
-    if (thu != null && thu!.isNotEmpty && dayCode <= DateTime.thursday)
+    }
+    if (thu != null && thu!.isNotEmpty && dayCode <= DateTime.thursday) {
       relevantDigits.addAll(thu!);
-    if (fri != null && fri!.isNotEmpty && dayCode <= DateTime.friday)
+    }
+    if (fri != null && fri!.isNotEmpty && dayCode <= DateTime.friday) {
       relevantDigits.addAll(fri!);
-    if (sat != null && sat!.isNotEmpty && dayCode <= DateTime.saturday)
+    }
+    if (sat != null && sat!.isNotEmpty && dayCode <= DateTime.saturday) {
       relevantDigits.addAll(sat!);
-    if (sun != null && sun!.isNotEmpty && dayCode <= DateTime.sunday)
+    }
+    if (sun != null && sun!.isNotEmpty && dayCode <= DateTime.sunday) {
       relevantDigits.addAll(sun!);
+    }
 
     return relevantDigits;
   }

@@ -70,14 +70,12 @@ class PicksCardView extends StatelessWidget {
                     width: model.tabPosWidthFactor,
                   ),
                   Container(
-
                     height: 5,
                     width: SizeConfig.screenWidth! / 2 -
                         SizeConfig.pageHorizontalMargins * 2,
                     decoration: const BoxDecoration(
                         color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(5))
-                    ),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
                   )
                 ],
               ),
@@ -110,6 +108,7 @@ class PicksCardView extends StatelessWidget {
                         )
                       : WeeklyPicks(
                           weeklyDraws: model.weeklyDigits,
+                          model: model,
                         )
                 ],
               ),

@@ -211,7 +211,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(LoginControllerView(), LoginPageConfig);
           break;
         case Pages.Root:
-          _addPageData(Root(), RootPageConfig);
+          _addPageData(const Root(), RootPageConfig);
           break;
         case Pages.UserProfileDetails:
           _addPageData(const UserProfileDetails(), UserProfileDetailsConfig);
