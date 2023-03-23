@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
@@ -10,20 +8,16 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_ticket.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_ticket.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/buy_ticket_widget.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/ticket_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
@@ -33,12 +27,10 @@ import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:provider/provider.dart';
@@ -148,169 +140,169 @@ class TambolaHomeView extends StatelessWidget {
   }
 }
 
-class TicketsView extends StatelessWidget {
-  final TambolaHomeViewModel? model;
-
-  const TicketsView({super.key, this.model});
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    if (!model!.weeklyTicksFetched || !model!.weeklyDrawFetched) {
-      return const SizedBox();
-    } else if (model!.userWeeklyBoards == null ||
-        model!.activeTambolaCardCount == 0) {
-      return Padding(
-        padding: const EdgeInsets.all(10),
-        child: SizedBox(
-          width: SizeConfig.screenWidth,
-          child: Center(
-              child: (model!.ticketsBeingGenerated)
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: SizeConfig.screenWidth! * 0.8,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: UiConstants.primaryColor.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: FractionallySizedBox(
-                            heightFactor: 1,
-                            widthFactor: model!
-                                        .tambolaService!.ticketGenerateCount ==
-                                    model!.tambolaService!
-                                        .atomicTicketGenerationLeftCount
-                                ? 0.1
-                                : (model!.tambolaService!.ticketGenerateCount! -
-                                        model!.tambolaService!
-                                            .atomicTicketGenerationLeftCount) /
-                                    model!.tambolaService!.ticketGenerateCount!,
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: UiConstants.primaryColor,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          "${locale.tgenerated} ${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount} ${locale.tgeneratedCount(model!.tambolaService!.ticketGenerateCount.toString())}",
-                          style: TextStyles.rajdhani.body2.colour(Colors.white),
-                        ),
-                      ],
-                    )
-                  : const SizedBox()),
-        ),
-      );
-    } else if (model!.activeTambolaCardCount == 1) {
-      //One tambola ticket
-      model!.tambolaBoardViews = [];
-      model!.tambolaBoardViews!.add(TambolaTicket(
-        bestBoards: model!.refreshBestBoards(),
-        dailyPicks: model!.weeklyDigits,
-        board: model!.userWeeklyBoards![0],
-        calledDigits: (model!.weeklyDrawFetched && model!.weeklyDigits != null)
-            ? model!.weeklyDigits!.toList()
-            : [],
-      ));
-
-      return SizedBox(
-        width: SizeConfig.screenWidth,
-        child: TabViewGenerator(
-          model: model,
-          showIndicatorForAll: false,
-        ),
-      );
-    } else {
-      //Multiple tickets
-      if (!model!.ticketsLoaded) {
-        model!.ticketsLoaded = true;
-        model!.tambolaBoardViews = [];
-
-        model!.userWeeklyBoards!.forEach((board) {
-          model!.tambolaBoardViews!.add(
-            TambolaTicket(
-              bestBoards: model!.refreshBestBoards(),
-              dailyPicks: model!.weeklyDigits,
-              board: board,
-              calledDigits:
-                  (model!.weeklyDrawFetched && model!.weeklyDigits != null)
-                      ? model!.weeklyDigits!.toList()
-                      : [],
-            ),
-          );
-        });
-      }
-
-      return Column(
-        children: [
-          // Padding(
-          //   padding: EdgeInsets.symmetric(
-          //       horizontal:
-          //           SizeConfig.pageHorizontalMargins + SizeConfig.padding2),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: [
-          //       // Text(
-          //       //   "Your Best tickets",
-          //       //   style: TextStyles.rajdhaniSB.body0,
-          //       // ),
-          //       // TextButton(
-          //       //     onPressed: () {
-          //       //       AppState.delegate.appState.currentAction = PageAction(
-          //       //         state: PageState.addWidget,
-          //       //         page: AllTambolaTicketsPageConfig,
-          //       //         widget: AllTambolaTickets(
-          //       //             ticketList: model.tambolaBoardViews.toList()),
-          //       //       );
-          //       //     },
-          //       //     child: Row(
-          //       //       mainAxisAlignment: MainAxisAlignment.center,
-          //       //       children: [
-          //       //         Padding(
-          //       //           padding: EdgeInsets.only(
-          //       //             top: SizeConfig.padding2,
-          //       //           ),
-          //       //           child: Text(
-          //       //               'View All (${model.userWeeklyBoards.length})',
-          //       //               style: TextStyles.rajdhaniSB.body2),
-          //       //         ),
-          //       //         SvgPicture.asset(Assets.chevRonRightArrow,
-          //       //             height: SizeConfig.padding24,
-          //       //             width: SizeConfig.padding24,
-          //       //             color: UiConstants.primaryColor)
-          //       //       ],
-          //       //     )
-          //       //     // child: Text(
-          //       //     //   "View All (${model.userWeeklyBoards.length})",
-          //       //     //   style: TextStyles.sourceSansSB.body2
-          //       //     //       .colour(UiConstants.kTabBorderColor),
-          //       //     // ),
-          //       //     )
-          //     ],
-          //   ),
-          // ),
-          // SizedBox(
-          //   height: SizeConfig.padding12,
-          // ),
-          SizedBox(
-            width: SizeConfig.screenWidth,
-            child: TabViewGenerator(
-              model: model,
-              showIndicatorForAll: true,
-            ),
-          ),
-        ],
-      );
-    }
-  }
-}
+// class TicketsView extends StatelessWidget {
+//   final TambolaHomeViewModel? model;
+//
+//   const TicketsView({super.key, this.model});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     S locale = S.of(context);
+//     if (!model!.weeklyTicksFetched || !model!.weeklyDrawFetched) {
+//       return const SizedBox();
+//     } else if (model!.userWeeklyBoards == null ||
+//         model!.activeTambolaCardCount == 0) {
+//       return Padding(
+//         padding: const EdgeInsets.all(10),
+//         child: SizedBox(
+//           width: SizeConfig.screenWidth,
+//           child: Center(
+//               child: (model!.ticketsBeingGenerated)
+//                   ? Column(
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       crossAxisAlignment: CrossAxisAlignment.center,
+//                       children: [
+//                         Container(
+//                           width: SizeConfig.screenWidth! * 0.8,
+//                           height: 4,
+//                           decoration: BoxDecoration(
+//                             color: UiConstants.primaryColor.withOpacity(0.3),
+//                             borderRadius: BorderRadius.circular(100),
+//                           ),
+//                           child: FractionallySizedBox(
+//                             heightFactor: 1,
+//                             widthFactor: model!
+//                                         .tambolaService!.ticketGenerateCount ==
+//                                     model!.tambolaService!
+//                                         .atomicTicketGenerationLeftCount
+//                                 ? 0.1
+//                                 : (model!.tambolaService!.ticketGenerateCount! -
+//                                         model!.tambolaService!
+//                                             .atomicTicketGenerationLeftCount) /
+//                                     model!.tambolaService!.ticketGenerateCount!,
+//                             alignment: Alignment.centerLeft,
+//                             child: Container(
+//                               decoration: BoxDecoration(
+//                                 color: UiConstants.primaryColor,
+//                                 borderRadius: BorderRadius.circular(100),
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                         const SizedBox(height: 16),
+//                         Text(
+//                           "${locale.tgenerated} ${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount} ${locale.tgeneratedCount(model!.tambolaService!.ticketGenerateCount.toString())}",
+//                           style: TextStyles.rajdhani.body2.colour(Colors.white),
+//                         ),
+//                       ],
+//                     )
+//                   : const SizedBox()),
+//         ),
+//       );
+//     } else if (model!.activeTambolaCardCount == 1) {
+//       //One tambola ticket
+//       model!.tambolaBoardViews = [];
+//       model!.tambolaBoardViews!.add(TambolaTicket(
+//         bestBoards: model!.refreshBestBoards(),
+//         dailyPicks: model!.weeklyDigits,
+//         board: model!.userWeeklyBoards![0],
+//         calledDigits: (model!.weeklyDrawFetched && model!.weeklyDigits != null)
+//             ? model!.weeklyDigits!.toList()
+//             : [],
+//       ));
+//
+//       return SizedBox(
+//         width: SizeConfig.screenWidth,
+//         child: TabViewGenerator(
+//           model: model,
+//           showIndicatorForAll: false,
+//         ),
+//       );
+//     } else {
+//       //Multiple tickets
+//       if (!model!.ticketsLoaded) {
+//         model!.ticketsLoaded = true;
+//         model!.tambolaBoardViews = [];
+//
+//         model!.userWeeklyBoards!.forEach((board) {
+//           model!.tambolaBoardViews!.add(
+//             TambolaTicket(
+//               bestBoards: model!.refreshBestBoards(),
+//               dailyPicks: model!.weeklyDigits,
+//               board: board,
+//               calledDigits:
+//                   (model!.weeklyDrawFetched && model!.weeklyDigits != null)
+//                       ? model!.weeklyDigits!.toList()
+//                       : [],
+//             ),
+//           );
+//         });
+//       }
+//
+//       return Column(
+//         children: [
+//           // Padding(
+//           //   padding: EdgeInsets.symmetric(
+//           //       horizontal:
+//           //           SizeConfig.pageHorizontalMargins + SizeConfig.padding2),
+//           //   child: Row(
+//           //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           //     crossAxisAlignment: CrossAxisAlignment.center,
+//           //     children: [
+//           //       // Text(
+//           //       //   "Your Best tickets",
+//           //       //   style: TextStyles.rajdhaniSB.body0,
+//           //       // ),
+//           //       // TextButton(
+//           //       //     onPressed: () {
+//           //       //       AppState.delegate.appState.currentAction = PageAction(
+//           //       //         state: PageState.addWidget,
+//           //       //         page: AllTambolaTicketsPageConfig,
+//           //       //         widget: AllTambolaTickets(
+//           //       //             ticketList: model.tambolaBoardViews.toList()),
+//           //       //       );
+//           //       //     },
+//           //       //     child: Row(
+//           //       //       mainAxisAlignment: MainAxisAlignment.center,
+//           //       //       children: [
+//           //       //         Padding(
+//           //       //           padding: EdgeInsets.only(
+//           //       //             top: SizeConfig.padding2,
+//           //       //           ),
+//           //       //           child: Text(
+//           //       //               'View All (${model.userWeeklyBoards.length})',
+//           //       //               style: TextStyles.rajdhaniSB.body2),
+//           //       //         ),
+//           //       //         SvgPicture.asset(Assets.chevRonRightArrow,
+//           //       //             height: SizeConfig.padding24,
+//           //       //             width: SizeConfig.padding24,
+//           //       //             color: UiConstants.primaryColor)
+//           //       //       ],
+//           //       //     )
+//           //       //     // child: Text(
+//           //       //     //   "View All (${model.userWeeklyBoards.length})",
+//           //       //     //   style: TextStyles.sourceSansSB.body2
+//           //       //     //       .colour(UiConstants.kTabBorderColor),
+//           //       //     // ),
+//           //       //     )
+//           //     ],
+//           //   ),
+//           // ),
+//           // SizedBox(
+//           //   height: SizeConfig.padding12,
+//           // ),
+//           SizedBox(
+//             width: SizeConfig.screenWidth,
+//             child: TabViewGenerator(
+//               model: model,
+//               showIndicatorForAll: true,
+//             ),
+//           ),
+//         ],
+//       );
+//     }
+//   }
+// }
 
 class TambolaResultCard extends StatelessWidget {
   final TambolaHomeViewModel? model;
@@ -982,19 +974,19 @@ class TodayWeeklyPicksCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(
         top: SizeConfig.pageHorizontalMargins,
-        bottom: SizeConfig.pageHorizontalMargins + SizeConfig.padding16,
+        bottom:  SizeConfig.padding8,
       ),
-      decoration: BoxDecoration(
-        // color: UiConstants.kArrowButtonBackgroundColor,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(
-            SizeConfig.roundness32,
-          ),
-          bottomRight: Radius.circular(
-            SizeConfig.roundness32,
-          ),
-        ),
-      ),
+      // decoration: BoxDecoration(
+      //   // color: UiConstants.kArrowButtonBackgroundColor,
+      //   borderRadius: BorderRadius.only(
+      //     bottomLeft: Radius.circular(
+      //       SizeConfig.roundness32,
+      //     ),
+      //     bottomRight: Radius.circular(
+      //       SizeConfig.roundness32,
+      //     ),
+      //   ),
+      // ),
       child: PicksCardView(),
     );
   }

@@ -4,7 +4,6 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TambolaInstantView extends StatelessWidget {

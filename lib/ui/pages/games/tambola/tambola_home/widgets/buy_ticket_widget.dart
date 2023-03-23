@@ -2,7 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -29,7 +29,7 @@ class ButTicketsComponent extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 18),
       padding: EdgeInsets.symmetric(
           horizontal: SizeConfig.pageHorizontalMargins,
-          vertical: SizeConfig.pageHorizontalMargins),
+          vertical: SizeConfig.padding32),
       decoration: BoxDecoration(
         color: const Color(0xff30363C),
         borderRadius: BorderRadius.all(

@@ -25,7 +25,7 @@ import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_ticket.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_ticket.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -83,9 +83,11 @@ class TambolaHomeViewModel extends BaseViewModel {
   bool _showWinCard = false;
   Map<String, int> ticketCodeWinIndex = {};
   bool _isEligible = false;
+
   bool get isEligible => _isEligible;
 
   set isEligible(value) => _isEligible = value;
+
   bool get showWinCard => _showWinCard;
 
   set showWinCard(value) {
@@ -94,6 +96,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   TambolaWidgetController? tambolaWidgetController;
+
   //Constant values
   Map<String, IconData> tambolaOdds = {
     "Full House": Icons.apps,
@@ -104,13 +107,11 @@ class TambolaHomeViewModel extends BaseViewModel {
   };
 
   List<String> tabList = [
-
     "All",
+    "Corners",
+    "One Row",
+    "Two Rows",
     "Full House",
-    "1st Row",
-    "2nd Row",
-    "3rd Row",
-    "Corner",
   ];
 
   String boxHeading = "How to Play";
@@ -135,8 +136,10 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   LeaderboardModel? get tlboard => _tLeaderBoard;
+
   PrizesModel? get tPrizes =>
       _prizeService!.gamePrizeMap[Constants.GAME_TYPE_TAMBOLA];
+
   List<Winners> get winners => _winners;
 
   int get ticketSavedAmount => _ticketSavedAmount;
@@ -567,7 +570,8 @@ class TambolaHomeViewModel extends BaseViewModel {
       );
     }
 
-    unawaited(PreferenceHelper.setBool(PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false));
+    unawaited(PreferenceHelper.setBool(
+        PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false));
   }
 
   bool handleScrollNotification(ScrollNotification notification) {

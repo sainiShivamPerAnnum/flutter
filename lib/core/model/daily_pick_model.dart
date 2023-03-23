@@ -73,15 +73,16 @@ class DailyPick {
     }
   }
 
+  ///todo : remove the value
   factory DailyPick.noPicks() {
     return DailyPick(
-      mon: [-1, -1, -1],
-      thu: [-1, -1, -1],
-      fri: [-1, -1, -1],
-      sat: [-1, -1, -1],
-      sun: [-1, -1, -1],
-      tue: [-1, -1, -1],
-      wed: [-1, -1, -1],
+      mon: [3, 2, 10],
+      thu: [1, 11, 12],
+      fri: [4, 7, 8],
+      sat: [10, 5, 6],
+      sun: [4, 7, 8],
+      tue: [1, 11, 12],
+      wed: [4, 7, 8],
     );
   }
 

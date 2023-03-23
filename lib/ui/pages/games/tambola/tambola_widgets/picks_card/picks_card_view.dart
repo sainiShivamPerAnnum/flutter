@@ -29,9 +29,9 @@ class PicksCardView extends StatelessWidget {
             borderRadius: BorderRadius.all(
               Radius.circular(SizeConfig.roundness12),
             ),
-            image: const DecorationImage(
-                image: AssetImage('assets/images/tambola_1cr_bg.png'),
-            fit: BoxFit.fitHeight),
+            // image: const DecorationImage(
+            //     image: AssetImage('assets/images/tambola_1cr.png'),
+            // fit: BoxFit.fitHeight),
 
             // boxShadow: [
             //   BoxShadow(

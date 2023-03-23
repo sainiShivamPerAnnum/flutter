@@ -12,7 +12,7 @@ class WinnersModel {
   TimestampModel? timestamp;
   String? gametype;
   static final helper = HelperModel<WinnersModel>(
-    (map) => WinnersModel.fromMap(map),
+    WinnersModel.fromMap,
   );
 
   WinnersModel({

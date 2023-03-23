@@ -1,21 +1,15 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
-import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_existing_user_landing_page.dart';
-import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_header.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_ticket_info.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -24,58 +18,19 @@ import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:felloapp/util/url_type_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'package:video_player/video_player.dart';
 
-class TambolaWrapper extends StatelessWidget {
-  const TambolaWrapper({Key? key, this.vm}) : super(key: key);
-  final RootViewModel? vm;
-  @override
-  Widget build(BuildContext context) {
-    return BaseView<TambolaHomeViewModel>(
-      onModelReady: (model) {
-        model.init();
-      },
-      builder: (ctx, model, child) {
-        if (model.state == ViewState.Busy) {
-          return const Scaffold(
-            body: Center(child: FullScreenLoader()),
-            backgroundColor: UiConstants.kBackgroundColor,
-          );
-        }
-        return RefreshIndicator(
-          color: UiConstants.primaryColor,
-          backgroundColor: Colors.black,
-          onRefresh: model.refreshTambolaTickets,
-          child: Scaffold(
-            body: (model.activeTambolaCardCount ?? 0) > 0
-                ? TambolaExistingUserScreen(
-                    model: model,
-                  )
-                : TambolaNewUserPage(
-                    model: model,
-                    isFromNavigation: locator<RootController>()
-                        .navItems
-                        .containsValue(RootController.tambolaNavBar),
-                  ),
-          ),
-        );
-      },
-    );
-  }
-}
+
 
 class TambolaNewUserPage extends StatefulWidget {
   const TambolaNewUserPage(
       {Key? key,
-      required this.model,
-      this.showPrizeSection = false,
-      this.showWinners = false,
-      this.isFromNavigation = false})
+        required this.model,
+        this.showPrizeSection = false,
+        this.showWinners = false,
+        this.isFromNavigation = false})
       : super(key: key);
   final TambolaHomeViewModel model;
   final bool showPrizeSection;
@@ -194,7 +149,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
             alignment: Alignment.bottomCenter,
             child: Container(
               padding:
-                  const EdgeInsets.only(top: 14, bottom: 24, left: 32, right: 32),
+              const EdgeInsets.only(top: 14, bottom: 24, left: 32, right: 32),
               width: double.infinity,
               color: UiConstants.kBackgroundColor,
               // height: SizeConfig.screenHeight! * 0.17,
@@ -229,19 +184,19 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                       onPressed: () {
                         locator<AnalyticsService>().track(
                             eventName:
-                                (widget.model.activeTambolaCardCount ?? 0) >= 1
-                                    ? AnalyticsEvents.tambolaSaveTapped
-                                    : AnalyticsEvents
-                                        .tambolaGetFirstTicketTapped,
+                            (widget.model.activeTambolaCardCount ?? 0) >= 1
+                                ? AnalyticsEvents.tambolaSaveTapped
+                                : AnalyticsEvents
+                                .tambolaGetFirstTicketTapped,
                             properties: AnalyticsProperties
                                 .getDefaultPropertiesMap(extraValuesMap: {
                               "Time left for draw Tambola (mins)":
-                                  AnalyticsProperties
-                                      .getTimeLeftForTambolaDraw(),
+                              AnalyticsProperties
+                                  .getTimeLeftForTambolaDraw(),
                               "Tambola Tickets Owned":
-                                  AnalyticsProperties.getTambolaTicketCount(),
+                              AnalyticsProperties.getTambolaTicketCount(),
                               "Number of Tickets":
-                                  widget.model.activeTambolaCardCount ?? 0,
+                              widget.model.activeTambolaCardCount ?? 0,
                               "Amount": widget.model.ticketSavedAmount,
                             }));
                         widget.model.updateTicketSavedAmount(1);
@@ -261,174 +216,5 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
         ],
       ),
     );
-  }
-}
-
-class TambolaHeader extends StatelessWidget {
-  const TambolaHeader({Key? key, required this.model}) : super(key: key);
-  final TambolaHomeViewModel model;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenHeight! * 0.4,
-      width: double.infinity,
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.padding24, vertical: 12),
-      decoration: BoxDecoration(
-          color: UiConstants.kBackgroundColor,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
-      child: Builder(
-        builder: (_) {
-          switch (UrlTypeHelper.getType(model.game!.walkThroughUri!)) {
-            case UrlType.IMAGE:
-              return SvgPicture.network(model.game!.walkThroughUri!);
-            case UrlType.VIDEO:
-              return TambolaVideoPlayer(link: model.game!.walkThroughUri!);
-
-            default:
-              return const SizedBox();
-          }
-        },
-      ),
-    );
-  }
-}
-
-class TambolaTicketInfo extends StatelessWidget {
-  const TambolaTicketInfo({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Container(
-      height: SizeConfig.screenHeight! * 0.10,
-      width: SizeConfig.screenWidth! * 0.80,
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xff627F8E)),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          tileMode: TileMode.mirror,
-          end: Alignment.centerRight,
-          stops: const [0, 0.5, 0.5, 1],
-          colors: [
-            const Color(
-              0xff627F8E,
-            ).withOpacity(0.2),
-            const Color(
-              0xff627F8E,
-            ).withOpacity(0.2),
-            Colors.transparent,
-            Colors.transparent
-          ],
-        ),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: SizeConfig.screenWidth! * 0.37,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "₹ " +
-                      (AppConfig.getValue(AppConfigKey.tambola_cost)
-                              .toString()
-                              .isEmpty
-                          ? '500'
-                          : AppConfig.getValue<int>(AppConfigKey.tambola_cost)
-                              .toString()),
-                  style: TextStyles.sourceSansB.title3,
-                ),
-                Text(
-                  locale.invested,
-                  style: TextStyles.sourceSansSB.body3,
-                )
-              ],
-            ),
-          ),
-          Text('=', style: TextStyles.sourceSansB.title1),
-          SizedBox(
-            width: SizeConfig.screenWidth! * 0.37,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("1 Ticket", style: TextStyles.sourceSansB.title3),
-                Text(
-                  locale.tEveryWeekText,
-                  style: TextStyles.sourceSansSB.body4,
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class TambolaVideoPlayer extends StatefulWidget {
-  const TambolaVideoPlayer(
-      {Key? key,
-      required this.link,
-      this.showShimmer = false,
-      this.aspectRatio})
-      : super(key: key);
-  final String link;
-  final bool showShimmer;
-  final double? aspectRatio;
-  @override
-  State<TambolaVideoPlayer> createState() => _TambolaVideoPlayerState();
-}
-
-class _TambolaVideoPlayerState extends State<TambolaVideoPlayer> {
-  VideoPlayerController? _controller;
-
-  @override
-  void initState() {
-    _controller = VideoPlayerController.network(widget.link)
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-        _controller?.setLooping(true);
-        _controller?.play();
-      });
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _controller?.value.isInitialized ?? false
-        ? ClipRRect(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            child: AspectRatio(
-              aspectRatio: widget.aspectRatio ?? _controller!.value.aspectRatio,
-              child: VideoPlayer(_controller!),
-            ),
-          )
-        : widget.showShimmer
-            ? Shimmer.fromColors(
-                baseColor: UiConstants.kUserRankBackgroundColor,
-                highlightColor: Colors.grey.shade800,
-                child: AspectRatio(
-                  aspectRatio: 1.4,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness12),
-                    ),
-                  ),
-                ),
-              )
-            : Container();
   }
 }

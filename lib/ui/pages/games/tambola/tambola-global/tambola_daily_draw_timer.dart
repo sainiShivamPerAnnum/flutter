@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -83,7 +82,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
-    if (!showClock) {
+    if (showClock) {
       final hours = twoDigits(duration.inHours);
       final minutes = twoDigits(duration.inMinutes.remainder(60));
       final seconds = twoDigits(duration.inSeconds.remainder(60));

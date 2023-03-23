@@ -1,11 +1,7 @@
 import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class WeeklyPicks extends StatelessWidget {
   final DailyPick? weeklyDraws;
@@ -44,13 +40,13 @@ class WeeklyPicks extends StatelessWidget {
     if (draws != null &&
         draws.getWeekdayDraws(day - 1) != null &&
         !draws.getWeekdayDraws(day - 1)!.contains(-1)) {
-      draws.getWeekdayDraws(day - 1)!.forEach((element) {
+      for (final element in draws.getWeekdayDraws(day - 1)!) {
         balls.add(
-            _getDrawBall(element.toString(), colCount == day ? true : false));
-      });
+            _getDrawBall(element.toString(), colCount == day));
+      }
     } else {
       for (int i = 0; i < 3; i++) {
-        balls.add(_getDrawBall('-', colCount == day ? true : false));
+        balls.add(_getDrawBall('-', colCount == day));
       }
     }
     return Row(
@@ -65,9 +61,9 @@ class WeeklyPicks extends StatelessWidget {
           horizontal: SizeConfig.padding4, vertical: SizeConfig.padding6),
       width: SizeConfig.screenWidth! * 0.07,
       height: SizeConfig.screenWidth! * 0.07,
-      decoration: new BoxDecoration(
+      decoration:  BoxDecoration(
         color: isToday
-            ? UiConstants.kSnackBarPositiveContentColor
+            ? Colors.black
             : Colors.white.withOpacity(0.3),
         shape: BoxShape.circle,
       ),
@@ -85,13 +81,13 @@ class WeeklyPicks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("TEsting mon: ${weeklyDraws!.mon}");
-    print("TEsting tue: ${weeklyDraws!.tue}");
-    print("TEsting wed: ${weeklyDraws!.wed}");
-    print("TEsting thu: ${weeklyDraws!.thu}");
-    print("TEsting fri: ${weeklyDraws!.fri}");
-    print("TEsting sat: ${weeklyDraws!.sat}");
-    print("TEsting sun: ${weeklyDraws!.sun}");
+    debugPrint("TEsting mon: ${weeklyDraws!.mon}");
+    debugPrint("TEsting tue: ${weeklyDraws!.tue}");
+    debugPrint("TEsting wed: ${weeklyDraws!.wed}");
+    debugPrint("TEsting thu: ${weeklyDraws!.thu}");
+    debugPrint("TEsting fri: ${weeklyDraws!.fri}");
+    debugPrint("TEsting sat: ${weeklyDraws!.sat}");
+    debugPrint("TEsting sun: ${weeklyDraws!.sun}");
     // print("TEsting wekkcode: ${weeklyDraws.weekCode}");
     // if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
     //   return Container(
@@ -132,20 +128,18 @@ class WeeklyPicks extends StatelessWidget {
     List<Widget> colElems = [];
     int colCount = today.weekday;
     for (int i = 0; i < 7; i++) {
-      colElems.add(Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(getDayName(i + 1).toUpperCase(),
-                style: TextStyles.sourceSans.body3.colour(i + 1 == colCount
-                    ? UiConstants.kSnackBarPositiveContentColor
-                    : Colors.white)),
-            SizedBox(
-              width: SizeConfig.padding12,
-            ),
-            _getDrawBallRow(weeklyDraws, i + 1),
-          ],
-        ),
+      colElems.add(Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(getDayName(i + 1).toUpperCase(),
+              style: TextStyles.sourceSans.body3.colour(i + 1 == colCount
+                  ? Colors.black
+                  : Colors.white)),
+          SizedBox(
+            width: SizeConfig.padding12,
+          ),
+          _getDrawBallRow(weeklyDraws, i + 1),
+        ],
       ));
     }
 

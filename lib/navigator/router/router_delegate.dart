@@ -25,7 +25,7 @@ import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_vi
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/show_all_tickets.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_wrapper.dart';
 import 'package:felloapp/ui/pages/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
@@ -57,6 +57,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -66,16 +67,17 @@ import '../../core/model/app_config_model.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
-  final AnalyticsService? _analytics = locator<AnalyticsService>();
-  final JourneyService? _journeyService = locator<JourneyService>();
+  final AnalyticsService _analytics = locator<AnalyticsService>();
+  final JourneyService _journeyService = locator<JourneyService>();
 
   final List<Page> _pages = [];
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
-  CustomLogger _logger = locator<CustomLogger>();
-  BaseUtil? _baseUtil = locator<BaseUtil>(); //required to fetch client token
+  final CustomLogger _logger = locator<CustomLogger>();
+  final BaseUtil _baseUtil =
+      locator<BaseUtil>(); //required to fetch client token
   final AppState appState;
 
   FelloRouterDelegate(this.appState) : navigatorKey = GlobalKey() {
@@ -133,9 +135,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   Future<bool> popRoute() {
     if (canPop()) {
       _removePage(_pages.last as MaterialPage<dynamic>);
-      print("Current Stack: ${AppState.screenStack}");
-      if (AppState.screenStack.length == 1)
+      debugPrint("Current Stack: ${AppState.screenStack}");
+      if (AppState.screenStack.length == 1) {
         _journeyService!.checkForMilestoneLevelChange();
+      }
       notifyListeners();
 
       return Future.value(true);
@@ -211,11 +214,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(Root(), RootPageConfig);
           break;
         case Pages.UserProfileDetails:
-          _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
+          _addPageData(const UserProfileDetails(), UserProfileDetailsConfig);
           break;
 
         case Pages.TxnHistory:
-          _addPageData(TransactionsHistory(), TransactionsHistoryPageConfig);
+          _addPageData(
+              const TransactionsHistory(), TransactionsHistoryPageConfig);
           break;
         case Pages.KycDetails:
           _addPageData(KYCDetailsView(), KycDetailsPageConfig);
@@ -231,7 +235,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         //   break;
 
         case Pages.UpdateRequired:
-          _addPageData(UpdateRequiredScreen(), UpdateRequiredConfig);
+          _addPageData(const UpdateRequiredScreen(), UpdateRequiredConfig);
           break;
         case Pages.RefPolicy:
           _addPageData(ReferralPolicy(), RefPolicyPageConfig);
@@ -240,11 +244,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);
           break;
         case Pages.Support:
-          _addPageData(SupportPage(), SupportPageConfig);
+          _addPageData(const SupportPage(), SupportPageConfig);
           break;
 
         case Pages.THome:
-          _addPageData(TambolaWrapper(), THomePageConfig);
+          _addPageData(const TambolaWrapper(), THomePageConfig);
           break;
         // case Pages.TGame: //
         //   _addPageData(TambolaGameView(), TGamePageConfig);
@@ -266,13 +270,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         //   break;
 
         case Pages.TWeeklyResult:
-          _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
+          _addPageData(const WeeklyResult(), TWeeklyResultPageConfig);
           break;
         case Pages.Notifications:
           _addPageData(NotificationsPage(), NotificationsConfig);
           break;
         case Pages.LendboxDetails:
-          _addPageData(LendboxDetailsView(), LendboxDetailsPageConfig);
+          _addPageData(const LendboxDetailsView(), LendboxDetailsPageConfig);
           break;
         case Pages.ReferralDetails:
           _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
@@ -292,37 +296,39 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(ScratchCardsView(), ScratchCardsViewPageConfig);
           break;
         case Pages.AutosaveDetailsView:
-          _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
+          _addPageData(
+              const AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
           break;
         case Pages.AutosaveProcessView:
-          _addPageData(AutosaveProcessView(), AutosaveProcessViewPageConfig);
+          _addPageData(
+              const AutosaveProcessView(), AutosaveProcessViewPageConfig);
           break;
         case Pages.UserAutosaveDetailsView:
-          _addPageData(
-              UserAutosaveDetailsView(), UserAutosaveDetailsViewPageConfig);
+          _addPageData(const UserAutosaveDetailsView(),
+              UserAutosaveDetailsViewPageConfig);
           break;
 
         case Pages.TopPlayerLeaderboard:
           _addPageData(
-              TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
+              const TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
           break;
         case Pages.JourneyView:
           _addPageData(JourneyView(), JourneyViewPageConfig);
           break;
         case Pages.OnBoardingView:
-          _addPageData(OnBoardingView(), OnBoardingViewPageConfig);
+          _addPageData(const OnBoardingView(), OnBoardingViewPageConfig);
           break;
         case Pages.BlogPostWebView:
-          _addPageData(BlogWebView(), BlogPostWebViewConfig);
+          _addPageData(const BlogWebView(), BlogPostWebViewConfig);
           break;
         case Pages.CampaignView:
           _addPageData(CampaignView(), CampaignViewPageConfig);
           break;
         case Pages.SaveAssetView:
-          _addPageData(SaveAssetView(), SaveAssetsViewConfig);
+          _addPageData(const SaveAssetView(), SaveAssetsViewConfig);
           break;
         case Pages.SettingsView:
-          _addPageData(SettingsView(), SettingsViewPageConfig);
+          _addPageData(const SettingsView(), SettingsViewPageConfig);
           break;
         // case Pages.TransactionDetailsPage:
         //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);
@@ -368,9 +374,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
 // 6
   void addAll(List<PageConfiguration> routes) {
-    routes.forEach((route) {
-      addPage(route);
-    });
+    routes.forEach(addPage);
   }
 
   void pushBelow(Widget child, PageConfiguration newRoute, {int? index}) {
@@ -739,7 +743,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           return WillPopScope(
               onWillPop: () {
                 AppState.backButtonDispatcher!.didPopRoute();
-                print("Popped the dialog");
+                debugPrint("Popped the dialog");
                 return Future.value(true);
               },
               child: dialogWidget!);
@@ -757,7 +761,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             topic: topic,
           );
         },
-        transitionDuration: Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 500),
         transitionsBuilder: (context, animation, anotherAnimation, child) {
           animation =
               CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
@@ -817,9 +821,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = LendboxDetailsPageConfig;
         break;
       case 'quickTour':
-        Future.delayed(Duration(seconds: 2), () {
-          SpotLightController.instance.startQuickTour();
-        });
+        Future.delayed(const Duration(seconds: 2),
+            SpotLightController.instance.startQuickTour);
 
         break;
       case 'lendboxDetails':
@@ -975,8 +978,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           'Save more in Gold or Flo to unlock the game and complete the milestone');
       appState.onItemTapped(
           DynamicUiUtils.navBar.indexWhere((element) => element == 'PL'));
-    } else
+    } else {
       BaseUtil.openGameModalSheet(game);
+    }
   }
 
   openAppWalkthrough() {
@@ -1004,11 +1008,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP)) {
       int expiryTimeStampInMSE = PreferenceHelper.getInt(
           PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP);
-      if (DateTime.now().millisecondsSinceEpoch < expiryTimeStampInMSE)
+      if (DateTime.now().millisecondsSinceEpoch < expiryTimeStampInMSE) {
         return false;
+      }
     }
     PreferenceHelper.setInt(PreferenceHelper.CACHE_RATING_EXPIRY_TIMESTAMP,
-        DateTime.now().add(Duration(days: 10)).millisecondsSinceEpoch);
+        DateTime.now().add(const Duration(days: 10)).millisecondsSinceEpoch);
     return true;
   }
 }
