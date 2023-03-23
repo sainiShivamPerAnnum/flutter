@@ -1,7 +1,13 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -83,7 +89,11 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                 style: TextStyles.sourceSansB.body1,
                               ),
                               subtitle: Text(
-                                  model.autosaveAssetOptionList[index].subtitle,
+                                  (model.autosaveAssetOptionList[index]
+                                          .isEnabled)
+                                      ? model.autosaveAssetOptionList[index]
+                                          .subtitle
+                                      : "Complete KYC to enable this option",
                                   style: TextStyles.sourceSans.body3),
                               trailing: Radio(
                                 value: index,
@@ -118,6 +128,34 @@ class AutosaveAssetChoiceView extends StatelessWidget {
               ),
             ),
           ),
+          if (!model.autosaveAssetOptionList[0].isEnabled)
+            Padding(
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              child: Text.rich(
+                TextSpan(
+                  text: "Want to do your Kyc now?",
+                  children: [
+                    TextSpan(
+                      text: "Tap here",
+                      style: TextStyles.sourceSansSB.italic
+                          .colour(UiConstants.primaryColor),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Haptic.vibrate();
+                          AppState.showAutosaveBt = false;
+                          AppState.delegate!.appState.currentAction =
+                              PageAction(
+                                  state: PageState.replace,
+                                  page: KycDetailsPageConfig);
+                        },
+                    )
+                  ],
+                ),
+                style: TextStyles.sourceSans.italic.body3
+                    .colour(UiConstants.kTextColor3),
+                textAlign: TextAlign.center,
+              ),
+            ),
           Spacer(),
           AppPositiveBtn(btnText: "NEXT", onPressed: model.proceed),
           SizedBox(height: SizeConfig.pageHorizontalMargins)

@@ -143,6 +143,19 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
   const ActiveOrPausedAutosaveCard({Key? key, required this.service})
       : super(key: key);
 
+  getAutosaveStatusText(AutosaveState state) {
+    switch (state) {
+      case AutosaveState.ACTIVE:
+        return "Active";
+      case AutosaveState.INIT:
+        return "Processing";
+      case AutosaveState.PAUSED:
+        return "Paused";
+      default:
+        "N/A";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -185,10 +198,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "AUTOSAVE " +
-                                      service.autosaveState.name
-                                          .toUpperCase() ??
-                                  "N/A",
+                              getAutosaveStatusText(service.autosaveState),
                               style: TextStyles.sourceSansB.body0.colour(
                                   service.autosaveState == AutosaveState.ACTIVE
                                       ? UiConstants.primaryColor

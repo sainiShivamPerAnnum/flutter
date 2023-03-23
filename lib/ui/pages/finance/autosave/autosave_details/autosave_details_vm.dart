@@ -26,7 +26,7 @@ class AutosaveDetailsViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final SubscriptionRepo? _subcriptionRepo = locator<SubscriptionRepo>();
-  PageController? txnPageController;
+  PageController? txnPageController = PageController(initialPage: 0);
   S locale = locator<S>();
 
   SubscriptionModel? _activeSubscription;
@@ -58,7 +58,8 @@ class AutosaveDetailsViewModel extends BaseViewModel {
   }
 
   init() async {
-    setState(ViewState.Busy);
+    state = ViewState.Busy;
+    // setState(ViewState.Busy);
     await findActiveSubscription();
     setState(ViewState.Idle);
   }

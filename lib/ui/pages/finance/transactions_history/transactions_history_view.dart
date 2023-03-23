@@ -46,43 +46,42 @@ class TransactionsHistory extends StatelessWidget {
               elevation: 0,
               leading: FelloAppBarBackButton(),
               title: Text(
-                locale.txnHistory,
+                (investmentType == InvestmentType.AUGGOLD99
+                        ? "Gold "
+                        : "Flo ") +
+                    locale.txnHistory,
                 style: TextStyles.rajdhaniSB.title5,
               ),
             ),
             backgroundColor: UiConstants.kBackgroundColor,
-            body: investmentType == InvestmentType.LENDBOXP2P
-                ? SingleTransactionView(
-                    model: model,
-                  )
-                : Column(
+            body: Column(
+              children: [
+                SizedBox(
+                  height: SizeConfig.padding10,
+                ),
+                TransactionChoiceSelectionTab(model: model),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+                Expanded(
+                  child: PageView(
+                    controller: model.pageController,
+                    pageSnapping: true,
+                    scrollDirection: Axis.horizontal,
+                    allowImplicitScrolling: true,
+                    physics: NeverScrollableScrollPhysics(),
                     children: [
-                      SizedBox(
-                        height: SizeConfig.padding10,
+                      SingleTransactionView(
+                        model: model,
                       ),
-                      TransactionChoiceSelectionTab(model: model),
-                      SizedBox(
-                        height: SizeConfig.padding24,
-                      ),
-                      Expanded(
-                        child: PageView(
-                          controller: model.pageController,
-                          pageSnapping: true,
-                          scrollDirection: Axis.horizontal,
-                          allowImplicitScrolling: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          children: [
-                            SingleTransactionView(
-                              model: model,
-                            ),
-                            SIPTransactionHistoryView(
-                              model: model,
-                            )
-                          ],
-                        ),
-                      ),
+                      SIPTransactionHistoryView(
+                        model: model,
+                      )
                     ],
-                  ));
+                  ),
+                ),
+              ],
+            ));
       },
     );
   }

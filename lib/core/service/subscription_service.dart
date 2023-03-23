@@ -17,6 +17,7 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_proce
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -462,6 +463,7 @@ class SubService extends ChangeNotifier {
 
   handleTap() {
     print(_autosaveState);
+    Haptic.vibrate();
     switch (autosaveState) {
       case AutosaveState.INIT:
         return BaseUtil.showNegativeAlert(

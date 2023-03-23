@@ -99,7 +99,15 @@ class AutosaveDetailsView extends StatelessWidget {
                                         style: TextStyles.rajdhaniSB.title3,
                                       ),
                                       Spacer(),
-                                      if (model.hasMoreTxns)
+                                      if (!model.isFetchingTransactions &&
+                                          (((model.currentPage == 0) &&
+                                                  (model.augTxnList?.length ??
+                                                          0) >
+                                                      1) ||
+                                              ((model.currentPage == 1) &&
+                                                  (model.lbTxnList?.length ??
+                                                          0) >
+                                                      1)))
                                         GestureDetector(
                                           onTap: () {
                                             Haptic.vibrate();
@@ -107,8 +115,13 @@ class AutosaveDetailsView extends StatelessWidget {
                                                 .currentAction = PageAction(
                                               state: PageState.addWidget,
                                               widget: TransactionsHistory(
-                                                investmentType:
-                                                    InvestmentType.AUGGOLD99,
+                                                investmentType: (model
+                                                            .txnPageController!
+                                                            .page!
+                                                            .toInt() ==
+                                                        1)
+                                                    ? InvestmentType.LENDBOXP2P
+                                                    : InvestmentType.AUGGOLD99,
                                                 showAutosave: true,
                                               ),
                                               page:

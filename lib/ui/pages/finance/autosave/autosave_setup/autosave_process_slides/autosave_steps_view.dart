@@ -115,16 +115,38 @@ class AutosaveStepsView extends StatelessWidget {
           ),
         ),
         Spacer(),
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins,
+              vertical: SizeConfig.padding12),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                Assets.multiAvatars,
+                width: SizeConfig.screenWidth! * 0.2,
+              ),
+              SizedBox(width: SizeConfig.padding12),
+              Expanded(
+                child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "5K+  users are growing their money with Autosave",
+                      style: TextStyles.sourceSans.body3,
+                    )),
+              )
+            ],
+          ),
+        ),
         AppPositiveBtn(
           btnText: locale.btnGetStarted,
           onPressed: () {
             Haptic.vibrate();
             model.proceed();
           },
-          width: SizeConfig.screenWidth! * 0.784,
+          width: SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
         ),
         SizedBox(
-          height: SizeConfig.screenWidth! * 0.1893,
+          height: SizeConfig.pageHorizontalMargins,
         ),
       ],
     );

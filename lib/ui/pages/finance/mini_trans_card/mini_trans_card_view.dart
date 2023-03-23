@@ -78,7 +78,7 @@ class MiniTransactionCard extends StatelessWidget {
                                       model.state == ViewState.Idle &&
                                               m.txnList != null &&
                                               m.txnList!.isNotEmpty &&
-                                              m.txnList!.length < 3
+                                              m.txnList!.length > 3
                                           ? InkWell(
                                               child: Padding(
                                                 padding: EdgeInsets.only(

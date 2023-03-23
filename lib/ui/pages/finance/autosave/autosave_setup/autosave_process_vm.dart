@@ -230,6 +230,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
     floAmountFieldController?.dispose();
     _selectedAssetOption = 0;
     _selectedFrequency = FREQUENCY.daily;
+    autosaveAssetOptionList.clear();
   }
 
   updateInit() async {
@@ -291,9 +292,11 @@ class AutosaveProcessViewModel extends BaseViewModel {
     floAmountFieldController?.dispose();
     _selectedAssetOption = 0;
     _selectedFrequency = FREQUENCY.daily;
+    autosaveAssetOptionList.clear();
   }
 
   Future<void> createSubscription() async {
+    AppState.showAutosaveBt = false;
     await _subService.createSubscription(
       amount: totalInvestingAmount,
       freq: selectedFrequency.name.toUpperCase(),
