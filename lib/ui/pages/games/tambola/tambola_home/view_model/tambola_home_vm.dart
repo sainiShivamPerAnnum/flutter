@@ -83,6 +83,13 @@ class TambolaHomeViewModel extends BaseViewModel {
   bool _showWinCard = false;
   Map<String, int> ticketCodeWinIndex = {};
   bool _isEligible = false;
+  bool _show1CrCard = false;
+
+  bool get show1CrCard => _show1CrCard;
+
+  set show1CrCard(bool value) {
+    _show1CrCard = value;
+  }
 
   bool get isEligible => _isEligible;
 
@@ -249,6 +256,10 @@ class TambolaHomeViewModel extends BaseViewModel {
     if (today.weekday == 7 && today.hour > 18) {
       showSummaryCards = false;
       notifyListeners();
+    }
+
+    if (today.weekday == 1 && (today.hour >= 0 && today.hour < 12)) {
+      show1CrCard = true;
     }
 
     setState(ViewState.Idle);

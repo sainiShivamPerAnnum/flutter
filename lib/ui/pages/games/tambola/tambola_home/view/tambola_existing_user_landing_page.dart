@@ -11,6 +11,7 @@ import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/ticket_widget.
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/buy_ticket_widget.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/how_tambola_works_widget.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/today_weekly_pick_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -235,5 +236,3 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
     );
   }
 }
-
-/// TODO: After refactoring update the original widget with this widget

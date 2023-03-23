@@ -29,18 +29,6 @@ class PicksCardView extends StatelessWidget {
             borderRadius: BorderRadius.all(
               Radius.circular(SizeConfig.roundness12),
             ),
-            // image: const DecorationImage(
-            //     image: AssetImage('assets/images/tambola_1cr.png'),
-            // fit: BoxFit.fitHeight),
-
-            // boxShadow: [
-            //   BoxShadow(
-            //     spreadRadius: 5,
-            //     color: Colors.black.withOpacity(0.2),
-            //     blurRadius: 5,
-            //     offset: const Offset(4, 4),
-            //   )
-            // ],
           ),
           margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.pageHorizontalMargins,

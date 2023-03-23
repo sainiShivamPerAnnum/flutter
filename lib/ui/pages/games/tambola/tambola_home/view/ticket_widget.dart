@@ -1,6 +1,12 @@
+import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/ticket_view.dart';
+import 'package:felloapp/ui/pages/support/faq/faq_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -93,13 +99,24 @@ class TicketHeader extends StatelessWidget {
                     style: TextStyles.sourceSansSB.body4
                         .colour(UiConstants.kBlogTitleColor),
                   ),
-                  Text(
-                    "Know More",
-                    style: TextStyles.sourceSansSB.body4
-                        .colour(UiConstants.kBlogTitleColor)
-                        .copyWith(
-                            decorationStyle: TextDecorationStyle.solid,
-                            decoration: TextDecoration.underline),
+                  GestureDetector(
+                    onTap: () {
+                      AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.addWidget,
+                        page: FaqPageConfig,
+                        widget: const FAQPage(
+                          type: FaqsType.play,
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Know More",
+                      style: TextStyles.sourceSansSB.body4
+                          .colour(UiConstants.kBlogTitleColor)
+                          .copyWith(
+                              decorationStyle: TextDecorationStyle.solid,
+                              decoration: TextDecoration.underline),
+                    ),
                   ),
                 ],
               ),

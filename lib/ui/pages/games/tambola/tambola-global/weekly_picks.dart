@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 class WeeklyPicks extends StatelessWidget {
   final DailyPick? weeklyDraws;
+
   // BaseUtil baseProvider;
 
   const WeeklyPicks({
@@ -41,8 +42,7 @@ class WeeklyPicks extends StatelessWidget {
         draws.getWeekdayDraws(day - 1) != null &&
         !draws.getWeekdayDraws(day - 1)!.contains(-1)) {
       for (final element in draws.getWeekdayDraws(day - 1)!) {
-        balls.add(
-            _getDrawBall(element.toString(), colCount == day));
+        balls.add(_getDrawBall(element.toString(), colCount == day));
       }
     } else {
       for (int i = 0; i < 3; i++) {
@@ -61,10 +61,9 @@ class WeeklyPicks extends StatelessWidget {
           horizontal: SizeConfig.padding4, vertical: SizeConfig.padding6),
       width: SizeConfig.screenWidth! * 0.07,
       height: SizeConfig.screenWidth! * 0.07,
-      decoration:  BoxDecoration(
-        color: isToday
-            ? Colors.black
-            : Colors.white.withOpacity(0.3),
+      decoration: BoxDecoration(
+        color: isToday ? Colors.black : Colors.white.withOpacity(0.3),
+        border: isToday ? Border.all(color: const Color(0xffFFD979)) : null,
         shape: BoxShape.circle,
       ),
       child: Center(
@@ -132,9 +131,8 @@ class WeeklyPicks extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(getDayName(i + 1).toUpperCase(),
-              style: TextStyles.sourceSans.body3.colour(i + 1 == colCount
-                  ? Colors.black
-                  : Colors.white)),
+              style: TextStyles.sourceSans.body3
+                  .colour(Colors.white)),
           SizedBox(
             width: SizeConfig.padding12,
           ),
@@ -153,17 +151,17 @@ class WeeklyPicks extends StatelessWidget {
         Expanded(
           child: ListView(
             padding: EdgeInsets.zero,
-            physics: NeverScrollableScrollPhysics(),
-            children: side1,
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
+            children: side1,
           ),
         ),
         Expanded(
           child: ListView(
             padding: EdgeInsets.zero,
-            physics: NeverScrollableScrollPhysics(),
-            children: side2,
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
+            children: side2,
           ),
         ),
       ],

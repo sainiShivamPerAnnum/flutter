@@ -80,18 +80,28 @@ class TambolaTicket extends StatelessWidget {
     }
   }
 
+  String getTag() {
+    return (board!.assigned_time.toDate().day == DateTime.sunday &&
+            DateTime.now().day == DateTime.sunday &&
+            board!.assigned_time.toDate().hour < 24 &&
+            (board!.assigned_time.toDate().hour >= 18))
+        ? "NEXT WEEK"
+        : (board!.assigned_time.toDate().day == DateTime.now().day)
+            ? "NEW"
+            : "";
+  }
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     if (ticketNumbers.isEmpty) generateNumberList();
 
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.pageHorizontalMargins,
-      ),
-      child: Stack(
-        children: [
-          ClipPath(
+    return Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins, vertical: 2),
+          child: ClipPath(
             clipper: TicketPainter(),
             child: Container(
               height: 175,
@@ -101,7 +111,8 @@ class TambolaTicket extends StatelessWidget {
                 color: const Color(0xff30363C),
                 borderRadius: BorderRadius.circular(10.0),
                 border: Border.all(
-                    color: const Color(0xff627F8E).withOpacity(0.2), width: 1.5),
+                    color: const Color(0xff627F8E).withOpacity(0.2),
+                    width: 1.5),
               ),
               child: Column(
                 children: [
@@ -112,40 +123,6 @@ class TambolaTicket extends StatelessWidget {
                         '#${board!.getTicketNumber()}',
                         style: TextStyles.sourceSans.body4.colour(
                           const Color(0xff72767A),
-                        ),
-                      ),
-                      (board!.assigned_time.toDate().day == DateTime.now().day)
-                          ? Shimmer(
-                              gradient: const LinearGradient(
-                                colors: [
-                                  UiConstants.primaryLight,
-                                  UiConstants.primaryColor,
-                                  UiConstants.primaryLight
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              child: Text(
-                                locale.tambolaNew,
-                                style: TextStyles.rajdhaniB.body3,
-                              ),
-                            )
-                          : const SizedBox(),
-                      Shimmer(
-                        gradient: const LinearGradient(
-                          colors: [
-                            UiConstants.primaryLight,
-                            UiConstants.primaryColor,
-                            UiConstants.primaryLight
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        child: Text(
-                          'NEXT WEEK',
-                          style: TextStyles.sourceSansSB.body4.colour(
-                            const Color(0xff1ADAB7),
-                          ),
                         ),
                       ),
                       Text(
@@ -162,7 +139,8 @@ class TambolaTicket extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: 27,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 9,
                       mainAxisSpacing: 2,
                       crossAxisSpacing: 1,
@@ -198,7 +176,7 @@ class TambolaTicket extends StatelessWidget {
                                 ticketNumbers[i] == 0
                                     ? ""
                                     : ticketNumbers[i].toString(),
-                                style: TextStyles.rajdhaniB.body3
+                                style: TextStyles.rajdhaniB.body2
                                     .colour(getTextColor(i)),
                               ),
                             ),
@@ -212,15 +190,54 @@ class TambolaTicket extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            margin: const EdgeInsets.only(top: 40),
-            child: MySeparator(
-              color: Colors.white.withOpacity(0.3),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          margin: const EdgeInsets.only(top: 40),
+          child: MySeparator(
+            color: Colors.white.withOpacity(0.3),
+          ),
+        ),
+        getTag().length > 1
+            ? Positioned.fill(
+                top: -1,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 1,
+                          blurRadius: 3,
+                          offset: const Offset(
+                              0, 1.5), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: CustomPaint(
+                      size: Size(80, (74 * 0.29).toDouble()),
+                      painter: RPSCustomPainter(),
+                    ),
+                  ),
+                ))
+            : const SizedBox(),
+        Positioned.fill(
+          top: 3,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Text(
+              getTag(),
+              style: TextStyles.sourceSansSB.body4.colour(
+                Colors.white.withOpacity(0.8),
+              ),
             ),
           ),
-        ],
-      ),
+        )
+      ],
     );
   }
 }

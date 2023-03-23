@@ -17,6 +17,7 @@ import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/buy_ticket_widget.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_top_banner.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/ticket_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/weekly_results/weekly_result.dart';
@@ -35,6 +36,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:provider/provider.dart';
 
+import 'widgets/today_weekly_pick_card.dart';
+
 class TambolaHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -46,7 +49,7 @@ class TambolaHomeView extends StatelessWidget {
     return BaseView<TambolaHomeViewModel>(
       onModelReady: (model) {
         model.init();
-        model.scrollController = new ScrollController();
+        model.scrollController =  ScrollController();
         model.scrollController.addListener(() {
           model.udpateCardOpacity();
         });
@@ -307,7 +310,7 @@ class TambolaHomeView extends StatelessWidget {
 class TambolaResultCard extends StatelessWidget {
   final TambolaHomeViewModel? model;
 
-  const TambolaResultCard({this.model});
+  const TambolaResultCard({super.key, this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -542,7 +545,7 @@ class Odds extends StatelessWidget {
   final int currentIndex;
 
   const Odds(this._digitsObj, this._board, this._bestBoards, this.showBestBoard,
-      this.currentIndex);
+      this.currentIndex, {super.key});
 
   @override
   Widget build(BuildContext cx) {
@@ -936,7 +939,7 @@ class GameChips extends StatelessWidget {
   final String? text;
   final int? page;
 
-  const GameChips({this.model, this.text, this.page});
+  const GameChips({super.key, this.model, this.text, this.page});
 
   @override
   Widget build(BuildContext context) {
@@ -961,36 +964,6 @@ class GameChips extends StatelessWidget {
   }
 }
 
-class TodayWeeklyPicksCard extends StatelessWidget {
-  const TodayWeeklyPicksCard({
-    Key? key,
-    required this.model,
-  }) : super(key: key);
-
-  final TambolaHomeViewModel model;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: SizeConfig.pageHorizontalMargins,
-        bottom:  SizeConfig.padding8,
-      ),
-      // decoration: BoxDecoration(
-      //   // color: UiConstants.kArrowButtonBackgroundColor,
-      //   borderRadius: BorderRadius.only(
-      //     bottomLeft: Radius.circular(
-      //       SizeConfig.roundness32,
-      //     ),
-      //     bottomRight: Radius.circular(
-      //       SizeConfig.roundness32,
-      //     ),
-      //   ),
-      // ),
-      child: PicksCardView(),
-    );
-  }
-}
 
 class TambolaLeaderBoard extends StatelessWidget {
   const TambolaLeaderBoard({

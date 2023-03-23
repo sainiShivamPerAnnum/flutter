@@ -31,7 +31,7 @@ class FaqPill extends StatelessWidget {
           );
         },
         child: Container(
-            key: ValueKey(Constants.HELP_FAB),
+            key: const ValueKey(Constants.HELP_FAB),
             // height: SizeConfig.navBarHeight * 0.5,
             margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.padding8,
