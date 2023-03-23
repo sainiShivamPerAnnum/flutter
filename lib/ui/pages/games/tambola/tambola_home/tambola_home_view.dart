@@ -37,112 +37,116 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:provider/provider.dart';
 
+import 'widgets/no_ticket_widget.dart';
 import 'widgets/today_weekly_pick_card.dart';
 
-class TambolaHomeView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityService>(context, listen: true)
-            .connectivityStatus;
+// class TambolaHomeView extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     S locale = S.of(context);
+//     ConnectivityStatus connectivityStatus =
+//         Provider.of<ConnectivityService>(context, listen: true)
+//             .connectivityStatus;
+//
+//     return BaseView<TambolaHomeViewModel>(
+//       onModelReady: (model) {
+//         model.init();
+//         model.scrollController =  ScrollController();
+//         model.scrollController.addListener(() {
+//           model.udpateCardOpacity();
+//         });
+//       },
+//       builder: (ctx, model, child) {
+//         return Scaffold(
+//           key: const ValueKey(Constants.TAMBOLA_HOME_SCREEN),
+//           appBar: FAppBar(
+//             type: FaqsType.play,
+//             showAvatar: false,
+//             showCoinBar: false,
+//             showHelpButton: false,
+//             title: locale.tTitle,
+//             backgroundColor: UiConstants.kArrowButtonBackgroundColor,
+//           ),
+//           backgroundColor: UiConstants.kBackgroundColor,
+//           body: Stack(
+//             children: [
+//               const NewSquareBackground(),
+//               SingleChildScrollView(
+//                 child: Column(
+//                   children: [
+//                     //Today and Weekly Picks
+//                     TodayWeeklyPicksCard(model: model),
+//                     //Win Announcement card
+//                     if (model.showWinCard) TambolaResultCard(model: model),
+//                     SizedBox(height: SizeConfig.screenWidth! * 0.075),
+//                     //Your best tickets
+//                     connectivityStatus != ConnectivityStatus.Offline
+//                         ? model.userWeeklyBoards != null
+//                             ? TicketsView(model: model)
+//                             : Container(
+//                                 width: SizeConfig.screenWidth,
+//                                 padding: EdgeInsets.symmetric(
+//                                     vertical: SizeConfig.pageHorizontalMargins),
+//                                 child: Column(
+//                                   crossAxisAlignment: CrossAxisAlignment.center,
+//                                   children: [
+//                                     const FullScreenLoader(),
+//                                     SizedBox(height: SizeConfig.padding20),
+//                                     Text(
+//                                       locale.tFetch,
+//                                       style: TextStyles.sourceSans.body2
+//                                           .colour(Colors.white),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               )
+//                         : const SizedBox.shrink(),
+//                     (Platform.isIOS)
+//                         ? Text(
+//                             locale.tAppleInfo,
+//                             style: TextStyle(
+//                                 fontWeight: FontWeight.w100,
+//                                 fontSize: SizeConfig.mediumTextSize,
+//                                 color: Colors.white),
+//                           )
+//                         : Container(),
+//                     //How to play
+//                     InfoComponent2(
+//                         heading: model.boxHeading,
+//                         assetList: model.boxAssets,
+//                         titleList: model.boxTitlles,
+//                         height: SizeConfig.screenWidth! * 0.35),
+//
+//                     //Tambola Prizes
+//                     TambolaPrize(
+//                       model: model,
+//                     ),
+//                     //LeaderBoard
+//                     TambolaLeaderBoard(
+//                       model: model,
+//                     ),
+//                     SizedBox(
+//                       height: SizeConfig.screenWidth! * 0.35,
+//                     )
+//                   ],
+//                 ),
+//               ),
+//               Positioned(
+//                 bottom: 0,
+//                 child: ButTicketsComponent(
+//                   model: model,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
-    return BaseView<TambolaHomeViewModel>(
-      onModelReady: (model) {
-        model.init();
-        model.scrollController =  ScrollController();
-        model.scrollController.addListener(() {
-          model.udpateCardOpacity();
-        });
-      },
-      builder: (ctx, model, child) {
-        return Scaffold(
-          key: const ValueKey(Constants.TAMBOLA_HOME_SCREEN),
-          appBar: FAppBar(
-            type: FaqsType.play,
-            showAvatar: false,
-            showCoinBar: false,
-            showHelpButton: false,
-            title: locale.tTitle,
-            backgroundColor: UiConstants.kArrowButtonBackgroundColor,
-          ),
-          backgroundColor: UiConstants.kBackgroundColor,
-          body: Stack(
-            children: [
-              const NewSquareBackground(),
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    //Today and Weekly Picks
-                    TodayWeeklyPicksCard(model: model),
-                    //Win Announcement card
-                    if (model.showWinCard) TambolaResultCard(model: model),
-                    SizedBox(height: SizeConfig.screenWidth! * 0.075),
-                    //Your best tickets
-                    connectivityStatus != ConnectivityStatus.Offline
-                        ? model.userWeeklyBoards != null
-                            ? TicketsView(model: model)
-                            : Container(
-                                width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.pageHorizontalMargins),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const FullScreenLoader(),
-                                    SizedBox(height: SizeConfig.padding20),
-                                    Text(
-                                      locale.tFetch,
-                                      style: TextStyles.sourceSans.body2
-                                          .colour(Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              )
-                        : const SizedBox.shrink(),
-                    (Platform.isIOS)
-                        ? Text(
-                            locale.tAppleInfo,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w100,
-                                fontSize: SizeConfig.mediumTextSize,
-                                color: Colors.white),
-                          )
-                        : Container(),
-                    //How to play
-                    InfoComponent2(
-                        heading: model.boxHeading,
-                        assetList: model.boxAssets,
-                        titleList: model.boxTitlles,
-                        height: SizeConfig.screenWidth! * 0.35),
 
-                    //Tambola Prizes
-                    TambolaPrize(
-                      model: model,
-                    ),
-                    //LeaderBoard
-                    TambolaLeaderBoard(
-                      model: model,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.screenWidth! * 0.35,
-                    )
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                child: ButTicketsComponent(
-                  model: model,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
+
 
 // class TicketsView extends StatelessWidget {
 //   final TambolaHomeViewModel? model;
@@ -308,6 +312,8 @@ class TambolaHomeView extends StatelessWidget {
 //   }
 // }
 
+
+
 class TambolaResultCard extends StatelessWidget {
   final TambolaHomeViewModel? model;
 
@@ -358,6 +364,8 @@ class TambolaResultCard extends StatelessWidget {
   }
 }
 
+
+/// Old code
 class TabViewGenerator extends StatefulWidget {
   const TabViewGenerator({
     Key? key,
@@ -371,7 +379,7 @@ class TabViewGenerator extends StatefulWidget {
   @override
   State<TabViewGenerator> createState() => _TabViewGeneratorState();
 }
-
+/// Old code
 class _TabViewGeneratorState extends State<TabViewGenerator>
     with TickerProviderStateMixin {
   TabController? _tabController;
@@ -514,29 +522,6 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
   }
 }
 
-class NoTicketWidget extends StatelessWidget {
-  const NoTicketWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset(
-          Assets.noWinnersAsset,
-          width: SizeConfig.screenWidth! * 0.2,
-        ),
-        SizedBox(
-          height: SizeConfig.padding14,
-        ),
-        Text(
-          "No eligible tickets",
-          style: TextStyles.sourceSans.body4.colour(Colors.white),
-        ),
-      ],
-    );
-  }
-}
 
 class Odds extends StatelessWidget {
   final DailyPick _digitsObj;
@@ -967,166 +952,3 @@ class GameChips extends StatelessWidget {
 
 
 
-class TambolaPrize extends StatelessWidget {
-  const TambolaPrize({
-    Key? key,
-    required this.model,
-  }) : super(key: key);
-
-  final TambolaHomeViewModel model;
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        Container(
-          margin: EdgeInsets.only(top: SizeConfig.screenWidth! * 0.15),
-          decoration: BoxDecoration(
-            color: UiConstants.kTambolaMidTextColor,
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: SizeConfig.screenWidth! * 0.17,
-              ),
-              Text(
-                locale.tPrizes,
-                style: TextStyles.rajdhaniB.title4.colour(Colors.white),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding54),
-                child: Text(
-                  AppConfig.getValue<String?>(
-                          AppConfigKey.game_tambola_announcement) ??
-                      locale.tWin1Crore,
-                  textAlign: TextAlign.center,
-                  style: TextStyles.sourceSans.body4.colour(
-                    Colors.white.withOpacity(0.5),
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                child: model.tPrizes == null
-                    ? Center(
-                        child: Column(
-                          children: [
-                            FullScreenLoader(
-                              size: SizeConfig.padding80,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding16,
-                            ),
-                            Text(
-                              locale.tFetch,
-                              style: TextStyles.rajdhaniB.body2
-                                  .colour(Colors.white),
-                            ),
-                          ],
-                        ),
-                      )
-                    : ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: model.tPrizes!.prizesA!.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding16),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  Assets.tambolaPrizeAssets[index],
-                                  color: Colors.grey,
-                                  height: SizeConfig.padding44,
-                                  width: SizeConfig.padding44,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.padding10,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      model.tPrizes!.prizesA![index]
-                                          .displayName!,
-                                      style: TextStyles.rajdhaniB.body2
-                                          .colour(Colors.white),
-                                    ),
-                                    Text(
-                                      locale.tCompleteToGet(model
-                                          .tPrizes!.prizesA![index].displayName
-                                          .toString()),
-                                      style: TextStyles.sourceSans.body4.colour(
-                                          Colors.white.withOpacity(0.5)),
-                                    )
-                                  ],
-                                ),
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          model.tPrizes!.prizesA![index]
-                                                  .displayAmount ??
-                                              "",
-                                          style: TextStyles.sourceSans.body3
-                                              .colour(Colors.white),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            SvgPicture.asset(
-                                              Assets.token,
-                                              width: SizeConfig.padding12,
-                                            ),
-                                            SizedBox(
-                                              width: SizeConfig.padding10,
-                                            ),
-                                            Text(
-                                              "${model.tPrizes!.prizesA![index].flc}",
-                                              style: TextStyles.sourceSans.body4
-                                                  .colour(Colors.white
-                                                      .withOpacity(0.5)),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
-          width: SizeConfig.screenWidth! * 0.3,
-          height: SizeConfig.screenWidth! * 0.3,
-          decoration: BoxDecoration(
-            color: UiConstants.kTambolaMidTextColor,
-            shape: BoxShape.circle,
-          ),
-          child: SvgPicture.asset(
-            "assets/svg/tambola_prize_asset.svg",
-            width: double.maxFinite,
-            height: double.maxFinite,
-          ),
-        ),
-      ],
-    );
-  }
-}

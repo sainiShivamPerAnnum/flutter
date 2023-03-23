@@ -8,6 +8,7 @@ import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_header.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_prize.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_ticket_info.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
