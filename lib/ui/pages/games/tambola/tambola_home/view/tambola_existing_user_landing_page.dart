@@ -96,42 +96,7 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                       ],
                     ),
                   ),
-                GestureDetector(
-                  onTap: () {
-                    AppState.delegate!.appState.currentAction = PageAction(
-                      state: PageState.addWidget,
-                      page: AllTambolaTicketsPageConfig,
-                      widget: AllTambolaTickets(
-                          ticketList: widget.model.tambolaBoardViews!.toList()),
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.screenWidth! * 0.06),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff627F8E).withOpacity(0.2),
-                      border: Border.all(color: const Color(0xff627F8E)),
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          locale.tViewAllTicks,
-                          style: TextStyles.rajdhaniSB.body1,
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                          size: SizeConfig.padding16,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                _buildGestureDetector(locale),
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
@@ -166,6 +131,45 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
         ],
       ),
     );
+  }
+
+  GestureDetector _buildGestureDetector(S locale) {
+    return GestureDetector(
+                onTap: () {
+                  AppState.delegate!.appState.currentAction = PageAction(
+                    state: PageState.addWidget,
+                    page: AllTambolaTicketsPageConfig,
+                    widget: AllTambolaTickets(
+                        ticketList: widget.model.tambolaBoardViews!.toList()),
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.screenWidth! * 0.06),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff627F8E).withOpacity(0.2),
+                    border: Border.all(color: const Color(0xff627F8E)),
+                    borderRadius:
+                        BorderRadius.circular(SizeConfig.roundness12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        locale.tViewAllTicks,
+                        style: TextStyles.rajdhaniSB.body1,
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: SizeConfig.padding16,
+                      ),
+                    ],
+                  ),
+                ),
+              );
   }
 
   FAppBar _buildFAppBar(S locale) {

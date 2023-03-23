@@ -42,7 +42,7 @@ class ButTicketsComponent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           BuyTicketPriceWidget(
-            Amount: AppConfig.getValue(AppConfigKey.tambola_cost).toString(),
+            amount: AppConfig.getValue(AppConfigKey.tambola_cost).toString(),
           ),
           SizedBox(
             height: SizeConfig.padding12,
@@ -172,12 +172,10 @@ class ButTicketsComponent extends StatelessWidget {
 }
 
 class BuyTicketPriceWidget extends StatelessWidget {
-  const BuyTicketPriceWidget({Key? key, required this.Amount})
+  const BuyTicketPriceWidget({Key? key, required this.amount})
       : super(key: key);
 
-  final String Amount;
-
-  // final String Ticket;
+  final String amount;
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +206,7 @@ class BuyTicketPriceWidget extends StatelessWidget {
           width: SizeConfig.padding4,
         ),
         Text(
-          'Rs. $Amount = ',
+          'Rs. $amount = ',
           style: TextStyles.sourceSans.body2,
         ),
         SizedBox(
