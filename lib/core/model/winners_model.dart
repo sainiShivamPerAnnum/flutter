@@ -50,6 +50,7 @@ class WinnersModel {
     timestamp = TimestampModel.currentTimeStamp();
     gametype = '';
   }
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id ?? '',
@@ -96,6 +97,7 @@ class Winners {
   final String? gameType;
   final double? score;
   final String? displayScore;
+  final MatchMap? matchMap;
 
   Winners(
       {this.amount,
@@ -105,6 +107,7 @@ class Winners {
       this.userid,
       this.score,
       this.gameType,
+      this.matchMap,
       this.displayScore});
 
   Winners copyWith(
@@ -115,6 +118,7 @@ class Winners {
       String? userid,
       double? score,
       String? gameType,
+      MatchMap? matchMap,
       String? displayScore}) {
     return Winners(
         amount: amount ?? this.amount,
@@ -124,6 +128,7 @@ class Winners {
         userid: userid ?? this.userid,
         score: score ?? this.score,
         gameType: gameType ?? this.gameType,
+        matchMap: matchMap ?? this.matchMap,
         displayScore: displayScore ?? this.displayScore);
   }
 
@@ -136,6 +141,7 @@ class Winners {
       'userid': userid,
       'score': score,
       'gameType': gameType,
+      "matchMap": matchMap?.toMap(),
       'displayScore': displayScore
     };
   }
@@ -149,6 +155,8 @@ class Winners {
         userid: map['userid'] ?? '',
         score: (map['score'] ?? 0).toDouble(),
         gameType: gameType ?? '',
+        matchMap:
+            map["matchMap"] == null ? null : MatchMap.fromMap(map["matchMap"]),
         displayScore: map['displayScore'] ?? '');
   }
 
@@ -159,31 +167,96 @@ class Winners {
 
   @override
   String toString() {
-    return 'Winners(amount: $amount, isMockUser: $isMockUser, username: $username, flc: $flc, userid: $userid, score: $score)';
+    return 'Winners{amount: $amount, isMockUser: $isMockUser, username: $username, flc: $flc, userid: $userid, gameType: $gameType, score: $score, displayScore: $displayScore, matchMap: $matchMap}';
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Winners &&
-        other.amount == amount &&
-        other.isMockUser == isMockUser &&
-        other.username == username &&
-        other.flc == flc &&
-        other.userid == userid &&
-        other.score == score &&
-        other.gameType == gameType;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Winners &&
+          runtimeType == other.runtimeType &&
+          amount == other.amount &&
+          isMockUser == other.isMockUser &&
+          username == other.username &&
+          flc == other.flc &&
+          userid == other.userid &&
+          gameType == other.gameType &&
+          score == other.score &&
+          displayScore == other.displayScore &&
+          matchMap == other.matchMap;
 
   @override
-  int get hashCode {
-    return amount.hashCode ^
-        isMockUser.hashCode ^
-        username.hashCode ^
-        flc.hashCode ^
-        userid.hashCode ^
-        score.hashCode ^
-        gameType.hashCode;
+  int get hashCode =>
+      amount.hashCode ^
+      isMockUser.hashCode ^
+      username.hashCode ^
+      flc.hashCode ^
+      userid.hashCode ^
+      gameType.hashCode ^
+      score.hashCode ^
+      displayScore.hashCode ^
+      matchMap.hashCode;
+}
+
+class MatchMap {
+  MatchMap({
+    this.oneRow,
+    this.twoRows,
+    this.fullHouse,
+    this.corners,
+  });
+
+  final int? oneRow;
+  final int? twoRows;
+  final int? fullHouse;
+  final int? corners;
+
+  MatchMap copyWith({
+    int? oneRow,
+    int? twoRows,
+    int? fullHouse,
+    int? corners,
+  }) =>
+      MatchMap(
+        oneRow: oneRow ?? this.oneRow,
+        twoRows: twoRows ?? this.twoRows,
+        fullHouse: fullHouse ?? this.fullHouse,
+        corners: corners ?? this.corners,
+      );
+
+  factory MatchMap.fromMap(Map<String, dynamic> json) => MatchMap(
+        oneRow: json["oneRow"],
+        twoRows: json["twoRows"],
+        fullHouse: json["fullHouse"],
+        corners: json["corners"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "oneRow": oneRow,
+        "twoRows": twoRows,
+        "fullHouse": fullHouse,
+        "corners": corners,
+      };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MatchMap &&
+          runtimeType == other.runtimeType &&
+          oneRow == other.oneRow &&
+          twoRows == other.twoRows &&
+          fullHouse == other.fullHouse &&
+          corners == other.corners;
+
+  @override
+  int get hashCode =>
+      oneRow.hashCode ^
+      twoRows.hashCode ^
+      fullHouse.hashCode ^
+      corners.hashCode;
+
+  @override
+  String toString() {
+    return 'MatchMap{oneRow: $oneRow, twoRows: $twoRows, fullHouse: $fullHouse, corners: $corners}';
   }
 }

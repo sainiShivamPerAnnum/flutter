@@ -226,7 +226,7 @@ class TambolaTicket extends StatelessWidget {
                 ))
             : const SizedBox(),
         Positioned.fill(
-          top: 3,
+          top: 2,
           child: Align(
             alignment: Alignment.topCenter,
             child: Text(

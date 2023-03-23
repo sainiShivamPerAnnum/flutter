@@ -22,6 +22,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:showcaseview/showcaseview.dart';
 
+import '../widgets/tambola_leader_board.dart';
+
 
 
 class TambolaNewUserPage extends StatefulWidget {
