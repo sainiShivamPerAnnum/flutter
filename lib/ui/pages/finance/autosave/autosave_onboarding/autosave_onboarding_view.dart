@@ -6,7 +6,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -52,8 +51,8 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
           setState(() {});
         }
       });
-    PreferenceHelper.setBool(
-        PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME, false);
+    // PreferenceHelper.setBool(
+    //     PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME, false);
     _analyticsService!
         .track(eventName: AnalyticsEvents.autosaveDetailsScreenView);
     super.initState();

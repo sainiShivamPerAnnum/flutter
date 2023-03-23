@@ -58,7 +58,15 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   Icons.arrow_back_ios,
                   color: UiConstants.kTextColor,
                 ),
-                onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  model.pageController.page == 0
+                      ? AppState.backButtonDispatcher!.didPopRoute()
+                      : model.pageController.animateToPage(
+                          model.pageController.page!.toInt() - 1,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.decelerate);
+                },
               ),
               actions: [
                 Row(
@@ -103,9 +111,7 @@ class AutosaveSetupView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageView(
       controller: model.pageController,
-      physics: model.isSubscriptionCreationInProgress
-          ? NeverScrollableScrollPhysics()
-          : ClampingScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
       children: [
         AutosaveStepsView(model: model),
         AutosaveAssetChoiceView(model: model),

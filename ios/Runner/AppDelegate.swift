@@ -42,6 +42,8 @@ import Flutter
             switch call.method {
             case "getDeviceId":
                 self.getUniqueDeviceId(result: result)
+            case "isAppInstalled":
+                self.isAppInstalled(appName: call.arguments("appName"), result: result)
             default:
                 result(FlutterMethodNotImplemented)
                 return
@@ -81,6 +83,17 @@ import Flutter
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
+    private func isAppInstalled(appName: String, result: FlutterResult) -> Bool{
+    
+    let appScheme = "\(appName)://app"
+    let appUrl = URL(string: appScheme)
+
+    if UIApplication.shared.canOpenURL(appUrl! as URL) {
+        result(true)
+    } else {
+        result(false)
+    }
+    }
     private func getUniqueDeviceId(result:FlutterResult) {
         result(UIDevice.current.identifierForVendor!.uuidString)
     }

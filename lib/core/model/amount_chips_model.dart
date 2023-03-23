@@ -29,8 +29,8 @@ class AmountChipsModel {
   factory AmountChipsModel.fromMap(Map<String, dynamic> map) {
     return AmountChipsModel(
       order: map['order'] ?? 0,
-      value: map['value'] ?? 0,
-      best: map['best'] ?? false,
+      value: map['amount'] ?? 0,
+      best: map['popular'] ?? false,
       isSelected: false,
     );
   }

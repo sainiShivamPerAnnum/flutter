@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -439,7 +440,7 @@ class AutosaveDetailsView extends StatelessWidget {
   //   ];
   // }
 
-  _buildUpdateAutoPay(SubService subService, model) {
+  _buildUpdateAutoPay(SubService subService, AutosaveDetailsViewModel model) {
     S locale = locator<S>();
     return [
       if (subService.autosaveState == AutosaveState.ACTIVE)
@@ -474,7 +475,7 @@ class AutosaveDetailsView extends StatelessWidget {
                         style: TextStyles.rajdhani.body3),
                   ))
             : ReactivePositiveAppButton(
-                onPressed: () => model.pauseResume(),
+                onPressed: model.pauseResume,
                 btnText: locale.resumeAutoSave,
               ),
       ),
@@ -523,10 +524,6 @@ class AutosaveAssetDetailTile extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
                 SizeConfig.roundness5,
-              ),
-              border: Border.all(
-                width: 0.5,
-                color: Colors.grey,
               ),
             ),
             height: SizeConfig.padding54,
@@ -716,7 +713,8 @@ class AutoSaveDetailsCard extends StatelessWidget {
                                 _subService.subscriptionData!),
                             style: TextStyles.sourceSans.body4
                                 .colour(
-                                  getRichTextColor(_subService.autosaveState),
+                                  getRichTextColor(_subService.autosaveState,
+                                      _subService.subscriptionData!),
                                 )
                                 .copyWith(fontStyle: FontStyle.italic),
                           ),
@@ -730,13 +728,14 @@ class AutoSaveDetailsCard extends StatelessWidget {
     );
   }
 
-  getRichTextColor(AutosaveState autosaveState) {
+  getRichTextColor(AutosaveState autosaveState, SubscriptionModel subdata) {
     if (autosaveState == AutosaveState.ACTIVE)
       return UiConstants.primaryColor;
     else if (autosaveState == AutosaveState.PAUSED) {
-      return UiConstants.tertiarySolid;
-    } else {
-      return Colors.red;
+      if (subdata.resumeDate != TimestampModel.none())
+        return UiConstants.tertiarySolid;
+      else
+        return Colors.red;
     }
   }
 
@@ -744,8 +743,11 @@ class AutoSaveDetailsCard extends StatelessWidget {
     if (autosaveState == AutosaveState.ACTIVE)
       return "verified and active";
     else if (autosaveState == AutosaveState.PAUSED) {
-      return "verified and paused ${subdata.resumeDate != null ? "till " + DateFormat.MMMEd().format(subdata.resumeDate!.toDate()) : "forever"} ";
-    } else
-      return "currently inactive";
+      if (subdata.resumeDate != TimestampModel.none())
+        return "verified and paused till " +
+            "${DateFormat.MMMEd().format(subdata.resumeDate!.toDate())} ";
+      else
+        return "currently inactive";
+    }
   }
 }

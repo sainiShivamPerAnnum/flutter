@@ -34,12 +34,15 @@ enum AutosavePauseOption {
   ONE_MONTH,
 }
 
+List defaultChipsAndComboList = [
+  defaultAmountChipList,
+  defaultAmountChipList,
+  defaultSipComboList
+];
 List<AmountChipsModel> defaultAmountChipList = [
   AmountChipsModel(order: 0, value: 100, best: false, isSelected: false),
   AmountChipsModel(order: 0, value: 250, best: true, isSelected: false),
   AmountChipsModel(order: 0, value: 500, best: false, isSelected: false),
-  AmountChipsModel(order: 0, value: 750, best: false, isSelected: false),
-  AmountChipsModel(order: 0, value: 1000, best: false, isSelected: false),
 ];
 
 List<SubComboModel> defaultSipComboList = [
@@ -273,7 +276,6 @@ class SubService extends ChangeNotifier {
     isPauseOrResuming = false;
     if (res.isSuccess()) {
       subscriptionData = res.model;
-      AppState.backButtonDispatcher!.didPopRoute();
       Future.delayed(Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription resumed successfully",
             "Effective changes will take place from tomorrow");
@@ -345,48 +347,37 @@ class SubService extends ChangeNotifier {
   Future<void> getAutosaveSuggestions() async {
     if (suggestions.isNotEmpty) return;
 
-    //Get single asset chips
-    List<List<AmountChipsModel>> suggestionAmountChipsCategories = [];
-    suggestionAmountChipsCategories
-        .add(await _getAmountChips(freq: FREQUENCY.daily.name));
-    suggestionAmountChipsCategories
-        .add(await _getAmountChips(freq: FREQUENCY.weekly.name));
-    suggestionAmountChipsCategories
-        .add(await _getAmountChips(freq: FREQUENCY.monthly.name));
+    //Get daily frequency data
 
-    suggestions.add(suggestionAmountChipsCategories);
-
-    //Get combo asset chips
-
-    List<List<SubComboModel>> comboAmountChipsCategories = [];
-    if (comboAmountChipsCategories.isNotEmpty) return;
-    comboAmountChipsCategories
-        .add(await getSipCombos(freq: FREQUENCY.daily.name));
-    comboAmountChipsCategories
-        .add(await getSipCombos(freq: FREQUENCY.weekly.name));
-    comboAmountChipsCategories
-        .add(await getSipCombos(freq: FREQUENCY.monthly.name));
-
-    suggestions.add(comboAmountChipsCategories);
+    // List<List<AmountChipsModel>> suggestionAmountChipsCategories = [];
+    final dailyFreqData =
+        await getAmountChipsAndCombos(freq: FREQUENCY.daily.name);
+    final weeklyFreqData =
+        await getAmountChipsAndCombos(freq: FREQUENCY.daily.name);
+    final monthlyFreqData =
+        await getAmountChipsAndCombos(freq: FREQUENCY.daily.name);
+    List augChips = [dailyFreqData[0], weeklyFreqData[0], monthlyFreqData[0]];
+    List lbChips = [dailyFreqData[1], weeklyFreqData[1], monthlyFreqData[1]];
+    List combos = [dailyFreqData[2], weeklyFreqData[2], monthlyFreqData[2]];
+    suggestions.addAll([augChips, lbChips, combos]);
   }
 
-  Future<List<AmountChipsModel>> _getAmountChips({required String freq}) async {
-    ApiResponse<List<AmountChipsModel>> data =
-        await _getterRepo.getAmountChips(freq: freq);
+  Future<List> getAmountChipsAndCombos({required String freq}) async {
+    ApiResponse<List> data = await _getterRepo.getSubCombosAndChips(freq: freq);
     if (data.isSuccess())
       return data.model!;
     else
-      return defaultAmountChipList;
+      return defaultChipsAndComboList;
   }
 
-  Future<List<SubComboModel>> getSipCombos({required String freq}) async {
-    ApiResponse<List<SubComboModel>> data =
-        await _getterRepo.getSubCombos(freq: freq);
-    if (data.isSuccess())
-      return data.model!;
-    else
-      return defaultSipComboList;
-  }
+  // Future<List<SubComboModel>> getSipCombos({required String freq}) async {
+  //   ApiResponse<List<SubComboModel>> data =
+  //       await _getterRepo.getSubCombos(freq: freq);
+  //   if (data.isSuccess())
+  //     return data.model!;
+  //   else
+  //     return defaultSipComboList;
+  // }
 
   Future<int> getPhonePeVersionCode() async {
     final res = await _subscriptionRepo.getPhonepeVersionCode();
@@ -447,7 +438,7 @@ class SubService extends ChangeNotifier {
         autosaveState = AutosaveState.PAUSED;
         break;
       case "PAUSE_FROM_APP_FOREVER":
-        autosaveState = AutosaveState.INACTIVE;
+        autosaveState = AutosaveState.PAUSED;
         break;
       case "PAUSE_FROM_PSP":
         autosaveState = AutosaveState.PAUSED;

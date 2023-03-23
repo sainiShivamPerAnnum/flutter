@@ -1,8 +1,6 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/ui/elements/helpers/height_adaptive_pageview.dart';
-import 'package:felloapp/ui/modalsheets/autosave_combo_input_modalsheet.dart';
 import 'package:felloapp/ui/pages/finance/autosave/amount_chips.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/finance/autosave/segmate_chip.dart';
@@ -42,7 +40,7 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
               children: [
                 Text(
                     model.selectedAssetOption == 0
-                        ? "Select amount & frequency"
+                        ? "Flo & Gold Combo Autosave"
                         : model.selectedAssetOption == 1
                             ? "Fello Flo Autosave"
                             : "Digital Gold Autosave",
@@ -51,19 +49,22 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
                   padding: EdgeInsets.symmetric(
                       vertical: SizeConfig.padding10,
                       horizontal: SizeConfig.padding16),
-                  child: Text(
-                      model.selectedAssetOption == 0
-                          ? "Enter an amount to SIP or choose a combo"
-                          : model.selectedAssetOption == 1
-                              ? "Select amount & frequency for Fello flo"
-                              : "Select amount & frequency for Digital gold",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.sourceSans.body2),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                        model.selectedAssetOption == 0
+                            ? "Select a frequency and a combo"
+                            : "Choose an amount & frequency for your Autosave",
+                        textAlign: TextAlign.center,
+                        style: TextStyles.sourceSans.body2),
+                  ),
                 ),
                 SizedBox(height: SizeConfig.padding24),
                 AutosaveFrequencyBar(model: model),
                 if (model.selectedAssetOption == 1)
                   CenterTextField(
+                    model: model,
+                    readOnly: model.readOnly,
                     amountFieldController: model.floAmountFieldController!,
                     onChanged: (val) {
                       model.totalInvestingAmount = int.tryParse(val ?? '0')! +
@@ -73,6 +74,8 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
                   ),
                 if (model.selectedAssetOption == 2)
                   CenterTextField(
+                    model: model,
+                    readOnly: model.readOnly,
                     amountFieldController: model.goldAmountFieldController!,
                     onChanged: (val) {
                       model.totalInvestingAmount = int.tryParse(val ?? '0')! +
@@ -130,20 +133,22 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
             FocusScope.of(context).unfocus();
           },
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-            child: ReactivePositiveAppButton(
-              btnText: model.finalButtonCta,
-              onPressed: () async {
-                Haptic.vibrate();
-                await model.updateSubscription();
-              },
-              width: SizeConfig.screenWidth! * 0.8,
+        if (model.totalInvestingAmount != 0)
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              child: ReactivePositiveAppButton(
+                btnText:
+                    "SETUP AUTOSAVE FOR ₹${model.totalInvestingAmount}/${model.selectedFrequency.name}",
+                onPressed: () async {
+                  Haptic.vibrate();
+                  await model.updateSubscription();
+                },
+                width: SizeConfig.screenWidth! * 0.8,
+              ),
             ),
-          ),
-        )
+          )
       ],
     );
   }
@@ -326,7 +331,8 @@ class AutosaveComboGrid extends StatelessWidget {
         return i == combo.length
             ? (model.customComboModel != null
                 ? GestureDetector(
-                    onTap: () => model.openCustomInputModalSheet(model),
+                    onTap: () =>
+                        model.openCustomInputModalSheet(model, isNew: false),
                     child: ComboCard(
                       combo: model.customComboModel!,
                       isCustomCreated: true,
@@ -392,9 +398,7 @@ class ComboCard extends StatelessWidget {
                     width: 1,
                     color: combo.isSelected
                         ? UiConstants.primaryColor
-                        : combo.popular
-                            ? Color(0xffF7C780)
-                            : Colors.grey),
+                        : Colors.grey),
                 borderRadius: BorderRadius.circular(SizeConfig.roundness8),
                 color: UiConstants.kBackgroundColor2),
             padding: EdgeInsets.only(top: SizeConfig.padding10),
@@ -500,19 +504,7 @@ class CustomComboCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        BaseUtil.openModalBottomSheet(
-          isBarrierDismissible: true,
-          addToScreenStack: true,
-          backgroundColor: UiConstants.kBackgroundColor,
-          isScrollControlled: true,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.roundness32),
-              topRight: Radius.circular(SizeConfig.roundness32)),
-          hapticVibrate: true,
-          content: AutosaveComboInputFieldsModalSheet(model: model),
-        );
-      },
+      onTap: () => model.openCustomInputModalSheet(model),
       child: Column(
         children: [
           SizedBox(height: SizeConfig.padding16),
@@ -688,13 +680,13 @@ class AutosaveAmountInputTile extends StatelessWidget {
         ),
         Spacer(),
         Container(
-          width: SizeConfig.screenWidth! * 0.3,
+          width: SizeConfig.screenWidth! * 0.4,
           child: AppTextField(
             textEditingController: controller,
             isEnabled: true,
             keyboardType: TextInputType.number,
             prefixText: "₹ ",
-            textAlign: TextAlign.center,
+            maxLength: 4,
             prefixTextStyle: TextStyles.rajdhaniB.body1,
             onChanged: onValueChanged,
             autoFocus: autoFocus,
@@ -714,10 +706,14 @@ class CenterTextField extends StatefulWidget {
     super.key,
     required this.amountFieldController,
     required this.onChanged,
+    required this.readOnly,
+    required this.model,
   });
 
   final TextEditingController amountFieldController;
   final Function onChanged;
+  final bool readOnly;
+  final AutosaveProcessViewModel model;
 
   @override
   State<CenterTextField> createState() => _CenterTextFieldState();
@@ -725,6 +721,7 @@ class CenterTextField extends StatefulWidget {
 
 class _CenterTextFieldState extends State<CenterTextField> {
   double? _fieldWidth;
+  bool readOnly = true;
 
   double? get fieldWidth => this._fieldWidth;
 
@@ -732,6 +729,13 @@ class _CenterTextFieldState extends State<CenterTextField> {
     // setState(() {
     this._fieldWidth = value;
     // });
+  }
+
+  enableField() {
+    if (readOnly)
+      setState(() {
+        readOnly = false;
+      });
   }
 
   @override
@@ -743,48 +747,59 @@ class _CenterTextFieldState extends State<CenterTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: SizeConfig.screenWidth! * 0.784,
-      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
-      decoration: BoxDecoration(
-        color: UiConstants.kTextFieldColor,
-        borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-        border: Border.all(
-          color: UiConstants.kTextColor.withOpacity(0.1),
-          width: SizeConfig.border1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "₹",
-            style: TextStyles.rajdhaniB.size(SizeConfig.screenWidth! * 0.1067),
+    return GestureDetector(
+      onTap: () {
+        enableField();
+        FocusScope.of(context).requestFocus();
+      },
+      child: Container(
+        width: SizeConfig.screenWidth! * 0.784,
+        margin: EdgeInsets.symmetric(vertical: SizeConfig.padding24),
+        decoration: BoxDecoration(
+          color: UiConstants.kTextFieldColor,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+          border: Border.all(
+            color: UiConstants.kTextColor.withOpacity(0.1),
+            width: SizeConfig.border1,
           ),
-          SizedBox(
-            width: fieldWidth,
-            child: TextField(
-              controller: widget.amountFieldController,
-              keyboardType: TextInputType.number,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "₹",
               style:
                   TextStyles.rajdhaniB.size(SizeConfig.screenWidth! * 0.1067),
-              decoration: InputDecoration(
-                focusedBorder: InputBorder.none,
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                // isCollapse: true,
-                isDense: true,
-              ),
-              onChanged: (val) {
-                widget.onChanged(val);
-                fieldWidth = ((SizeConfig.screenWidth! * 0.07) *
-                    widget.amountFieldController.text.length.toDouble());
-              },
             ),
-          ),
-        ],
+            SizedBox(
+              width: fieldWidth,
+              child: TextField(
+                onTap: enableField,
+                showCursor: true,
+                autofocus: true,
+                controller: widget.amountFieldController,
+                keyboardType: TextInputType.number,
+                readOnly: readOnly,
+                style:
+                    TextStyles.rajdhaniB.size(SizeConfig.screenWidth! * 0.1067),
+                decoration: InputDecoration(
+                  focusedBorder: InputBorder.none,
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  // isCollapse: true,
+                  isDense: true,
+                ),
+                onChanged: (val) {
+                  widget.onChanged(val);
+                  fieldWidth = ((SizeConfig.screenWidth! * 0.07) *
+                      widget.amountFieldController.text.length.toDouble());
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

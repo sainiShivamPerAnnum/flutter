@@ -54,11 +54,11 @@ class AmountChips extends StatelessWidget {
                     borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   ),
                   padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding6,
-                      vertical: SizeConfig.padding4),
+                      horizontal: SizeConfig.padding4,
+                      vertical: SizeConfig.padding2),
                   child: Text(
                     locale.best,
-                    style: TextStyles.rajdhaniB.body4
+                    style: TextStyles.rajdhaniB.body5
                         .colour(Colors.white)
                         .letterSpace(SizeConfig.padding2),
                   ),

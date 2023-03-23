@@ -1,7 +1,6 @@
 //Project Imports
 import 'dart:async';
 
-import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -168,30 +167,5 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
 
     return _routerDelegate!.popRoute();
-  }
-
-  showNegativeAlert(String title, String message, {int? seconds}) {
-    Flushbar(
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      icon: Icon(
-        Icons.assignment_late,
-        size: 28.0,
-        color: UiConstants.tertiarySolid,
-      ),
-      margin: EdgeInsets.all(10),
-      borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-      title: title,
-      message: message,
-      duration: Duration(seconds: seconds ?? 3),
-      backgroundColor: Colors.black,
-      boxShadows: [
-        BoxShadow(
-          color: UiConstants.negativeAlertColor,
-          offset: Offset(0.0, 2.0),
-          blurRadius: 3.0,
-        )
-      ],
-    )..show(AppState.delegate!.navigatorKey.currentContext!);
   }
 }

@@ -45,9 +45,7 @@ class AutosaveUpdateView extends StatelessWidget {
                 )
               : PageView(
                   controller: model.pageController,
-                  physics: model.isSubscriptionCreationInProgress
-                      ? NeverScrollableScrollPhysics()
-                      : ClampingScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
                     AutosaveAssetChoiceView(model: model),
                     AutoPaySetupOrUpdateView(model: model),

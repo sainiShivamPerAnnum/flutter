@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -25,7 +26,7 @@ class AutosaveAssetChoiceView extends StatelessWidget {
           Text("Setup Autosave", style: TextStyles.rajdhaniSB.title2),
           SizedBox(height: SizeConfig.padding14),
           Text(
-            "You are just a step away from compounded returns",
+            "Choose assets you want to autosave in:",
             style: TextStyles.sourceSans,
           ),
           SizedBox(height: SizeConfig.padding32),
@@ -68,6 +69,10 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                 if (model
                                     .autosaveAssetOptionList[index].isEnabled)
                                   model.selectedAssetOption = index;
+                                else
+                                  BaseUtil.showNegativeAlert(
+                                      "Complete your KYC to autosave in both Flo & Gold",
+                                      "Option not available");
                               },
                               contentPadding: EdgeInsets.zero,
                               minVerticalPadding: SizeConfig.padding10,
@@ -129,31 +134,41 @@ class AutosaveAssetChoiceView extends StatelessWidget {
             ),
           ),
           if (!model.autosaveAssetOptionList[0].isEnabled)
-            Padding(
-              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-              child: Text.rich(
-                TextSpan(
-                  text: "Want to do your Kyc now?",
-                  children: [
-                    TextSpan(
-                      text: "Tap here",
-                      style: TextStyles.sourceSansSB.italic
-                          .colour(UiConstants.primaryColor),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Haptic.vibrate();
-                          AppState.showAutosaveBt = false;
-                          AppState.delegate!.appState.currentAction =
-                              PageAction(
-                                  state: PageState.replace,
-                                  page: KycDetailsPageConfig);
-                        },
-                    )
-                  ],
+            GestureDetector(
+              onTap: () {
+                Haptic.vibrate();
+                AppState.showAutosaveBt = false;
+                AppState.delegate!.appState.currentAction = PageAction(
+                    state: PageState.replace, page: KycDetailsPageConfig);
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding10,
+                    horizontal: SizeConfig.pageHorizontalMargins),
+                child: Text.rich(
+                  TextSpan(
+                    text: "Want to do your Kyc now? ",
+                    children: [
+                      TextSpan(
+                        text: "Tap here",
+                        style: TextStyles.sourceSansSB
+                            .colour(UiConstants.primaryColor),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Haptic.vibrate();
+                            AppState.showAutosaveBt = false;
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                                    state: PageState.replace,
+                                    page: KycDetailsPageConfig);
+                          },
+                      )
+                    ],
+                  ),
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kTextColor3),
+                  textAlign: TextAlign.center,
                 ),
-                style: TextStyles.sourceSans.italic.body3
-                    .colour(UiConstants.kTextColor3),
-                textAlign: TextAlign.center,
               ),
             ),
           Spacer(),

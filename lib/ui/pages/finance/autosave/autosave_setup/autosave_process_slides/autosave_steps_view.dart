@@ -1,4 +1,3 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -23,17 +22,13 @@ class AutosaveStepsView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(
-          height: SizeConfig.screenWidth! * 0.2747,
-        ),
-        Center(
-          child: Text(
-            locale.howItworks,
-            style: TextStyles.rajdhaniSB.title4,
-          ),
+        Spacer(),
+        Text(
+          locale.howItworks,
+          style: TextStyles.rajdhaniSB.title4,
         ),
         SizedBox(
-          height: SizeConfig.screenWidth! * 0.12,
+          height: SizeConfig.screenHeight! * 0.04,
         ),
         AutosaveStepTile(
           image: SvgPicture.asset(
@@ -41,31 +36,12 @@ class AutosaveStepsView extends StatelessWidget {
             height: SizeConfig.screenWidth! * 0.0667,
             width: SizeConfig.screenWidth! * 0.0667,
           ),
-          title: locale.txnEnterUPI,
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                locale.autopayBankSupport,
-                style: TextStyles.sourceSans.body4.colour(
-                  UiConstants.kTextColor2,
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Haptic.vibrate();
-                  BaseUtil.launchUrl(
-                    'https://www.npci.org.in/what-we-do/autopay/list-of-banks-and-apps-live-on-autopay',
-                  );
-                },
-                child: Text(
-                  locale.btnCheckHere,
-                  style: TextStyles.sourceSans.body4.colour(
-                    UiConstants.kTabBorderColor,
-                  ),
-                ),
-              ),
-            ],
+          title: "Choose an asset to start with Autosave",
+          subtitle: Text(
+            "You can choose amongst Fello Flo, Digital Gold or both",
+            style: TextStyles.sourceSans.body4.colour(
+              UiConstants.kTextColor2,
+            ),
           ),
         ),
         AutosaveStepTile(
@@ -74,29 +50,11 @@ class AutosaveStepsView extends StatelessWidget {
             color: UiConstants.primaryColor,
             size: SizeConfig.screenWidth! * 0.112,
           ),
-          title: locale.txnApproveUPIReq,
-          subtitle: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: locale.checkYour,
-                  style: TextStyles.sourceSans.body4.colour(
-                    UiConstants.kTextColor2,
-                  ),
-                ),
-                TextSpan(
-                  text: locale.txnsPendingUPI,
-                  style: TextStyles.sourceSansSB.body4.colour(
-                    UiConstants.kTextColor2,
-                  ),
-                ),
-                TextSpan(
-                  text: locale.forTheRequest,
-                  style: TextStyles.sourceSans.body4.colour(
-                    UiConstants.kTextColor2,
-                  ),
-                ),
-              ],
+          title: "Enter the amount to Autosave and choose a frequency",
+          subtitle: Text(
+            "You can choose daily, weekly and monthly frequencies",
+            style: TextStyles.sourceSans.body4.colour(
+              UiConstants.kTextColor2,
             ),
           ),
         ),
@@ -106,9 +64,9 @@ class AutosaveStepsView extends StatelessWidget {
             height: SizeConfig.screenWidth! * 0.064,
             width: SizeConfig.screenWidth! * 0.064,
           ),
-          title: locale.setAutoPayAmount,
+          title: "Select a UPI app to setup Autosave",
           subtitle: Text(
-            locale.amountChangeTxt,
+            "The last step to achieve financial independence",
             style: TextStyles.sourceSans.body4.colour(
               UiConstants.kTextColor2,
             ),
@@ -116,9 +74,7 @@ class AutosaveStepsView extends StatelessWidget {
         ),
         Spacer(),
         Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
-              vertical: SizeConfig.padding12),
+          padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
           child: Row(
             children: [
               SvgPicture.asset(
@@ -165,7 +121,8 @@ class AutosaveStepTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      width: SizeConfig.screenWidth,
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.screenWidth! * 0.08,
         vertical: SizeConfig.screenWidth! * 0.0533,
@@ -183,21 +140,23 @@ class AutosaveStepTile extends StatelessWidget {
           SizedBox(
             width: SizeConfig.padding24,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyles.sourceSans.body2,
-              ),
-              SizedBox(
-                height: SizeConfig.padding4,
-              ),
-              SizedBox(
-                width: SizeConfig.screenWidth! * 0.6,
-                child: subtitle,
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyles.sourceSans.body2,
+                ),
+                SizedBox(
+                  height: SizeConfig.padding4,
+                ),
+                SizedBox(
+                  width: SizeConfig.screenWidth! * 0.6,
+                  child: subtitle,
+                ),
+              ],
+            ),
           )
         ],
       ),

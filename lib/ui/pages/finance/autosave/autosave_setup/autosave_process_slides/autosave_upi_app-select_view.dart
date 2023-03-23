@@ -35,14 +35,23 @@ class UpiAppSelectView extends StatelessWidget {
               Container(
                   margin: EdgeInsets.symmetric(
                       horizontal: SizeConfig.pageHorizontalMargins),
-                  child: AutosaveSummary(model: model)),
+                  child: AutosaveSummary(showTopDivider: false, model: model)),
               Divider(
                 height: SizeConfig.padding16,
                 color: Colors.white30,
                 indent: SizeConfig.pageHorizontalMargins,
                 endIndent: SizeConfig.pageHorizontalMargins,
               ),
-              SizedBox(height: SizeConfig.padding32),
+              Text(
+                model.selectedFrequency == FREQUENCY.daily
+                    ? "Autosave will be processed  everyday at 8 AM"
+                    : model.selectedFrequency == FREQUENCY.weekly
+                        ? "Autosave will be processed on every Sunday"
+                        : "Autosave will be done on 1st of every month",
+                style:
+                    TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
+              ),
+              SizedBox(height: SizeConfig.padding40),
               Text(
                 "Select a UPI App to setup",
                 style: TextStyles.rajdhaniSB.title4,
@@ -115,61 +124,71 @@ class UpiAppSelectView extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(
-                  vertical: SizeConfig.padding32,
-                  horizontal: SizeConfig.pageHorizontalMargins,
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white54, width: 0.5),
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                  ),
-                  padding: EdgeInsets.all(SizeConfig.padding16),
-                  child: Row(children: [
-                    SvgPicture.asset(
-                      Assets.securityCheck,
-                      width: SizeConfig.padding54,
-                    ),
-                    SizedBox(width: SizeConfig.padding12),
-                    Expanded(
-                      child: Text(
-                        "You will receive a mandate for ₹2000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.",
-                        style: TextStyles.body3.colour(UiConstants.kTextColor2),
+              if (model.selectedUpiApp != null)
+                Expanded(
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: SizeConfig.padding32,
+                          horizontal: SizeConfig.pageHorizontalMargins,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Colors.white54, width: 0.5),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness16),
+                          ),
+                          padding: EdgeInsets.all(SizeConfig.padding16),
+                          child: Row(children: [
+                            SvgPicture.asset(
+                              Assets.securityCheck,
+                              width: SizeConfig.padding54,
+                            ),
+                            SizedBox(width: SizeConfig.padding12),
+                            Expanded(
+                              child: Text(
+                                "You will receive a mandate for ₹2000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.",
+                                style: TextStyles.body3
+                                    .colour(UiConstants.kTextColor2),
+                              ),
+                            )
+                          ]),
+                        ),
                       ),
-                    )
-                  ]),
-                ),
-              ),
-              Spacer(),
-              ReactivePositiveAppButton(
-                btnText: locale.btnSumbit,
-                onPressed: () async {
-                  Haptic.vibrate();
-                  if (model.selectedUpiApp == null)
-                    return BaseUtil.showNegativeAlert("No app selected",
-                        'Please choose a upi app to continue');
-                  await model.createSubscription();
-                },
-                width: SizeConfig.screenWidth! * 0.88,
-              ),
-              SizedBox(
-                height: SizeConfig.padding16,
-              ),
-              Text(
-                locale.autoPayBanksSupported,
-                style: TextStyles.sourceSansL.body4,
-              ),
-              SizedBox(
-                height: SizeConfig.padding16,
-              ),
-              Image.asset(
-                "assets/images/autosavebanks.png",
-                width: SizeConfig.screenWidth! * 0.7,
-              ),
-              SizedBox(
-                height: SizeConfig.padding32,
-              ),
+                      Spacer(),
+                      ReactivePositiveAppButton(
+                        btnText: locale.btnSumbit,
+                        onPressed: () async {
+                          Haptic.vibrate();
+                          if (model.selectedUpiApp == null)
+                            return BaseUtil.showNegativeAlert("No app selected",
+                                'Please choose a upi app to continue');
+                          await model.createSubscription();
+                        },
+                        width: SizeConfig.screenWidth! * 0.88,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      Text(
+                        locale.autoPayBanksSupported,
+                        style: TextStyles.sourceSansL.body4,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      Image.asset(
+                        "assets/images/autosavebanks.png",
+                        width: SizeConfig.screenWidth! * 0.7,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding32,
+                      ),
+                    ],
+                  ),
+                )
             ],
           )
         : Center(

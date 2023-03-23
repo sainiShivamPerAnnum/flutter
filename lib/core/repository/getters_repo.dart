@@ -20,6 +20,7 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
 class GetterRepository extends BaseRepo {
@@ -161,45 +162,51 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<AmountChipsModel>>> getAmountChips({
-    required String freq,
-  }) async {
-    try {
-      final token = await getBearerToken();
-      final amountChipsResponse = await APIService.instance.getData(
-        ApiPath.amountChips,
-        cBaseUrl: _baseUrl,
-        queryParams: {
-          "freq": freq,
-        },
-        token: token,
-      );
+  // Future<ApiResponse<List<AmountChipsModel>>> getAmountChips({
+  //   required String freq,
+  // }) async {
+  //   try {
+  //     final token = await getBearerToken();
+  //     final amountChipsResponse = await APIService.instance.getData(
+  //       ApiPath.amountChips,
+  //       cBaseUrl: _baseUrl,
+  //       queryParams: {
+  //         "freq": freq,
+  //       },
+  //       token: token,
+  //     );
 
-      final amountChipsModel =
-          AmountChipsModel.helper.fromMapArray(amountChipsResponse["data"]);
+  //     final amountChipsModel =
+  //         AmountChipsModel.helper.fromMapArray(amountChipsResponse["data"]);
 
-      return ApiResponse(model: amountChipsModel, code: 200);
-    } catch (e) {
-      logger!.e(e.toString());
-      return ApiResponse.withError("Unable to fetch statistics", 400);
-    }
-  }
+  //     return ApiResponse(model: amountChipsModel, code: 200);
+  //   } catch (e) {
+  //     logger!.e(e.toString());
+  //     return ApiResponse.withError("Unable to fetch statistics", 400);
+  //   }
+  // }
 
-  Future<ApiResponse<List<SubComboModel>>> getSubCombos({
+  Future<ApiResponse<List>> getSubCombosAndChips({
     required String freq,
   }) async {
     try {
       final token = await getBearerToken();
       final subComboResponse = await APIService.instance.getData(
-        ApiPath.getSubCombos(freq.toUpperCase()),
+        ApiPath.getSubCombosChips(freq.toUpperCase()),
         cBaseUrl: _baseUrl,
         token: token,
       );
 
       final subComboModelData =
           SubComboModel.helper.fromMapArray(subComboResponse["data"]["combos"]);
+      final augChips = AmountChipsModel.helper.fromMapArray(
+          subComboResponse["data"][Constants.ASSET_TYPE_LENDBOX]["chips"]);
 
-      return ApiResponse(model: subComboModelData, code: 200);
+      final lbChips = AmountChipsModel.helper.fromMapArray(
+          subComboResponse["data"][Constants.ASSET_TYPE_LENDBOX]["chips"]);
+
+      return ApiResponse(
+          model: [augChips, lbChips, subComboModelData], code: 200);
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);

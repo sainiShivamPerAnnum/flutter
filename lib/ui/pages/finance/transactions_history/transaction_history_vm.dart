@@ -125,10 +125,10 @@ class TransactionsHistoryViewModel extends BaseViewModel {
       });
     }
 
-    if (_txnHistoryService!.txnList == null ||
-        _txnHistoryService!.txnList!.length <= 5) {
-      getTransactions();
-    }
+    // if (_txnHistoryService!.txnList == null ||
+    //     _txnHistoryService!.txnList!.length <= 5) {
+    getTransactions();
+    // }
 
     if (_txnHistoryService!.txnList != null) {
       filteredList = _txnHistoryService!.txnList;

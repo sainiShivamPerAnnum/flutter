@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_proce
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 final formKey = GlobalKey<FormState>();
@@ -33,6 +34,7 @@ class _AutosaveComboInputFieldsModalSheetState
   }
 
   validateFloValue(String? value, FREQUENCY freq) {
+    if (value!.isEmpty) return "Please enter an amount";
     int amt = int.tryParse(value ?? '0')!;
     switch (freq) {
       case FREQUENCY.daily:
@@ -58,6 +60,7 @@ class _AutosaveComboInputFieldsModalSheetState
   }
 
   validateGoldValue(String? value, FREQUENCY freq) {
+    if (value!.isEmpty) return "Please enter an amount";
     int amt = int.tryParse(value ?? '0')!;
     switch (freq) {
       case FREQUENCY.daily:
@@ -76,6 +79,17 @@ class _AutosaveComboInputFieldsModalSheetState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(height: SizeConfig.padding6),
+          FittedBox(
+            child: Text("Make your own Autosave Combo",
+                style: TextStyles.sourceSansSB.title5),
+          ),
+          SizedBox(height: SizeConfig.padding16),
+          Text("Enter an amount  for Digital Gold & Fello Flo",
+              style: TextStyles.sourceSans.body3.colour(
+                UiConstants.kTextColor2,
+              )),
+          SizedBox(height: SizeConfig.padding14),
           Form(
               key: formKey,
               child: Column(

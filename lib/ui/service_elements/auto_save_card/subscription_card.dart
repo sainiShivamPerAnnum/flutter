@@ -152,7 +152,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
       case AutosaveState.PAUSED:
         return "Paused";
       default:
-        "N/A";
+        return "N/A";
     }
   }
 
