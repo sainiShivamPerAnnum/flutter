@@ -92,13 +92,14 @@ class TicketHeader extends StatelessWidget {
               SizedBox(
                 height: SizeConfig.padding4,
               ),
-              Row(
+              if (TambolaRepo.expiringTicketCount > 1) Row(
                 children: [
-                  Text(
-                    "${TambolaRepo.expiringTicketCount} ticket${TambolaRepo.expiringTicketCount > 1 ? 's' : ''} expiring this Sunday. ",
-                    style: TextStyles.sourceSansSB.body4
-                        .colour(UiConstants.kBlogTitleColor),
-                  ),
+
+                    Text(
+                      "${TambolaRepo.expiringTicketCount} ticket${TambolaRepo.expiringTicketCount > 1 ? 's' : ''} expiring this Sunday. ",
+                      style: TextStyles.sourceSansSB.body4
+                          .colour(UiConstants.kBlogTitleColor),
+                    ),
                   GestureDetector(
                     onTap: () {
                       AppState.delegate!.appState.currentAction = PageAction(

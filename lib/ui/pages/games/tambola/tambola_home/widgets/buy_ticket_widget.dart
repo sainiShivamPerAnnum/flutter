@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
@@ -39,9 +41,8 @@ class ButTicketsComponent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const BuyTicketPriceWidget(
-            Amount: '500',
-            Ticket: '1',
+          BuyTicketPriceWidget(
+            Amount: AppConfig.getValue(AppConfigKey.tambola_cost).toString(),
           ),
           SizedBox(
             height: SizeConfig.padding12,
@@ -52,7 +53,7 @@ class ButTicketsComponent extends StatelessWidget {
                 .colour(UiConstants.kTextFieldTextColor),
           ),
           SizedBox(
-            height: SizeConfig.padding16,
+            height: SizeConfig.padding32,
           ),
           Row(
             children: [
@@ -171,12 +172,12 @@ class ButTicketsComponent extends StatelessWidget {
 }
 
 class BuyTicketPriceWidget extends StatelessWidget {
-  const BuyTicketPriceWidget(
-      {Key? key, required this.Amount, required this.Ticket})
+  const BuyTicketPriceWidget({Key? key, required this.Amount})
       : super(key: key);
 
   final String Amount;
-  final String Ticket;
+
+  // final String Ticket;
 
   @override
   Widget build(BuildContext context) {
@@ -218,7 +219,7 @@ class BuyTicketPriceWidget extends StatelessWidget {
           width: SizeConfig.padding4,
         ),
         Text(
-          '$Ticket Ticket',
+          '1 Ticket',
           style: TextStyles.sourceSans.body2,
         ),
         SizedBox(
