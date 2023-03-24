@@ -16,14 +16,14 @@ class TambolaInstantView extends StatelessWidget {
       backgroundColor: Colors.black.withOpacity(0.5),
       body: Center(
         child: Container(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             bottom: 14,
             left: 14,
           ),
           height: SizeConfig.screenHeight! * 0.48,
           width: SizeConfig.screenWidth! * 0.8,
           decoration: BoxDecoration(
-            color: Color(0xff39393C),
+            color: const Color(0xff39393C),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
@@ -37,8 +37,8 @@ class TambolaInstantView extends StatelessWidget {
                       AppState.backButtonDispatcher!.didPopRoute();
                     },
                     child: Container(
-                      padding: EdgeInsets.all(8),
-                      child: Icon(
+                      padding: const EdgeInsets.all(8),
+                      child: const Icon(
                         Icons.close,
                         color: Colors.white,
                       ),
@@ -59,7 +59,7 @@ class TambolaInstantView extends StatelessWidget {
                   style: TextStyles.sourceSansSB.title5,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Text(
@@ -68,7 +68,7 @@ class TambolaInstantView extends StatelessWidget {
                   style: TextStyles.sourceSans.body3
                       .colour(Colors.white.withOpacity(0.6)),
                 ),
-                Spacer(),
+                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.only(right: 14),
                   child: AppPositiveBtn(
