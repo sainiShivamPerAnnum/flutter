@@ -1,5 +1,5 @@
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/no_ticket_widget.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_ticket.dart';

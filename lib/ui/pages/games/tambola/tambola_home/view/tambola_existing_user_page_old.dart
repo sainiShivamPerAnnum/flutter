@@ -5,7 +5,7 @@ import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';

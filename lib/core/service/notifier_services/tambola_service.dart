@@ -103,9 +103,9 @@ class TambolaService extends ChangeNotifier {
     completer = Completer();
     if (!_weeklyTicksFetched) {
       _weeklyTicksFetched = true;
-      _logger!.d("Fetching Tambola tickets ${DateTime.now().second}");
+      _logger.d("Fetching Tambola tickets ${DateTime.now().second}");
       // ticketsLoaded = false;
-      final tickets = await _tambolaRepo!.getTickets();
+      final tickets = await _tambolaRepo.getTickets();
       if (tickets.code == 200) {
         List<TambolaBoard?>? boards =
             tickets.model!.map((e) => e.board).toList();

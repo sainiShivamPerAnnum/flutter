@@ -560,7 +560,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     //         .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT)));
 
     isEligible = true;
-    _logger!.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
+    _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
     showWinCard = true;
     // if (!tambolaService.winnerDialogCalled)

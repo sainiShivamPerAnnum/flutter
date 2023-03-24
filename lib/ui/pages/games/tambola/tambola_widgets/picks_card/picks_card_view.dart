@@ -39,24 +39,30 @@ class PicksCardView extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: TextButton(
-                      onPressed: () => model.switchTab(0),
-                      child: Text(
-                        "Today's Picks",
-                        style: model.tabNo == 0
-                            ? selectedTextStyle
-                            : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 15),
+                      child: TextButton(
+                        onPressed: () => model.switchTab(0),
+                        child: Text(
+                          "Today's Picks",
+                          style: model.tabNo == 0
+                              ? selectedTextStyle
+                              : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
-                    child: TextButton(
-                      onPressed: () => model.switchTab(1),
-                      child: Text(
-                        'Weekly Picks',
-                        style: model.tabNo == 1
-                            ? selectedTextStyle
-                            : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 15),
+                      child: TextButton(
+                        onPressed: () => model.switchTab(1),
+                        child: Text(
+                          'Weekly Picks',
+                          style: model.tabNo == 1
+                              ? selectedTextStyle
+                              : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                        ),
                       ),
                     ),
                   )
@@ -97,6 +103,7 @@ class PicksCardView extends StatelessWidget {
                     dailyPicksCount: model.dailyPicksCount,
                     todaysPicks: model.todaysPicks ??
                         List.generate(model.dailyPicksCount, (index) => 0),
+                    // totalTicketMatched: model.totalTicketMatched,
                   ),
                   model.weeklyDigits == null
                       ? Center(

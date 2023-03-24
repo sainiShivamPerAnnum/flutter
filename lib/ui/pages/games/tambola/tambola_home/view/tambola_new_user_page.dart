@@ -5,7 +5,7 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_header.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_prize.dart';

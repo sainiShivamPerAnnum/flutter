@@ -14,13 +14,27 @@ class CurrentPicks extends StatelessWidget {
       {super.key,
       this.todaysPicks,
       this.dailyPicksCount,
-      this.isTambolaCard = true});
+      this.isTambolaCard = true,
+      this.totalTicketMatched = 0});
 
   final List<int>? todaysPicks;
   final int? dailyPicksCount;
   final bool isTambolaCard;
+  final int? totalTicketMatched;
 
   // int renderedTimes = 0;
+
+  String getText(S locale) {
+    if ((totalTicketMatched ?? 0) > 0) {
+      /// Todo: logic incorrect
+      return "Today’s draw matches your $totalTicketMatched tickets!";
+    }
+
+    return todaysPicks == [-1, -1, -1]
+        ? locale.tDrawnAtText1
+        : locale.tDrawnAtText2;
+  }
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -37,9 +51,7 @@ class CurrentPicks extends StatelessWidget {
             padding: EdgeInsets.only(
                 top: SizeConfig.padding24, bottom: SizeConfig.padding16),
             child: Text(
-              todaysPicks == [-1, -1, -1]
-                  ? locale.tDrawnAtText1
-                  : locale.tDrawnAtText2,
+              getText(locale),
               style: TextStyles.sourceSansSB.body4,
             ),
           )
@@ -119,7 +131,7 @@ class AnimatedPicksDisplay extends StatefulWidget {
 }
 
 class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
-  Random random =  Random();
+  Random random = Random();
 
   List<int> randomList = [];
 
@@ -225,7 +237,7 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
                       itemBuilder: (context, index) {
                         return _buildBalls(
                             randomList[index],
-                            index == 0 ,
+                            index == 0,
                             Colors.primaries[
                                 Random().nextInt(Colors.primaries.length)]);
                       },
@@ -239,7 +251,6 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
     ;
   }
 }
-
 
 class TicketNumber extends StatelessWidget {
   const TicketNumber({Key? key}) : super(key: key);

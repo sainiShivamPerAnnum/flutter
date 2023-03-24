@@ -4,7 +4,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_view.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/ticket_widget.dart';
@@ -71,7 +71,12 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                   model: widget.model,
                 ),
                 SizedBox(
-                  height: SizeConfig.padding20,
+                  height: SizeConfig.padding6,
+                ),
+                // if (widget.model.showWinCard)
+                //   TambolaResultCard(model: widget.model),
+                SizedBox(
+                  height: SizeConfig.padding10,
                 ),
                 if (widget.model.userWeeklyBoards != null)
                   TicketWidget(
@@ -97,15 +102,16 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                       ],
                     ),
                   ),
-                const NextWeekTicketInfo(),
-                SizedBox(
-                  height: SizeConfig.padding28,
-                ),
+                if (DateTime.now().day == DateTime.sunday) ...[
+                  const NextWeekTicketInfo(),
+                  SizedBox(
+                    height: SizeConfig.padding28,
+                  ),
+                ],
                 _buildGestureDetector(locale),
                 SizedBox(
                   height: SizeConfig.padding28,
                 ),
-
                 AnimatedBuilder(
                   animation: animationController,
                   builder: (ctx, child) {
@@ -268,7 +274,7 @@ class NextWeekTicketInfo extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.06),
       padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.white.withOpacity(0.5),width: 0.5),
+          border: Border.all(color: Colors.white.withOpacity(0.5), width: 0.5),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           color: Colors.transparent),
       child: Row(

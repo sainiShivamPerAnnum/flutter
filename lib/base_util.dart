@@ -312,7 +312,7 @@ class BaseUtil extends ChangeNotifier {
       content: WebGameModalSheet(
         game: game,
       ),
-      backgroundColor: Color(0xff39393C),
+      backgroundColor: const Color(0xff39393C),
       hapticVibrate: true,
     );
   }
@@ -386,7 +386,7 @@ class BaseUtil extends ChangeNotifier {
         isBarrierDismissible: false,
         addToScreenStack: true,
         isScrollControlled: true,
-        content: ConfirmExitModal());
+        content: const ConfirmExitModal());
   }
 
   void openSellModalSheet({required InvestmentType investmentType}) {
@@ -494,7 +494,7 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    print("Current Stack: ${AppState.screenStack}");
+    debugPrint("Current Stack: ${AppState.screenStack}");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     await showDialog(
       barrierColor: barrierColor,
@@ -520,7 +520,7 @@ class BaseUtil extends ChangeNotifier {
       AppState.screenStack.add(ScreenItem.dialog);
     }
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
-    print("Current Stack: ${AppState.screenStack}");
+    debugPrint("Current Stack: ${AppState.screenStack}");
     await showModalBottomSheet(
       enableDrag: enableDrag,
       constraints: boxContraints,
@@ -806,7 +806,7 @@ class BaseUtil extends ChangeNotifier {
         _internalOpsService!.logFailure(_myUser!.uid,
             FailType.UserAugmontBalanceUpdateFailed, errorDetails);
       }
-      print('$err');
+      debugPrint('$err');
     });
   }
 

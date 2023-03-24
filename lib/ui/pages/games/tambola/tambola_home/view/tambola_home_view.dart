@@ -37,8 +37,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/no_ticket_widget.dart';
-import 'widgets/today_weekly_pick_card.dart';
+import '../widgets/no_ticket_widget.dart';
+import '../widgets/today_weekly_pick_card.dart';
 
 // class TambolaHomeView extends StatelessWidget {
 //   @override

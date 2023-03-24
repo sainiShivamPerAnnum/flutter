@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -18,6 +20,13 @@ class PicksCardViewModel extends BaseViewModel {
   double? _titleOpacity;
   List<int>? _todaysPicks;
   DailyPick? _weeklyDigits;
+  int? _totalTicketMatched;
+
+  int get totalTicketMatched => _totalTicketMatched ?? 0;
+
+  set totalTicketMatched(int value) {
+    _totalTicketMatched = value;
+  }
 
   List<int>? get todaysPicks => _todaysPicks;
 
@@ -124,9 +133,14 @@ class PicksCardViewModel extends BaseViewModel {
     var data = _tambolaService.ticketsNumbers;
     bool exist = false;
     data.forEach((element) {
+      // log('totalTicketMatched $totalTicketMatched');
+
       exist = element.contains(int.tryParse(dailyNumber));
+
+      // if (exist) totalTicketMatched += 1;
     });
 
+    // notifyListeners();
     return exist;
   }
 }
