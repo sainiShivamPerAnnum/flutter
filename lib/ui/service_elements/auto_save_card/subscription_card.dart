@@ -7,6 +7,7 @@ import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/finance/autosave/segmate_chip.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -49,11 +50,14 @@ class AutosaveCard extends StatelessWidget {
                 await service.handleTap();
               },
               child: (service.subscriptionData != null)
-                  ? (showAutosaveCard(service)
-                      ? ActiveOrPausedAutosaveCard(
-                          service: service,
-                        )
-                      : SizedBox())
+                  ? (
+                          // showAutosaveCard(service)
+                          //   ?
+                          ActiveOrPausedAutosaveCard(
+                      service: service,
+                    )
+                      // : SizedBox()
+                      )
                   : InitAutosaveCard(
                       service: service,
                     ),
@@ -82,9 +86,8 @@ class InitAutosaveCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TitleSubtitleContainer(
-              title: 'Start Autosaving',
-              subTitle:
-                  'Save in Digital Gold automatically and win added rewards',
+              title: 'Introducing Autosave',
+              subTitle: 'Automated payments for Fello Flo & Digital Gold',
             ),
             SizedBox(
               height: SizeConfig.padding32,
@@ -113,7 +116,7 @@ class InitAutosaveCard extends StatelessWidget {
                         constraints: BoxConstraints(
                           maxWidth: SizeConfig.screenWidth! * 0.5,
                         ),
-                        child: Text(locale.saveAutoSaveTitle,
+                        child: Text("Setup Autosave Now",
                             style: TextStyles.sourceSans.bold.body1),
                       ),
                       SizedBox(
@@ -147,7 +150,21 @@ class InitAutosaveCard extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: SizeConfig.padding32,
+              height: SizeConfig.padding54,
+              child: Row(
+                children: [
+                  SizedBox(width: SizeConfig.pageHorizontalMargins * 1.6),
+                  SvgPicture.asset(
+                    Assets.scratchCard,
+                    width: SizeConfig.padding24,
+                  ),
+                  Text(
+                    "  Win a scratch card on successful autosave setup",
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTextColor2),
+                  ),
+                ],
+              ),
             ),
             Divider(color: UiConstants.kTextColor2.withOpacity(0.5)),
           ],
@@ -188,7 +205,6 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
       children: [
         TitleSubtitleContainer(
           title: 'Autosave Details',
-          subTitle: 'View all your autosave transactions here',
         ),
         SizedBox(
           height: SizeConfig.padding12,
@@ -203,7 +219,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: UiConstants.kSecondaryBackgroundColor,
               borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-              border: Border.all(color: Colors.white30),
+              border: Border.all(color: Colors.white12),
             ),
             child: Stack(
               children: [
@@ -220,7 +236,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                       width: SizeConfig.padding90,
                     ),
                     SizedBox(
-                      width: SizeConfig.padding16,
+                      width: SizeConfig.padding20,
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -229,12 +245,10 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                         FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            "Autosave " +
-                                getAutosaveStatusText(service.autosaveState),
-                            style: TextStyles.sourceSansB.body0.colour(
-                                service.autosaveState == AutosaveState.ACTIVE
-                                    ? UiConstants.primaryColor
-                                    : UiConstants.tertiarySolid),
+                            getAutosaveStatusText(service.autosaveState) +
+                                " Autosave",
+                            style: TextStyles.sourceSansB.body0
+                                .colour(Colors.white),
                             textAlign: TextAlign.left,
                           ),
                         ),
@@ -254,7 +268,8 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                               TextSpan(
                                 text: "/" +
                                     (service.subscriptionData?.frequency
-                                            .toCamelCase() ??
+                                            .toCamelCase()
+                                            .frequencyRename() ??
                                         ""),
                                 style: TextStyles.sourceSans.body4
                                     .colour(UiConstants.kTextColor2),

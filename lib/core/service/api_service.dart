@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:encrypt/encrypt.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -37,6 +38,9 @@ class APIService implements API {
   APIService._();
   static final instance = APIService._();
 
+  final _CACHE_ENCRYPTION_KEY = "264a239b0d87e175509b2aeb2a44b28c";
+  final _CACHE_ENCRYPTION_IV = "cffb220f03eaac73";
+
   @override
   Future<dynamic> getData(
     String url, {
@@ -44,6 +48,7 @@ class APIService implements API {
     Map<String, dynamic>? queryParams,
     Map<String, dynamic>? headers,
     String? cBaseUrl,
+    bool decryptData = false,
   }) async {
     // final HttpMetric metric =
     //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
@@ -74,6 +79,12 @@ class APIService implements API {
       logger!.d("response from $finalPath");
       logger!.d("Get Response: ${response.statusCode}");
       logger!.d("Get Response: ${response.body}");
+      if (decryptData) {
+        final data = await _decryptData(response.body);
+        log(data!);
+
+        return json.decode(data);
+      }
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -312,9 +323,23 @@ class APIService implements API {
     }
   }
 
+  Future<String?> _decryptData(String data) async {
+    final encrypter = Encrypter(AES(
+      Key.fromUtf8(utf8.decode(_CACHE_ENCRYPTION_KEY.codeUnits)),
+      mode: AESMode.cbc,
+    ));
+
+    final _data = encrypter.decrypt16(
+      data,
+      iv: IV.fromUtf8(utf8.decode(_CACHE_ENCRYPTION_IV.codeUnits)),
+    );
+
+    return _data;
+  }
+
   Future<String> _getAppVersion() async {
     try {
-      if (_versionString == null || _versionString.isEmpty) {
+      if (_versionString.isEmpty) {
         PackageInfo packageInfo = await PackageInfo.fromPlatform();
         _versionString = '${packageInfo.buildNumber}';
       }

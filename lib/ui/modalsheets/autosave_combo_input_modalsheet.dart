@@ -25,11 +25,20 @@ class _AutosaveComboInputFieldsModalSheetState
   List getRangeSubtitle(FREQUENCY freq) {
     switch (freq) {
       case FREQUENCY.daily:
-        return ["(₹25 - ₹5000)", "(₹25 - ₹5000)"];
+        return [
+          "(₹${widget.model.dailyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.dailyMaxMinInfo.max})",
+          "(₹${widget.model.dailyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.dailyMaxMinInfo.max})",
+        ];
       case FREQUENCY.weekly:
-        return ["(₹50 - ₹5000)", "(₹50 - ₹5000)"];
+        return [
+          "(₹${widget.model.weeklyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.weeklyMaxMinInfo.max})",
+          "(₹${widget.model.weeklyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.weeklyMaxMinInfo.max})",
+        ];
       case FREQUENCY.monthly:
-        return ["(₹100 - ₹5000)", "(₹100 - ₹5000)"];
+        return [
+          "(₹${widget.model.monthlyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.monthlyMaxMinInfo.max})",
+          "(₹${widget.model.monthlyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.monthlyMaxMinInfo.max})",
+        ];
     }
   }
 
@@ -38,22 +47,22 @@ class _AutosaveComboInputFieldsModalSheetState
     int amt = int.tryParse(value ?? '0')!;
     switch (freq) {
       case FREQUENCY.daily:
-        return amt < 25
-            ? "Amount too low"
-            : amt > 5000
+        return amt < widget.model.dailyMaxMinInfo.min.LENDBOXP2P
+            ? "Enter valid amount"
+            : amt > widget.model.dailyMaxMinInfo.max
                 ? "Amount too high"
                 : null;
 
       case FREQUENCY.weekly:
-        return amt < 50
-            ? "Amount too low"
-            : amt > 5000
+        return amt < widget.model.weeklyMaxMinInfo.min.LENDBOXP2P
+            ? "Enter valid amount"
+            : amt > widget.model.weeklyMaxMinInfo.max
                 ? "Amount too high"
                 : null;
       case FREQUENCY.monthly:
-        return amt < 100
-            ? "Amount too low"
-            : amt > 5000
+        return amt < widget.model.monthlyMaxMinInfo.min.LENDBOXP2P
+            ? "Enter valid amount"
+            : amt > widget.model.monthlyMaxMinInfo.max
                 ? "Amount too high"
                 : null;
     }
@@ -64,11 +73,24 @@ class _AutosaveComboInputFieldsModalSheetState
     int amt = int.tryParse(value ?? '0')!;
     switch (freq) {
       case FREQUENCY.daily:
-        return amt < 25 ? "low amount" : null;
+        return amt < widget.model.dailyMaxMinInfo.min.AUGGOLD99
+            ? "Enter valid amount"
+            : amt > widget.model.dailyMaxMinInfo.max
+                ? "Amount too high"
+                : null;
+
       case FREQUENCY.weekly:
-        return amt < 50 ? "low amount" : null;
+        return amt < widget.model.weeklyMaxMinInfo.min.AUGGOLD99
+            ? "Enter valid amount"
+            : amt > widget.model.weeklyMaxMinInfo.max
+                ? "Amount too high"
+                : null;
       case FREQUENCY.monthly:
-        return amt < 100 ? "low amount" : null;
+        return amt < widget.model.monthlyMaxMinInfo.min.AUGGOLD99
+            ? "Enter valid amount"
+            : amt > widget.model.monthlyMaxMinInfo.max
+                ? "Amount too high"
+                : null;
     }
   }
 

@@ -24,14 +24,9 @@ class AutosaveAssetChoiceView extends StatelessWidget {
       child: Column(
         children: [
           Text("Setup Autosave", style: TextStyles.rajdhaniSB.title2),
-          SizedBox(height: SizeConfig.padding14),
-          Text(
-            "Choose assets you want to autosave in:",
-            style: TextStyles.sourceSans,
-          ),
           SizedBox(height: SizeConfig.padding32),
           Text(
-            "Choose an asset to do an SIP in:",
+            "Choose an asset to Autosave",
             style: TextStyles.rajdhaniSB.title4,
           ),
           SizedBox(height: SizeConfig.padding10),
@@ -98,7 +93,7 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                           .isEnabled)
                                       ? model.autosaveAssetOptionList[index]
                                           .subtitle
-                                      : "Complete KYC to enable this option",
+                                      : "Complete KYC to unlock",
                                   style: TextStyles.sourceSans.body3),
                               trailing: Radio(
                                 value: index,
@@ -108,9 +103,8 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                       .autosaveAssetOptionList[index].isEnabled)
                                     model.selectedAssetOption = index;
                                   else
-                                    BaseUtil.showNegativeAlert(
-                                        "Complete your KYC to autosave in both Flo & Gold",
-                                        "Option not available");
+                                    BaseUtil.showNegativeAlert("KYC Incomplete",
+                                        "Complete your KYC to autosave in this asset");
                                 },
                               ),
                             ),
@@ -143,7 +137,7 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                 Haptic.vibrate();
                 AppState.showAutosaveBt = false;
                 AppState.delegate!.appState.currentAction = PageAction(
-                    state: PageState.replace, page: KycDetailsPageConfig);
+                    state: PageState.addPage, page: KycDetailsPageConfig);
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -151,10 +145,18 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                     horizontal: SizeConfig.pageHorizontalMargins),
                 child: Text.rich(
                   TextSpan(
-                    text: "Want to do your Kyc now? ",
                     children: [
+                      WidgetSpan(
+                          child: Icon(
+                        Icons.info_outline,
+                        size: SizeConfig.padding24,
+                        color: UiConstants.kTextColor3,
+                      )),
                       TextSpan(
-                        text: "Tap here",
+                        text: " Want to do your KYC now? ",
+                      ),
+                      TextSpan(
+                        text: "Tap here ",
                         style: TextStyles.sourceSansSB
                             .colour(UiConstants.primaryColor),
                         recognizer: TapGestureRecognizer()
@@ -169,7 +171,7 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                       )
                     ],
                   ),
-                  style: TextStyles.sourceSans.body3
+                  style: TextStyles.sourceSans.body2
                       .colour(UiConstants.kTextColor3),
                   textAlign: TextAlign.center,
                 ),

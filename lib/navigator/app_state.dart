@@ -15,6 +15,7 @@ import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -152,6 +153,26 @@ class AppState extends ChangeNotifier {
     executeNavBarItemFirstClick(index);
   }
 
+  bool showTourStrip = false;
+
+  setTourStripValue() {
+    showTourStrip = false;
+    notifyListeners();
+  }
+
+  void setShowStripValue() async {
+    final sharePreference = await SharedPreferences.getInstance();
+    final value = sharePreference.getInt('showTour');
+    final appSession = value ?? 0;
+    if (appSession < 2) {
+      if (appSession == 0) {
+        showTourStrip = true;
+        notifyListeners();
+      }
+      sharePreference.setInt('showTour', appSession + 1);
+    }
+  }
+
   returnHome() {
     _rootIndex = 0;
     print(_rootIndex);
@@ -203,7 +224,8 @@ class AppState extends ChangeNotifier {
       case "Tambola":
         executeForFirstTambolaClick(index);
         break;
-      case "Accounts":
+      case "Account":
+      case "Win":
         executeForFirstAccountsTabClick(index);
         break;
       default:
@@ -229,8 +251,13 @@ class AppState extends ChangeNotifier {
   }
 
   executeForFirstSaveTabClick(index) {}
-  executeForFirstPlayTabClick(index) {}
-  executeForFirstAccountsTabClick(index) {}
+  executeForFirstPlayTabClick(index) {
+    SpotLightController.instance.userFlow = UserFlow.onPlayTab;
+  }
+
+  executeForFirstAccountsTabClick(index) {
+    SpotLightController.instance.userFlow = UserFlow.onWinPage;
+  }
 
   executeForFirstTambolaClick(index) {
     final TambolaService _tambolaService = locator<TambolaService>();

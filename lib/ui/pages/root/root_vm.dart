@@ -6,8 +6,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
-import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -30,19 +28,17 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
 
@@ -52,6 +48,7 @@ class RootViewModel extends BaseViewModel {
         super();
 
   final BaseUtil? _baseUtil = locator<BaseUtil>();
+
   final FcmHandler? _fcmListener = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
@@ -94,30 +91,41 @@ class RootViewModel extends BaseViewModel {
     appState.setRootLoadValue = true;
     _referralService.verifyReferral();
     _referralService.initDynamicLinks();
+
     _rootController.currentNavBarItemModel =
         _rootController.navItems.values.first;
+
     _tambolaService!.init();
     _subscriptionService.init();
     initialize();
   }
 
   initialize() async {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      await _userService.userBootUpEE();
-      await verifyUserBootupDetails();
-      await checkForBootUpAlerts();
-      await _userService.getUserFundWalletData();
-      await handleStartUpNotificationData();
-      _journeyService.getUnscratchedGT();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) async {
+        await _userService.userBootUpEE();
+        await verifyUserBootupDetails();
+        await checkForBootUpAlerts();
+        await _userService.getUserFundWalletData();
+        if (AppState.isFirstTime)
+          Future.delayed(Duration(seconds: 1), () {
+            SpotLightController.instance.showTourDialog();
+          });
+        await handleStartUpNotificationData();
 
-      _userService.checkForNewNotifications();
-      _userService.getProfilePicture();
-      _initAdhocNotifications();
-      Future.delayed(Duration(seconds: 8), () {
-        _marketingService.checkUserDailyAppCheckInStatus().then((value) {
-          getHappyHourCampaign();
-        });
-      });
+        _journeyService.getUnscratchedGT();
+
+        _userService.checkForNewNotifications();
+        _userService.getProfilePicture();
+        _initAdhocNotifications();
+        if (!AppState.isFirstTime) showMarketingCampings();
+      },
+    );
+  }
+
+  void showMarketingCampings() {
+    Future.delayed(Duration(seconds: 2), () {
+      _marketingService.getCampaigns();
     });
   }
 
@@ -235,69 +243,6 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  late HappyHourCampign happyHourCampaign;
-
-  Future getHappyHourCampaign() async {
-    final campaign = await locator<CampaignRepo>().getHappyHourCampaign();
-    if (campaign.code == 200 && campaign.model != null) {
-      if (locator.isRegistered<HappyHourCampign>()) {
-        locator.unregister<HappyHourCampign>();
-      }
-      locator.registerSingleton<HappyHourCampign>(campaign.model!);
-      final _isDuringHappyHourVisited =
-          locator<SharedPreferences>().getBool("duringHappyHourVisited") ??
-              false;
-      if (_isDuringHappyHourVisited) {
-        final date =
-            locator<SharedPreferences>().getString("timStampOfHappyHour") ??
-                DateTime.now().toString();
-
-        final shouldClearCache = DateTime.now().day != DateTime.parse(date).day;
-
-        if (shouldClearCache) {
-          locator<SharedPreferences>().remove('timStampOfHappyHour');
-          locator<SharedPreferences>().remove('duringHappyHourVisited');
-          locator<SharedPreferences>().remove('showedAfterHappyHourDialog');
-        }
-      }
-
-      if (campaign.model!.data!.showHappyHour) {
-        if (!_isDuringHappyHourVisited && !AppState.isFirstTime) {
-          locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-          locator<SharedPreferences>().setBool("duringHappyHourVisited", true);
-          locator<SharedPreferences>()
-              .setString('timStampOfHappyHour', DateTime.now().toString());
-        }
-
-        happyHourCampaign = campaign.model!;
-        showHappyHourBanner = true;
-        notifyListeners();
-        return;
-      }
-
-      final endTime = DateTime.parse(campaign.model!.data!.endTime!);
-
-      if (endTime.day != DateTime.now().day) {
-        return;
-      }
-      final isVistedDuringHappyHour =
-          locator<SharedPreferences>().getBool('duringHappyHourVisited') ??
-              false;
-      final isalreadyShowed =
-          locator<SharedPreferences>().getBool("showedAfterHappyHourDialog") ??
-              false;
-      if (DateTime.now().isAfter(endTime) &&
-          !isVistedDuringHappyHour &&
-          !isalreadyShowed) {
-        locator<BaseUtil>()
-            .showHappyHourDialog(campaign.model!, afterHappyHour: true);
-        locator<SharedPreferences>()
-            .setBool("showedAfterHappyHourDialog", true);
-      }
-      ;
-    }
-  }
-
   handleStartUpNotificationData() {
     if (AppState.isRootAvailableForIncomingTaskExecution == true &&
         AppState.startupNotifMessage != null) {
@@ -317,9 +262,9 @@ class RootViewModel extends BaseViewModel {
         PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET,
         def: true);
     if (showSecurityPrompt &&
-        _userService!.baseUser!.isAugmontOnboarded! &&
-        _userService!.userFundWallet!.augGoldQuantity > 0 &&
-        _userService!.baseUser!.userPreferences
+        _userService.baseUser!.isAugmontOnboarded! &&
+        _userService.userFundWallet!.augGoldQuantity > 0 &&
+        _userService.baseUser!.userPreferences
                 .getPreference(Preferences.APPLOCK) ==
             0) {
       canExecuteStartupNotification = false;
@@ -331,165 +276,13 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  Future<dynamic> _verifyReferral(BuildContext? context) async {
-    if (BaseUtil.referrerUserId != null) {
-      // when referrer id is fetched from one-link
-      if (PreferenceHelper.getBool(
-        PreferenceHelper.REFERRAL_PROCESSED,
-        def: false,
-      )) return;
-
-      await _refRepo!.createReferral(
-        _userService!.baseUser!.uid,
-        BaseUtil.referrerUserId,
-      );
-
-      _logger!.d('referral processed from link');
-      PreferenceHelper.setBool(PreferenceHelper.REFERRAL_PROCESSED, true);
-    } else if (BaseUtil.manualReferralCode != null) {
-      if (BaseUtil.manualReferralCode!.length == 4) {
-        _verifyFirebaseManualReferral(context);
-      } else {
-        _verifyOneLinkManualReferral();
-      }
-    }
-  }
-
-  Future<dynamic> _verifyOneLinkManualReferral() async {
-    final referrerId = await _refRepo!
-        .getUserIdByRefCode(BaseUtil.manualReferralCode!.toUpperCase());
-
-    if (referrerId.code == 200) {
-      await _refRepo!.createReferral(
-        _userService!.baseUser!.uid,
-        referrerId.model,
-      );
-    } else {
-      BaseUtil.showNegativeAlert(referrerId.errorMessage, '');
-    }
-  }
-
-  Future<dynamic> _verifyFirebaseManualReferral(BuildContext? context) async {
-    try {
-      PendingDynamicLinkData? dynamicLinkData =
-          await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(
-              '${FlavorConfig.instance!.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}'));
-      Uri? deepLink = dynamicLinkData?.link;
-      _logger!.d(deepLink.toString());
-      if (deepLink != null)
-        return _processDynamicLink(
-          _userService!.baseUser!.uid,
-          deepLink,
-          context,
-        );
-    } catch (e) {
-      _logger!.e(e.toString());
-    }
-  }
-
-  Future<dynamic> _initDynamicLinks(BuildContext? context) async {
-    FirebaseDynamicLinks.instance.onLink.distinct().listen((event) {
-      final Uri? deepLink = event.link;
-      if (deepLink == null) return null;
-      _logger!.d('Received deep link. Process the referral');
-      return _processDynamicLink(
-          _userService!.baseUser!.uid, deepLink, context);
-    }).onError((e) {
-      _logger!.d('Error');
-      _logger!.d(e.toString());
-    });
-
-    final PendingDynamicLinkData? data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri? deepLink = data?.link;
-    if (deepLink != null) {
-      _logger!.d('Received deep link. Process the referral');
-      return _processDynamicLink(
-          _userService!.baseUser!.uid, deepLink, context);
-    }
-  }
-
   void setShowHappyHour(bool showHappyHour) {
     showHappyHourBanner = showHappyHour;
     notifyListeners();
   }
 
-  _processDynamicLink(
-      String? userId, Uri deepLink, BuildContext? context) async {
-    String _uri = deepLink.toString();
-
-    if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
-      _submitTrack(_uri);
-    } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
-      try {
-        final path =
-            _uri.substring(Constants.APP_NAVIGATION_LINK.length, _uri.length);
-        AppState.delegate!.parseRoute(Uri.parse(path));
-      } catch (error) {
-        _logger!.e(error);
-      }
-    } else {
-      BaseUtil.manualReferralCode =
-          null; //make manual Code null in case user used both link and code
-
-      //Referral dynamic link
-      bool _flag = await _submitReferral(
-        _userService!.baseUser!.uid,
-        _userService!.myUserName,
-        _uri,
-      );
-
-      if (_flag) {
-        _logger!.d('Rewards added');
-        refresh();
-      } else {
-        // _logger.d('$addUserTicketCount tickets need to be added for the user');
-      }
-    }
-  }
-
-  bool _submitTrack(String deepLink) {
-    try {
-      String prefix = '${Constants.APP_DOWNLOAD_LINK}/campaign/';
-      if (deepLink.startsWith(prefix)) {
-        String campaignId = deepLink.replaceAll(prefix, '');
-        if (campaignId.isNotEmpty || campaignId == null) {
-          _logger!.d(campaignId);
-          _analyticsService!.trackInstall(campaignId);
-          return true;
-        }
-      }
-      return false;
-    } catch (e) {
-      _logger!.e(e);
-      return false;
-    }
-  }
-
-  Future<bool> _submitReferral(
-      String? userId, String? userName, String deepLink) async {
-    try {
-      String prefix = 'https://fello.in/';
-      if (deepLink.startsWith(prefix)) {
-        String referee = deepLink.replaceAll(prefix, '');
-        _logger!.d(referee);
-        if (prefix.length > 0 && prefix != userId) {
-          return _refRepo!.createReferral(userId, referee).then((res) {
-            // _logger.d('User deserves $userTicketUpdateCount more tickets');
-            return res.model!;
-          });
-        } else
-          return false;
-      } else
-        return false;
-    } catch (e) {
-      _logger!.e(e);
-      return false;
-    }
-  }
-
   Future<void> verifyUserBootupDetails() async {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_userService.baseUser != null && _userService.userBootUp != null) {
         //1.check if the account is blocked
         if (_userService.userBootUp!.data != null &&

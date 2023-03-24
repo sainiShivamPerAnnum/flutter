@@ -1,12 +1,17 @@
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -115,6 +120,25 @@ class MiniTransactionCard extends StatelessWidget {
                               ),
                             )),
                   SizedBox(height: SizeConfig.padding12),
+                  if (locator<SubService>().subscriptionData != null)
+                    Container(
+                      padding: EdgeInsets.only(bottom: SizeConfig.padding16),
+                      child: Center(
+                        child: InkWell(
+                          onTap: () {
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                                    page: AutosaveDetailsViewPageConfig,
+                                    state: PageState.addPage);
+                          },
+                          child: Text(
+                            "View Autosave Transactions",
+                            style: TextStyles.sourceSansM.body3
+                                .colour(UiConstants.primaryColor),
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               );
             },

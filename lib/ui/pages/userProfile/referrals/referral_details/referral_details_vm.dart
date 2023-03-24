@@ -151,7 +151,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     final ReferralRepo? _referralRepo = locator<ReferralRepo>();
 
-    if (!baseProvider.referralsFetched!) {
+    if (!(baseProvider.referralsFetched ?? false)) {
       _referralRepo!.getReferralHistory().then((refHisModel) {
         if (refHisModel.isSuccess()) {
           baseProvider.referralsFetched = true;

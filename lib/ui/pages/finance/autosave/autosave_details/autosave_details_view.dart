@@ -10,12 +10,14 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/height_adaptive_pageview.dart';
+import 'package:felloapp/ui/pages/finance/autosave/segmate_chip.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -96,8 +98,8 @@ class AutosaveDetailsView extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Text(
-                                        locale.txnRecent,
-                                        style: TextStyles.rajdhaniSB.title3,
+                                        "Autosave Transactions",
+                                        style: TextStyles.rajdhaniSB.title4,
                                       ),
                                       Spacer(),
                                       if (!model.isFetchingTransactions &&
@@ -167,7 +169,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                 .pageHorizontalMargins),
                                         child: Column(
                                           children: [
-                                            Divider(color: Colors.white30),
+                                            // Divider(color: Colors.white30),
                                             Container(
                                               height: SizeConfig.padding70,
                                               child: Row(
@@ -202,9 +204,9 @@ class AutosaveDetailsView extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ),
-                                                  VerticalDivider(
-                                                    color: Colors.white30,
-                                                  ),
+                                                  // VerticalDivider(
+                                                  //   color: Colors.white30,
+                                                  // ),
                                                   Expanded(
                                                     child: GestureDetector(
                                                       onTap: () {
@@ -459,7 +461,7 @@ class AutosaveDetailsView extends StatelessWidget {
     return [
       if (subService.autosaveState == AutosaveState.ACTIVE)
         AppPositiveBtn(
-          btnText: locale.btnUpdate,
+          btnText: "UPDATE AUTOSAVE",
           onPressed: () {
             //NOTE: CHECK IN EDIT MODE
             AppState.delegate!.appState.currentAction = PageAction(
@@ -566,6 +568,14 @@ class SubTxnTile extends StatelessWidget {
   final SubscriptionTransactionModel txn;
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final String type;
+
+  String get getFormattedDate =>
+      DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(
+          txn.createdOn!.millisecondsSinceEpoch));
+
+  String get formattedTime =>
+      DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+          txn.createdOn!.millisecondsSinceEpoch));
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -582,16 +592,16 @@ class SubTxnTile extends StatelessWidget {
                 children: [
                   Text(
                     type == Constants.ASSET_TYPE_AUGMONT
-                        ? "Digital Gold"
-                        : "Fello Flo",
-                    style: TextStyles.rajdhaniM.body2,
+                        ? "Gold Deposit"
+                        : "Flo Deposit",
+                    style: TextStyles.sourceSansM.body2,
                   ),
                   SizedBox(
                     height: SizeConfig.padding10,
                   ),
                   Text(
-                    _txnHistoryService!.getFormattedTime(txn.createdOn!),
-                    style: TextStyles.rajdhaniL.body3,
+                    getFormattedDate + " at " + formattedTime,
+                    style: TextStyles.sourceSansL.body4,
                   ),
                 ],
               ),
@@ -601,14 +611,14 @@ class SubTxnTile extends StatelessWidget {
                 children: [
                   Text(
                     "₹${type == Constants.ASSET_TYPE_AUGMONT ? (txn.augMap?.amount ?? '0') : (txn.lbMap!.amount ?? '0')}",
-                    style: TextStyles.rajdhaniSB.body2,
+                    style: TextStyles.sourceSansSB.body2,
                   ),
                   SizedBox(
                     height: SizeConfig.padding10,
                   ),
                   Text(
                     txn.status!,
-                    style: TextStyles.rajdhaniM.body3.colour(
+                    style: TextStyles.sourceSansM.body3.colour(
                       _txnHistoryService!.getTileColor(txn.status),
                     ),
                   ),
@@ -663,7 +673,7 @@ class AutoSaveDetailsCard extends StatelessWidget {
                   children: [
                     Text(
                       "You are saving",
-                      style: TextStyles.rajdhani.body3
+                      style: TextStyles.sourceSans.body3
                           .setOpacity(0.6)
                           .letterSpace(SizeConfig.padding2),
                     ),
@@ -675,7 +685,7 @@ class AutoSaveDetailsCard extends StatelessWidget {
                         children: [
                           TextSpan(
                               text:
-                                  '/${_subService.subscriptionData!.frequency!.toLowerCase()}',
+                                  '/${_subService.subscriptionData!.frequency!.toCamelCase().frequencyRename()}',
                               style: TextStyles.rajdhaniT.title2)
                         ],
                       ),
@@ -691,7 +701,7 @@ class AutoSaveDetailsCard extends StatelessWidget {
                       AutosaveAssetDetailTile(
                         asset: Assets.felloFlo,
                         title: "Fello Flo",
-                        subtitle: "10% returns, I myself have invested there",
+                        subtitle: "P2P Fund | 10% Returns",
                         amt: "₹" + (_subService.subscriptionData!.lbAmt ?? '-'),
                       ),
                     if (int.tryParse(
@@ -700,7 +710,7 @@ class AutoSaveDetailsCard extends StatelessWidget {
                       AutosaveAssetDetailTile(
                         asset: Assets.digitalGoldBar,
                         title: "Digital Gold",
-                        subtitle: "Stable and low returns",
+                        subtitle: "Safe and Stable Returns",
                         amt:
                             "₹" + (_subService.subscriptionData!.augAmt ?? '-'),
                       ),
@@ -725,12 +735,10 @@ class AutoSaveDetailsCard extends StatelessWidget {
                           TextSpan(
                             text: getRichText(_subService.autosaveState,
                                 _subService.subscriptionData!),
-                            style: TextStyles.sourceSans.body4
-                                .colour(
-                                  getRichTextColor(_subService.autosaveState,
-                                      _subService.subscriptionData!),
-                                )
-                                .copyWith(fontStyle: FontStyle.italic),
+                            style: TextStyles.sourceSans.body4.colour(
+                              getRichTextColor(_subService.autosaveState,
+                                  _subService.subscriptionData!),
+                            ),
                           ),
                         ],
                       ),

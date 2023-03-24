@@ -6,8 +6,10 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -49,9 +51,11 @@ import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 //Flutter Imports
@@ -142,10 +146,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void _removePage(MaterialPage page) {
-    if (page != null) {
-      AppState.screenStack.removeLast();
-      _pages.remove(page);
-    }
+    AppState.screenStack.removeLast();
+    _pages.remove(page);
   }
 
   MaterialPage _createPage(Widget child, PageConfiguration pageConfig) {
@@ -798,6 +800,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'lboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;
         break;
+      case 'quickTour':
+        Future.delayed(Duration(seconds: 2), () {
+          SpotLightController.instance.startQuickTour();
+        });
+
+        break;
       case 'lendboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;
         break;
@@ -934,8 +942,25 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     //   widget: WebHomeView(game: game),
     //   page: WebHomeViewPageConfig,
     // );
+    bool isLocked = false;
+    double netWorth = locator<UserService>().userFundWallet!.augGoldPrinciple +
+        (locator<UserService>().userFundWallet!.wLbPrinciple ?? 0.0);
+    for (var i in locator<GameRepo>().gameTier.data) {
+      for (var j in i!.games) {
+        if (j!.gameCode == game) {
+          isLocked = netWorth < i.minInvestmentToUnlock;
+          break;
+        }
+      }
+    }
 
-    BaseUtil.openGameModalSheet(game);
+    if (isLocked) {
+      BaseUtil.showNegativeAlert('Game is locked for you',
+          'Save more in Gold or Flo to unlock the game and complete the milestone');
+      appState.onItemTapped(
+          DynamicUiUtils.navBar.indexWhere((element) => element == 'PL'));
+    } else
+      BaseUtil.openGameModalSheet(game);
   }
 
   openAppWalkthrough() {

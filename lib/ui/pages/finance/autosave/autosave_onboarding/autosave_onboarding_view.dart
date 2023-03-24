@@ -32,7 +32,7 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
     ],
     [
       Assets.autosaveBenefitsAssets[1],
-      "You will never be out of tokens",
+      "Never run out of tokens",
       "Get tokens on every Autosave transaction. Use tokens to play games and win more rewards!"
     ],
     [
@@ -165,6 +165,15 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
                       ]),
                 ),
               ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                  margin: EdgeInsets.only(top: SizeConfig.fToolBarHeight),
+                  width: SizeConfig.screenWidth,
+                  alignment: Alignment.center,
+                  height: SizeConfig.title1,
+                  child: Text("Autosave", style: TextStyles.rajdhaniB.title1)),
             ),
             Align(
               alignment: Alignment.bottomCenter,

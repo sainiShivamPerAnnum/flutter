@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/game_stats_model.dart';
+import 'package:felloapp/core/model/game_tier_model.dart' hide GameModel;
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -13,17 +14,14 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/more_games_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/trendingGames.dart';
+import 'package:felloapp/ui/pages/hometabs/play/widgets/games_widget/games_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/pages/static/app_footer.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -40,9 +38,10 @@ class PlayViewModel extends BaseViewModel {
     locale = locator<S>();
     boxHeading = locale!.howGamesWork;
     boxTitles.addAll([
-      locale!.boxPlayTitle1,
-      locale!.boxPlayTitle2,
-      "Win scratch cards everytime you score",
+      'Earn tokens by saving in Gold or Flo',
+      'Use Fello tokens to play different games',
+      "Win scratch cards for every high score!",
+      "Maintain savings to play all games"
     ]);
   }
   final GetterRepository? _getterRepo = locator<GetterRepository>();
@@ -72,6 +71,7 @@ class PlayViewModel extends BaseViewModel {
     Assets.ludoGameAsset,
     Assets.token,
     Assets.gift,
+    "assets/svg/piggy_bank.svg",
   ];
   List<String> boxTitles = [];
   ////////////////////////////////////////////
@@ -127,7 +127,7 @@ class PlayViewModel extends BaseViewModel {
     isGamesListDataLoading = true;
 
     final response = await gamesRepo!.getGames();
-
+    final res = await gamesRepo!.getGameTiers();
     locator<UserStatsRepo>().getGameStats();
     gameStats = await _userStatsRepo.completer.future.onError(
         (error, stackTrace) => BaseUtil.showNegativeAlert(
@@ -135,6 +135,10 @@ class PlayViewModel extends BaseViewModel {
 
     showSecurityMessageAtTop =
         _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
+
+    if (res.isSuccess()) {
+      gameTier = res.model;
+    }
     if (response.isSuccess()) {
       gamesListData = response.model;
       isGamesListDataLoading = false;
@@ -145,6 +149,8 @@ class PlayViewModel extends BaseViewModel {
       setGameStatus();
     });
   }
+
+  GameTiers? gameTier;
 
   getOrderedPlayViewItems(PlayViewModel model) {
     List<Widget> playViewChildren = [];
@@ -161,14 +167,14 @@ class PlayViewModel extends BaseViewModel {
           }
           break;
         case 'AG':
-          playViewChildren.add(TrendingGamesSection(model: model));
+          playViewChildren.add(GamesWidget(model: model));
           break;
         case 'HTP':
           playViewChildren.add(InfoComponent2(
             heading: model.boxHeading,
             assetList: model.boxAssets,
             titleList: model.boxTitles,
-            height: SizeConfig.screenWidth! * 0.3,
+            height: SizeConfig.screenWidth! * 0.25,
           ));
           break;
         case 'GOW':

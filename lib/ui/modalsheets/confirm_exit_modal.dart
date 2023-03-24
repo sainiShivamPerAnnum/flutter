@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
@@ -8,6 +6,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 import '../pages/static/app_widget.dart';
@@ -50,7 +49,7 @@ class ConfirmExitModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("assets/images/cus_photos.png"),
+              SvgPicture.asset(Assets.multiAvatars),
               SizedBox(
                 width: 4,
               ),

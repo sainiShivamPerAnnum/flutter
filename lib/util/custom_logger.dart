@@ -100,7 +100,7 @@ class CustomLogger {
       var output = _printer.log(logEvent);
 
       if (output.isNotEmpty) {
-        var outputEvent = OutputEvent(LogEvent(level, message), output);
+        var outputEvent = OutputEvent(logEvent, output);
         // Issues with log output should NOT influence
         // the main software behavior.
         try {

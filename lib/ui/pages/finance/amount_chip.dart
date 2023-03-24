@@ -59,20 +59,17 @@ class AmountChip extends StatelessWidget {
           if (isBest)
             Align(
               alignment: Alignment.bottomCenter,
-              child: Transform.scale(
-                scale: 0.5,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding4,
-                    vertical: SizeConfig.padding2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: UiConstants.primaryColor,
-                  ),
-                  child: Text(
-                    locale.best,
-                    style: TextStyles.rajdhaniSB.body5,
-                  ),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding4,
+                  vertical: SizeConfig.padding2,
+                ),
+                decoration: BoxDecoration(
+                  color: UiConstants.primaryColor,
+                ),
+                child: Text(
+                  locale.best,
+                  style: TextStyles.rajdhaniSB.body5,
                 ),
               ),
             )

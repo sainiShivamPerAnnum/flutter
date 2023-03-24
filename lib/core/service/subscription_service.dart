@@ -137,6 +137,7 @@ class SubService extends ChangeNotifier {
 
   init() {
     autosaveVisible = AppConfig.getValue(AppConfigKey.autosaveActive) as bool;
+    print("-----------autosave visible $autosaveVisible");
     if (autosaveVisible) getSubscription();
   }
 
@@ -353,14 +354,15 @@ class SubService extends ChangeNotifier {
     final dailyFreqData =
         await getAmountChipsAndCombos(freq: FREQUENCY.daily.name);
     final weeklyFreqData =
-        await getAmountChipsAndCombos(freq: FREQUENCY.daily.name);
+        await getAmountChipsAndCombos(freq: FREQUENCY.weekly.name);
     final monthlyFreqData =
-        await getAmountChipsAndCombos(freq: FREQUENCY.daily.name);
+        await getAmountChipsAndCombos(freq: FREQUENCY.monthly.name);
     List augChips = [dailyFreqData[0], weeklyFreqData[0], monthlyFreqData[0]];
     List lbChips = [dailyFreqData[1], weeklyFreqData[1], monthlyFreqData[1]];
     List combos = [dailyFreqData[2], weeklyFreqData[2], monthlyFreqData[2]];
+    List minMaxInfo = [dailyFreqData[3], weeklyFreqData[3], monthlyFreqData[3]];
 
-    suggestions.addAll([augChips, lbChips, combos]);
+    suggestions.addAll([augChips, lbChips, combos, minMaxInfo]);
   }
 
   Future<List> getAmountChipsAndCombos({required String freq}) async {

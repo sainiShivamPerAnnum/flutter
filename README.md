@@ -1,7 +1,7 @@
 
 ![Twitter Follow](https://img.shields.io/twitter/follow/fellofinance?style=social)
 
-Client App for Fello
+Mobile Client App for Fello
 
 Run commands:
 ```

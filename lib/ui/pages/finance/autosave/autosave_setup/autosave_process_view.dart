@@ -1,5 +1,6 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -48,7 +49,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
               elevation: 0.0,
               title: model.currentPage <= 3
                   ? Text(
-                      "${model.currentPage + 1}/4",
+                      "Step ${model.currentPage + 1} of 4",
                       style: TextStyles.sourceSansL.body3,
                     )
                   : Container(),
@@ -199,6 +200,7 @@ class AutosaveSuccessView extends StatelessWidget {
               width: SizeConfig.screenWidth! -
                   SizeConfig.pageHorizontalMargins * 2,
               onPressed: () {
+                locator<UserService>().getUserFundWalletData();
                 AppState.backButtonDispatcher!.didPopRoute();
               },
             ),

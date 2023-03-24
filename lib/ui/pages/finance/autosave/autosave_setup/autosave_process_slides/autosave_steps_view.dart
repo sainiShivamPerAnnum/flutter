@@ -63,7 +63,7 @@ class AutosaveStepsView extends StatelessWidget {
           ),
           title: "Select a UPI app to setup Autosave",
           subtitle: Text(
-            "The last step to achieve financial independence",
+            "Choose amongst popular UPI apps, approve mandate and activate autosave!",
             style: TextStyles.sourceSans.body4.colour(
               UiConstants.kTextColor2,
             ),
@@ -76,14 +76,15 @@ class AutosaveStepsView extends StatelessWidget {
             children: [
               SvgPicture.asset(
                 Assets.multiAvatars,
-                width: SizeConfig.screenWidth! * 0.2,
+                fit: BoxFit.cover,
+                width: SizeConfig.screenWidth! * 0.16,
               ),
               SizedBox(width: SizeConfig.padding12),
               Expanded(
                 child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      "5K+  users are growing their money with Autosave",
+                      "500+  users are growing their wealth with Autosave",
                       style: TextStyles.sourceSans.body3,
                     )),
               )
@@ -91,7 +92,7 @@ class AutosaveStepsView extends StatelessWidget {
           ),
         ),
         AppPositiveBtn(
-          btnText: locale.btnGetStarted,
+          btnText: "NEXT",
           onPressed: () {
             Haptic.vibrate();
             model.proceed();

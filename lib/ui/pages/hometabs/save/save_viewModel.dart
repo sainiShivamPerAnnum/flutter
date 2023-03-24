@@ -180,7 +180,7 @@ class SaveViewModel extends BaseViewModel {
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
-        case 'AS':
+        case 'BL':
           saveViewItems.add(AutosaveCard());
           break;
         case 'CH':
@@ -191,6 +191,7 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     });
+
     saveViewItems.add(
       Container(
         margin: EdgeInsets.only(top: SizeConfig.padding40),

@@ -14,6 +14,7 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -63,7 +64,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
 
-    if (AppState.showAutosaveBt) {
+    if (AppState.showAutosaveBt &&
+        AppState.screenStack.last != ScreenItem.dialog) {
       AppState.showAutosaveBt = false;
       BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
@@ -77,6 +79,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           hapticVibrate: true,
           content: AutosaveConfirmExitModalSheet());
       return Future.value(true);
+    }
+
+    if (SpotLightController.instance.startShowCase) {
+      SpotLightController.instance.startShowCase = false;
+      SpotLightController.instance.init();
+
+      SpotLightController.instance.userFlow = UserFlow.onSaveTab;
     }
 
     if (locator<BackButtonActions>().isTransactionCancelled) {
@@ -106,6 +115,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       Navigator.pop(_routerDelegate!.navigatorKey.currentContext!);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
+      return Future.value(true);
+    }
+
+    if (SpotLightController.instance.isTourStarted) {
+      SpotLightController.instance.dismissSpotLight();
       return Future.value(true);
     }
 

@@ -35,7 +35,7 @@ class ScratchCardsView extends StatelessWidget {
                     children: [
                       NoRecordDisplayWidget(
                         assetSvg: Assets.noTickets,
-                        text: "No Golden Tickets won",
+                        text: "No Scratch Card won",
                       )
                     ],
                   )

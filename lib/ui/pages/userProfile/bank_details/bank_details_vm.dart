@@ -46,6 +46,13 @@ class BankDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool showBankDetailsHelpView = true;
+
+  void changeView() {
+    showBankDetailsHelpView = false;
+    notifyListeners();
+  }
+
   set isDetailsUpdating(value) {
     this._isDetailsUpdating = value;
     notifyListeners();

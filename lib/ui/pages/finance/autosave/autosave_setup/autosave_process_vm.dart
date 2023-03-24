@@ -47,6 +47,15 @@ class AutosaveProcessViewModel extends BaseViewModel {
   List<SubComboModel> dailyCombos = defaultSipComboList;
   List<SubComboModel> weeklyCombos = defaultSipComboList;
   List<SubComboModel> monthlyCombos = defaultSipComboList;
+
+  MaxMin dailyMaxMinInfo =
+      MaxMin(min: MinAsset(AUGGOLD99: 50, LENDBOXP2P: 100), max: 500);
+
+  MaxMin weeklyMaxMinInfo =
+      MaxMin(min: MinAsset(AUGGOLD99: 50, LENDBOXP2P: 100), max: 500);
+
+  MaxMin monthlyMaxMinInfo =
+      MaxMin(min: MinAsset(AUGGOLD99: 50, LENDBOXP2P: 100), max: 500);
   late List<ApplicationMeta> appsList;
   ApplicationMeta? _selectedUpiApp;
   String finalButtonCta = "SETUP";
@@ -56,6 +65,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   int _selectedAssetOption = 2;
   int _totalInvestingAmount = 0;
   bool isUpdateFlow = false;
+  String? minMaxCapString;
 
   int get totalInvestingAmount => this._totalInvestingAmount;
 
@@ -106,7 +116,6 @@ class AutosaveProcessViewModel extends BaseViewModel {
     this._selectedFrequency = value;
     switch (value) {
       case FREQUENCY.daily:
-        minValue = 25;
         selectedAssetOption != 0
             ? chipsController!.jumpToPage(
                 0,
@@ -116,7 +125,6 @@ class AutosaveProcessViewModel extends BaseViewModel {
               );
         break;
       case FREQUENCY.weekly:
-        minValue = 100;
         selectedAssetOption != 0
             ? chipsController!.jumpToPage(
                 1,
@@ -124,9 +132,9 @@ class AutosaveProcessViewModel extends BaseViewModel {
             : comboController!.jumpToPage(
                 1,
               );
+
         break;
       case FREQUENCY.monthly:
-        minValue = 200;
         selectedAssetOption != 0
             ? chipsController!.jumpToPage(
                 2,
@@ -136,6 +144,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
               );
         break;
     }
+
+    selectedAssetOption == 1
+        ? updateMinMaxCapString(floAmountFieldController?.text)
+        : updateMinMaxCapString(goldAmountFieldController?.text);
     notifyListeners();
   }
 
@@ -212,6 +224,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
         dailyCombos = _subService.suggestions[2][0];
         weeklyCombos = _subService.suggestions[2][1];
         monthlyCombos = _subService.suggestions[2][2];
+
+        dailyMaxMinInfo = _subService.suggestions[3][0];
+        weeklyMaxMinInfo = _subService.suggestions[3][1];
+        monthlyMaxMinInfo = _subService.suggestions[3][2];
       });
       autosaveAssetOptionList = [
         AutosaveAssetModel(
@@ -236,6 +252,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
       floAmountFieldController = TextEditingController();
 
       selectedAssetOption = _userService!.isSimpleKycVerified ? 0 : 2;
+      if (selectedAssetOption == 0) {
+        dailyCombos[2].isSelected = true;
+        notifyListeners();
+      }
       // if (_userService!.isSimpleKycVerified) {
       pageController.addListener(
         () {
@@ -248,9 +268,11 @@ class AutosaveProcessViewModel extends BaseViewModel {
     }
 
     setState(ViewState.Idle);
-    if (!PreferenceHelper.getBool(
-        PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME))
-      pageController.jumpToPage(1);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!PreferenceHelper.getBool(
+          PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME))
+        pageController.jumpToPage(1);
+    });
   }
 
   dump() {
@@ -282,6 +304,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
       dailyCombos = _subService.suggestions[2][0];
       weeklyCombos = _subService.suggestions[2][1];
       monthlyCombos = _subService.suggestions[2][2];
+
+      dailyMaxMinInfo = _subService.suggestions[3][0];
+      weeklyMaxMinInfo = _subService.suggestions[3][1];
+      monthlyMaxMinInfo = _subService.suggestions[3][2];
     });
     autosaveAssetOptionList = [
       AutosaveAssetModel(
@@ -406,6 +432,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
     if (selectedAssetOption == 2) {
       goldAmountFieldController!.text = val.toString();
     }
+    updateMinMaxCapString(val.toString());
+
     totalInvestingAmount =
         int.tryParse(goldAmountFieldController?.text ?? '0')! +
             int.tryParse(floAmountFieldController?.text ?? '0')!;
@@ -426,6 +454,72 @@ class AutosaveProcessViewModel extends BaseViewModel {
             ? lbMonthlyChips[index].isSelected = true
             : augMonthlyChips[index].isSelected = true;
         break;
+    }
+    notifyListeners();
+  }
+
+  void updateMinMaxCapString(String? val) {
+    if (val == null || val.isEmpty)
+      minMaxCapString = null;
+    else {
+      int amt = int.tryParse(val) ?? 0;
+      if (selectedAssetOption == 0) {
+        switch (selectedFrequency) {
+          case FREQUENCY.daily:
+            minMaxCapString = amt < dailyMaxMinInfo.min.LENDBOXP2P
+                ? "Enter valid amount"
+                : amt > dailyMaxMinInfo.max
+                    ? "Amount too high"
+                    : null;
+            return;
+
+          case FREQUENCY.weekly:
+            minMaxCapString = amt < weeklyMaxMinInfo.min.LENDBOXP2P
+                ? "Enter valid amount"
+                : amt > weeklyMaxMinInfo.max
+                    ? "Amount too high"
+                    : null;
+            return;
+          case FREQUENCY.monthly:
+            minMaxCapString = amt < monthlyMaxMinInfo.min.LENDBOXP2P
+                ? "Enter valid amount"
+                : amt > monthlyMaxMinInfo.max
+                    ? "Amount too high"
+                    : null;
+            return;
+
+          default:
+            minMaxCapString = null;
+        }
+      } else {
+        switch (selectedFrequency) {
+          case FREQUENCY.daily:
+            minMaxCapString = amt < dailyMaxMinInfo.min.AUGGOLD99
+                ? "Enter valid amount"
+                : amt > dailyMaxMinInfo.max
+                    ? "Amount too high"
+                    : null;
+            return;
+
+          case FREQUENCY.weekly:
+            minMaxCapString = amt < weeklyMaxMinInfo.min.AUGGOLD99
+                ? "Enter valid amount"
+                : amt > weeklyMaxMinInfo.max
+                    ? "Amount too high"
+                    : null;
+            return;
+          case FREQUENCY.monthly:
+            minMaxCapString = amt < monthlyMaxMinInfo.min.AUGGOLD99
+                ? "Enter valid amount"
+                : amt > monthlyMaxMinInfo.max
+                    ? "Amount too high"
+                    : null;
+            return;
+
+          default:
+            minMaxCapString = null;
+        }
+      }
     }
     notifyListeners();
   }

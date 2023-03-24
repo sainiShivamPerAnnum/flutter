@@ -3,6 +3,7 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_proce
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -28,106 +29,108 @@ class UpiAppSelectView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return model.appsList.length > 1
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
+        ? Stack(
             children: [
-              Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins),
-                  child: AutosaveSummary(showTopDivider: false, model: model)),
-              Divider(
-                height: SizeConfig.padding16,
-                color: Colors.white30,
-                indent: SizeConfig.pageHorizontalMargins,
-                endIndent: SizeConfig.pageHorizontalMargins,
-              ),
-              Text(
-                model.selectedFrequency == FREQUENCY.daily
-                    ? "Autosave will be processed  everyday at 8 AM"
-                    : model.selectedFrequency == FREQUENCY.weekly
-                        ? "Autosave will be processed on every Sunday"
-                        : "Autosave will be done on 1st of every month",
-                style:
-                    TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
-              ),
-              SizedBox(height: SizeConfig.padding40),
-              Text(
-                "Select a UPI App to setup",
-                style: TextStyles.rajdhaniSB.title4,
-              ),
-              SizedBox(height: SizeConfig.padding20),
-              Padding(
-                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                child: GridView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: model.appsList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Haptic.vibrate();
-                        model.selectedUpiApp = model.appsList[index];
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: UiConstants.kBackgroundColor3,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black,
-                                offset: model.selectedUpiApp != null &&
-                                        model.selectedUpiApp ==
-                                            model.appsList[index]
-                                    ? Offset(1, 1)
-                                    : Offset(4, 4),
-                                blurRadius: 2,
-                                spreadRadius: 2)
-                          ],
-                          border: Border.all(
-                              color: model.selectedUpiApp != null &&
-                                      model.selectedUpiApp ==
-                                          model.appsList[index]
-                                  ? UiConstants.primaryColor
-                                  : Colors.white,
-                              width: model.selectedUpiApp != null &&
-                                      model.selectedUpiApp ==
-                                          model.appsList[index]
-                                  ? 2
-                                  : 0.5),
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness12),
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              model.appsList[index]
-                                  .iconImage(SizeConfig.padding40),
-                              SizedBox(
-                                height: 10,
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        child: AutosaveSummary(
+                            showTopDivider: false, model: model)),
+                    Divider(
+                      height: SizeConfig.padding16,
+                      color: Colors.white30,
+                      indent: SizeConfig.pageHorizontalMargins,
+                      endIndent: SizeConfig.pageHorizontalMargins,
+                    ),
+                    Text(
+                      model.selectedFrequency == FREQUENCY.daily
+                          ? "Autosave will be processed  everyday at 8 AM"
+                          : model.selectedFrequency == FREQUENCY.weekly
+                              ? "Autosave will be processed on every Sunday"
+                              : "Autosave will be done on 1st of every month",
+                      style: TextStyles.sourceSans.body2
+                          .colour(UiConstants.kTextColor2),
+                    ),
+                    SizedBox(height: SizeConfig.padding40),
+                    Text(
+                      "Select a UPI App to setup",
+                      style: TextStyles.rajdhaniSB.title4,
+                    ),
+                    SizedBox(height: SizeConfig.padding20),
+                    Padding(
+                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                      child: GridView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: model.appsList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Haptic.vibrate();
+                              model.selectedUpiApp = model.appsList[index];
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: UiConstants.kBackgroundColor3,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black,
+                                      offset: model.selectedUpiApp != null &&
+                                              model.selectedUpiApp ==
+                                                  model.appsList[index]
+                                          ? Offset(1, 1)
+                                          : Offset(4, 4),
+                                      blurRadius: 2,
+                                      spreadRadius: 2)
+                                ],
+                                border: Border.all(
+                                    color: model.selectedUpiApp != null &&
+                                            model.selectedUpiApp ==
+                                                model.appsList[index]
+                                        ? UiConstants.primaryColor
+                                        : Colors.white,
+                                    width: model.selectedUpiApp != null &&
+                                            model.selectedUpiApp ==
+                                                model.appsList[index]
+                                        ? 2
+                                        : 0.5),
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness12),
                               ),
-                              Text(
-                                model.appsList[index].upiApplication.appName,
-                                style:
-                                    TextStyles.sourceSans.colour(Colors.white),
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    model.appsList[index]
+                                        .iconImage(SizeConfig.padding40),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      model.appsList[index].upiApplication
+                                          .appName,
+                                      style: TextStyles.sourceSans
+                                          .colour(Colors.white),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
+                            ),
+                          );
+                        },
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: SizeConfig.padding20,
                         ),
                       ),
-                    );
-                  },
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: SizeConfig.padding20,
-                  ),
-                ),
-              ),
-              if (model.selectedUpiApp != null)
-                Expanded(
-                  child: Column(
-                    children: [
+                    ),
+                    if (model.selectedUpiApp != null)
                       Container(
                         margin: EdgeInsets.symmetric(
                           vertical: SizeConfig.padding32,
@@ -149,7 +152,7 @@ class UpiAppSelectView extends StatelessWidget {
                             SizedBox(width: SizeConfig.padding12),
                             Expanded(
                               child: Text(
-                                "You will receive a mandate for ₹2000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.",
+                                "You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹${model.totalInvestingAmount}/${model.selectedFrequency.rename()}.",
                                 style: TextStyles.body3
                                     .colour(UiConstants.kTextColor2),
                               ),
@@ -157,36 +160,47 @@ class UpiAppSelectView extends StatelessWidget {
                           ]),
                         ),
                       ),
-                      Spacer(),
-                      ReactivePositiveAppButton(
-                        btnText: locale.btnSumbit,
-                        onPressed: () async {
-                          Haptic.vibrate();
-                          if (model.selectedUpiApp == null)
-                            return BaseUtil.showNegativeAlert("No app selected",
-                                'Please choose a upi app to continue');
-                          await model.createSubscription();
-                        },
-                        width: SizeConfig.screenWidth! * 0.88,
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding16,
-                      ),
-                      Text(
-                        locale.autoPayBanksSupported,
-                        style: TextStyles.sourceSansL.body4,
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding16,
-                      ),
-                      Image.asset(
-                        "assets/images/autosavebanks.png",
-                        width: SizeConfig.screenWidth! * 0.7,
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding32,
-                      ),
-                    ],
+                  ],
+                ),
+              ),
+              if (model.selectedUpiApp != null)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SafeArea(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ReactivePositiveAppButton(
+                          btnText: locale.btnSumbit,
+                          onPressed: () async {
+                            Haptic.vibrate();
+                            if (model.selectedUpiApp == null)
+                              return BaseUtil.showNegativeAlert(
+                                  "No app selected",
+                                  'Please choose a upi app to continue');
+                            await model.createSubscription();
+                          },
+                          width: SizeConfig.screenWidth! * 0.88,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                        Text(
+                          locale.autoPayBanksSupported,
+                          style: TextStyles.sourceSansL.body4,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                        Image.asset(
+                          "assets/images/autosavebanks.png",
+                          width: SizeConfig.screenWidth! * 0.7,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding32,
+                        ),
+                      ],
+                    ),
                   ),
                 )
             ],

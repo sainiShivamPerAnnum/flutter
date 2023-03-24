@@ -38,6 +38,7 @@ class AutosaveConfirmExitModalSheet extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: SizeConfig.padding32),
               child: SvgPicture.asset(
                 Assets.multiAvatars,
+                fit: BoxFit.cover,
                 width: SizeConfig.screenWidth! * 0.6,
               ),
             ),

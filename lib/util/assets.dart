@@ -122,6 +122,8 @@ class Assets {
   static final String goldConveyor = "assets/images/gold_convyor.webp";
   static final String floConveyor = "assets/images/flo_convyor.webp";
 
+  static final String happyhourPolygon = "assets/svg/happy_hour_polygons.svg";
+
   // WIN
 
   static final String amazonClaim = "assets/images/amazon_claim.png";
@@ -294,6 +296,7 @@ class Assets {
   ];
 
   static String multiAvatars = "assets/vectors/multiAvatars.svg";
+  static String multiRealAvatars = "assets/images/cus_photos.png";
   static final String infoWhyPan =
       'Your PAN Card is used as your unique ID to set up your investment profile in different assets';
 

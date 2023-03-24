@@ -266,6 +266,9 @@ class _JourneyMilestoneDetailsModalSheetState
                                         BaseUtil.openDepositOptionsModalSheet(
                                           amount: widget.milestone.value,
                                         );
+                                      } else {
+                                        AppState.delegate!.parseRoute(Uri.parse(
+                                            widget.milestone.actionUri!));
                                       }
                                     } else {
                                       AppState.delegate!.parseRoute(Uri.parse(

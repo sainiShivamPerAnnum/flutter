@@ -47,7 +47,9 @@ class BlackWhiteButton extends StatelessWidget {
       height: height,
       width: width,
       child: MaterialButton(
-        onPressed: onPress,
+        onPressed: () {
+          onPress.call();
+        },
         padding: padding,
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.circular(5),

@@ -41,6 +41,7 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart'
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -386,7 +387,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void openSellModalSheet({required InvestmentType investmentType}) {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final bool? isAugSellLocked = _userService?.userBootUp?.data!.banMap
           ?.investments?.withdrawal?.augmont?.isBanned;
       final String? augSellBanNotice = _userService
@@ -426,7 +427,8 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  static openDepositOptionsModalSheet({int? amount, bool isSkipMl = false}) {
+  static openDepositOptionsModalSheet(
+      {int? amount, bool isSkipMl = false, String? title, String? subtitle}) {
     // if (_userService!.userJourneyStats!.mlIndex == 1)
     //   return BaseUtil.openDialog(
     //       addToScreenStack: true,
@@ -449,7 +451,12 @@ class BaseUtil extends ChangeNotifier {
             ),
             topRight: Radius.circular(SizeConfig.roundness24),
           ),
-          content: DepositOptionModalSheet(amount: amount, isSkipMl: isSkipMl));
+          content: DepositOptionModalSheet(
+            amount: amount,
+            isSkipMl: isSkipMl,
+            title: title,
+            subtitle: subtitle,
+          ));
     });
   }
 
@@ -481,12 +488,14 @@ class BaseUtil extends ChangeNotifier {
     bool? hapticVibrate,
     required bool isBarrierDismissible,
     ValueChanged<dynamic>? callback,
+    Color? barrierColor,
   }) async {
     if (addToScreenStack != null && addToScreenStack == true)
       AppState.screenStack.add(ScreenItem.dialog);
     print("Current Stack: ${AppState.screenStack}");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     await showDialog(
+      barrierColor: barrierColor,
       context: AppState.delegate!.navigatorKey.currentContext!,
       barrierDismissible: isBarrierDismissible,
       builder: (ctx) => content!,
@@ -592,6 +601,7 @@ class BaseUtil extends ChangeNotifier {
       manualReferralCode = null;
       referrerUserId = null;
       _setRuntimeDefaults();
+      SpotLightController.instance.dispose();
 
       return true;
     } catch (e) {
@@ -900,7 +910,7 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isSignedIn() => (firebaseUser != null && firebaseUser!.uid != null);
+  bool isSignedIn() => (firebaseUser != null);
 
   // bool isActiveUser() => (_myUser != null && !_myUser!.hasIncompleteDetails());
 
@@ -935,14 +945,13 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future showHappyHourDialog(HappyHourCampign model,
-      {bool afterHappyHour = false, bool isComingFromSave = false}) async {
+      {bool isComingFromSave = false}) async {
     return openModalBottomSheet(
       backgroundColor: Colors.transparent,
       addToScreenStack: true,
       hapticVibrate: true,
       content: HappyHourModel(
         model: model,
-        isAfterHappyHour: afterHappyHour,
         isComingFromSave: isComingFromSave,
       ),
       isBarrierDismissible: true,
