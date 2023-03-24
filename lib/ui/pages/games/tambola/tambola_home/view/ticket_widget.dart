@@ -73,10 +73,11 @@ class TicketHeader extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -89,7 +90,7 @@ class TicketHeader extends StatelessWidget {
                 ],
               ),
               // if (TambolaRepo.expiringTicketCount != 0)
-              SizedBox(
+              if (TambolaRepo.expiringTicketCount > 1) SizedBox(
                 height: SizeConfig.padding4,
               ),
               if (TambolaRepo.expiringTicketCount > 1) Row(
@@ -146,7 +147,7 @@ class TicketHeader extends StatelessWidget {
               child: Text(
                 locale.tGetTickets,
                 style: TextStyles.rajdhaniSB.body4
-                    .colour(UiConstants.kBlogCardRandomColor2),
+                    .colour(Colors.white),
                 key: const ValueKey(Constants.GET_TAMBOLA_TICKETS),
               ),
             ),

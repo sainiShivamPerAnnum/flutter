@@ -44,7 +44,7 @@ class TambolaLeaderBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Container(
-      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+      padding: EdgeInsets.symmetric(horizontal:SizeConfig.pageHorizontalMargins),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

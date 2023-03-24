@@ -130,10 +130,10 @@ class ButTicketsComponent extends StatelessWidget {
                 width: SizeConfig.screenWidth! * 0.25,
                 height: SizeConfig.screenHeight! * 0.05,
                 decoration: const BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Color(0xff08D2AD),
-                    Color(0xff43544F),
-                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                  // gradient: LinearGradient(colors: [
+                  //  Color(0xff08D2AD),
+                  //   Color(0xff43544F),
+                  // ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   color: Color(0xff08D2AD),
                 ),
@@ -190,23 +190,23 @@ class BuyTicketPriceWidget extends StatelessWidget {
         SizedBox(
           width: SizeConfig.padding4,
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(
-            color: UiConstants.kBlogCardRandomColor2,
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
-            border: Border.all(color: Colors.black, width: 1),
-          ),
-          child: Text(
-            '₹',
-            style: TextStyles.sourceSansB.body4.colour(Colors.black),
-          ),
-        ),
-        SizedBox(
-          width: SizeConfig.padding4,
-        ),
+        // Container(
+        //   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        //   decoration: BoxDecoration(
+        //     color: UiConstants.kBlogCardRandomColor2,
+        //     borderRadius: const BorderRadius.all(Radius.circular(5)),
+        //     border: Border.all(color: Colors.black, width: 1),
+        //   ),
+        //   child: Text(
+        //     '₹',
+        //     style: TextStyles.sourceSansB.body4.colour(Colors.black),
+        //   ),
+        // ),
+        // SizedBox(
+        //   width: SizeConfig.padding4,
+        // ),
         Text(
-          'Rs. $amount = ',
+          '₹$amount = ',
           style: TextStyles.sourceSans.body2,
         ),
         SizedBox(
@@ -217,7 +217,7 @@ class BuyTicketPriceWidget extends StatelessWidget {
           width: SizeConfig.padding4,
         ),
         Text(
-          '1 Ticket',
+          '1 Free Ticket',
           style: TextStyles.sourceSans.body2,
         ),
         SizedBox(

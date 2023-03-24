@@ -130,7 +130,7 @@ class UiConstants {
     colors: [const Color(0xff111111), UiConstants.kTextFieldColor.withOpacity(0.7)],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    stops: [0.0, 0.4],
+    stops: const [0.0, 0.4],
     tileMode: TileMode.clamp,
   );
 
@@ -147,7 +147,7 @@ class UiConstants {
     colors: [const Color(0xff141316), UiConstants.kBackgroundColor.withOpacity(0.2)],
     begin: Alignment.bottomCenter,
     end: Alignment.topCenter,
-    stops: [0, 0.7],
+    stops: const [0, 0.7],
     tileMode: TileMode.clamp,
   );
 
@@ -155,7 +155,7 @@ class UiConstants {
     colors: [const Color(0xffFFE9B1), const Color(0xffFFE9B1).withOpacity(0.0)],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    stops: [0, 0.8],
+    stops: const [0, 0.8],
     tileMode: TileMode.clamp,
   );
 
@@ -182,9 +182,9 @@ class UiConstants {
 
 extension ColorExtension on String {
   Color? toColor() {
-    var hexColor = this.replaceAll("#", "");
+    var hexColor = replaceAll("#", "");
     if (hexColor.length == 6) {
-      hexColor = "FF" + hexColor;
+      hexColor = "FF$hexColor";
     }
     if (hexColor.length == 8) {
       return Color(int.parse("0x$hexColor"));

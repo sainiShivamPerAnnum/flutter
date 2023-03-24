@@ -19,6 +19,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 class TambolaExistingUserScreen extends StatefulWidget {
@@ -96,10 +97,15 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                       ],
                     ),
                   ),
+                const NextWeekTicketInfo(),
+                SizedBox(
+                  height: SizeConfig.padding28,
+                ),
                 _buildGestureDetector(locale),
                 SizedBox(
-                  height: SizeConfig.padding24,
+                  height: SizeConfig.padding28,
                 ),
+
                 AnimatedBuilder(
                   animation: animationController,
                   builder: (ctx, child) {
@@ -118,7 +124,7 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                   model: widget.model,
                 ),
                 SizedBox(
-                  height: SizeConfig.padding34,
+                  height: SizeConfig.padding14,
                 ),
                 HowTambolaWorks(model: widget.model),
                 SizedBox(height: SizeConfig.padding14),
@@ -135,41 +141,39 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
 
   GestureDetector _buildGestureDetector(S locale) {
     return GestureDetector(
-                onTap: () {
-                  AppState.delegate!.appState.currentAction = PageAction(
-                    state: PageState.addWidget,
-                    page: AllTambolaTicketsPageConfig,
-                    widget: AllTambolaTickets(
-                        ticketList: widget.model.tambolaBoardViews!.toList()),
-                  );
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.screenWidth! * 0.06),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xff627F8E).withOpacity(0.2),
-                    border: Border.all(color: const Color(0xff627F8E)),
-                    borderRadius:
-                        BorderRadius.circular(SizeConfig.roundness12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        locale.tViewAllTicks,
-                        style: TextStyles.rajdhaniSB.body1,
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white,
-                        size: SizeConfig.padding16,
-                      ),
-                    ],
-                  ),
-                ),
-              );
+      onTap: () {
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: AllTambolaTicketsPageConfig,
+          widget: AllTambolaTickets(
+              ticketList: widget.model.tambolaBoardViews!.toList()),
+        );
+      },
+      child: Container(
+        margin:
+            EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.06),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xff627F8E).withOpacity(0.2),
+          border: Border.all(color: const Color(0xff627F8E)),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              locale.tViewAllTicks,
+              style: TextStyles.rajdhaniSB.body1,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.white,
+              size: SizeConfig.padding16,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   FAppBar _buildFAppBar(S locale) {
@@ -238,6 +242,66 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
       ),
       title: locale.tTitle,
       backgroundColor: UiConstants.kBackgroundColor,
+
+      // subtitle: RichText(
+      //   text: TextSpan(
+      //     text: 'Win upto',
+      //     style: TextStyles.body3.colour(Colors.white),
+      //     children: [
+      //       TextSpan(
+      //       text: ' 1 Crore',
+      //       style: TextStyles.body3.colour(UiConstants.tertiarySolid),)
+      //     ]
+      //   ),
+      //
+      // ),
+    );
+  }
+}
+
+class NextWeekTicketInfo extends StatelessWidget {
+  const NextWeekTicketInfo({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.06),
+      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.white.withOpacity(0.5),width: 0.5),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          color: Colors.transparent),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(SizeConfig.padding6),
+            height: 45,
+            decoration: BoxDecoration(
+                color: const Color(0xff024A4F).withOpacity(0.5),
+                // borderRadius: BorderRadius.circular(50),
+                shape: BoxShape.circle),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              height: 24,
+              decoration: const BoxDecoration(
+                  color: Color(0xff024A4F),
+                  // borderRadius: BorderRadius.circular(50),
+                  shape: BoxShape.circle),
+              child: SvgPicture.asset('assets/svg/bulb.svg'),
+            ),
+          ),
+          SizedBox(width: SizeConfig.padding12),
+          Expanded(
+            child: Text(
+              'New tickets received from 6PM - 12AM on Sunday will be considered for next week’s draw',
+              maxLines: 3,
+              style: TextStyles.sourceSans.body4.colour(
+                const Color(0xff919193).withOpacity(0.8),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

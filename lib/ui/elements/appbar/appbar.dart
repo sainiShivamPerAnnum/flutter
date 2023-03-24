@@ -21,6 +21,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   final double? leftPad;
   final bool showLeading;
   final Widget? leading;
+  final Widget? subtitle;
   // final bool hasBackButton;
   final TextStyle? style;
   const FAppBar({
@@ -36,6 +37,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     this.style,
     this.action,
     this.leftPad,
+    this.subtitle,
     // this.hasBackButton = true
   }) : super(key: key);
 
@@ -50,9 +52,16 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
         children: [
           SizedBox(width: SizeConfig.padding8),
           showAvatar ? ProfileImageSE() : const SizedBox(),
-          Text(
-            title ?? '',
-            style: TextStyles.rajdhaniSB.title5.merge(style),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title ?? '',
+                style: TextStyles.rajdhaniSB.title5.merge(style),
+              ),
+              subtitle ?? const SizedBox(),
+            ],
           ),
         ],
       ),
