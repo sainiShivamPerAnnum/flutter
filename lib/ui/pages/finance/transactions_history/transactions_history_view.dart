@@ -450,14 +450,6 @@ class TransactionSIPTile extends StatelessWidget {
                 .getFormattedTxnAmount(double.tryParse(txn!.amount!)!),
             style: TextStyles.sourceSansM.body3,
           ),
-          Padding(
-            padding: EdgeInsets.all(SizeConfig.padding6),
-            child: Icon(
-              Icons.arrow_forward_ios,
-              size: SizeConfig.iconSize3,
-              color: UiConstants.kTextColor,
-            ),
-          )
         ],
       ),
     );

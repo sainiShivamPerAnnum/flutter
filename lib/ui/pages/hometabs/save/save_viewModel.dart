@@ -181,7 +181,7 @@ class SaveViewModel extends BaseViewModel {
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
         case 'AS':
-          saveViewItems.add(AutosaveCard(locationKey: ValueKey('save')));
+          saveViewItems.add(AutosaveCard());
           break;
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));

@@ -2,6 +2,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/FelloTile.dart';
@@ -139,7 +140,8 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 },
               ),
               SizedBox(height: SizeConfig.padding16),
-              if (AppConfig.getValue(AppConfigKey.autosaveActive) as bool)
+              if (AppConfig.getValue(AppConfigKey.autosaveActive) as bool &&
+                  locator<SubService>().subscriptionData == null)
                 FelloTile(
                   leadingAsset: Assets.repeat,
                   title: locale.saveAutoSaveTitle,
@@ -152,7 +154,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                     AppState.isWebGamePInProgress = false;
                     while (AppState.screenStack.length > 1)
                       AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.delegate!.parseRoute(Uri.parse("augDetails"));
+                    AppState.delegate!.appState.setCurrentTabIndex = 0;
                   },
                 ),
               SizedBox(height: SizeConfig.padding24),

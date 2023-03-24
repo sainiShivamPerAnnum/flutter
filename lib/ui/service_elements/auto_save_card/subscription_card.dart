@@ -17,8 +17,25 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AutosaveCard extends StatelessWidget {
-  final ValueKey locationKey;
-  AutosaveCard({required this.locationKey});
+  final InvestmentType? investmentType;
+  AutosaveCard({this.investmentType});
+
+  bool showAutosaveCard(SubService service) {
+    if (investmentType != null) {
+      if (service.subscriptionData!.status == "PAUSE_FROM_APP_FOREVER") {
+        return false;
+      } else {
+        if (investmentType == InvestmentType.AUGGOLD99) {
+          return !((service.subscriptionData!.augAmt ?? "").isEmpty ||
+              service.subscriptionData!.augAmt == "0");
+        } else {
+          return !((service.subscriptionData!.lbAmt ?? "").isEmpty ||
+              service.subscriptionData!.lbAmt == "0");
+        }
+      }
+    } else
+      return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +49,11 @@ class AutosaveCard extends StatelessWidget {
                 await service.handleTap();
               },
               child: (service.subscriptionData != null)
-                  ? ActiveOrPausedAutosaveCard(
-                      service: service,
-                      innerTapActive: false,
-                    )
+                  ? (showAutosaveCard(service)
+                      ? ActiveOrPausedAutosaveCard(
+                          service: service,
+                        )
+                      : SizedBox())
                   : InitAutosaveCard(
                       service: service,
                     ),
@@ -142,9 +160,12 @@ class InitAutosaveCard extends StatelessWidget {
 class ActiveOrPausedAutosaveCard extends StatelessWidget {
   final SubService service;
   final InvestmentType? asset;
-  final bool innerTapActive;
+  final bool assetSpecificCard;
   const ActiveOrPausedAutosaveCard(
-      {Key? key, required this.service, this.asset, this.innerTapActive = true})
+      {Key? key,
+      required this.service,
+      this.asset,
+      this.assetSpecificCard = true})
       : super(key: key);
 
   getAutosaveStatusText(AutosaveState state) {
@@ -162,80 +183,104 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        if (innerTapActive) service.handleTap();
-      },
-      child: Container(
-        height: SizeConfig.screenWidth! * 0.20,
-        width: SizeConfig.screenWidth,
-        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-        margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-        decoration: BoxDecoration(
-          color: UiConstants.kBackgroundColor2,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-          border: Border.all(color: Colors.white30),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TitleSubtitleContainer(
+          title: 'Autosave Details',
+          subTitle: 'View all your autosave transactions here',
         ),
-        child: Row(
-          children: [
-            SvgPicture.asset(
-              service.subscriptionData != null &&
-                      service.subscriptionData!.status ==
-                          Constants.SUBSCRIPTION_ACTIVE
-                  ? Assets.autoSaveOngoing
-                  : Assets.autoSavePaused,
-              height: SizeConfig.padding44,
-              width: SizeConfig.padding44,
-            ),
-            SizedBox(
-              width: SizeConfig.padding6,
-            ),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                "Autosave " + getAutosaveStatusText(service.autosaveState),
-                style: TextStyles.sourceSansB.body1.colour(
-                    service.autosaveState == AutosaveState.ACTIVE
-                        ? UiConstants.primaryColor
-                        : UiConstants.tertiarySolid),
-                textAlign: TextAlign.left,
-              ),
-            ),
-            Spacer(),
-            RichText(
-              text: TextSpan(
-                text: '₹',
-                style: TextStyles.sourceSansSB.body0
-                    .colour(UiConstants.kTextColor),
-                children: [
-                  TextSpan(
-                    text:
-                        "${asset == InvestmentType.AUGGOLD99 ? service.subscriptionData?.augAmt : asset == InvestmentType.LENDBOXP2P ? service.subscriptionData?.lbAmt : service.subscriptionData?.amount ?? 0} ",
-                    style: TextStyles.sourceSansSB.body0
-                        .colour(UiConstants.kTextColor),
-                  ),
-                  TextSpan(
-                    text: "/" +
-                        (service.subscriptionData?.frequency.toCamelCase() ??
-                            ""),
-                    style: TextStyles.sourceSans.body4
-                        .colour(UiConstants.kTextColor2),
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                service.handleTap();
-              },
-              icon: Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: Colors.white,
-              ),
-            )
-          ],
+        SizedBox(
+          height: SizeConfig.padding12,
         ),
-      ),
+        GestureDetector(
+          onTap: service.handleTap,
+          child: Container(
+            height: SizeConfig.screenWidth! * 0.36,
+            width: SizeConfig.screenWidth,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+            margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+            decoration: BoxDecoration(
+              color: UiConstants.kSecondaryBackgroundColor,
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              border: Border.all(color: Colors.white30),
+            ),
+            child: Stack(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      service.subscriptionData != null &&
+                              service.subscriptionData!.status ==
+                                  Constants.SUBSCRIPTION_ACTIVE
+                          ? Assets.autoSaveOngoing
+                          : Assets.autoSavePaused,
+                      height: SizeConfig.padding90,
+                      width: SizeConfig.padding90,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding16,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            "Autosave " +
+                                getAutosaveStatusText(service.autosaveState),
+                            style: TextStyles.sourceSansB.body0.colour(
+                                service.autosaveState == AutosaveState.ACTIVE
+                                    ? UiConstants.primaryColor
+                                    : UiConstants.tertiarySolid),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig.padding8),
+                        RichText(
+                          text: TextSpan(
+                            text: '₹',
+                            style: TextStyles.sourceSansSB.body0
+                                .colour(UiConstants.kTextColor),
+                            children: [
+                              TextSpan(
+                                text:
+                                    "${asset == InvestmentType.AUGGOLD99 ? service.subscriptionData?.augAmt : asset == InvestmentType.LENDBOXP2P ? service.subscriptionData?.lbAmt : service.subscriptionData?.amount ?? 0} ",
+                                style: TextStyles.sourceSansSB.body0
+                                    .colour(UiConstants.kTextColor),
+                              ),
+                              TextSpan(
+                                text: "/" +
+                                    (service.subscriptionData?.frequency
+                                            .toCamelCase() ??
+                                        ""),
+                                style: TextStyles.sourceSans.body4
+                                    .colour(UiConstants.kTextColor2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: SizeConfig.padding12),
+                    child: SvgPicture.asset(
+                      Assets.chevRonRightArrow,
+                      width: SizeConfig.iconSize0,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

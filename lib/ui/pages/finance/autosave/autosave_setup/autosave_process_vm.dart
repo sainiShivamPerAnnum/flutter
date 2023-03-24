@@ -72,6 +72,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
       floAmountFieldController!.text = '0';
       goldAmountFieldController!.text = '0';
       _totalInvestingAmount = 0;
+      onComboTapped(2);
       comboController = PageController();
     } else if (value == 1) {
       floAmountFieldController!.text = '100';

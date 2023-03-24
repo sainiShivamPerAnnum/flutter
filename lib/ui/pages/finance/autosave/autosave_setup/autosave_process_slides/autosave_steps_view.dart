@@ -22,21 +22,18 @@ class AutosaveStepsView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Spacer(),
         Text(
-          locale.howItworks,
+          "Steps to Setup Autosave",
           style: TextStyles.rajdhaniSB.title4,
         ),
-        SizedBox(
-          height: SizeConfig.screenHeight! * 0.04,
-        ),
+        SizedBox(height: SizeConfig.padding26),
         AutosaveStepTile(
           image: SvgPicture.asset(
-            Assets.upiIcon,
-            height: SizeConfig.screenWidth! * 0.0667,
-            width: SizeConfig.screenWidth! * 0.0667,
+            Assets.floGold,
+            height: SizeConfig.screenWidth! * 0.1,
+            width: SizeConfig.screenWidth! * 0.1,
           ),
-          title: "Choose an asset to start with Autosave",
+          title: "Choose an asset to Autosave",
           subtitle: Text(
             "You can choose amongst Fello Flo, Digital Gold or both",
             style: TextStyles.sourceSans.body4.colour(
@@ -45,12 +42,12 @@ class AutosaveStepsView extends StatelessWidget {
           ),
         ),
         AutosaveStepTile(
-          image: Icon(
-            Icons.verified,
-            color: UiConstants.primaryColor,
-            size: SizeConfig.screenWidth! * 0.112,
+          image: SvgPicture.asset(
+            Assets.rupee,
+            height: SizeConfig.screenWidth! * 0.0667,
+            width: SizeConfig.screenWidth! * 0.0667,
           ),
-          title: "Enter the amount to Autosave and choose a frequency",
+          title: "Enter amount and choose a frequency",
           subtitle: Text(
             "You can choose daily, weekly and monthly frequencies",
             style: TextStyles.sourceSans.body4.colour(
@@ -60,7 +57,7 @@ class AutosaveStepsView extends StatelessWidget {
         ),
         AutosaveStepTile(
           image: SvgPicture.asset(
-            Assets.rupee,
+            Assets.upiIcon,
             height: SizeConfig.screenWidth! * 0.064,
             width: SizeConfig.screenWidth! * 0.064,
           ),

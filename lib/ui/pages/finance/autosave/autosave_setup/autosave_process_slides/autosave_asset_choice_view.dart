@@ -103,10 +103,14 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                               trailing: Radio(
                                 value: index,
                                 groupValue: model.selectedAssetOption,
-                                onChanged: (val) {
+                                onChanged: (_) {
                                   if (model
                                       .autosaveAssetOptionList[index].isEnabled)
                                     model.selectedAssetOption = index;
+                                  else
+                                    BaseUtil.showNegativeAlert(
+                                        "Complete your KYC to autosave in both Flo & Gold",
+                                        "Option not available");
                                 },
                               ),
                             ),

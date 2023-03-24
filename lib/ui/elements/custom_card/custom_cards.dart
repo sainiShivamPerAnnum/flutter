@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/ui/service_elements/auto_save_card/autosave_status_text.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -90,7 +89,7 @@ class SaveCustomCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    AutosaveStatusText(asset: title!),
+                                    // AutosaveStatusText(asset: title!),
                                     Text(
                                       title!,
                                       style: TextStyles.rajdhaniSB.title5,

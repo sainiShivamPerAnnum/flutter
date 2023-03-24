@@ -273,7 +273,9 @@ class AutosaveDetailsView extends StatelessWidget {
                                                   model.currentPage = val;
                                                 },
                                                 children: [
-                                                  model.augTxnList?.length == 0
+                                                  (model.augTxnList?.length ??
+                                                              0) ==
+                                                          0
                                                       ? Center(
                                                           child:
                                                               NoRecordDisplayWidget(
@@ -296,8 +298,13 @@ class AutosaveDetailsView extends StatelessWidget {
                                                           child:
                                                               ListView.builder(
                                                             itemCount: model
-                                                                .augTxnList
-                                                                ?.length,
+                                                                        .augTxnList!
+                                                                        .length >
+                                                                    5
+                                                                ? 5
+                                                                : model
+                                                                    .augTxnList!
+                                                                    .length,
                                                             shrinkWrap: true,
                                                             physics:
                                                                 NeverScrollableScrollPhysics(),
@@ -318,7 +325,9 @@ class AutosaveDetailsView extends StatelessWidget {
                                                             },
                                                           ),
                                                         ),
-                                                  model.lbTxnList?.length == 0
+                                                  (model.lbTxnList?.length ??
+                                                              0) ==
+                                                          0
                                                       ? Center(
                                                           child:
                                                               NoRecordDisplayWidget(
@@ -341,8 +350,13 @@ class AutosaveDetailsView extends StatelessWidget {
                                                           child:
                                                               ListView.builder(
                                                             itemCount: model
-                                                                .lbTxnList
-                                                                ?.length,
+                                                                        .lbTxnList!
+                                                                        .length >
+                                                                    5
+                                                                ? 5
+                                                                : model
+                                                                    .lbTxnList
+                                                                    ?.length,
                                                             shrinkWrap: true,
                                                             physics:
                                                                 NeverScrollableScrollPhysics(),

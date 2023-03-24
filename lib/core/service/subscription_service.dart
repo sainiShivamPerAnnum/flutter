@@ -150,7 +150,7 @@ class SubService extends ChangeNotifier {
     allSubTxnList = [];
     lbSubTxnList = [];
     augSubTxnList = [];
-
+    suggestions.clear();
     hasNoMoreLbSubsTxns = false;
     hasNoMoreAugSubsTxns = false;
     upiApplication = null;
@@ -359,6 +359,7 @@ class SubService extends ChangeNotifier {
     List augChips = [dailyFreqData[0], weeklyFreqData[0], monthlyFreqData[0]];
     List lbChips = [dailyFreqData[1], weeklyFreqData[1], monthlyFreqData[1]];
     List combos = [dailyFreqData[2], weeklyFreqData[2], monthlyFreqData[2]];
+
     suggestions.addAll([augChips, lbChips, combos]);
   }
 

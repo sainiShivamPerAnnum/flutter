@@ -4,10 +4,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
@@ -174,17 +177,37 @@ class AssetSectionView extends StatelessWidget {
                                 ),
                               ],
                               if (!isNewUser) ...[
+                                MiniTransactionCard(investmentType: type),
+                                if (locator<SubService>().subscriptionData !=
+                                    null)
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        bottom: SizeConfig.padding16),
+                                    child: Center(
+                                      child: InkWell(
+                                        onTap: () {
+                                          AppState.delegate!.appState
+                                                  .currentAction =
+                                              PageAction(
+                                                  page:
+                                                      AutosaveDetailsViewPageConfig,
+                                                  state: PageState.addPage);
+                                        },
+                                        child: Text(
+                                          "View Autosave Transactions",
+                                          style: TextStyles.sourceSansM.body3
+                                              .colour(UiConstants.primaryColor),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 if (locator<SubService>().subscriptionData !=
                                     null)
                                   Container(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: SizeConfig.padding16),
-                                    child: ActiveOrPausedAutosaveCard(
-                                      service: locator<SubService>(),
-                                      asset: type,
-                                    ),
+                                    child: AutosaveCard(investmentType: type),
                                   ),
-                                MiniTransactionCard(investmentType: type),
                                 if (balance != 0) ...[
                                   Align(
                                     alignment: Alignment.centerLeft,

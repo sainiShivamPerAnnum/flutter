@@ -28,6 +28,18 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
     S locale = locator<S>();
     return Stack(
       children: [
+        // Align(
+        //   alignment: Alignment.bottomCenter,
+        //   child: Container(
+        //     height: SizeConfig.navBarHeight * 2,
+        //     width: SizeConfig.screenWidth,
+        //     decoration: BoxDecoration(
+        //       gradient: LinearGradient(
+        //         colors: [Colors.transparent, UiConstants.kBackgroundColor],
+        //       ),
+        //     ),
+        //   ),
+        // ),
         Container(
           width: SizeConfig.screenWidth,
           height: SizeConfig.screenHeight! - SizeConfig.fToolBarHeight,
@@ -67,9 +79,8 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
                     readOnly: model.readOnly,
                     amountFieldController: model.floAmountFieldController!,
                     onChanged: (val) {
-                      model.totalInvestingAmount = int.tryParse(val ?? '0')! +
-                          int.tryParse(
-                              model.floAmountFieldController?.text ?? '0')!;
+                      model.totalInvestingAmount = int.tryParse(
+                          model.floAmountFieldController?.text ?? '0')!;
                     },
                   ),
                 if (model.selectedAssetOption == 2)
@@ -78,9 +89,8 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
                     readOnly: model.readOnly,
                     amountFieldController: model.goldAmountFieldController!,
                     onChanged: (val) {
-                      model.totalInvestingAmount = int.tryParse(val ?? '0')! +
-                          int.tryParse(
-                              model.goldAmountFieldController?.text ?? '0')!;
+                      model.totalInvestingAmount = int.tryParse(
+                          model.goldAmountFieldController?.text ?? '0')!;
                     },
                   ),
                 Container(
@@ -584,9 +594,6 @@ class AutosaveSuggestionChipsRow extends StatelessWidget {
     print(chipsData.map((e) => e.toString()).toList());
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        // shrinkWrap: true,
-        // scrollDirection: Axis.horizontal,
-        // physics: BouncingScrollPhysics(),
         children: List.generate(
           model.getChipsLength(),
           (index) => AmountChips(
@@ -597,7 +604,10 @@ class AutosaveSuggestionChipsRow extends StatelessWidget {
                     int.tryParse(model.goldAmountFieldController!.text) ==
                         chipsData[index].value)),
             amount: chipsData[index].value,
-            onTap: () => model.onChipTapped(chipsData[index].value!, index),
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              model.onChipTapped(chipsData[index].value!, index);
+            },
             isBestSeller: chipsData[index].best,
           ),
         ));
@@ -793,7 +803,7 @@ class _CenterTextFieldState extends State<CenterTextField> {
                 ),
                 onChanged: (val) {
                   widget.onChanged(val);
-                  fieldWidth = ((SizeConfig.screenWidth! * 0.07) *
+                  fieldWidth = ((SizeConfig.screenWidth! * 0.08) *
                       widget.amountFieldController.text.length.toDouble());
                 },
               ),
