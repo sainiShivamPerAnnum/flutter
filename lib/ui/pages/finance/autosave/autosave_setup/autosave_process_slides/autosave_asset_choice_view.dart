@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class AutosaveAssetChoiceView extends StatelessWidget {
   final AutosaveProcessViewModel model;
@@ -30,107 +32,121 @@ class AutosaveAssetChoiceView extends StatelessWidget {
             style: TextStyles.rajdhaniSB.title4,
           ),
           SizedBox(height: SizeConfig.padding10),
-          Column(
-            children: List.generate(
-              model.autosaveAssetOptionList.length,
-              (index) => Container(
-                margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  child: ColorFiltered(
-                    colorFilter: model.autosaveAssetOptionList[index].isEnabled
-                        ? ColorFilter.mode(Colors.transparent, BlendMode.color)
-                        : ColorFilter.mode(
-                            Colors.grey,
-                            BlendMode.saturation,
-                          ),
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      height: SizeConfig.screenWidth! * 0.24,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 1,
-                            color: Color(0xff4F4F4F),
-                          ),
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness5),
-                          color: Color(0xff303030)),
-                      child: Stack(
-                        children: [
-                          Align(
-                            alignment: Alignment.center,
-                            child: ListTile(
-                              onTap: () {
-                                if (model
-                                    .autosaveAssetOptionList[index].isEnabled)
-                                  model.selectedAssetOption = index;
-                                else
-                                  BaseUtil.showNegativeAlert(
-                                      "Complete your KYC to autosave in both Flo & Gold",
-                                      "Option not available");
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              minVerticalPadding: SizeConfig.padding10,
-                              leading: index == 0
-                                  ? SvgPicture.asset(
-                                      model
-                                          .autosaveAssetOptionList[index].asset,
-                                      width: SizeConfig.padding70,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.asset(
-                                      model
-                                          .autosaveAssetOptionList[index].asset,
-                                      width: SizeConfig.padding70,
-                                      fit: BoxFit.cover,
+          Selector<UserService, bool>(
+              selector: (ctx, userService) => userService.isSimpleKycVerified,
+              builder: (context, isSimpleKycVerified, child) {
+                return Column(
+                  children: List.generate(
+                    model.autosaveAssetOptionList.length,
+                    (index) => Container(
+                      margin:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+                      child: ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness5),
+                        child: ColorFiltered(
+                          colorFilter: index == 2
+                              ? ColorFilter.mode(
+                                  Colors.transparent, BlendMode.color)
+                              : isSimpleKycVerified
+                                  ? ColorFilter.mode(
+                                      Colors.transparent, BlendMode.color)
+                                  : ColorFilter.mode(
+                                      Colors.grey,
+                                      BlendMode.saturation,
                                     ),
-                              title: Text(
-                                model.autosaveAssetOptionList[index].title,
-                                style: TextStyles.sourceSansB.body1,
-                              ),
-                              subtitle: Text(
-                                  (model.autosaveAssetOptionList[index]
-                                          .isEnabled)
-                                      ? model.autosaveAssetOptionList[index]
-                                          .subtitle
-                                      : "Complete KYC to unlock",
-                                  style: TextStyles.sourceSans.body3),
-                              trailing: Radio(
-                                value: index,
-                                groupValue: model.selectedAssetOption,
-                                onChanged: (_) {
-                                  if (model
-                                      .autosaveAssetOptionList[index].isEnabled)
-                                    model.selectedAssetOption = index;
-                                  else
-                                    BaseUtil.showNegativeAlert("KYC Incomplete",
-                                        "Complete your KYC to autosave in this asset");
-                                },
-                              ),
+                          child: Container(
+                            width: SizeConfig.screenWidth,
+                            // height: SizeConfig.screenWidth! * 0.24,
+
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: Color(0xff4F4F4F),
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness5),
+                                color: Color(0xff303030)),
+                            child: Stack(
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: ListTile(
+                                    onTap: () {
+                                      if (isSimpleKycVerified)
+                                        model.selectedAssetOption = index;
+                                      else
+                                        BaseUtil.showNegativeAlert(
+                                            "Complete your KYC to autosave in both Flo & Gold",
+                                            "Option not available");
+                                    },
+                                    contentPadding: EdgeInsets.zero,
+                                    minVerticalPadding: SizeConfig.padding10,
+                                    leading: index == 0
+                                        ? SvgPicture.asset(
+                                            model.autosaveAssetOptionList[index]
+                                                .asset,
+                                            width: SizeConfig.padding70,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.asset(
+                                            model.autosaveAssetOptionList[index]
+                                                .asset,
+                                            width: SizeConfig.padding70,
+                                            fit: BoxFit.cover,
+                                          ),
+                                    title: Text(
+                                      model
+                                          .autosaveAssetOptionList[index].title,
+                                      style: TextStyles.sourceSansB.body1,
+                                    ),
+                                    subtitle: Text(
+                                        (model.autosaveAssetOptionList[index]
+                                                .isEnabled)
+                                            ? model
+                                                .autosaveAssetOptionList[index]
+                                                .subtitle
+                                            : "Complete KYC to unlock",
+                                        style: TextStyles.sourceSans.body3),
+                                    trailing: Radio(
+                                      value: index,
+                                      groupValue: model.selectedAssetOption,
+                                      onChanged: (_) {
+                                        if (model.autosaveAssetOptionList[index]
+                                            .isEnabled)
+                                          model.selectedAssetOption = index;
+                                        else
+                                          BaseUtil.showNegativeAlert(
+                                              "KYC Incomplete",
+                                              "Complete your KYC to autosave in this asset");
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                if (model
+                                    .autosaveAssetOptionList[index].isPopular)
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: IgnorePointer(
+                                      child: CustomPaint(
+                                        size: Size(
+                                            SizeConfig.padding64,
+                                            (SizeConfig.padding64 *
+                                                    0.6538461538461539)
+                                                .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                        painter: RPSCustomPainter(),
+                                      ),
+                                    ),
+                                  )
+                              ],
                             ),
                           ),
-                          if (model.autosaveAssetOptionList[index].isPopular)
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: IgnorePointer(
-                                child: CustomPaint(
-                                  size: Size(
-                                      SizeConfig.padding64,
-                                      (SizeConfig.padding64 *
-                                              0.6538461538461539)
-                                          .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                                  painter: RPSCustomPainter(),
-                                ),
-                              ),
-                            )
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-          ),
+                );
+              }),
           if (!model.autosaveAssetOptionList[0].isEnabled)
             GestureDetector(
               onTap: () {
@@ -165,7 +181,7 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                             AppState.showAutosaveBt = false;
                             AppState.delegate!.appState.currentAction =
                                 PageAction(
-                                    state: PageState.replace,
+                                    state: PageState.addPage,
                                     page: KycDetailsPageConfig);
                           },
                       )

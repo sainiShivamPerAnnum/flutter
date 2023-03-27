@@ -50,17 +50,8 @@ class AutosaveCard extends StatelessWidget {
                 await service.handleTap();
               },
               child: (service.subscriptionData != null)
-                  ? (
-                          // showAutosaveCard(service)
-                          //   ?
-                          ActiveOrPausedAutosaveCard(
-                      service: service,
-                    )
-                      // : SizedBox()
-                      )
-                  : InitAutosaveCard(
-                      service: service,
-                    ),
+                  ? ActiveOrPausedAutosaveCard(service: service)
+                  : InitAutosaveCard(service: service),
             )
           : SizedBox(),
     );
@@ -200,102 +191,108 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TitleSubtitleContainer(
-          title: 'Autosave Details',
-        ),
-        SizedBox(
-          height: SizeConfig.padding12,
-        ),
-        GestureDetector(
-          onTap: service.handleTap,
-          child: Container(
-            height: SizeConfig.screenWidth! * 0.36,
-            width: SizeConfig.screenWidth,
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-            margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-            decoration: BoxDecoration(
-              color: UiConstants.kSecondaryBackgroundColor,
-              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-              border: Border.all(color: Colors.white12),
-            ),
-            child: Stack(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      service.subscriptionData != null &&
-                              service.subscriptionData!.status ==
-                                  Constants.SUBSCRIPTION_ACTIVE
-                          ? Assets.autoSaveOngoing
-                          : Assets.autoSavePaused,
-                      height: SizeConfig.padding90,
-                      width: SizeConfig.padding90,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding20,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            getAutosaveStatusText(service.autosaveState) +
-                                " Autosave",
-                            style: TextStyles.sourceSansB.body0
-                                .colour(Colors.white),
-                            textAlign: TextAlign.left,
+    return Container(
+      margin: EdgeInsets.only(
+        top: SizeConfig.padding10,
+        bottom: SizeConfig.padding16,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TitleSubtitleContainer(
+            title: 'Autosave Details',
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+          GestureDetector(
+            onTap: service.handleTap,
+            child: Container(
+              height: SizeConfig.screenWidth! * 0.36,
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+              decoration: BoxDecoration(
+                color: UiConstants.kSecondaryBackgroundColor,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                border: Border.all(color: Colors.white12),
+              ),
+              child: Stack(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        service.subscriptionData != null &&
+                                service.subscriptionData!.status ==
+                                    Constants.SUBSCRIPTION_ACTIVE
+                            ? Assets.autoSaveOngoing
+                            : Assets.autoSavePaused,
+                        height: SizeConfig.padding90,
+                        width: SizeConfig.padding90,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding20,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              getAutosaveStatusText(service.autosaveState) +
+                                  " Autosave",
+                              style: TextStyles.sourceSansB.body0
+                                  .colour(Colors.white),
+                              textAlign: TextAlign.left,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: SizeConfig.padding8),
-                        RichText(
-                          text: TextSpan(
-                            text: '₹',
-                            style: TextStyles.sourceSansSB.body0
-                                .colour(UiConstants.kTextColor),
-                            children: [
-                              TextSpan(
-                                text:
-                                    "${asset == InvestmentType.AUGGOLD99 ? service.subscriptionData?.augAmt : asset == InvestmentType.LENDBOXP2P ? service.subscriptionData?.lbAmt : service.subscriptionData?.amount ?? 0} ",
-                                style: TextStyles.sourceSansSB.body0
-                                    .colour(UiConstants.kTextColor),
-                              ),
-                              TextSpan(
-                                text: "/" +
-                                    (service.subscriptionData?.frequency
-                                            .toCamelCase()
-                                            .frequencyRename() ??
-                                        ""),
-                                style: TextStyles.sourceSans.body4
-                                    .colour(UiConstants.kTextColor2),
-                              ),
-                            ],
+                          SizedBox(height: SizeConfig.padding8),
+                          RichText(
+                            text: TextSpan(
+                              text: '₹',
+                              style: TextStyles.sourceSansSB.body0
+                                  .colour(UiConstants.kTextColor),
+                              children: [
+                                TextSpan(
+                                  text:
+                                      "${asset == InvestmentType.AUGGOLD99 ? service.subscriptionData?.augAmt : asset == InvestmentType.LENDBOXP2P ? service.subscriptionData?.lbAmt : service.subscriptionData?.amount ?? 0} ",
+                                  style: TextStyles.sourceSansSB.body0
+                                      .colour(UiConstants.kTextColor),
+                                ),
+                                TextSpan(
+                                  text: "/" +
+                                      (service.subscriptionData?.frequency
+                                              .toCamelCase()
+                                              .frequencyRename() ??
+                                          ""),
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(UiConstants.kTextColor2),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: SizeConfig.padding12),
-                    child: SvgPicture.asset(
-                      Assets.chevRonRightArrow,
-                      width: SizeConfig.iconSize0,
-                    ),
+                        ],
+                      ),
+                    ],
                   ),
-                )
-              ],
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: SizeConfig.padding12),
+                      child: SvgPicture.asset(
+                        Assets.chevRonRightArrow,
+                        width: SizeConfig.iconSize0,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

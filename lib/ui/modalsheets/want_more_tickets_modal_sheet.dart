@@ -140,7 +140,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 },
               ),
               SizedBox(height: SizeConfig.padding16),
-              if (AppConfig.getValue(AppConfigKey.autosaveActive) as bool &&
+              if (AppConfig.getValue(AppConfigKey.showNewAutosave) as bool &&
                   locator<SubService>().subscriptionData == null)
                 FelloTile(
                   leadingAsset: Assets.repeat,

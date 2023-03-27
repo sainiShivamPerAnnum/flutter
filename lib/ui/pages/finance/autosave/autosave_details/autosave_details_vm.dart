@@ -84,9 +84,9 @@ class AutosaveDetailsViewModel extends BaseViewModel {
   }
 
   pauseResume() async {
+    if (_subService.isPauseOrResuming) return;
     if (_subService.autosaveState == AutosaveState.PAUSED ||
         _subService.autosaveState == AutosaveState.INACTIVE) {
-      if (_subService.isPauseOrResuming) return;
       _analyticsService
           .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
         "frequency": activeSubscription!.frequency,

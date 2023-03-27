@@ -658,93 +658,80 @@ class AutoSaveDetailsCard extends StatelessWidget {
       ),
       child: Consumer<SubService>(
         builder: (context, _subService, property) {
-          return (_subService.subscriptionData!.status ==
-                      Constants.SUBSCRIPTION_INACTIVE &&
-                  _subService.subscriptionData!.resumeDate == null)
-              ? Center(
-                  child: Text(
-                    locale.autoSaveInActive,
-                    style: TextStyles.title3.bold.colour(Colors.white),
-                  ),
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "You are saving",
+                style: TextStyles.sourceSans.body3
+                    .setOpacity(0.6)
+                    .letterSpace(SizeConfig.padding2),
+              ),
+              SizedBox(height: SizeConfig.padding10),
+              RichText(
+                text: TextSpan(
+                  text: '₹${_subService.subscriptionData!.amount}',
+                  style: TextStyles.rajdhaniB.title1,
                   children: [
-                    Text(
-                      "You are saving",
-                      style: TextStyles.sourceSans.body3
-                          .setOpacity(0.6)
-                          .letterSpace(SizeConfig.padding2),
+                    TextSpan(
+                        text:
+                            '/${_subService.subscriptionData!.frequency!.toCamelCase().frequencyRename()}',
+                        style: TextStyles.rajdhaniT.title2)
+                  ],
+                ),
+              ),
+              SizedBox(height: SizeConfig.padding12),
+              Divider(
+                height: SizeConfig.padding12,
+                color: UiConstants.kAutosaveBalanceColor.withOpacity(0.4),
+              ),
+              if (int.tryParse(_subService.subscriptionData!.lbAmt ?? '0') != 0)
+                AutosaveAssetDetailTile(
+                  asset: Assets.felloFlo,
+                  title: "Fello Flo",
+                  subtitle: "P2P Fund | 10% Returns",
+                  amt: "₹" + (_subService.subscriptionData!.lbAmt ?? '-'),
+                ),
+              if (int.tryParse(_subService.subscriptionData!.augAmt ?? '0') !=
+                  0)
+                AutosaveAssetDetailTile(
+                  asset: Assets.digitalGoldBar,
+                  title: "Digital Gold",
+                  subtitle: "Safe and Stable Returns",
+                  amt: "₹" + (_subService.subscriptionData!.augAmt ?? '-'),
+                ),
+              SizedBox(
+                height: SizeConfig.padding12,
+              ),
+              Divider(
+                height: SizeConfig.padding12,
+                color: UiConstants.kAutosaveBalanceColor.withOpacity(0.4),
+              ),
+              SizedBox(height: SizeConfig.padding10),
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: locale.yourAutoSave,
+                      style: TextStyles.sourceSans.body4
+                          .setOpacity(0.4)
+                          .copyWith(fontStyle: FontStyle.italic),
                     ),
-                    SizedBox(height: SizeConfig.padding10),
-                    RichText(
-                      text: TextSpan(
-                        text: '₹${_subService.subscriptionData!.amount}',
-                        style: TextStyles.rajdhaniB.title1,
-                        children: [
-                          TextSpan(
-                              text:
-                                  '/${_subService.subscriptionData!.frequency!.toCamelCase().frequencyRename()}',
-                              style: TextStyles.rajdhaniT.title2)
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.padding12),
-                    Divider(
-                      height: SizeConfig.padding12,
-                      color: UiConstants.kAutosaveBalanceColor.withOpacity(0.4),
-                    ),
-                    if (int.tryParse(
-                            _subService.subscriptionData!.lbAmt ?? '0') !=
-                        0)
-                      AutosaveAssetDetailTile(
-                        asset: Assets.felloFlo,
-                        title: "Fello Flo",
-                        subtitle: "P2P Fund | 10% Returns",
-                        amt: "₹" + (_subService.subscriptionData!.lbAmt ?? '-'),
-                      ),
-                    if (int.tryParse(
-                            _subService.subscriptionData!.augAmt ?? '0') !=
-                        0)
-                      AutosaveAssetDetailTile(
-                        asset: Assets.digitalGoldBar,
-                        title: "Digital Gold",
-                        subtitle: "Safe and Stable Returns",
-                        amt:
-                            "₹" + (_subService.subscriptionData!.augAmt ?? '-'),
-                      ),
-                    SizedBox(
-                      height: SizeConfig.padding12,
-                    ),
-                    Divider(
-                      height: SizeConfig.padding12,
-                      color: UiConstants.kAutosaveBalanceColor.withOpacity(0.4),
-                    ),
-                    SizedBox(height: SizeConfig.padding10),
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: locale.yourAutoSave,
-                            style: TextStyles.sourceSans.body4
-                                .setOpacity(0.4)
-                                .copyWith(fontStyle: FontStyle.italic),
-                          ),
-                          TextSpan(
-                            text: getRichText(_subService.autosaveState,
-                                _subService.subscriptionData!),
-                            style: TextStyles.sourceSans.body4.colour(
-                              getRichTextColor(_subService.autosaveState,
-                                  _subService.subscriptionData!),
-                            ),
-                          ),
-                        ],
+                    TextSpan(
+                      text: getRichText(_subService.autosaveState,
+                          _subService.subscriptionData!),
+                      style: TextStyles.sourceSans.body4.colour(
+                        getRichTextColor(_subService.autosaveState,
+                            _subService.subscriptionData!),
                       ),
                     ),
                   ],
-                );
+                ),
+              ),
+            ],
+          );
         },
       ),
     );

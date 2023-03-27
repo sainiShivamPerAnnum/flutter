@@ -84,7 +84,7 @@ class SaveAssetView extends StatelessWidget {
                             ),
                             SizedBox(height: SizeConfig.padding24),
                             // -- Break --
-                            // AutosaveCard(),
+
                             MiniTransactionCard(
                                 investmentType: InvestmentType.AUGGOLD99),
                           ],

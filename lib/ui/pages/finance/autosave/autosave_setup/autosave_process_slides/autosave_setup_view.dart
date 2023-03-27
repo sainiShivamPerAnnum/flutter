@@ -81,7 +81,8 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
                     amountFieldController: model.floAmountFieldController!,
                     onChanged: (val) {
                       model.totalInvestingAmount = int.tryParse(
-                          model.floAmountFieldController?.text ?? '0')!;
+                              model.floAmountFieldController?.text ?? '0') ??
+                          0;
                     },
                   ),
                 if (model.selectedAssetOption == 2)
@@ -91,7 +92,8 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
                     amountFieldController: model.goldAmountFieldController!,
                     onChanged: (val) {
                       model.totalInvestingAmount = int.tryParse(
-                          model.goldAmountFieldController?.text ?? '0')!;
+                              model.goldAmountFieldController?.text ?? '0') ??
+                          0;
                     },
                   ),
                 Container(
@@ -147,26 +149,33 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
             FocusScope.of(context).unfocus();
           },
         ),
-        if (model.totalInvestingAmount != 0)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-              child: ReactivePositiveAppButton(
-                btnText:
-                    "SETUP FOR ₹${model.totalInvestingAmount}/${model.selectedFrequency.rename()}",
-                onPressed: () async {
-                  if (model.minMaxCapString != null &&
-                      model.minMaxCapString!.isNotEmpty)
-                    return BaseUtil.showNegativeAlert("Invalid amount entered",
-                        "Please enter a valid amount to proceed");
-                  Haptic.vibrate();
-                  await model.updateSubscription();
-                },
-                width: SizeConfig.screenWidth! * 0.8,
-              ),
+        // if (model.totalInvestingAmount != 0 )
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+            child: ReactivePositiveAppButton(
+              btnText:
+                  "SETUP FOR ₹${model.totalInvestingAmount}/${model.selectedFrequency.rename()}",
+              onPressed: () async {
+                if (model.selectedAssetOption == 1)
+                  model.updateMinMaxCapString(
+                      model.floAmountFieldController!.text);
+                if (model.selectedAssetOption == 2)
+                  model.updateMinMaxCapString(
+                      model.goldAmountFieldController!.text);
+                if (model.selectedAssetOption != 0 &&
+                    model.minMaxCapString != null &&
+                    model.minMaxCapString!.isNotEmpty)
+                  return BaseUtil.showNegativeAlert("Invalid amount entered",
+                      "Please enter a valid amount to proceed");
+                Haptic.vibrate();
+                await model.updateSubscription();
+              },
+              width: SizeConfig.screenWidth! * 0.8,
             ),
-          )
+          ),
+        )
       ],
     );
   }
@@ -750,9 +759,9 @@ class _CenterTextFieldState extends State<CenterTextField> {
   double? get fieldWidth => this._fieldWidth;
 
   set fieldWidth(double? value) {
-    // setState(() {
-    this._fieldWidth = value;
-    // });
+    setState(() {
+      this._fieldWidth = value;
+    });
   }
 
   enableField() {
@@ -765,8 +774,22 @@ class _CenterTextFieldState extends State<CenterTextField> {
   @override
   initState() {
     super.initState();
-    _fieldWidth = ((SizeConfig.screenWidth! * 0.07) *
+    updateFieldWidth();
+    widget.amountFieldController.addListener(() {
+      updateFieldWidth();
+    });
+  }
+
+  updateFieldWidth() {
+    fieldWidth = ((SizeConfig.screenWidth! * 0.07) *
         widget.amountFieldController.text.length.toDouble());
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    widget.amountFieldController.removeListener(updateFieldWidth);
+    super.dispose();
   }
 
   @override
@@ -804,7 +827,8 @@ class _CenterTextFieldState extends State<CenterTextField> {
                     style: TextStyles.rajdhaniB
                         .size(SizeConfig.screenWidth! * 0.1067),
                   ),
-                  SizedBox(
+                  Container(
+                    // color: Colors.red,
                     width: fieldWidth,
                     child: TextField(
                       onTap: enableField,
@@ -840,16 +864,46 @@ class _CenterTextFieldState extends State<CenterTextField> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
-              child: Text(
-                widget.model.minMaxCapString ?? '',
-                style: TextStyles.body3.colour(Colors.red),
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding4,
+                horizontal: SizeConfig.pageHorizontalMargins,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.model.minMaxCapString ?? '',
+                    style: TextStyles.body3.colour(Colors.red),
+                  ),
+                  Text(
+                    getMinMaxRange(),
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTextColor2),
+                  )
+                ],
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  String getMinMaxRange() {
+    switch (widget.model.selectedFrequency) {
+      case FREQUENCY.daily:
+        return widget.model.selectedAssetOption == 1
+            ? "(₹${widget.model.dailyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.dailyMaxMinInfo.max})"
+            : "(₹${widget.model.dailyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.dailyMaxMinInfo.max})";
+      case FREQUENCY.weekly:
+        return widget.model.selectedAssetOption == 1
+            ? "(₹${widget.model.weeklyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.weeklyMaxMinInfo.max})"
+            : "(₹${widget.model.weeklyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.weeklyMaxMinInfo.max})";
+      case FREQUENCY.monthly:
+        return widget.model.selectedAssetOption == 1
+            ? "(₹${widget.model.monthlyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.monthlyMaxMinInfo.max})"
+            : "(₹${widget.model.monthlyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.monthlyMaxMinInfo.max})";
+    }
   }
 }
 

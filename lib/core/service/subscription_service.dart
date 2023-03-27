@@ -119,8 +119,8 @@ class SubService extends ChangeNotifier {
   SubscriptionModel? _subscriptionData;
   SubscriptionModel? get subscriptionData => this._subscriptionData;
   set subscriptionData(value) {
-    this._subscriptionData = value;
     if (value == null) return;
+    this._subscriptionData = value;
     setSubscriptionState();
   }
 
@@ -136,7 +136,7 @@ class SubService extends ChangeNotifier {
   // SUBSCRIPTION SERVICE CORE METHODS - START
 
   init() {
-    autosaveVisible = AppConfig.getValue(AppConfigKey.autosaveActive) as bool;
+    autosaveVisible = AppConfig.getValue(AppConfigKey.showNewAutosave) as bool;
     print("-----------autosave visible $autosaveVisible");
     if (autosaveVisible) getSubscription();
   }

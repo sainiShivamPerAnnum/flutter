@@ -16,6 +16,7 @@ class SegmentChips extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
+        FocusScope.of(context).unfocus();
         model.selectedFrequency = frequency;
       },
       child: Container(

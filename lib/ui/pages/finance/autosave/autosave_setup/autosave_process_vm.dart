@@ -114,40 +114,73 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   set selectedFrequency(FREQUENCY value) {
     this._selectedFrequency = value;
+    deselectOtherComboIfAny(notify: false);
     switch (value) {
       case FREQUENCY.daily:
-        selectedAssetOption != 0
-            ? chipsController!.jumpToPage(
-                0,
-              )
-            : comboController!.jumpToPage(
-                0,
-              );
+        if (selectedAssetOption != 0) {
+          chipsController!.jumpToPage(0);
+          selectedAssetOption == 1
+              ? floAmountFieldController?.text =
+                  lbDailyChips[0].value.toString()
+              : goldAmountFieldController?.text =
+                  augDailyChips[0].value.toString();
+        } else {
+          comboController!.jumpToPage(0);
+          customComboModel = null;
+          dailyCombos[2].isSelected = true;
+          goldAmountFieldController?.text = dailyCombos[2].AUGGOLD99.toString();
+          floAmountFieldController?.text = dailyCombos[2].LENDBOXP2P.toString();
+        }
         break;
       case FREQUENCY.weekly:
-        selectedAssetOption != 0
-            ? chipsController!.jumpToPage(
-                1,
-              )
-            : comboController!.jumpToPage(
-                1,
-              );
-
+        if (selectedAssetOption != 0) {
+          chipsController!.jumpToPage(1);
+          selectedAssetOption == 1
+              ? floAmountFieldController?.text =
+                  lbWeeklyChips[0].value.toString()
+              : goldAmountFieldController?.text =
+                  augWeeklyChips[0].value.toString();
+        } else {
+          comboController!.jumpToPage(1);
+          customComboModel = null;
+          weeklyCombos[2].isSelected = true;
+          goldAmountFieldController?.text =
+              weeklyCombos[2].AUGGOLD99.toString();
+          floAmountFieldController?.text =
+              weeklyCombos[2].LENDBOXP2P.toString();
+        }
         break;
       case FREQUENCY.monthly:
-        selectedAssetOption != 0
-            ? chipsController!.jumpToPage(
-                2,
-              )
-            : comboController!.jumpToPage(
-                2,
-              );
+        if (selectedAssetOption != 0) {
+          chipsController!.jumpToPage(2);
+          selectedAssetOption == 1
+              ? floAmountFieldController?.text =
+                  lbMonthlyChips[0].value.toString()
+              : goldAmountFieldController?.text =
+                  augMonthlyChips[0].value.toString();
+        } else {
+          comboController!.jumpToPage(2);
+          customComboModel = null;
+          monthlyCombos[2].isSelected = true;
+          goldAmountFieldController?.text =
+              monthlyCombos[2].AUGGOLD99.toString();
+          floAmountFieldController?.text =
+              monthlyCombos[2].LENDBOXP2P.toString();
+        }
         break;
     }
+    print("ComboModel : $customComboModel");
+    totalInvestingAmount =
+        (int.tryParse(floAmountFieldController?.text ?? '') ?? 0) +
+            (int.tryParse(goldAmountFieldController?.text ?? '') ?? 0);
 
-    selectedAssetOption == 1
-        ? updateMinMaxCapString(floAmountFieldController?.text)
-        : updateMinMaxCapString(goldAmountFieldController?.text);
+    if (selectedAssetOption == 1) {
+      updateMinMaxCapString(floAmountFieldController?.text);
+    }
+    if (selectedAssetOption == 2) {
+      updateMinMaxCapString(goldAmountFieldController?.text);
+    }
+
     notifyListeners();
   }
 
@@ -254,9 +287,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
       selectedAssetOption = _userService!.isSimpleKycVerified ? 0 : 2;
       if (selectedAssetOption == 0) {
         dailyCombos[2].isSelected = true;
-        notifyListeners();
       }
-      // if (_userService!.isSimpleKycVerified) {
       pageController.addListener(
         () {
           if ((pageController.page ?? 0).toInt() != currentPage) {
@@ -264,7 +295,6 @@ class AutosaveProcessViewModel extends BaseViewModel {
           }
         },
       );
-      // }
     }
 
     setState(ViewState.Idle);
@@ -459,11 +489,40 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   void updateMinMaxCapString(String? val) {
-    if (val == null || val.isEmpty)
-      minMaxCapString = null;
-    else {
+    if (val == null || val.isEmpty) {
+      minMaxCapString = "Enter valid amount";
+      totalInvestingAmount = 0;
+    } else {
       int amt = int.tryParse(val) ?? 0;
       if (selectedAssetOption == 0) {
+        switch (selectedFrequency) {
+          case FREQUENCY.daily:
+            minMaxCapString = amt < dailyMaxMinInfo.min.LENDBOXP2P
+                ? "Enter valid amount"
+                : amt > dailyMaxMinInfo.max
+                    ? "Amount too high"
+                    : null;
+            return;
+
+          case FREQUENCY.weekly:
+            minMaxCapString = amt < weeklyMaxMinInfo.min.LENDBOXP2P
+                ? "Enter valid amount"
+                : amt > weeklyMaxMinInfo.max
+                    ? "Amount too high"
+                    : null;
+            return;
+          case FREQUENCY.monthly:
+            minMaxCapString = amt < monthlyMaxMinInfo.min.LENDBOXP2P
+                ? "Enter valid amount"
+                : amt > monthlyMaxMinInfo.max
+                    ? "Amount too high"
+                    : null;
+            return;
+
+          default:
+            minMaxCapString = null;
+        }
+      } else if (selectedAssetOption == 1) {
         switch (selectedFrequency) {
           case FREQUENCY.daily:
             minMaxCapString = amt < dailyMaxMinInfo.min.LENDBOXP2P
@@ -527,6 +586,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   void onComboTapped(int index) {
     Haptic.vibrate();
     if (customComboModel != null) customComboModel!.isSelected = false;
+    minMaxCapString = null;
     deselectOtherComboIfAny();
     switch (selectedFrequency) {
       case FREQUENCY.daily:
@@ -581,15 +641,15 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   openCustomInputModalSheet(model, {bool isNew = true}) {
-    if (!isNew) {
-      floAmountFieldController!.text = customComboModel!.AUGGOLD99.toString();
-      goldAmountFieldController!.text = customComboModel!.LENDBOXP2P.toString();
-      customComboModel!.isSelected = true;
-      totalInvestingAmount =
-          customComboModel!.AUGGOLD99 + customComboModel!.LENDBOXP2P;
-      deselectOtherComboIfAny();
-      notifyListeners();
-    }
+    // if (!isNew) {
+    //   floAmountFieldController!.text = customComboModel!.AUGGOLD99.toString();
+    //   goldAmountFieldController!.text = customComboModel!.LENDBOXP2P.toString();
+    //   customComboModel!.isSelected = true;
+    //   totalInvestingAmount =
+    //       customComboModel!.AUGGOLD99 + customComboModel!.LENDBOXP2P;
+    //   deselectOtherComboIfAny();
+    //   notifyListeners();
+    // }
     return BaseUtil.openModalBottomSheet(
       isBarrierDismissible: true,
       addToScreenStack: true,

@@ -15,7 +15,7 @@ import 'base_repo.dart';
 class SubscriptionRepo extends BaseRepo {
   final CustomLogger _logger = locator<CustomLogger>();
   String baseUrl = FlavorConfig.isProduction()
-      ? ""
+      ? "https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod"
       : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
 
   Future<ApiResponse<List<SubscriptionTransactionModel>>>

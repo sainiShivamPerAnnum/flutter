@@ -180,7 +180,7 @@ class SaveViewModel extends BaseViewModel {
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
-        case 'BL':
+        case 'NAS':
           saveViewItems.add(AutosaveCard());
           break;
         case 'CH':

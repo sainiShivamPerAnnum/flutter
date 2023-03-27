@@ -160,6 +160,9 @@ class UpiAppSelectView extends StatelessWidget {
                           ]),
                         ),
                       ),
+                    SizedBox(
+                      height: SizeConfig.navBarHeight,
+                    )
                   ],
                 ),
               ),
@@ -181,20 +184,6 @@ class UpiAppSelectView extends StatelessWidget {
                             await model.createSubscription();
                           },
                           width: SizeConfig.screenWidth! * 0.88,
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding16,
-                        ),
-                        Text(
-                          locale.autoPayBanksSupported,
-                          style: TextStyles.sourceSansL.body4,
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding16,
-                        ),
-                        Image.asset(
-                          "assets/images/autosavebanks.png",
-                          width: SizeConfig.screenWidth! * 0.7,
                         ),
                         SizedBox(
                           height: SizeConfig.padding32,

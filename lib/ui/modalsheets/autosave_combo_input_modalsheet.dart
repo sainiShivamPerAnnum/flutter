@@ -22,6 +22,9 @@ class AutosaveComboInputFieldsModalSheet extends StatefulWidget {
 
 class _AutosaveComboInputFieldsModalSheetState
     extends State<AutosaveComboInputFieldsModalSheet> {
+  TextEditingController _goldController = TextEditingController();
+  TextEditingController _floController = TextEditingController();
+  int totalSipAmount = 0;
   List getRangeSubtitle(FREQUENCY freq) {
     switch (freq) {
       case FREQUENCY.daily:
@@ -42,8 +45,21 @@ class _AutosaveComboInputFieldsModalSheetState
     }
   }
 
+  updateSipAmount() {
+    int floAmt = 0;
+    int goldAmt = 0;
+
+    if (_floController.text.isNotEmpty)
+      floAmt = int.tryParse(_floController.text) ?? 0;
+    if (_goldController.text.isNotEmpty)
+      goldAmt = int.tryParse(_goldController.text) ?? 0;
+    setState(() {
+      totalSipAmount = floAmt + goldAmt;
+    });
+  }
+
   validateFloValue(String? value, FREQUENCY freq) {
-    if (value!.isEmpty) return "Please enter an amount";
+    if (value!.isEmpty) return "Enter valid amount";
     int amt = int.tryParse(value ?? '0')!;
     switch (freq) {
       case FREQUENCY.daily:
@@ -69,7 +85,7 @@ class _AutosaveComboInputFieldsModalSheetState
   }
 
   validateGoldValue(String? value, FREQUENCY freq) {
-    if (value!.isEmpty) return "Please enter an amount";
+    if (value!.isEmpty) return "Enter valid amount";
     int amt = int.tryParse(value ?? '0')!;
     switch (freq) {
       case FREQUENCY.daily:
@@ -92,6 +108,20 @@ class _AutosaveComboInputFieldsModalSheetState
                 ? "Amount too high"
                 : null;
     }
+  }
+
+  @override
+  initState() {
+    if (widget.model.customComboModel != null) {
+      _goldController.text =
+          widget.model.customComboModel!.AUGGOLD99.toString();
+
+      _floController.text =
+          widget.model.customComboModel!.LENDBOXP2P.toString();
+      totalSipAmount = (int.tryParse(_floController.text) ?? 0) +
+          (int.tryParse(_goldController.text) ?? 0);
+    }
+    super.initState();
   }
 
   @override
@@ -121,15 +151,13 @@ class _AutosaveComboInputFieldsModalSheetState
                     title: widget.model.autosaveAssetOptionList[1].title,
                     subtitle:
                         getRangeSubtitle(widget.model.selectedFrequency)[0],
-                    controller: widget.model.floAmountFieldController!,
+                    controller: _floController,
                     autoFocus: true,
                     onValueChanged: (val) {
                       if (val.isEmpty) val = '0';
-                      widget.model.totalInvestingAmount =
-                          int.tryParse(val ?? '0')! +
-                              int.tryParse(widget
-                                      .model.goldAmountFieldController?.text ??
-                                  '0')!;
+                      totalSipAmount = int.tryParse(val ?? '0')! +
+                          (int.tryParse(_goldController.text) ?? 0);
+                      updateSipAmount();
                       setState(() {});
                     },
                     validator: (val) {
@@ -142,15 +170,13 @@ class _AutosaveComboInputFieldsModalSheetState
                     title: widget.model.autosaveAssetOptionList[2].title,
                     subtitle:
                         getRangeSubtitle(widget.model.selectedFrequency)[1],
-                    controller: widget.model.goldAmountFieldController!,
+                    controller: _goldController,
                     autoFocus: false,
                     onValueChanged: (val) {
                       if (val.isEmpty) val = '0';
-                      widget.model.totalInvestingAmount =
-                          int.tryParse(val ?? '0')! +
-                              int.tryParse(
-                                  widget.model.floAmountFieldController?.text ??
-                                      '0')!;
+                      totalSipAmount = int.tryParse(val ?? '0')! +
+                          (int.tryParse(_floController.text) ?? 0);
+                      updateSipAmount();
                       setState(() {});
                     },
                     validator: (val) {
@@ -169,7 +195,7 @@ class _AutosaveComboInputFieldsModalSheetState
               Text("Total SIP Amount", style: TextStyles.rajdhaniSB.body0),
               Spacer(),
               Text(
-                "₹${widget.model.totalInvestingAmount}  ",
+                "₹$totalSipAmount",
                 style: TextStyles.sourceSans.body1,
               )
             ],
@@ -189,20 +215,12 @@ class _AutosaveComboInputFieldsModalSheetState
           AppPositiveBtn(
             btnText: "SUBMIT",
             onPressed: () {
-              if (widget.model.totalInvestingAmount > 5000)
+              if (totalSipAmount > 5000)
                 return BaseUtil.showNegativeAlert("Entered amount is too high",
                     "Please reduce the investing amount and try again");
               if (formKey.currentState!.validate()) {
-                widget.model.customComboModel = SubComboModel(
-                    order: 3,
-                    title: "Custom",
-                    popular: false,
-                    AUGGOLD99: int.tryParse(
-                        widget.model.goldAmountFieldController!.text)!,
-                    LENDBOXP2P: int.tryParse(
-                        widget.model.floAmountFieldController!.text)!,
-                    icon: "",
-                    isSelected: true);
+                createCombo();
+                widget.model.totalInvestingAmount = totalSipAmount;
                 widget.model.deselectOtherComboIfAny(notify: true);
                 AppState.backButtonDispatcher!.didPopRoute();
               }
@@ -212,5 +230,20 @@ class _AutosaveComboInputFieldsModalSheetState
         ],
       ),
     );
+  }
+
+  createCombo() {
+    if (_goldController.text.isNotEmpty && _floController.text.isNotEmpty)
+      widget.model.goldAmountFieldController?.text = _goldController.text;
+    widget.model.floAmountFieldController?.text = _floController.text;
+
+    widget.model.customComboModel = SubComboModel(
+        order: 3,
+        title: "Custom",
+        popular: false,
+        AUGGOLD99: int.tryParse(_goldController.text)!,
+        LENDBOXP2P: int.tryParse(_floController.text)!,
+        icon: "",
+        isSelected: true);
   }
 }
