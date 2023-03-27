@@ -3,10 +3,10 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/ticket_view.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -34,7 +34,7 @@ class TicketWidget extends StatelessWidget {
     return Column(
       children: [
         TicketHeader(
-            model: model,
+            activeTambolaCardCount: model.activeTambolaCardCount ?? 0,
             scrollController: scrollController,
             animationController: animationController,
             locale: locale),
@@ -53,13 +53,13 @@ class TicketWidget extends StatelessWidget {
 class TicketHeader extends StatelessWidget {
   const TicketHeader({
     super.key,
-    required this.model,
     required this.scrollController,
     required this.animationController,
     required this.locale,
+    required this.activeTambolaCardCount,
   });
 
-  final TambolaHomeViewModel model;
+  final int activeTambolaCardCount;
   final ScrollController scrollController;
   final AnimationController animationController;
   final S locale;
@@ -81,47 +81,48 @@ class TicketHeader extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset('assets/svg/ticket_icon.svg'),
+                  SvgPicture.asset(Assets.ticket_icon),
                   SizedBox(
                     width: SizeConfig.padding8,
                   ),
-                  Text("Tickets (${model.activeTambolaCardCount})",
+                  Text("Tickets ($activeTambolaCardCount)",
                       style: TextStyles.rajdhaniSB.body1),
                 ],
               ),
               // if (TambolaRepo.expiringTicketCount != 0)
-              if (TambolaRepo.expiringTicketCount > 1) SizedBox(
-                height: SizeConfig.padding4,
-              ),
-              if (TambolaRepo.expiringTicketCount > 1) Row(
-                children: [
-
+              if (TambolaRepo.expiringTicketCount > 1)
+                SizedBox(
+                  height: SizeConfig.padding4,
+                ),
+              if (TambolaRepo.expiringTicketCount > 1)
+                Row(
+                  children: [
                     Text(
                       "${TambolaRepo.expiringTicketCount} ticket${TambolaRepo.expiringTicketCount > 1 ? 's' : ''} expiring this Sunday. ",
                       style: TextStyles.sourceSansSB.body4
                           .colour(UiConstants.kBlogTitleColor),
                     ),
-                  GestureDetector(
-                    onTap: () {
-                      AppState.delegate!.appState.currentAction = PageAction(
-                        state: PageState.addWidget,
-                        page: FaqPageConfig,
-                        widget: const FAQPage(
-                          type: FaqsType.play,
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Know More",
-                      style: TextStyles.sourceSansSB.body4
-                          .colour(UiConstants.kBlogTitleColor)
-                          .copyWith(
-                              decorationStyle: TextDecorationStyle.solid,
-                              decoration: TextDecoration.underline),
+                    GestureDetector(
+                      onTap: () {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          state: PageState.addWidget,
+                          page: FaqPageConfig,
+                          widget: const FAQPage(
+                            type: FaqsType.play,
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Know More",
+                        style: TextStyles.sourceSansSB.body4
+                            .colour(UiConstants.kBlogTitleColor)
+                            .copyWith(
+                                decorationStyle: TextDecorationStyle.solid,
+                                decoration: TextDecoration.underline),
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
             ],
           ),
           GestureDetector(
@@ -146,8 +147,7 @@ class TicketHeader extends StatelessWidget {
               ),
               child: Text(
                 locale.tGetTickets,
-                style: TextStyles.rajdhaniSB.body4
-                    .colour(Colors.white),
+                style: TextStyles.rajdhaniSB.body4.colour(Colors.white),
                 key: const ValueKey(Constants.GET_TAMBOLA_TICKETS),
               ),
             ),

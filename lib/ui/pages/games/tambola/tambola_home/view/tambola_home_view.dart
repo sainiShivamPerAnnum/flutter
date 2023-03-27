@@ -1,33 +1,10 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/connectivity_status_enum.dart';
-import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/elements/default_avatar.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/buy_ticket_widget.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_leader_board.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_top_banner.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/ticket_view.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/weekly_results/weekly_result.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
-import 'package:felloapp/ui/pages/static/game_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -35,10 +12,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
-import 'package:provider/provider.dart';
-
-import '../widgets/no_ticket_widget.dart';
-import '../widgets/today_weekly_pick_card.dart';
 
 // class TambolaHomeView extends StatelessWidget {
 //   @override
@@ -364,273 +337,271 @@ class TambolaResultCard extends StatelessWidget {
   }
 }
 
-
 /// Old code
-class TabViewGenerator extends StatefulWidget {
-  const TabViewGenerator({
-    Key? key,
-    required this.model,
-    required this.showIndicatorForAll,
-  }) : super(key: key);
+// class TabViewGenerator extends StatefulWidget {
+//   const TabViewGenerator({
+//     Key? key,
+//     required this.model,
+//     required this.showIndicatorForAll,
+//   }) : super(key: key);
+//
+//   final TambolaHomeViewModel? model;
+//   final bool showIndicatorForAll;
+//
+//   @override
+//   State<TabViewGenerator> createState() => _TabViewGeneratorState();
+// }
+//  Old code
+// class _TabViewGeneratorState extends State<TabViewGenerator>
+//     with TickerProviderStateMixin {
+//   TabController? _tabController;
+//   List<TambolaBoard?>? _bestBoards;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _tabController =
+//         TabController(vsync: this, length: widget.model!.tabList.length);
+//     _tabController!.addListener(_handleTabSelection);
+//     _bestBoards = widget.model!.refreshBestBoards();
+//   }
+//
+//   void _handleTabSelection() {
+//     setState(() {});
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return DefaultTabController(
+//         length: widget.model!.tabList.length,
+//         child: Column(
+//           children: [
+//             TabBar(
+//               controller: _tabController,
+//               labelPadding: EdgeInsets.zero,
+//               indicatorColor: Colors.transparent,
+//               physics: const BouncingScrollPhysics(),
+//               isScrollable: true,
+//               tabs: List.generate(
+//                 widget.model!.tabList.length,
+//                 (index) => Container(
+//                   margin: EdgeInsets.only(
+//                     right: index == widget.model!.tabList.length - 1
+//                         ? SizeConfig.pageHorizontalMargins
+//                         : SizeConfig.padding10,
+//                     left: index == 0 ? SizeConfig.pageHorizontalMargins : 0.0,
+//                   ),
+//                   padding: EdgeInsets.symmetric(
+//                     horizontal: SizeConfig.padding10,
+//                     vertical: SizeConfig.padding16,
+//                   ),
+//                   decoration: BoxDecoration(
+//                       borderRadius: BorderRadius.circular(SizeConfig.padding16),
+//                       color: UiConstants.gameCardColor,
+//                       border: Border.all(
+//                           color: _tabController!.index == index
+//                               ? Colors.white
+//                               : Colors.transparent,
+//                           width: _tabController!.index == index ? 0.5 : 0.0)),
+//                   child: Text(
+//                     widget.model!.tabList[index],
+//                     textAlign: TextAlign.center,
+//                     style: TextStyles.body4.colour(
+//                       Colors.white.withOpacity(
+//                           _tabController!.index == index ? 1 : 0.5),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//             SizedBox(
+//               height: SizeConfig.padding16,
+//             ),
+//             SizedBox(
+//               height: SizeConfig.screenWidth! * 0.56,
+//               child: TabBarView(
+//                 controller: _tabController,
+//                 physics: const NeverScrollableScrollPhysics(),
+//                 children: [
+//                   //All tickets
+//                   PageViewWithIndicator(
+//                     model: widget.model,
+//                     showIndicator: widget.showIndicatorForAll,
+//                   ),
+//                   //Corner
+//                   widget.model!.userWeeklyBoards != null &&
+//                           widget.model!.userWeeklyBoards!.length >= 1
+//                       ? Column(
+//                           children: [
+//                             Ticket(
+//                                 dailyPicks: widget.model!.weeklyDigits,
+//                                 bestBoards: _bestBoards,
+//                                 board: _bestBoards![0],
+//                                 showBestOdds: false,
+//                                 calledDigits:
+//                                     widget.model!.weeklyDigits!.toList()),
+//                           ],
+//                         )
+//                       : const NoTicketWidget(),
+//                   //Top row
+//                   widget.model!.userWeeklyBoards != null &&
+//                           widget.model!.userWeeklyBoards!.length >= 1
+//                       ? Column(
+//                           children: [
+//                             Ticket(
+//                                 dailyPicks: widget.model!.weeklyDigits,
+//                                 bestBoards: _bestBoards,
+//                                 board: _bestBoards![1],
+//                                 showBestOdds: false,
+//                                 calledDigits:
+//                                     widget.model!.weeklyDigits!.toList()),
+//                           ],
+//                         )
+//                       : const NoTicketWidget(),
+//                   widget.model!.userWeeklyBoards != null &&
+//                           widget.model!.userWeeklyBoards!.length >= 1
+//                       ? Column(
+//                           children: [
+//                             Ticket(
+//                                 dailyPicks: widget.model!.weeklyDigits,
+//                                 bestBoards: _bestBoards,
+//                                 board: _bestBoards![2],
+//                                 showBestOdds: false,
+//                                 calledDigits:
+//                                     widget.model!.weeklyDigits!.toList()),
+//                           ],
+//                         )
+//                       : const NoTicketWidget(),
+//                   widget.model!.userWeeklyBoards != null &&
+//                           widget.model!.userWeeklyBoards!.length >= 1
+//                       ? Column(
+//                           children: [
+//                             Ticket(
+//                                 dailyPicks: widget.model!.weeklyDigits,
+//                                 bestBoards: _bestBoards,
+//                                 board: _bestBoards![3],
+//                                 showBestOdds: false,
+//                                 calledDigits:
+//                                     widget.model!.weeklyDigits!.toList()),
+//                           ],
+//                         )
+//                       : const NoTicketWidget(),
+//                 ],
+//               ),
+//             )
+//           ],
+//         ));
+//   }
+// }
 
-  final TambolaHomeViewModel? model;
-  final bool showIndicatorForAll;
-
-  @override
-  State<TabViewGenerator> createState() => _TabViewGeneratorState();
-}
-/// Old code
-class _TabViewGeneratorState extends State<TabViewGenerator>
-    with TickerProviderStateMixin {
-  TabController? _tabController;
-  List<TambolaBoard?>? _bestBoards;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController =
-        TabController(vsync: this, length: widget.model!.tabList.length);
-    _tabController!.addListener(_handleTabSelection);
-    _bestBoards = widget.model!.refreshBestBoards();
-  }
-
-  void _handleTabSelection() {
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: widget.model!.tabList.length,
-        child: Column(
-          children: [
-            TabBar(
-              controller: _tabController,
-              labelPadding: EdgeInsets.zero,
-              indicatorColor: Colors.transparent,
-              physics: const BouncingScrollPhysics(),
-              isScrollable: true,
-              tabs: List.generate(
-                widget.model!.tabList.length,
-                (index) => Container(
-                  margin: EdgeInsets.only(
-                    right: index == widget.model!.tabList.length - 1
-                        ? SizeConfig.pageHorizontalMargins
-                        : SizeConfig.padding10,
-                    left: index == 0 ? SizeConfig.pageHorizontalMargins : 0.0,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding10,
-                    vertical: SizeConfig.padding16,
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(SizeConfig.padding16),
-                      color: UiConstants.gameCardColor,
-                      border: Border.all(
-                          color: _tabController!.index == index
-                              ? Colors.white
-                              : Colors.transparent,
-                          width: _tabController!.index == index ? 0.5 : 0.0)),
-                  child: Text(
-                    widget.model!.tabList[index],
-                    textAlign: TextAlign.center,
-                    style: TextStyles.body4.colour(
-                      Colors.white.withOpacity(
-                          _tabController!.index == index ? 1 : 0.5),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            SizedBox(
-              height: SizeConfig.screenWidth! * 0.56,
-              child: TabBarView(
-                controller: _tabController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  //All tickets
-                  PageViewWithIndicator(
-                    model: widget.model,
-                    showIndicator: widget.showIndicatorForAll,
-                  ),
-                  //Corner
-                  widget.model!.userWeeklyBoards != null &&
-                          widget.model!.userWeeklyBoards!.length >= 1
-                      ? Column(
-                          children: [
-                            Ticket(
-                                dailyPicks: widget.model!.weeklyDigits,
-                                bestBoards: _bestBoards,
-                                board: _bestBoards![0],
-                                showBestOdds: false,
-                                calledDigits:
-                                    widget.model!.weeklyDigits!.toList()),
-                          ],
-                        )
-                      : const NoTicketWidget(),
-                  //Top row
-                  widget.model!.userWeeklyBoards != null &&
-                          widget.model!.userWeeklyBoards!.length >= 1
-                      ? Column(
-                          children: [
-                            Ticket(
-                                dailyPicks: widget.model!.weeklyDigits,
-                                bestBoards: _bestBoards,
-                                board: _bestBoards![1],
-                                showBestOdds: false,
-                                calledDigits:
-                                    widget.model!.weeklyDigits!.toList()),
-                          ],
-                        )
-                      : const NoTicketWidget(),
-                  widget.model!.userWeeklyBoards != null &&
-                          widget.model!.userWeeklyBoards!.length >= 1
-                      ? Column(
-                          children: [
-                            Ticket(
-                                dailyPicks: widget.model!.weeklyDigits,
-                                bestBoards: _bestBoards,
-                                board: _bestBoards![2],
-                                showBestOdds: false,
-                                calledDigits:
-                                    widget.model!.weeklyDigits!.toList()),
-                          ],
-                        )
-                      : const NoTicketWidget(),
-                  widget.model!.userWeeklyBoards != null &&
-                          widget.model!.userWeeklyBoards!.length >= 1
-                      ? Column(
-                          children: [
-                            Ticket(
-                                dailyPicks: widget.model!.weeklyDigits,
-                                bestBoards: _bestBoards,
-                                board: _bestBoards![3],
-                                showBestOdds: false,
-                                calledDigits:
-                                    widget.model!.weeklyDigits!.toList()),
-                          ],
-                        )
-                      : const NoTicketWidget(),
-                ],
-              ),
-            )
-          ],
-        ));
-  }
-}
-
-
-class Odds extends StatelessWidget {
-  final DailyPick _digitsObj;
-  final TambolaBoard _board;
-  final List<TambolaBoard> _bestBoards;
-  final bool showBestBoard;
-  final int currentIndex;
-
-  const Odds(this._digitsObj, this._board, this._bestBoards, this.showBestBoard,
-      this.currentIndex, {super.key});
-
-  @override
-  Widget build(BuildContext cx) {
-    S locale = S.of(cx);
-    if (_board == null) return Container();
-    List<int> _digits = (_digitsObj != null) ? _digitsObj.toList() : [];
-    switch (currentIndex) {
-      case 0:
-        return _buildRow(
-            cx,
-            Icons.border_top,
-            locale.tTopRow,
-            _board.getRowOdds(0, _digits).toString() + locale.tLeft,
-            _bestBoards[0].getRowOdds(0, _digits).toString() + locale.tLeft,
-            _bestBoards[0],
-            _digits);
-      case 1:
-        return _buildRow(
-            cx,
-            Icons.border_horizontal,
-            locale.tMiddleRow,
-            _board.getRowOdds(1, _digits).toString() + locale.tLeft,
-            _bestBoards[1].getRowOdds(1, _digits).toString() + locale.tLeft,
-            _bestBoards[1],
-            _digits);
-      case 2:
-        return _buildRow(
-            cx,
-            Icons.border_bottom,
-            locale.tBottomRow,
-            _board.getRowOdds(2, _digits).toString() + locale.tLeft,
-            _bestBoards[2].getRowOdds(2, _digits).toString() + locale.tLeft,
-            _bestBoards[2],
-            _digits);
-      case 3:
-        return _buildRow(
-            cx,
-            Icons.border_outer,
-            locale.tCorners,
-            _board.getCornerOdds(_digits).toString() + locale.tLeft,
-            _bestBoards[3].getCornerOdds(_digits).toString() + locale.tLeft,
-            _bestBoards[3],
-            _digits);
-      case 4:
-        return _buildRow(
-            cx,
-            Icons.apps,
-            locale.tFullHouse,
-            _board.getFullHouseOdds(_digits).toString() + locale.tLeft,
-            _bestBoards[4].getFullHouseOdds(_digits).toString() + locale.tLeft,
-            _bestBoards[4],
-            _digits);
-
-      default:
-        return _buildRow(
-            cx,
-            Icons.border_top,
-            locale.tTopRow,
-            _board.getRowOdds(0, _digits).toString() + locale.tLeft,
-            _bestBoards[0].getRowOdds(0, _digits).toString() + locale.tLeft,
-            _bestBoards[0],
-            _digits);
-    }
-  }
-
-  Widget _buildBestTicket(
-      BuildContext cx, TambolaBoard _bestBoard, List<int> _digits) {
-    return Column(
-      children: [
-        Ticket(
-            dailyPicks: _digitsObj,
-            bestBoards: _bestBoards,
-            board: _bestBoard,
-            showBestOdds: false,
-            calledDigits: _digits),
-      ],
-    );
-  }
-
-  Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd,
-      String _oOdd, TambolaBoard _bestBoard, List<int> _digits) {
-    return Column(
-      children: [
-        Ticket(
-            dailyPicks: _digitsObj,
-            bestBoards: _bestBoards,
-            board: _bestBoard,
-            showBestOdds: false,
-            calledDigits: _digits),
-        // SizedBox(
-        //   height: SizeConfig.padding8,
-        // ),
-        // SizedBox(
-        //   height: SizeConfig.padding6,
-        // ),
-      ],
-    );
-  }
-}
+// class Odds extends StatelessWidget {
+//   final DailyPick _digitsObj;
+//   final TambolaBoard _board;
+//   final List<TambolaBoard> _bestBoards;
+//   final bool showBestBoard;
+//   final int currentIndex;
+//
+//   const Odds(this._digitsObj, this._board, this._bestBoards, this.showBestBoard,
+//       this.currentIndex, {super.key});
+//
+//   @override
+//   Widget build(BuildContext cx) {
+//     S locale = S.of(cx);
+//     if (_board == null) return Container();
+//     List<int> _digits = (_digitsObj != null) ? _digitsObj.toList() : [];
+//     switch (currentIndex) {
+//       case 0:
+//         return _buildRow(
+//             cx,
+//             Icons.border_top,
+//             locale.tTopRow,
+//             _board.getRowOdds(0, _digits).toString() + locale.tLeft,
+//             _bestBoards[0].getRowOdds(0, _digits).toString() + locale.tLeft,
+//             _bestBoards[0],
+//             _digits);
+//       case 1:
+//         return _buildRow(
+//             cx,
+//             Icons.border_horizontal,
+//             locale.tMiddleRow,
+//             _board.getRowOdds(1, _digits).toString() + locale.tLeft,
+//             _bestBoards[1].getRowOdds(1, _digits).toString() + locale.tLeft,
+//             _bestBoards[1],
+//             _digits);
+//       case 2:
+//         return _buildRow(
+//             cx,
+//             Icons.border_bottom,
+//             locale.tBottomRow,
+//             _board.getRowOdds(2, _digits).toString() + locale.tLeft,
+//             _bestBoards[2].getRowOdds(2, _digits).toString() + locale.tLeft,
+//             _bestBoards[2],
+//             _digits);
+//       case 3:
+//         return _buildRow(
+//             cx,
+//             Icons.border_outer,
+//             locale.tCorners,
+//             _board.getCornerOdds(_digits).toString() + locale.tLeft,
+//             _bestBoards[3].getCornerOdds(_digits).toString() + locale.tLeft,
+//             _bestBoards[3],
+//             _digits);
+//       case 4:
+//         return _buildRow(
+//             cx,
+//             Icons.apps,
+//             locale.tFullHouse,
+//             _board.getFullHouseOdds(_digits).toString() + locale.tLeft,
+//             _bestBoards[4].getFullHouseOdds(_digits).toString() + locale.tLeft,
+//             _bestBoards[4],
+//             _digits);
+//
+//       default:
+//         return _buildRow(
+//             cx,
+//             Icons.border_top,
+//             locale.tTopRow,
+//             _board.getRowOdds(0, _digits).toString() + locale.tLeft,
+//             _bestBoards[0].getRowOdds(0, _digits).toString() + locale.tLeft,
+//             _bestBoards[0],
+//             _digits);
+//     }
+//   }
+//
+//   Widget _buildBestTicket(
+//       BuildContext cx, TambolaBoard _bestBoard, List<int> _digits) {
+//     return Column(
+//       children: [
+//         Ticket(
+//             dailyPicks: _digitsObj,
+//             bestBoards: _bestBoards,
+//             board: _bestBoard,
+//             showBestOdds: false,
+//             calledDigits: _digits),
+//       ],
+//     );
+//   }
+//
+//   Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd,
+//       String _oOdd, TambolaBoard _bestBoard, List<int> _digits) {
+//     return Column(
+//       children: [
+//         Ticket(
+//             dailyPicks: _digitsObj,
+//             bestBoards: _bestBoards,
+//             board: _bestBoard,
+//             showBestOdds: false,
+//             calledDigits: _digits),
+//         // SizedBox(
+//         //   height: SizeConfig.padding8,
+//         // ),
+//         // SizedBox(
+//         //   height: SizeConfig.padding6,
+//         // ),
+//       ],
+//     );
+//   }
+// }
 
 // class ButTicketsComponent extends StatelessWidget {
 //   ButTicketsComponent({

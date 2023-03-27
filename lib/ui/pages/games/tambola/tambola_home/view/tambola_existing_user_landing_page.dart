@@ -4,7 +4,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/all_tambola_tickets.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/ticket_widget.dart';
@@ -14,6 +13,7 @@ import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/how_tambola
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_leader_board.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/today_weekly_pick_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -134,8 +134,7 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                 ),
                 HowTambolaWorks(model: widget.model),
                 SizedBox(height: SizeConfig.padding14),
-                LottieBuilder.network(
-                    "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+                LottieBuilder.network(Assets.bottomBannerLottie),
                 SizedBox(height: SizeConfig.navBarHeight),
               ],
             ),
@@ -160,8 +159,10 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
             EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.06),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: const Color(0xff627F8E).withOpacity(0.2),
-          border: Border.all(color: const Color(0xff627F8E)),
+          color:
+              UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.2),
+          border: Border.all(
+              color: UiConstants.kModalSheetSecondaryBackgroundColor),
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         ),
         child: Row(
@@ -234,7 +235,7 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
             child: Container(
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xff1a1a1a),
+                  color: UiConstants.kArrowButtonBackgroundColor,
                   border: Border.all(color: Colors.white)),
               padding: const EdgeInsets.all(6),
               child: Icon(
@@ -283,14 +284,14 @@ class NextWeekTicketInfo extends StatelessWidget {
             padding: EdgeInsets.all(SizeConfig.padding6),
             height: 45,
             decoration: BoxDecoration(
-                color: const Color(0xff024A4F).withOpacity(0.5),
+                color: UiConstants.kNextTicketInfo.withOpacity(0.5),
                 // borderRadius: BorderRadius.circular(50),
                 shape: BoxShape.circle),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               height: 24,
-              decoration: const BoxDecoration(
-                  color: Color(0xff024A4F),
+              decoration: BoxDecoration(
+                  color: UiConstants.kNextTicketInfo,
                   // borderRadius: BorderRadius.circular(50),
                   shape: BoxShape.circle),
               child: SvgPicture.asset('assets/svg/bulb.svg'),
@@ -302,7 +303,7 @@ class NextWeekTicketInfo extends StatelessWidget {
               'New tickets received from 6PM - 12AM on Sunday will be considered for next week’s draw',
               maxLines: 3,
               style: TextStyles.sourceSans.body4.colour(
-                const Color(0xff919193).withOpacity(0.8),
+                UiConstants.kTextColor2.withOpacity(0.8),
               ),
             ),
           )

@@ -34,7 +34,7 @@ class HowTambolaWorks extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SvgPicture.asset(
-            'assets/svg/tambola_instant_view.svg',
+            Assets.tambola_instant_view,
             height: 35,
           ),
           Text(

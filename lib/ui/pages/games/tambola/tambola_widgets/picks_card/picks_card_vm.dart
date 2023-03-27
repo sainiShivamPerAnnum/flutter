@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -132,15 +130,13 @@ class PicksCardViewModel extends BaseViewModel {
   bool isNumberPresent(String dailyNumber) {
     var data = _tambolaService.ticketsNumbers;
     bool exist = false;
-    data.forEach((element) {
+    for (final element in data) {
       // log('totalTicketMatched $totalTicketMatched');
-
       exist = element.contains(int.tryParse(dailyNumber));
 
-      // if (exist) totalTicketMatched += 1;
-    });
+      if (exist) break;
+    }
 
-    // notifyListeners();
     return exist;
   }
 }

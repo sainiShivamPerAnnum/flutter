@@ -334,4 +334,9 @@ class Assets {
   static const String cash_single = "assets/svg/cash_note.svg";
   static const String cash_bindle = "assets/svg/cash_bundle.svg";
   static const String cash_with_coins = "assets/svg/cash_with_coins.svg";
+  static const String ticket_icon = 'assets/svg/ticket_icon.svg';
+  static const String tambolaPrizeAsset = 'assets/svg/tambola_prize_asset.svg';
+  static const String one_cr_bg = 'assets/svg/1_cr.svg';
+  static const String bottomBannerLottie =
+      'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
 }

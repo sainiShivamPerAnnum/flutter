@@ -24,7 +24,6 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/util/assets.dart';
@@ -65,13 +64,14 @@ class TambolaHomeViewModel extends BaseViewModel {
   List<TambolaTicket>? _tambolaBoardViews;
   int ticketGenerationTryCount = 0;
   TextEditingController? ticketCountController;
-  Ticket? _currentBoardView;
+  // Ticket? _currentBoardView;
   TambolaBoard? _currentBoard;
   Widget? _widget;
   late AnimationController animationController;
   PageController? ticketPageController;
   int _currentPage = 1;
-  List<Ticket> _topFiveTambolaBoards = [];
+
+  // List<Ticket> _topFiveTambolaBoards = [];
   List<TambolaBoard>? _bestTambolaBoards;
   bool showSummaryCards = true;
   bool ticketBuyInProgress = false;
@@ -181,11 +181,11 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   Widget? get cardWidget => _widget;
 
-  List<Ticket> get topFiveTambolaBoards => _topFiveTambolaBoards;
+  // List<Ticket> get topFiveTambolaBoards => _topFiveTambolaBoards;
 
   bool get weeklyTicksFetched => tambolaService!.weeklyTicksFetched;
 
-  Ticket? get currentBoardView => _currentBoardView;
+  // Ticket? get currentBoardView => _currentBoardView;
 
   TambolaBoard? get currentBoard => _currentBoard;
 
@@ -274,7 +274,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     await tambolaService!.completer.future;
 
     _currentBoard = null;
-    _currentBoardView = null;
+    // _currentBoardView = null;
 
     await _examineTicketsForWins();
   }
@@ -338,7 +338,7 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   Future<void> refreshTambolaTickets({bool shouldRefresh = true}) async {
     _logger!.i('Refreshing..');
-    _topFiveTambolaBoards = [];
+    // _topFiveTambolaBoards = [];
     ticketsBeingGenerated = true;
     if (shouldRefresh) tambolaService!.weeklyTicksFetched = false;
     await init();
@@ -451,22 +451,22 @@ class TambolaHomeViewModel extends BaseViewModel {
     );
   }
 
-  Ticket? buildBoardView(TambolaBoard board) {
-    if (!board.isValid()) return null;
-    List<int> _calledDigits;
-    if (!tambolaService!.weeklyDrawFetched ||
-        weeklyDigits == null ||
-        weeklyDigits!.toList().isEmpty) {
-      _calledDigits = [];
-    } else {
-      _calledDigits = weeklyDigits!.getPicksPostDate(DateTime.monday);
-    }
-
-    return Ticket(
-      board: board,
-      calledDigits: _calledDigits,
-    );
-  }
+  // Ticket? buildBoardView(TambolaBoard board) {
+  //   if (!board.isValid()) return null;
+  //   List<int> _calledDigits;
+  //   if (!tambolaService!.weeklyDrawFetched ||
+  //       weeklyDigits == null ||
+  //       weeklyDigits!.toList().isEmpty) {
+  //     _calledDigits = [];
+  //   } else {
+  //     _calledDigits = weeklyDigits!.getPicksPostDate(DateTime.monday);
+  //   }
+  //
+  //   return Ticket(
+  //     board: board,
+  //     calledDigits: _calledDigits,
+  //   );
+  // }
 
   List<TambolaBoard?>? refreshBestBoards() {
     if (userWeeklyBoards == null || userWeeklyBoards!.isEmpty) {

@@ -178,6 +178,10 @@ class UiConstants {
   static Color kBlogCardRandomColor5 = const Color(0xFFA5E4FF);
 
   static Color kTambolaTabColor = const Color(0xff191919);
+  static Color kNextTicketInfo = const Color(0xff024A4F);
+  static Color kBuyTicketBg = const Color(0xff30363C);
+  static Color kBuyTicketSaveButton = const Color(0xff08D2AD);
+  static Color kGreyTextColor = const Color(0xff72767A);
 }
 
 extension ColorExtension on String {

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -155,8 +154,7 @@ class Winners {
         userid: map['userid'] ?? '',
         score: (map['score'] ?? 0).toDouble(),
         gameType: gameType ?? '',
-        matchMap:
-            map["matchMap"] == null ? null : MatchMap.fromMap(map["matchMap"]),
+        matchMap: MatchMap.fromMap(map["matchMap"] ?? {}),
         displayScore: map['displayScore'] ?? '');
   }
 
@@ -225,10 +223,10 @@ class MatchMap {
       );
 
   factory MatchMap.fromMap(Map<String, dynamic> json) => MatchMap(
-        oneRow: json["oneRow"],
-        twoRows: json["twoRows"],
-        fullHouse: json["fullHouse"],
-        corners: json["corners"],
+        oneRow: json["oneRow"] ?? 0,
+        twoRows: json["twoRows"] ?? 0,
+        fullHouse: json["fullHouse"] ?? 0,
+        corners: json["corners"] ?? 0,
       );
 
   Map<String, dynamic> toMap() => {

@@ -33,7 +33,7 @@ class ButTicketsComponent extends StatelessWidget {
           horizontal: SizeConfig.pageHorizontalMargins,
           vertical: SizeConfig.padding32),
       decoration: BoxDecoration(
-        color: const Color(0xff30363C),
+        color: UiConstants.kBuyTicketBg,
         borderRadius: BorderRadius.all(
           Radius.circular(SizeConfig.roundness16),
         ),
@@ -129,13 +129,13 @@ class ButTicketsComponent extends StatelessWidget {
               Container(
                 width: SizeConfig.screenWidth! * 0.25,
                 height: SizeConfig.screenHeight! * 0.05,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   // gradient: LinearGradient(colors: [
                   //  Color(0xff08D2AD),
                   //   Color(0xff43544F),
                   // ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Color(0xff08D2AD),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  color: UiConstants.kBuyTicketSaveButton,
                 ),
                 child: MaterialButton(
                   // padding: EdgeInsets.zero,

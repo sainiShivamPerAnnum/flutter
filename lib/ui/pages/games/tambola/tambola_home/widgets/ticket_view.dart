@@ -14,6 +14,10 @@ class TicketsView extends StatelessWidget {
 
   const TicketsView({super.key, this.model});
 
+  String getText(S locale) {
+    return '${locale.tgenerated} ${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount} ${locale.tgeneratedCount(model!.tambolaService!.ticketGenerateCount.toString())}';
+  }
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -60,7 +64,7 @@ class TicketsView extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        "${locale.tgenerated} ${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount} ${locale.tgeneratedCount(model!.tambolaService!.ticketGenerateCount.toString())}",
+                        getText(locale),
                         style: TextStyles.rajdhani.body2.colour(Colors.white),
                       ),
                     ],
@@ -192,8 +196,8 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
                           vertical: SizeConfig.padding10,
                         ),
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(SizeConfig.padding14)),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(SizeConfig.padding14)),
                           color: _tabController!.index == index
                               ? UiConstants.kTambolaTabColor
                               : Colors.transparent,

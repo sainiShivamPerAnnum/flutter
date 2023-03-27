@@ -5,7 +5,6 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_header.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_prize.dart';
@@ -130,8 +129,8 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                   child: Text(
                     widget.model.game!.description!,
                     textAlign: TextAlign.center,
-                    style: TextStyles.rajdhaniSB.body2
-                        .colour(const Color(0xffD9D9D9).withOpacity(0.41)),
+                    style: TextStyles.rajdhaniSB.body2.colour(
+                        UiConstants.kProfileBorderColor.withOpacity(0.41)),
                   ),
                 ),
                 SizedBox(height: SizeConfig.padding20),

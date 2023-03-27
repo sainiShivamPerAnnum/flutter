@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class TambolaTicketInfo extends StatelessWidget {
@@ -15,7 +16,7 @@ class TambolaTicketInfo extends StatelessWidget {
       height: SizeConfig.screenHeight! * 0.10,
       width: SizeConfig.screenWidth! * 0.80,
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xff627F8E)),
+        border: Border.all(color: UiConstants.kFAQDividerColor),
         borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         gradient: LinearGradient(
           begin: Alignment.centerLeft,

@@ -7,7 +7,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shimmer/shimmer.dart';
 
 class TambolaTicket extends StatelessWidget {
   TambolaTicket({
@@ -36,7 +35,7 @@ class TambolaTicket extends StatelessWidget {
 
   Color getColor(int index) {
     if (calledDigits.contains(ticketNumbers[index])) {
-      return const Color(0xff495DB2);
+      return UiConstants.kSaveDigitalGoldCardBg;
     } else {
       return Colors.transparent;
     }
@@ -44,7 +43,7 @@ class TambolaTicket extends StatelessWidget {
 
   Color getTextColor(int index) {
     if (calledDigits.contains(ticketNumbers[index])) {
-      return const Color(0xff93B5FE);
+      return UiConstants.kBlogTitleColor;
     } else {
       return Colors.white;
     }
@@ -61,7 +60,7 @@ class TambolaTicket extends StatelessWidget {
             // margin: const EdgeInsets.all(1),
             width: 1,
             decoration: BoxDecoration(
-              color: const Color(0xff93B5FE),
+              color: UiConstants.kBlogTitleColor,
               borderRadius: BorderRadius.circular(100),
             ),
           ),
@@ -108,10 +107,10 @@ class TambolaTicket extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: const Color(0xff30363C),
+                color: UiConstants.kBuyTicketBg,
                 borderRadius: BorderRadius.circular(10.0),
                 border: Border.all(
-                    color: const Color(0xff627F8E).withOpacity(0.2),
+                    color: UiConstants.kFAQDividerColor.withOpacity(0.2),
                     width: 1.5),
               ),
               child: Column(
@@ -121,15 +120,13 @@ class TambolaTicket extends StatelessWidget {
                     children: [
                       Text(
                         '#${board!.getTicketNumber()}',
-                        style: TextStyles.sourceSans.body4.colour(
-                          const Color(0xff72767A),
-                        ),
+                        style: TextStyles.sourceSans.body4
+                            .colour(UiConstants.kGreyTextColor),
                       ),
                       Text(
                         '${locale.tGeneratedOn} ${DateFormat('d/M').format(DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch))}',
-                        style: TextStyles.sourceSans.body4.colour(
-                          const Color(0xff72767A),
-                        ),
+                        style: TextStyles.sourceSans.body4
+                            .colour(UiConstants.kGreyTextColor),
                       ),
                     ],
                   ),

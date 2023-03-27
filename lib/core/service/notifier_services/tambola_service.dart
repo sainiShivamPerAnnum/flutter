@@ -161,8 +161,8 @@ class TambolaService extends ChangeNotifier {
     if (locator<RootController>()
         .navItems
         .containsValue(RootController.tambolaNavBar)) {
-      await fetchTambolaBoard();
-      await completer.future.then((value) {
+      fetchTambolaBoard();
+      completer.future.then((value) {
         initialTicketCount = value?.length;
         highlightDailyPicks(userWeeklyBoards!);
       });
@@ -195,6 +195,7 @@ class TambolaService extends ChangeNotifier {
     _winnerDialogCalled = false;
     _atomicTicketGenerationLeftCount = 0;
     _atomicTicketDeletionLeftCount = 0;
+    ticketsNumbers = [];
   }
 
   fetchWeeklyPicks({bool forcedRefresh = false}) async {

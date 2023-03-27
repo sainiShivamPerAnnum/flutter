@@ -163,7 +163,7 @@ class TambolaPrize extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: SvgPicture.asset(
-            "assets/svg/tambola_prize_asset.svg",
+            Assets.tambolaPrizeAsset,
             width: double.maxFinite,
             height: double.maxFinite,
           ),

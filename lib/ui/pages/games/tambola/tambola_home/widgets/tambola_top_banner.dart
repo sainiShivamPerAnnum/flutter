@@ -1,3 +1,4 @@
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,8 +19,8 @@ class TambolaTopBanner extends StatelessWidget {
         bottom: SizeConfig.pageHorizontalMargins,
       ),
       decoration: BoxDecoration(
-          image: const DecorationImage(
-              image: AssetImage('assets/images/tambola_1cr_bg.png')),
+          // image: const DecorationImage(
+          //     image: AssetImage('assets/images/tambola_1cr_bg.png')),
           color: UiConstants.kSnackBarPositiveContentColor,
           borderRadius: BorderRadius.all(
             Radius.circular(
@@ -33,7 +34,7 @@ class TambolaTopBanner extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                'assets/images/1_cr.svg',
+                Assets.one_cr_bg,
                 height: 80,
               ),
               const SizedBox(

@@ -58,17 +58,16 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'ui/pages/finance/withdraw_warning_screen.dart';
-
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
-  final DBModel? _dbModel = locator<DBModel>();
+  final DBModel _dbModel = locator<DBModel>();
+
   // final LocalDBModel? _lModel = locator<LocalDBModel>();
-  final AppState? _appState = locator<AppState>();
-  final UserService? _userService = locator<UserService>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AppState _appState = locator<AppState>();
+  final UserService _userService = locator<UserService>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   S locale = locator<S>();
   static Flushbar? flushbar;
   BaseUser? _myUser;
@@ -213,7 +212,7 @@ class BaseUtil extends ChangeNotifier {
         _userCreationTimestamp = firebaseUser!.metadata.creationTime;
 
         ///pick zerobalance asset
-        Random rnd = new Random();
+        Random rnd = Random();
         zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
       }
     } catch (e) {
@@ -233,7 +232,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future<void> refreshFunds() async {
     //TODO: ADD LOADER
-    print("-----------------> I got called");
+    debugPrint("-----------------> I got called");
     return _userRepo!.getFundBalance().then((aValue) {
       if (aValue.code == 200) {
         userFundWallet = aValue.model;
@@ -270,25 +269,20 @@ class BaseUtil extends ChangeNotifier {
             extraValuesMap: {"location": getLocationForCurrentTab()}));
   }
 
-  getLocationForCurrentTab() {
+  String getLocationForCurrentTab() {
     int tab = AppState.delegate!.appState.getCurrentTabIndex;
 
     switch (tab) {
       case 0:
         return "Journey View, top Left Corner";
-        break;
       case 1:
         return "Save Section, top Left Corner";
-        break;
       case 2:
         return "Play Section, top Left Corner";
-        break;
       case 3:
         return "Win Section, top Left Corner";
-        break;
       default:
         return "";
-        break;
     }
   }
 
@@ -312,7 +306,7 @@ class BaseUtil extends ChangeNotifier {
       content: WebGameModalSheet(
         game: game,
       ),
-      backgroundColor: const Color(0xff39393C),
+      backgroundColor: UiConstants.gameCardColor,
       hapticVibrate: true,
     );
   }
@@ -548,8 +542,7 @@ class BaseUtil extends ChangeNotifier {
       logger.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
       return true;
     }).catchError((e) {
-      logger.e(
-          "User Authentication failed with credential: Error: $e");
+      logger.e("User Authentication failed with credential: Error: $e");
       return false;
     });
   }
@@ -652,22 +645,21 @@ class BaseUtil extends ChangeNotifier {
   bool isOldCustomer() {
     //all users before april 2021 are marked old
     if (userCreationTimestamp == null) return false;
-    return (userCreationTimestamp!.isBefore(Constants.VERSION_2_RELEASE_DATE));
+    return userCreationTimestamp!.isBefore(Constants.VERSION_2_RELEASE_DATE);
   }
 
   static int getWeekNumber({DateTime? currentDate}) {
-    DateTime tdt = (currentDate != null) ? currentDate : new DateTime.now();
+    DateTime tdt = (currentDate != null) ? currentDate : DateTime.now();
     int dayn = tdt.weekday;
     //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
     //tdt.setDate(tdt.getDate() - dayn + 3);
-    DateTime firstThursday =
-        new DateTime(tdt.year, tdt.month, tdt.day - dayn + 3);
-    tdt = new DateTime(tdt.year, 1, 1);
+    DateTime firstThursday = DateTime(tdt.year, tdt.month, tdt.day - dayn + 3);
+    tdt = DateTime(tdt.year, 1, 1);
     if (tdt.weekday != DateTime.friday) {
       //tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
       int x = tdt.weekday;
       x = (tdt.weekday == 7) ? 0 : tdt.weekday;
-      tdt = new DateTime(tdt.year, 1, 1 + ((5 - x) + 7) % 7);
+      tdt = DateTime(tdt.year, 1, 1 + ((5 - x) + 7) % 7);
     }
     int n = 1 +
         ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) /
@@ -677,17 +669,17 @@ class BaseUtil extends ChangeNotifier {
   }
 
   double getUpdatedWithdrawalClosingBalance(double investment) =>
-      (toDouble(_userFundWallet!.iciciBalance) +
-          toDouble(_userFundWallet!.augGoldBalance) +
-          toDouble(_userFundWallet!.prizeBalance) +
-          toDouble(_userFundWallet!.lockedPrizeBalance) -
-          investment);
+      toDouble(_userFundWallet!.iciciBalance) +
+      toDouble(_userFundWallet!.augGoldBalance) +
+      toDouble(_userFundWallet!.prizeBalance) +
+      toDouble(_userFundWallet!.lockedPrizeBalance) -
+      investment;
 
   double getCurrentTotalClosingBalance() =>
-      (toDouble(_userFundWallet!.iciciBalance) +
-          toDouble(_userFundWallet!.augGoldBalance) +
-          toDouble(_userFundWallet!.prizeBalance) +
-          toDouble(_userFundWallet!.lockedPrizeBalance));
+      toDouble(_userFundWallet!.iciciBalance) +
+      toDouble(_userFundWallet!.augGoldBalance) +
+      toDouble(_userFundWallet!.prizeBalance) +
+      toDouble(_userFundWallet!.lockedPrizeBalance);
 
   static T? _cast<T>(x) => x is T ? x : null;
 
@@ -731,7 +723,7 @@ class BaseUtil extends ChangeNotifier {
 
   static double digitPrecision(double x, [int offset = 2, bool round = true]) {
     double y = x * pow(10, offset);
-    int z = (round) ? y.round() : y.truncate();
+    int z = round ? y.round() : y.truncate();
     return z / pow(10, offset);
   }
 
@@ -824,8 +816,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void flipSecurityValue(bool value) {
-    _myUser!.userPreferences
-        .setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
+    _myUser!.userPreferences.setPreference(Preferences.APPLOCK, value ? 1 : 0);
     notifyListeners();
   }
 
@@ -913,7 +904,7 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isSignedIn() => (firebaseUser != null);
+  bool isSignedIn() => firebaseUser != null;
 
   // bool isActiveUser() => (_myUser != null && !_myUser!.hasIncompleteDetails());
 
@@ -964,7 +955,8 @@ class BaseUtil extends ChangeNotifier {
 
 class CompleteProfileDialog extends StatelessWidget {
   final String? title, subtitle;
-  CompleteProfileDialog({this.title, this.subtitle});
+
+  const CompleteProfileDialog({super.key, this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
