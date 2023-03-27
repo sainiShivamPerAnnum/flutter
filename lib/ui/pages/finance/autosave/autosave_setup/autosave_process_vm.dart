@@ -5,7 +5,7 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -30,7 +30,8 @@ enum STATUS { Pending, Complete, Init }
 class AutosaveProcessViewModel extends BaseViewModel {
   // final PaytmService? _paytmService = locator<PaytmService>();
   final CustomLogger? _logger = locator<CustomLogger>();
-  final UserService? _userService = locator<UserService>();
+  // final UserService? _userService = locator<UserService>();
+  final BankAndPanService _bankingService = locator<BankAndPanService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final ScratchCardService _gtService = ScratchCardService();
   final SubService _subService = locator<SubService>();
@@ -268,23 +269,21 @@ class AutosaveProcessViewModel extends BaseViewModel {
           title: "Fello Flo + Digital Gold",
           subtitle: "Save in both of your favorite assets & earn great returns",
           isPopular: true,
-          isEnabled: _userService!.isSimpleKycVerified,
         ),
         AutosaveAssetModel(
           asset: Assets.felloFlo,
           title: "Fello Flo",
           subtitle: "The 10% fund is now available for Autosave",
-          isEnabled: _userService!.isSimpleKycVerified,
         ),
         AutosaveAssetModel(
-            asset: Assets.digitalGoldBar,
-            title: "Digital Gold",
-            subtitle: "Stable returns are now automated with Autosave",
-            isEnabled: true)
+          asset: Assets.digitalGoldBar,
+          title: "Digital Gold",
+          subtitle: "Stable returns are now automated with Autosave",
+        )
       ];
       floAmountFieldController = TextEditingController();
 
-      selectedAssetOption = _userService!.isSimpleKycVerified ? 0 : 2;
+      selectedAssetOption = _bankingService.isKYCVerified ? 0 : 2;
       if (selectedAssetOption == 0) {
         dailyCombos[2].isSelected = true;
       }
@@ -345,23 +344,21 @@ class AutosaveProcessViewModel extends BaseViewModel {
         title: "Fello Flo + Digital Gold",
         subtitle: "Save in both of your favorite assets & earn great returns",
         isPopular: true,
-        isEnabled: _userService!.isSimpleKycVerified,
       ),
       AutosaveAssetModel(
         asset: Assets.felloFlo,
         title: "Fello Flo",
         subtitle: "The 10% fund is now available for Autosave",
-        isEnabled: _userService!.isSimpleKycVerified,
       ),
       AutosaveAssetModel(
-          asset: Assets.digitalGoldBar,
-          title: "Digital Gold",
-          subtitle: "Stable returns are now automated with Autosave",
-          isEnabled: true)
+        asset: Assets.digitalGoldBar,
+        title: "Digital Gold",
+        subtitle: "Stable returns are now automated with Autosave",
+      )
     ];
     floAmountFieldController =
         TextEditingController(text: _subService.subscriptionData!.lbAmt ?? '0');
-    selectedAssetOption = _userService!.isSimpleKycVerified ? 0 : 2;
+    selectedAssetOption = _bankingService.isKYCVerified ? 0 : 2;
     pageController.addListener(
       () {
         if ((pageController.page ?? 0).toInt() != currentPage) {
@@ -669,12 +666,10 @@ class AutosaveAssetModel {
   final String title;
   final String subtitle;
   final bool isPopular;
-  final bool isEnabled;
 
   AutosaveAssetModel(
       {required this.asset,
       required this.title,
       required this.subtitle,
-      required this.isEnabled,
       this.isPopular = false});
 }

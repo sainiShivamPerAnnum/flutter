@@ -781,8 +781,11 @@ class _CenterTextFieldState extends State<CenterTextField> {
   }
 
   updateFieldWidth() {
-    fieldWidth = ((SizeConfig.screenWidth! * 0.07) *
-        widget.amountFieldController.text.length.toDouble());
+    if (widget.amountFieldController.text.isEmpty)
+      fieldWidth = SizeConfig.padding20;
+    else
+      fieldWidth = ((SizeConfig.screenWidth! * 0.07) *
+          widget.amountFieldController.text.length.toDouble());
   }
 
   @override
@@ -854,9 +857,7 @@ class _CenterTextFieldState extends State<CenterTextField> {
                       onChanged: (val) {
                         widget.onChanged(val);
                         widget.model.updateMinMaxCapString(val);
-                        fieldWidth = ((SizeConfig.screenWidth! * 0.08) *
-                            widget.amountFieldController.text.length
-                                .toDouble());
+                        updateFieldWidth();
                       },
                     ),
                   ),
