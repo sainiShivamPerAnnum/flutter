@@ -1,13 +1,13 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_setup_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 final formKey = GlobalKey<FormState>();
 
@@ -245,5 +245,69 @@ class _AutosaveComboInputFieldsModalSheetState
         LENDBOXP2P: int.tryParse(_floController.text)!,
         icon: "",
         isSelected: true);
+  }
+}
+
+class AutosaveAmountInputTile extends StatelessWidget {
+  const AutosaveAmountInputTile({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    this.autoFocus = false,
+    required this.asset,
+    required this.controller,
+    required this.onValueChanged,
+    required this.validator,
+  });
+  final String title, subtitle, asset;
+  final TextEditingController controller;
+  final Function onValueChanged;
+  final bool autoFocus;
+  final Function validator;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: SizeConfig.padding12,
+      ),
+      child: Row(children: [
+        Image.asset(
+          asset,
+          width: SizeConfig.padding70,
+          fit: BoxFit.cover,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyles.sourceSansB.body1,
+            ),
+            SizedBox(height: SizeConfig.padding4),
+            Text(subtitle,
+                style: TextStyles.sourceSans.body3.colour(Colors.grey)),
+          ],
+        ),
+        Spacer(),
+        Container(
+          width: SizeConfig.screenWidth! * 0.4,
+          child: AppTextField(
+            textEditingController: controller,
+            isEnabled: true,
+            keyboardType: TextInputType.number,
+            prefixText: "₹ ",
+            maxLength: 4,
+            prefixTextStyle: TextStyles.rajdhaniB.body1,
+            onChanged: onValueChanged,
+            autoFocus: autoFocus,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+            ],
+            validator: (val) => validator(val),
+          ),
+        ),
+      ]),
+    );
   }
 }

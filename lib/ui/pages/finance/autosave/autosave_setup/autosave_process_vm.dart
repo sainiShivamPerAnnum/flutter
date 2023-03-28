@@ -11,7 +11,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modalsheets/autosave_combo_input_modalsheet.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -26,11 +25,7 @@ enum FREQUENCY { daily, weekly, monthly }
 
 enum STATUS { Pending, Complete, Init }
 
-//TODO add chip tap to Enter amount setup
 class AutosaveProcessViewModel extends BaseViewModel {
-  // final PaytmService? _paytmService = locator<PaytmService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  // final UserService? _userService = locator<UserService>();
   final BankAndPanService _bankingService = locator<BankAndPanService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final ScratchCardService _gtService = ScratchCardService();
@@ -57,11 +52,11 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   MaxMin monthlyMaxMinInfo =
       MaxMin(min: MinAsset(AUGGOLD99: 50, LENDBOXP2P: 100), max: 500);
+
   late List<ApplicationMeta> appsList;
   ApplicationMeta? _selectedUpiApp;
   String finalButtonCta = "SETUP";
   SubComboModel? customComboModel;
-  bool readOnly = true;
 
   int _selectedAssetOption = 2;
   int _totalInvestingAmount = 0;
@@ -89,12 +84,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
       floAmountFieldController!.text = '100';
       goldAmountFieldController!.text = '0';
       _totalInvestingAmount = 100;
-      readOnly = true;
     } else {
       floAmountFieldController!.text = '0';
       goldAmountFieldController!.text = '100';
       _totalInvestingAmount = 100;
-      readOnly = true;
     }
     notifyListeners();
   }
@@ -209,13 +202,6 @@ class AutosaveProcessViewModel extends BaseViewModel {
   TextEditingController? floAmountFieldController;
 
   List<AutosaveAssetModel> autosaveAssetOptionList = [];
-
-  enableField() {
-    if (readOnly) {
-      readOnly = false;
-      notifyListeners();
-    }
-  }
 
   getAvailableUpiApps() async {
     appsList = await _subService.getUPIApps();
@@ -638,15 +624,6 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   openCustomInputModalSheet(model, {bool isNew = true}) {
-    // if (!isNew) {
-    //   floAmountFieldController!.text = customComboModel!.AUGGOLD99.toString();
-    //   goldAmountFieldController!.text = customComboModel!.LENDBOXP2P.toString();
-    //   customComboModel!.isSelected = true;
-    //   totalInvestingAmount =
-    //       customComboModel!.AUGGOLD99 + customComboModel!.LENDBOXP2P;
-    //   deselectOtherComboIfAny();
-    //   notifyListeners();
-    // }
     return BaseUtil.openModalBottomSheet(
       isBarrierDismissible: true,
       addToScreenStack: true,
@@ -658,6 +635,30 @@ class AutosaveProcessViewModel extends BaseViewModel {
       hapticVibrate: true,
       content: AutosaveComboInputFieldsModalSheet(model: model),
     );
+  }
+
+  Future<void> setupCtaOnPressed() async {
+    if (selectedAssetOption == 1)
+      updateMinMaxCapString(floAmountFieldController!.text);
+    if (selectedAssetOption == 2)
+      updateMinMaxCapString(goldAmountFieldController!.text);
+    if (selectedAssetOption != 0 &&
+        minMaxCapString != null &&
+        minMaxCapString!.isNotEmpty)
+      return BaseUtil.showNegativeAlert(
+          "Invalid amount entered", "Please enter a valid amount to proceed");
+    Haptic.vibrate();
+    await updateSubscription();
+  }
+
+  onCenterGoldTextFieldChange(val) {
+    totalInvestingAmount =
+        int.tryParse(goldAmountFieldController?.text ?? '0') ?? 0;
+  }
+
+  onCenterLbTextFieldChange(val) {
+    totalInvestingAmount =
+        int.tryParse(floAmountFieldController?.text ?? '0') ?? 0;
   }
 }
 

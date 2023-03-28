@@ -7,6 +7,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_setup_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_upi_app-select_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_setup_components/autosave_summary.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';

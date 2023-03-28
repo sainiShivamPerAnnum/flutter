@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_setup_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_setup_components/autosave_summary.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
