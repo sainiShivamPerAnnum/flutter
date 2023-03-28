@@ -122,6 +122,7 @@ class Assets {
   static const String floConveyor = "assets/images/flo_convyor.webp";
 
   static const String happyhourPolygon = "assets/svg/happy_hour_polygons.svg";
+  static const String floGold = "assets/vectors/flogold.svg";
 
   // WIN
 
@@ -287,7 +288,16 @@ class Assets {
     "assets/vectors/icons/one_row.svg",
     "assets/vectors/icons/corners.svg",
   ];
-  static const String infoWhyPan =
+
+  static List<String> autosaveBenefitsAssets = [
+    "assets/vectors/aus1.svg",
+    "assets/vectors/aus2.svg",
+    "assets/vectors/aus3.svg",
+  ];
+
+  static String multiAvatars = "assets/vectors/multiAvatars.svg";
+  static String multiRealAvatars = "assets/images/cus_photos.png";
+  static final String infoWhyPan =
       'Your PAN Card is used as your unique ID to set up your investment profile in different assets';
 
   static const String logoBase64 =

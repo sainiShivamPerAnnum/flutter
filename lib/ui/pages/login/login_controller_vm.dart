@@ -175,7 +175,7 @@ class LoginControllerViewModel extends BaseViewModel {
               _analyticsService!.track(
                   eventName: AnalyticsEvents.mobileOtpDone,
                   properties: {'mobile': this.userMobile});
-              AppState.isOnboardingInProgress = true;
+
               _otpScreenKey.currentState!.model!.onOtpReceived();
               FirebaseAuth.instance
                   .signInWithCustomToken(verifyOtp.model!)
@@ -353,6 +353,7 @@ class LoginControllerViewModel extends BaseViewModel {
             duration: Duration(seconds: 1),
             curve: Curves.easeIn);
       });
+      AppState.isOnboardingInProgress = true;
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user

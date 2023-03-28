@@ -1,4 +1,3 @@
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -6,29 +5,23 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class AmountChips extends StatelessWidget {
-  final model;
   final int? amount;
+  final bool isSelected;
+  final Function onTap;
   final bool? isBestSeller;
-  AmountChips({
-    this.model,
-    this.amount,
-    this.isBestSeller = false,
-  });
+  AmountChips(
+      {this.amount,
+      required this.onTap,
+      this.isBestSeller = false,
+      this.isSelected = false});
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
       child: InkWell(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-          Haptic.vibrate();
-          model.amountFieldController.text = amount.toString();
-          
-          model.onAmountValueChanged(amount.toString());
-          model.lastTappedChipAmount = amount;
-        },
+        onTap: () => onTap(),
         child: Column(
           children: [
             Container(
@@ -38,10 +31,9 @@ class AmountChips extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color:
-                      int.tryParse(model.amountFieldController.text) == amount
-                          ? UiConstants.primaryColor
-                          : Color(0xFFFEF5DC).withOpacity(0.2),
+                  color: isSelected
+                      ? UiConstants.primaryColor
+                      : Color(0xFFFEF5DC).withOpacity(0.2),
                   width: SizeConfig.border0,
                 ),
                 borderRadius: BorderRadius.circular(SizeConfig.roundness5),
@@ -62,11 +54,11 @@ class AmountChips extends StatelessWidget {
                     borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   ),
                   padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding6,
-                      vertical: SizeConfig.padding4),
+                      horizontal: SizeConfig.padding4,
+                      vertical: SizeConfig.padding2),
                   child: Text(
                     locale.best,
-                    style: TextStyles.rajdhaniB.body4
+                    style: TextStyles.rajdhaniB.body5
                         .colour(Colors.white)
                         .letterSpace(SizeConfig.padding2),
                   ),

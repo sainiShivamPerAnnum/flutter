@@ -47,6 +47,7 @@ class AppState extends ChangeNotifier {
   static Map<String, dynamic>? startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String? _fcmData;
+  static bool showAutosaveBt = false;
   static bool isFirstTime = false;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;

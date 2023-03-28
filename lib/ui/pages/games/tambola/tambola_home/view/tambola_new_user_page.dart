@@ -24,15 +24,13 @@ import 'package:showcaseview/showcaseview.dart';
 
 import '../widgets/tambola_leader_board.dart';
 
-
-
 class TambolaNewUserPage extends StatefulWidget {
   const TambolaNewUserPage(
       {Key? key,
-        required this.model,
-        this.showPrizeSection = false,
-        this.showWinners = false,
-        this.isFromNavigation = false})
+      required this.model,
+      this.showPrizeSection = false,
+      this.showWinners = false,
+      this.isFromNavigation = false})
       : super(key: key);
   final TambolaHomeViewModel model;
   final bool showPrizeSection;
@@ -150,8 +148,8 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              padding:
-              const EdgeInsets.only(top: 14, bottom: 24, left: 32, right: 32),
+              padding: const EdgeInsets.only(
+                  top: 14, bottom: 24, left: 32, right: 32),
               width: double.infinity,
               color: UiConstants.kBackgroundColor,
               // height: SizeConfig.screenHeight! * 0.17,
@@ -186,23 +184,23 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                       onPressed: () {
                         locator<AnalyticsService>().track(
                             eventName:
-                            (widget.model.activeTambolaCardCount ?? 0) >= 1
-                                ? AnalyticsEvents.tambolaSaveTapped
-                                : AnalyticsEvents
-                                .tambolaGetFirstTicketTapped,
+                                (widget.model.activeTambolaCardCount ?? 0) >= 1
+                                    ? AnalyticsEvents.tambolaSaveTapped
+                                    : AnalyticsEvents
+                                        .tambolaGetFirstTicketTapped,
                             properties: AnalyticsProperties
                                 .getDefaultPropertiesMap(extraValuesMap: {
                               "Time left for draw Tambola (mins)":
-                              AnalyticsProperties
-                                  .getTimeLeftForTambolaDraw(),
+                                  AnalyticsProperties
+                                      .getTimeLeftForTambolaDraw(),
                               "Tambola Tickets Owned":
-                              AnalyticsProperties.getTambolaTicketCount(),
+                                  AnalyticsProperties.getTambolaTicketCount(),
                               "Number of Tickets":
-                              widget.model.activeTambolaCardCount ?? 0,
+                                  widget.model.activeTambolaCardCount ?? 0,
                               "Amount": widget.model.ticketSavedAmount,
                             }));
                         widget.model.updateTicketSavedAmount(1);
-                        BaseUtil().openDepositOptionsModalSheet(
+                        BaseUtil.openDepositOptionsModalSheet(
                             amount: widget.model.ticketSavedAmount);
                       },
                     ),

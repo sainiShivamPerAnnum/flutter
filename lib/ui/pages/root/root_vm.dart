@@ -20,8 +20,8 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -60,6 +60,7 @@ class RootViewModel extends BaseViewModel {
   final ScratchCardService? _gtService = locator<ScratchCardService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
   final AppState appState = locator<AppState>();
+  final SubService _subscriptionService = locator<SubService>();
   final S locale;
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
@@ -68,7 +69,6 @@ class RootViewModel extends BaseViewModel {
   final ReferralRepo _refRepo = locator<ReferralRepo>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final PaytmService _paytmService = locator<PaytmService>();
   final ReferralService _referralService = locator<ReferralService>();
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
@@ -79,10 +79,11 @@ class RootViewModel extends BaseViewModel {
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     _txnHistoryService.signOut();
-    _paytmService.getActiveSubscriptionDetails();
+    // _paytmService.getActiveSubscriptionDetails();
     await _journeyService.checkForMilestoneLevelChange();
     await _gtService?.updateUnscratchedGTCount();
     await _journeyService.getUnscratchedGT();
+    await _subscriptionService.getSubscription();
   }
 
   onInit() {
@@ -95,6 +96,7 @@ class RootViewModel extends BaseViewModel {
         _rootController.navItems.values.first;
 
     _tambolaService!.init();
+    _subscriptionService.init();
     initialize();
   }
 
@@ -318,8 +320,8 @@ class RootViewModel extends BaseViewModel {
               await BaseUtil().signOut();
               _tambolaService?.signOut();
               _analyticsService.signOut();
-              _paytmService.signout();
               _bankAndKycService?.dump();
+              _subscriptionService.dispose();
               AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(

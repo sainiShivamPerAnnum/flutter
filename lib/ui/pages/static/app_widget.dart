@@ -151,83 +151,83 @@ class AppTextField extends StatelessWidget {
         autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
         decoration: inputDecoration ??
             InputDecoration(
-              counterStyle: TextStyle(color: UiConstants.kTextColor),
-              suffixIcon: Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: suffixIcon,
-              ),
-              prefixText: prefixText,
-              prefixStyle: prefixTextStyle,
-              suffixText: suffixText,
-              suffixStyle: suffixTextStyle,
-              suffix: suffix,
-              prefixIcon: prefixIcon,
-              suffixIconConstraints: suffixIconConstraints ??
-                  BoxConstraints(
-                    minWidth: 35,
-                    minHeight: 35,
-                    maxHeight: 35,
-                    maxWidth: 35,
+                counterStyle: TextStyle(color: UiConstants.kTextColor),
+                suffixIcon: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: suffixIcon,
+                ),
+                prefixText: prefixText,
+                prefixStyle: prefixTextStyle,
+                suffixText: suffixText,
+                suffixStyle: suffixTextStyle,
+                suffix: suffix,
+                prefixIcon: prefixIcon,
+                suffixIconConstraints: suffixIconConstraints ??
+                    BoxConstraints(
+                      minWidth: 35,
+                      minHeight: 35,
+                      maxHeight: 35,
+                      maxWidth: 35,
+                    ),
+                fillColor: fillColor ??
+                    (isEnabled
+                        ? UiConstants.kTextFieldColor
+                        : UiConstants.kTextFieldColor.withOpacity(0.7)),
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: UiConstants.kTextColor.withOpacity(0.1),
+                    width: SizeConfig.border1,
                   ),
-              fillColor: fillColor ??
-                  (isEnabled
-                      ? UiConstants.kTextFieldColor
-                      : UiConstants.kTextFieldColor.withOpacity(0.7)),
-              filled: true,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                borderSide: BorderSide(
-                  color: UiConstants.kTextColor.withOpacity(0.1),
-                  width: SizeConfig.border1,
                 ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                borderSide: BorderSide(
-                  color: UiConstants.kTextColor.withOpacity(0.1),
-                  width: SizeConfig.border1,
-                ),
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                borderSide: BorderSide(
-                  color: UiConstants.kTextColor.withOpacity(0.1),
-                  width: SizeConfig.border1,
-                ),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                borderSide: BorderSide(
-                  color: Colors.red,
-                  width: SizeConfig.border1,
-                ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                borderSide: BorderSide(
-                  color: Colors.red,
-                  width: SizeConfig.border1,
-                ),
-              ),
-              errorStyle: TextStyle(
-                height: 0.75,
-                fontSize: 12,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                borderSide: BorderSide(
-                  color: UiConstants.kTabBorderColor,
-                  width: SizeConfig.border1,
-                ),
-              ),
-              hintText: hintText,
-              hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
-              contentPadding: contentPadding ??
-                  EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding16,
-                    vertical: SizeConfig.padding2,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: UiConstants.kTextColor.withOpacity(0.1),
+                    width: SizeConfig.border1,
                   ),
-            ),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: UiConstants.kTextColor.withOpacity(0.1),
+                    width: SizeConfig.border1,
+                  ),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                    width: SizeConfig.border1,
+                  ),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                    width: SizeConfig.border1,
+                  ),
+                ),
+                errorStyle: TextStyle(
+                  height: 0.75,
+                  fontSize: 12,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  borderSide: BorderSide(
+                    color: UiConstants.kTabBorderColor,
+                    width: SizeConfig.border1,
+                  ),
+                ),
+                hintText: hintText,
+                hintStyle: TextStyles.body3.colour(UiConstants.kTextColor2),
+                contentPadding: contentPadding ??
+                    EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding16,
+                      vertical: SizeConfig.padding2,
+                    ),
+                counterText: ""),
       ),
     );
   }
@@ -529,9 +529,12 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
                         size: SizeConfig.title5,
                         color: Colors.white,
                       )
-                    : Text(
-                        widget.btnText.toUpperCase(),
-                        style: TextStyles.rajdhaniB.title5,
+                    : FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          widget.btnText.toUpperCase(),
+                          style: TextStyles.rajdhaniB.title5,
+                        ),
                       ),
               ),
             ));

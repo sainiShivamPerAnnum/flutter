@@ -424,7 +424,7 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  openDepositOptionsModalSheet(
+  static openDepositOptionsModalSheet(
       {int? amount, bool isSkipMl = false, String? title, String? subtitle}) {
     // if (_userService!.userJourneyStats!.mlIndex == 1)
     //   return BaseUtil.openDialog(
@@ -432,27 +432,29 @@ class BaseUtil extends ChangeNotifier {
     //       isBarrierDismissible: true,
     //       hapticVibrate: false,
     //       content: CompleteProfileDialog());
-    _analyticsService!
+    locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
-    return BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        enableDrag: false,
-        hapticVibrate: true,
-        backgroundColor:
-            UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-        isBarrierDismissible: true,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(
-            SizeConfig.roundness12,
+    Future.delayed(Duration(milliseconds: 500), () {
+      return openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          backgroundColor:
+              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+          isBarrierDismissible: true,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(
+              SizeConfig.roundness12,
+            ),
+            topRight: Radius.circular(SizeConfig.roundness24),
           ),
-          topRight: Radius.circular(SizeConfig.roundness24),
-        ),
-        content: DepositOptionModalSheet(
-          amount: amount,
-          isSkipMl: isSkipMl,
-          title: title,
-          subtitle: subtitle,
-        ));
+          content: DepositOptionModalSheet(
+            amount: amount,
+            isSkipMl: isSkipMl,
+            title: title,
+            subtitle: subtitle,
+          ));
+    });
   }
 
   static showPositiveAlert(String? title, String? message, {int seconds = 2}) {
@@ -606,11 +608,13 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static Future<void> launchUrl(String url) async {
+  static Future<bool> launchUrl(String url) async {
     if (!await launchUrlString(url, mode: LaunchMode.externalApplication)) {
       BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
           "Please try after some time");
+      return false;
     }
+    return true;
   }
 
   // void openTambolaGame() async {

@@ -15,7 +15,6 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -34,7 +33,7 @@ class RazorpayService extends ChangeNotifier {
   UserTransaction? _currentTxn;
   ValueChanged<UserTransaction?>? _txnUpdateListener;
   Razorpay? _razorpay;
-  PaytmService? _paytmService;
+  // PaytmService? _paytmService;
   PaytmRepository? _paytmRepo;
   AugmontTransactionService? _augTxnService;
   BaseTransactionService? _txnService;
@@ -46,7 +45,7 @@ class RazorpayService extends ChangeNotifier {
   bool init(InvestmentType investmentType) {
     _razorpay = Razorpay();
     _logger = locator<CustomLogger>();
-    _paytmService = locator<PaytmService>();
+    // _paytmService = locator<PaytmService>();
     _analyticsService = locator<AnalyticsService>();
 
     _paytmRepo = locator<PaytmRepository>();

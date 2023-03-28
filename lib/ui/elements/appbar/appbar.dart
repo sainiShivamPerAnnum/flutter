@@ -70,6 +70,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
       backgroundColor: backgroundColor ?? Colors.transparent,
       actions: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (showCoinBar)
               Showcase(

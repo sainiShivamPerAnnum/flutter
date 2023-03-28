@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AutosaveTransactionDetailsDialog extends StatefulWidget {
-  final AutosaveTransactionModel _transaction;
+  final SubscriptionTransactionModel _transaction;
 
   AutosaveTransactionDetailsDialog(this._transaction);
 
@@ -89,8 +89,7 @@ class AutosaveTransactionDetailsDialogState
                   Padding(
                     padding: EdgeInsets.only(bottom: 8),
                     child: Text(
-                      _txnHistoryService!
-                          .getFormattedTxnAmount(widget._transaction.amount!),
+                      widget._transaction.amount,
                       // '₹ ${widget._transaction.amount.toStringAsFixed(2)}',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
@@ -141,12 +140,12 @@ class AutosaveTransactionDetailsDialogState
                         children: [
                           referralTile(
                             locale.purchaseRate,
-                            '₹ ${widget._transaction.augmontMap!.aLockPrice ?? locale.na}/gm',
+                            '₹ ${widget._transaction.augMap?.lockPrice ?? locale.na}/gm',
                             Colors.redAccent.withOpacity(0.6),
                           ),
                           referralTile(
                             locale.goldPurchased,
-                            '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augmontMap!.aGoldBalance) ?? 'N/A' as double)} grams',
+                            '${_getAugmontGoldGrams(BaseUtil.toDouble(widget._transaction.augMap?.gold) ?? 'N/A' as double)} grams',
                             Colors.redAccent.withOpacity(0.6),
                           )
                         ],

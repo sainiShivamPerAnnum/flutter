@@ -39,6 +39,7 @@ class ApiPath {
   static String scratchCards(uid) => '/user/$uid/golden_tickets';
   static String isEmailRegistered(uid) => '/user/$uid/email/registered';
   static String get dynamicUi => '/ui/dynamic';
+  static String getSubCombosChips(String freq) => "/subs/$freq/config";
 
   //GT Rewards
   static const kRedeemGtReward = "/gt/redeem";
@@ -137,4 +138,10 @@ class ApiPath {
 
   //marketing events
   static String kDailyAppBonusEvent(String uid) => "/user/$uid/daily-bonus";
+
+  //phonepe subscriptions
+  static String subscription(String uid) => "/$uid/sub";
+  static const pauseSubscription = "/sub/pause";
+  static const resumeSubscription = "/sub/resume";
+  static String txnsSubscription(String uid) => "/$uid/sub/txns";
 }

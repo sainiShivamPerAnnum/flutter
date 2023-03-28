@@ -152,7 +152,7 @@ class ButTicketsComponent extends StatelessWidget {
                               model.ticketCountController!.text ?? "",
                           "Amount": model.ticketSavedAmount,
                         }));
-                    BaseUtil().openDepositOptionsModalSheet(
+                    BaseUtil.openDepositOptionsModalSheet(
                         amount: model.ticketSavedAmount);
                   },
                   child: Center(

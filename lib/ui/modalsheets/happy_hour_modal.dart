@@ -206,7 +206,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                         ? SolidButton(
                             onPress: () {
                               AppState.backButtonDispatcher!.didPopRoute();
-                              locator<BaseUtil>().openDepositOptionsModalSheet(
+                              BaseUtil.openDepositOptionsModalSheet(
                                   title:
                                       "You are investing during Happy Hours!");
                               locator<MixpanelAnalytics>().track(
