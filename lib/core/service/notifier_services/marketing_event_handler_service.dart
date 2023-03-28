@@ -228,13 +228,14 @@ class MarketingEventHandlerService
   }
 
   getCurrentDay(DailyAppCheckInEventModel data) {
-    if (data.streakEnd == TimestampModel.none())
+    if (data.streakEnd == TimestampModel.none()) {
       currentDay = 0;
-    else if (data.showStreakBreakMessage)
+    } else if (data.showStreakBreakMessage) {
       currentDay = 0;
-    else
+    } else {
       currentDay = TimestampModel.daysBetween(
           dailyAppCheckInEventData!.streakStart.toDate(), DateTime.now());
+    }
     log("Current Day: $currentDay");
   }
 }

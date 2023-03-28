@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
@@ -23,7 +24,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_ticket.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -37,39 +38,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class TambolaHomeViewModel extends BaseViewModel {
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final PrizeService? _prizeService = locator<PrizeService>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final GameRepo? _gamesRepo = locator<GameRepo>();
-  final WinnerService? _winnerService = locator<WinnerService>();
-  final DBModel? _dbModel = locator<DBModel>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final PrizeService _prizeService = locator<PrizeService>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final GameRepo _gamesRepo = locator<GameRepo>();
+  final WinnerService _winnerService = locator<WinnerService>();
+  final DBModel _dbModel = locator<DBModel>();
   final S locale = locator<S>();
   final TambolaService? tambolaService = locator<TambolaService>();
-  final UserCoinService? _coinService = locator<UserCoinService>();
-  final TambolaRepo? _tambolaRepo = locator<TambolaRepo>();
-  final UserService? _userService = locator<UserService>();
+  final UserCoinService _coinService = locator<UserCoinService>();
+  final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
+  final UserService _userService = locator<UserService>();
 
   bool isLeaderboardLoading = false;
   bool isPrizesLoading = false;
   int? currentPage = 0;
-  PageController pageController = new PageController(initialPage: 0);
+  PageController pageController = PageController(initialPage: 0);
   LeaderboardModel? _tLeaderBoard;
   late ScrollController scrollController;
   double cardOpacity = 1;
   GameModel? game;
   List<Winners> _winners = [];
-  List<Ticket>? _tambolaBoardViews;
+  List<TambolaTicket>? _tambolaBoardViews;
   int ticketGenerationTryCount = 0;
   TextEditingController? ticketCountController;
-  Ticket? _currentBoardView;
+  // Ticket? _currentBoardView;
   TambolaBoard? _currentBoard;
   Widget? _widget;
   late AnimationController animationController;
   PageController? ticketPageController;
   int _currentPage = 1;
-  List<Ticket> _topFiveTambolaBoards = [];
+
+  // List<Ticket> _topFiveTambolaBoards = [];
   List<TambolaBoard>? _bestTambolaBoards;
   bool showSummaryCards = true;
   bool ticketBuyInProgress = false;
@@ -81,17 +83,27 @@ class TambolaHomeViewModel extends BaseViewModel {
   bool _showWinCard = false;
   Map<String, int> ticketCodeWinIndex = {};
   bool _isEligible = false;
-  get isEligible => this._isEligible;
+  bool _show1CrCard = false;
 
-  set isEligible(value) => this._isEligible = value;
-  get showWinCard => this._showWinCard;
+  bool get show1CrCard => _show1CrCard;
+
+  set show1CrCard(bool value) {
+    _show1CrCard = value;
+  }
+
+  bool get isEligible => _isEligible;
+
+  set isEligible(value) => _isEligible = value;
+
+  bool get showWinCard => _showWinCard;
 
   set showWinCard(value) {
-    this._showWinCard = value;
+    _showWinCard = value;
     notifyListeners();
   }
 
   TambolaWidgetController? tambolaWidgetController;
+
   //Constant values
   Map<String, IconData> tambolaOdds = {
     "Full House": Icons.apps,
@@ -122,7 +134,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     Assets.howToPlayAsset3Tambola,
   ];
 
-  udpateCardOpacity() {
+  void udpateCardOpacity() {
     cardOpacity = 1 -
         (scrollController.offset / scrollController.position.maxScrollExtent)
             .clamp(0, 1)
@@ -131,8 +143,10 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   LeaderboardModel? get tlboard => _tLeaderBoard;
+
   PrizesModel? get tPrizes =>
       _prizeService!.gamePrizeMap[Constants.GAME_TYPE_TAMBOLA];
+
   List<Winners> get winners => _winners;
 
   int get ticketSavedAmount => _ticketSavedAmount;
@@ -145,33 +159,33 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   List<TambolaBoard?>? get userWeeklyBoards => tambolaService!.userWeeklyBoards;
 
-  List<Ticket>? get tambolaBoardViews => this._tambolaBoardViews;
+  List<TambolaTicket>? get tambolaBoardViews => _tambolaBoardViews;
 
-  set tambolaBoardViews(List<Ticket>? value) {
-    this._tambolaBoardViews = value;
+  set tambolaBoardViews(List<TambolaTicket>? value) {
+    _tambolaBoardViews = value;
   }
 
-  get ticketsBeingGenerated => this._ticketsBeingGenerated;
+  bool get ticketsBeingGenerated => _ticketsBeingGenerated;
 
   set ticketsBeingGenerated(value) {
-    this._ticketsBeingGenerated = value;
+    _ticketsBeingGenerated = value;
     notifyListeners();
   }
 
-  get weeklyDrawFetched => this._weeklyDrawFetched;
+  bool get weeklyDrawFetched => _weeklyDrawFetched;
 
   set weeklyDrawFetched(value) {
-    this._weeklyDrawFetched = value;
+    _weeklyDrawFetched = value;
     notifyListeners();
   }
 
   Widget? get cardWidget => _widget;
 
-  List<Ticket> get topFiveTambolaBoards => _topFiveTambolaBoards;
+  // List<Ticket> get topFiveTambolaBoards => _topFiveTambolaBoards;
 
   bool get weeklyTicksFetched => tambolaService!.weeklyTicksFetched;
 
-  Ticket? get currentBoardView => _currentBoardView;
+  // Ticket? get currentBoardView => _currentBoardView;
 
   TambolaBoard? get currentBoard => _currentBoard;
 
@@ -187,15 +201,15 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   // int? get totalActiveTickets => tambolaService!.ticketCount;
 
-  viewpage(int? index) {
+  void viewpage(int? index) {
     currentPage = index;
-    print(currentPage);
+    debugPrint("$currentPage");
     pageController.animateToPage(currentPage!,
-        duration: Duration(milliseconds: 200), curve: Curves.decelerate);
+        duration: const Duration(milliseconds: 200), curve: Curves.decelerate);
     refresh();
   }
 
-  updateTicketSavedAmount(int count) {
+  void updateTicketSavedAmount(int count) {
     _ticketSavedAmount = AppConfig.getValue(AppConfigKey.tambola_cost) * count;
     notifyListeners();
   }
@@ -207,15 +221,13 @@ class TambolaHomeViewModel extends BaseViewModel {
     await getGameDetails();
     log("Get Game Details:${DateTime.now().second}");
     // getLeaderboard();
-    if (tambolaWidgetController == null) {
-      tambolaWidgetController = TambolaWidgetController();
-    }
-    fetchWinners();
-    if (tPrizes == null) getPrizes();
+    tambolaWidgetController ??= TambolaWidgetController();
+    await fetchWinners();
+    if (tPrizes == null) await getPrizes();
 
     //Tambola services
     ticketCountController =
-        new TextEditingController(text: buyTicketCount.toString());
+        TextEditingController(text: buyTicketCount.toString());
     updateTicketSavedAmount(buyTicketCount);
 
     // Ticket wallet check
@@ -225,8 +237,9 @@ class TambolaHomeViewModel extends BaseViewModel {
     if (weeklyDigits == null) {
       await tambolaService!.fetchWeeklyPicks();
       weeklyDrawFetched = true;
-    } else
+    } else {
       weeklyDrawFetched = true;
+    }
 
     ///next get the tambola tickets of this week
 
@@ -245,31 +258,36 @@ class TambolaHomeViewModel extends BaseViewModel {
       notifyListeners();
     }
 
+    if (today.weekday == 1 && (today.hour >= 0 && today.hour < 12)) {
+      show1CrCard = true;
+    }
+
     setState(ViewState.Idle);
   }
 
   Future<void> fetchTambola() async {
     ticketsLoaded = false;
-    if (!tambolaService!.weeklyTicksFetched)
-      tambolaService!.fetchTambolaBoard();
+    if (!tambolaService!.weeklyTicksFetched) {
+      await tambolaService!.fetchTambolaBoard();
+    }
 
     await tambolaService!.completer.future;
 
     _currentBoard = null;
-    _currentBoardView = null;
+    // _currentBoardView = null;
 
-    _examineTicketsForWins();
+    await _examineTicketsForWins();
   }
 
-  fetchWinners() async {
-    final winnersModel = await _winnerService!
+  Future<void> fetchWinners() async {
+    final winnersModel = await _winnerService
         .fetchWinnersByGameCode(Constants.GAME_TYPE_TAMBOLA);
     _winners = winnersModel!.winners!;
     notifyListeners();
   }
 
   Future getProfileDpWithUid(String? uid) async {
-    return await _dbModel!.getUserDP(uid);
+    return _dbModel.getUserDP(uid);
   }
 
   // Future<void> getLeaderboard() async {
@@ -294,8 +312,9 @@ class TambolaHomeViewModel extends BaseViewModel {
     isPrizesLoading = true;
     notifyListeners();
     await _prizeService!.fetchPrizeByGameType(Constants.GAME_TYPE_TAMBOLA);
-    if (tPrizes == null)
+    if (tPrizes == null) {
       BaseUtil.showNegativeAlert(locale.prizeFetchFailed, locale.tryLater);
+    }
     isPrizesLoading = false;
     notifyListeners();
   }
@@ -306,7 +325,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   //   BaseUtil().openTambolaGame();
   // }
 
-  getGameDetails() async {
+  Future<void> getGameDetails() async {
     if (game != null) return;
     final response =
         await _gamesRepo!.getGameByCode(gameCode: Constants.GAME_TYPE_TAMBOLA);
@@ -319,16 +338,17 @@ class TambolaHomeViewModel extends BaseViewModel {
 
   Future<void> refreshTambolaTickets({bool shouldRefresh = true}) async {
     _logger!.i('Refreshing..');
-    _topFiveTambolaBoards = [];
+    // _topFiveTambolaBoards = [];
     ticketsBeingGenerated = true;
     if (shouldRefresh) tambolaService!.weeklyTicksFetched = false;
-    init();
+    await init();
     notifyListeners();
   }
 
   int? get activeTambolaCardCount {
-    if (tambolaService == null || tambolaService!.userWeeklyBoards == null)
+    if (tambolaService == null || tambolaService!.userWeeklyBoards == null) {
       return 0;
+    }
     return tambolaService!.userWeeklyBoards!.length;
   }
 
@@ -338,11 +358,12 @@ class TambolaHomeViewModel extends BaseViewModel {
   }
 
   void increaseTicketCount() {
-    if (buyTicketCount < 30)
+    if (buyTicketCount < 30) {
       buyTicketCount += 1;
-    else
+    } else {
       BaseUtil.showNegativeAlert(
           locale.ticketsExceeded, locale.tktsPurchaseLimit);
+    }
     ticketCountController!.text = buyTicketCount.toString();
     updateTicketSavedAmount(buyTicketCount);
 
@@ -430,26 +451,26 @@ class TambolaHomeViewModel extends BaseViewModel {
     );
   }
 
-  Ticket? buildBoardView(TambolaBoard board) {
-    if (board == null || !board.isValid()) return null;
-    List<int> _calledDigits;
-    if (!tambolaService!.weeklyDrawFetched ||
-        weeklyDigits == null ||
-        weeklyDigits!.toList().isEmpty)
-      _calledDigits = [];
-    else {
-      _calledDigits = weeklyDigits!.getPicksPostDate(DateTime.monday);
-    }
-
-    return Ticket(
-      board: board,
-      calledDigits: _calledDigits,
-    );
-  }
+  // Ticket? buildBoardView(TambolaBoard board) {
+  //   if (!board.isValid()) return null;
+  //   List<int> _calledDigits;
+  //   if (!tambolaService!.weeklyDrawFetched ||
+  //       weeklyDigits == null ||
+  //       weeklyDigits!.toList().isEmpty) {
+  //     _calledDigits = [];
+  //   } else {
+  //     _calledDigits = weeklyDigits!.getPicksPostDate(DateTime.monday);
+  //   }
+  //
+  //   return Ticket(
+  //     board: board,
+  //     calledDigits: _calledDigits,
+  //   );
+  // }
 
   List<TambolaBoard?>? refreshBestBoards() {
     if (userWeeklyBoards == null || userWeeklyBoards!.isEmpty) {
-      return new List<TambolaBoard?>.filled(5, null);
+      return List<TambolaBoard?>.filled(5, null);
     }
     _bestTambolaBoards = [];
     for (int i = 0; i < 4; i++) {
@@ -460,11 +481,11 @@ class TambolaHomeViewModel extends BaseViewModel {
       return _bestTambolaBoards;
     }
 
-    userWeeklyBoards!.forEach((board) {
-      if (_bestTambolaBoards![0] == null) _bestTambolaBoards![0] = board!;
-      if (_bestTambolaBoards![1] == null) _bestTambolaBoards![1] = board!;
-      if (_bestTambolaBoards![2] == null) _bestTambolaBoards![2] = board!;
-      if (_bestTambolaBoards![3] == null) _bestTambolaBoards![3] = board!;
+    for (final board in userWeeklyBoards!) {
+      if (_bestTambolaBoards?[0] == null) _bestTambolaBoards![0] = board!;
+      if (_bestTambolaBoards?[1] == null) _bestTambolaBoards![1] = board!;
+      if (_bestTambolaBoards?[2] == null) _bestTambolaBoards![2] = board!;
+      if (_bestTambolaBoards?[3] == null) _bestTambolaBoards![3] = board!;
 
       if (_bestTambolaBoards![0].getCornerOdds(weeklyDigits!.toList()) >
           board!.getCornerOdds(weeklyDigits!.toList())) {
@@ -482,7 +503,7 @@ class TambolaHomeViewModel extends BaseViewModel {
           board.getFullHouseOdds(weeklyDigits!.toList())) {
         _bestTambolaBoards![3] = board;
       }
-    });
+    }
 
     return _bestTambolaBoards;
   }
@@ -493,40 +514,44 @@ class TambolaHomeViewModel extends BaseViewModel {
         weeklyDigits == null ||
         weeklyDigits!.toList().length != 7 * (dailyPicksCount ?? 3) ||
         weeklyDigits!.toList().contains(-1)) {
-      _logger!.i('Testing is not ready yet');
+      _logger.i('Testing is not ready yet');
       return;
     }
 
-    userWeeklyBoards!.forEach((boardObj) {
+    for (final boardObj in userWeeklyBoards!) {
       if (boardObj!
               .getCornerOdds(weeklyDigits!.getPicksPostDate(DateTime.monday)) ==
           0) {
-        if (boardObj.getTicketNumber() != 'NA')
+        if (boardObj.getTicketNumber() != 'NA') {
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.CORNERS_COMPLETED;
+        }
       }
       if (boardObj
               .getOneRowOdds(weeklyDigits!.getPicksPostDate(DateTime.monday)) ==
           0) {
-        if (boardObj.getTicketNumber() != 'NA')
+        if (boardObj.getTicketNumber() != 'NA') {
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.ONE_ROW_COMPLETED;
+        }
       }
       if (boardObj
               .getTwoRowOdds(weeklyDigits!.getPicksPostDate(DateTime.monday)) ==
           0) {
-        if (boardObj.getTicketNumber() != 'NA')
+        if (boardObj.getTicketNumber() != 'NA') {
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.TWO_ROWS_COMPLETED;
+        }
       }
       if (boardObj.getFullHouseOdds(
               weeklyDigits!.getPicksPostDate(DateTime.monday)) ==
           0) {
-        if (boardObj.getTicketNumber() != 'NA')
+        if (boardObj.getTicketNumber() != 'NA') {
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.FULL_HOUSE_COMPLETED;
+        }
       }
-    });
+    }
 
     // double totalInvestedPrinciple =
     //     _userService.userFundWallet.augGoldPrinciple;
@@ -535,7 +560,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     //         .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT)));
 
     isEligible = true;
-    _logger!.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
+    _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
     showWinCard = true;
     // if (!tambolaService.winnerDialogCalled)
@@ -549,14 +574,15 @@ class TambolaHomeViewModel extends BaseViewModel {
     //   );
     // tambolaService.winnerDialogCalled = true;
 
-    if (ticketCodeWinIndex.length > 0) {
+    if (ticketCodeWinIndex.isNotEmpty) {
       BaseUtil.showPositiveAlert(
         locale.tambolaTicketWinAlert1,
         locale.tambolaTicketWinAlert2,
       );
     }
 
-    PreferenceHelper.setBool(PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false);
+    unawaited(PreferenceHelper.setBool(
+        PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false));
   }
 
   bool handleScrollNotification(ScrollNotification notification) {

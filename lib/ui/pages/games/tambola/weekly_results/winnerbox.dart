@@ -1,15 +1,9 @@
-import 'dart:math';
-
 import 'package:felloapp/core/model/prizes_model.dart';
-import 'package:felloapp/core/service/notifier_services/prize_service.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class WinnerBox extends StatelessWidget {
   final Map<String, int>? winningsmap;

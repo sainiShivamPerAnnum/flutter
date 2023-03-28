@@ -21,6 +21,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   final double? leftPad;
   final bool showLeading;
   final Widget? leading;
+  final Widget? subtitle;
   // final bool hasBackButton;
   final TextStyle? style;
   const FAppBar({
@@ -36,11 +37,12 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     this.style,
     this.action,
     this.leftPad,
+    this.subtitle,
     // this.hasBackButton = true
   }) : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -49,10 +51,17 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(width: SizeConfig.padding8),
-          showAvatar ? ProfileImageSE() : SizedBox(),
-          Text(
-            '${title ?? ''}',
-            style: TextStyles.rajdhaniSB.title5.merge(style),
+          showAvatar ? ProfileImageSE() : const SizedBox(),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title ?? '',
+                style: TextStyles.rajdhaniSB.title5.merge(style),
+              ),
+              subtitle ?? const SizedBox(),
+            ],
           ),
         ],
       ),
@@ -69,7 +78,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
                     'For every rupee saved in Digital Gold or Fello Flo, you get 1 Fello token',
                 child: FelloCoinBar(
                     svgAsset: Assets.token,
-                    key: ValueKey(Constants.FELLO_COIN_BAR)),
+                    key: const ValueKey(Constants.FELLO_COIN_BAR)),
               ),
             if (type != null) FaqPill(type: type),
             if (action != null) action!,

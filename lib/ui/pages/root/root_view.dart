@@ -25,6 +25,8 @@ import 'package:provider/provider.dart';
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
+  const Root({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BaseView<RootViewModel>(

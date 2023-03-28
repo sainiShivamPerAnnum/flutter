@@ -33,7 +33,7 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
         setState(() {
           isLoadingTickets = true;
         });
-        Future.delayed(Duration(seconds: 3)).then((_) {
+        Future.delayed(const Duration(seconds: 3)).then((_) {
           setState(() {
             listLength = widget.ticketList.length - listLength! > 10
                 ? listLength! + 10
@@ -41,7 +41,7 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
             isLoadingTickets = false;
           });
           ticketController!.animateTo(ticketController!.offset + 80,
-              duration: Duration(seconds: 1), curve: Curves.easeIn);
+              duration: const Duration(seconds: 1), curve: Curves.easeIn);
         });
       }
     });
@@ -52,7 +52,7 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: UiConstants.kArrowButtonBackgroundColor,
-      appBar: FAppBar(
+      appBar: const FAppBar(
         type: FaqsType.play,
         showAvatar: false,
         showCoinBar: false,

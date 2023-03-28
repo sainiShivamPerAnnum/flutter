@@ -6,7 +6,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class PicksCardViewModel extends BaseViewModel {
-  final TambolaService? _tambolaService = locator<TambolaService>();
+  final TambolaService _tambolaService = locator<TambolaService>();
+
   int get dailyPicksCount => _tambolaService!.dailyPicksCount ?? 3;
   PageController? _pageController;
 
@@ -17,57 +18,67 @@ class PicksCardViewModel extends BaseViewModel {
   double? _titleOpacity;
   List<int>? _todaysPicks;
   DailyPick? _weeklyDigits;
+  int? _totalTicketMatched;
+
+  int get totalTicketMatched => _totalTicketMatched ?? 0;
+
+  set totalTicketMatched(int value) {
+    _totalTicketMatched = value;
+  }
+
   List<int>? get todaysPicks => _todaysPicks;
+
   DailyPick? get weeklyDigits => _weeklyDigits;
   int _tabNo = 0;
-  get tabNo => this._tabNo;
+
+  get tabNo => _tabNo;
   double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
 
-  get tabPosWidthFactor => this._tabPosWidthFactor;
+  get tabPosWidthFactor => _tabPosWidthFactor;
 
   set tabNo(value) {
-    this._tabNo = value;
+    _tabNo = value;
     notifyListeners();
   }
 
   set tabPosWidthFactor(value) {
-    this._tabPosWidthFactor = value;
+    _tabPosWidthFactor = value;
     notifyListeners();
   }
 
-  get normalTopCardHeight => this._normalTopCardHeight;
+  double? get normalTopCardHeight => _normalTopCardHeight;
 
-  get isShowingAllPicks => this._isShowingAllPicks;
+  get isShowingAllPicks => _isShowingAllPicks;
 
-  get topCardHeight => this._topCardHeight;
+  get topCardHeight => _topCardHeight;
 
-  get expandedTopCardHeight => this._expandedTopCardHeight;
+  get expandedTopCardHeight => _expandedTopCardHeight;
 
-  get titleOpacity => this._titleOpacity;
+  get titleOpacity => _titleOpacity;
 
   set isShowingAllPicks(value) {
-    this._isShowingAllPicks = value;
+    _isShowingAllPicks = value;
   }
 
   set topCardHeight(value) {
-    this._topCardHeight = value;
+    _topCardHeight = value;
   }
 
   set expandedTopCardHeight(value) {
-    this._expandedTopCardHeight = value;
+    _expandedTopCardHeight = value;
   }
 
   set titleOpacity(value) {
-    this._titleOpacity = value;
+    _titleOpacity = value;
   }
 
   set normalTopCardHeight(value) {
-    this._normalTopCardHeight = value;
+    _normalTopCardHeight = value;
   }
 
   PageController? get pageController => _pageController;
 
-  init() async {
+  Future<void> init() async {
     _pageController = PageController(initialPage: 0);
 
     isShowingAllPicks = false;
@@ -78,7 +89,7 @@ class PicksCardViewModel extends BaseViewModel {
     fetchTodaysPicks();
   }
 
-  fetchTodaysPicks() {
+  void fetchTodaysPicks() {
     _todaysPicks = _tambolaService!.todaysPicks;
     _weeklyDigits = _tambolaService!.weeklyDigits;
 
@@ -93,7 +104,7 @@ class PicksCardViewModel extends BaseViewModel {
     } else {
       topCardHeight = normalTopCardHeight;
       isShowingAllPicks = false;
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         titleOpacity = 1.0;
         notifyListeners();
       });
@@ -101,7 +112,7 @@ class PicksCardViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  switchTab(int tab) {
+  void switchTab(int tab) {
     if (tab == tabNo) return;
 
     tabPosWidthFactor = tabNo == 0
@@ -110,9 +121,22 @@ class PicksCardViewModel extends BaseViewModel {
 
     _pageController!.animateToPage(
       tab,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.linear,
     );
     tabNo = tab;
+  }
+
+  bool isNumberPresent(String dailyNumber) {
+    var data = _tambolaService.ticketsNumbers;
+    bool exist = false;
+    for (final element in data) {
+      // log('totalTicketMatched $totalTicketMatched');
+      exist = element.contains(int.tryParse(dailyNumber));
+
+      if (exist) break;
+    }
+
+    return exist;
   }
 }

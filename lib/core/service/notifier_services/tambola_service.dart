@@ -16,10 +16,10 @@ import 'package:flutter/cupertino.dart';
 import '../../repository/ticket_repo.dart';
 
 class TambolaService extends ChangeNotifier {
-  CustomLogger? _logger = locator<CustomLogger>();
-  UserService? _userService = locator<UserService>();
-  final TambolaRepo? _tambolaRepo = locator<TambolaRepo>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
+  final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
   static int? ticketCount;
   static int? _dailyPicksCount = 3;
@@ -33,6 +33,7 @@ class TambolaService extends ChangeNotifier {
   int? _atomicTicketDeletionLeftCount;
   int? ticketGenerateCount;
   int? initialTicketCount;
+  List<List<int>> _ticketsNumbers = [];
 
   late Completer<List<TambolaBoard?>?> completer;
 
@@ -46,7 +47,11 @@ class TambolaService extends ChangeNotifier {
     _userWeeklyBoards = null;
   }
 
-  // int? get ticketCount => _ticketCount;
+  List<List<int>> get ticketsNumbers => _ticketsNumbers;
+
+  set ticketsNumbers(List<List<int>> value) {
+    _ticketsNumbers = value;
+  } // int? get ticketCount => _ticketCount;
 
   get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
 
@@ -98,9 +103,9 @@ class TambolaService extends ChangeNotifier {
     completer = Completer();
     if (!_weeklyTicksFetched) {
       _weeklyTicksFetched = true;
-      _logger!.d("Fetching Tambola tickets ${DateTime.now().second}");
+      _logger.d("Fetching Tambola tickets ${DateTime.now().second}");
       // ticketsLoaded = false;
-      final tickets = await _tambolaRepo!.getTickets();
+      final tickets = await _tambolaRepo.getTickets();
       if (tickets.code == 200) {
         List<TambolaBoard?>? boards =
             tickets.model!.map((e) => e.board).toList();
@@ -116,6 +121,7 @@ class TambolaService extends ChangeNotifier {
         // _currentBoard = null;
         // _currentBoardView = null;
         ticketCount = boards.length;
+
         completer.complete(boards);
       } else {
         completer.complete(null);
@@ -147,7 +153,7 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  init() {
+  Future<void> init() async {
     _atomicTicketGenerationLeftCount = 0;
     _atomicTicketDeletionLeftCount = 0;
 
@@ -158,8 +164,16 @@ class TambolaService extends ChangeNotifier {
       fetchTambolaBoard();
       completer.future.then((value) {
         initialTicketCount = value?.length;
+        highlightDailyPicks(userWeeklyBoards!);
       });
     }
+  }
+
+  void highlightDailyPicks(List<TambolaBoard?> boards) {
+    boards.forEach((element) {
+      ticketsNumbers
+          .add(element!.tambolaBoard!.expand((element) => element).toList());
+    });
   }
 
   // Future<void> getTicketCount() async {
@@ -171,7 +185,7 @@ class TambolaService extends ChangeNotifier {
   //   }
   // }
 
-  dump() {
+  void dump() {
     _dailyPicksCount = null;
     _todaysPicks = null;
     _weeklyDigits = null;
@@ -181,6 +195,7 @@ class TambolaService extends ChangeNotifier {
     _winnerDialogCalled = false;
     _atomicTicketGenerationLeftCount = 0;
     _atomicTicketDeletionLeftCount = 0;
+    ticketsNumbers = [];
   }
 
   fetchWeeklyPicks({bool forcedRefresh = false}) async {
@@ -239,7 +254,7 @@ class TambolaService extends ChangeNotifier {
     try {
       dailyPicksCount = int.parse(_dpc);
     } catch (e) {
-      _logger!.e('key parsing failed: ' + e.toString());
+      _logger!.e('key parsing failed: $e');
       Map<String, String> errorDetails = {'error_msg': e.toString()};
       _internalOpsService!.logFailure(_userService!.baseUser!.uid,
           FailType.DailyPickParseFailed, errorDetails);

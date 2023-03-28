@@ -11,7 +11,9 @@ class FelloInfoDialog extends StatelessWidget {
   final Widget? customContent;
   final bool isAddedToScreenStack;
   final bool defaultPadding;
-  FelloInfoDialog({
+
+  const FelloInfoDialog({
+    super.key,
     this.title,
     this.asset,
     this.subtitle,
@@ -21,56 +23,56 @@ class FelloInfoDialog extends StatelessWidget {
     this.defaultPadding = true,
     this.isAddedToScreenStack = false,
   });
+
   @override
   Widget build(BuildContext context) {
     return BaseDialog(
       // defaultPadding: defaultPadding,
       // isAddedToScreenStack: isAddedToScreenStack,
-      content: customContent != null
-          ? customContent
-          : Container(
-              width: SizeConfig.screenWidth,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (asset != null)
-                    SizedBox(height: SizeConfig.screenHeight! * 0.04),
-                  if (asset != null)
-                    SvgPicture.asset(
-                      asset!,
-                      height: SizeConfig.screenHeight! * 0.16,
-                    ),
-                  if (asset != null)
-                    SizedBox(
-                      height: SizeConfig.screenHeight! * 0.04,
-                    ),
-                  if (png != null)
-                    SizedBox(height: SizeConfig.screenHeight! * 0.04),
-                  if (asset != null)
-                    Image.asset(
-                      png!,
-                      height: SizeConfig.screenHeight! * 0.16,
-                    ),
-                  if (png != null)
-                    SizedBox(
-                      height: SizeConfig.screenHeight! * 0.04,
-                    ),
-                  Text(
-                    title!,
-                    style: TextStyles.title3.bold,
-                    textAlign: TextAlign.center,
+      content: customContent ??
+          SizedBox(
+            width: SizeConfig.screenWidth,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (asset != null)
+                  SizedBox(height: SizeConfig.screenHeight! * 0.04),
+                if (asset != null)
+                  SvgPicture.asset(
+                    asset!,
+                    height: SizeConfig.screenHeight! * 0.16,
                   ),
-                  SizedBox(height: SizeConfig.padding16),
-                  Text(
-                    subtitle!,
-                    textAlign: TextAlign.center,
-                    style: TextStyles.body2.colour(Colors.grey),
+                if (asset != null)
+                  SizedBox(
+                    height: SizeConfig.screenHeight! * 0.04,
                   ),
-                  SizedBox(height: SizeConfig.screenHeight! * 0.02),
-                  action!
-                ],
-              ),
+                if (png != null)
+                  SizedBox(height: SizeConfig.screenHeight! * 0.04),
+                if (asset != null)
+                  Image.asset(
+                    png!,
+                    height: SizeConfig.screenHeight! * 0.16,
+                  ),
+                if (png != null)
+                  SizedBox(
+                    height: SizeConfig.screenHeight! * 0.04,
+                  ),
+                Text(
+                  title!,
+                  style: TextStyles.title3.bold,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: SizeConfig.padding16),
+                Text(
+                  subtitle!,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.body2.colour(Colors.grey),
+                ),
+                SizedBox(height: SizeConfig.screenHeight! * 0.02),
+                action!
+              ],
             ),
+          ),
     );
   }
 }

@@ -66,7 +66,7 @@ import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_vm.dart';

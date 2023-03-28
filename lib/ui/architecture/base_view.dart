@@ -14,7 +14,12 @@ class BaseView<T extends BaseViewModel> extends StatefulWidget {
   final Function(T)? onModelDispose;
   final Widget? child;
 
-  BaseView({this.builder, this.onModelReady, this.onModelDispose, this.child});
+  const BaseView(
+      {super.key,
+      this.builder,
+      this.onModelReady,
+      this.onModelDispose,
+      this.child});
 
   @override
   _BaseViewState<T> createState() => _BaseViewState<T>();
@@ -26,7 +31,7 @@ class _BaseViewState<T extends BaseViewModel> extends State<BaseView<T>> {
   @override
   void initState() {
     if (widget.onModelReady != null) {
-      widget.onModelReady! (model!);
+      widget.onModelReady!(model!);
     }
 
     super.initState();

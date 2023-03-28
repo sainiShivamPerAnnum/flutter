@@ -96,26 +96,28 @@ class TambolaRepo extends BaseRepo {
       });
     }
     await CacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
-    if (ticketData.isNotEmpty)
+    if (ticketData.isNotEmpty) {
       _cacheService.writeMap(
           CacheKeys.TAMBOLA_TICKETS,
           DateHelper.timeToWeekendInMinutes(),
           {"tickets": ticketData, "expiringTicketsCount": expiringTicketCount});
+    }
   }
 
   arrangeTambolaTickets(
       List<TambolaModel> tickets, List<TambolaModel> deletedTickets) {
-    if (activeTambolaTickets.isEmpty)
+    if (activeTambolaTickets.isEmpty) {
       activeTambolaTickets = tickets;
-    else {
+    } else {
       if (deletedTickets.isNotEmpty) {
         deletedTickets.forEach((dt) {
           //   if (activeTambolaTickets.contains(dt))
           //     activeTambolaTickets.remove(dt);
           if (activeTambolaTickets.firstWhere((ticket) => ticket.id == dt.id,
                   orElse: () => TambolaModel.none()) !=
-              TambolaModel.none())
+              TambolaModel.none()) {
             activeTambolaTickets.removeWhere((ticket) => ticket.id == dt.id);
+          }
         });
       }
       if (tickets.isNotEmpty) {
@@ -128,10 +130,11 @@ class TambolaRepo extends BaseRepo {
     }
 
     activeTambolaTickets.forEach((tt) {
-      if (lastTimeStamp == null)
+      if (lastTimeStamp == null) {
         lastTimeStamp = tt.assignedTime;
-      else if (tt.assignedTime!.toDate().isAfter(lastTimeStamp!.toDate()))
+      } else if (tt.assignedTime!.toDate().isAfter(lastTimeStamp!.toDate())) {
         lastTimeStamp = tt.assignedTime;
+      }
     });
     logger.d(
         "Latest TimeStamp: ${lastTimeStamp != null ? DateFormat('d MMMM, yyyy - hh:mm a').format(lastTimeStamp!.toDate()) + ' ' + lastTimeStamp!.toDate().toUtc().toString() + ' ' + lastTimeStamp!.toDate().toUtc().toIso8601String() : 'null'}");
@@ -183,13 +186,14 @@ class TambolaRepo extends BaseRepo {
                 cBaseUrl: _baseUrl,
               ), (dynamic response) {
         final data = response['data'];
-        if (data != null && data.isNotEmpty)
+        if (data != null && data.isNotEmpty) {
           return ApiResponse<DailyPick>(
             model: DailyPick.fromMap(data["picks"]),
             code: 200,
           );
-        else
+        } else {
           return ApiResponse<DailyPick>(model: DailyPick.noPicks(), code: 200);
+        }
       });
     } catch (e) {
       logger.e('daily pick $e');

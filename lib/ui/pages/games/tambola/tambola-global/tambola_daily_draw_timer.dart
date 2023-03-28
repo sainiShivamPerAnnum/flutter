@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +14,7 @@ class DailyPicksTimer extends StatefulWidget {
   final Color? bgColor;
   final MainAxisAlignment? alignment;
 
-  DailyPicksTimer({
+  const DailyPicksTimer({super.key,
     required this.replacementWidget,
     this.bgColor,
     this.alignment,
@@ -30,17 +29,18 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   bool showClock = true;
   bool countDown = true;
   BaseUtil? baseProvider;
-  TambolaService? _tambolaService = locator<TambolaService>();
+  final TambolaService _tambolaService = locator<TambolaService>();
 
   @override
   void initState() {
     if (getDifferance().isNegative) {
       duration = getDifferance().abs();
-      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-        timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
       });
-    } else
+    } else {
       showClock = false;
+    }
     super.initState();
   }
 
@@ -53,9 +53,9 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
     return timeDiff;
   }
 
-  void addTime() async {
+  Future<void> addTime() async {
     if (!getDifferance().isNegative) {
-      await _tambolaService?.fetchWeeklyPicks(forcedRefresh: true);
+      await _tambolaService.fetchWeeklyPicks(forcedRefresh: true);
       setState(() {
         showClock = false;
         timer?.cancel();
@@ -90,9 +90,9 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
           mainAxisAlignment: widget.alignment ?? MainAxisAlignment.center,
           children: [
             buildTimeCard(time: hours),
-            TimerDots(),
+            const TimerDots(),
             buildTimeCard(time: minutes),
-            TimerDots(),
+            const TimerDots(),
             buildTimeCard(time: seconds),
           ]);
     }
@@ -103,7 +103,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
         height: SizeConfig.screenWidth! * 0.16,
         width: SizeConfig.screenWidth! * 0.16,
         // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: UiConstants.kBackgroundColor,
           shape: BoxShape.circle,
         ),
