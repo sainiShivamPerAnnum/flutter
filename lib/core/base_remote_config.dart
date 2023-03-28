@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -222,7 +220,7 @@ class BaseRemoteConfig {
 
   static const Map<String, String> _RZP_DEV_MID = {'rzp_dev_mid': 'rdm'};
 
-  static const Map<String, bool> _AUTOSAVE_ACTIVE = {'autosaveActive': true};
+  static const Map<String, bool> _AUTOSAVE_ACTIVE = {'autosaveActive': false};
   static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,

@@ -1,15 +1,22 @@
 //Project imports
 import 'dart:async';
-import 'dart:io';
-import 'package:apxor_flutter/apxor_flutter.dart';
+
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
-import 'package:felloapp/core/service/notifier_services/winners_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_instant_view.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 //Flutter imports
@@ -27,9 +34,10 @@ class PageAction {
 }
 
 class AppState extends ChangeNotifier {
-  final WinnerService? _winnerService = locator<WinnerService>();
-  final LeaderboardService? _lbService = locator<LeaderboardService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  // final WinnerService? _winnerService = locator<WinnerService>();
+  // final LeaderboardService? _lbService = locator<LeaderboardService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final RootController _rootController = locator<RootController>();
   int _rootIndex = 0;
   static PageController homeTabPageController = PageController(initialPage: 0);
   // Future _txnFunction;
@@ -52,11 +60,18 @@ class AppState extends ChangeNotifier {
   static bool isWinOpened = false;
   static bool isRootAvailableForIncomingTaskExecution = true;
   static bool isInstantGtViewInView = false;
+  static int ticketCount = 0;
+  static bool isFirstTimeJourneyOpened = false;
+  static bool isJourneyFirstTab = false;
 
   static List<ScreenItem> screenStack = [];
   static FelloRouterDelegate? delegate;
   static FelloBackButtonDispatcher? backButtonDispatcher;
 
+  static void Function()? onTap;
+  static InvestmentType? type;
+  static double? amt;
+  static bool isRepeated = false;
   PageAction _currentAction = PageAction();
   // BackButtonDispatcher backButtonDispatcher;
 
@@ -112,34 +127,49 @@ class AppState extends ChangeNotifier {
 
 // GETTERS AND SETTERS
 
-  int get getCurrentTabIndex => _rootIndex ?? 0;
+  int get getCurrentTabIndex => _rootIndex;
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
-      switch (index) {
-        case 0:
-          _analyticsService!.trackScreen(screen: 'Journey',properties: {});
-          break;
-        case 1:
-          _analyticsService!.trackScreen(screen: 'Save',properties: {});
-          break;
-        case 2:
-          _analyticsService!.trackScreen(screen: 'Play',properties: {});
-          break;
-        case 3:
-          _analyticsService!.trackScreen(screen: 'Win',properties: {});
-          break;
-        default:
-      }
-  
-
-    // homeTabPageController.jumpToPage(_rootIndex);
-    if (index == 2 && isWinOpened == false) {
-      _lbService!.fetchReferralLeaderBoard();
-      isWinOpened = true;
-    }
+    //First Call check for journey
+    executeForFirstJourneyTabClick(index);
+    executeNavBarItemFirstClick(index);
+    _rootController.onChange(_rootController.navItems.values.toList()[index]);
     print(_rootIndex);
     notifyListeners();
+  }
+
+  void onItemTapped(int index) {
+    final JourneyService _journeyService = locator<JourneyService>();
+    if (JourneyService.isAvatarAnimationInProgress) return;
+    _rootController.onChange(_rootController.navItems.values.toList()[index]);
+    AppState.delegate!.appState.setCurrentTabIndex = index;
+    trackEvent(index);
+    Haptic.vibrate();
+    if (_rootController.currentNavBarItemModel ==
+        RootController.journeyNavBarItem)
+      _journeyService.checkForMilestoneLevelChange();
+    executeNavBarItemFirstClick(index);
+  }
+
+  bool showTourStrip = false;
+
+  setTourStripValue() {
+    showTourStrip = false;
+    notifyListeners();
+  }
+
+  void setShowStripValue() async {
+    final sharePreference = await SharedPreferences.getInstance();
+    final value = sharePreference.getInt('showTour');
+    final appSession = value ?? 0;
+    if (appSession < 2) {
+      if (appSession == 0) {
+        showTourStrip = true;
+        notifyListeners();
+      }
+      sharePreference.setInt('showTour', appSession + 1);
+    }
   }
 
   returnHome() {
@@ -166,13 +196,137 @@ class AppState extends ChangeNotifier {
     });
   }
 
-  static dump() {
+  dump() {
     isRootAvailableForIncomingTaskExecution = true;
+    isFirstTimeJourneyOpened = false;
+    isJourneyFirstTab = false;
     isFirstTime = false;
+    _rootController.navItems.clear();
   }
   // setLastTapIndex() {
   //   SharedPreferences.getInstance().then((instance) {
   //     rootIndex = instance.getInt('lastTab');
   //   });
   // }
+
+  executeNavBarItemFirstClick(index) {
+    switch (_rootController.currentNavBarItemModel.title) {
+      case "Journey":
+        executeForFirstJourneyTabClick(index);
+        break;
+      case "Save":
+        executeForFirstSaveTabClick(index);
+        break;
+      case "Play":
+        executeForFirstPlayTabClick(index);
+        break;
+      case "Tambola":
+        executeForFirstTambolaClick(index);
+        break;
+      case "Account":
+      case "Win":
+        executeForFirstAccountsTabClick(index);
+        break;
+      default:
+        break;
+    }
+  }
+
+  executeForFirstJourneyTabClick(int index) {
+    final JourneyService _journeyService = locator<JourneyService>();
+    int journeyIndex = _rootController.navItems.values
+        .toList()
+        .indexWhere((item) => item.title == "Journey");
+    if (journeyIndex == 0) {
+      isFirstTimeJourneyOpened = true;
+      isJourneyFirstTab = true;
+    }
+    if (!isFirstTimeJourneyOpened) {
+      if (index == journeyIndex) {
+        isFirstTimeJourneyOpened = true;
+        _journeyService.buildJourney();
+      }
+    }
+  }
+
+  executeForFirstSaveTabClick(index) {}
+  executeForFirstPlayTabClick(index) {
+    SpotLightController.instance.userFlow = UserFlow.onPlayTab;
+  }
+
+  executeForFirstAccountsTabClick(index) {
+    SpotLightController.instance.userFlow = UserFlow.onWinPage;
+  }
+
+  executeForFirstTambolaClick(index) {
+    final TambolaService _tambolaService = locator<TambolaService>();
+    _tambolaService.completer.future.then(
+      (value) {
+        if ((_tambolaService.initialTicketCount ?? -1) == 0) {
+          if (_tambolaService.userWeeklyBoards!.length > 0) {
+            _tambolaService.initialTicketCount =
+                _tambolaService.userWeeklyBoards!.length;
+            WidgetsBinding.instance.addPostFrameCallback(
+              (timeStamp) {
+                AppState.screenStack.add(ScreenItem.dialog);
+                Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
+                    .push(
+                  PageRouteBuilder(
+                    opaque: false,
+                    pageBuilder: (BuildContext context, _, __) =>
+                        TambolaInstantView(
+                      ticketCount: _tambolaService.userWeeklyBoards!.length,
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        }
+      },
+    );
+  }
+
+  void trackEvent(int index) {
+    final ScratchCardService _gtService = locator<ScratchCardService>();
+    if (_rootController.currentNavBarItemModel ==
+        RootController.journeyNavBarItem) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.journeySection,
+          properties: AnalyticsProperties.getDefaultPropertiesMap());
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.saveNavBarItem) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.saveSection,
+          properties: AnalyticsProperties.getDefaultPropertiesMap());
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.playNavBarItem) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.playSection,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Time left for draw Tambola (mins)":
+                AnalyticsProperties.getTimeLeftForTambolaDraw(),
+            "Tambola Tickets Owned":
+                AnalyticsProperties.getTambolaTicketCount(),
+          }));
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.winNavBarItem) {
+      _analyticsService.track(
+          eventName: "Account section tapped",
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
+            "Unscratched Ticket Count": _gtService.unscratchedTicketsCount,
+            "Scratched Ticket Count": (_gtService.activeScratchCards.length) -
+                _gtService.unscratchedTicketsCount,
+          }));
+    } else if (_rootController.currentNavBarItemModel ==
+        RootController.tambolaNavBar) {
+      _analyticsService.track(eventName: "Tambola tab tapped", properties: {
+        "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
+        "index": index
+      });
+    }
+  }
 }

@@ -60,10 +60,18 @@ class WithdrawableGoldDetails {
   double? quantity;
   double? lockedQuantity;
   double? balance;
+  final String limitHeading;
+  final String limitMessage;
+  final double limitQuantity;
+  final double limit;
   WithdrawableGoldDetails({
     @required this.quantity,
     @required this.lockedQuantity,
     @required this.balance,
+    required this.limit,
+    required this.limitHeading,
+    required this.limitMessage,
+    required this.limitQuantity,
   });
 
   WithdrawableGoldDetails copyWith({
@@ -75,10 +83,15 @@ class WithdrawableGoldDetails {
       quantity: quantity ?? this.quantity,
       lockedQuantity: lockedQuantity ?? this.lockedQuantity,
       balance: balance ?? this.balance,
+      limit: limit,
+      limitQuantity: limitQuantity,
+      limitHeading: limitHeading,
+      limitMessage: limitMessage,
     );
   }
 
-  WithdrawableGoldDetails.base() {
+  WithdrawableGoldDetails.base(
+      this.limitHeading, this.limitMessage, this.limitQuantity, this.limit) {
     quantity = 0.0;
     lockedQuantity = 0.0;
     balance = 0.0;
@@ -97,6 +110,10 @@ class WithdrawableGoldDetails {
       quantity: map['quantity'].toDouble(),
       lockedQuantity: map['lockedQuantity'].toDouble(),
       balance: map['balance'].toDouble(),
+      limit: (map['limit'] ?? 0) * 1.0,
+      limitHeading: map['limitHeading'] ?? "",
+      limitMessage: map['limitMessage'] ?? "",
+      limitQuantity: (map['limitQuantity'] ?? 0) * 1.0,
     );
   }
 

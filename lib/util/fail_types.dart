@@ -56,7 +56,22 @@ enum FailType {
   MixpanelServiceInitFailed,
   HttpModelInitFailed,
   Splash,
-  Journey
+  Journey,
+  KycImageCaptureFailed,
+  SendOtpFailed,
+  VerifyOtpFailed,
+  DeviceIdUpdateFailed,
+  UpdateUserFailed,
+  UpdateFcmTokenFailed,
+  RazorpayTransactionFailed,
+  GetDeviceInfoFailed,
+  UserRepoLogoutFailed,
+  UserBootUpDetailsFetchFailed,
+  VerifyPanFailed,
+  SignedImageUploadFailed,
+  PanImageUploadFailed,
+  PanInfoFetchFailed,
+  ScratchCardListFailed,
 }
 
 extension ParseToString on FailType {

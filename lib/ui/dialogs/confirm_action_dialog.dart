@@ -9,13 +9,14 @@ class ConfirmationDialog extends StatefulWidget {
   final String title, description, buttonText, cancelBtnText;
   final Function confirmAction, cancelAction;
   final Widget? asset;
-
+  final bool showSecondaryButton;
   ConfirmationDialog({
     required this.title,
     this.description = '',
     required this.buttonText,
     required this.confirmAction,
     required this.cancelAction,
+    this.showSecondaryButton = true,
     this.asset,
     this.cancelBtnText = 'Cancel',
   });
@@ -110,25 +111,35 @@ class _FormDialogState extends State<ConfirmationDialog> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      AppNegativeBtn(
-                        width: SizeConfig.screenWidth! * 0.40,
-                        btnText: widget.cancelBtnText,
-                        onPressed: () {
-                          return widget.cancelAction();
-                        },
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding10,
-                      ),
-                      AppPositiveBtn(
-                        btnText: widget.buttonText,
-                        width: SizeConfig.screenWidth! * 0.40,
-                        onPressed: () {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          return widget.confirmAction();
-                        },
+                      if (widget.showSecondaryButton) ...[
+                        Expanded(
+                          child: AppNegativeBtn(
+                            width: SizeConfig.screenWidth! * 0.40,
+                            btnText: widget.cancelBtnText,
+                            onPressed: () {
+                              return widget.cancelAction();
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding10,
+                        ),
+                      ],
+                      Expanded(
+                        child: Center(
+                          child: AppPositiveBtn(
+                            btnText: widget.buttonText,
+                            width: !widget.showSecondaryButton
+                                ? null
+                                : SizeConfig.screenWidth! * 0.40,
+                            onPressed: () {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              return widget.confirmAction();
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),

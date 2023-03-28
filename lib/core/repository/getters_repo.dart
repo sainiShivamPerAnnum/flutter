@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
@@ -9,7 +10,6 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
@@ -20,13 +20,17 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:flutter/cupertino.dart';
 
+//[TODO]:Added Prod CDN url;
 class GetterRepository extends BaseRepo {
   final _cacheService = CacheService();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://qdp0idzhjc.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://vbbe56oey5.execute-api.ap-south-1.amazonaws.com/prod';
+
+  final _cdnBaseUrl = FlavorConfig.isDevelopment()
+      ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
+      : 'https://d11q4cti75qmcp.cloudfront.net/';
 
   Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
     String? type,
@@ -53,9 +57,9 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse(model: statisticsResponse["data"], code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch statistics", 400);
+          e.toString() ?? "Unable to fetch statistics", 400);
     }
   }
 
@@ -76,9 +80,9 @@ class GetterRepository extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch statistics", 400);
+          e.toString() ?? "Unable to fetch statistics", 400);
     }
   }
 
@@ -103,6 +107,16 @@ class GetterRepository extends BaseRepo {
     }
   }
 
+  Future setUpAppConfigs() async {
+    final _appConfig = await getAppConfig();
+    if (_appConfig.code != 200) {
+      AppConfig.instance({
+        "message": "Default Values",
+        "data": BaseRemoteConfig.DEFAULTS,
+      });
+    }
+  }
+
   Future<ApiResponse<AppConfig>> getAppConfig() async {
     try {
       // final token = await getBearerToken();
@@ -111,8 +125,9 @@ class GetterRepository extends BaseRepo {
         CacheKeys.APPCONFIG,
         TTL.ONE_DAY,
         () => APIService.instance.getData(
-          ApiPath.getAppConfig,
-          cBaseUrl: _baseUrl,
+          'appConfig.txt',
+          cBaseUrl: _cdnBaseUrl,
+          decryptData: true,
           headers: {
             'authKey':
                 '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
@@ -146,7 +161,7 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse(model: winnerModel, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
@@ -170,7 +185,7 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse(model: amountChipsModel, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);
     }
   }
@@ -182,7 +197,7 @@ class GetterRepository extends BaseRepo {
         ApiPath.kPromos,
         cBaseUrl: _baseUrl,
         queryParams: {
-          "uid": userService!.baseUser!.uid,
+          "uid": userService.baseUser!.uid,
         },
         token: token,
       );
@@ -191,12 +206,12 @@ class GetterRepository extends BaseRepo {
 
       print("Test123 ${response.toString()}");
 
-      logger!.d(responseData);
+      logger.d(responseData);
       final events = PromoCardModel.helper.fromMapArray(responseData['promos']);
 
       return ApiResponse<List<PromoCardModel>>(model: events, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       print("Test123 ${e.toString()}");
       return ApiResponse.withError("Unable to fetch promos", 400);
     }
@@ -221,11 +236,11 @@ class GetterRepository extends BaseRepo {
           final faqs = FAQDataModel.helper.fromMapArray(response["data"]);
           return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
         },
-      ))) as ApiResponse<List<FAQDataModel>>;
+      )));
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch statistics", 400);
+          e.toString() ?? "Unable to fetch statistics", 400);
     }
   }
 
@@ -241,12 +256,12 @@ class GetterRepository extends BaseRepo {
 
       final responseData = response["data"];
 
-      logger!.d(responseData);
+      logger.d(responseData);
       final events = StoryItemModel.helper.fromMapArray(responseData['slides']);
 
       return ApiResponse<List<StoryItemModel>>(model: events, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
@@ -255,23 +270,20 @@ class GetterRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
 
-      return (await _cacheService.cachedApi(
+      return await _cacheService.cachedApi(
         '${CacheKeys.PAGE_CONFIGS}',
         TTL.ONE_DAY,
-        () => APIService.instance.getData(
-          ApiPath.dynamicUi,
-          cBaseUrl: _baseUrl,
-          token: token,
-        ),
+        () => APIService.instance.getData("dynamicUi.txt",
+            cBaseUrl: _cdnBaseUrl, token: token, decryptData: true),
         (response) {
-          final responseData = response["data"]["dynamicUi"];
+          final responseData = response["dynamicUi"];
 
           logger.d("Page Config: $responseData");
           final pageConfig = DynamicUI.fromMap(responseData);
           logger.d("Page Config: $responseData");
           return ApiResponse<DynamicUI>(model: pageConfig, code: 200);
         },
-      )) as ApiResponse<DynamicUI>;
+      );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);
@@ -280,11 +292,11 @@ class GetterRepository extends BaseRepo {
 
   //TODO: Not working
   //Triggered on: Share button click on win view
-  // Future<ApiResponse<List<GoldenTicket>>> getGoldenTickets() async {
+  // Future<ApiResponse<List<ScratchCard>>> getScratchCards() async {
   //   try {
   //     // final token = await getBearerToken();
   //     final response = await APIService.instance.getData(
-  //       ApiPath.goldenTickets(userService.baseUser.uid),
+  //       ApiPath.scratchCards(userService.baseUser.uid),
   //       cBaseUrl: "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev",
   //       queryParams: {},
   //     );
@@ -298,9 +310,9 @@ class GetterRepository extends BaseRepo {
   //     final responseData = response["data"]["gts"];
 
   //     print("Test123 ${response.toString()}");
-  //     // final goldenTickets = GoldenTicket.fromJson(json, docId);
+  //     // final scratchCards = ScratchCard.fromJson(json, docId);
 
-  //     // return ApiResponse<List<GoldenTicket>>(model: events, code: 200);
+  //     // return ApiResponse<List<ScratchCard>>(model: events, code: 200);
   //   } catch (e) {
   //     logger.e(e.toString());
   //     print("Test123 ${e.toString()}");

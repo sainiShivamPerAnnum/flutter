@@ -1,5 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -13,17 +17,33 @@ class CacheService {
   final CustomLogger? _logger = locator<CustomLogger>();
 
   static Future<void> initialize() async {
-    if (_isar == null) {
-      final dir = await getApplicationSupportDirectory();
-      _isar = await Isar.open(
-        [CacheModelSchema],
-        directory: dir.path,
-      );
+    try {
+      if (_isar == null) {
+        final dir = await getApplicationSupportDirectory();
+        _isar = await Isar.open(
+          [CacheModelSchema],
+          directory: dir.path,
+        );
+      }
+    } catch (e) {
+      BaseUtil.showNegativeAlert("Isar initialization failed", e.toString(),
+          seconds: 20);
+      log("ISAR:: Unable to initialize isar");
+    }
+  }
+
+  static Future<void> checkIfInvalidationRequired() async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final _invalidate =
+        AppConfig.getValue(AppConfigKey.invalidateBefore) as int;
+    if (now <= _invalidate) {
+      await CacheService.invalidateAll();
     }
   }
 
   static Future<void> invalidateAll() async {
     final CustomLogger? _logger = locator<CustomLogger>();
+
     try {
       _logger!.d('cache: invalidate all');
       await _isar?.writeTxn(() async {
@@ -35,48 +55,51 @@ class CacheService {
   }
 
   Future<ApiResponse<T>> cachedApi<T>(
-    String key,
-    int ttl,
-    Future<dynamic> Function() apiReq,
-    ApiResponse<T> Function(dynamic) parseData,
-  ) async {
+      String key,
+      int ttl,
+      Future<dynamic> Function() apiReq,
+      ApiResponse<T> Function(dynamic) parseData,
+      {bool isFromCdn = false}) async {
     final cachedData = await getData(key);
 
     if (cachedData != null && ttl != 0) {
       try {
         _logger!.d('cache: data read successfully');
-
+        log("APP CONFIG: ${cachedData.data!}");
         return parseData(json.decode(cachedData.data!));
       } catch (e) {
         _logger!.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);
         await invalidateByKey(key);
-        return await _processApiAndSaveToCache(
-          key,
-          ttl,
-          apiReq,
-          parseData,
-        );
+        return await _processApiAndSaveToCache(key, ttl, apiReq, parseData,
+            isFromCdn: isFromCdn);
       }
     }
 
-    return await _processApiAndSaveToCache(key, ttl, apiReq, parseData);
+    return await _processApiAndSaveToCache(key, ttl, apiReq, parseData,
+        isFromCdn: isFromCdn);
   }
 
   Future<ApiResponse<T>> _processApiAndSaveToCache<T>(
-    String key,
-    int ttl,
-    Future<dynamic> Function() apiReq,
-    ApiResponse<T> Function(dynamic) parseData,
-  ) async {
+      String key,
+      int ttl,
+      Future<dynamic> Function() apiReq,
+      ApiResponse<T> Function(dynamic) parseData,
+      {bool isFromCdn = false}) async {
     final response = await apiReq();
 
     final res = parseData(response);
-
-    if (response != null &&
-        response['data'] != null &&
-        response['data'].isNotEmpty &&
-        ttl != 0) await writeMap(key, ttl, response);
+    try {
+      if (isFromCdn) {
+        if (response != null) await writeMap(key, ttl, response);
+      } else if (response != null &&
+          response['data'] != null &&
+          response['data'].isNotEmpty &&
+          ttl != 0) await writeMap(key, ttl, response);
+    } catch (e) {
+      _logger!
+          .d("Writing to isar failed, returning data directly without caching");
+    }
 
     return res;
   }
@@ -109,9 +132,9 @@ class CacheService {
 
   static Future<bool> invalidateByKey(String key) async {
     final CustomLogger? _logger = locator<CustomLogger>();
+
     try {
       _logger!.d('cache: invalidating key $key');
-
       await _isar!.writeTxn(() async {
         final List<CacheModel> data = await _isar!
             .collection<CacheModel>()
@@ -136,7 +159,6 @@ class CacheService {
   Future<bool> _invalidate(int id) async {
     try {
       _logger!.d('cache: invalidating id $id');
-
       await _isar!.writeTxn(() async {
         return await _isar!.cacheModels.delete(id);
       });
@@ -149,18 +171,23 @@ class CacheService {
   }
 
   Future<CacheModel?> getData(String key) async {
-    final data = await _isar!.cacheModels.filter().keyEqualTo(key).findFirst();
-    final now = DateTime.now().millisecondsSinceEpoch;
+    try {
+      final data =
+          await _isar!.cacheModels.filter().keyEqualTo(key).findFirst();
+      final now = DateTime.now().millisecondsSinceEpoch;
 
-    if (data != null) {
-      _logger!.d(
-          'cache: data read from cache ${data.id} ${data.key} ${data.expireAfterTimestamp} $now');
+      if (data != null) {
+        _logger!.d(
+            'cache: data read from cache ${data.id} ${data.key} ${data.expireAfterTimestamp} $now');
 
-      if (data.expireAfterTimestamp! > now) {
-        return data;
-      } else {
-        await invalidateByKey(key);
+        if (data.expireAfterTimestamp! > now) {
+          return data;
+        } else {
+          await invalidateByKey(key);
+        }
       }
+    } catch (e) {
+      return null;
     }
 
     return null;

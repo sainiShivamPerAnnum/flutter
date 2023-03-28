@@ -6,50 +6,55 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/pages/help_and_support/freshdesk_help.dart';
-import 'package:felloapp/ui/pages/help_and_support/referral_policy_page.dart';
-import 'package:felloapp/ui/pages/help_and_support/support.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_rating_dialog.dart';
+import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
+import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
+import 'package:felloapp/ui/pages/finance/augmont/augmont_gold_details/save_assets_view.dart';
+import 'package:felloapp/ui/pages/finance/autopay/autopay_details_view.dart';
+import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_view.dart';
+import 'package:felloapp/ui/pages/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
+import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
+import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
+import 'package:felloapp/ui/pages/games/tambola/show_all_tickets.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
+import 'package:felloapp/ui/pages/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
-import 'package:felloapp/ui/pages/onboarding/onboarding4.0/onboarding_4_view.dart';
+import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
-import 'package:felloapp/ui/pages/others/events/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/others/events/topSavers/top_savers_new.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/augmont_gold_details/save_assets_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/autopay_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/autopay_process/autopay_process_view.dart';
-import 'package:felloapp/ui/pages/others/finance/autopay/user_autopay_details/user_autopay_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/lendbox/detail_page/lendbox_details_view.dart';
-import 'package:felloapp/ui/pages/others/finance/transactions_history/transactions_history_view.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/show_all_tickets.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_home/tambola_new_user_page.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/weekly_results/weekly_result.dart';
-import 'package:felloapp/ui/pages/others/games/web/web_home/web_home_view.dart';
-import 'package:felloapp/ui/pages/others/profile/bank_details/bank_details_view.dart';
-import 'package:felloapp/ui/pages/others/profile/kyc_details/kyc_details_view.dart';
-import 'package:felloapp/ui/pages/others/profile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/pages/others/profile/referrals/referral_details/referral_details_view.dart';
-import 'package:felloapp/ui/pages/others/profile/settings/settings_view.dart';
-import 'package:felloapp/ui/pages/others/profile/userProfile/userProfile_view.dart';
-import 'package:felloapp/ui/pages/others/profile/verify_email.dart';
-import 'package:felloapp/ui/pages/others/rewards/golden_tickets/golden_tickets_view.dart';
+import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
+import 'package:felloapp/ui/pages/support/freshdesk_help.dart';
+import 'package:felloapp/ui/pages/support/referral_policy_page.dart';
+import 'package:felloapp/ui/pages/support/support.dart';
+import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_view.dart';
+import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
+import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
+import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
+import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
-import 'package:felloapp/ui/widgets/fello_dialog/fello_rating_dialog.dart';
+import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 //Flutter Imports
@@ -68,6 +73,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
+
   CustomLogger _logger = locator<CustomLogger>();
   BaseUtil? _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final AppState appState;
@@ -94,7 +100,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       key: navigatorKey,
       onPopPage: _onPopPage,
       pages: buildPages(),
-      // transitionDelegate: const MyTransitionDelegate(),
+      transitionDelegate: const MyTransitionDelegate(),
     );
   }
 
@@ -139,10 +145,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void _removePage(MaterialPage page) {
-    if (page != null) {
-      AppState.screenStack.removeLast();
-      _pages.remove(page);
-    }
+    AppState.screenStack.removeLast();
+    _pages.remove(page);
   }
 
   MaterialPage _createPage(Widget child, PageConfiguration pageConfig) {
@@ -284,8 +288,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
           break;
 
-        case Pages.GoldenTicketsView:
-          _addPageData(GoldenTicketsView(), GoldenTicketsViewPageConfig);
+        case Pages.ScratchCardsView:
+          _addPageData(ScratchCardsView(), ScratchCardsViewPageConfig);
           break;
         case Pages.AutosaveDetailsView:
           _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
@@ -320,6 +324,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.SettingsView:
           _addPageData(SettingsView(), SettingsViewPageConfig);
           break;
+        // case Pages.TransactionDetailsPage:
+        //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);
+        //   break;
+
         default:
           break;
       }
@@ -517,11 +525,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.FreshDeskHelp:
         FreshDeskHelpPageConfig.currentPageAction = action;
         break;
-      case Pages.GoldenTicketView:
-        GoldenTicketViewPageConfig.currentPageAction = action;
+      case Pages.ScratchCardView:
+        ScratchCardViewPageConfig.currentPageAction = action;
         break;
-      case Pages.GoldenTicketsView:
-        GoldenTicketsViewPageConfig.currentPageAction = action;
+      case Pages.ScratchCardsView:
+        ScratchCardsViewPageConfig.currentPageAction = action;
         break;
       case Pages.GoldenMilestonesView:
         GoldenMilestonesViewPageConfig.currentPageAction = action;
@@ -581,6 +589,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.SellConfirmationView:
         SellConfirmationViewConfig.currentPageAction = action;
         break;
+      case Pages.TransactionDetailsPage:
+        TransactionDetailsPageConfig.currentPageAction = action;
+        break;
       case Pages.ViewAllBlogsView:
         ViewAllBlogsViewConfig.currentPageAction = action;
         break;
@@ -610,6 +621,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.SellConfirmationView:
         SellConfirmationViewConfig.currentPageAction = action;
+        break;
+      case Pages.AssetViewSection:
+        AssetViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -665,7 +679,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     return List.of(_pages);
   }
 
-  void parseRoute(Uri uri) {
+  void parseRoute(Uri uri, {String? title}) {
     _logger.d("Url: ${uri.toString()}");
     if (uri.scheme == "http" || uri.scheme == "https") {
       AppState.delegate!.appState.currentAction = PageAction(
@@ -673,6 +687,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         state: PageState.addWidget,
         widget: WebViewScreen(
           url: uri.toString(),
+          title: title,
         ),
       );
       return;
@@ -686,7 +701,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         if (segment.startsWith('d-', 0)) {
           dialogCheck(segment.split('-').last);
         } else if (segment.startsWith('GM_')) {
-          openWebGame(segment);
+          openWebGame(
+            segment,
+          );
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else if (segment.startsWith('story-')) {
@@ -760,17 +777,36 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     PageConfiguration? pageConfiguration;
     switch (screenKey) {
       case 'journey':
-        appState.setCurrentTabIndex = 0;
+        appState.setCurrentTabIndex = appState.setCurrentTabIndex =
+            locator<RootController>()
+                .navItems
+                .values
+                .toList()
+                .indexOf(RootController.journeyNavBarItem);
         break;
       case 'save':
-        appState.setCurrentTabIndex = 1;
+        appState.setCurrentTabIndex = locator<RootController>()
+            .navItems
+            .values
+            .toList()
+            .indexOf(RootController.saveNavBarItem);
         break;
       case 'play':
-        appState.setCurrentTabIndex = 2;
+        appState.setCurrentTabIndex = appState.setCurrentTabIndex =
+            locator<RootController>()
+                .navItems
+                .values
+                .toList()
+                .indexOf(RootController.playNavBarItem);
         break;
       case 'win':
-        appState.setCurrentTabIndex = 3;
+        appState.setCurrentTabIndex = locator<RootController>()
+            .navItems
+            .values
+            .toList()
+            .indexOf(RootController.winNavBarItem);
         break;
+
       case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
@@ -779,6 +815,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'lboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;
+        break;
+      case 'quickTour':
+        Future.delayed(Duration(seconds: 2), () {
+          SpotLightController.instance.startQuickTour();
+        });
+
         break;
       case 'lendboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;
@@ -814,6 +856,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
+        if (locator<RootController>()
+            .navItems
+            .containsValue(RootController.tambolaNavBar)) {
+          appState.setCurrentTabIndex = locator<RootController>()
+              .navItems
+              .values
+              .toList()
+              .indexOf(RootController.tambolaNavBar);
+          break;
+        }
         pageConfiguration = THomePageConfig;
         break;
       case 'myWinnings':
@@ -901,17 +953,36 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   openWebGame(String game) {
-    AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addWidget,
-      widget: WebHomeView(game: game),
-      page: WebHomeViewPageConfig,
-    );
+    // AppState.delegate!.appState.currentAction = PageAction(
+    //   state: PageState.addWidget,
+    //   widget: WebHomeView(game: game),
+    //   page: WebHomeViewPageConfig,
+    // );
+    bool isLocked = false;
+    double netWorth = locator<UserService>().userFundWallet!.augGoldPrinciple +
+        (locator<UserService>().userFundWallet!.wLbPrinciple ?? 0.0);
+    for (var i in locator<GameRepo>().gameTier.data) {
+      for (var j in i!.games) {
+        if (j!.gameCode == game) {
+          isLocked = netWorth < i.minInvestmentToUnlock;
+          break;
+        }
+      }
+    }
+
+    if (isLocked) {
+      BaseUtil.showNegativeAlert('Game is locked for you',
+          'Save more in Gold or Flo to unlock the game and complete the milestone');
+      appState.onItemTapped(
+          DynamicUiUtils.navBar.indexWhere((element) => element == 'PL'));
+    } else
+      BaseUtil.openGameModalSheet(game);
   }
 
   openAppWalkthrough() {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
-      widget: OnBoardingView(comingFrom: COMING_FROM_HOME),
+      widget: const OnBoardingView(),
       page: OnBoardingViewPageConfig,
     );
   }

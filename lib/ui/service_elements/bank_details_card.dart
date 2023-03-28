@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -16,54 +17,58 @@ class BankDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeConsumer<BankAndPanService,
-            BankAndPanServiceProperties>(
-        properties: [BankAndPanServiceProperties.bankDetailsVerified],
-        builder: (context, model, property) => model!.isBankDetailsAdded &&
-                model.activeBankAccountDetails != null 
-            ? Container(
-                margin: EdgeInsets.only(
-                    top: SizeConfig.pageHorizontalMargins * 2,
-                    bottom: SizeConfig.pageHorizontalMargins / 2),
-                decoration: BoxDecoration(
-                  border: Border.all(color: UiConstants.kTextColor2),
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-                ),
-                child: ListTile(
-                  leading: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: UiConstants.primaryColor, width: 0.5),
+    return PropertyChangeProvider<BankAndPanService,
+        BankAndPanServiceProperties>(
+      value: locator<BankAndPanService>(),
+      child: PropertyChangeConsumer<BankAndPanService,
+              BankAndPanServiceProperties>(
+          properties: [BankAndPanServiceProperties.bankDetailsVerified],
+          builder: (context, model, property) => model!.isBankDetailsAdded &&
+                  model.activeBankAccountDetails != null
+              ? Container(
+                  margin: EdgeInsets.only(
+                      top: SizeConfig.pageHorizontalMargins * 2,
+                      bottom: SizeConfig.pageHorizontalMargins / 2),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: UiConstants.kTextColor2),
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                  ),
+                  child: ListTile(
+                    leading: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: UiConstants.primaryColor, width: 0.5),
+                      ),
+                      padding: EdgeInsets.all(SizeConfig.padding8),
+                      child: SvgPicture.asset(
+                        Assets.bank,
+                        color: UiConstants.primaryColor,
+                        width: SizeConfig.padding24,
+                        height: SizeConfig.padding24,
+                      ),
                     ),
-                    padding: EdgeInsets.all(SizeConfig.padding8),
-                    child: SvgPicture.asset(
-                      Assets.bank,
-                      color: UiConstants.primaryColor,
-                      width: SizeConfig.padding24,
-                      height: SizeConfig.padding24,
+                    title: Text(model.activeBankAccountDetails?.account ?? "",
+                        style: TextStyles.sourceSansB.body2),
+                    subtitle: Text(
+                      model.activeBankAccountDetails?.name ?? "",
+                      style: TextStyles.sourceSans.body3
+                          .colour(UiConstants.kTextColor2),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.edit,
+                        color: UiConstants.kTextColor,
+                      ),
+                      onPressed: () {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                            page: BankDetailsPageConfig,
+                            state: PageState.addPage);
+                      },
                     ),
                   ),
-                  title: Text(model.activeBankAccountDetails?.account ?? "",
-                      style: TextStyles.sourceSansB.body2),
-                  subtitle: Text(
-                    model.activeBankAccountDetails?.name ?? "",
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTextColor2),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(
-                      Icons.edit,
-                      color: UiConstants.kTextColor,
-                    ),
-                    onPressed: () {
-                      AppState.delegate!.appState.currentAction = PageAction(
-                          page: BankDetailsPageConfig,
-                          state: PageState.addPage);
-                    },
-                  ),
-                ),
-              )
-            : SizedBox());
+                )
+              : SizedBox()),
+    );
   }
 }

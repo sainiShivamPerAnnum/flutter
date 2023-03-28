@@ -63,6 +63,7 @@ class UserTransaction {
   Map<String, dynamic>? misMap;
   Timestamp? _timestamp;
   Timestamp? _updatedTime;
+  Map<String, dynamic>? couponMap;
   List<TransactionStatusMapItemModel>? transactionUpdatesMap;
 
   static final String fldAmount = 'tAmount';
@@ -166,8 +167,11 @@ class UserTransaction {
     this._timestamp,
     this._paytmMap,
     this._updatedTime,
+    
     this.transactionUpdatesMap,
     this.misMap,
+    this.couponMap,
+    
   );
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
@@ -191,6 +195,7 @@ class UserTransaction {
           parseTimeStamp(data[fldUpdatedTime]) ?? Timestamp(0, 0),
           parseTransactionStatusSummary(data[fldtransactionUpdatesMap]) ?? '',
           data['miscMap'] ?? {},
+          data["coupon"] ?? {},
         );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
@@ -214,6 +219,7 @@ class UserTransaction {
           Timestamp(0, 0),
           data[fldtransactionUpdatesMap],
           data['miscMap'],
+          data["coupon"],
         );
 
   //Augmont gold investment initiated by investor

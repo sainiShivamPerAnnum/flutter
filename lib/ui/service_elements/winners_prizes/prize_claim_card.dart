@@ -58,7 +58,7 @@ class PrizeClaimCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    locale.totalRewards,
+                                    "Total Winnings",
                                     style:
                                         TextStyles.body1.colour(Colors.white),
                                   ),

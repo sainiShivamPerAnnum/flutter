@@ -1,11 +1,12 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
+import 'dart:async';
+
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -31,6 +32,9 @@ class TambolaService extends ChangeNotifier {
   int? _atomicTicketGenerationLeftCount;
   int? _atomicTicketDeletionLeftCount;
   int? ticketGenerateCount;
+  int? initialTicketCount;
+
+  late Completer<List<TambolaBoard?>?> completer;
 
   signOut() {
     _weeklyDrawFetched = false;
@@ -88,6 +92,38 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool isTambolaBoardUpdated = false;
+
+  Future<void> fetchTambolaBoard() async {
+    completer = Completer();
+    if (!_weeklyTicksFetched) {
+      _weeklyTicksFetched = true;
+      _logger!.d("Fetching Tambola tickets ${DateTime.now().second}");
+      // ticketsLoaded = false;
+      final tickets = await _tambolaRepo!.getTickets();
+      if (tickets.code == 200) {
+        List<TambolaBoard?>? boards =
+            tickets.model!.map((e) => e.board).toList();
+
+        if (userWeeklyBoards != null &&
+            userWeeklyBoards!.length != boards.length) {
+          isTambolaBoardUpdated = true;
+          notifyListeners();
+          isTambolaBoardUpdated = false;
+        }
+        _logger!.d("Fetched Tambola tickets ${DateTime.now().second}");
+        userWeeklyBoards = boards;
+        // _currentBoard = null;
+        // _currentBoardView = null;
+        ticketCount = boards.length;
+        completer.complete(boards);
+      } else {
+        completer.complete(null);
+        _logger!.d(tickets.errorMessage);
+      }
+    }
+  }
+
   set weeklyDrawFetched(value) {
     _weeklyDrawFetched = value;
   }
@@ -114,7 +150,16 @@ class TambolaService extends ChangeNotifier {
   init() {
     _atomicTicketGenerationLeftCount = 0;
     _atomicTicketDeletionLeftCount = 0;
+
     setUpDailyPicksCount();
+    if (locator<RootController>()
+        .navItems
+        .containsValue(RootController.tambolaNavBar)) {
+      fetchTambolaBoard();
+      completer.future.then((value) {
+        initialTicketCount = value?.length;
+      });
+    }
   }
 
   // Future<void> getTicketCount() async {

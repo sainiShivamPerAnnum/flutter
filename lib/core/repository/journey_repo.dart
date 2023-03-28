@@ -1,7 +1,6 @@
 import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -27,6 +26,8 @@ class JourneyRepository extends BaseRepo {
   static const String LOCAL_ASSET_DATABASE = "localAssetDatabase";
   String? _filePathDirectory;
 
+  List<JourneyPage> journeyPages = [];
+
   final _baseUrlJourney = FlavorConfig.isDevelopment()
       ? 'https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://rs0wiakaw7.execute-api.ap-south-1.amazonaws.com/prod';
@@ -34,6 +35,10 @@ class JourneyRepository extends BaseRepo {
   final _baseUrlStats = FlavorConfig.isDevelopment()
       ? "https://l6e3g2pr2b.execute-api.ap-south-1.amazonaws.com/dev"
       : 'https://08wplse7he.execute-api.ap-south-1.amazonaws.com/prod';
+
+  final _cdnBaseUrl = FlavorConfig.isDevelopment()
+      ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
+      : 'https://d11q4cti75qmcp.cloudfront.net/';
 
   //Initiating instance for local directory of Android || iOS
   Future<void> init() async {
@@ -51,6 +56,7 @@ class JourneyRepository extends BaseRepo {
   }
 
   void dump() {
+    journeyPages.clear();
     if (Directory(_filePathDirectory!).existsSync()) {
       Directory(_filePathDirectory!).deleteSync(recursive: true);
     }
@@ -92,10 +98,6 @@ class JourneyRepository extends BaseRepo {
     String filePath = '';
     if (Platform.isAndroid) {
       try {
-        // final directory = await getApplicationDocumentsDirectory();
-        // if (!await directory.exists()) await directory.create(recursive: true);
-        // filePath = '${directory.path}/journey_assets/$fileName';
-
         filePath = '$_filePathDirectory$fileName';
         File file = await new File(filePath).create(recursive: true);
         file.writeAsBytesSync(svgBytes);
@@ -108,9 +110,6 @@ class JourneyRepository extends BaseRepo {
       }
     } else if (Platform.isIOS) {
       try {
-        // final directory = await getTemporaryDirectory();
-        // if (!await directory.exists()) await directory.create(recursive: true);
-        // filePath = '${directory.path}/journey_assets/$fileName';
         filePath = '$_filePathDirectory$fileName';
         File file = await new File(filePath).create(recursive: true);
         file.writeAsBytesSync(svgBytes);
@@ -152,6 +151,7 @@ class JourneyRepository extends BaseRepo {
 
   //Fetch Journey pages from journey collection
   //params: start page and direction[up,down]
+
   Future<ApiResponse<List<JourneyPage>>> fetchJourneyPages(
     int page,
     String direction,
@@ -201,6 +201,86 @@ class JourneyRepository extends BaseRepo {
     }
   }
 
+  Future<ApiResponse<List<JourneyPage>>> fetchNewJourneyPages(
+    int page,
+    String direction,
+    String version,
+  ) async {
+    try {
+      // final isUp = direction == PAGE_DIRECTION_UP;
+      // final limit = 1; // inclusive limit so actually 2 pages are returned
+
+      final startPage = page - 1; // max(isUp ? page : page - limit, 1);
+      final endPage = page; // isUp ? page + limit : page;
+
+      final token = await getBearerToken();
+      final queryParams = {"page": page.toString(), "direction": direction};
+      print(journeyPages.length);
+
+      if (journeyPages.isNotEmpty) {
+        if (journeyPages.length - 1 >= endPage)
+          return ApiResponse(
+              model: [journeyPages[startPage], journeyPages[endPage]],
+              code: 200);
+        else {
+          if (page > journeyPages.length)
+            return ApiResponse(model: [], code: 200);
+          else
+            return ApiResponse(
+                model: journeyPages.sublist(startPage), code: 200);
+        }
+      }
+      // final response = await APIService.instance.getData(
+      //     "journey_${version.toLowerCase()}.txt",
+      //     token: token,
+      //     cBaseUrl: _cdnBaseUrl,
+      //     queryParams: queryParams,
+      //     decryptData: true);
+
+      // List<dynamic>? items = response;
+
+      // if (items!.isEmpty)
+      //   return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+
+      // for (int i = 0; i < items.length; i++) {
+      //   journeyPages.add(JourneyPage.fromMap(items[i], i + 1));
+      // }
+
+      // return ApiResponse<List<JourneyPage>>(
+      //     model: [journeyPages[0], journeyPages[1]], code: 200);
+
+      return await _cacheService.cachedApi(
+          CacheKeys.JOURNEY_PAGE,
+          TTL.ONE_DAY,
+          isFromCdn: true,
+          () => APIService.instance.getData(
+                "journey_${version.toLowerCase()}.txt",
+                token: token,
+                cBaseUrl: _cdnBaseUrl,
+                queryParams: queryParams,
+                decryptData: true,
+              ), (responseData) {
+        List<dynamic>? items = responseData;
+
+        if (items!.isEmpty)
+          return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+
+        for (int i = 0; i < items.length; i++) {
+          journeyPages.add(JourneyPage.fromMap(items[i], i + 1));
+        }
+
+        return ApiResponse<List<JourneyPage>>(
+            model: [journeyPages[0], journeyPages[1]], code: 200);
+      });
+    } on FetchDataException catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 500);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
   // Returns User Journey stats
   // refer UserJourneyStatsModel for the response
   Future<ApiResponse<UserJourneyStatsModel>> getUserJourneyStats() async {
@@ -224,48 +304,31 @@ class JourneyRepository extends BaseRepo {
     }
   }
 
-  // Helper Methods
-  // Just the upload created journey page data
-  // Future<void> uploadJourneyPage(JourneyPage page) async {
-  //   try {
-  //     // final String _uid = _userService.baseUser.uid;
-  //     final _token = await getBearerToken();
-  //     final _body = page.toMap();
-  //     dev.log(json.encode(_body));
-  //     final response = await APIService.instance.postData(
-  //       ApiPath.getJourney(2),
-  //       token: _token,
-  //       body: _body,
-  //       cBaseUrl: "https://i2mkmm61d4.execute-api.ap-south-1.amazonaws.com/dev",
-  //     );
-  //     logger.d(response);
-  //     return true;
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //     return false;
-  //   }
-  // }
-
-  Future<ApiResponse<List<JourneyLevel>>> getJourneyLevels() async {
+  Future<ApiResponse<List<JourneyLevel>>> getJourneyLevels(
+      String version) async {
     try {
-      List<JourneyLevel> journeylevels = [];
+      List<JourneyLevel> journeyLevels = [];
       final _token = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.kJourneyLevel,
-        token: _token,
-        cBaseUrl: _baseUrlJourney,
-      );
+          "journeyLevels${version.toUpperCase()}.txt",
+          token: _token,
+          cBaseUrl: _cdnBaseUrl,
+          decryptData: true);
 
-      final responseData = response["data"];
-      responseData.forEach((level, levelDetails) {
-        journeylevels.add(JourneyLevel.fromMap(levelDetails));
-      });
-      logger!.d("Response from get Journey Level: $response");
-      return ApiResponse(model: journeylevels, code: 200);
+      // final response = await APIService.instance.getData(
+      //   ApiPath.kJourneyLevel,
+      //   token: _token,
+      //   cBaseUrl: _baseUrlJourney,
+      // );
+
+      // final responseData = response["data"];
+      journeyLevels = JourneyLevel.helper.fromMapArray(response);
+
+      logger.d("Response from get Journey Level: $response");
+      return ApiResponse(model: journeyLevels, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
-      return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch user levels", 400);
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

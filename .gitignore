@@ -22,10 +22,14 @@ ios/build/*
 ios/Podfile.lock
 ios/Runner.xcodeproj/*
 ios/Runner.xcworkspace/*
+ios/.symlinks/plugins
+build/
 
 # You definitely want these for CI and CD
 **/ios/*.ipa
 **/ios/*.app.dSYM.zip
+ios/*.ipa
+ios/*.app.dSYM.zip
 
 # These are optional
 android/fastlane/report.xml
@@ -69,3 +73,4 @@ app.*.map.json
 # "JSON to Dart Model" generator tracker files locations.
 /.json_models/
 models.jsonc
+build/ios/

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/repository/internal_ops_repo.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -11,9 +12,11 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 class InternalOpsService extends ChangeNotifier {
   String? phoneModel;
+  String? _deviceId;
   String? softwareVersion;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   bool isDeviceInfoInitiated = false;
@@ -35,7 +38,6 @@ class InternalOpsService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> initDeviceInfo() async {
-    String? _deviceId;
     String? _platform;
     String? brand;
     bool? isPhysicalDevice;
@@ -48,7 +50,6 @@ class InternalOpsService extends ChangeNotifier {
           phoneModel = iosDeviceInfo.name;
           softwareVersion = iosDeviceInfo.systemVersion;
           _deviceId = iosDeviceInfo.identifierForVendor;
-          isPhysicalDevice = iosDeviceInfo.isPhysicalDevice;
           brand = "apple";
           _platform = "ios";
           logger!.d(
@@ -64,7 +65,10 @@ class InternalOpsService extends ChangeNotifier {
           logger!.d(
               "Device Information - phoneModel: $phoneModel \nSoftware version: $softwareVersion \nDeviceId $_deviceId");
         }
-        isDeviceInfoInitiated = true;
+        if ((_deviceId ?? '').isEmpty) {
+          _deviceId = await getDeviceId();
+        }
+        if ((_deviceId ?? '').isNotEmpty) isDeviceInfoInitiated = true;
         return {
           "deviceId": _deviceId ?? "",
           "platform": _platform ?? "",
@@ -74,6 +78,11 @@ class InternalOpsService extends ChangeNotifier {
           "isPhysicalDevice": isPhysicalDevice ?? false
         };
       } catch (e) {
+        logFailure(
+          locator<UserService>().baseUser?.uid ?? '',
+          FailType.GetDeviceInfoFailed,
+          {'message': "Get Device info failed"},
+        );
         log.error('Initiating Device Info failed');
       }
     }
@@ -130,4 +139,18 @@ class InternalOpsService extends ChangeNotifier {
       log.error('Crashlytics record error fail : $e');
     }
   }
+}
+
+Future<String> getDeviceId() async {
+  String deviceId = "";
+  try {
+    const platform = MethodChannel("methodChannel/deviceData");
+
+    final String result = await platform.invokeMethod('getDeviceId');
+    deviceId = result;
+  } catch (e) {
+    debugPrint(e.toString());
+    deviceId = "";
+  }
+  return deviceId;
 }

@@ -477,6 +477,8 @@ class GamesBanMap {
   AssetBanMap? candyFiestaMap;
   AssetBanMap? bowlingMap;
   AssetBanMap? bottleFlipMap;
+  AssetBanMap? rollyVortex;
+  AssetBanMap? knifeHit;
   GamesBanMap({
     @required this.cricketMap,
     @required this.tambolaMap,
@@ -485,6 +487,8 @@ class GamesBanMap {
     @required this.candyFiestaMap,
     @required this.bowlingMap,
     @required this.bottleFlipMap,
+    @required this.rollyVortex,
+    @required this.knifeHit,
   });
 
   GamesBanMap.base() {
@@ -495,17 +499,20 @@ class GamesBanMap {
     candyFiestaMap = AssetBanMap.base();
     bowlingMap = AssetBanMap.base();
     bottleFlipMap = AssetBanMap.base();
+    rollyVortex = AssetBanMap.base();
+    knifeHit = AssetBanMap.base();
   }
 
-  GamesBanMap copyWith({
-    AssetBanMap? cricketMap,
-    AssetBanMap? tambolaMap,
-    AssetBanMap? poolClubMap,
-    AssetBanMap? footballMap,
-    AssetBanMap? candyFiestaMap,
-AssetBanMap? bowlingMap,
-AssetBanMap? bottleFlipMap
-  }) {
+  GamesBanMap copyWith(
+      {AssetBanMap? cricketMap,
+      AssetBanMap? tambolaMap,
+      AssetBanMap? poolClubMap,
+      AssetBanMap? footballMap,
+      AssetBanMap? candyFiestaMap,
+      AssetBanMap? bowlingMap,
+      AssetBanMap? bottleFlipMap,
+      AssetBanMap? rollyVortex,
+      AssetBanMap? knifeHit}) {
     return GamesBanMap(
       cricketMap: cricketMap ?? this.cricketMap,
       tambolaMap: tambolaMap ?? this.tambolaMap,
@@ -513,7 +520,9 @@ AssetBanMap? bottleFlipMap
       footballMap: footballMap ?? this.footballMap,
       candyFiestaMap: candyFiestaMap ?? this.candyFiestaMap,
       bowlingMap: bowlingMap ?? this.bowlingMap,
-      bottleFlipMap: bottleFlipMap ?? this.bottleFlipMap
+      bottleFlipMap: bottleFlipMap ?? this.bottleFlipMap,
+      rollyVortex: rollyVortex ?? this.rollyVortex,
+      knifeHit: knifeHit ?? this.knifeHit,
     );
   }
 
@@ -525,7 +534,9 @@ AssetBanMap? bottleFlipMap
       'footballMap': footballMap!.toMap(),
       'candyFiestaMap': candyFiestaMap!.toMap(),
       'bowlingMap': bowlingMap!.toMap(),
-      'bottleFlipMap': bottleFlipMap!.toMap()
+      'bottleFlipMap': bottleFlipMap!.toMap(),
+      'rollyVortex': rollyVortex!.toMap(),
+      'knifeHit': knifeHit!.toMap(),
     };
   }
 
@@ -556,14 +567,25 @@ AssetBanMap? bottleFlipMap
               map[Constants.GAME_TYPE_CANDYFIESTA] as Map<String, dynamic>,
               Constants.GAME_TYPE_CANDYFIESTA)
           : null,
-        bowlingMap: map[Constants.GAME_TYPE_BOWLING] != null
+      bowlingMap: map[Constants.GAME_TYPE_BOWLING] != null
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_BOWLING] as Map<String, dynamic>,
               Constants.GAME_TYPE_BOWLING)
           : null,
-        bottleFlipMap: map[Constants.GAME_TYPE_BOTTLEFLIP] != null  ? AssetBanMap.fromMap(
+      bottleFlipMap: map[Constants.GAME_TYPE_BOTTLEFLIP] != null
+          ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_BOTTLEFLIP] as Map<String, dynamic>,
               Constants.GAME_TYPE_BOTTLEFLIP)
+          : null,
+      rollyVortex: map[Constants.GAME_TYPE_ROLLYVORTEX] != null
+          ? AssetBanMap.fromMap(
+              map[Constants.GAME_TYPE_ROLLYVORTEX] as Map<String, dynamic>,
+              Constants.GAME_TYPE_ROLLYVORTEX)
+          : null,
+      knifeHit: map[Constants.GAME_TYPE_KNIFEHIT] != null
+          ? AssetBanMap.fromMap(
+              map[Constants.GAME_TYPE_KNIFEHIT] as Map<String, dynamic>,
+              Constants.GAME_TYPE_KNIFEHIT)
           : null,
     );
   }

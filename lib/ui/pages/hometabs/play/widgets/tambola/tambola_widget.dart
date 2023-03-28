@@ -2,10 +2,10 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
+import 'package:felloapp/ui/elements/tambola_card/tambola_card_vm.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/current_picks.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
-import 'package:felloapp/ui/pages/others/games/tambola/tambola_widgets/current_picks.dart';
-import 'package:felloapp/ui/widgets/custom_card/custom_cards.dart';
-import 'package:felloapp/ui/widgets/tambola_card/tambola_card_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -164,7 +164,7 @@ class _TambolaTimer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-               locale.tDrawTime ,
+                locale.tDrawTime,
                 style: TextStyles.sourceSans.body4,
               ),
               Text(
@@ -218,7 +218,7 @@ class _TicketWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-            locale.tDrawTime,
+                locale.tDrawTime,
                 style: TextStyles.sourceSans.body4,
               ),
               SizedBox(

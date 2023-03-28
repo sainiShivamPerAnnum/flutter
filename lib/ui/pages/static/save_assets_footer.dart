@@ -1,4 +1,3 @@
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -10,7 +9,7 @@ import 'package:flutter_svg/svg.dart';
 
 class SaveAssetsFooter extends StatelessWidget {
   const SaveAssetsFooter({Key? key}) : super(key: key);
- 
+
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
@@ -19,46 +18,44 @@ class SaveAssetsFooter extends StatelessWidget {
           left: SizeConfig.pageHorizontalMargins,
           right: SizeConfig.pageHorizontalMargins,
           top: SizeConfig.padding6,
-          bottom: SizeConfig.padding20),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SaveInfoSection(
-              title: locale.govtAcc,
-              imageAsset: Assets.augmontLogo,
-              imageHeight: SizeConfig.screenWidth! * 0.07,
-              imageWidth: SizeConfig.screenWidth! * 0.16,
-            ),
-            VerticalDivider(
-              color: Colors.white,
-              thickness: 0.2,
-              width: 10,
-              indent: 2,
-              endIndent: 2,
-            ),
-            SaveInfoSection(
-              title: locale.rbiCertified,
-              imageAsset: Assets.lendboxLogo,
-              imageHeight: SizeConfig.screenWidth! * 0.07,
-              imageWidth: SizeConfig.screenWidth! * 0.16,
-            ),
-            VerticalDivider(
-              color: Colors.white,
-              thickness: 0.2,
-              width: 10,
-              indent: 2,
-              endIndent: 2,
-            ),
-            SaveInfoSection(
-              title: locale.trustedBy,
-              imageAsset: Assets.rbiLogo,
-              imageHeight: SizeConfig.screenWidth! * 0.07,
-              imageWidth: SizeConfig.screenWidth! * 0.16,
-            ),
-          ],
-        ),
+          bottom: SizeConfig.padding10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SaveInfoSection(
+            title: locale.govtAcc,
+            imageAsset: Assets.augmontLogo,
+            imageHeight: SizeConfig.screenWidth! * 0.07,
+            imageWidth: SizeConfig.screenWidth! * 0.16,
+          ),
+          Container(
+            color: Colors.white,
+            width: 0.2,
+            height: SizeConfig.padding40,
+            margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding4, vertical: SizeConfig.padding2),
+          ),
+          SaveInfoSection(
+            title: locale.rbiCertified,
+            imageAsset: Assets.lendboxLogo,
+            imageHeight: SizeConfig.screenWidth! * 0.07,
+            imageWidth: SizeConfig.screenWidth! * 0.16,
+          ),
+          Container(
+            color: Colors.white,
+            width: 0.2,
+            height: SizeConfig.padding40,
+            margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding4, vertical: SizeConfig.padding2),
+          ),
+          SaveInfoSection(
+            title: locale.trustedBy,
+            imageAsset: Assets.rbiLogo,
+            imageHeight: SizeConfig.screenWidth! * 0.07,
+            imageWidth: SizeConfig.screenWidth! * 0.16,
+          ),
+        ],
       ),
     );
   }
@@ -80,7 +77,9 @@ class SaveInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
+      width: SizeConfig.screenWidth! * 0.27,
+      alignment: Alignment.center,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

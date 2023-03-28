@@ -3,9 +3,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class BaseAnimation extends StatefulWidget {
-  const BaseAnimation({Key? key, this.child}) : super(key: key);
-  final Widget? child;
-
+  const BaseAnimation();
   @override
   State<BaseAnimation> createState() => _BaseAnimationState();
 }
@@ -29,20 +27,20 @@ class _BaseAnimationState extends State<BaseAnimation>
     _animation1 = Tween(begin: 0.0, end: sw! * 1.195).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Cubic(.20, .20, 1, 0),
+        curve: Curves.slowMiddle,
       ),
     );
     _animation2 = Tween(begin: 0.0, end: sw! * 1.195).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Cubic(.10, .4, .50, 0),
+        curve: Curves.slowMiddle,
       ),
     );
 
     _animation3 = Tween(begin: 0.0, end: sw! * 1.195).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Cubic(0.20, .65, .30, 0),
+        curve: Curves.slowMiddle,
       ),
     );
     initDelay();
@@ -58,7 +56,7 @@ class _BaseAnimationState extends State<BaseAnimation>
   }
 
   void initDelay() async {
-    await Future.delayed(const Duration(milliseconds: 100), () {});
+    await Future.delayed(const Duration(milliseconds: 500), () {});
     _animationController.forward();
   }
 
@@ -67,22 +65,17 @@ class _BaseAnimationState extends State<BaseAnimation>
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
-        return Stack(
-          children: [
-            if (widget.child != null) widget.child!,
-            Visibility(
-              visible: _animationController.value != 1,
-              child: CustomPaint(
-                painter: AnimationPainter(
-                  transparentCircleRadius: _animation1!.value,
-                  outerCircleRadius: _animation2!.value,
-                  outerThinCircleRadius: _animation3!.value,
+        return (_animationController.value != 1)
+            ? Center(
+                child: CustomPaint(
+                  painter: AnimationPainter(
+                    transparentCircleRadius: _animation1!.value,
+                    outerCircleRadius: _animation2!.value,
+                    outerThinCircleRadius: _animation3!.value,
+                  ),
                 ),
-                size: Size(sw!, sh!),
-              ),
-            ),
-          ],
-        );
+              )
+            : SizedBox();
       },
     );
   }

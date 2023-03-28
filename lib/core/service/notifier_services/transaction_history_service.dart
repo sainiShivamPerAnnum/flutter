@@ -1,27 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/transaction_history_service_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:property_change_notifier/property_change_notifier.dart';
-
-class TransactionHistoryService
-    extends PropertyChangeNotifier<TransactionHistoryServiceProperties> {
+class TxnHistoryService extends ChangeNotifier {
   final CustomLogger? _logger = locator<CustomLogger>();
   final S locale = locator<S>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
-  List<UserTransaction>? _txnList;
+  List<UserTransaction>? _txnList = [];
   String? lastTxnDocId;
   String? lastPrizeTxnDocId;
   String? lastDepositTxnDocId;
@@ -37,7 +33,7 @@ class TransactionHistoryService
 
   set txnList(List<UserTransaction>? list) {
     _txnList = list;
-    notifyListeners(TransactionHistoryServiceProperties.TransactionHistoryList);
+    notifyListeners();
   }
 
   appendTxns(List<UserTransaction> list) {
@@ -48,7 +44,7 @@ class TransactionHistoryService
     });
     _txnList!
         .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
-    notifyListeners(TransactionHistoryServiceProperties.TransactionHistoryList);
+    notifyListeners();
   }
 
   fetchTransactions({
@@ -245,7 +241,7 @@ class TransactionHistoryService
     } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
       return locale.rewardsRedemeed;
     } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK)
-      return locale.goldenTicket;
+      return locale.scratchCard;
     return locale.felloRewards;
   }
 
@@ -253,9 +249,9 @@ class TransactionHistoryService
     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
       return locale.btnDeposit.toUpperCase();
     } else if (type == UserTransaction.TRAN_TYPE_PRIZE) {
-      return locale.prizeText;
+      return locale.prizeText.toUpperCase();
     } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-      return locale.withdrawal;
+      return locale.withdrawal.toUpperCase();
     }
     return locale.autoSipText;
   }
@@ -277,7 +273,7 @@ class TransactionHistoryService
         type == UserTransaction.TRAN_STATUS_FAILED) {
       return Colors.redAccent;
     } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
-      return UiConstants.primaryColor;
+      return UiConstants.kTabBorderColor;
     } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
       return Colors.amber;
     } else if (type == UserTransaction.TRAN_STATUS_PROCESSING) {

@@ -30,7 +30,7 @@ class BaseUser {
   String? appFlyerId;
   String? avatarId;
   bool? isOldUser;
-
+  List segments;
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
   static final String fldEmail = "mEmail";
@@ -87,6 +87,7 @@ class BaseUser {
     this.appFlyerId,
     this.avatarId,
     this.isOldUser,
+    this.segments,
   );
 
   BaseUser.newUser(String id, String mobile)
@@ -115,6 +116,7 @@ class BaseUser {
           '',
           '',
           false,
+          [],
         );
   BaseUser.base()
       : this(
@@ -142,6 +144,7 @@ class BaseUser {
           '',
           '',
           false,
+          [],
         );
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String? client_token])
       : this(
@@ -168,7 +171,8 @@ class BaseUser {
             TimestampModel.fromMap(data[fldCreatedOn]),
             data[fldAppFlyerId] ?? '',
             data[fldAvatarId] ?? '',
-            data[fldIsOldUser] ?? false);
+            data[fldIsOldUser] ?? false,
+            data['mSegments'] ?? []);
 
   //to send user object to server
   toJson() {

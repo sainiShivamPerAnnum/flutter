@@ -46,7 +46,8 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor,
         elevation: 0.0,
         title: Text(
-          appBarTitle ?? (isForTopReferrers ? locale.topRef :locale.topWinners),
+          appBarTitle ??
+              (isForTopReferrers ? locale.topRef : locale.topWinners),
           maxLines: 1,
           overflow: TextOverflow.clip,
           style: TextStyles.rajdhaniSB.title4,
@@ -54,7 +55,7 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          NewSquareBackground(),
+          const NewSquareBackground(),
           SingleChildScrollView(
             child: Column(
               children: [

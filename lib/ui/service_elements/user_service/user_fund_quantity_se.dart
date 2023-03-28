@@ -67,7 +67,7 @@ class LboxGrowthArrow extends StatelessWidget {
             (model!.userFundWallet?.wLbBalance ?? 0) > 0
                 ? Icon(
                     Icons.arrow_upward,
-                    size: SizeConfig.padding14,
+                    size: SizeConfig.padding16,
                     color: UiConstants.primaryColor,
                   )
                 : SizedBox());

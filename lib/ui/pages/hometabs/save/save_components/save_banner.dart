@@ -1,12 +1,8 @@
-import 'dart:async';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
-import 'package:felloapp/ui/modals_sheets/happy_hour_modal.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/draw_time_util.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -14,7 +10,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 
 class HappyHourBanner extends StatefulWidget {
   HappyHourBanner({Key? key, required this.model}) : super(key: key);
@@ -29,7 +24,7 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
 
   @override
   void closeTimer() {
-    Provider.of<RootViewModel>(context, listen: false).setShowHappyHour(false);
+    locator<MarketingEventHandlerService>().getHappyHourCampaign();
     super.closeTimer();
   }
 
@@ -57,7 +52,7 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
                 locator<HappyHourCampign>().data?.rewards?.first.value ?? "",
             "timer": "$inHours:$inMinutes:$inSeconds"
           },
-          "location":"Purple Strip"
+          "location": "Purple Strip"
         });
       },
       child: SizedBox(
@@ -80,7 +75,7 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
               ),
               RichText(
                 text: TextSpan(
-                  text: locale.happyHoursEndingin,
+                  text: "Happy Hour ends in ",
                   style: TextStyles.sourceSans.body3.colour(Colors.white),
                   children: [
                     TextSpan(

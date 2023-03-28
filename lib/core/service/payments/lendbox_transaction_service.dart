@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
@@ -10,8 +10,10 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/core/service/notifier_services/golden_ticket_service.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -34,10 +36,9 @@ class LendboxTransactionService extends BaseTransactionService {
   final CustomLogger? _logger = locator<CustomLogger>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
-  final _gtService = GoldenTicketService();
+  final _gtService = ScratchCardService();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
   final TambolaService? _tambolaService = locator<TambolaService>();
@@ -161,12 +162,14 @@ class LendboxTransactionService extends BaseTransactionService {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
+            currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
+            await _newUserCheck();
             _tambolaService!.weeklyTicksFetched = false;
             transactionReponseModel = res.model!;
             timer!.cancel();
             return transactionResponseUpdate(
               amount: this.currentTxnAmount,
-              gtId: transactionReponseModel?.data?.gtId ?? "",
+              gtIds: transactionReponseModel?.data?.gtIds ?? [],
             );
           }
           break;
@@ -185,22 +188,22 @@ class LendboxTransactionService extends BaseTransactionService {
     }
   }
 
-  Future<void> transactionResponseUpdate({String? gtId, double? amount}) async {
+  Future<void> _newUserCheck() async {
+    locator<MarketingEventHandlerService>().getHappyHourCampaign();
+
+    if (_userService!.baseUser!.segments.contains("NEW_USER")) {
+      await CacheService.invalidateByKey(CacheKeys.USER);
+      final list = _userService!.baseUser!.segments;
+      list.remove("NEW_USER");
+      _userService!.userSegments = list;
+      _userService!.baseUser!.segments = list;
+    }
+  }
+
+  Future<void> transactionResponseUpdate(
+      {List<String>? gtIds, double? amount}) async {
     _logger!.d("Polling response processing");
     try {
-      if (gtId != null) {
-        print("Hey a new fcm recived with gtId: $gtId");
-        if (GoldenTicketService.lastGoldenTicketId != null) {
-          if (GoldenTicketService.lastGoldenTicketId == gtId) {
-            return;
-          } else {
-            GoldenTicketService.lastGoldenTicketId = gtId;
-          }
-        } else {
-          GoldenTicketService.lastGoldenTicketId = gtId;
-        }
-      }
-
       //add this to augmontBuyVM
       _userCoinService!.getUserCoinBalance();
       double newFlcBalance = amount ?? 0;
@@ -209,10 +212,9 @@ class LendboxTransactionService extends BaseTransactionService {
             (_userCoinService!.flcBalance! + newFlcBalance).toInt());
       }
       _userService!.getUserFundWalletData();
-      print(gtId);
       if (currentTransactionState == TransactionState.ongoing) {
-        GoldenTicketService.goldenTicketId = gtId;
-        await _gtService.fetchAndVerifyGoldenTicketByID();
+        ScratchCardService.scratchCardsList = gtIds;
+        // await _gtService.fetchAndVerifyScratchCardByID();
         await _userService!.getUserJourneyStats();
 
         AppState.unblockNavigation();

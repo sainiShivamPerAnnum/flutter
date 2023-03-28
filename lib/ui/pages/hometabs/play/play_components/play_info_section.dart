@@ -1,6 +1,4 @@
-import 'package:felloapp/ui/pages/hometabs/play/play_components/play_title.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/titlesGames.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +29,7 @@ class _InfoComponentState extends State<InfoComponent> {
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setState(() {
         setState(() {
           isBoxOpen = true;
@@ -134,12 +132,11 @@ class InfoComponent2 extends StatefulWidget {
 }
 
 class _InfoComponent2State extends State<InfoComponent2> {
-  double heightOfObject = SizeConfig.screenWidth! * 0.3;
-
   bool isOpen = true;
 
   @override
   Widget build(BuildContext context) {
+    double heightOfObject = SizeConfig.screenWidth! * 0.25;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -300,14 +297,14 @@ class _InfoComponent3State extends State<InfoComponent3> {
         SizeConfig.pageHorizontalMargins,
         0.0,
         SizeConfig.pageHorizontalMargins,
-        SizeConfig.pageHorizontalMargins,
+        0,
       ),
       padding: EdgeInsets.fromLTRB(
-        SizeConfig.pageHorizontalMargins,
-        SizeConfig.pageHorizontalMargins,
-        SizeConfig.pageHorizontalMargins,
-        SizeConfig.pageHorizontalMargins,
-      ),
+          SizeConfig.pageHorizontalMargins,
+          SizeConfig.pageHorizontalMargins,
+          SizeConfig.pageHorizontalMargins,
+          // SizeConfig.pageHorizontalMargins,
+          0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

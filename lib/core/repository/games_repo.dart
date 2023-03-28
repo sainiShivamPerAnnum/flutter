@@ -5,8 +5,8 @@ import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:flutter/cupertino.dart';
 
+import '../model/game_tier_model.dart' hide GameModel;
 import 'base_repo.dart';
 
 class GameRepo extends BaseRepo {
@@ -18,6 +18,10 @@ class GameRepo extends BaseRepo {
   List<GameModel>? games;
   List<GameModel>? get allgames => this._allgames;
   set allgames(List<GameModel>? value) => this._allgames = value;
+
+  late GameTiers _gameTiers;
+
+  GameTiers get gameTier => _gameTiers;
 
   Future<ApiResponse<List<GameModel>>> getGames() async {
     try {
@@ -36,6 +40,7 @@ class GameRepo extends BaseRepo {
       return ApiResponse<List<GameModel>>(model: allgames, code: 200);
     } catch (e) {
       logger!.e("Unable to fetch games ${e.toString()}");
+
       allgames = [];
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch games", 400);
@@ -57,6 +62,26 @@ class GameRepo extends BaseRepo {
       logger!.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch game by id", 400);
+    }
+  }
+
+  Future<ApiResponse<GameTiers>> getGameTiers() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        '/games/tiers',
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      _gameTiers = GameTiers.fromJson(response);
+      return ApiResponse<GameTiers>(model: _gameTiers, code: 200);
+    } catch (e) {
+      logger!.e("Unable to fetch games ${e.toString()}");
+
+      allgames = [];
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch games", 400);
     }
   }
 

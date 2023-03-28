@@ -43,8 +43,8 @@ const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
 const String BlockedUserPath = '/blockeUser';
 const String FreshdeskHelpPath = '/freshDeskHelp';
-const String GoldenTicketViewPath = '/goldenTicketView';
-const String GoldenTicketsViewPath = '/goldenTicketsView';
+const String ScratchCardViewPath = '/scratchCardView';
+const String ScratchCardsViewPath = '/scratchCardsView';
 const String GoldenMilestonesViewPath = '/goldenMilestonesView';
 const String TopSaverViewPath = '/topSaverView';
 const String AllParticipantsViewPath = '/allParticipantsView';
@@ -77,6 +77,8 @@ const String WebViewScreenPath = "/webViewScreenPath";
 const String SettingsScreenPath = '/settingsScreenPath';
 const String TExistingUserViewPath = '/texistingUserPath';
 const String TNewUserViewPath = '/tnewUserViewPath';
+const String TransactionDetailsPath = '/transactionDetailsPage';
+const String AssetViewPath = '/assetViewSection';
 
 enum Pages {
   Splash,
@@ -106,6 +108,7 @@ enum Pages {
   TExistingUser,
   TGame,
   TWeeklyResult,
+  AssetViewSection,
   TWalkthrough,
   TPickDraw,
   TShowAllTickets,
@@ -122,8 +125,8 @@ enum Pages {
   MyWinnings,
   BlockedUser,
   FreshDeskHelp,
-  GoldenTicketView,
-  GoldenTicketsView,
+  ScratchCardView,
+  ScratchCardsView,
   GoldenMilestonesView,
   TopSaverView,
   AllParticipantsView,
@@ -152,6 +155,7 @@ enum Pages {
   InfoStoriesView,
   WebView,
   SettingsView,
+  TransactionDetailsPage
 }
 
 class PageConfiguration {
@@ -183,6 +187,17 @@ PageConfiguration SplashPageConfig = PageConfiguration(
   uiPage: Pages.Splash,
   name: 'Splash Screen',
 );
+PageConfiguration AssetViewPageConfig = PageConfiguration(
+    key: 'AssetView',
+    path: AssetViewPath,
+    uiPage: Pages.AssetViewSection,
+    name: 'AssetViewScreen');
+
+PageConfiguration TransactionDetailsPageConfig = PageConfiguration(
+    key: 'TransactionDetailsPage',
+    path: TransactionDetailsPath,
+    uiPage: Pages.TransactionDetailsPage,
+    name: 'TransactionDetails Screen');
 
 PageConfiguration NotificationsConfig = PageConfiguration(
   key: 'Notifications',
@@ -478,16 +493,16 @@ PageConfiguration FreshDeskHelpPageConfig = PageConfiguration(
     uiPage: Pages.FreshDeskHelp,
     name: 'FreshDesk Help');
 
-PageConfiguration GoldenTicketViewPageConfig = PageConfiguration(
-    key: 'GoldenTicketView',
-    path: GoldenTicketViewPath,
-    uiPage: Pages.GoldenTicketView,
-    name: 'Golden Ticket Highlighted');
+PageConfiguration ScratchCardViewPageConfig = PageConfiguration(
+    key: 'ScratchCardView',
+    path: ScratchCardViewPath,
+    uiPage: Pages.ScratchCardView,
+    name: 'Scratch Card Highlighted');
 
-PageConfiguration GoldenTicketsViewPageConfig = PageConfiguration(
-    key: 'GoldenTicketsView',
-    path: GoldenTicketsViewPath,
-    uiPage: Pages.GoldenTicketsView,
+PageConfiguration ScratchCardsViewPageConfig = PageConfiguration(
+    key: 'ScratchCardsView',
+    path: ScratchCardsViewPath,
+    uiPage: Pages.ScratchCardsView,
     name: 'Golden Tickets Screen');
 
 PageConfiguration GoldenMilestonesViewPageConfig = PageConfiguration(

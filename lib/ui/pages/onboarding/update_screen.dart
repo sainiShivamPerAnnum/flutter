@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -25,7 +26,7 @@ class UpdateRequiredScreen extends StatelessWidget {
       body: Stack(
         alignment: AlignmentDirectional.center,
         children: [
-          NewSquareBackground(),
+          const NewSquareBackground(),
           Positioned(
             top: 0,
             child: Container(
@@ -73,11 +74,9 @@ class UpdateRequiredScreen extends StatelessWidget {
                   onPressed: () {
                     try {
                       if (Platform.isIOS)
-                        BaseUtil.launchUrl(
-                            'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+                        BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
                       else if (Platform.isAndroid)
-                        BaseUtil.launchUrl(
-                            'https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                        BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
                     } catch (e) {
                       Log(e.toString());
                       BaseUtil.showNegativeAlert(

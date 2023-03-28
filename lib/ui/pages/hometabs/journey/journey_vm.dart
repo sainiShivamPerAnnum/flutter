@@ -6,11 +6,11 @@ import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/model/golden_ticket_model.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -18,7 +18,7 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/Journey%20page%20elements/milestone_details_modal.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/elements/milestone_details_modal.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +44,7 @@ class JourneyPageViewModel extends BaseViewModel {
 
   List<MilestoneModel> get completedMilestoneList =>
       _journeyService!.completedMilestoneList;
-  List<GoldenTicket> get completedMilestonePrizeList =>
+  List<ScratchCard> get completedMilestonePrizeList =>
       _journeyService!.completedMilestonesPrizeList;
   ScrollController? get mainController => _journeyService!.mainController;
 
@@ -57,10 +57,11 @@ class JourneyPageViewModel extends BaseViewModel {
   int get pageCount => _journeyService!.pageCount;
   int? get avatarActiveMilestoneLevel => _journeyService!.avatarRemoteMlIndex;
   int userMilestoneLevel = 1, userJourneyLevel = 1;
-  bool _isLoading = false,
+  bool
+      // _isLoading = false,
       isEnd = false,
-      _isRefreshing = false,
-      _isLoaderRequired = false;
+      _isRefreshing = false;
+  // _isLoaderRequired = false;
 
   AnimationController? get controller => _journeyService!.controller;
 
@@ -74,17 +75,17 @@ class JourneyPageViewModel extends BaseViewModel {
 
   // set controller(value) => this._controller = value;
 
-  bool get isLoading => this._isLoading;
-  bool get isLoaderRequired => this._isLoaderRequired;
-  set isLoading(bool value) {
-    this._isLoading = value;
-    notifyListeners();
-  }
+  // bool get isLoading => this._isLoading;
+  // bool get isLoaderRequired => this._isLoaderRequired;
+  // set isLoading(bool value) {
+  //   this._isLoading = value;
+  //   notifyListeners();
+  // }
 
-  set isLoaderRequired(bool value) {
-    this._isLoaderRequired = value;
-    notifyListeners();
-  }
+  // set isLoaderRequired(bool value) {
+  //   this._isLoaderRequired = value;
+  //   notifyListeners();
+  // }
 
   bool get isRefreshing => this._isRefreshing;
 
@@ -108,49 +109,49 @@ class JourneyPageViewModel extends BaseViewModel {
 
   init(TickerProvider ticker) async {
     log("Journey VM init Called");
-    if (Platform.isAndroid) {
-      ApxorFlutter.trackScreen("Journey");
-    }
-    isLoading = true;
-    _journeyService!.vsync = ticker;
-    logger!.d("Pages length: ${_journeyService!.pages!.length ?? 0}");
-    _journeyService!.getAvatarCachedMilestoneIndex();
-    await _journeyService!.updateUserJourneyStats();
-    if (_journeyService!.isThereAnyMilestoneLevelChange()!) {
-      _journeyService!.createPathForAvatarAnimation(
-          _journeyService!.avatarCachedMlIndex,
-          _journeyService!.avatarRemoteMlIndex);
-      _journeyService!.createAvatarAnimationObject();
-    } else {
-      _journeyService!.placeAvatarAtTheCurrentMileStone();
-    }
-
-    _journeyService!.mainController =
-        ScrollController(initialScrollOffset: 600);
-    isLoading = false;
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
-      if (_journeyService!.avatarRemoteMlIndex < 3) {
-        await _journeyService!.mainController!.animateTo(
-          0,
-          duration: const Duration(seconds: 2),
-          curve: Curves.easeOutCubic,
-        );
-      } else
-        await _journeyService!.scrollPageToAvatarPosition();
-      await _journeyService!.animateAvatar();
-      _journeyService!.updateRewardSTooltips();
-      _journeyService!.mainController!.addListener(() {
-        if (_journeyService!.mainController!.offset >
-            _journeyService!.mainController!.position.maxScrollExtent) {
-          if (!canMorePagesBeFetched())
-            return updatingJourneyView();
-          else
-            return addPageToTop();
-        }
-      });
+    if (Platform.isAndroid) ApxorFlutter.trackScreen("Journey");
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _journeyService!.isLoading = true;
+      _journeyService!.vsync = ticker;
+      logger!.d("Pages length: ${_journeyService!.pages!.length ?? 0}");
+      _journeyService!.mainController =
+          ScrollController(initialScrollOffset: 600);
+      if (AppState.isJourneyFirstTab) _journeyService!.buildJourney();
     });
 
-    // checkIfUserIsNewAndNeedsStoryView();
+    // _journeyService!.getAvatarCachedMilestoneIndex();
+    // await _journeyService!.updateUserJourneyStats();
+    // if (_journeyService!.isThereAnyMilestoneLevelChange()!) {
+    //   _journeyService!.createPathForAvatarAnimation(
+    //       _journeyService!.avatarCachedMlIndex,
+    //       _journeyService!.avatarRemoteMlIndex);
+    //   _journeyService!.createAvatarAnimationObject();
+    // } else {
+    //   _journeyService!.placeAvatarAtTheCurrentMileStone();
+    // }
+
+    // isLoading = false;
+    // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+    //   if (_journeyService!.avatarRemoteMlIndex < 3) {
+    //     await _journeyService!.mainController!.animateTo(
+    //       0,
+    //       duration: const Duration(seconds: 2),
+    //       curve: Curves.easeOutCubic,
+    //     );
+    //   } else
+    //     await _journeyService!.scrollPageToAvatarPosition();
+    //   await _journeyService!.animateAvatar();
+    //   _journeyService!.updateRewardSTooltips();
+    //   _journeyService!.mainController!.addListener(() {
+    //     if (_journeyService!.mainController!.offset >
+    //         _journeyService!.mainController!.position.maxScrollExtent) {
+    //       if (!canMorePagesBeFetched())
+    //         return updatingJourneyView();
+    //       else
+    //         return addPageToTop();
+    //     }
+    //   });
+    // });
   }
 
   // checkIfUserIsNewAndNeedsStoryView() {
@@ -204,26 +205,26 @@ class JourneyPageViewModel extends BaseViewModel {
   Future<void> checkIfThereIsAMilestoneLevelChange() async =>
       _journeyService!.checkForMilestoneLevelChange();
 
-  addPageToTop() async {
-    if (isLoading) return;
-    logger!.d("Adding page to top");
-    if (!canMorePagesBeFetched()) return;
-    isLoading = true;
-    isLoaderRequired = true;
-    final prevPageslength = pages!.length;
-    await _journeyService!.fetchMoreNetworkPages();
-    logger!.d("Total Pages length: ${pages!.length}");
-    if (prevPageslength < pages!.length)
-      await mainController!.animateTo(
-        mainController!.offset + 100,
-        curve: Curves.easeOutCubic,
-        duration: Duration(seconds: 1),
-      );
-    _journeyService!.placeAvatarAtTheCurrentMileStone();
-    // _journeyService.refreshJourneyPath();
-    isLoaderRequired = false;
-    isLoading = false;
-  }
+  // addPageToTop() async {
+  //   if (isLoading) return;
+  //   logger!.d("Adding page to top");
+  //   if (!canMorePagesBeFetched()) return;
+  //   isLoading = true;
+  //   isLoaderRequired = true;
+  //   final prevPageslength = pages!.length;
+  //   await _journeyService!.fetchMoreNetworkPages();
+  //   logger!.d("Total Pages length: ${pages!.length}");
+  //   if (prevPageslength < pages!.length)
+  //     await mainController!.animateTo(
+  //       mainController!.offset + 100,
+  //       curve: Curves.easeOutCubic,
+  //       duration: Duration(seconds: 1),
+  //     );
+  //   _journeyService!.placeAvatarAtTheCurrentMileStone();
+  //   // _journeyService.refreshJourneyPath();
+  //   isLoaderRequired = false;
+  //   isLoading = false;
+  // }
 
   canMorePagesBeFetched() =>
       _journeyService!.getJourneyLevelBlurData() == null ? true : false;
@@ -270,6 +271,7 @@ class JourneyPageViewModel extends BaseViewModel {
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "version": _userService!.userJourneyStats!.version,
             "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
             "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
             "MileStone sub Text":
@@ -283,6 +285,7 @@ class JourneyPageViewModel extends BaseViewModel {
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "version": _userService!.userJourneyStats!.version,
             "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
             "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
             "MileStone sub Text":
@@ -295,6 +298,7 @@ class JourneyPageViewModel extends BaseViewModel {
           eventName: AnalyticsEvents.journeyMileStoneTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            "version": _userService!.userJourneyStats!.version,
             "Capsule text": AnalyticsProperties.getJouneryCapsuleText(),
             "MileStone text": AnalyticsProperties.getJourneyMileStoneText(),
             "MileStone sub Text":
@@ -313,6 +317,7 @@ class JourneyPageViewModel extends BaseViewModel {
       isScrollControlled: true,
       content: JourneyMilestoneDetailsModalSheet(
         milestone: milestone,
+        version: _userService!.userJourneyStats!.version,
         status: status,
       ),
     );

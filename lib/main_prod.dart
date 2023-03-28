@@ -23,7 +23,8 @@ void main() async {
         mixpanelToken: MixpanelAnalytics.PROD_TOKEN,
         dynamicLinkPrefix: 'https://fello.in',
         gameApiTokenSecret:
-            "bb34f35f0a0f7424fb8a25708b58ec142df5216ff05ffbb186108744cd340c85"),
+            "bb34f35f0a0f7424fb8a25708b58ec142df5216ff05ffbb186108744cd340c85",
+        dummyMobileNo: '9999900002'),
   );
 
   await mainInit();

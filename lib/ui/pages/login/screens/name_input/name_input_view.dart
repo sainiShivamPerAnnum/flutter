@@ -60,7 +60,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
               child: Column(
                 children: [
                   Text(
-                   locale.obEnterDetails,
+                    locale.obEnterDetails,
                     style: TextStyles.rajdhaniB.title2,
                   ),
                   Text(
@@ -86,7 +86,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                     child: AppTextField(
                       textEditingController: model.nameController,
                       isEnabled: model.enabled,
-
+                      maxLength: 256,
                       hintText: locale.obNameHint,
                       focusNode: model.nameFocusNode,
                       textCapitalization: TextCapitalization.words,
@@ -242,7 +242,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                   vertical: SizeConfig.padding12),
               alignment: Alignment.center,
               child: Text(
-               locale.obIsOlder,
+                locale.obIsOlder,
                 textAlign: TextAlign.center,
                 style: TextStyles.body3.colour(
                   UiConstants.kTextColor2,

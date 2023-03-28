@@ -1,12 +1,11 @@
 import 'package:felloapp/core/enums/cache_type_enum.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheManager {
   // static const CACHE_RATING_HIT_COUNT = "rHitCount";
   // static const CACHE_RATING_DIALOG_OPEN_COUNT = "RDShowCount";
   static const CACHE_LATEST_NOTIFICATION_TIME = "latestNotification";
-  static const CACHE_LATEST_GOLDEN_TICKET_TIME = "latestGoldenTicket";
+  static const CACHE_LATEST_GOLDEN_TICKET_TIME = "latestScratchCard";
   static const CACHE_IS_SUBSCRIPTION_FIRST_TIME = "isSubFirstTime";
   static const CACHE_IS_FIRST_TIME_FOOTBALL = 'firstTimeFootball';
   static const CACHE_LAST_UGT_CHECK_TIME = "lastUGTCheckTime";

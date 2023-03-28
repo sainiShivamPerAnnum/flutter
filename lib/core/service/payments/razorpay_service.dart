@@ -10,15 +10,18 @@ import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -37,6 +40,7 @@ class RazorpayService extends ChangeNotifier {
   BaseTransactionService? _txnService;
   AnalyticsService? _analyticsService;
   InvestmentType? currentInvestmentType;
+  final _userService = locator<UserService>();
   S locale = locator<S>();
 
   bool init(InvestmentType investmentType) {
@@ -44,6 +48,7 @@ class RazorpayService extends ChangeNotifier {
     _logger = locator<CustomLogger>();
     _paytmService = locator<PaytmService>();
     _analyticsService = locator<AnalyticsService>();
+
     _paytmRepo = locator<PaytmRepository>();
     _augTxnService = locator<AugmontTransactionService>();
     _txnService = investmentType == InvestmentType.LENDBOXP2P
@@ -56,6 +61,7 @@ class RazorpayService extends ChangeNotifier {
   }
 
   void handlePaymentSuccess(PaymentSuccessResponse response) async {
+    locator<BackButtonActions>().isTransactionCancelled = false;
     String paymentId = response.paymentId!;
     String checkoutOrderId = response.orderId!;
     String paySignature = response.signature!;
@@ -63,7 +69,7 @@ class RazorpayService extends ChangeNotifier {
     _txnService!.initiatePolling();
     log.debug(
         "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
-    _currentTxn!.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
+    _currentTxn?.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
     if (_currentTxn!.rzp![UserTransaction.subFldRzpOrderId] !=
         checkoutOrderId) {
       _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
@@ -77,10 +83,11 @@ class RazorpayService extends ChangeNotifier {
   void handlePaymentError(PaymentFailureResponse response) {
     _txnService!.currentTransactionState = TransactionState.idle;
     AppState.unblockNavigation();
-    BaseUtil.showNegativeAlert(
-      locale.txnFailed,
-      locale.txnFailedSubtitle
-    );
+    if (response.code == 2)
+      locator<BackButtonActions>().isTransactionCancelled = true;
+    else
+      locator<BackButtonActions>().isTransactionCancelled = false;
+    BaseUtil.showNegativeAlert(locale.txnFailed, locale.txnFailedSubtitle);
     log.debug("ERROR: " + response.code.toString() + " - " + response.message!);
     Map<String, dynamic>? currentTxnDetails =
         _augTxnService?.currentTransactionAnalyticsDetails;
@@ -88,9 +95,14 @@ class RazorpayService extends ChangeNotifier {
     currentTxnDetails?["Error message"] = response.message;
     _analyticsService!.track(
         eventName: AnalyticsEvents.paymentCancelled,
-        properties: currentTxnDetails);
+        properties: _txnService!.currentTransactionAnalyticsDetails ?? {});
 
-    _currentTxn!.rzp?[UserTransaction.subFldRzpStatus] =
+    locator<InternalOpsService>().logFailure(
+      _userService!.baseUser!.uid,
+      FailType.RazorpayTransactionFailed,
+      {'message': "Razorpay payment cancelled or failed"},
+    );
+    _currentTxn?.rzp?[UserTransaction.subFldRzpStatus] =
         UserTransaction.RZP_TRAN_STATUS_FAILED;
     if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
 
@@ -182,12 +194,10 @@ class RazorpayService extends ChangeNotifier {
           'prefill': {'contact': mobile, 'email': "hello@fello.in"}
         };
 
-         _razorpay!.open(options);
+        _razorpay!.open(options);
         return true;
       } else {
-        BaseUtil.showNegativeAlert(
-         locale.failedToCreateTxn, locale.tryLater
-        );
+        BaseUtil.showNegativeAlert(locale.failedToCreateTxn, locale.tryLater);
         AppState.unblockNavigation();
 
         return false;

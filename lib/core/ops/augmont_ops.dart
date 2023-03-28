@@ -17,7 +17,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/others/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -45,9 +45,8 @@ class AugmontService extends ChangeNotifier {
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
-  final TransactionHistoryService? _txnHistoryService =
-      locator<TransactionHistoryService>();
-      S locale = locator<S>();
+  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  S locale = locator<S>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
@@ -193,8 +192,7 @@ class AugmontService extends ChangeNotifier {
         BaseUtil.showNegativeAlert(
             _onSellCompleteResponse.errorMessage, locale.obPleaseTryAgain);
       else
-        BaseUtil.showNegativeAlert(locale.txnVerify,
-            locale.txnVerifySubTitle);
+        BaseUtil.showNegativeAlert(locale.txnVerify, locale.txnVerifySubTitle);
 
       _internalOpsService!.logFailure(
           _userService!.baseUser!.uid, FailType.WithdrawlCompleteApiFailed, {
@@ -213,8 +211,7 @@ class AugmontService extends ChangeNotifier {
       isBarrierDismissible: false,
       content: PendingDialog(
         title: locale.withDrawalProcessing,
-        subtitle:
-            locale.amountWillbeCreditedShortly,
+        subtitle: locale.amountWillbeCreditedShortly,
         duration: '',
       ),
     );
@@ -275,7 +272,7 @@ class AugmontService extends ChangeNotifier {
     if (response == null) {
       log.error('response is null');
     }
-    if (response.statusCode != 200 && response.statusCode != 201) {
+    if (response.statusCode != 200 && response.statusCode != 201) {     
       log.error(
           'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
       if (response.statusCode == 502)

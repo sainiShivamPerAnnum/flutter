@@ -44,6 +44,8 @@ class UiConstants {
       900: const Color(0xff2EB19F),
     },
   );
+  static const Color kGoldContainerColor = const Color(0xff39498C);
+  static const Color kFloContainerColor = const Color(0xff023C40);
 
   /// New UI Colors
   static const Color kTextColor = const Color(0xFFFFFFFF);
@@ -114,6 +116,7 @@ class UiConstants {
   static const Color kAutosaveBalanceColor = const Color(0xFFEFECD1);
 
   static const Color kSecondaryLeaderBoardTextColor = const Color(0xffF4F1EC);
+  static const Color kScratchHereStripColor = Color(0xffEFAF4E);
 
   static LinearGradient kTextFieldGradient1 = LinearGradient(
     colors: [Color(0xff111111), Colors.transparent],
