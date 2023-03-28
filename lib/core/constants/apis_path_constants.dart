@@ -39,7 +39,9 @@ class ApiPath {
   static String scratchCards(uid) => '/user/$uid/golden_tickets';
   static String isEmailRegistered(uid) => '/user/$uid/email/registered';
   static String get dynamicUi => '/ui/dynamic';
+  static String get isUsernameAvailable => "/username/availability";
   static String getSubCombosChips(String freq) => "/subs/$freq/config";
+
 
   //GT Rewards
   static const kRedeemGtReward = "/gt/redeem";

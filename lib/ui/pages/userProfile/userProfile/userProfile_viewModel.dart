@@ -1,4 +1,5 @@
 //Project Imports
+import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -32,6 +33,7 @@ import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/components/sign_in_options.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/date_helper.dart';
+import 'package:felloapp/util/debouncer.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -52,11 +54,12 @@ class UserProfileVM extends BaseViewModel {
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   final usernameRegex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
   UsernameResponse? response;
+  Debouncer? _debouncer;
 
   Log log = new Log('User Profile');
   bool _inEditMode = false;
   bool _isgmailFieldEnabled = true;
-  bool _isNewUser = false;
+  // bool _isNewUser = false;
   bool _isEmailEnabled = false;
   bool _isContinuedWithGoogle = false;
   bool _isSigningInWithGoogle = false;
@@ -87,7 +90,7 @@ class UserProfileVM extends BaseViewModel {
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
   final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
-
+  bool isUsernameUpdated = false;
   double? picSize;
   XFile? selectedProfilePicture;
   ValueChanged<bool>? upload;
@@ -147,7 +150,7 @@ class UserProfileVM extends BaseViewModel {
 
   String get dateInputError => _dateInputError;
   bool get isUpdaingUserDetails => this._isUpdaingUserDetails;
-  get isNewUser => this._isNewUser;
+  // get isNewUser => this._isNewUser;
   get isgmailFieldEnabled => this._isgmailFieldEnabled;
   get errorPadding => this._errorPadding;
   get isNameEnabled => this._isNameEnabled;
@@ -184,11 +187,11 @@ class UserProfileVM extends BaseViewModel {
     notifyListeners();
   }
 
-  set isNewUser(value) {
-    this._isNewUser = value;
+  // set isNewUser(value) {
+  //   this._isNewUser = value;
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 
   set isEmailEnabled(value) {
     this._isEmailEnabled = value;
@@ -224,9 +227,9 @@ class UserProfileVM extends BaseViewModel {
 
   set isDateEnabled(value) => this._isDateEnabled = value;
 
-  init(bool inu) {
-    isNewUser = inu;
-    if (isNewUser) enableEdit();
+  init() {
+    // isNewUser = inu;
+    // if (isNewUser) enableEdit();
     nameController = new TextEditingController(text: myname);
     dobController = new TextEditingController(text: myDob);
     genderController = new TextEditingController(text: gender);
@@ -235,7 +238,7 @@ class UserProfileVM extends BaseViewModel {
     emailController = new TextEditingController(text: myEmail);
     mobileController = new TextEditingController(text: myMobile);
     if (_userService!.isEmailVerified) isgmailFieldEnabled = false;
-    if (isNewUser) usernameController = TextEditingController();
+    // if (isNewUser) usernameController = TextEditingController();
     checkIfUserIsKYCVerified();
   }
 
@@ -249,6 +252,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   usernameInit() {
+    _debouncer = Debouncer();
     inEditMode = true;
     usernameController = TextEditingController();
   }
@@ -343,7 +347,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   checkIfUserIsKYCVerified() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setState(ViewState.Busy);
       if (_bankAndKycService!.isKYCVerified) {
         // nameController!.text =
@@ -356,9 +360,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   updateDetails() async {
-    if (formKey.currentState!.validate() &&
-        isValidDate() &&
-        await usernameIsValid()) {
+    if (formKey.currentState!.validate() && isValidDate()) {
       if (_checkForChanges() && checkForNullData()) {
         if (checkIfAdult()) {
           isUpdaingUserDetails = true;
@@ -372,8 +374,8 @@ class UserProfileVM extends BaseViewModel {
               _userService!.isEmailVerified;
           _userService!.baseUser!.email = emailController!.text.trim();
           _userService!.baseUser!.username =
-              isNewUser ? username : _userService!.baseUser!.username;
-          await _userRepo.updateUser(
+              // isNewUser ? username : _userService!.baseUser!.username;
+              await _userRepo.updateUser(
             uid: _userService!.baseUser!.uid,
             dMap: {
               BaseUser.fldName: _userService!.baseUser!.name!
@@ -402,8 +404,8 @@ class UserProfileVM extends BaseViewModel {
               dobController!.text = _userService!.baseUser!.dob!;
               isUpdaingUserDetails = false;
               inEditMode = false;
-              if (isNewUser) AppState.backButtonDispatcher!.didPopRoute();
-              isNewUser = false;
+              // if (isNewUser) AppState.backButtonDispatcher!.didPopRoute();
+              // isNewUser = false;
               isEmailEnabled = false;
               BaseUtil.showPositiveAlert(
                 locale.updatedSuccessfully,
@@ -435,27 +437,29 @@ class UserProfileVM extends BaseViewModel {
       return DateHelper.isAdult(selectedDate);
   }
 
-  Future<bool> usernameIsValid() async {
-    if (!isNewUser) return true;
-    if (!(await (validateUsername()) ?? false)) {
-      BaseUtil.showNegativeAlert(
-          locale.invalidUsername, locale.anotherUserName);
-      return false;
-    }
-    return (username != null &&
-        username.isNotEmpty &&
-        isValid != null &&
-        isValid! &&
-        isUsernameLoading == false);
-  }
+  // Future<bool> usernameIsValid() async {
+  //   if (!isNewUser) return true;
+  //   if (!(await (validateUsername()) ?? false)) {
+  //     BaseUtil.showNegativeAlert(
+  //         locale.invalidUsername, locale.anotherUserName);
+  //     return false;
+  //   }
+  //   return (username != null &&
+  //       username.isNotEmpty &&
+  //       isValid != null &&
+  //       isValid! &&
+  //       isUsernameLoading == false);
+  // }
 
   bool _checkForChanges() {
-    if (isNewUser) return true;
+    // if (isNewUser) return true;
     if (myname != nameController!.text.trim() ||
         myEmail != emailController!.text.trim() ||
         isDOBChanged() ||
-        isGenderChanged()) return true;
-    if (!isNewUser) inEditMode = false;
+        isGenderChanged()) {
+      return true;
+    }
+    inEditMode = false;
     // BaseUtil.showNegativeAlert("No changes", "please make some changes");
     return false;
   }
@@ -719,7 +723,6 @@ class UserProfileVM extends BaseViewModel {
         content: ConfirmationDialog(
           asset: NewProfileImage(
             showAction: false,
-            isNewUser: isNewUser,
             image: ClipOval(
               child: Image.file(
                 File(selectedProfilePicture!.path),
@@ -856,49 +859,50 @@ class UserProfileVM extends BaseViewModel {
   }
 
   Future updateUsername() async {
-    if (isUpdaingUserDetails) return;
-    if (!(await validateUsername() ?? false)) return;
+    if (isUpdaingUserDetails || isUsernameLoading) return;
+    if (usernameController!.text.isEmpty)
+      return BaseUtil.showNegativeAlert(
+          "No username entered", "Please add a good username to continue");
     AppState.blockNavigation();
     isUpdaingUserDetails = true;
     inEditMode = false;
     final res = await _userRepo
         .updateUser(dMap: {BaseUser.fldUsername: usernameController?.text});
+    isUpdaingUserDetails = false;
+    AppState.unblockNavigation();
     if (res.isSuccess()) {
       await _userService!.setBaseUser();
-      AppState.unblockNavigation();
+      isUsernameUpdated = true;
+      notifyListeners();
       AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showPositiveAlert(
           locale.userNameSuccess,
           locale.userNameSuccessSubtitle(
               _userService!.baseUser?.username.toString() ?? ''));
-
       return true;
     } else {
       inEditMode = true;
       BaseUtil.showNegativeAlert(res.errorMessage, "");
     }
-    isUpdaingUserDetails = false;
-    AppState.unblockNavigation();
   }
 
   Widget showResult() {
     print("Response " + response.toString());
-    if (isValid == null) {
+
+    if (isValid == null || isUsernameUpdated) {
       return SizedBox();
     }
     if (isUsernameLoading) {
-      return Container(
-        height: SizeConfig.padding16,
-        width: SizeConfig.padding16,
-        child: Row(
-          children: [
-            Expanded(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-              ),
+      return Row(
+        children: [
+          Container(
+            height: SizeConfig.padding16,
+            width: SizeConfig.padding16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
             ),
-          ],
-        ),
+          ),
+        ],
       );
     } else if (response == UsernameResponse.EMPTY)
       return Text(
@@ -956,6 +960,11 @@ class UserProfileVM extends BaseViewModel {
     );
   }
 
+  checkIfUsernameIsAvailable() {
+    log.debug("username check called");
+    _debouncer!.call(validateUsername);
+  }
+
   Future<bool?>? validateUsername() async {
     // if (isUsernameLoading) return false;
     isUsernameLoading = true;
@@ -977,9 +986,10 @@ class UserProfileVM extends BaseViewModel {
       errorPadding = SizeConfig.padding8;
 
       if (usernameRegex.hasMatch(username)) {
-        bool res = await dbProvider!
-            .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
-
+        bool res = false;
+        final apiResponse = await _userRepo.isUsernameAvailable(username);
+        if (apiResponse.isSuccess()) res = apiResponse.model ?? false;
+        // dbProvider!.checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
         isValid = res;
         if (res)
           response = UsernameResponse.AVAILABLE;
