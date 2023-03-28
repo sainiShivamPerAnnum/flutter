@@ -1,8 +1,7 @@
 package `in`.fello.felloapp
 
 import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.net.Uri
 import android.os.RemoteException
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
@@ -38,13 +37,18 @@ class MyPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
                 when (responseCode) {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         try {
-                            val referrerDetails: ReferrerDetails = referrerClient.installReferrer
-                            val referrerUrl: String = referrerDetails.installReferrer
                             val response: ReferrerDetails = referrerClient.installReferrer
+                            val referrerUrl: String = response.installReferrer
                             val referrerClickTime: Long = response.referrerClickTimestampSeconds
                             val appInstallTime: Long = response.installBeginTimestampSeconds
                             val instantExperienceLaunched: Boolean = response.googlePlayInstantParam
-                            result.success(referrerUrl+response.toString()+ referrerClickTime.toString()+appInstallTime.toString()+instantExperienceLaunched.toString())
+                            val referrerUri: Uri = Uri.parse(referrerUrl)
+                            val utmSource: String? = referrerUri.getQueryParameter("utm_source")
+                            val utmMedium: String? = referrerUri.getQueryParameter("utm_medium")
+                            val utmCampaign: String? = referrerUri.getQueryParameter("utm_campaign")
+                            val utmContent: String? = referrerUri.getQueryParameter("utm_content")
+
+                            result.success( referrerUrl + utmSource + utmMedium + utmCampaign + utmContent+ referrerClickTime.toString()+appInstallTime.toString()+instantExperienceLaunched.toString())
                         } catch (e: RemoteException) {
                             result.error("REMOTE_EXCEPTION", e.message, null)
                         }

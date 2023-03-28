@@ -1,4 +1,5 @@
 import 'dart:developer' as dev;
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -18,8 +19,8 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -201,29 +202,9 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
-                              SizeConfig.padding16, SizeConfig.padding10, 0),
-                          child: RichText(
-                            text: new TextSpan(
-                              children: [
-                                new TextSpan(
-                                  text: locale.obAgreeText,
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor2),
-                                ),
-                                new TextSpan(
-                                  text: locale.obTermsofService,
-                                  style: TextStyles.sourceSans.body3.underline
-                                      .colour(UiConstants.kTextColor),
-                                  recognizer: new TapGestureRecognizer()
-                                    ..onTap = () {
-                                      model.onTermsAndConditionsClicked();
-                                    },
-                                ),
-                              ],
-                            ),
-                          ),
+                        TnC(
+                          locale: locale,
+                          model: model,
                         ),
                         SizedBox(
                           height: SizeConfig.screenWidth! * 0.1 +
@@ -293,5 +274,63 @@ class _LoginControllerViewState extends State<LoginControllerView> {
         );
       },
     );
+  }
+}
+
+class TnC extends StatefulWidget {
+  const TnC({
+    super.key,
+    required this.locale,
+    required this.model,
+  });
+
+  final S? locale;
+  final LoginControllerViewModel model;
+
+  @override
+  State<TnC> createState() => _TnCState();
+}
+
+class _TnCState extends State<TnC> {
+  String _data = "Get Install Referrer";
+
+  get data => this._data;
+
+  set data(value) {
+    this._data = value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        getReferralData();
+      },
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(SizeConfig.padding10, SizeConfig.padding16,
+            SizeConfig.padding10, 0),
+        child: Text(
+          data,
+          style: TextStyles.sourceSans.body2,
+        ),
+      ),
+    );
+  }
+
+  Future<String> getReferralData() async {
+    String installReferrer = "";
+    HapticFeedback.vibrate();
+    try {
+      log("calling referrer data");
+      const _channel = MethodChannel('my_plugin');
+      installReferrer = await _channel.invokeMethod('getInstallReferrer');
+    } catch (e) {
+      BaseUtil.showNegativeAlert(e.toString(), "error!");
+    }
+
+    setState(() {
+      data = installReferrer;
+    });
+    return "";
   }
 }
