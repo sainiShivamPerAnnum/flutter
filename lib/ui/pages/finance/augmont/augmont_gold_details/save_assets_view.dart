@@ -10,7 +10,6 @@ import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_sectio
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
@@ -85,7 +84,7 @@ class SaveAssetView extends StatelessWidget {
                             ),
                             SizedBox(height: SizeConfig.padding24),
                             // -- Break --
-                            AutosaveCard(locationKey: ValueKey('augDetails')),
+
                             MiniTransactionCard(
                                 investmentType: InvestmentType.AUGGOLD99),
                           ],

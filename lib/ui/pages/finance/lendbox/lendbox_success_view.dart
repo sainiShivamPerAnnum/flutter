@@ -125,13 +125,13 @@ class LendboxSuccessView extends StatelessWidget {
                     _txnService?.transactionReponseModel?.data?.txnDisplayMsg ??
                         "",
                     textAlign: TextAlign.center,
-                    style: TextStyles.sourceSans.body2.setOpecity(0.7)),
+                    style: TextStyles.sourceSans.body2.setOpacity(0.7)),
               )
             else
               Text(
                 locale.txnInvestmentSuccess,
                 textAlign: TextAlign.center,
-                style: TextStyles.sourceSans.body2.setOpecity(0.7),
+                style: TextStyles.sourceSans.body2.setOpacity(0.7),
               ),
             SizedBox(
               height: SizeConfig.padding20,

@@ -73,8 +73,8 @@ android {
         //     storePassword keystoreProperties['debugstorePassword']
         // }
 
-         //Comment it before push to develop, to build using CICD 
-         //Uncomment for local build and release.
+        //Comment it before push to develop, to build using CICD
+        //Uncomment for local build and release.
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']

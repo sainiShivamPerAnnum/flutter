@@ -23,7 +23,7 @@ import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -78,7 +78,6 @@ class UserProfileVM extends BaseViewModel {
   final AppState _appstate = locator<AppState>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
   final S? _locale = locator<S>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
@@ -125,7 +124,7 @@ class UserProfileVM extends BaseViewModel {
 
   String? get myUserDpUrl => _userService!.myUserDpUrl;
   String get myname => _userService!.name ?? "";
-  String get myUsername => _userService!.baseUser!.username ?? "";
+  String get myUsername => _userService!.baseUser?.username ?? "";
   String get myDob => _userService!.dob ?? "";
   String get myEmail => _userService!.email ?? "";
   String get myGender => _userService!.gender ?? "";
@@ -545,13 +544,14 @@ class UserProfileVM extends BaseViewModel {
                 _txnHistoryService!.signOut();
                 _tambolaService!.signOut();
                 _analyticsService!.signOut();
-                _paytmService!.signout();
                 _bankAndKycService!.dump();
                 ScratchCardService.dump();
                 _tambolaRepo.dump();
                 locator<JourneyRepository>().dump();
                 _appstate.dump();
+                locator<SubService>().dump();
                 AppState.backButtonDispatcher!.didPopRoute();
+
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(
@@ -850,6 +850,7 @@ class UserProfileVM extends BaseViewModel {
     isSigningInWithGoogle = true;
     String? email = await _googleSignInService!.signInWithGoogle();
     if (email != null) {
+      AppState.backButtonDispatcher!.didPopRoute();
       isgmailFieldEnabled = false;
       emailController!.text = email;
       // isGoogleVerified = true;

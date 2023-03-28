@@ -1,7 +1,7 @@
 import 'package:felloapp/util/logger.dart';
 
 class DailyPick {
-  static Log log = new Log('DailyPick');
+  static Log log = const Log('DailyPick');
   List<int>? mon;
   List<int>? tue;
   List<int>? wed;
@@ -35,7 +35,7 @@ class DailyPick {
 
   factory DailyPick.fromMap(Map<String, dynamic> picksData) {
     final Map<String, dynamic> data  = Map.from(picksData);
-    if (data.isNotEmpty)
+    if (data.isNotEmpty) {
       return DailyPick(
         // weekCode: data[fldWeekCode],
         mon: (data[fldWeekDay[0]] != null)
@@ -60,7 +60,7 @@ class DailyPick {
             ? List.from(data[fldWeekDay[6]])
             : null,
       );
-    else
+    } else {
       return DailyPick(
         mon: [-1, -1, -1],
         thu: [-1, -1, -1],
@@ -70,8 +70,10 @@ class DailyPick {
         tue: [-1, -1, -1],
         wed: [-1, -1, -1],
       );
+    }
   }
 
+  ///todo : remove the value
   factory DailyPick.noPicks() {
     return DailyPick(
       mon: [-1, -1, -1],
@@ -120,20 +122,27 @@ class DailyPick {
   ///if dayCode = 4, return picks from thu,fri,sat,sun
   List<int> getPicksPostDate(int dayCode) {
     List<int> relevantDigits = [];
-    if (mon != null && mon!.isNotEmpty && dayCode == DateTime.monday)
+    if (mon != null && mon!.isNotEmpty && dayCode == DateTime.monday) {
       relevantDigits.addAll(mon!);
-    if (tue != null && tue!.isNotEmpty && dayCode <= DateTime.tuesday)
+    }
+    if (tue != null && tue!.isNotEmpty && dayCode <= DateTime.tuesday) {
       relevantDigits.addAll(tue!);
-    if (wed != null && wed!.isNotEmpty && dayCode <= DateTime.wednesday)
+    }
+    if (wed != null && wed!.isNotEmpty && dayCode <= DateTime.wednesday) {
       relevantDigits.addAll(wed!);
-    if (thu != null && thu!.isNotEmpty && dayCode <= DateTime.thursday)
+    }
+    if (thu != null && thu!.isNotEmpty && dayCode <= DateTime.thursday) {
       relevantDigits.addAll(thu!);
-    if (fri != null && fri!.isNotEmpty && dayCode <= DateTime.friday)
+    }
+    if (fri != null && fri!.isNotEmpty && dayCode <= DateTime.friday) {
       relevantDigits.addAll(fri!);
-    if (sat != null && sat!.isNotEmpty && dayCode <= DateTime.saturday)
+    }
+    if (sat != null && sat!.isNotEmpty && dayCode <= DateTime.saturday) {
       relevantDigits.addAll(sat!);
-    if (sun != null && sun!.isNotEmpty && dayCode <= DateTime.sunday)
+    }
+    if (sun != null && sun!.isNotEmpty && dayCode <= DateTime.sunday) {
       relevantDigits.addAll(sun!);
+    }
 
     return relevantDigits;
   }

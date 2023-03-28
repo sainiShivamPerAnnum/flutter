@@ -39,7 +39,7 @@ class LendboxTransactionService extends BaseTransactionService {
   final _gtService = ScratchCardService();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   S locale = locator<S>();
@@ -79,43 +79,44 @@ class LendboxTransactionService extends BaseTransactionService {
     return null;
   }
 
+  @override
   Future<void> processPaytmTransaction() async {
-    AppState.blockNavigation();
-    final createdPaytmTransactionData = await this.createPaytmTransaction();
+    // AppState.blockNavigation();
+    // final createdPaytmTransactionData = await this.createPaytmTransaction();
 
-    if (createdPaytmTransactionData != null) {
-      bool _status = await _paytmService!.initiatePaytmPGTransaction(
-        paytmSubscriptionModel: createdPaytmTransactionData,
-        restrictAppInvoke: FlavorConfig.isDevelopment(),
-        investmentType: InvestmentType.LENDBOXP2P,
-      );
+    // if (createdPaytmTransactionData != null) {
+    //   bool _status = await _paytmService!.initiatePaytmPGTransaction(
+    //     paytmSubscriptionModel: createdPaytmTransactionData,
+    //     restrictAppInvoke: FlavorConfig.isDevelopment(),
+    //     investmentType: InvestmentType.LENDBOXP2P,
+    //   );
 
-      currentTransactionState = TransactionState.ongoing;
+    //   currentTransactionState = TransactionState.ongoing;
 
-      if (_status) {
-        AppState.blockNavigation();
-        _logger!
-            .d("Txn Timer Function reinitialised and set with 30 secs delay");
-        initiatePolling();
-      } else {
-        if (currentTransactionState == TransactionState.ongoing) {
-          currentTransactionState = TransactionState.idle;
-        }
-        AppState.unblockNavigation();
-        BaseUtil.showNegativeAlert(
-          locale.txnFailed,
-          locale.txnFailedSubtitle,
-        );
-      }
-      AppState.unblockNavigation();
-      // resetBuyOptions();
-    } else {
-      return BaseUtil.showNegativeAlert(
-        locale.failedToCreateTxn,
-        locale.tryLater,
-      );
-    }
-    AppState.unblockNavigation();
+    //   if (_status) {
+    //     AppState.blockNavigation();
+    //     _logger!
+    //         .d("Txn Timer Function reinitialised and set with 30 secs delay");
+    //     initiatePolling();
+    //   } else {
+    //     if (currentTransactionState == TransactionState.ongoing) {
+    //       currentTransactionState = TransactionState.idle;
+    //     }
+    //     AppState.unblockNavigation();
+    //     BaseUtil.showNegativeAlert(
+    //       locale.txnFailed,
+    //       locale.txnFailedSubtitle,
+    //     );
+    //   }
+    //   AppState.unblockNavigation();
+    //   // resetBuyOptions();
+    // } else {
+    //   return BaseUtil.showNegativeAlert(
+    //     locale.failedToCreateTxn,
+    //     locale.tryLater,
+    //   );
+    // }
+    // AppState.unblockNavigation();
   }
 
   Future<CreatePaytmTransactionModel?> createPaytmTransaction() async {
@@ -239,36 +240,36 @@ class LendboxTransactionService extends BaseTransactionService {
 
   @override
   Future<void> processUpiTransaction() async {
-    AppState.blockNavigation();
-    CreatePaytmTransactionModel? createdPaytmTransactionData =
-        await this.createPaytmTransaction();
+    // AppState.blockNavigation();
+    // CreatePaytmTransactionModel? createdPaytmTransactionData =
+    //     await this.createPaytmTransaction();
 
-    if (createdPaytmTransactionData != null) {
-      final deepUri = await _paytmService!.generateUpiTransactionDeepUri(
-          selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
+    // if (createdPaytmTransactionData != null) {
+    //   final deepUri = await _paytmService!.generateUpiTransactionDeepUri(
+    //       selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
 
-      if (deepUri != null && deepUri.isNotEmpty) {
-        final res = await _paytmService!.initiateUpiTransaction(
-          amount: this.currentTxnAmount,
-          orderId: createdPaytmTransactionData.data!.orderId,
-          upiApplication: upiApplication,
-          url: deepUri,
-          investmentType: InvestmentType.AUGGOLD99,
-        );
+    //   if (deepUri != null && deepUri.isNotEmpty) {
+    //     final res = await _paytmService!.initiateUpiTransaction(
+    //       amount: this.currentTxnAmount,
+    //       orderId: createdPaytmTransactionData.data!.orderId,
+    //       upiApplication: upiApplication,
+    //       url: deepUri,
+    //       investmentType: InvestmentType.AUGGOLD99,
+    //     );
 
-        if (res && Platform.isAndroid) initiatePolling();
-        AppState.unblockNavigation();
-      } else {
-        AppState.unblockNavigation();
+    //     if (res && Platform.isAndroid) initiatePolling();
+    //     AppState.unblockNavigation();
+    //   } else {
+    //     AppState.unblockNavigation();
 
-        BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
-      }
-    } else {
-      AppState.unblockNavigation();
-      return BaseUtil.showNegativeAlert(
-        locale.failedToCreateTxn,
-        locale.tryLater,
-      );
-    }
+    //     BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
+    //   }
+    // } else {
+    //   AppState.unblockNavigation();
+    //   return BaseUtil.showNegativeAlert(
+    //     locale.failedToCreateTxn,
+    //     locale.tryLater,
+    //   );
+    // }
   }
 }

@@ -26,6 +26,7 @@ class KycUnVerifiedView extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         model.capturedImage != null

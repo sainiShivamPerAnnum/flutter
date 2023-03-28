@@ -34,7 +34,7 @@ void main() async {
         // DevicePreview(
         //   enabled: !kReleaseMode,
         // builder: (context) =>
-        MyApp(), // Wrap your app
+        const MyApp(), // Wrap your app
         // ),
       );
     },

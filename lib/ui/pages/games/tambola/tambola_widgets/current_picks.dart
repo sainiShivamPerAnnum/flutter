@@ -10,38 +10,52 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CurrentPicks extends StatelessWidget {
-  CurrentPicks(
-      {this.todaysPicks, this.dailyPicksCount, this.isTambolaCard = true});
+  const CurrentPicks(
+      {super.key,
+      this.todaysPicks,
+      this.dailyPicksCount,
+      this.isTambolaCard = true,
+      this.totalTicketMatched = 0});
+
   final List<int>? todaysPicks;
   final int? dailyPicksCount;
-  bool isTambolaCard;
+  final bool isTambolaCard;
+  final int? totalTicketMatched;
 
-  int renderedTimes = 0;
+  // int renderedTimes = 0;
+
+  String getText(S locale) {
+    if ((totalTicketMatched ?? 0) > 0) {
+      /// Todo: logic incorrect
+      return "Today’s draw matches your $totalTicketMatched tickets!";
+    }
+
+    return todaysPicks == [-1, -1, -1]
+        ? locale.tDrawnAtText1
+        : locale.tDrawnAtText2;
+  }
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          DailyPicksTimer(
-            replacementWidget: TodayPicksBallsAnimation(
-              picksList: todaysPicks!,
-            ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        DailyPicksTimer(
+          replacementWidget: TodayPicksBallsAnimation(
+            picksList: todaysPicks!,
           ),
-          if (!isTambolaCard)
-            Container(
-              padding: EdgeInsets.only(
-                  top: SizeConfig.padding24, bottom: SizeConfig.padding16),
-              child: Text(
-                todaysPicks == [-1, -1, -1]
-                    ? locale.tDrawnAtText1
-                    : locale.tDrawnAtText2,
-                style: TextStyles.sourceSansSB.body4,
-              ),
-            )
-        ],
-      ),
+        ),
+        if (!isTambolaCard)
+          Container(
+            padding: EdgeInsets.only(
+                top: SizeConfig.padding24, bottom: SizeConfig.padding16),
+            child: Text(
+              getText(locale),
+              style: TextStyles.sourceSansSB.body4,
+            ),
+          )
+      ],
     );
   }
 }
@@ -58,18 +72,19 @@ class TodayPicksBallsAnimation extends StatelessWidget {
   final double? ballHeight;
   final double? ballWidth;
   final EdgeInsets? margin;
+
   @override
   Widget build(BuildContext context) {
     List<int> animationDurations = [2500, 4000, 5000, 3500, 4500];
     List<Color> ballColorCodes = [
-      Color(0xffC34B29),
-      Color(0xffFFD979),
-      Color(0xffAECCFF),
+      const Color(0xffC34B29),
+      const Color(0xffFFD979),
+      const Color(0xffAECCFF),
     ];
 
     return Consumer<AppState>(
       builder: (context, m, child) {
-        print("I am generated 2 ${picksList!.length}");
+        debugPrint("I am generated 2 ${picksList!.length}");
 
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -95,7 +110,7 @@ class TodayPicksBallsAnimation extends StatelessWidget {
 }
 
 class AnimatedPicksDisplay extends StatefulWidget {
-  AnimatedPicksDisplay({
+  const AnimatedPicksDisplay({
     Key? key,
     required this.number,
     required this.animationDurationMilliseconds,
@@ -116,16 +131,16 @@ class AnimatedPicksDisplay extends StatefulWidget {
 }
 
 class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
-  Random random = new Random();
+  Random random = Random();
 
   List<int> randomList = [];
 
   bool isAnimationDone = false;
 
   List<Color> ballColorCodes = [
-    Color(0xffC34B29),
-    Color(0xffFFD979),
-    Color(0xffAECCFF),
+    const Color(0xffC34B29),
+    const Color(0xffFFD979),
+    const Color(0xffAECCFF),
   ];
 
   ScrollController? _controller;
@@ -135,9 +150,7 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
     _controller = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (isAnimationDone == false) {
-        Future.delayed(const Duration(milliseconds: 500), () {
-          _scrollDown();
-        });
+        Future.delayed(const Duration(milliseconds: 500), _scrollDown);
       }
     });
     super.initState();
@@ -163,7 +176,7 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
       width: widget.ballWidth,
       height: widget.ballHeight,
       padding: EdgeInsets.all(SizeConfig.padding4),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.circle,
       ),
       child: Container(
@@ -181,7 +194,7 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 0.7)),
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
             ),
@@ -203,13 +216,13 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
     return Container(
       width: SizeConfig.screenWidth! * 0.14,
       height: SizeConfig.screenWidth! * 0.14,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: UiConstants.kArrowButtonBackgroundColor,
         shape: BoxShape.circle,
       ),
       child: ClipOval(
         child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           controller: _controller,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -219,12 +232,12 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
                   : ListView.builder(
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: randomList.length,
                       itemBuilder: (context, index) {
                         return _buildBalls(
                             randomList[index],
-                            index == 0 ? true : false,
+                            index == 0,
                             Colors.primaries[
                                 Random().nextInt(Colors.primaries.length)]);
                       },
@@ -236,5 +249,14 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
       ),
     );
     ;
+  }
+}
+
+class TicketNumber extends StatelessWidget {
+  const TicketNumber({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

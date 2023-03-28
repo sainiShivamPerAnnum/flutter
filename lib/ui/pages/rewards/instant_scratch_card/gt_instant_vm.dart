@@ -7,11 +7,9 @@ import 'package:felloapp/core/service/notifier_services/marketing_event_handler_
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_view.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -25,7 +23,7 @@ class GTInstantViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final ApiPath? _apiPaths = locator<ApiPath>();
   final ScratchCardService? _gtService = locator<ScratchCardService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
   final JourneyService _journeyService = locator<JourneyService>();
   final MarketingEventHandlerService _marketingEventHandlerService =
       locator<MarketingEventHandlerService>();
@@ -102,13 +100,13 @@ class GTInstantViewModel extends BaseViewModel {
 
   init() async {
     Haptic.vibrate();
-    isAutosaveAlreadySetup = _paytmService!.activeSubscription != null &&
-        (_paytmService!.activeSubscription!.status ==
-                Constants.SUBSCRIPTION_ACTIVE ||
-            (_paytmService!.activeSubscription!.status ==
-                    Constants.SUBSCRIPTION_INACTIVE &&
-                _paytmService!.activeSubscription!.resumeDate != null &&
-                _paytmService!.activeSubscription!.resumeDate!.isNotEmpty));
+    // isAutosaveAlreadySetup = _paytmService!.activeSubscription != null &&
+    //     (_paytmService!.activeSubscription!.status ==
+    //             Constants.SUBSCRIPTION_ACTIVE ||
+    //         (_paytmService!.activeSubscription!.status ==
+    //                 Constants.SUBSCRIPTION_INACTIVE &&
+    //             _paytmService!.activeSubscription!.resumeDate != null &&
+    //             _paytmService!.activeSubscription!.resumeDate!.isNotEmpty));
     scratchCard = ScratchCardService.currentGT;
     ScratchCardService.currentGT = null;
 

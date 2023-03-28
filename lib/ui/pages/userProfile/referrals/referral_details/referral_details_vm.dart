@@ -50,7 +50,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   int get tabNo => _tabNo;
   set tabNo(value) {
-    this._tabNo = value;
+    _tabNo = value;
     notifyListeners();
   }
 
@@ -58,7 +58,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   double get tabPosWidthFactor => _tabPosWidthFactor;
   set tabPosWidthFactor(value) {
-    this._tabPosWidthFactor = value;
+    _tabPosWidthFactor = value;
     notifyListeners();
   }
 
@@ -91,13 +91,13 @@ class ReferralDetailsViewModel extends BaseViewModel {
   get isReferalsFetched => _isReferalsFetched;
 
   init(BuildContext context) {
-    this.generateLink().then((value) {
+    generateLink().then((value) {
       _refUrl = value;
     });
     _pageController = PageController(initialPage: 0);
 
-    this.fetchReferralCode();
-    this.fetchReferalsList(context);
+    fetchReferralCode();
+    fetchReferalsList(context);
   }
 
   void copyReferCode() {
@@ -222,7 +222,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
     shareLinkInProgress = true;
     refresh();
 
-    String? url = await this.generateLink();
+    String? url = await generateLink();
 
     shareLinkInProgress = false;
     refresh();

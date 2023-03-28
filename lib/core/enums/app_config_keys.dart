@@ -1,6 +1,7 @@
 enum AppConfigKey {
   loginAssetUrl,
   invalidateBefore,
+  showNewAutosave,
   autosaveActive,
   referralBonus,
   referralFlcBonus,
@@ -30,6 +31,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.loginAssetUrl;
       case 'invalidateBefore':
         return AppConfigKey.invalidateBefore;
+      case 'showNewAutosave':
+        return AppConfigKey.showNewAutosave;
       case 'autosaveActive':
         return AppConfigKey.autosaveActive;
       case 'referralBonus':

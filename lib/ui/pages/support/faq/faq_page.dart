@@ -21,13 +21,14 @@ class FAQPage extends StatelessWidget {
   final FaqsType? type;
 
   const FAQPage({
+    super.key,
     required this.type,
   });
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return new Scaffold(
+    return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       appBar: FAppBar(
           title: locale.faqs,
@@ -61,7 +62,7 @@ class FAQPage extends StatelessWidget {
         onModelReady: (model) => model.init(type!),
         builder: (ctx, model, child) {
           return model.state == ViewState.Busy
-              ? Center(
+              ? const Center(
                   child: FullScreenLoader(bottomPadding: true),
                 )
               : Padding(
@@ -80,7 +81,7 @@ class FAQPage extends StatelessWidget {
                       ),
                       trailing: Container(
                         margin: EdgeInsets.only(left: SizeConfig.padding44),
-                        child: Icon(
+                        child: const Icon(
                           Icons.keyboard_arrow_right,
                           color: UiConstants.kFAQArrowColor,
                         ),

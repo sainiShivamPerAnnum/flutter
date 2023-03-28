@@ -130,7 +130,7 @@ extension TextStyleHelpers on TextStyle {
   TextStyle colour(Color? color) => copyWith(color: color);
   TextStyle size(double size) => copyWith(fontSize: size);
   TextStyle setHeight(double height) => copyWith(height: height);
-  TextStyle setOpecity(double opacity) =>
+  TextStyle setOpacity(double opacity) =>
       copyWith(color: color!.withOpacity(opacity));
 }
 

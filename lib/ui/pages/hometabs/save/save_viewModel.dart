@@ -180,8 +180,8 @@ class SaveViewModel extends BaseViewModel {
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
-        case 'AS':
-          saveViewItems.add(AutosaveCard(locationKey: ValueKey('save')));
+        case 'NAS':
+          saveViewItems.add(AutosaveCard());
           break;
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));
@@ -195,7 +195,8 @@ class SaveViewModel extends BaseViewModel {
     saveViewItems.add(
       Container(
         margin: EdgeInsets.only(top: SizeConfig.padding40),
-        child: LottieBuilder.network("https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+        child: LottieBuilder.network(
+            "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
       ),
     );
 

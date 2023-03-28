@@ -34,7 +34,7 @@ class Play extends StatelessWidget {
                       child: ListView(
                         cacheExtent: 500,
                         padding: EdgeInsets.zero,
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         children: model.getOrderedPlayViewItems(model),
                       ),
                     ),

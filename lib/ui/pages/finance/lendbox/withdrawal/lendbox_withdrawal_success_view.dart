@@ -23,14 +23,15 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
             ),
           ),
           Text(
-           locale.btnCongratulations,
+            locale.btnCongratulations,
             style: TextStyles.rajdhaniB.title2,
           ),
           SizedBox(height: SizeConfig.padding12),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
-            child: Text( locale.txnWithDrawReq,
-              style: TextStyles.sourceSans.body2.setOpecity(0.7),
+            child: Text(
+              locale.txnWithDrawReq,
+              style: TextStyles.sourceSans.body2.setOpacity(0.7),
               textAlign: TextAlign.center,
             ),
           ),
@@ -43,7 +44,7 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
               AppState.backButtonDispatcher!.didPopRoute();
             },
             child: Text(
-             locale.obDone,
+              locale.obDone,
               style:
                   TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),

@@ -13,12 +13,14 @@ import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
+import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
 //[TODO]:Added Prod CDN url;
@@ -133,10 +135,13 @@ class GetterRepository extends BaseRepo {
                 '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
           },
         ),
-        (p0) => ApiResponse(
-          code: 200,
-          model: AppConfig.instance(p0),
-        ),
+        (p0) {
+          print(p0);
+          return ApiResponse(
+            code: 200,
+            model: AppConfig.instance(p0),
+          );
+        },
       );
     } catch (e) {
       log(e.toString());
@@ -166,24 +171,56 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<AmountChipsModel>>> getAmountChips({
+  // Future<ApiResponse<List<AmountChipsModel>>> getAmountChips({
+  //   required String freq,
+  // }) async {
+  //   try {
+  //     final token = await getBearerToken();
+  //     final amountChipsResponse = await APIService.instance.getData(
+  //       ApiPath.amountChips,
+  //       cBaseUrl: _baseUrl,
+  //       queryParams: {
+  //         "freq": freq,
+  //       },
+  //       token: token,
+  //     );
+
+  //     final amountChipsModel =
+  //         AmountChipsModel.helper.fromMapArray(amountChipsResponse["data"]);
+
+  //     return ApiResponse(model: amountChipsModel, code: 200);
+  //   } catch (e) {
+  //     logger!.e(e.toString());
+  //     return ApiResponse.withError("Unable to fetch statistics", 400);
+  //   }
+  // }
+
+  Future<ApiResponse<List>> getSubCombosAndChips({
     required String freq,
   }) async {
     try {
       final token = await getBearerToken();
-      final amountChipsResponse = await APIService.instance.getData(
-        ApiPath.amountChips,
+      final subComboResponse = await APIService.instance.getData(
+        ApiPath.getSubCombosChips(freq.toUpperCase()),
         cBaseUrl: _baseUrl,
-        queryParams: {
-          "freq": freq,
-        },
         token: token,
       );
 
-      final amountChipsModel =
-          AmountChipsModel.helper.fromMapArray(amountChipsResponse["data"]);
+      final subComboModelData =
+          SubComboModel.helper.fromMapArray(subComboResponse["data"]["combos"]);
+      final augChips = AmountChipsModel.helper.fromMapArray(
+          subComboResponse["data"][Constants.ASSET_TYPE_LENDBOX]["chips"]);
 
-      return ApiResponse(model: amountChipsModel, code: 200);
+      final lbChips = AmountChipsModel.helper.fromMapArray(
+          subComboResponse["data"][Constants.ASSET_TYPE_LENDBOX]["chips"]);
+
+      final minMaxInfo = MaxMin.fromMap({
+        "min": subComboResponse["data"]["min"],
+        "max": subComboResponse["data"]["max"]
+      });
+
+      return ApiResponse(
+          model: [augChips, lbChips, subComboModelData, minMaxInfo], code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch statistics", 400);

@@ -1,7 +1,6 @@
 //Project Imports
 import 'dart:async';
 
-import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -12,6 +11,7 @@ import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
@@ -63,11 +63,23 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   @override
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
-    // _journeyService!.checkForMilestoneLevelChange();
-    // if (_journeyService!.isJourneyOnboardingInView) {
-    //   _journeyService!.isJourneyOnboardingInView = false;
-    //   _journeyService!.isUserJourneyOnboarded = true;
-    // }
+
+    if (AppState.showAutosaveBt &&
+        AppState.screenStack.last != ScreenItem.dialog) {
+      AppState.showAutosaveBt = false;
+      BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          backgroundColor: UiConstants.kBackgroundColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness32),
+            topRight: Radius.circular(SizeConfig.roundness32),
+          ),
+          isScrollControlled: true,
+          hapticVibrate: true,
+          content: AutosaveConfirmExitModalSheet());
+      return Future.value(true);
+    }
 
     if (SpotLightController.instance.startShowCase) {
       SpotLightController.instance.startShowCase = false;
@@ -169,30 +181,5 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
 
     return _routerDelegate!.popRoute();
-  }
-
-  showNegativeAlert(String title, String message, {int? seconds}) {
-    Flushbar(
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      icon: Icon(
-        Icons.assignment_late,
-        size: 28.0,
-        color: UiConstants.tertiarySolid,
-      ),
-      margin: EdgeInsets.all(10),
-      borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-      title: title,
-      message: message,
-      duration: Duration(seconds: seconds ?? 3),
-      backgroundColor: Colors.black,
-      boxShadows: [
-        BoxShadow(
-          color: UiConstants.negativeAlertColor,
-          offset: Offset(0.0, 2.0),
-          blurRadius: 3.0,
-        )
-      ],
-    )..show(AppState.delegate!.navigatorKey.currentContext!);
   }
 }

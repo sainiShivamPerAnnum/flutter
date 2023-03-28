@@ -53,6 +53,14 @@ class UpiApplication {
     discoveryCustomScheme: 'phonepe',
   );
 
+  /// PhonePe
+  static final phonePePreprod = UpiApplication(
+    androidPackageName: 'com.phonepe.app.preprod',
+    iosBundleId: 'com.phonepe.PhonePeApp.preprod',
+    appName: 'PhonePe Preprod',
+    discoveryCustomScheme: 'phonepe preprod',
+  );
+
   /// Paytm
   static final paytm = UpiApplication(
     androidPackageName: 'net.one97.paytm',
