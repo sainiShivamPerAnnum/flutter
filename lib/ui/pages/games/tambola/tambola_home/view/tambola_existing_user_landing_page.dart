@@ -5,6 +5,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/all_tambola_tickets.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_new_user_page.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/ticket_widget.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
@@ -73,8 +74,8 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                 SizedBox(
                   height: SizeConfig.padding6,
                 ),
-                // if (widget.model.showWinCard)
-                //   TambolaResultCard(model: widget.model),
+                if (widget.model.showWinCard)
+                  TambolaResultCard(model: widget.model),
                 SizedBox(
                   height: SizeConfig.padding10,
                 ),
