@@ -131,7 +131,6 @@ class PicksCardViewModel extends BaseViewModel {
     var data = _tambolaService.ticketsNumbers;
     bool exist = false;
     for (final element in data) {
-      // log('totalTicketMatched $totalTicketMatched');
       exist = element.contains(int.tryParse(dailyNumber));
 
       if (exist) break;
