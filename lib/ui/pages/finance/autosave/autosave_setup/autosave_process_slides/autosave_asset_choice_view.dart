@@ -108,12 +108,12 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                           style: TextStyles.sourceSansB.body1,
                                         ),
                                         subtitle: Text(
-                                            isSimpleKycVerified
-                                                ? model
+                                            index != 2 && !isSimpleKycVerified
+                                                ? "Complete KYC to unlock"
+                                                : model
                                                     .autosaveAssetOptionList[
                                                         index]
-                                                    .subtitle
-                                                : "Complete KYC to unlock",
+                                                    .subtitle,
                                             style: TextStyles.sourceSans.body3),
                                         trailing: Radio(
                                           value: index,

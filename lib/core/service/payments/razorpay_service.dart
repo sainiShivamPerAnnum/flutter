@@ -149,7 +149,7 @@ class RazorpayService extends ChangeNotifier {
         'name': investmentType == InvestmentType.AUGGOLD99
             ? 'Digital Gold Purchase'
             : 'Fello Flo Saving',
-        'order': txnModel.data!.orderId,
+        'order_id': txnModel.data!.orderId,
         'description':
             investmentType == InvestmentType.AUGGOLD99 ? 'GOLD' : 'FLO',
         'timeout': 120, // in seconds
@@ -178,7 +178,7 @@ class RazorpayService extends ChangeNotifier {
           'name': investmentType == InvestmentType.AUGGOLD99
               ? 'Digital Gold Purchase'
               : 'Fello Flo Saving',
-          'order': txnModel.data!.orderId,
+          'order_id': txnModel.data!.orderId,
           'description':
               investmentType == InvestmentType.AUGGOLD99 ? 'GOLD' : 'FLO',
           'timeout': 120, // in seconds
