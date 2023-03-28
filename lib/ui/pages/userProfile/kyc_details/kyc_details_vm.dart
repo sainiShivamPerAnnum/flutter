@@ -6,12 +6,14 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_kyc_data_model.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -21,12 +23,41 @@ enum KycVerificationStatus { UNVERIFIED, FAILED, VERIFIED, NONE }
 
 class KYCDetailsViewModel extends BaseViewModel {
   final _bankAndPanService = locator<BankAndPanService>();
+  final GoogleSignInService _googleService = locator<GoogleSignInService>();
   S locale = locator<S>();
   TextEditingController? nameController, panController;
   bool inEditMode = true;
+  String? get email => _userService.email;
   bool _isUpdatingKycDetails = false;
+  bool _isEmailUpdating = false;
+  get isEmailUpdating => this._isEmailUpdating;
+
+  bool isPanTileOpen = false;
+  bool isEmailTileOpen = false;
+
+  set isEmailUpdating(value) {
+    this._isEmailUpdating = value;
+    notifyListeners();
+  }
+
   int permissionFailureCount = 0;
   get isUpdatingKycDetails => this._isUpdatingKycDetails;
+
+  bool _isPanVerified = false;
+  // bool _isEmailVerified = false;
+  bool get isPanVerified => this._isPanVerified;
+
+  set isPanVerified(bool value) {
+    this._isPanVerified = value;
+    notifyListeners();
+  }
+
+  get isEmailVerified => _userService.isEmailVerified;
+
+  // set isEmailVerified(value) {
+  //   this._isEmailVerified = value;
+  //   notifyListeners();
+  // }
 
   set isUpdatingKycDetails(value) {
     this._isUpdatingKycDetails = value;
@@ -83,7 +114,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
   final BankingRepository _bankingRepo = locator<BankingRepository>();
 
@@ -107,7 +138,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   init() {
     nameController = new TextEditingController();
     panController = new TextEditingController();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       checkForKycExistence();
     });
   }
@@ -143,7 +174,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   }
 
   Future checkForKycExistence() async {
-    _logger!.d("${_bankAndPanService.userKycData?.toString()}");
+    _logger.d("${_bankAndPanService.userKycData?.toString()}");
     setState(ViewState.Busy);
     if (_bankAndPanService.isKYCVerified &&
         _bankAndPanService.userKycData != null)
@@ -160,14 +191,38 @@ class KYCDetailsViewModel extends BaseViewModel {
         nameController!.text = userKycData!.name;
         inEditMode = false;
         hasDetails = true;
-      } else
+        isPanTileOpen = false;
+        if (!isEmailVerified) isEmailTileOpen = true;
+      } else {
+        isPanTileOpen = true;
         kycVerificationStatus = KycVerificationStatus.UNVERIFIED;
+      }
     } else {
+      isPanTileOpen = true;
       kycVerificationStatus = KycVerificationStatus.UNVERIFIED;
     }
     if (kycVerificationStatus == KycVerificationStatus.UNVERIFIED)
       showKycHelpView = true;
     setState(ViewState.Idle);
+  }
+
+  Future<bool> veryGmail() async {
+    if (isEmailVerified) return false;
+    if (isEmailUpdating) return false;
+    Haptic.vibrate();
+    isEmailUpdating = true;
+    final String? response = await _googleService.signInWithGoogle();
+    isEmailUpdating = false;
+    if (response != null) {
+      // email = response;
+      BaseUtil.showPositiveAlert(
+          "Email verified successfully", "Your email was successfully added");
+      _logger.d("Email $email verified successfully");
+      return true;
+    } else {
+      _logger.d("failed to verify email, try again");
+      return false;
+    }
   }
 
   Future<void> onSubmit(context) async {

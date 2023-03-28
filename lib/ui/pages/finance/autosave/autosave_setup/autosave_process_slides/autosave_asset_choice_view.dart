@@ -48,12 +48,12 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                 BorderRadius.circular(SizeConfig.roundness5),
                             child: ColorFiltered(
                               colorFilter: index == 2
-                                  ? ColorFilter.mode(
+                                  ? const ColorFilter.mode(
                                       Colors.transparent, BlendMode.color)
                                   : isSimpleKycVerified
-                                      ? ColorFilter.mode(
+                                      ? const ColorFilter.mode(
                                           Colors.transparent, BlendMode.color)
-                                      : ColorFilter.mode(
+                                      : const ColorFilter.mode(
                                           Colors.grey,
                                           BlendMode.saturation,
                                         ),

@@ -174,7 +174,7 @@ class UpiAppSelectView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ReactivePositiveAppButton(
-                          btnText: locale.btnSumbit,
+                          btnText: locale.btnSubmit,
                           onPressed: () async {
                             Haptic.vibrate();
                             if (model.selectedUpiApp == null)

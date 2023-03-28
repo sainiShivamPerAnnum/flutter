@@ -847,6 +847,7 @@ class UserProfileVM extends BaseViewModel {
     isSigningInWithGoogle = true;
     String? email = await _googleSignInService!.signInWithGoogle();
     if (email != null) {
+      AppState.backButtonDispatcher!.didPopRoute();
       isgmailFieldEnabled = false;
       emailController!.text = email;
       // isGoogleVerified = true;

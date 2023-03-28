@@ -106,7 +106,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
   bool get hasNewNotifications => _hasNewNotifications;
-  // UserAugmontDetail get userAugmontDetails => this._userAugmontDetails;
+  bool get isCompleteKycCompleted => isSimpleKycVerified && isEmailVerified;
+
   List _userSegments = [];
   set baseUser(baseUser) {
     _baseUser = baseUser;
