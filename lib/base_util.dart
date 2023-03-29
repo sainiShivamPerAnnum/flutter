@@ -424,7 +424,7 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  static openDepositOptionsModalSheet(
+  static void openDepositOptionsModalSheet(
       {int? amount, bool isSkipMl = false, String? title, String? subtitle}) {
     // if (_userService!.userJourneyStats!.mlIndex == 1)
     //   return BaseUtil.openDialog(

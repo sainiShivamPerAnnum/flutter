@@ -208,24 +208,23 @@ class LoginControllerViewModel extends BaseViewModel {
 
       case LoginNameInputView.index:
         {
-          if (_nameKey.currentState!.model.formKey.currentState.validate()) {
+          if (_nameKey.currentState!.model.formKey.currentState!.validate()) {
             String refCode = _nameKey.currentState!.model.getReferralCode();
-            if (refCode != null && refCode.isNotEmpty)
+            if (refCode.isNotEmpty) {
               BaseUtil.manualReferralCode = refCode;
+            }
 
             setState(ViewState.Busy);
 
             String name = _nameKey.currentState!.model.nameController.text
                 .trim()
-                .replaceAll(new RegExp(r"\s+\b|\b\s"), " ");
+                .replaceAll(RegExp(r"\s+\b|\b\s"), " ");
             String gender =
                 _formatGender(_nameKey.currentState!.model.genderValue);
-            if (userService.baseUser == null) {
-              //firebase user should never be null at this point
-              userService.baseUser = BaseUser.newUser(
-                  userService.firebaseUser!.uid,
-                  _formatMobileNumber(LoginControllerView.mobileno)!);
-            }
+
+            userService.baseUser ??= BaseUser.newUser(
+                userService.firebaseUser!.uid,
+                _formatMobileNumber(LoginControllerView.mobileno)!);
 
             _nameKey.currentState?.model.enabled = false;
             notifyListeners();
@@ -549,7 +548,7 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   _onOtpFilled() {
-    if (this.state == ViewState.Idle) processScreenInput(_currentPage);
+    processScreenInput(_currentPage);
   }
 
   _onOtpResendRequested() {

@@ -56,13 +56,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   : Container(),
               centerTitle: true,
               leading: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back_ios,
                   color: UiConstants.kTextColor,
                 ),
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  model.pageController.page == 0
+                  (model.pageController.page == 0 ||
+                          autosaveState == AutosaveState.INIT)
                       ? AppState.backButtonDispatcher!.didPopRoute()
                       : model.pageController.animateToPage(
                           model.pageController.page!.toInt() - 1,

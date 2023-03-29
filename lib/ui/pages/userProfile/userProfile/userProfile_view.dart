@@ -20,6 +20,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UserProfileDetails extends StatelessWidget {
+  const UserProfileDetails({super.key});
+
   @override
   Widget build(BuildContext context) {
     S? locale = S.of(context);

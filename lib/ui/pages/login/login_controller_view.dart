@@ -1,7 +1,6 @@
 import 'dart:developer' as dev;
 import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
@@ -113,13 +112,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                 Positioned(
                   bottom: MediaQuery.of(context).viewInsets.bottom,
                   child: GestureDetector(
-                    onTap: () {
-                      if (BaseUtil.showNoInternetAlert()) return;
-                      if (model.state == ViewState.Idle)
-                        model.processScreenInput(
-                          model.currentPage,
-                        );
-                    },
+                    onTap: () => model.processScreenInput(model.currentPage),
                     child: Container(
                       width: SizeConfig.screenWidth,
                       height: SizeConfig.padding54,
