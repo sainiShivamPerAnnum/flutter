@@ -29,7 +29,7 @@ class NewUserSaveView extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                        color: Color(0xff232326),
+                        color: const Color(0xff232326),
                         borderRadius: BorderRadius.vertical(
                             bottom: Radius.circular(SizeConfig.padding24))),
                     child: Column(
@@ -66,7 +66,7 @@ class NewUserSaveView extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.padding10,
                         ),
-                        SaveAssetsFooter(),
+                        const SaveAssetsFooter(),
                         SizedBox(
                           height: SizeConfig.padding10,
                         ),

@@ -79,6 +79,7 @@ const String TExistingUserViewPath = '/texistingUserPath';
 const String TNewUserViewPath = '/tnewUserViewPath';
 const String TransactionDetailsPath = '/transactionDetailsPage';
 const String AssetViewPath = '/assetViewSection';
+const String PowerPlayPath = '/powerPlayPath';
 
 enum Pages {
   Splash,
@@ -155,7 +156,8 @@ enum Pages {
   InfoStoriesView,
   WebView,
   SettingsView,
-  TransactionDetailsPage
+  TransactionDetailsPage,
+  PowerPlayHome
 }
 
 class PageConfiguration {
@@ -677,3 +679,9 @@ PageConfiguration SettingsViewPageConfig = PageConfiguration(
     path: SettingsScreenPath,
     uiPage: Pages.SettingsView,
     name: "Settings Screen");
+
+PageConfiguration PowerPlayHomeConfig = PageConfiguration(
+    key: 'PowerPlayPath',
+    path: PowerPlayPath,
+    uiPage: Pages.PowerPlayHome,
+    name: "PowerPlay Home Screen");
