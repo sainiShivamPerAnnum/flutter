@@ -103,12 +103,15 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                       ],
                     ),
                   ),
-                if (DateTime.now().day == DateTime.sunday) ...[
+                if (DateTime.now().weekday == DateTime.sunday) ...[
                   const NextWeekTicketInfo(),
                   SizedBox(
                     height: SizeConfig.padding28,
                   ),
                 ],
+                SizedBox(
+                  height: SizeConfig.padding10,
+                ),
                 _buildGestureDetector(locale),
                 SizedBox(
                   height: SizeConfig.padding28,

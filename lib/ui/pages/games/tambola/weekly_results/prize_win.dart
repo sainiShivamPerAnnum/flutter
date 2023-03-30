@@ -1,7 +1,7 @@
 // import 'package:confetti/confetti.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/ui/pages/games/tambola/weekly_results/winnerbox.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -13,6 +13,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class PrizeWin extends StatefulWidget {
   final Map<String, int>? winningsMap;
@@ -139,17 +140,21 @@ class _PrizeWinState extends State<PrizeWin> {
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kFAQsAnswerColor)),
                 ),
-                Container(
-                  margin:
-                      EdgeInsets.only(bottom: SizeConfig.pageHorizontalMargins),
-                  child: AppPositiveBtn(
-                    width: SizeConfig.screenWidth! * 0.9,
-                    onPressed: () {
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                    btnText: "SAVE MORE",
-                  ),
-                ),
+                Consumer<ReferralService>(builder: (context, model, child) {
+                  return Container(
+                    margin: EdgeInsets.only(
+                        bottom: SizeConfig.pageHorizontalMargins),
+                    child: AppPositiveBtn(
+                      width: SizeConfig.screenWidth! * 0.9,
+                      onPressed: () {
+                        if (model.isShareAlreadyClicked == false) {
+                          model.shareLink();
+                        }
+                      },
+                      btnText: "Share with Friends",
+                    ),
+                  );
+                }),
               ],
             ),
           ),

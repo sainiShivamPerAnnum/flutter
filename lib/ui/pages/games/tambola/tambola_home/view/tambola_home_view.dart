@@ -316,7 +316,7 @@ class TambolaResultCard extends StatelessWidget {
         child: ListTile(
           leading: SvgPicture.asset(
             Assets.tambolaCardAsset,
-            width: SizeConfig.screenWidth! * 0.13,
+            width: SizeConfig.screenWidth! * 0.15,
           ),
           title: FittedBox(
             fit: BoxFit.scaleDown,
@@ -853,7 +853,7 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
     return Column(
       children: [
         SizedBox(
-          height: SizeConfig.screenWidth! * 0.47,
+          height: SizeConfig.screenWidth! * 0.52,
           width: SizeConfig.screenWidth,
           child: PageView(
             physics: const BouncingScrollPhysics(),
