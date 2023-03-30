@@ -30,169 +30,171 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
               ),
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FAppBar(
-                // type: FaqsType.play,
-                showAvatar: false,
-                showCoinBar: false,
-                showHelpButton: false,
-                backgroundColor: Colors.transparent,
-                action: Row(
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        onSurface: Colors.white,
-                        side: BorderSide(
-                            color: Colors.white.withOpacity(0.5), width: 0.5),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FAppBar(
+                  // type: FaqsType.play,
+                  showAvatar: false,
+                  showCoinBar: false,
+                  showHelpButton: false,
+                  backgroundColor: Colors.transparent,
+                  action: Row(
+                    children: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                          onSurface: Colors.white,
+                          side: BorderSide(
+                              color: Colors.white.withOpacity(0.5), width: 0.5),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5))),
+                        ),
+                        onPressed: () {},
+                        child: Padding(
+                          padding: EdgeInsets.zero,
+                          child: Text(
+                            "Invite Friends",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: SizeConfig.body5,
+                            ),
+                          ),
+                        ),
                       ),
-                      onPressed: () {},
-                      child: Padding(
-                        padding: EdgeInsets.zero,
-                        child: Text(
-                          "Invite Friends",
-                          style: TextStyle(
+                      SizedBox(
+                        width: SizeConfig.padding12,
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              // color: UiConstants.kArrowButtonBackgroundColor,
+                              border: Border.all(
+                                  color: Colors.white.withOpacity(0.5))),
+                          padding: const EdgeInsets.all(6),
+                          child: Icon(
+                            Icons.question_mark,
                             color: Colors.white,
-                            fontSize: SizeConfig.body5,
+                            size: SizeConfig.padding20,
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding12,
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            // color: UiConstants.kArrowButtonBackgroundColor,
-                            border: Border.all(
-                                color: Colors.white.withOpacity(0.5))),
-                        padding: const EdgeInsets.all(6),
-                        child: Icon(
-                          Icons.question_mark,
-                          color: Colors.white,
-                          size: SizeConfig.padding20,
-                        ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Center(
-                child: Image.asset(
-                  'assets/images/powerplay_logo.png',
-                  height: 95,
+                Center(
+                  child: Image.asset(
+                    'assets/images/powerplay_logo.png',
+                    height: 95,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Center(
-                  child: Text(
-                'Predict. Save. Win.',
-                style: TextStyles.sourceSansSB.body2,
-              )),
-              const SizedBox(
-                height: 13,
-              ),
-              Container(
-                height: 43,
-                margin: const EdgeInsets.symmetric(horizontal: 50),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Colors.black.withOpacity(0.7),
+                const SizedBox(
+                  height: 10,
                 ),
-                child: Text(
-                  'Total Won From PowerPlay : ₹100',
+                Center(
+                    child: Text(
+                  'Predict. Save. Win.',
                   style: TextStyles.sourceSansSB.body2,
+                )),
+                const SizedBox(
+                  height: 13,
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                height: SizeConfig.screenWidth! * 0.25,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: SizeConfig.pageHorizontalMargins),
-                      height: 85,
-                      width: 275,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 11, horizontal: 18),
-                      decoration: BoxDecoration(
-                        color: const Color(0xffA5E4FF),
-                        borderRadius: BorderRadius.circular(10),
-                        // border: Border.all(color: Colors.white, width: 0.5),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'How it Works?',
-                            style: TextStyles.sourceSansSB.body1
-                                .colour(Colors.black),
-                          ),
-                          Expanded(
-                            child: Text(
-                              'Predict the winning score of today’s match and get a chance to win digital gold equal to the Winning score!',
-                              style: TextStyles.sourceSans.body4
+                Container(
+                  height: 43,
+                  margin: const EdgeInsets.symmetric(horizontal: 50),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.black.withOpacity(0.7),
+                  ),
+                  child: Text(
+                    'Total Won From PowerPlay : ₹100',
+                    style: TextStyles.sourceSansSB.body2,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: SizeConfig.screenWidth! * 0.25,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: SizeConfig.pageHorizontalMargins),
+                        height: 85,
+                        width: 275,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 11, horizontal: 18),
+                        decoration: BoxDecoration(
+                          color: const Color(0xffA5E4FF),
+                          borderRadius: BorderRadius.circular(10),
+                          // border: Border.all(color: Colors.white, width: 0.5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'How it Works?',
+                              style: TextStyles.sourceSansSB.body1
                                   .colour(Colors.black),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: Text(
+                                'Predict the winning score of today’s match and get a chance to win digital gold equal to the Winning score!',
+                                style: TextStyles.sourceSans.body4
+                                    .colour(Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      height: 85,
-                      width: 275,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 11, horizontal: 18),
-                      decoration: BoxDecoration(
-                        color: const Color(0xffA5E4FF),
-                        borderRadius: BorderRadius.circular(10),
-                        // border: Border.all(color: Colors.white, width: 0.5),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'How it Works?',
-                            style: TextStyles.sourceSansSB.body1
-                                .colour(Colors.black),
-                          ),
-                          Expanded(
-                            child: Text(
-                              'Predict the winning score of today’s match and get a chance to win digital gold equal to the Winning score!',
-                              style: TextStyles.sourceSans.body4
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        height: 85,
+                        width: 275,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 11, horizontal: 18),
+                        decoration: BoxDecoration(
+                          color: const Color(0xffA5E4FF),
+                          borderRadius: BorderRadius.circular(10),
+                          // border: Border.all(color: Colors.white, width: 0.5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'How it Works?',
+                              style: TextStyles.sourceSansSB.body1
                                   .colour(Colors.black),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: Text(
+                                'Predict the winning score of today’s match and get a chance to win digital gold equal to the Winning score!',
+                                style: TextStyles.sourceSans.body4
+                                    .colour(Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              const PowerPlayMatch(),
-            ],
+                const SizedBox(
+                  height: 30,
+                ),
+                const PowerPlayMatch(),
+              ],
+            ),
           ),
         ],
       ),
@@ -270,177 +272,648 @@ class _PowerPlayMatchState extends State<PowerPlayMatch>
             const SizedBox(
               height: 20,
             ),
-            SizedBox(
-              height: SizeConfig.screenWidth! * 0.56,
-              child: TabBarView(
-                controller: _tabController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: const Color(0xff3B4E6E).withOpacity(0.8),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 22, vertical: 8),
-                          decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5)),
-                              color: Color(0xff273C60)),
-                          child: Row(
-                            children: [
-                              Text(
-                                'IPL Match - 4',
-                                style: TextStyles.sourceSansB.body2
-                                    .colour(Colors.white),
-                              ),
-                              const Spacer(),
-                              Text(
-                                'PREDICTION LEADERBOARD',
-                                style: TextStyles.sourceSans.body5
-                                    .colour(Colors.white.withOpacity(0.7)),
-                              ),
-                              const Icon(
-                                Icons.arrow_forward_ios,
-                                size: 10,
-                                color: Colors.white,
-                              )
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 18,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 17),
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 30,
-                                width: 35,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.white)),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Bengaluru',
-                                    style: TextStyles.sourceSansB.body4,
-                                  ),
-                                  Text(
-                                    '140/2 (19)',
-                                    style: TextStyles.sourceSans.copyWith(
-                                        fontSize:
-                                            SizeConfig.screenWidth! * 0.030),
-                                  ),
-                                ],
-                              ),
-                              const Spacer(),
-                              Text(
-                                'VS',
-                                style: TextStyles.sourceSansB.body4,
-                              ),
-                              const Spacer(),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Chennai',
-                                    style: TextStyles.sourceSansB.body4,
-                                  ),
-                                  Text(
-                                    'YET TO BAT',
-                                    style: TextStyles.sourceSans.copyWith(
-                                        fontSize:
-                                            SizeConfig.screenWidth! * 0.030),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Container(
-                                height: 30,
-                                width: 35,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.white)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Center(
-                          child: Text(
-                            'PREDICTIONS END AFTER RCB PLAYS 19TH OVER',
-                            style: TextStyles.sourceSans.copyWith(
-                                fontSize: SizeConfig.screenWidth! * 0.030),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 18,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 22,
-                          ),
-                          child: MaterialButton(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            color: Colors.white,
-                            onPressed: () {
-                              // _analyticsService.track(
-                              //     eventName: AnalyticsEvents.tambolaSaveTapped,
-                              //     properties: AnalyticsProperties
-                              //         .getDefaultPropertiesMap(extraValuesMap: {
-                              //       "Time left for draw Tambola (mins)":
-                              //       AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                              //       "Tambola Tickets Owned":
-                              //       AnalyticsProperties.getTambolaTicketCount(),
-                              //       "Number of Tickets":
-                              //       model.ticketCountController!.text ?? "",
-                              //       "Amount": model.ticketSavedAmount,
-                              //     }));
-                              // BaseUtil.openDepositOptionsModalSheet(
-                              //     amount: model.ticketSavedAmount);
-                            },
-                            child: Center(
-                              child: Text(
-                                'PREDICT NOW',
-                                style: TextStyles.rajdhaniB.body1
-                                    .colour(Colors.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 100,
-                    color: Colors.red,
-                  ),
-                  Container(
-                    height: 100,
-                    color: Colors.green,
-                  )
-                ],
-              ),
-            )
+            Builder(builder: (_){
+              if(_tabController!.index == 0){
+                return const LiveMatch();
+            } else if(_tabController!.index == 1){
+                return const UpcomingMatch();
+            } else {
+                return const CompletedMatch();
+              }
+            }),
           ],
         ),
       ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
+}
+
+class CompletedMatch extends StatelessWidget {
+  const CompletedMatch({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 10,
+      color: Colors.green,
+    );
+  }
+}
+
+class LiveMatch extends StatelessWidget {
+  const LiveMatch({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // height: 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: const Color(0xff3B4E6E).withOpacity(0.8),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 22, vertical: 8),
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(5),
+                    topRight: Radius.circular(5)),
+                color: Color(0xff273C60)),
+            child: Row(
+              children: [
+                Text(
+                  'IPL Match - 4',
+                  style: TextStyles.sourceSansB.body2
+                      .colour(Colors.white),
+                ),
+                const Spacer(),
+                Text(
+                  'PREDICTION LEADERBOARD',
+                  style: TextStyles.sourceSans.body5
+                      .colour(Colors.white.withOpacity(0.7)),
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 10,
+                  color: Colors.white,
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 18,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 17),
+            child: Row(
+              children: [
+                Container(
+                  height: 30,
+                  width: 35,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white)),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Bengaluru',
+                      style: TextStyles.sourceSansB.body4,
+                    ),
+                    Text(
+                      '140/2 (19)',
+                      style: TextStyles.sourceSans.copyWith(
+                          fontSize:
+                          SizeConfig.screenWidth! * 0.030),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Text(
+                  'VS',
+                  style: TextStyles.sourceSansB.body4,
+                ),
+                const Spacer(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Chennai',
+                      style: TextStyles.sourceSansB.body4,
+                    ),
+                    Text(
+                      'YET TO BAT',
+                      style: TextStyles.sourceSans.copyWith(
+                          fontSize:
+                          SizeConfig.screenWidth! * 0.030),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Container(
+                  height: 30,
+                  width: 35,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white)),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Center(
+            child: Text(
+              'PREDICTIONS END AFTER RCB PLAYS 19TH OVER',
+              style: TextStyles.sourceSans.copyWith(
+                  fontSize: SizeConfig.screenWidth! * 0.030),
+            ),
+          ),
+          const SizedBox(
+            height: 18,
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(
+              horizontal: 22,
+            ),
+            child: MaterialButton(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              color: Colors.white,
+              onPressed: () {
+                // _analyticsService.track(
+                //     eventName: AnalyticsEvents.tambolaSaveTapped,
+                //     properties: AnalyticsProperties
+                //         .getDefaultPropertiesMap(extraValuesMap: {
+                //       "Time left for draw Tambola (mins)":
+                //       AnalyticsProperties.getTimeLeftForTambolaDraw(),
+                //       "Tambola Tickets Owned":
+                //       AnalyticsProperties.getTambolaTicketCount(),
+                //       "Number of Tickets":
+                //       model.ticketCountController!.text ?? "",
+                //       "Amount": model.ticketSavedAmount,
+                //     }));
+                // BaseUtil.openDepositOptionsModalSheet(
+                //     amount: model.ticketSavedAmount);
+              },
+              child: Center(
+                child: Text(
+                  'PREDICT NOW',
+                  style: TextStyles.rajdhaniB.body1
+                      .colour(Colors.black),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class UpcomingMatch extends StatelessWidget {
+  const UpcomingMatch({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          // height: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: const Color(0xff3B4E6E).withOpacity(0.8),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 22, vertical: 8),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5),
+                        topRight: Radius.circular(5)),
+                    color: Color(0xff273C60)),
+                child: Row(
+                  children: [
+                    Text(
+                      'IPL Match - 4',
+                      style: TextStyles.sourceSansB.body2
+                          .colour(Colors.white),
+                    ),
+                    const Spacer(),
+                    Text(
+                      'PREDICTION LEADERBOARD',
+                      style: TextStyles.sourceSans.body5
+                          .colour(Colors.white.withOpacity(0.7)),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 10,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 14,
+              ),
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 17),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 30,
+                      width: 35,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                          Border.all(color: Colors.white)),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Column(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Bengaluru',
+                          style: TextStyles.sourceSansB.body4,
+                        ),
+                        Text(
+                          '140/2 (19)',
+                          style: TextStyles.sourceSans.copyWith(
+                              fontSize: SizeConfig.screenWidth! *
+                                  0.030),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      'VS',
+                      style: TextStyles.sourceSansB.body4,
+                    ),
+                    const Spacer(),
+                    Column(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Chennai',
+                          style: TextStyles.sourceSansB.body4,
+                        ),
+                        Text(
+                          'YET TO BAT',
+                          style: TextStyles.sourceSans.copyWith(
+                              fontSize: SizeConfig.screenWidth! *
+                                  0.030),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Container(
+                      height: 30,
+                      width: 35,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                          Border.all(color: Colors.white)),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 19,
+              ),
+              Center(
+                child: Text(
+                  'Match starts at 7 PM',
+                  style: TextStyles.sourceSans.copyWith(
+                      fontSize: SizeConfig.screenWidth! * 0.030),
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                decoration: BoxDecoration(
+                    color:
+                    const Color(0xff000000).withOpacity(0.3),
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(5),
+                        bottomRight: Radius.circular(5))),
+                child: Center(
+                  child: Text(
+                    'Predictions start in 05 : 02 Hrs',
+                    style: TextStyles.sourceSans.copyWith(
+                        fontSize:
+                        SizeConfig.screenWidth! * 0.030),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Container(
+          // height: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: const Color(0xff3B4E6E).withOpacity(0.8),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 22, vertical: 8),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5),
+                        topRight: Radius.circular(5)),
+                    color: Color(0xff273C60)),
+                child: Row(
+                  children: [
+                    Text(
+                      'IPL Match - 4',
+                      style: TextStyles.sourceSansB.body2
+                          .colour(Colors.white),
+                    ),
+                    const Spacer(),
+                    Text(
+                      'PREDICTION LEADERBOARD',
+                      style: TextStyles.sourceSans.body5
+                          .colour(Colors.white.withOpacity(0.7)),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 10,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 14,
+              ),
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 17),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 30,
+                      width: 35,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                          Border.all(color: Colors.white)),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Column(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Bengaluru',
+                          style: TextStyles.sourceSansB.body4,
+                        ),
+                        Text(
+                          '140/2 (19)',
+                          style: TextStyles.sourceSans.copyWith(
+                              fontSize: SizeConfig.screenWidth! *
+                                  0.030),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      'VS',
+                      style: TextStyles.sourceSansB.body4,
+                    ),
+                    const Spacer(),
+                    Column(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Chennai',
+                          style: TextStyles.sourceSansB.body4,
+                        ),
+                        Text(
+                          'YET TO BAT',
+                          style: TextStyles.sourceSans.copyWith(
+                              fontSize: SizeConfig.screenWidth! *
+                                  0.030),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Container(
+                      height: 30,
+                      width: 35,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                          Border.all(color: Colors.white)),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 19,
+              ),
+              Center(
+                child: Text(
+                  'Match starts at 7 PM',
+                  style: TextStyles.sourceSans.copyWith(
+                      fontSize: SizeConfig.screenWidth! * 0.030),
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                decoration: BoxDecoration(
+                    color:
+                    const Color(0xff000000).withOpacity(0.3),
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(5),
+                        bottomRight: Radius.circular(5))),
+                child: Center(
+                  child: Text(
+                    'Predictions start in 05 : 02 Hrs',
+                    style: TextStyles.sourceSans.copyWith(
+                        fontSize:
+                        SizeConfig.screenWidth! * 0.030),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Container(
+          // height: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: const Color(0xff3B4E6E).withOpacity(0.8),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 22, vertical: 8),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5),
+                        topRight: Radius.circular(5)),
+                    color: Color(0xff273C60)),
+                child: Row(
+                  children: [
+                    Text(
+                      'IPL Match - 4',
+                      style: TextStyles.sourceSansB.body2
+                          .colour(Colors.white),
+                    ),
+                    const Spacer(),
+                    Text(
+                      'PREDICTION LEADERBOARD',
+                      style: TextStyles.sourceSans.body5
+                          .colour(Colors.white.withOpacity(0.7)),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 10,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 14,
+              ),
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 17),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 30,
+                      width: 35,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                          Border.all(color: Colors.white)),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Column(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Bengaluru',
+                          style: TextStyles.sourceSansB.body4,
+                        ),
+                        Text(
+                          '140/2 (19)',
+                          style: TextStyles.sourceSans.copyWith(
+                              fontSize: SizeConfig.screenWidth! *
+                                  0.030),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      'VS',
+                      style: TextStyles.sourceSansB.body4,
+                    ),
+                    const Spacer(),
+                    Column(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Chennai',
+                          style: TextStyles.sourceSansB.body4,
+                        ),
+                        Text(
+                          'YET TO BAT',
+                          style: TextStyles.sourceSans.copyWith(
+                              fontSize: SizeConfig.screenWidth! *
+                                  0.030),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Container(
+                      height: 30,
+                      width: 35,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                          Border.all(color: Colors.white)),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 19,
+              ),
+              Center(
+                child: Text(
+                  'Match starts at 7 PM',
+                  style: TextStyles.sourceSans.copyWith(
+                      fontSize: SizeConfig.screenWidth! * 0.030),
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                decoration: BoxDecoration(
+                    color:
+                    const Color(0xff000000).withOpacity(0.3),
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(5),
+                        bottomRight: Radius.circular(5))),
+                child: Center(
+                  child: Text(
+                    'Predictions start in 05 : 02 Hrs',
+                    style: TextStyles.sourceSans.copyWith(
+                        fontSize:
+                        SizeConfig.screenWidth! * 0.030),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+      ],
     );
   }
 }
