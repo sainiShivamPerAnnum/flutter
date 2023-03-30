@@ -33,7 +33,8 @@ class AutosaveAssetChoiceView extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding10),
           Selector<BankAndPanService, bool>(
-              selector: (ctx, userService) => userService.isKYCVerified,
+              selector: (ctx, bankAndPanService) =>
+                  bankAndPanService.isKYCVerified,
               builder: (context, isSimpleKycVerified, child) {
                 return Column(
                   children: [
