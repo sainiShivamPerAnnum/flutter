@@ -69,10 +69,16 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins,
-                    ).copyWith(top: SizeConfig.padding10),
-                    child: Image.asset(Assets.win1croreBanner)),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                  ).copyWith(top: SizeConfig.padding10),
+                  // decoration:
+                  //     BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: LottieBuilder.asset(
+                          'assets/lotties/Tambolascreentopbanner.json')),
+                ),
                 TodayWeeklyPicksCard(
                   model: widget.model,
                 ),
