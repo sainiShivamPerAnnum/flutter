@@ -32,7 +32,7 @@ class CurrentPicks extends StatelessWidget {
 
     return todaysPicks == [-1, -1, -1]
         ? locale.tDrawnAtText1
-        : locale.tDrawnAtText2;
+        : "Picks drawn at 6 PM";
   }
 
   @override
@@ -52,7 +52,7 @@ class CurrentPicks extends StatelessWidget {
                 top: SizeConfig.padding24, bottom: SizeConfig.padding16),
             child: Text(
               getText(locale),
-              style: TextStyles.sourceSansSB.body4,
+              style: TextStyles.sourceSansSB.body3,
             ),
           )
       ],

@@ -68,11 +68,16 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                    ).copyWith(top: SizeConfig.padding10),
+                    child: Image.asset(Assets.win1croreBanner)),
                 TodayWeeklyPicksCard(
                   model: widget.model,
                 ),
                 SizedBox(
-                  height: SizeConfig.padding6,
+                  height: SizeConfig.padding12,
                 ),
                 if (widget.model.showWinCard)
                   TambolaResultCard(model: widget.model),
@@ -106,7 +111,7 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                 if (DateTime.now().weekday == DateTime.sunday) ...[
                   const NextWeekTicketInfo(),
                   SizedBox(
-                    height: SizeConfig.padding28,
+                    height: SizeConfig.padding16,
                   ),
                 ],
                 SizedBox(
@@ -292,7 +297,7 @@ class NextWeekTicketInfo extends StatelessWidget {
                 // borderRadius: BorderRadius.circular(50),
                 shape: BoxShape.circle),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               height: 24,
               decoration: BoxDecoration(
                   color: UiConstants.kNextTicketInfo,
@@ -307,7 +312,7 @@ class NextWeekTicketInfo extends StatelessWidget {
               'New tickets received from 6PM - 12AM on Sunday will be considered for next week’s draw',
               maxLines: 3,
               style: TextStyles.sourceSans.body4.colour(
-                UiConstants.kTextColor2.withOpacity(0.8),
+                Colors.white,
               ),
             ),
           )

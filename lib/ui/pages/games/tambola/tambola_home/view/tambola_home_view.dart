@@ -306,31 +306,48 @@ class TambolaResultCard extends StatelessWidget {
       ),
       child: Container(
         margin: EdgeInsets.only(
-            top: SizeConfig.pageHorizontalMargins,
+            // top: SizeConfig.pageHorizontalMargins,
             right: SizeConfig.pageHorizontalMargins,
             left: SizeConfig.pageHorizontalMargins),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-            color: UiConstants.kSnackBarPositiveContentColor),
-        padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+          border: Border.all(
+              color: UiConstants.kModalSheetSecondaryBackgroundColor),
+          color:
+              UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.3),
+        ),
+        padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
         child: ListTile(
           leading: SvgPicture.asset(
             Assets.tambolaCardAsset,
-            width: SizeConfig.screenWidth! * 0.15,
+            width: SizeConfig.screenWidth! * 0.17,
           ),
-          title: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              locale.tResultsOut,
-              style: TextStyles.rajdhaniB.title3,
-            ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  locale.tResultsOut,
+                  style: TextStyles.rajdhaniB.title3,
+                ),
+              ),
+              const SizedBox(
+                height: 1,
+              ),
+              Text(
+                locale.tCheckIfWon,
+                style: TextStyles.sourceSans.body3
+                    .colour(Colors.white.withOpacity(0.7)),
+              ),
+            ],
           ),
-          subtitle: Text(
-            locale.tCheckIfWon,
-            style: TextStyles.sourceSans.body2,
+          // subtitle:
+          trailing: const Icon(
+            Icons.arrow_forward_ios_rounded,
+            color: Colors.white,
+            size: 20,
           ),
-          trailing:
-              const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
         ),
       ),
     );

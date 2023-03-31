@@ -425,7 +425,11 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static void openDepositOptionsModalSheet(
-      {int? amount, bool isSkipMl = false, String? title, String? subtitle}) {
+      {int? amount,
+      bool isSkipMl = false,
+      String? title,
+      String? subtitle,
+      int timer = 500}) {
     // if (_userService!.userJourneyStats!.mlIndex == 1)
     //   return BaseUtil.openDialog(
     //       addToScreenStack: true,
@@ -434,7 +438,7 @@ class BaseUtil extends ChangeNotifier {
     //       content: CompleteProfileDialog());
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: timer), () {
       return openModalBottomSheet(
           addToScreenStack: true,
           enableDrag: false,

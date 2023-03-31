@@ -61,7 +61,7 @@ class WinnerBox extends StatelessWidget {
                 style: TextStyles.sourceSansSB.body2.colour(Colors.white),
               ),
               Text(
-                "₹${getTokenWonAmount(getValue(value))}",
+                "#$key",
                 style: TextStyles.sourceSansSB.body2.colour(Colors.white),
               )
             ],
@@ -150,8 +150,7 @@ class WinnerBox extends StatelessWidget {
             children: [
               Text(
                 'Tokens Won',
-                style: TextStyles.sourceSans.body3
-                    .colour(const Color(0xffBDBDBE).withOpacity(0.7)),
+                style: TextStyles.sourceSans.body3.colour(Colors.white),
               ),
               Row(
                 children: [

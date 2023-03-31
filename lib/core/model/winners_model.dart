@@ -97,17 +97,20 @@ class Winners {
   final double? score;
   final String? displayScore;
   final MatchMap? matchMap;
+  final int? ticketOwned;
 
-  Winners(
-      {this.amount,
-      this.isMockUser,
-      this.username,
-      this.flc,
-      this.userid,
-      this.score,
-      this.gameType,
-      this.matchMap,
-      this.displayScore});
+  Winners({
+    this.amount,
+    this.isMockUser,
+    this.username,
+    this.flc,
+    this.userid,
+    this.score,
+    this.gameType,
+    this.matchMap,
+    this.displayScore,
+    this.ticketOwned,
+  });
 
   Winners copyWith(
       {int? amount,
@@ -118,7 +121,8 @@ class Winners {
       double? score,
       String? gameType,
       MatchMap? matchMap,
-      String? displayScore}) {
+      String? displayScore,
+      int? ticketOwned}) {
     return Winners(
         amount: amount ?? this.amount,
         isMockUser: isMockUser ?? this.isMockUser,
@@ -128,7 +132,8 @@ class Winners {
         score: score ?? this.score,
         gameType: gameType ?? this.gameType,
         matchMap: matchMap ?? this.matchMap,
-        displayScore: displayScore ?? this.displayScore);
+        displayScore: displayScore ?? this.displayScore,
+        ticketOwned: ticketOwned ?? this.ticketOwned);
   }
 
   Map<String, dynamic> toMap() {
@@ -141,7 +146,8 @@ class Winners {
       'score': score,
       'gameType': gameType,
       "matchMap": matchMap?.toMap(),
-      'displayScore': displayScore
+      'displayScore': displayScore,
+      'ticketOwned': ticketOwned,
     };
   }
 
@@ -155,7 +161,8 @@ class Winners {
         score: (map['score'] ?? 0).toDouble(),
         gameType: gameType ?? '',
         matchMap: MatchMap.fromMap(map["matchMap"] ?? {}),
-        displayScore: map['displayScore'] ?? '');
+        displayScore: map['displayScore'] ?? '',
+        ticketOwned: map['totalTickets'] ?? 0);
   }
 
   String toJson() => json.encode(toMap());
@@ -165,7 +172,7 @@ class Winners {
 
   @override
   String toString() {
-    return 'Winners{amount: $amount, isMockUser: $isMockUser, username: $username, flc: $flc, userid: $userid, gameType: $gameType, score: $score, displayScore: $displayScore, matchMap: $matchMap}';
+    return 'Winners{amount: $amount, isMockUser: $isMockUser, username: $username, flc: $flc, userid: $userid, gameType: $gameType, score: $score, displayScore: $displayScore, matchMap: $matchMap, ticketOwned: $ticketOwned}';
   }
 
   @override
@@ -181,7 +188,8 @@ class Winners {
           gameType == other.gameType &&
           score == other.score &&
           displayScore == other.displayScore &&
-          matchMap == other.matchMap;
+          matchMap == other.matchMap &&
+          ticketOwned == other.ticketOwned;
 
   @override
   int get hashCode =>
@@ -193,7 +201,8 @@ class Winners {
       gameType.hashCode ^
       score.hashCode ^
       displayScore.hashCode ^
-      matchMap.hashCode;
+      matchMap.hashCode ^
+      ticketOwned.hashCode;
 }
 
 class MatchMap {

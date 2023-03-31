@@ -1,7 +1,7 @@
 // import 'package:confetti/confetti.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/referral_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/games/tambola/weekly_results/winnerbox.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -13,7 +13,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 
 class PrizeWin extends StatefulWidget {
   final Map<String, int>? winningsMap;
@@ -69,8 +68,8 @@ class _PrizeWinState extends State<PrizeWin> {
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      width: SizeConfig.screenWidth! * 0.7,
-                      height: SizeConfig.screenWidth! * 0.7,
+                      width: SizeConfig.screenWidth! * 0.5,
+                      height: SizeConfig.screenWidth! * 0.5,
                       padding: EdgeInsets.all(SizeConfig.padding16),
                       decoration: BoxDecoration(
                         color: UiConstants.kSliverAppBarBackgroundColor
@@ -78,8 +77,8 @@ class _PrizeWinState extends State<PrizeWin> {
                         shape: BoxShape.circle,
                       ),
                       child: Container(
-                        width: SizeConfig.screenWidth! * 0.6,
-                        height: SizeConfig.screenWidth! * 0.6,
+                        width: SizeConfig.screenWidth! * 0.4,
+                        height: SizeConfig.screenWidth! * 0.4,
                         decoration: const BoxDecoration(
                           color: UiConstants.kSliverAppBarBackgroundColor,
                           shape: BoxShape.circle,
@@ -88,7 +87,7 @@ class _PrizeWinState extends State<PrizeWin> {
                     ),
                     SvgPicture.asset(
                       Assets.tambolaCardAsset,
-                      width: SizeConfig.screenWidth! * 0.6,
+                      width: SizeConfig.screenWidth! * 0.4,
                     )
                   ],
                 ),
@@ -101,12 +100,15 @@ class _PrizeWinState extends State<PrizeWin> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding10,
+                    vertical: SizeConfig.padding6,
                   ),
                   child: Text("Your tickets won!",
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kFAQsAnswerColor)),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 WinnerBox(
                   winningsmap: widget.winningsMap,
@@ -134,27 +136,26 @@ class _PrizeWinState extends State<PrizeWin> {
                   padding: EdgeInsets.symmetric(
                     vertical: SizeConfig.padding20,
                   ),
-                  child: Text(
-                      "Your prizes will be credited in a scratch card.\nShare with your friends in the meanwhile!",
+                  child: Text("Your prizes will be credited in a scratch card",
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kFAQsAnswerColor)),
                 ),
-                Consumer<ReferralService>(builder: (context, model, child) {
-                  return Container(
-                    margin: EdgeInsets.only(
-                        bottom: SizeConfig.pageHorizontalMargins),
-                    child: AppPositiveBtn(
-                      width: SizeConfig.screenWidth! * 0.9,
-                      onPressed: () {
-                        if (model.isShareAlreadyClicked == false) {
-                          model.shareLink();
-                        }
-                      },
-                      btnText: "Share with Friends",
-                    ),
-                  );
-                }),
+                Container(
+                  margin:
+                      EdgeInsets.only(bottom: SizeConfig.pageHorizontalMargins),
+                  child: AppPositiveBtn(
+                    width: SizeConfig.screenWidth! * 0.9,
+                    onPressed: () {
+                      AppState.delegate!.parseRoute(Uri.parse('/myWinnings'));
+
+                      // if (model.isShareAlreadyClicked == false) {
+                      //   model.shareLink();
+                      // }
+                    },
+                    btnText: "Claim Your Prizes",
+                  ),
+                ),
               ],
             ),
           ),
