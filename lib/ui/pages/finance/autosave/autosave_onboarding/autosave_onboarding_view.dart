@@ -12,7 +12,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 class AutosaveOnboardingView extends StatefulWidget {
   const AutosaveOnboardingView({Key? key}) : super(key: key);
@@ -71,66 +71,57 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
     S locale = S.of(context);
     return Scaffold(
       backgroundColor: Color(0xFF032A2E),
-      // floatingActionButton: FloatingActionButton(
-      //   backgroundColor: Color(0xff0B867C),
-      //   onPressed: () {
-      //     if (currentPage == 2)
-      //       AppState.delegate!.appState.currentAction = PageAction(
-      //         state: PageState.replace,
-      //         page: AutosaveProcessViewPageConfig,
-      //       );
-      //     else
-      //       _controller!.animateToPage(currentPage + 1,
-      //           duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-      //   },
-      // child: Container(
-      //   width: SizeConfig.padding64,
-      //   height: SizeConfig.padding64,
-      //   decoration: BoxDecoration(
-      //     color: Colors.transparent,
-      //     border: Border.all(
-      //       color: Color(0xFF009D91),
-      //       width: 2,
-      //     ),
-      //     shape: BoxShape.circle,
-      //   ),
-      //   child: Icon(Icons.arrow_forward_ios_rounded,
-      //       size: SizeConfig.padding20, color: Colors.white),
-      // ),
-      // ),
       body: Stack(
         children: [
           const NewSquareBackground(),
-          Positioned(
-            top: 0,
-            child: Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.screenHeight!,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xff0B867C).withOpacity(0.95),
-                      Color(0xff0B867C).withOpacity(0.2),
-                      Color(0xff0B867C).withOpacity(0.05),
-                      Colors.transparent
-                    ]),
+          Row(
+            children: [
+              Container(
+                width: SizeConfig.screenWidth! / 2,
+                height: SizeConfig.fToolBarHeight,
+                color: Color(0xff025155),
               ),
-            ),
+              Container(
+                width: SizeConfig.screenWidth! / 2,
+                height: SizeConfig.fToolBarHeight,
+                color: const Color(0xff01646B),
+              )
+            ],
           ),
+          // Positioned(
+          //   top: 0,
+          //   child: Container(
+          //     width: SizeConfig.screenWidth,
+          //     height: SizeConfig.screenHeight!,
+          //     decoration: BoxDecoration(
+          //       gradient: LinearGradient(
+          //           begin: Alignment.topCenter,
+          //           end: Alignment.bottomCenter,
+          //           colors: [
+          //             Color(0xff0B867C).withOpacity(0.95),
+          //             Color(0xff0B867C).withOpacity(0.2),
+          //             Color(0xff0B867C).withOpacity(0.05),
+          //             Colors.transparent
+          //           ]),
+          //     ),
+          //   ),
+          // ),
           Container(
             height: SizeConfig.screenHeight,
             width: SizeConfig.screenWidth,
             child: SafeArea(
               child: Column(
                 children: [
-                  SizedBox(
-                    height: SizeConfig.screenWidth,
-                    width: SizeConfig.screenWidth,
-                    child: SvgPicture.asset(
-                      storyData[0][0],
-                      fit: BoxFit.cover,
+                  SizedBox(height: SizeConfig.padding12),
+                  ClipPath(
+                    clipper: LottieClipper(),
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      child: Lottie.asset(
+                        "assets/lotties/autosave.json",
+                        fit: BoxFit.cover,
+                        width: SizeConfig.screenWidth,
+                      ),
                     ),
                   ),
                   Container(
@@ -310,4 +301,26 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
       ),
     );
   }
+}
+
+class LottieClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height);
+
+    var controlPoint = Offset(size.width / 2, size.height / 1.3);
+
+    var secondEndPoint = Offset(size.width, size.height);
+    path.quadraticBezierTo(
+        controlPoint.dx, controlPoint.dy, secondEndPoint.dx, secondEndPoint.dy);
+
+    path.lineTo(size.width, size.height);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
