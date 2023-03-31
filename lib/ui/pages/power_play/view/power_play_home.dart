@@ -49,7 +49,8 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                           side: BorderSide(
                               color: Colors.white.withOpacity(0.5), width: 0.5),
                           shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(5))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
                         ),
                         onPressed: () {},
                         child: Padding(
@@ -92,7 +93,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Center(
                     child: Text(
@@ -100,7 +101,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                   style: TextStyles.sourceSansSB.body2,
                 )),
                 const SizedBox(
-                  height: 13,
+                  height: 10,
                 ),
                 Container(
                   height: 43,
@@ -117,7 +118,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 14,
                 ),
                 SizedBox(
                   height: SizeConfig.screenWidth! * 0.25,
@@ -190,7 +191,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                   ),
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 const PowerPlayMatch(),
               ],
@@ -272,12 +273,12 @@ class _PowerPlayMatchState extends State<PowerPlayMatch>
             const SizedBox(
               height: 20,
             ),
-            Builder(builder: (_){
-              if(_tabController!.index == 0){
+            Builder(builder: (_) {
+              if (_tabController!.index == 0) {
                 return const LiveMatch();
-            } else if(_tabController!.index == 1){
+              } else if (_tabController!.index == 1) {
                 return const UpcomingMatch();
-            } else {
+              } else {
                 return const CompletedMatch();
               }
             }),
@@ -324,25 +325,23 @@ class LiveMatch extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 22, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5),
-                    topRight: Radius.circular(5)),
+                    topLeft: Radius.circular(5), topRight: Radius.circular(5)),
                 color: Color(0xff273C60)),
             child: Row(
               children: [
                 Text(
                   'IPL Match - 4',
-                  style: TextStyles.sourceSansB.body2
-                      .colour(Colors.white),
+                  style: TextStyles.sourceSansB.body2.colour(Colors.white),
                 ),
                 const Spacer(),
                 Text(
                   'PREDICTION LEADERBOARD',
-                  style: TextStyles.sourceSans.body5
-                      .colour(Colors.white.withOpacity(0.7)),
+                  style: TextStyles.sourceSans
+                      .colour(Colors.white.withOpacity(0.7))
+                      .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
                 ),
                 const Icon(
                   Icons.arrow_forward_ios,
@@ -378,9 +377,8 @@ class LiveMatch extends StatelessWidget {
                     ),
                     Text(
                       '140/2 (19)',
-                      style: TextStyles.sourceSans.copyWith(
-                          fontSize:
-                          SizeConfig.screenWidth! * 0.030),
+                      style: TextStyles.sourceSans
+                          .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
                     ),
                   ],
                 ),
@@ -399,9 +397,8 @@ class LiveMatch extends StatelessWidget {
                     ),
                     Text(
                       'YET TO BAT',
-                      style: TextStyles.sourceSans.copyWith(
-                          fontSize:
-                          SizeConfig.screenWidth! * 0.030),
+                      style: TextStyles.sourceSans
+                          .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
                     ),
                   ],
                 ),
@@ -424,8 +421,8 @@ class LiveMatch extends StatelessWidget {
           Center(
             child: Text(
               'PREDICTIONS END AFTER RCB PLAYS 19TH OVER',
-              style: TextStyles.sourceSans.copyWith(
-                  fontSize: SizeConfig.screenWidth! * 0.030),
+              style: TextStyles.sourceSans
+                  .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
             ),
           ),
           const SizedBox(
@@ -439,26 +436,11 @@ class LiveMatch extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
               onPressed: () {
-                // _analyticsService.track(
-                //     eventName: AnalyticsEvents.tambolaSaveTapped,
-                //     properties: AnalyticsProperties
-                //         .getDefaultPropertiesMap(extraValuesMap: {
-                //       "Time left for draw Tambola (mins)":
-                //       AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                //       "Tambola Tickets Owned":
-                //       AnalyticsProperties.getTambolaTicketCount(),
-                //       "Number of Tickets":
-                //       model.ticketCountController!.text ?? "",
-                //       "Amount": model.ticketSavedAmount,
-                //     }));
-                // BaseUtil.openDepositOptionsModalSheet(
-                //     amount: model.ticketSavedAmount);
               },
               child: Center(
                 child: Text(
                   'PREDICT NOW',
-                  style: TextStyles.rajdhaniB.body1
-                      .colour(Colors.black),
+                  style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                 ),
               ),
             ),
@@ -479,441 +461,154 @@ class UpcomingMatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          // height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: const Color(0xff3B4E6E).withOpacity(0.8),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 22, vertical: 8),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5)),
-                    color: Color(0xff273C60)),
-                child: Row(
-                  children: [
-                    Text(
-                      'IPL Match - 4',
-                      style: TextStyles.sourceSansB.body2
-                          .colour(Colors.white),
-                    ),
-                    const Spacer(),
-                    Text(
-                      'PREDICTION LEADERBOARD',
-                      style: TextStyles.sourceSans.body5
-                          .colour(Colors.white.withOpacity(0.7)),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 10,
-                      color: Colors.white,
-                    )
-                  ],
-                ),
+    return ListView.builder(
+      itemCount: 3,
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return Column(
+          children: [
+            Container(
+              // height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: const Color(0xff3B4E6E).withOpacity(0.8),
               ),
-              const SizedBox(
-                height: 14,
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 17),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 30,
-                      width: 35,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border:
-                          Border.all(color: Colors.white)),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
+              child: Column(
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            topRight: Radius.circular(5)),
+                        color: Color(0xff273C60)),
+                    child: Row(
                       children: [
                         Text(
-                          'Bengaluru',
-                          style: TextStyles.sourceSansB.body4,
+                          'IPL Match - 4',
+                          style:
+                              TextStyles.sourceSansB.body2.colour(Colors.white),
                         ),
+                        const Spacer(),
                         Text(
-                          '140/2 (19)',
-                          style: TextStyles.sourceSans.copyWith(
-                              fontSize: SizeConfig.screenWidth! *
-                                  0.030),
+                          'PREDICTION LEADERBOARD',
+                          style: TextStyles.sourceSans.body5
+                              .colour(Colors.white.withOpacity(0.7))
+                              .copyWith(
+                                  fontSize: SizeConfig.screenWidth! * 0.030),
                         ),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 10,
+                          color: Colors.white,
+                        )
                       ],
                     ),
-                    const Spacer(),
-                    Text(
-                      'VS',
-                      style: TextStyles.sourceSansB.body4,
-                    ),
-                    const Spacer(),
-                    Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Chennai',
-                          style: TextStyles.sourceSansB.body4,
-                        ),
-                        Text(
-                          'YET TO BAT',
-                          style: TextStyles.sourceSans.copyWith(
-                              fontSize: SizeConfig.screenWidth! *
-                                  0.030),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                      height: 30,
-                      width: 35,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border:
-                          Border.all(color: Colors.white)),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 19,
-              ),
-              Center(
-                child: Text(
-                  'Match starts at 7 PM',
-                  style: TextStyles.sourceSans.copyWith(
-                      fontSize: SizeConfig.screenWidth! * 0.030),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                decoration: BoxDecoration(
-                    color:
-                    const Color(0xff000000).withOpacity(0.3),
-                    borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(5),
-                        bottomRight: Radius.circular(5))),
-                child: Center(
-                  child: Text(
-                    'Predictions start in 05 : 02 Hrs',
-                    style: TextStyles.sourceSans.copyWith(
-                        fontSize:
-                        SizeConfig.screenWidth! * 0.030),
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Container(
-          // height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: const Color(0xff3B4E6E).withOpacity(0.8),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 22, vertical: 8),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5)),
-                    color: Color(0xff273C60)),
-                child: Row(
-                  children: [
-                    Text(
-                      'IPL Match - 4',
-                      style: TextStyles.sourceSansB.body2
-                          .colour(Colors.white),
-                    ),
-                    const Spacer(),
-                    Text(
-                      'PREDICTION LEADERBOARD',
-                      style: TextStyles.sourceSans.body5
-                          .colour(Colors.white.withOpacity(0.7)),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 10,
-                      color: Colors.white,
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 14,
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 17),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 30,
-                      width: 35,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border:
-                          Border.all(color: Colors.white)),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Bengaluru',
-                          style: TextStyles.sourceSansB.body4,
-                        ),
-                        Text(
-                          '140/2 (19)',
-                          style: TextStyles.sourceSans.copyWith(
-                              fontSize: SizeConfig.screenWidth! *
-                                  0.030),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Text(
-                      'VS',
-                      style: TextStyles.sourceSansB.body4,
-                    ),
-                    const Spacer(),
-                    Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Chennai',
-                          style: TextStyles.sourceSansB.body4,
-                        ),
-                        Text(
-                          'YET TO BAT',
-                          style: TextStyles.sourceSans.copyWith(
-                              fontSize: SizeConfig.screenWidth! *
-                                  0.030),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                      height: 30,
-                      width: 35,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border:
-                          Border.all(color: Colors.white)),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 19,
-              ),
-              Center(
-                child: Text(
-                  'Match starts at 7 PM',
-                  style: TextStyles.sourceSans.copyWith(
-                      fontSize: SizeConfig.screenWidth! * 0.030),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                decoration: BoxDecoration(
-                    color:
-                    const Color(0xff000000).withOpacity(0.3),
-                    borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(5),
-                        bottomRight: Radius.circular(5))),
-                child: Center(
-                  child: Text(
-                    'Predictions start in 05 : 02 Hrs',
-                    style: TextStyles.sourceSans.copyWith(
-                        fontSize:
-                        SizeConfig.screenWidth! * 0.030),
+                  const SizedBox(
+                    height: 14,
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Container(
-          // height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: const Color(0xff3B4E6E).withOpacity(0.8),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 22, vertical: 8),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5)),
-                    color: Color(0xff273C60)),
-                child: Row(
-                  children: [
-                    Text(
-                      'IPL Match - 4',
-                      style: TextStyles.sourceSansB.body2
-                          .colour(Colors.white),
-                    ),
-                    const Spacer(),
-                    Text(
-                      'PREDICTION LEADERBOARD',
-                      style: TextStyles.sourceSans.body5
-                          .colour(Colors.white.withOpacity(0.7)),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 10,
-                      color: Colors.white,
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 14,
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 17),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 30,
-                      width: 35,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border:
-                          Border.all(color: Colors.white)),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 17),
+                    child: Row(
                       children: [
+                        Container(
+                          height: 30,
+                          width: 35,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white)),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Bengaluru',
+                              style: TextStyles.sourceSansB.body4,
+                            ),
+                            Text(
+                              '140/2 (19)',
+                              style: TextStyles.sourceSans.copyWith(
+                                  fontSize: SizeConfig.screenWidth! * 0.030),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
                         Text(
-                          'Bengaluru',
+                          'VS',
                           style: TextStyles.sourceSansB.body4,
                         ),
-                        Text(
-                          '140/2 (19)',
-                          style: TextStyles.sourceSans.copyWith(
-                              fontSize: SizeConfig.screenWidth! *
-                                  0.030),
+                        const Spacer(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Chennai',
+                              style: TextStyles.sourceSansB.body4,
+                            ),
+                            Text(
+                              'YET TO BAT',
+                              style: TextStyles.sourceSans.copyWith(
+                                  fontSize: SizeConfig.screenWidth! * 0.030),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Container(
+                          height: 30,
+                          width: 35,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white)),
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    Text(
-                      'VS',
-                      style: TextStyles.sourceSansB.body4,
-                    ),
-                    const Spacer(),
-                    Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Chennai',
-                          style: TextStyles.sourceSansB.body4,
-                        ),
-                        Text(
-                          'YET TO BAT',
-                          style: TextStyles.sourceSans.copyWith(
-                              fontSize: SizeConfig.screenWidth! *
-                                  0.030),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Container(
-                      height: 30,
-                      width: 35,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border:
-                          Border.all(color: Colors.white)),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 19,
-              ),
-              Center(
-                child: Text(
-                  'Match starts at 7 PM',
-                  style: TextStyles.sourceSans.copyWith(
-                      fontSize: SizeConfig.screenWidth! * 0.030),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                decoration: BoxDecoration(
-                    color:
-                    const Color(0xff000000).withOpacity(0.3),
-                    borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(5),
-                        bottomRight: Radius.circular(5))),
-                child: Center(
-                  child: Text(
-                    'Predictions start in 05 : 02 Hrs',
-                    style: TextStyles.sourceSans.copyWith(
-                        fontSize:
-                        SizeConfig.screenWidth! * 0.030),
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-      ],
+                  const SizedBox(
+                    height: 19,
+                  ),
+                  Center(
+                    child: Text(
+                      'Match starts at 7 PM',
+                      style: TextStyles.sourceSans
+                          .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    decoration: BoxDecoration(
+                        color: const Color(0xff000000).withOpacity(0.3),
+                        borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(5),
+                            bottomRight: Radius.circular(5))),
+                    child: Center(
+                      child: Text(
+                        'Predictions start in 05 : 02 Hrs',
+                        style: TextStyles.sourceSans.copyWith(
+                            fontSize: SizeConfig.screenWidth! * 0.030),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        );
+      },
     );
   }
 }
