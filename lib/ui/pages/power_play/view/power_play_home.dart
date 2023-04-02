@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/power_play/view/how_it_works.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -103,18 +104,24 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  height: 43,
-                  margin: const EdgeInsets.symmetric(horizontal: 50),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.black.withOpacity(0.7),
-                  ),
-                  child: Text(
-                    'Total Won From PowerPlay : ₹100',
-                    style: TextStyles.sourceSansSB.body2,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const HowItWorks()));
+                  },
+                  child: Container(
+                    height: 43,
+                    margin: const EdgeInsets.symmetric(horizontal: 50),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.black.withOpacity(0.7),
+                    ),
+                    child: Text(
+                      'Total Won From PowerPlay : ₹100',
+                      style: TextStyles.sourceSansSB.body2,
+                    ),
                   ),
                 ),
                 const SizedBox(
