@@ -11,9 +11,13 @@ import 'package:flutter/material.dart';
 class DepositOptionModalSheet extends StatelessWidget {
   final int? amount;
   final bool? isSkipMl;
-  DepositOptionModalSheet({this.amount, this.isSkipMl, this.title,this.subtitle});
+
+  const DepositOptionModalSheet(
+      {super.key, this.amount, this.isSkipMl, this.title, this.subtitle});
+
   final String? title;
   final String? subtitle;
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -30,7 +34,8 @@ class DepositOptionModalSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(title ?? locale.chooseYourAsset, style: TextStyles.rajdhaniSB.title5),
+              Text(title ?? locale.chooseYourAsset,
+                  style: TextStyles.rajdhaniSB.title5),
               Padding(
                 padding: EdgeInsets.only(top: SizeConfig.padding4),
                 child: Text(

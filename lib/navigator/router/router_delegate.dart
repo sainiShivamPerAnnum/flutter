@@ -35,6 +35,7 @@ import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_home_view.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
@@ -316,6 +317,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
         case Pages.PowerPlayHome:
           _addPageData(const PowerPlayHome(), pageConfig);
+          break;
+
+        case Pages.PowerPlayLeaderBoard:
+          _addPageData(const PredictionLeaderboard(), pageConfig);
           break;
         // case Pages.TransactionDetailsPage:
         //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);

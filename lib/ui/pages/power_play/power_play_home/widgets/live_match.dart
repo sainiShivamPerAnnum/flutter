@@ -1,3 +1,8 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -31,11 +36,18 @@ class LiveMatch extends StatelessWidget {
                   style: TextStyles.sourceSansB.body2.colour(Colors.white),
                 ),
                 const Spacer(),
-                Text(
-                  'PREDICTION LEADERBOARD',
-                  style: TextStyles.sourceSans
-                      .colour(Colors.white.withOpacity(0.7))
-                      .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                GestureDetector(
+                  onTap: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.addPage,
+                        page: PowerPlayLeaderBoardConfig);
+                  },
+                  child: Text(
+                    'PREDICTION LEADERBOARD',
+                    style: TextStyles.sourceSans
+                        .colour(Colors.white.withOpacity(0.7))
+                        .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                  ),
                 ),
                 const Icon(
                   Icons.arrow_forward_ios,
@@ -72,7 +84,19 @@ class LiveMatch extends StatelessWidget {
             child: MaterialButton(
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: () {
+                BaseUtil.openModalBottomSheet(
+                    isBarrierDismissible: true,
+                    addToScreenStack: true,
+                    backgroundColor: const Color(0xff21284A),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness32),
+                      topRight: Radius.circular(SizeConfig.roundness32),
+                    ),
+                    isScrollControlled: true,
+                    hapticVibrate: true,
+                    content: const MakePredictionSheet());
+              },
               child: Center(
                 child: Text(
                   'PREDICT NOW',

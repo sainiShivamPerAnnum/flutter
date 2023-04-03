@@ -434,7 +434,7 @@ class BaseUtil extends ChangeNotifier {
     //       content: CompleteProfileDialog());
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       return openModalBottomSheet(
           addToScreenStack: true,
           enableDrag: false,

@@ -1,6 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribution_sheet.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -314,7 +313,7 @@ class PredictionLeaderboard extends StatelessWidget {
                         ),
                         isScrollControlled: true,
                         hapticVibrate: true,
-                        content: const PrizeDistributionSheet());
+                        content: const MakePredictionSheet());
                   },
                   child: Center(
                     child: Text(
@@ -490,6 +489,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
               margin: EdgeInsets.symmetric(
                 horizontal: SizeConfig.padding12,
               ),
+              autoFocus: true,
               textEditingController: _textController,
               isEnabled: true,
               maxLength: 256,
@@ -498,6 +498,9 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
               hintStyle:
                   TextStyles.sourceSans.body3.colour(const Color(0xff21284A)),
               inputFormatters: [
+                //limit of 3 digits
+                LengthLimitingTextInputFormatter(3),
+
                 FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
               ],
               fillColor: const Color(0xffD9D9D9).withOpacity(0.8),
@@ -506,6 +509,9 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
                 color: Color(0xff21284A),
                 size: 25,
               ),
+              suffixText: 'Runs',
+              suffixTextStyle:
+                  TextStyles.sourceSansSB.body3.colour(const Color(0xff21284A)),
               // onSubmit: (_) =>null,
 
               validator: (value) {
@@ -521,7 +527,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
             ),
             //What is a Prediction?
             Text(
-              "What is a Prediction?",
+              "What is Chasing Score?",
               style: TextStyles.sourceSans.body2
                   .colour(Colors.white)
                   .copyWith(decoration: TextDecoration.underline),
@@ -535,19 +541,10 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
                   borderRadius: BorderRadius.circular(5)),
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
-              onPressed: () {
-                // BaseUtil.openModalBottomSheet(
-                //     isBarrierDismissible: true,
-                //     addToScreenStack: true,
-                //     backgroundColor: const Color(0xff21284A),
-                //     borderRadius: BorderRadius.only(
-                //       topLeft: Radius.circular(SizeConfig.roundness32),
-                //       topRight: Radius.circular(SizeConfig.roundness32),
-                //     ),
-                //     isScrollControlled: true,
-                //     hapticVibrate: true,
-                //     content: const YourPredictionSheet());
-              },
+              onPressed: () => BaseUtil.openDepositOptionsModalSheet(
+                  title:
+                      'To predict, Save ₹${_textController.text} in Gold or Flo',
+                  subtitle: 'Make as many predictions as you can, to win'),
               child: Center(
                 child: Text(
                   'PREDICT NOW',
