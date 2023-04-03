@@ -1,9 +1,11 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -464,6 +466,8 @@ class AutosaveDetailsView extends StatelessWidget {
           btnText: "UPDATE AUTOSAVE",
           onPressed: () {
             //NOTE: CHECK IN EDIT MODE
+            locator<AnalyticsService>()
+                .track(eventName: AnalyticsEvents.asUpdateTapped);
             AppState.delegate!.appState.currentAction = PageAction(
               page: AutosaveUpdateViewPageConfig,
               state: PageState.addPage,

@@ -12,6 +12,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -49,7 +50,8 @@ class RootViewModel extends BaseViewModel {
 
   final BaseUtil? _baseUtil = locator<BaseUtil>();
 
-  final FcmHandler? _fcmListener = locator<FcmHandler>();
+  final FcmListener _fcmListener = locator<FcmListener>();
+  final FcmHandler _fcmHandler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger? _logger = locator<CustomLogger>();
@@ -106,6 +108,7 @@ class RootViewModel extends BaseViewModel {
         await _userService.userBootUpEE();
         await verifyUserBootupDetails();
         await checkForBootUpAlerts();
+        await _fcmListener.refreshTopics();
         await _userService.getUserFundWalletData();
         if (AppState.isFirstTime)
           Future.delayed(Duration(seconds: 1), () {
@@ -135,12 +138,12 @@ class RootViewModel extends BaseViewModel {
   onDispose() {
     AppState.isUserSignedIn = false;
     appState.setRootLoadValue = false;
-    _fcmListener!.addIncomingMessageListener(null);
+    _fcmHandler.addIncomingMessageListener(null);
   }
 
   _initAdhocNotifications() {
     if (_fcmListener != null && _baseUtil != null) {
-      _fcmListener!.addIncomingMessageListener((valueMap) {
+      _fcmHandler.addIncomingMessageListener((valueMap) {
         if (valueMap['title'] != null && valueMap['body'] != null) {
           if (AppState.screenStack.last == ScreenItem.dialog ||
               AppState.screenStack.last == ScreenItem.modalsheet) return;
@@ -175,7 +178,7 @@ class RootViewModel extends BaseViewModel {
           UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
       content: SecurityModalSheet(),
     );
-    _fcmListener?.addIncomingMessageListener((valueMap) {
+    _fcmHandler.addIncomingMessageListener((valueMap) {
       if (valueMap['title'] != null && valueMap['body'] != null) {
         BaseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
             seconds: 5);
@@ -247,7 +250,7 @@ class RootViewModel extends BaseViewModel {
     if (AppState.isRootAvailableForIncomingTaskExecution == true &&
         AppState.startupNotifMessage != null) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
-      _fcmListener?.handleMessage(
+      _fcmHandler.handleMessage(
         AppState.startupNotifMessage,
         MsgSource.Terminated,
       );
