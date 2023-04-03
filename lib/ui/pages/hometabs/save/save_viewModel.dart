@@ -23,6 +23,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.da
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
+import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
@@ -186,6 +187,7 @@ class SaveViewModel extends BaseViewModel {
   getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
+    saveViewItems.add(const PowerPlayCard());
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
         case 'NAS':
