@@ -186,6 +186,7 @@ class SaveViewModel extends BaseViewModel {
   getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
+    saveViewItems.add(const PowerPlayCard());
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
         case 'NAS':

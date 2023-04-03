@@ -184,61 +184,70 @@ class SaveNetWorthSection extends StatelessWidget {
             ),
           ),
           getAssetsOrder(),
-          GestureDetector(
-            onTap: () {
-              AppState.delegate!.appState.currentAction = PageAction(
-                state: PageState.addPage,
-                page: PowerPlayHomeConfig,
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
-              height: 80,
-              padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 23),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    stops: [0.5, 1],
-                    colors: [Color(0xff1F2C65), Color(0xffE35833)]),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.white, width: 0.5),
-              ),
-              child: Row(children: [
-                SvgPicture.network(
-                  'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
-                  width: 63,
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Make your Prediction for:',
-                      style: TextStyles.rajdhaniB.body3,
-                    ),
-                    const SizedBox(
-                      height: 3,
-                    ),
-                    Text('Bengaluru vs Chennai',
-                        style: TextStyles.rajdhaniSB.body3),
-                  ],
-                ),
-                const Spacer(),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 10,
-                  color: Colors.white,
-                )
-              ]),
-            ),
-          ),
           const SizedBox(
             height: 15,
           ),
           const SaveAssetsFooter(),
         ],
+      ),
+    );
+  }
+}
+
+class PowerPlayCard extends StatelessWidget {
+  const PowerPlayCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addPage,
+          page: PowerPlayHomeConfig,
+        );
+      },
+      child: Container(
+        margin:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+        height: 80,
+        padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 23),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+              stops: [0.5, 1], colors: [Color(0xff1F2C65), Color(0xffE35833)]),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.white, width: 0.5),
+        ),
+        child: Row(children: [
+          SvgPicture.network(
+            'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
+            width: 63,
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Make your Prediction for:',
+                style: TextStyles.rajdhaniB.body3,
+              ),
+              const SizedBox(
+                height: 3,
+              ),
+              Text('Bengaluru vs Chennai', style: TextStyles.rajdhaniSB.body3),
+            ],
+          ),
+          const Spacer(),
+          const Icon(
+            Icons.arrow_forward_ios,
+            size: 10,
+            color: Colors.white,
+          )
+        ]),
       ),
     );
   }
