@@ -22,7 +22,7 @@ class AutosaveOnboardingView extends StatefulWidget {
 }
 
 class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   PageController? _controller;
   double dragStartPosition = 0, dragUpdatePosition = 0;
 
@@ -53,10 +53,6 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
           setState(() {});
         }
       });
-    // PreferenceHelper.setBool(
-    //     PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME, false);
-    _analyticsService!
-        .track(eventName: AnalyticsEvents.autosaveDetailsScreenView);
     super.initState();
   }
 
@@ -163,6 +159,8 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
                           state: PageState.replace,
                           page: AutosaveProcessViewPageConfig,
                         );
+                        _analyticsService.track(
+                            eventName: AnalyticsEvents.asBenefitsTapped);
                       },
                     ),
                   )
@@ -184,119 +182,6 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
               ),
             ),
           )
-          // Align(
-          //   alignment: Alignment.topCenter,
-          //   child: Container(
-          //       margin: EdgeInsets.only(top: SizeConfig.fToolBarHeight),
-          //       width: SizeConfig.screenWidth,
-          //       alignment: Alignment.center,
-          //       height: SizeConfig.title1,
-          //       child: Text("Autosave", style: TextStyles.rajdhaniB.title1)),
-          // ),
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: SafeArea(
-          //     child: Column(
-          //       mainAxisSize: MainAxisSize.min,
-          //       children: [
-          //         Container(
-          //           height: SizeConfig.screenWidth! * 1.5,
-          //           child: PageView.builder(
-          //             controller: _controller,
-          //             // physics: NeverScrollableScrollPhysics(),
-          //             onPageChanged: (val) {},
-          //             itemCount: 3,
-          //             itemBuilder: (context, index) {
-          //               return Column(
-          //                 children: [
-          //                   SvgPicture.asset(
-          //                     storyData[index][0],
-          //                     width: SizeConfig.screenWidth,
-          //                   ),
-          //                   Padding(
-          //                     padding: EdgeInsets.symmetric(
-          //                         horizontal: SizeConfig.pageHorizontalMargins),
-          //                     child: Text(
-          //                       storyData[index][1],
-          //                       textAlign: TextAlign.center,
-          //                       style: TextStyles.rajdhaniB.title2,
-          //                     ),
-          //                   ),
-          //                   SizedBox(
-          //                     height: SizeConfig.padding16,
-          //                   ),
-          //                   Padding(
-          //                     padding: EdgeInsets.symmetric(
-          //                         horizontal: SizeConfig.padding32),
-          //                     child: Text(
-          //                       storyData[index][2],
-          //                       textAlign: TextAlign.center,
-          //                       style: TextStyles.sourceSans.body2,
-          //                     ),
-          //                   ),
-          //                   SizedBox(
-          //                     height: SizeConfig.padding24,
-          //                   ),
-          //                 ],
-          //               );
-          //             },
-          //           ),
-          //         ),
-          //         Row(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: List.generate(
-          //             3,
-          //             (index) {
-          //               return Container(
-          //                 width: SizeConfig.padding8,
-          //                 height: SizeConfig.padding8,
-          //                 margin: EdgeInsets.symmetric(horizontal: 3),
-          //                 decoration: BoxDecoration(
-          //                   color: currentPage == index
-          //                       ? Colors.white
-          //                       : Colors.transparent,
-          //                   border: Border.all(color: Colors.white),
-          //                   shape: BoxShape.circle,
-          //                 ),
-          //               );
-          //             },
-          //           ),
-          //         ),
-          //         SizedBox(height: SizeConfig.padding40)
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          // if (currentPage < 2)
-          //   Align(
-          //     alignment: Alignment.topRight,
-          //     child: SafeArea(
-          //       child: GestureDetector(
-          //         onTap: () {
-          // AppState.delegate!.appState.currentAction = PageAction(
-          //   state: PageState.replace,
-          //   page: AutosaveProcessViewPageConfig,
-          // );
-          //         },
-          //         child: Container(
-          //           margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-          //           decoration: BoxDecoration(
-          //             borderRadius:
-          //                 BorderRadius.circular(SizeConfig.roundness40),
-          //             border: Border.all(color: Colors.white, width: 1),
-          //             color: UiConstants.darkPrimaryColor,
-          //           ),
-          //           padding: EdgeInsets.symmetric(
-          //               horizontal: SizeConfig.padding12,
-          //               vertical: SizeConfig.padding10),
-          //           child: Text(
-          //             "SKIP",
-          //             style: TextStyles.rajdhaniSB.body3,
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
         ],
       ),
     );

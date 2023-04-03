@@ -65,23 +65,26 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                       width: 1,
-                                      color: Color(0xff4F4F4F),
+                                      color: const Color(0xff4F4F4F),
                                     ),
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness5),
-                                    color: Color(0xff303030)),
+                                    color: const Color(0xff303030)),
                                 child: Stack(
                                   children: [
                                     Align(
                                       alignment: Alignment.center,
                                       child: ListTile(
                                         onTap: () {
-                                          if (isSimpleKycVerified)
+                                          if (isSimpleKycVerified) {
                                             model.selectedAssetOption = index;
-                                          else
+                                          } else {
                                             BaseUtil.showNegativeAlert(
                                                 "Complete your KYC to autosave in both Flo & Gold",
                                                 "Option not available");
+                                          }
+                                          model.trackAssetChoice(
+                                              isSimpleKycVerified);
                                         },
                                         contentPadding: EdgeInsets.zero,
                                         minVerticalPadding:
@@ -120,12 +123,13 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                           value: index,
                                           groupValue: model.selectedAssetOption,
                                           onChanged: (_) {
-                                            if (isSimpleKycVerified)
+                                            if (isSimpleKycVerified) {
                                               model.selectedAssetOption = index;
-                                            else
+                                            } else {
                                               BaseUtil.showNegativeAlert(
                                                   "KYC Incomplete",
                                                   "Complete your KYC to autosave in this asset");
+                                            }
                                           },
                                         ),
                                       ),
@@ -140,7 +144,7 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                                 SizeConfig.padding64,
                                                 (SizeConfig.padding64 *
                                                         0.6538461538461539)
-                                                    .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                                    .toDouble()),
                                             painter: RPSCustomPainter(),
                                           ),
                                         ),
@@ -162,6 +166,7 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                               PageAction(
                                   state: PageState.addPage,
                                   page: KycDetailsPageConfig);
+                          model.trackAssetChoiceKyc();
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(
@@ -176,7 +181,7 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                   size: SizeConfig.padding24,
                                   color: UiConstants.kTextColor3,
                                 )),
-                                TextSpan(
+                                const TextSpan(
                                   text: " Want to do your KYC now? ",
                                 ),
                                 TextSpan(
