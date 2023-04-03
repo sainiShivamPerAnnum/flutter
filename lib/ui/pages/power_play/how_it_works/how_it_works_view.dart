@@ -1,3 +1,5 @@
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -17,10 +19,16 @@ class HowItWorks extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
-                  Icons.arrow_back_ios,
-                  size: 25,
-                  color: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    //pop this screen
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  },
+                  child: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 25,
+                    color: Colors.white,
+                  ),
                 ),
                 const Spacer(),
                 Text(
@@ -73,7 +81,7 @@ class HowItWorks extends StatelessWidget {
                   Container(
                     // margin: const EdgeInsets.symmetric(horizontal: 10),
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3),
                       color: const Color(0xff62E3C4),
@@ -123,73 +131,9 @@ class HowItWorks extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 17),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 30,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white)),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Bengaluru',
-                              style: TextStyles.sourceSansB.body4,
-                            ),
-                            Text(
-                              '140/2 (19)',
-                              style: TextStyles.sourceSans.copyWith(
-                                  fontSize: SizeConfig.screenWidth! * 0.030),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black,
-                          ),
-                          child: Text(
-                            'VS',
-                            style: TextStyles.sourceSansB.body4,
-                          ),
-                        ),
-                        const Spacer(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Chennai',
-                              style: TextStyles.sourceSansB.body4,
-                            ),
-                            Text(
-                              'YET TO BAT',
-                              style: TextStyles.sourceSans.copyWith(
-                                  fontSize: SizeConfig.screenWidth! * 0.030),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white)),
-                        ),
-                      ],
-                    ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 17),
+                    child: IplTeamsScoreWidget(),
                   ),
                   const SizedBox(
                     height: 19,
@@ -219,7 +163,6 @@ class HowItWorks extends StatelessWidget {
             const SizedBox(
               height: 12,
             ),
-            //The score being chased by the playing team in the 2nd innings.
             Flexible(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -410,7 +353,7 @@ class HowItWorks extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5)),
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Text(
                   'Predict Now'.toUpperCase(),
                   style: TextStyles.rajdhaniB.body1.colour(Colors.black),

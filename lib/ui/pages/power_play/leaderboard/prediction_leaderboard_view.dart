@@ -1,8 +1,12 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +18,7 @@ class PredictionLeaderboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return PowerPlayBackgroundUi(
       child: SingleChildScrollView(
         child: SafeArea(
@@ -32,8 +37,9 @@ class PredictionLeaderboard extends StatelessWidget {
                     children: [
                       TextButton(
                         style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          onSurface: Colors.white,
+                          foregroundColor: Colors.white,
+                          disabledForegroundColor:
+                              Colors.white.withOpacity(0.38),
                           side: BorderSide(
                               color: Colors.white.withOpacity(0.5), width: 0.5),
                           shape: const RoundedRectangleBorder(
@@ -74,12 +80,12 @@ class PredictionLeaderboard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Center(
-                  child: SvgPicture.network(
-                    'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
-                    height: 95,
-                  ),
-                ),
+                // Center(
+                //   child: SvgPicture.network(
+                //     'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
+                //     height: 95,
+                //   ),
+                // ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -237,7 +243,7 @@ class PredictionLeaderboard extends StatelessWidget {
                         Text(
                           "Your Predictions (10)",
                           style:
-                              TextStyles.sourceSans.body3.colour(Colors.white),
+                          TextStyles.sourceSans.body3.colour(Colors.white),
                         ),
                         // const Spacer(),
                         Icon(
@@ -258,7 +264,7 @@ class PredictionLeaderboard extends StatelessWidget {
                   height: 85,
                   // width: 275,
                   padding:
-                      const EdgeInsets.symmetric(vertical: 11, horizontal: 18),
+                  const EdgeInsets.symmetric(vertical: 11, horizontal: 18),
                   decoration: BoxDecoration(
                     color: const Color(0xffA5E4FF),
                     borderRadius: BorderRadius.circular(10),
@@ -271,13 +277,13 @@ class PredictionLeaderboard extends StatelessWidget {
                       Text(
                         'How it Works?',
                         style:
-                            TextStyles.sourceSansSB.body1.colour(Colors.black),
+                        TextStyles.sourceSansSB.body1.colour(Colors.black),
                       ),
                       Expanded(
                         child: Text(
                           'Predict the winning score of today’s match and get a chance to win digital gold equal to the Winning score!',
                           style:
-                              TextStyles.sourceSans.body4.colour(Colors.black),
+                          TextStyles.sourceSans.body4.colour(Colors.black),
                         ),
                       ),
                     ],
@@ -288,11 +294,18 @@ class PredictionLeaderboard extends StatelessWidget {
                   height: SizeConfig.padding20,
                 ),
                 // WHAT IS A PREDICTION?
-                Text(
-                  "WHAT IS A PREDICTION?",
-                  style: TextStyles.rajdhaniB.body1
-                      .colour(Colors.white)
-                      .copyWith(decoration: TextDecoration.underline),
+                GestureDetector(
+                  onTap: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.addPage,
+                        page: PowerPlayHowItWorksConfig);
+                  },
+                  child: Text(
+                    "WHAT IS A PREDICTION?",
+                    style: TextStyles.rajdhaniB.body1
+                        .colour(Colors.white)
+                        .copyWith(decoration: TextDecoration.underline),
+                  ),
                 ),
                 SizedBox(
                   height: SizeConfig.padding20,
@@ -396,79 +409,14 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
               ),
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 20,
+                  SizedBox(
+                    height: SizeConfig.padding20,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 17),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 30,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white)),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Bengaluru',
-                              style: TextStyles.sourceSansB.body4,
-                            ),
-                            Text(
-                              '140/2 (19)',
-                              style: TextStyles.sourceSans.copyWith(
-                                  fontSize: SizeConfig.screenWidth! * 0.030),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black,
-                          ),
-                          child: Text(
-                            'VS',
-                            style: TextStyles.sourceSansB.body4,
-                          ),
-                        ),
-                        const Spacer(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Chennai',
-                              style: TextStyles.sourceSansB.body4,
-                            ),
-                            Text(
-                              'YET TO BAT',
-                              style: TextStyles.sourceSans.copyWith(
-                                  fontSize: SizeConfig.screenWidth! * 0.030),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 19,
+                  const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 17),
+                      child: IplTeamsScoreWidget()),
+                  SizedBox(
+                    height: SizeConfig.padding20,
                   ),
                 ],
               ),

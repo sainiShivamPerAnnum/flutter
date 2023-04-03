@@ -81,6 +81,7 @@ const String TransactionDetailsPath = '/transactionDetailsPage';
 const String AssetViewPath = '/assetViewSection';
 const String PowerPlayPath = '/powerPlayPath';
 const String PowerPlayLeaderBoardPath = '/powerPlayLeaderBoardPath';
+const String PowerPlayHowItWorksPath = '/powerPlayHowItWorksPath';
 
 enum Pages {
   Splash,
@@ -159,7 +160,8 @@ enum Pages {
   SettingsView,
   TransactionDetailsPage,
   PowerPlayHome,
-  PowerPlayLeaderBoard
+  PowerPlayLeaderBoard,
+  PowerPlayHowItWorks,
 }
 
 class PageConfiguration {
@@ -693,3 +695,9 @@ PageConfiguration PowerPlayLeaderBoardConfig = PageConfiguration(
     path: PowerPlayLeaderBoardPath,
     uiPage: Pages.PowerPlayLeaderBoard,
     name: "PowerPlay LeaderBoard Screen");
+
+PageConfiguration PowerPlayHowItWorksConfig = PageConfiguration(
+    key: 'PowerPlayHowItWorksPath',
+    path: PowerPlayHowItWorksPath,
+    uiPage: Pages.PowerPlayHowItWorks,
+    name: "PowerPlay HowItWorks Screen");
