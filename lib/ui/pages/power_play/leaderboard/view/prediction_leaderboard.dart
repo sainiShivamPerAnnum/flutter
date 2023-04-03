@@ -90,8 +90,8 @@ class PredictionLeaderboard extends StatelessWidget {
                       ),
                     ),
                     Center(
-                      child: Image.asset(
-                        'assets/images/powerplay_logo.png',
+                      child: SvgPicture.network(
+                        'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
                         height: 95,
                       ),
                     ),
