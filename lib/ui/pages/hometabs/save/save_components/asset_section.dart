@@ -1,14 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -21,7 +17,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:showcaseview/showcaseview.dart';
 
@@ -184,60 +179,10 @@ class SaveNetWorthSection extends StatelessWidget {
             ),
           ),
           getAssetsOrder(),
-          GestureDetector(
-            onTap: () {
-              AppState.delegate!.appState.currentAction = PageAction(
-                state: PageState.addPage,
-                page: PowerPlayHomeConfig,
-              );
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
-              height: 80,
-              padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 23),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                    stops: [0.5, 1],
-                    colors: [Color(0xff1F2C65), Color(0xffE35833)]),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.white, width: 0.5),
-              ),
-              child: Row(children: [
-                SvgPicture.network(
-                  'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
-                  width: 63,
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Make your Prediction for:',
-                      style: TextStyles.rajdhaniB.body3,
-                    ),
-                    const SizedBox(
-                      height: 3,
-                    ),
-                    Text('Bengaluru vs Chennai',
-                        style: TextStyles.rajdhaniSB.body3),
-                  ],
-                ),
-                const Spacer(),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 10,
-                  color: Colors.white,
-                )
-              ]),
-            ),
-          ),
           const SizedBox(
             height: 15,
           ),
-          const SaveAssetsFooter(),
+          // const SaveAssetsFooter(),
         ],
       ),
     );
