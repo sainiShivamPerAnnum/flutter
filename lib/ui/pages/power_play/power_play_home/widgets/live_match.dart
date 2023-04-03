@@ -1,4 +1,4 @@
-import 'package:felloapp/ui/pages/power_play/widgets/ipl_teams_score_widget.dart';
+import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';

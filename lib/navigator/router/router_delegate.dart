@@ -35,7 +35,7 @@ import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
-import 'package:felloapp/ui/pages/power_play/power_play_home/view/power_play_home.dart';
+import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_home_view.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';

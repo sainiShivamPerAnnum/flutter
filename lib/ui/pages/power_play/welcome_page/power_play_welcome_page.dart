@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/view/prediction_leaderboard.dart';
-import 'package:felloapp/ui/pages/power_play/widgets/power_play_bg.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
+import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
