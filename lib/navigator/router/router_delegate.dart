@@ -280,17 +280,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.AutosaveOnboardingView:
           _addPageData(
-              AutosaveOnboardingView(), AutosaveOnboardingViewPageConfig);
+              const AutosaveOnboardingView(), AutosaveOnboardingViewPageConfig);
           break;
         case Pages.AutosaveProcessView:
           _addPageData(
               const AutosaveProcessView(), AutosaveProcessViewPageConfig);
           break;
         case Pages.AutosaveDetailsView:
-          _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
+          _addPageData(
+              const AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
           break;
         case Pages.AutosaveUpdateView:
-          _addPageData(AutosaveUpdateView(), AutosaveUpdateViewPageConfig);
+          _addPageData(
+              const AutosaveUpdateView(), AutosaveUpdateViewPageConfig);
           break;
 
         case Pages.TopPlayerLeaderboard:

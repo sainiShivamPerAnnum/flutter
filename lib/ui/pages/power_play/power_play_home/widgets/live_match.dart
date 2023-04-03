@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
@@ -11,7 +12,10 @@ import 'package:flutter/material.dart';
 class LiveMatch extends StatelessWidget {
   const LiveMatch({
     super.key,
+    required this.matchData,
   });
+
+  final MatchData matchData;
 
   @override
   Widget build(BuildContext context) {

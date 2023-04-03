@@ -201,7 +201,7 @@ class SubService extends ChangeNotifier {
 
   startPollingForCreateSubscriptionResponse() {
     timer = Timer.periodic(
-      Duration(seconds: 10),
+      const Duration(seconds: 10),
       (t) {
         pollCount++;
         if (pollCount > 100) {
@@ -240,7 +240,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription updated successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -259,7 +259,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription paused successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -277,7 +277,7 @@ class SubService extends ChangeNotifier {
     isPauseOrResuming = false;
     if (res.isSuccess()) {
       subscriptionData = res.model;
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription resumed successfully",
             "Effective changes will take place from tomorrow");
       });

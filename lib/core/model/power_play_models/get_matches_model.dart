@@ -31,7 +31,8 @@ class MatchesModel {
         message: json["message"],
         data: json["data"] == null
             ? []
-            : List<MatchData>.from(json["data"]!.map(MatchData.fromJson)),
+            : List<MatchData>.from(
+                json["data"]!.map((x) => MatchData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
