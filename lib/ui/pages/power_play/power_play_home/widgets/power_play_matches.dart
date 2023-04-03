@@ -31,6 +31,13 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
   }
 
   void _handleTabSelection() {
+    if (_tabController!.index == 0) {
+      print("Live");
+    } else if (_tabController!.index == 1) {
+      print("Upcoming");
+    } else if (_tabController!.index == 2) {
+      print("Completed");
+    }
     setState(() {});
   }
 

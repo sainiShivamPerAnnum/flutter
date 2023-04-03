@@ -53,7 +53,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     super.dispose();
   }
 
-  void init() async {
+  Future<void> init() async {
     state = ViewState.Busy;
     _powerPlayService.init();
 
@@ -83,5 +83,6 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     }
 
     state = ViewState.Idle;
+    notifyListeners();
   }
 }

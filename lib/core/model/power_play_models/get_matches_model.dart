@@ -65,7 +65,7 @@ class MatchData {
     this.startsAt,
     this.status,
     this.teams,
-  });
+    this.headsUpText});
 
   final String? id;
   final Map<String, int>? currentScore;
@@ -76,6 +76,7 @@ class MatchData {
   final DateTime? startsAt;
   final String? status;
   final List<String>? teams;
+  final String? headsUpText;
 
   MatchData copyWith({
     String? id,
@@ -87,6 +88,7 @@ class MatchData {
     DateTime? startsAt,
     String? status,
     List<String>? teams,
+    String? headsUpText,
   }) =>
       MatchData(
         id: id ?? this.id,
@@ -98,6 +100,7 @@ class MatchData {
         startsAt: startsAt ?? this.startsAt,
         status: status ?? this.status,
         teams: teams ?? this.teams,
+        headsUpText: headsUpText ?? this.headsUpText,
       );
 
   factory MatchData.fromJson(Map<String, dynamic> json) => MatchData(
@@ -114,6 +117,7 @@ class MatchData {
         teams: json["teams"] == null
             ? []
             : List<String>.from(json["teams"]!.map((x) => x)),
+        headsUpText: json["headsUpText"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -127,6 +131,7 @@ class MatchData {
         "startsAt": startsAt?.toIso8601String(),
         "status": status,
         "teams": teams == null ? [] : List<dynamic>.from(teams!.map((x) => x)),
+        "headsUpText": headsUpText,
       };
 
   @override
@@ -142,7 +147,8 @@ class MatchData {
           scheduledTaskId == other.scheduledTaskId &&
           startsAt == other.startsAt &&
           status == other.status &&
-          teams == other.teams;
+          teams == other.teams &&
+          headsUpText == other.headsUpText;
 
   @override
   int get hashCode =>
@@ -154,5 +160,6 @@ class MatchData {
       scheduledTaskId.hashCode ^
       startsAt.hashCode ^
       status.hashCode ^
-      teams.hashCode;
+      teams.hashCode ^
+      headsUpText.hashCode;
 }

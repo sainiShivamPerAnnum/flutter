@@ -64,23 +64,26 @@ class LiveMatch extends StatelessWidget {
           const SizedBox(
             height: 18,
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 17),
-            child: IplTeamsScoreWidget(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+            child: IplTeamsScoreWidget(
+              team1: matchData.teams?[0] ?? "",
+              team2: matchData.teams?[1] ?? "",
+              score1: matchData.currentScore?[matchData.teams![0]].toString(),
+              score2: matchData.currentScore?[matchData.teams![1]].toString(),
+            ),
           ),
           const SizedBox(
             height: 30,
           ),
           Center(
             child: Text(
-              'PREDICTIONS END AFTER RCB PLAYS 19TH OVER',
+              matchData.headsUpText ?? '',
               style: TextStyles.sourceSans
                   .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
             ),
           ),
-          const SizedBox(
-            height: 18,
-          ),
+          SizedBox(height: SizeConfig.padding16),
           Container(
             margin: const EdgeInsets.symmetric(
               horizontal: 22,
@@ -99,7 +102,14 @@ class LiveMatch extends StatelessWidget {
                     ),
                     isScrollControlled: true,
                     hapticVibrate: true,
-                    content: const MakePredictionSheet());
+                    content: MakePredictionSheet(
+                      team1: matchData.teams?[0] ?? "",
+                      team2: matchData.teams?[1] ?? "",
+                      score1: matchData.currentScore?[matchData.teams![0]]
+                          .toString(),
+                      score2: matchData.currentScore?[matchData.teams![1]]
+                          .toString(),
+                    ));
               },
               child: Center(
                 child: Text(

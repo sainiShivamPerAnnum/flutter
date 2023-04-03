@@ -5,7 +5,16 @@ import 'package:flutter/material.dart';
 class IplTeamsScoreWidget extends StatelessWidget {
   const IplTeamsScoreWidget({
     super.key,
+    required this.team1,
+    required this.team2,
+    this.score1,
+    this.score2,
   });
+
+  final String team1;
+  final String team2;
+  final String? score1;
+  final String? score2;
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +33,11 @@ class IplTeamsScoreWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Bengaluru',
+              team1,
               style: TextStyles.sourceSansB.body4,
             ),
             Text(
-              '140/2 (19)',
+              score1 ?? '140/2 (19)',
               style: TextStyles.sourceSans
                   .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
             ),
@@ -44,11 +53,11 @@ class IplTeamsScoreWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Chennai',
+              team2,
               style: TextStyles.sourceSansB.body4,
             ),
             Text(
-              'YET TO BAT',
+              score2 ?? 'YET TO BAT',
               style: TextStyles.sourceSans
                   .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
             ),
