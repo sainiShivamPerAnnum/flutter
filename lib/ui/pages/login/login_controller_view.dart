@@ -2,6 +2,8 @@ import 'dart:developer' as dev;
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:advertising_id/advertising_id.dart';
+import 'package:app_set_id/app_set_id.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -102,11 +104,50 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               ),
               Align(
                 alignment: Alignment.topRight,
-                child: Container(
-                    margin: EdgeInsets.only(
-                        top: SizeConfig.pageHorizontalMargins / 2,
-                        right: SizeConfig.pageHorizontalMargins),
-                    child: FaqPill(type: FaqsType.onboarding)),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                      onPressed: () async {
+                        try {
+                          String? advertisingId = await AdvertisingId.id(true);
+                          BaseUtil.showPositiveAlert(
+                              advertisingId, "is the advertising Id");
+                        } catch (e) {
+                          debugPrint(e.toString());
+                          BaseUtil.showNegativeAlert(
+                              "Null", "is the advertising Id");
+                        }
+                      },
+                      child: Text(
+                        "Advertising Id",
+                        style: TextStyles.sourceSans.body2.underline,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        try {
+                          final appSetId = await AppSetId().getIdentifier();
+                          BaseUtil.showPositiveAlert(
+                              appSetId, "is the app set Id");
+                        } catch (e) {
+                          debugPrint(e.toString());
+                          BaseUtil.showNegativeAlert(
+                              "Null", "is the app set Id");
+                        }
+                      },
+                      child: Text(
+                        "AppSet Id",
+                        style: TextStyles.sourceSans.body2.underline,
+                      ),
+                    ),
+                    Container(
+                        margin: EdgeInsets.only(
+                            top: SizeConfig.pageHorizontalMargins / 2,
+                            right: SizeConfig.pageHorizontalMargins),
+                        child: FaqPill(type: FaqsType.onboarding)),
+                  ],
+                ),
               ),
               if (keyboardIsOpen)
                 Positioned(

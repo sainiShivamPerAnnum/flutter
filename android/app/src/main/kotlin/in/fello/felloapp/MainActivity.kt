@@ -11,24 +11,22 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import android.os.RemoteException
 import android.provider.Settings
-import android.system.Os.bind
 import android.util.Base64
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import com.android.installreferrer.api.InstallReferrerClient
-import com.android.installreferrer.api.InstallReferrerStateListener
-import com.android.installreferrer.api.ReferrerDetails
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugins.GeneratedPluginRegistrant.registerWith
 import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.security.MessageDigest
 
 
 class MainActivity : FlutterFragmentActivity()  {
@@ -79,6 +77,14 @@ class MainActivity : FlutterFragmentActivity()  {
                val id: String = getUniqueDeviceId(context)
                  result.success(id)
              }
+            else if(call.method == "getAdvertisingId"){
+                val id: String? = getAdvertisingId()
+                result.success(id)
+            }
+            else if(call.method == "getAppSetId"){
+                val id: String? = getAppSetId()
+                result.success(id);
+            }
             else {
               result.notImplemented()
             }
@@ -112,6 +118,46 @@ class MainActivity : FlutterFragmentActivity()  {
     @SuppressLint("HardwareIds")
     fun getUniqueDeviceId(context: Context): String {
         return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+    }
+
+
+    private fun getAdvertisingId(): String? {
+        var adInfo: com.google.android.gms.ads.identifier.AdvertisingIdClient.Info? = null
+        try {
+            adInfo = AdvertisingIdClient.getAdvertisingIdInfo(applicationContext)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: GooglePlayServicesNotAvailableException) {
+            e.printStackTrace()
+        } catch (e: GooglePlayServicesRepairableException) {
+            e.printStackTrace()
+        }
+        var advertisingId: String? = null
+        try {
+            advertisingId = adInfo?.id
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
+        }
+        return advertisingId
+    }
+
+    @SuppressLint("HardwareIds")
+    fun getAppSetId(): String {
+        val androidId = Settings.Secure.getString(
+            applicationContext.contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
+        val deviceId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Build.getSerial()
+        } else {
+            Build.SERIAL
+        }
+        val combinedId = "$androidId$deviceId"
+        val digest = MessageDigest.getInstance("SHA-256")
+        val hash = digest.digest(combinedId.toByteArray(Charsets.UTF_8))
+        return hash.joinToString("") {
+            String.format("%02x", it)
+        }
     }
 
     private var isAlreadyReturend=false
