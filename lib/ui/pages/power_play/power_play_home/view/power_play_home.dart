@@ -1,12 +1,11 @@
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/view/prediction_leaderboard.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/view/power_play_matches.dart';
 import 'package:felloapp/ui/pages/power_play/widgets/power_play_bg.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../welcome_page/view/power_play_welcome_page.dart';
 
 class PowerPlayHome extends StatefulWidget {
   const PowerPlayHome({Key? key}) : super(key: key);
@@ -95,7 +94,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const PowerPlayWelcomePage()));
+                      builder: (context) => const PredictionLeaderboard()));
                 },
                 child: Container(
                   height: 43,
