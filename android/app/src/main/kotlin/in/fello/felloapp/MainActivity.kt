@@ -89,6 +89,29 @@ class MainActivity : FlutterFragmentActivity()  {
               result.notImplemented()
             }
           }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "android_id").setMethodCallHandler {
+            call, result ->
+            if (call.method == "getId") {
+                result.success(getAndroidId())
+            } else {
+                result.notImplemented()
+            }
+        }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "root_check").setMethodCallHandler {
+            call, result ->
+            if (call.method == "isDeviceRooted") {
+                result.success(RootCheckService().isDeviceRooted())
+            } else {
+                result.notImplemented()
+            }
+        }
+}
+
+    @SuppressLint("HardwareIds")
+    private fun getAndroidId(): String? {
+        return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID);
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -274,10 +297,6 @@ class MainActivity : FlutterFragmentActivity()  {
             res?.error("400", "exception",ex.message )
         }
     }
-
-
-
-
 
 
     override fun onStart() {

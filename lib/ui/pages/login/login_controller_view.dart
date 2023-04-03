@@ -7,6 +7,7 @@ import 'package:app_set_id/app_set_id.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/device_root_check_service.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
@@ -25,6 +26,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+
+import 'package:felloapp/core/service/android_id_service.dart';
 
 class LoginControllerView extends StatefulWidget {
   final int? initPage;
@@ -128,8 +131,11 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       onPressed: () async {
                         try {
                           final appSetId = await AppSetId().getIdentifier();
-                          BaseUtil.showPositiveAlert(
-                              appSetId, "is the app set Id");
+                          final isDeviceRooted =
+                              await RootCheckService().isDeviceRooted();
+                          String? _androidId = await AndroidId().getId();
+                          BaseUtil.showPositiveAlert(isDeviceRooted.toString(),
+                              "is the device rooted set Id");
                         } catch (e) {
                           debugPrint(e.toString());
                           BaseUtil.showNegativeAlert(

@@ -61,6 +61,9 @@ class BaseUser {
   static final String fldAppFlyerId = "mAppFlyerId";
   static final String fldAvatarId = "mAvatarId";
   static final String fldIsOldUser = "isOldUser";
+  static final String fldReferralCode = "referralCode";
+  static final String fldAppSetId = "mAppSetId";
+  static final String fldAndroidId = "mAndroidId";
 
   BaseUser(
     this.uid,

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -21,6 +22,8 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/core/service/android_id_service.dart';
+import 'package:app_set_id/app_set_id.dart';
 
 import 'base_repo.dart';
 
@@ -52,6 +55,24 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse<Map<String, dynamic>>> setNewUser(
       BaseUser baseUser, token) async {
+    String? _appSetId;
+    String? _androidId;
+    try {
+      _appSetId = await AppSetId().getIdentifier();
+      logger.d('AppSetId: Package found an appropriate ID value: $_appSetId');
+    } catch (e) {
+      logger.e('AppSetId: Package failed to set an appropriate ID value');
+    }
+
+    if (Platform.isAndroid) {
+      try {
+        _androidId = await AndroidId().getId();
+        logger.d('AndroidId: Service found an Android Id: $_androidId');
+      } catch (e) {
+        logger.e('AndroidId: Service failed to find a Android Id');
+      }
+    }
+
     try {
       final String _bearer = token;
 
@@ -68,7 +89,9 @@ class UserRepository extends BaseRepo {
           BaseUser.fldAvatarId: baseUser.avatarId,
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
           BaseUser.fldAppFlyerId: await _appsFlyerService!.appFlyerId,
-          'referralCode': BaseUtil.manualReferralCode ?? ''
+          BaseUser.fldReferralCode: BaseUtil.manualReferralCode ?? '',
+          BaseUser.fldAppSetId: _appSetId ?? '',
+          BaseUser.fldAndroidId: _androidId ?? '',
         }
       };
 

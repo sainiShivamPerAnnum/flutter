@@ -12,6 +12,7 @@ dependencies:
   animated_text_kit: ^4.2.2
   animations: ^2.0.2
   another_flushbar: 1.12.29
+  app_set_id: ^1.0.0
   app_install_date: ^0.1.1
   appsflyer_sdk: ^6.5.2
   apxor_flutter:
@@ -99,7 +100,6 @@ dependencies:
   webengage_flutter: ^1.2.1
   webview_flutter: ^3.0.4
   advertising_id: ^2.4.0
-  app_set_id: ^1.0.0
 
 
 

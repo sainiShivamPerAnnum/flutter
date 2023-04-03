@@ -41,6 +41,7 @@ class InternalOpsService extends ChangeNotifier {
     String? _platform;
     String? brand;
     bool? isPhysicalDevice;
+    String? _osVersion;
 
     if (!isDeviceInfoInitiated) {
       try {
@@ -50,6 +51,7 @@ class InternalOpsService extends ChangeNotifier {
           phoneModel = iosDeviceInfo.name;
           softwareVersion = iosDeviceInfo.systemVersion;
           _deviceId = iosDeviceInfo.identifierForVendor;
+          _osVersion = iosDeviceInfo.systemVersion;
           brand = "apple";
           _platform = "ios";
           logger!.d(
@@ -60,6 +62,7 @@ class InternalOpsService extends ChangeNotifier {
           softwareVersion = androidDeviceInfo.version.sdkInt.toString();
           _deviceId = androidDeviceInfo.id;
           brand = androidDeviceInfo.brand;
+          _osVersion = androidDeviceInfo.version.sdkInt.toString();
           isPhysicalDevice = androidDeviceInfo.isPhysicalDevice;
           _platform = "android";
           logger!.d(
@@ -75,7 +78,8 @@ class InternalOpsService extends ChangeNotifier {
           "version": softwareVersion ?? 0,
           "model": phoneModel ?? "",
           "brand": brand ?? "",
-          "isPhysicalDevice": isPhysicalDevice ?? false
+          "isPhysicalDevice": isPhysicalDevice ?? false,
+          "osVersion": _osVersion ?? ""
         };
       } catch (e) {
         logFailure(
