@@ -209,4 +209,5 @@ class ApiPath {
 
   static String powerPlayWinnersLeaderboard(String matchId) =>
       "/powerplay/match/$matchId/leaderboard";
+  static String get seasonLeaderboard => "/powerplay/global/leaderboard";
 }

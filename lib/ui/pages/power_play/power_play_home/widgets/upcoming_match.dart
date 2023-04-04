@@ -28,12 +28,12 @@ class UpcomingMatch extends StatefulWidget {
 class _UpcomingMatchState extends State<UpcomingMatch> {
   String getDate(int index) {
     return DateFormat('d MMM ' 'yy')
-        .format(widget.model.upcomingMatchData![index]!.startsAt!);
+        .format(widget.model.upcomingMatchData![index]!.startsAt!.toDate());
   }
 
   String getTime(int index) {
     return DateFormat('hh:mm a')
-        .format(widget.model.upcomingMatchData![index]!.startsAt!);
+        .format(widget.model.upcomingMatchData![index]!.startsAt!.toDate());
   }
 
   @override

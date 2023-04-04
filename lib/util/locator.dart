@@ -87,6 +87,7 @@ import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_vm.
 import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_vm.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/view_model/leaderboard_view_model.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
+import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_vm.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratch_cards_vm.dart';
@@ -229,6 +230,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => PowerPlayHomeViewModel());
   locator.registerFactory(() => LeaderBoardViewModel());
   locator.registerFactory(() => CompletedMatchDetailsVM());
+  locator.registerFactory(() => SeasonLeaderboardViewModel());
 
   //WIDGETS
   locator.registerFactory(() => MiniTransactionCardViewModel());

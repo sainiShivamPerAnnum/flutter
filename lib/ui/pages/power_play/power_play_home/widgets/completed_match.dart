@@ -5,6 +5,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -32,6 +33,7 @@ class CompletedMatch extends StatelessWidget {
                 itemBuilder: (context, i) {
                   return GestureDetector(
                     onTap: () {
+                      Haptic.vibrate();
                       AppState.delegate!.appState.currentAction = PageAction(
                           page: FppCompletedMatchDetailsConfig,
                           widget: CompletedMatchDetailsView(

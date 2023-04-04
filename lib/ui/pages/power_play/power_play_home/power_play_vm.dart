@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
@@ -108,6 +109,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   }
 
   Future<void> handleTabSwitch(index) async {
+    Haptic.vibrate();
     switch (index) {
       case 0:
         break;
