@@ -41,6 +41,7 @@ class MainActivity : FlutterFragmentActivity()  {
         super.configureFlutterEngine(flutterEngine)
             context=applicationContext
         flutterEngine.plugins.add(MyPlugin())
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
                 // Note: this method is invoked on the main thread.
                 call, result ->
@@ -85,28 +86,16 @@ class MainActivity : FlutterFragmentActivity()  {
                 val id: String? = getAppSetId()
                 result.success(id);
             }
+            else if(call.method == "getAndroidId"){
+                result.success(getAndroidId())
+            }
+            else if(call.method == "isDeviceRooted"){
+                result.success(RootCheckService().isDeviceRooted())
+            }
             else {
               result.notImplemented()
             }
           }
-
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "android_id").setMethodCallHandler {
-            call, result ->
-            if (call.method == "getId") {
-                result.success(getAndroidId())
-            } else {
-                result.notImplemented()
-            }
-        }
-
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "root_check").setMethodCallHandler {
-            call, result ->
-            if (call.method == "isDeviceRooted") {
-                result.success(RootCheckService().isDeviceRooted())
-            } else {
-                result.notImplemented()
-            }
-        }
 }
 
     @SuppressLint("HardwareIds")

@@ -18,6 +18,8 @@ class InternalOpsService extends ChangeNotifier {
   String? phoneModel;
   String? _deviceId;
   String? softwareVersion;
+  String? osVersion;
+  String? integrity;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   bool isDeviceInfoInitiated = false;
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
@@ -41,7 +43,8 @@ class InternalOpsService extends ChangeNotifier {
     String? _platform;
     String? brand;
     bool? isPhysicalDevice;
-    String? _osVersion;
+    const BASE_CHANNEL = 'methodChannel/deviceData';
+    final platform = MethodChannel(BASE_CHANNEL);
 
     if (!isDeviceInfoInitiated) {
       try {
@@ -51,9 +54,10 @@ class InternalOpsService extends ChangeNotifier {
           phoneModel = iosDeviceInfo.name;
           softwareVersion = iosDeviceInfo.systemVersion;
           _deviceId = iosDeviceInfo.identifierForVendor;
-          _osVersion = iosDeviceInfo.systemVersion;
+          osVersion = iosDeviceInfo.systemVersion;
           brand = "apple";
           _platform = "ios";
+          integrity = 'UNAVAILABLE';
           logger!.d(
               "Device Information - $phoneModel \n $softwareVersion \n $_deviceId");
         } else if (Platform.isAndroid) {
@@ -62,9 +66,14 @@ class InternalOpsService extends ChangeNotifier {
           softwareVersion = androidDeviceInfo.version.sdkInt.toString();
           _deviceId = androidDeviceInfo.id;
           brand = androidDeviceInfo.brand;
-          _osVersion = androidDeviceInfo.version.sdkInt.toString();
+          osVersion = androidDeviceInfo.version.sdkInt.toString();
           isPhysicalDevice = androidDeviceInfo.isPhysicalDevice;
           _platform = "android";
+
+          //try to check if the device is rooted or not
+          final bool isDeviceRooted =
+              await platform.invokeMethod('isDeviceRooted');
+          integrity = (isDeviceRooted) ? 'ROOTED' : 'NOT_ROOTED';
           logger!.d(
               "Device Information - phoneModel: $phoneModel \nSoftware version: $softwareVersion \nDeviceId $_deviceId");
         }
@@ -79,7 +88,8 @@ class InternalOpsService extends ChangeNotifier {
           "model": phoneModel ?? "",
           "brand": brand ?? "",
           "isPhysicalDevice": isPhysicalDevice ?? false,
-          "osVersion": _osVersion ?? ""
+          "osVersion": osVersion ?? "",
+          "integrity": integrity ?? ""
         };
       } catch (e) {
         logFailure(

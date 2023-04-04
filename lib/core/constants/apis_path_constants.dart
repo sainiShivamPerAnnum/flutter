@@ -1,6 +1,9 @@
 class ApiPath {
   ApiPath();
 
+  //Analytics
+  get kSetInstallInfo => "/set-install-info";
+
   //Augmont Ops
   get kGetGoldRates => "/gold/rates";
   static String get happyHour => "/happy-hours/active";
