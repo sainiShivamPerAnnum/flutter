@@ -352,14 +352,14 @@ class LoginControllerViewModel extends BaseViewModel {
         'Received the following information: {InstallReferrerData: $installReferrerData,' +
             'AppSetId: $_appSetId, AndroidId: $_androidId, AdvertisingId: $_advertisingId, OSVersion: $_osVersion}');
 
-    // final ApiResponse response = await _analyticsRepo!.setInstallInfo(
-    //     userService.baseUser!,
-    //     installReferrerData,
-    //     _appSetId,
-    //     _androidId,
-    //     _osVersion,
-    //     _advertisingId);
-    // logger.d('Data sent to API with the following response: ${response.model}');
+    final ApiResponse response = await _analyticsRepo!.setInstallInfo(
+        userService.baseUser!,
+        installReferrerData,
+        _appSetId,
+        _androidId,
+        _osVersion,
+        _advertisingId);
+    logger.d('Data sent to API with the following response: ${response.model}');
   }
 
   void _onSignInSuccess(LoginSource source) async {
@@ -467,6 +467,11 @@ class LoginControllerViewModel extends BaseViewModel {
 
       BaseAnalytics.analytics!.logSignUp(signUpMethod: 'phoneNumber');
       _analyticsService!.trackSignup(userService.baseUser!.uid);
+
+      logger.d(
+          'invoke an API to send device related and install referrer related information to the server');
+      sendInstallInformation();
+      BaseUtil.isPostSignupSession = true;
     }
 
     BaseAnalytics.logUserProfile(userService.baseUser!);

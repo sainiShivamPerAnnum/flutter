@@ -21,6 +21,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -107,41 +108,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextButton(
-                      onPressed: () async {
-                        try {
-                          String? advertisingId = await AdvertisingId.id(true);
-                          BaseUtil.showPositiveAlert(
-                              advertisingId, "is the advertising Id");
-                        } catch (e) {
-                          debugPrint(e.toString());
-                          BaseUtil.showNegativeAlert(
-                              "Null", "is the advertising Id");
-                        }
-                      },
-                      child: Text(
-                        "Advertising Id",
-                        style: TextStyles.sourceSans.body2.underline,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        try {
-                          model.sendInstallInformation();
-                          final appSetId = await AppSetId().getIdentifier();
-                          BaseUtil.showPositiveAlert(
-                              "test", "is the device rooted set Id");
-                        } catch (e) {
-                          debugPrint(e.toString());
-                          BaseUtil.showNegativeAlert(
-                              "Null", "is the app set Id");
-                        }
-                      },
-                      child: Text(
-                        "AppSet Id",
-                        style: TextStyles.sourceSans.body2.underline,
-                      ),
-                    ),
                     Container(
                         margin: EdgeInsets.only(
                             top: SizeConfig.pageHorizontalMargins / 2,
@@ -244,9 +210,33 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                             ],
                           ),
                         ),
-                        TnC(
-                          locale: locale,
-                          model: model,
+                        // TnC(
+                        //   locale: locale,
+                        //   model: model,
+                        // ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
+                              SizeConfig.padding16, SizeConfig.padding10, 0),
+                          child: RichText(
+                            text: new TextSpan(
+                              children: [
+                                new TextSpan(
+                                  text: locale.obAgreeText,
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTextColor2),
+                                ),
+                                new TextSpan(
+                                  text: locale.obTermsofService,
+                                  style: TextStyles.sourceSans.body3.underline
+                                      .colour(UiConstants.kTextColor),
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () {
+                                      model.onTermsAndConditionsClicked();
+                                    },
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: SizeConfig.screenWidth! * 0.1 +
@@ -346,7 +336,7 @@ class _TnCState extends State<TnC> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        getReferralData();
+        // getReferralData();
       },
       child: Padding(
         padding: EdgeInsets.fromLTRB(SizeConfig.padding10, SizeConfig.padding16,
@@ -357,22 +347,5 @@ class _TnCState extends State<TnC> {
         ),
       ),
     );
-  }
-
-  Future<String> getReferralData() async {
-    String installReferrer = "";
-    HapticFeedback.vibrate();
-    try {
-      log("calling referrer data");
-      const _channel = MethodChannel('my_plugin');
-      installReferrer = await _channel.invokeMethod('getInstallReferrer');
-    } catch (e) {
-      BaseUtil.showNegativeAlert(e.toString(), "error!");
-    }
-
-    setState(() {
-      data = installReferrer;
-    });
-    return "";
   }
 }
