@@ -19,27 +19,36 @@ class CompletedMatchDetailsView extends StatelessWidget {
         children: [
           SizedBox(
             width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight,
+            // height: SizeConfig.screenHeight,
             child: Column(
               children: [
                 SizedBox(
                     height: SizeConfig.viewInsets.top + kToolbarHeight / 2),
-                SvgPicture.network(
-                  Assets.powerPlayMain,
-                  height: SizeConfig.screenWidth! * 0.2,
-                ),
-                const PowerPlayTotalWinWidget(),
-                // const WinTextWidget(),
-                const LossOrNoParticipateTextWidget(),
-                const CustomDivider(),
-                MatchBriefDetailsWidget(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding40,
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        SvgPicture.network(
+                          Assets.powerPlayMain,
+                          height: SizeConfig.screenWidth! * 0.2,
+                        ),
+                        const PowerPlayTotalWinWidget(),
+                        // const WinTextWidget(),
+                        const LossOrNoParticipateTextWidget(),
+                        const CustomDivider(),
+                        MatchBriefDetailsWidget(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding40,
+                          ),
+                        ),
+                        const UserPredictionsButton(),
+                        const CorrectPredictorsListView(),
+                        SizedBox(height: SizeConfig.navBarHeight * 1.5)
+                      ],
+                    ),
                   ),
                 ),
-                const UserPredictionsButton(),
-                const CorrectPredictorsListView(),
-                const FooterCta(),
               ],
             ),
           ),
@@ -53,6 +62,10 @@ class CompletedMatchDetailsView extends StatelessWidget {
               ),
             ),
           ),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: FooterCta(),
+          )
         ],
       ),
     );
@@ -66,12 +79,15 @@ class FooterCta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      height: SizeConfig.padding80,
+      width: SizeConfig.screenWidth,
       padding: EdgeInsets.only(
           left: SizeConfig.pageHorizontalMargins,
           right: SizeConfig.pageHorizontalMargins,
           bottom: SizeConfig.pageHorizontalMargins),
       child: MaterialButton(
+        height: SizeConfig.padding32,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         padding: const EdgeInsets.symmetric(vertical: 10),
         color: Colors.white,
@@ -96,106 +112,104 @@ class CorrectPredictorsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        width: SizeConfig.screenWidth,
-        margin: EdgeInsets.only(
-          top: SizeConfig.pageHorizontalMargins,
-          right: SizeConfig.pageHorizontalMargins,
-          left: SizeConfig.pageHorizontalMargins,
+    return Container(
+      width: SizeConfig.screenWidth,
+      margin: EdgeInsets.only(
+        top: SizeConfig.pageHorizontalMargins,
+        right: SizeConfig.pageHorizontalMargins,
+        left: SizeConfig.pageHorizontalMargins,
+      ),
+      child: Column(children: [
+        Text(
+          "Correct Predictors of the Match",
+          style: TextStyles.sourceSansB.title5,
         ),
-        child: Column(children: [
-          Text(
-            "Correct Predictors of the Match",
-            style: TextStyles.sourceSansB.title5,
-          ),
-          SizedBox(height: SizeConfig.padding16),
-          Row(
-            children: [
-              SizedBox(
-                width: SizeConfig.screenWidth! * 0.13,
-                child: Text(
-                  "#Rank",
-                  style: TextStyles.sourceSans.body3.colour(Colors.white38),
+        SizedBox(height: SizeConfig.padding16),
+        Row(
+          children: [
+            SizedBox(
+              width: SizeConfig.screenWidth! * 0.13,
+              child: Text(
+                "#Rank",
+                style: TextStyles.sourceSans.body3.colour(Colors.white38),
+              ),
+            ),
+            Text(
+              "Username",
+              style: TextStyles.sourceSans.body3.colour(Colors.white38),
+            ),
+            const Spacer(),
+            Text(
+              "Prediction",
+              style: TextStyles.sourceSans.body3.colour(Colors.white38),
+            ),
+          ],
+        ),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          itemCount: 4,
+          itemBuilder: (ctx, i) => Padding(
+            padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: SizeConfig.screenWidth! * 0.13,
+                  child: Text(
+                    "#$i",
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
                 ),
-              ),
-              Text(
-                "Username",
-                style: TextStyles.sourceSans.body3.colour(Colors.white38),
-              ),
-              const Spacer(),
-              Text(
-                "Prediction",
-                style: TextStyles.sourceSans.body3.colour(Colors.white38),
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.separated(
-              padding: EdgeInsets.zero,
-              itemCount: 4,
-              itemBuilder: (ctx, i) => Padding(
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
-                child: Row(
+                Expanded(
+                    child: Row(
                   children: [
-                    SizedBox(
-                      width: SizeConfig.screenWidth! * 0.13,
-                      child: Text(
-                        "#$i",
-                        style: TextStyles.sourceSansSB.body1,
+                    CircleAvatar(
+                      radius: SizeConfig.iconSize1,
+                      backgroundColor: Colors.black,
+                    ),
+                    SizedBox(width: SizeConfig.padding10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "@qwertyuiop",
+                            style: TextStyles.sourceSans.body3,
+                          ),
+                          SizedBox(height: SizeConfig.padding2),
+                          Text(
+                            "won ₹120 worth of digital gold",
+                            style: TextStyles.sourceSans.body4
+                                .colour(Colors.white70),
+                          )
+                        ],
                       ),
                     ),
-                    Expanded(
-                        child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: SizeConfig.iconSize1,
-                          backgroundColor: Colors.black,
-                        ),
-                        SizedBox(width: SizeConfig.padding10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "@qwertyuiop",
-                                style: TextStyles.sourceSans.body3,
-                              ),
-                              SizedBox(height: SizeConfig.padding2),
-                              Text(
-                                "won ₹120 worth of digital gold",
-                                style: TextStyles.sourceSans.body4
-                                    .colour(Colors.white70),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    )),
-                    SizedBox(width: SizeConfig.padding16),
-                    Text(
-                      "₹120 | 5:56 PM",
-                      style: TextStyles.sourceSans.body3,
-                    )
                   ],
-                ),
-              ),
-              separatorBuilder: (ctx, i) => (i == 3)
-                  ? const SizedBox()
-                  : const Divider(
-                      color: Colors.white30,
-                      thickness: 0.3,
-                    ),
+                )),
+                SizedBox(width: SizeConfig.padding16),
+                Text(
+                  "₹120 | 5:56 PM",
+                  style: TextStyles.sourceSans.body3,
+                )
+              ],
             ),
           ),
-          TextButton(
-              onPressed: () {},
-              child: Text(
-                "View All Winners",
-                style: TextStyles.sourceSans.body2.underline,
-              ))
-        ]),
-      ),
+          separatorBuilder: (ctx, i) => (i == 3)
+              ? const SizedBox()
+              : const Divider(
+                  color: Colors.white30,
+                  thickness: 0.3,
+                ),
+        ),
+        // TextButton(
+        //     onPressed: () {},
+        //     child: Text(
+        //       "View All Winners",
+        //       style: TextStyles.sourceSans.body2.underline,
+        //     ))
+      ]),
     );
   }
 }
