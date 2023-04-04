@@ -5,7 +5,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -32,7 +31,7 @@ class PredictionLeaderboard extends StatelessWidget {
     return BaseView<LeaderBoardViewModel>(
       onModelReady: (model) {
         model.getUserPredictedData();
-        model.powerPlayService.getUserTransactionHistory(MatchStatus.active);
+        model.powerPlayService.getUserTransactionHistory(matchData);
       },
       builder: (context, model, child) {
         return PowerPlayBackgroundUi(
