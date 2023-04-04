@@ -81,7 +81,7 @@ class PowerPlayService extends ChangeNotifier {
         BaseUtil.showNegativeAlert(response.errorMessage, "Please try again");
       }
     } catch (e) {
-      BaseUtil.showNegativeAlert("Something went wrong", "Please try again");
+      // BaseUtil.showNegativeAlert("Something went wrong", "Please try again");
     }
   }
 }

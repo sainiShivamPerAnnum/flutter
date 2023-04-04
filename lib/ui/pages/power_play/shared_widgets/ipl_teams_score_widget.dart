@@ -13,8 +13,8 @@ class IplTeamsScoreWidget extends StatelessWidget {
 
   final String team1;
   final String team2;
-  final String? score1;
-  final String? score2;
+  final int? score1;
+  final int? score2;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class IplTeamsScoreWidget extends StatelessWidget {
               style: TextStyles.sourceSansB.body4,
             ),
             Text(
-              score1 ?? '140/2 (19)',
+              score1 == 0 ? 'YET TO BAT' : score1.toString(),
               style: TextStyles.sourceSans
                   .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
             ),
@@ -57,7 +57,7 @@ class IplTeamsScoreWidget extends StatelessWidget {
               style: TextStyles.sourceSansB.body4,
             ),
             Text(
-              score2 ?? 'YET TO BAT',
+              score2 == 0 ? 'YET TO BAT' : score2.toString(),
               style: TextStyles.sourceSans
                   .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
             ),

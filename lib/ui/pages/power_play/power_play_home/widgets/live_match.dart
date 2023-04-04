@@ -15,7 +15,7 @@ class LiveMatch extends StatelessWidget {
     required this.matchData,
   });
 
-  final MatchData matchData;
+  final MatchData? matchData;
 
   @override
   Widget build(BuildContext context) {
@@ -61,24 +61,24 @@ class LiveMatch extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(
-            height: 18,
+          SizedBox(
+            height: SizeConfig.padding16,
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
             child: IplTeamsScoreWidget(
-              team1: matchData.teams?[0] ?? "",
-              team2: matchData.teams?[1] ?? "",
-              score1: matchData.currentScore?[matchData.teams![0]].toString(),
-              score2: matchData.currentScore?[matchData.teams![1]].toString(),
+              team1: matchData?.teams?[0] ?? "",
+              team2: matchData?.teams?[1] ?? "",
+              score1: matchData?.currentScore?[matchData?.teams![0]],
+              score2: matchData?.currentScore?[matchData?.teams![1]],
             ),
           ),
-          const SizedBox(
-            height: 30,
+          SizedBox(
+            height: SizeConfig.padding28,
           ),
           Center(
             child: Text(
-              matchData.headsUpText ?? '',
+              matchData?.headsUpText ?? '',
               style: TextStyles.sourceSans
                   .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
             ),
@@ -103,12 +103,10 @@ class LiveMatch extends StatelessWidget {
                     isScrollControlled: true,
                     hapticVibrate: true,
                     content: MakePredictionSheet(
-                      team1: matchData.teams?[0] ?? "",
-                      team2: matchData.teams?[1] ?? "",
-                      score1: matchData.currentScore?[matchData.teams![0]]
-                          .toString(),
-                      score2: matchData.currentScore?[matchData.teams![1]]
-                          .toString(),
+                      team1: matchData?.teams?[0] ?? "",
+                      team2: matchData?.teams?[1] ?? "",
+                      score1: matchData?.currentScore?[matchData?.teams![0]],
+                      score2: matchData?.currentScore?[matchData?.teams![1]],
                     ));
               },
               child: Center(

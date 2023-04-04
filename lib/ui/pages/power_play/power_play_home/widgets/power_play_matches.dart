@@ -93,13 +93,18 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                 ),
                 Builder(builder: (_) {
                   if (_tabController!.index == 0) {
-                    return model.state == ViewState.Busy
-                        ? const Center(child: CircularProgressIndicator())
+                    if (model.state == ViewState.Busy) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return model.liveMatchData?.isEmpty ?? true
+                        ? const Center(child: Text("No Live Match"))
                         : LiveMatch(
-                            matchData: model.liveMatchData[0],
+                            matchData: model.liveMatchData?[0],
                           );
                   } else if (_tabController!.index == 1) {
-                    return const UpcomingMatch();
+                    return UpcomingMatch(
+                      model: model,
+                    );
                   } else {
                     return const CompletedMatch();
                   }

@@ -14,19 +14,19 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   // }
 
   final List<String> _tabs = ["Live", "Upcoming", "Completed"];
-  List<MatchData> _liveMatchData = [];
-  List<MatchData> _upcomingMatchData = [];
+  List<MatchData?>? _liveMatchData = [];
+  List<MatchData?>? _upcomingMatchData = [];
   List<MatchData> _completedMatchData = [];
 
-  List<MatchData> get liveMatchData => _liveMatchData;
+  List<MatchData?>? get liveMatchData => _liveMatchData;
 
-  set liveMatchData(List<MatchData> value) {
+  set liveMatchData(List<MatchData?>? value) {
     _liveMatchData = value;
   }
 
-  List<MatchData> get upcomingMatchData => _upcomingMatchData;
+  List<MatchData?>? get upcomingMatchData => _upcomingMatchData;
 
-  set upcomingMatchData(List<MatchData> value) {
+  set upcomingMatchData(List<MatchData?>? value) {
     _upcomingMatchData = value;
   }
 
@@ -47,11 +47,11 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    // _powerPlayService.dump();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // _powerPlayService.dump();
+  //   super.dispose();
+  // }
 
   Future<void> init() async {
     state = ViewState.Busy;
@@ -62,7 +62,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
       liveMatchData = _powerPlayService.liveMatchData;
     }
 
-    log("VM -- liveMatchData: ${liveMatchData.length}");
+    log("VM -- liveMatchData: ${liveMatchData?.length}");
 
     state = ViewState.Idle;
     notifyListeners();
@@ -71,12 +71,16 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   Future<void> getMatchesByStatus(String status, int limit, int offset) async {
     state = ViewState.Busy;
     await _powerPlayService.getMatchesByStatus(status, limit, offset);
+
     if (_powerPlayService.liveMatchData.isNotEmpty &&
         status == MatchStatus.active.getValue) {
       liveMatchData = _powerPlayService.liveMatchData;
     } else if (_powerPlayService.upcomingMatchData.isNotEmpty &&
         status == MatchStatus.upcoming.getValue) {
+      // log("VM -- _powerPlayService.upcomingMatchData: ${_powerPlayService.upcomingMatchData.length}");
+
       upcomingMatchData = _powerPlayService.upcomingMatchData;
+      // log("VM -- upcomingMatchData: ${upcomingMatchData?.length}");
     } else if (_powerPlayService.completedMatchData.isNotEmpty &&
         status == MatchStatus.completed.getValue) {
       completedMatchData = _powerPlayService.completedMatchData;

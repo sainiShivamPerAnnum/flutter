@@ -134,7 +134,7 @@ class HowItWorks extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 17),
                     child: IplTeamsScoreWidget(
-                        team1: 'CSK', team2: 'RCB', score1: '140'),
+                        team1: 'CSK', team2: 'RCB', score1: 140),
                   ),
                   const SizedBox(
                     height: 19,

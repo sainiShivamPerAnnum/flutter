@@ -364,8 +364,8 @@ class MakePredictionSheet extends StatefulWidget {
 
   final String team1;
   final String team2;
-  final String? score1;
-  final String? score2;
+  final int? score1;
+  final int? score2;
 
   @override
   State<MakePredictionSheet> createState() => _MakePredictionSheetState();
