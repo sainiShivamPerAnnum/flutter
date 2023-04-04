@@ -15,7 +15,7 @@ class CompletedMatchDetailsVM extends BaseViewModel {
   bool _isWinnersLoading = false;
   bool _isPredictionsLoading = false;
   MatchData? matchData;
-  List<UserTransaction>? predications = [];
+  List<UserTransaction>? predictions = [];
 
   bool get isWinnersLoading => _isWinnersLoading;
 
@@ -62,9 +62,9 @@ class CompletedMatchDetailsVM extends BaseViewModel {
         status: 'COMPLETE');
     isPredictionsLoading = false;
     if (response.isSuccess()) {
-      predications = response.model!.transactions;
+      predictions = response.model!.transactions;
     } else {
-      predications = [];
+      predictions = [];
     }
   }
 }
