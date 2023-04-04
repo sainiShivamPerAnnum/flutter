@@ -1,84 +1,96 @@
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class IplTeamsScoreWidget extends StatelessWidget {
-  IplTeamsScoreWidget(
-      {super.key,
-      required this.team1,
-      required this.team2,
-      this.score1,
-      this.score2,
-      this.padding});
+  const IplTeamsScoreWidget({super.key, this.padding, required this.matchData});
 
-  EdgeInsets? padding;
-  final String team1;
-  final String team2;
-  final int? score1;
-  final int? score2;
+  final EdgeInsets? padding;
+  final MatchData matchData;
+
+  int get score1 => matchData.currentScore![matchData.teams![0]]!;
+  int get score2 => matchData.currentScore![matchData.teams![1]]!;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: SizeConfig.screenWidth,
-        padding: padding ?? EdgeInsets.zero,
-        child: Row(
-          children: [
-            Container(
-              height: 30,
-              width: 35,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white)),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  team1,
-                  style: TextStyles.sourceSansB.body4,
+      width: SizeConfig.screenWidth,
+      padding: padding ?? EdgeInsets.zero,
+      child: Row(
+        children: [
+          Expanded(
+              child: Row(
+            children: [
+              Container(
+                width: SizeConfig.iconSize1 * 2,
+                height: SizeConfig.iconSize1 * 2,
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                child: SvgPicture.network(
+                  matchData.teamLogoMap![matchData.teams![0]]!,
+                  fit: BoxFit.cover,
                 ),
-                Text(
-                  score1 == 0 ? 'YET TO BAT' : score1.toString(),
-                  style: TextStyles.sourceSans
-                      .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Text(
+              ),
+              SizedBox(width: SizeConfig.padding12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    matchData.teams![0],
+                    style: TextStyles.sourceSansB.body4,
+                  ),
+                  Text(
+                    score1 > 0 ? 'YET TO BAT' : score1.toString(),
+                    style: TextStyles.sourceSans
+                        .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                  ),
+                ],
+              ),
+            ],
+          )),
+          CircleAvatar(
+            backgroundColor: UiConstants.kPowerPlayPrimaryOff,
+            radius: SizeConfig.iconSize2,
+            child: Text(
               'VS',
               style: TextStyles.sourceSansB.body4,
             ),
-            const Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  team2,
-                  style: TextStyles.sourceSansB.body4,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      matchData.teams![1],
+                      style: TextStyles.sourceSansB.body4,
+                    ),
+                    Text(
+                      score2 == 0 ? 'YET TO BAT' : score2.toString(),
+                      style: TextStyles.sourceSans
+                          .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                    ),
+                  ],
                 ),
-                Text(
-                  score2 == 0 ? 'YET TO BAT' : score2.toString(),
-                  style: TextStyles.sourceSans
-                      .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                SizedBox(width: SizeConfig.padding12),
+                Container(
+                  width: SizeConfig.iconSize1 * 2,
+                  height: SizeConfig.iconSize1 * 2,
+                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  child: SvgPicture.network(
+                    matchData.teamLogoMap![matchData.teams![1]]!,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(
-              width: 5,
-            ),
-            Container(
-              height: 30,
-              width: 35,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white)),
-            ),
-          ],
-        ));
+          )
+        ],
+      ),
+    );
   }
 }

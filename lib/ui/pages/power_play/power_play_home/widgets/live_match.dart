@@ -67,14 +67,9 @@ class LiveMatch extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
             child: IplTeamsScoreWidget(
-              team1: matchData?.teams?[0] ?? "",
-              team2: matchData?.teams?[1] ?? "",
-              score1: matchData?.currentScore?[matchData?.teams![0]],
-              score2: matchData?.currentScore?[matchData?.teams![1]],
-              padding: EdgeInsets.symmetric(horizontal: 17),
-
+              matchData: matchData!,
+              padding: const EdgeInsets.symmetric(horizontal: 17),
             ),
-
           ),
           SizedBox(
             height: SizeConfig.padding28,
@@ -106,10 +101,7 @@ class LiveMatch extends StatelessWidget {
                     isScrollControlled: true,
                     hapticVibrate: true,
                     content: MakePredictionSheet(
-                      team1: matchData?.teams?[0] ?? "",
-                      team2: matchData?.teams?[1] ?? "",
-                      score1: matchData?.currentScore?[matchData?.teams![0]],
-                      score2: matchData?.currentScore?[matchData?.teams![1]],
+                      matchData: matchData!,
                     ));
               },
               child: Center(

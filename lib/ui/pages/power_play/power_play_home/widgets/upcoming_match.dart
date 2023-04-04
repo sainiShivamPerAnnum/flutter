@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
-import 'package:felloapp/ui/pages/power_play/power_play_home/view_model/power_play_view_model.dart';
+import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -23,12 +22,6 @@ class UpcomingMatch extends StatefulWidget {
 }
 
 class _UpcomingMatchState extends State<UpcomingMatch> {
-  @override
-  void initState() {
-    super.initState();
-    widget.model.getMatchesByStatus(MatchStatus.upcoming.getValue, 10, 0);
-  }
-
   String getDate(int index) {
     return DateFormat('d MMM ' 'yy')
         .format(widget.model.upcomingMatchData![index]!.startsAt!);
@@ -93,21 +86,8 @@ class _UpcomingMatchState extends State<UpcomingMatch> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 17),
                           child: IplTeamsScoreWidget(
-                            team1: widget.model.upcomingMatchData?[index]
-                                    ?.teams?[0] ??
-                                "",
-                            team2: widget.model.upcomingMatchData?[index]
-                                    ?.teams?[1] ??
-                                "",
-                            score1: widget.model.upcomingMatchData?[index]
-                                    ?.currentScore?[
-                                widget.model.upcomingMatchData?[index]
-                                    ?.teams?[0]],
-                            score2: widget.model.upcomingMatchData?[index]
-                                    ?.currentScore?[
-                                widget.model.upcomingMatchData?[index]
-                                    ?.teams?[1]],
-                          ),
+                              matchData:
+                                  widget.model.upcomingMatchData![index]!),
                         ),
                         const SizedBox(
                           height: 19,

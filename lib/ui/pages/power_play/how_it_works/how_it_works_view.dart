@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
@@ -132,9 +133,10 @@ class HowItWorks extends StatelessWidget {
                     height: 20,
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 17),
+                    padding: const EdgeInsets.symmetric(horizontal: 17),
                     child: IplTeamsScoreWidget(
-                        team1: 'CSK', team2: 'RCB', score1: 140),
+                      matchData: MatchData(),
+                    ),
                   ),
                   const SizedBox(
                     height: 19,

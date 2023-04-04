@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -91,10 +92,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         ),
                         isScrollControlled: true,
                         hapticVibrate: true,
-                        content: MakePredictionSheet(
-                          team1: 'MI',
-                          team2: 'CSK',
-                        ));
+                        content: MakePredictionSheet(matchData: MatchData()));
                   },
                   child: Center(
                     child: Text(
