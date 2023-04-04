@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/completed_match.dart';
@@ -84,14 +85,22 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                 if ((widget.model.liveMatchData == null ||
                         (widget.model.liveMatchData?.isEmpty ?? true)) &&
                     widget.model.isLive) {
-                  Future.delayed(const Duration(seconds: 1), () {
+                  Future.delayed(const Duration(milliseconds: 500), () {
                     widget.model.tabController?.animateTo(1);
+                    widget.model.handleTabSwitch(1);
                     widget.model.isLive = false;
                   });
                 }
 
                 return widget.model.liveMatchData?.isEmpty ?? true
-                    ? const NoLiveMatch()
+                    ? (widget.model.upcomingMatchData!.isEmpty ||
+                            widget.model.upcomingMatchData?[0] == null ||
+                            (widget.model.upcomingMatchData?[0]?.startsAt ==
+                                null))
+                        ? const SizedBox()
+                        : NoLiveMatch(
+                            timeStamp:
+                                widget.model.upcomingMatchData![0]!.startsAt!)
                     : LiveMatch(
                         model: widget.model,
                       );
@@ -119,7 +128,9 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
 }
 
 class NoLiveMatch extends StatelessWidget {
-  const NoLiveMatch({Key? key}) : super(key: key);
+  const NoLiveMatch({Key? key, required this.timeStamp}) : super(key: key);
+
+  final TimestampModel timeStamp;
 
   @override
   Widget build(BuildContext context) {
@@ -151,9 +162,8 @@ class NoLiveMatch extends StatelessWidget {
         SizedBox(
           height: SizeConfig.padding20,
         ),
-        const DailyPicksTimer(
-            startTime: '2023-04-04T14:00:00.000Z',
-            replacementWidget: SizedBox()),
+        DailyPicksTimer(
+            startTime: timeStamp, replacementWidget: const SizedBox()),
       ],
     );
   }

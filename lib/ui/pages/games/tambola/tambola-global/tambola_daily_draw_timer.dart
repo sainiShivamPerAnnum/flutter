@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -13,7 +14,7 @@ class DailyPicksTimer extends StatefulWidget {
   final Widget replacementWidget;
   final Color? bgColor;
   final MainAxisAlignment? alignment;
-  final String? startTime;
+  final TimestampModel? startTime;
 
   const DailyPicksTimer({
     super.key,
@@ -52,8 +53,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
     DateTime currentTime = DateTime.now();
     DateTime drawTime;
     if (widget.startTime != null) {
-      drawTime = DateTime.fromMillisecondsSinceEpoch(
-          DateTime.parse(widget.startTime!).millisecondsSinceEpoch);
+      drawTime = widget.startTime!.toDate();
     } else {
       drawTime = DateTime(DateTime.now().year, DateTime.now().month,
           DateTime.now().day, 18, 0, 10);
