@@ -357,4 +357,9 @@ class Assets {
   static const String powerPlayMain =
       'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg';
   static const String uhoh = 'assets/vectors/uhoh.svg';
+
+  static const kolkataIcon =
+      "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/KKR.svg";
+  static const bangaloreIcon =
+      "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/RCB.svg";
 }

@@ -17,9 +17,6 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   final PowerPlayService _powerPlayService = locator<PowerPlayService>();
   final TransactionHistoryRepository _txnRepo =
       locator<TransactionHistoryRepository>();
-  // PowerPlayHomeViewModel(){
-  //   _powerPlayService.init();
-  // }
 
   TabController? tabController;
   ScrollController? scrollController;

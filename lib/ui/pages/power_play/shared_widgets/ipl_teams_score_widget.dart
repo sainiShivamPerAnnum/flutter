@@ -1,4 +1,5 @@
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -30,7 +31,8 @@ class IplTeamsScoreWidget extends StatelessWidget {
                   height: SizeConfig.iconSize1 * 2,
                   decoration: const BoxDecoration(shape: BoxShape.circle),
                   child: SvgPicture.network(
-                    matchData.teamLogoMap?[matchData.teams?[0]] ?? "",
+                    matchData.teamLogoMap?[matchData.teams?[0]] ??
+                        Assets.bangaloreIcon,
                     fit: BoxFit.cover,
                     placeholderBuilder: (context) => Center(
                       child: Container(
@@ -44,7 +46,7 @@ class IplTeamsScoreWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    matchData.teams?[0] ?? "",
+                    matchData.teams?[0] ?? "Bangalore",
                     style: TextStyles.sourceSansB.body4,
                   ),
                   Text(
@@ -72,7 +74,7 @@ class IplTeamsScoreWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      matchData.teams?[1] ?? "",
+                      matchData.teams?[1] ?? "Kolkata",
                       style: TextStyles.sourceSansB.body4,
                     ),
                     Text(
@@ -88,7 +90,8 @@ class IplTeamsScoreWidget extends StatelessWidget {
                   height: SizeConfig.iconSize1 * 2,
                   decoration: const BoxDecoration(shape: BoxShape.circle),
                   child: SvgPicture.network(
-                    matchData.teamLogoMap?[matchData.teams?[1]] ?? "",
+                    matchData.teamLogoMap?[matchData.teams?[1]] ??
+                        Assets.kolkataIcon,
                     fit: BoxFit.cover,
                     placeholderBuilder: (context) => Center(
                       child: Container(

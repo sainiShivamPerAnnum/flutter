@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_view.dart';
@@ -86,47 +87,48 @@ class LiveMatch extends StatelessWidget {
               Center(
                 child: Text(
                   model.liveMatchData![0]!.headsUpText ?? '',
-                  style: TextStyles.sourceSans
-                      .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
-                ),
-              ),
-              SizedBox(height: SizeConfig.padding16),
-              Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 22,
-                ),
-                child: MaterialButton(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  color: Colors.white,
-                  onPressed: () {
-                    BaseUtil.openModalBottomSheet(
-                        isBarrierDismissible: true,
-                        addToScreenStack: true,
-                        backgroundColor: const Color(0xff21284A),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness32),
-                          topRight: Radius.circular(SizeConfig.roundness32),
-                        ),
-                        isScrollControlled: true,
-                        hapticVibrate: true,
-                        content: MakePredictionSheet(
-                          matchData: model.liveMatchData![0]!,
-                        ));
-                  },
-                  child: Center(
-                    child: Text(
-                      'PREDICT NOW',
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+              style: TextStyles.sourceSans
+                  .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+            ),
+          ),
+          SizedBox(height: SizeConfig.padding16),
+
+          if (model.liveMatchData?[0]!.status == MatchStatus.active.name)
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                  ),
+                  child: MaterialButton(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    color: Colors.white,
+                    onPressed: () {
+                      BaseUtil.openModalBottomSheet(
+                          isBarrierDismissible: true,
+                          addToScreenStack: true,
+                      backgroundColor: const Color(0xff21284A),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness32),
+                      topRight: Radius.circular(SizeConfig.roundness32),
                     ),
+                    isScrollControlled: true,
+                    hapticVibrate: true,
+                    content: MakePredictionSheet(
+                      matchData: model.liveMatchData![0]!,
+                      ));
+                },
+                child: Center(
+                  child: Text(
+                    'PREDICT NOW',
+                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
-            ],
-          ),
-        ),
+            ),
+          // const SizedBox(
+          //   height: 15,
+          // ),
+        ],
+      ),),
         SizedBox(height: SizeConfig.padding16),
         UserPredictionsButton(
           model: model,
