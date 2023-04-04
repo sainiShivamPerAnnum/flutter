@@ -1,4 +1,8 @@
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
+import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_vm.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/assets.dart';
@@ -7,68 +11,82 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class CompletedMatchDetailsView extends StatelessWidget {
-  const CompletedMatchDetailsView({super.key});
+  const CompletedMatchDetailsView({
+    super.key,
+    required this.matchData,
+  });
+
+  final MatchData matchData;
 
   @override
   Widget build(BuildContext context) {
-    return PowerPlayBackgroundUi(
-      child: Stack(
-        children: [
-          SizedBox(
-            width: SizeConfig.screenWidth,
-            // height: SizeConfig.screenHeight,
-            child: Column(
+    return BaseView<CompletedMatchDetailsVM>(
+        onModelReady: (model) {
+          model.init(matchData);
+        },
+        onModelDispose: (model) {},
+        builder: (ctx, model, child) {
+          return PowerPlayBackgroundUi(
+            child: Stack(
               children: [
                 SizedBox(
-                    height: SizeConfig.viewInsets.top + kToolbarHeight / 2),
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        SvgPicture.network(
-                          Assets.powerPlayMain,
-                          height: SizeConfig.screenWidth! * 0.2,
-                        ),
-                        const PowerPlayTotalWinWidget(),
-                        // const WinTextWidget(),
-                        const LossOrNoParticipateTextWidget(),
-                        const CustomDivider(),
-                        MatchBriefDetailsWidget(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding40,
+                  width: SizeConfig.screenWidth,
+                  // height: SizeConfig.screenHeight,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          height:
+                              SizeConfig.viewInsets.top + kToolbarHeight / 2),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(
+                            children: [
+                              // SvgPicture.network(
+                              //   Assets.powerPlayMain,
+                              //   height: SizeConfig.screenWidth! * 0.2,
+                              // ),
+                              // const PowerPlayTotalWinWidget(),
+                              matchData.matchStats!.didWon
+                                  ? const WinTextWidget()
+                                  : LossOrNoParticipateTextWidget(
+                                      isLoss: matchData.matchStats!.count > 0 &&
+                                          !matchData.matchStats!.didWon),
+                              const CustomDivider(),
+                              MatchBriefDetailsWidget(matchData: matchData),
+                              const UserPredictionsButton(),
+                              CorrectPredictorsListView(model: model),
+                              SizedBox(height: SizeConfig.navBarHeight * 1.5)
+                            ],
                           ),
                         ),
-                        const UserPredictionsButton(),
-                        const CorrectPredictorsListView(),
-                        SizedBox(height: SizeConfig.navBarHeight * 1.5)
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: SizedBox(
+                    height: SizeConfig.fToolBarHeight,
+                    child: const FAppBar(
+                      showAvatar: false,
+                      showCoinBar: false,
                     ),
                   ),
                 ),
+                const Align(
+                  alignment: Alignment.bottomCenter,
+                  child: FooterCta(),
+                )
               ],
             ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: SizedBox(
-              height: SizeConfig.fToolBarHeight,
-              child: const FAppBar(
-                showAvatar: false,
-                showCoinBar: false,
-              ),
-            ),
-          ),
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: FooterCta(),
-          )
-        ],
-      ),
-    );
+          );
+        });
   }
 }
 
@@ -106,9 +124,9 @@ class FooterCta extends StatelessWidget {
 }
 
 class CorrectPredictorsListView extends StatelessWidget {
-  const CorrectPredictorsListView({
-    super.key,
-  });
+  const CorrectPredictorsListView({super.key, required this.model});
+
+  final CompletedMatchDetailsVM model;
 
   @override
   Widget build(BuildContext context) {
@@ -125,92 +143,137 @@ class CorrectPredictorsListView extends StatelessWidget {
           style: TextStyles.sourceSansB.title5,
         ),
         SizedBox(height: SizeConfig.padding16),
-        Row(
-          children: [
-            SizedBox(
-              width: SizeConfig.screenWidth! * 0.13,
-              child: Text(
-                "#Rank",
-                style: TextStyles.sourceSans.body3.colour(Colors.white38),
-              ),
-            ),
-            Text(
-              "Username",
-              style: TextStyles.sourceSans.body3.colour(Colors.white38),
-            ),
-            const Spacer(),
-            Text(
-              "Prediction",
-              style: TextStyles.sourceSans.body3.colour(Colors.white38),
-            ),
-          ],
-        ),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.zero,
-          itemCount: 4,
-          itemBuilder: (ctx, i) => Padding(
-            padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: SizeConfig.screenWidth! * 0.13,
-                  child: Text(
-                    "#$i",
-                    style: TextStyles.sourceSansSB.body1,
+        model.isWinnersLoading
+            ? SizedBox(
+                height: SizeConfig.padding80,
+                child: Center(
+                  child: SpinKitWave(
+                    color: Colors.white,
+                    size: SizeConfig.padding34,
                   ),
                 ),
-                Expanded(
-                    child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: SizeConfig.iconSize1,
-                      backgroundColor: Colors.black,
-                    ),
-                    SizedBox(width: SizeConfig.padding10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              )
+            : model.winners.isEmpty
+                ? Column(
+                    children: [
+                      SizedBox(height: SizeConfig.padding54),
+                      SvgPicture.asset(
+                        Assets.noTransactionAsset,
+                        width: SizeConfig.screenWidth! * 0.4,
+                      ),
+                      SizedBox(height: SizeConfig.padding16),
+                      Text(
+                        "No winners to show",
+                        style: TextStyles.sourceSans.body2.colour(Colors.white),
+                      ),
+                      SizedBox(height: SizeConfig.padding32),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      Row(
                         children: [
-                          Text(
-                            "@qwertyuiop",
-                            style: TextStyles.sourceSans.body3,
+                          SizedBox(
+                            width: SizeConfig.screenWidth! * 0.13,
+                            child: Text(
+                              "#Rank",
+                              style: TextStyles.sourceSans.body3
+                                  .colour(Colors.white38),
+                            ),
                           ),
-                          SizedBox(height: SizeConfig.padding2),
                           Text(
-                            "won ₹120 worth of digital gold",
-                            style: TextStyles.sourceSans.body4
-                                .colour(Colors.white70),
-                          )
+                            "Username",
+                            style: TextStyles.sourceSans.body3
+                                .colour(Colors.white38),
+                          ),
+                          const Spacer(),
+                          Text(
+                            "Prediction",
+                            style: TextStyles.sourceSans.body3
+                                .colour(Colors.white38),
+                          ),
                         ],
                       ),
-                    ),
-                  ],
-                )),
-                SizedBox(width: SizeConfig.padding16),
-                Text(
-                  "₹120 | 5:56 PM",
-                  style: TextStyles.sourceSans.body3,
-                )
-              ],
-            ),
-          ),
-          separatorBuilder: (ctx, i) => (i == 3)
-              ? const SizedBox()
-              : const Divider(
-                  color: Colors.white30,
-                  thickness: 0.3,
-                ),
-        ),
-        // TextButton(
-        //     onPressed: () {},
-        //     child: Text(
-        //       "View All Winners",
-        //       style: TextStyles.sourceSans.body2.underline,
-        //     ))
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        itemCount: model.winners.length,
+                        itemBuilder: (ctx, i) => Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.padding10),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: SizeConfig.screenWidth! * 0.13,
+                                child: Text(
+                                  "#${i + 1}",
+                                  style: TextStyles.sourceSansSB.body1,
+                                ),
+                              ),
+                              Expanded(
+                                  child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: SizeConfig.iconSize1,
+                                    backgroundColor: Colors.black,
+                                  ),
+                                  SizedBox(width: SizeConfig.padding10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          model.winners[i].uname,
+                                          style: TextStyles.sourceSans.body3,
+                                        ),
+                                        SizedBox(height: SizeConfig.padding2),
+                                        Text(
+                                          getWinningString(model.winners[i]),
+                                          style: TextStyles.sourceSans.body4
+                                              .colour(Colors.white70),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )),
+                              SizedBox(width: SizeConfig.padding16),
+                              Text(
+                                "${model.winners[i].score} | ${DateFormat('h:mm a').format(
+                                  model.winners[i].timestamp.toDate(),
+                                )}",
+                                style: TextStyles.sourceSans.body3,
+                              )
+                            ],
+                          ),
+                        ),
+                        separatorBuilder: (ctx, i) => (i == 3)
+                            ? const SizedBox()
+                            : const Divider(
+                                color: Colors.white30,
+                                thickness: 0.3,
+                              ),
+                      ),
+                    ],
+                  )
       ]),
     );
+  }
+
+  String getWinningString(MatchWinnersLeaderboardItemModel item) {
+    String wText = "You have won";
+    if (item.amt! > 0) {
+      wText += " gold worth ₹${item.amt} ";
+    }
+    if (item.flc! > 0) {
+      wText += " | ${item.flc} tokens ";
+    }
+    if (item.tt! > 0) {
+      wText += " | ${item.tt} tambola tickets";
+    }
+    return wText;
   }
 }
 

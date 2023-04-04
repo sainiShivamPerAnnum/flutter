@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -35,6 +36,31 @@ class PowerPlayRepository extends BaseRepo {
 
       return ApiResponse<MatchesModel>(
         model: MatchesModel(),
+        code: 200,
+      );
+    } catch (e) {
+      _logger.e("getMatchesByStatus => ${e.toString()}");
+      return ApiResponse.withError(
+        e.toString(),
+        400,
+      );
+    }
+  }
+
+  Future<ApiResponse<List<MatchWinnersLeaderboardItemModel>>>
+      getWinnersLeaderboard(String matchId) async {
+    List<MatchWinnersLeaderboardItemModel> winners = [];
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath.powerPlayWinnersLeaderboard(matchId),
+        cBaseUrl: _baseUrl,
+      );
+      if (response['data'] != null) {
+        winners = MatchWinnersLeaderboardItemModel.helper
+            .fromMapArray(response['data']['users']);
+      }
+      return ApiResponse<List<MatchWinnersLeaderboardItemModel>>(
+        model: winners,
         code: 200,
       );
     } catch (e) {

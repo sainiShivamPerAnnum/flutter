@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // To parse this JSON data, do
 //
 //     final matchesModel = matchesModelFromJson(jsonString);
@@ -6,8 +7,6 @@ import 'dart:convert';
 
 MatchesModel matchesModelFromJson(String str) =>
     MatchesModel.fromJson(json.decode(str));
-
-String matchesModelToJson(MatchesModel data) => json.encode(data.toJson());
 
 class MatchesModel {
   MatchesModel({
@@ -35,13 +34,6 @@ class MatchesModel {
                 json["data"]!.map((x) => MatchData.fromJson(x))),
       );
 
-  Map<String, dynamic> toJson() => {
-        "message": message,
-        "data": data == null
-            ? []
-            : List<dynamic>.from(data!.map((x) => x.toJson())),
-      };
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -65,7 +57,11 @@ class MatchData {
     this.startsAt,
     this.status,
     this.teams,
-    this.headsUpText});
+    this.teamLogoMap,
+    this.headsUpText,
+    this.verdictText,
+    this.matchStats,
+  });
 
   final String? id;
   final Map<String, int>? currentScore;
@@ -76,32 +72,10 @@ class MatchData {
   final DateTime? startsAt;
   final String? status;
   final List<String>? teams;
+  final Map<String, String>? teamLogoMap;
   final String? headsUpText;
-
-  MatchData copyWith({
-    String? id,
-    Map<String, int>? currentScore,
-    DateTime? endsAt,
-    String? id3P,
-    String? matchTitle,
-    String? scheduledTaskId,
-    DateTime? startsAt,
-    String? status,
-    List<String>? teams,
-    String? headsUpText,
-  }) =>
-      MatchData(
-        id: id ?? this.id,
-        currentScore: currentScore ?? this.currentScore,
-        endsAt: endsAt ?? this.endsAt,
-        id3P: id3P ?? this.id3P,
-        matchTitle: matchTitle ?? this.matchTitle,
-        scheduledTaskId: scheduledTaskId ?? this.scheduledTaskId,
-        startsAt: startsAt ?? this.startsAt,
-        status: status ?? this.status,
-        teams: teams ?? this.teams,
-        headsUpText: headsUpText ?? this.headsUpText,
-      );
+  final String? verdictText;
+  final MatchStats? matchStats;
 
   factory MatchData.fromJson(Map<String, dynamic> json) => MatchData(
         id: json["_id"],
@@ -117,22 +91,12 @@ class MatchData {
         teams: json["teams"] == null
             ? []
             : List<String>.from(json["teams"]!.map((x) => x)),
+        teamLogoMap: Map.from(json["teamLogoMap"]!)
+            .map((k, v) => MapEntry<String, String>(k, v)),
         headsUpText: json["headsUpText"],
+        verdictText: json['verdictText'],
+        matchStats: MatchStats.fromMap(json['matchStats'] ?? {}),
       );
-
-  Map<String, dynamic> toJson() => {
-        "_id": id,
-        "currentScore": Map.from(currentScore!)
-            .map((k, v) => MapEntry<String, dynamic>(k, v)),
-        "endsAt": endsAt?.toIso8601String(),
-        "id3P": id3P,
-        "matchTitle": matchTitle,
-        "scheduledTaskId": scheduledTaskId,
-        "startsAt": startsAt?.toIso8601String(),
-        "status": status,
-        "teams": teams == null ? [] : List<dynamic>.from(teams!.map((x) => x)),
-        "headsUpText": headsUpText,
-      };
 
   @override
   bool operator ==(Object other) =>
@@ -162,4 +126,45 @@ class MatchData {
       status.hashCode ^
       teams.hashCode ^
       headsUpText.hashCode;
+}
+
+class MatchStats {
+  int count;
+  bool didWon;
+  MatchStats({
+    required this.count,
+    required this.didWon,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'count': count,
+      'didWon': didWon,
+    };
+  }
+
+  factory MatchStats.fromMap(Map<String, dynamic> map) {
+    return MatchStats(
+      count: map['count'] ?? 0,
+      didWon: map['didWon'] ?? false,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory MatchStats.fromJson(String source) =>
+      MatchStats.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() => 'MatchStats(count: $count, didWon: $didWon)';
+
+  @override
+  bool operator ==(covariant MatchStats other) {
+    if (identical(this, other)) return true;
+
+    return other.count == count && other.didWon == didWon;
+  }
+
+  @override
+  int get hashCode => count.hashCode ^ didWon.hashCode;
 }

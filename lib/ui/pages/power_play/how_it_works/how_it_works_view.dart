@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
@@ -81,7 +82,7 @@ class HowItWorks extends StatelessWidget {
                   Container(
                     // margin: const EdgeInsets.symmetric(horizontal: 10),
                     padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3),
                       color: const Color(0xff62E3C4),
@@ -131,10 +132,11 @@ class HowItWorks extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 17),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 17),
                     child: IplTeamsScoreWidget(
-                        team1: 'CSK', team2: 'RCB', score1: 140),
+                      matchData: MatchData(),
+                    ),
                   ),
                   const SizedBox(
                     height: 19,
@@ -354,7 +356,7 @@ class HowItWorks extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5)),
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Text(
                   'Predict Now'.toUpperCase(),
                   style: TextStyles.rajdhaniB.body1.colour(Colors.black),
