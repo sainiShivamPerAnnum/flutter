@@ -1,3 +1,6 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/power_play_matches.dart';
@@ -31,10 +34,16 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                 backgroundColor: Colors.transparent,
                 action: Row(
                   children: [
+                    IconButton(
+                        onPressed: () {
+                          AppState.delegate!.appState.currentAction =
+                              PageAction(
+                                  page: FppCompletedMatchDetailsConfig,
+                                  state: PageState.addPage);
+                        },
+                        icon: const Icon(Icons.abc)),
                     TextButton(
                       style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        onSurface: Colors.white,
                         side: BorderSide(
                             color: Colors.white.withOpacity(0.5), width: 0.5),
                         shape: const RoundedRectangleBorder(

@@ -84,29 +84,9 @@ class PredictionLeaderboard extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
+                MatchBriefDetailsWidget(),
                 //IPL Match 4
-                Text(
-                  "IPL Match 4",
-                  style: TextStyles.sourceSansB.body2.colour(Colors.white),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: IplTeamsScoreWidget(),
-                ),
-                //PREDICTIONS END AFTER 19TH OVER OF 1ST INNINGS
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "PREDICTIONS END AFTER 19TH OVER OF 1ST INNINGS",
-                  style: TextStyles.sourceSans.body4.colour(Colors.white),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+
                 Container(
                   height: 1,
                   color: Colors.white.withOpacity(0.5),
@@ -331,6 +311,39 @@ class PredictionLeaderboard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class MatchBriefDetailsWidget extends StatelessWidget {
+  EdgeInsets? padding;
+  MatchBriefDetailsWidget({super.key, this.padding});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          "IPL Match 4",
+          style: TextStyles.sourceSansB.body2.colour(Colors.white),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        IplTeamsScoreWidget(
+          padding: padding,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Text(
+          "PREDICTIONS END AFTER 19TH OVER OF 1ST INNINGS",
+          style: TextStyles.sourceSans.body4.colour(Colors.white),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+      ],
     );
   }
 }

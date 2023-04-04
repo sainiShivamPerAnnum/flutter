@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, constant_identifier_names
 
 import 'package:felloapp/navigator/app_state.dart';
 
@@ -79,7 +79,10 @@ const String TExistingUserViewPath = '/texistingUserPath';
 const String TNewUserViewPath = '/tnewUserViewPath';
 const String TransactionDetailsPath = '/transactionDetailsPage';
 const String AssetViewPath = '/assetViewSection';
+
+//POWER PLAY PATHS
 const String PowerPlayPath = '/powerPlayPath';
+const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
 
 enum Pages {
   Splash,
@@ -157,7 +160,10 @@ enum Pages {
   WebView,
   SettingsView,
   TransactionDetailsPage,
-  PowerPlayHome
+
+  //POWER PLAY
+  PowerPlayHome,
+  FppCompletedMatchDetails,
 }
 
 class PageConfiguration {
@@ -680,8 +686,15 @@ PageConfiguration SettingsViewPageConfig = PageConfiguration(
     uiPage: Pages.SettingsView,
     name: "Settings Screen");
 
+//POWER PLAY
 PageConfiguration PowerPlayHomeConfig = PageConfiguration(
     key: 'PowerPlayPath',
     path: PowerPlayPath,
     uiPage: Pages.PowerPlayHome,
     name: "PowerPlay Home Screen");
+
+PageConfiguration FppCompletedMatchDetailsConfig = PageConfiguration(
+    key: 'FppCompletedMatchDetailsPath',
+    path: FppCompletedMatchDetailsPath,
+    uiPage: Pages.FppCompletedMatchDetails,
+    name: "PowerPlay Completed Match Details Screen");

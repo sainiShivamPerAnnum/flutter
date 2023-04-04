@@ -48,9 +48,8 @@ class LiveMatch extends StatelessWidget {
           const SizedBox(
             height: 18,
           ),
-          const Padding(
+          IplTeamsScoreWidget(
             padding: EdgeInsets.symmetric(horizontal: 17),
-            child: IplTeamsScoreWidget(),
           ),
           const SizedBox(
             height: 30,
