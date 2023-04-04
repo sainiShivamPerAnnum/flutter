@@ -345,6 +345,8 @@ class MatchBriefDetailsWidget extends StatelessWidget {
         ),
         IplTeamsScoreWidget(
           padding: padding,
+          team1: "",
+          team2: "",
         ),
         const SizedBox(
           height: 20,
