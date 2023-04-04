@@ -1,3 +1,5 @@
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class PowerPlayBackgroundUi extends StatelessWidget {
@@ -11,24 +13,21 @@ class PowerPlayBackgroundUi extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff21284A),
-                  Color(0xff3C2840),
-                  Color(0xff772828),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.3, 0.6, 1],
-              ),
-            ),
+      body: Container(
+        height: SizeConfig.screenHeight,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              UiConstants.kPowerPlayPrimary,
+              Color(0xff3C2840),
+              UiConstants.kPowerPlaySecondary,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.3, 0.6, 1],
           ),
-          child
-        ],
+        ),
+        child: child,
       ),
       floatingActionButton: floatingActionButton,
     );

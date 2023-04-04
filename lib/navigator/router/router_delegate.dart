@@ -318,7 +318,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.PowerPlayHome:
-          _addPageData(const PowerPlayHome(), pageConfig);
+          _addPageData(const PowerPlayHome(), PowerPlayHomeConfig);
           break;
 
         case Pages.PowerPlayLeaderBoard:
@@ -626,6 +626,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.AssetViewSection:
         AssetViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.FppCompletedMatchDetails:
+        FppCompletedMatchDetailsConfig.currentPageAction = action;
         break;
       default:
         break;

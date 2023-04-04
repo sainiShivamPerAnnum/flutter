@@ -53,7 +53,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
     DateTime drawTime;
     if (widget.startTime != null) {
       drawTime = DateTime.fromMillisecondsSinceEpoch(
-          DateTime.parse("").millisecondsSinceEpoch);
+          DateTime.parse(widget.startTime!).millisecondsSinceEpoch);
     } else {
       drawTime = DateTime(DateTime.now().year, DateTime.now().month,
           DateTime.now().day, 18, 0, 10);

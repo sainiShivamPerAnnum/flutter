@@ -1,114 +1,112 @@
-import 'dart:developer';
+// import 'dart:developer';
 
-import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
-import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/locator.dart';
+// import 'package:felloapp/core/enums/view_state_enum.dart';
+// import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+// import 'package:felloapp/core/service/power_play_service.dart';
+// import 'package:felloapp/ui/architecture/base_vm.dart';
+// import 'package:felloapp/util/locator.dart';
 
-class PowerPlayHomeViewModel extends BaseViewModel {
-  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
+// class PowerPlayHomeViewModel extends BaseViewModel {
+//   final PowerPlayService _powerPlayService = locator<PowerPlayService>();
 
-  // PowerPlayHomeViewModel(){
-  //   _powerPlayService.init();
-  // }
 
-  final List<String> _tabs = ["Live", "Upcoming", "Completed"];
-  List<MatchData?>? _liveMatchData = [];
-  List<MatchData?>? _upcomingMatchData = [];
-  List<MatchData> _completedMatchData = [];
-  bool _isLive = true;
-  List<Map<String, dynamic>>? cardCarousel;
 
-  bool get isLive => _isLive;
+//   final List<String> _tabs = ["Live", "Upcoming", "Completed"];
+//   List<MatchData?>? _liveMatchData = [];
+//   List<MatchData?>? _upcomingMatchData = [];
+//   List<MatchData> _completedMatchData = [];
+//   bool _isLive = true;
+//   List<Map<String, dynamic>>? cardCarousel;
 
-  set isLive(bool value) {
-    _isLive = value;
-    notifyListeners();
-  }
+//   bool get isLive => _isLive;
 
-  List<MatchData?>? get liveMatchData => _liveMatchData;
+//   set isLive(bool value) {
+//     _isLive = value;
+//     notifyListeners();
+//   }
 
-  set liveMatchData(List<MatchData?>? value) {
-    _liveMatchData = value;
-  }
+//   List<MatchData?>? get liveMatchData => _liveMatchData;
 
-  List<MatchData?>? get upcomingMatchData => _upcomingMatchData;
+//   set liveMatchData(List<MatchData?>? value) {
+//     _liveMatchData = value;
+//   }
 
-  set upcomingMatchData(List<MatchData?>? value) {
-    _upcomingMatchData = value;
-  }
+//   List<MatchData?>? get upcomingMatchData => _upcomingMatchData;
 
-  List<MatchData> get completedMatchData => _completedMatchData;
+//   set upcomingMatchData(List<MatchData?>? value) {
+//     _upcomingMatchData = value;
+//   }
 
-  set completedMatchData(List<MatchData> value) {
-    _completedMatchData = value;
-  }
+//   List<MatchData> get completedMatchData => _completedMatchData;
 
-  List<String> get tabs => _tabs;
+//   set completedMatchData(List<MatchData> value) {
+//     _completedMatchData = value;
+//   }
 
-  int _selectedIndex = 0;
+//   List<String> get tabs => _tabs;
 
-  int get selectedIndex => _selectedIndex;
+//   int _selectedIndex = 0;
 
-  set selectedIndex(int value) {
-    _selectedIndex = value;
-    notifyListeners();
-  }
+//   int get selectedIndex => _selectedIndex;
 
-  // @override
-  // void dispose() {
-  //   // _powerPlayService.dump();
-  //   super.dispose();
-  // }
+//   set selectedIndex(int value) {
+//     _selectedIndex = value;
+//     notifyListeners();
+//   }
 
-  Future<void> init() async {
-    state = ViewState.Busy;
-    _powerPlayService.init();
-    getCardCarousle();
+//   // @override
+//   // void dispose() {
+//   //   // _powerPlayService.dump();
+//   //   super.dispose();
+//   // }
 
-    await _powerPlayService.getMatchesByStatus("active", 10, 0);
-    if (_powerPlayService.liveMatchData.isNotEmpty) {
-      liveMatchData = _powerPlayService.liveMatchData;
-    }
+//   Future<void> init() async {
+//     state = ViewState.Busy;
+//     _powerPlayService.init();
+//     getCardCarousle();
 
-    log("VM -- liveMatchData: ${liveMatchData?.length}");
+//     await _powerPlayService.getMatchesByStatus("active", 10, 0);
+//     if (_powerPlayService.liveMatchData.isNotEmpty) {
+//       liveMatchData = _powerPlayService.liveMatchData;
+//     }
 
-    state = ViewState.Idle;
-    notifyListeners();
-  }
+//     log("VM -- liveMatchData: ${liveMatchData?.length}");
 
-  Future<void> getMatchesByStatus(String status, int limit, int offset) async {
-    state = ViewState.Busy;
-    await _powerPlayService.getMatchesByStatus(status, limit, offset);
+//     state = ViewState.Idle;
+//     notifyListeners();
+//   }
 
-    if (_powerPlayService.liveMatchData.isNotEmpty &&
-        status == MatchStatus.active.getValue) {
-      liveMatchData = _powerPlayService.liveMatchData;
-    } else if (_powerPlayService.upcomingMatchData.isNotEmpty &&
-        status == MatchStatus.upcoming.getValue) {
-      // log("VM -- _powerPlayService.upcomingMatchData: ${_powerPlayService.upcomingMatchData.length}");
+//   Future<void> getMatchesByStatus(String status, int limit, int offset) async {
+//     state = ViewState.Busy;
+//     await _powerPlayService.getMatchesByStatus(status, limit, offset);
 
-      upcomingMatchData = _powerPlayService.upcomingMatchData;
-      // log("VM -- upcomingMatchData: ${upcomingMatchData?.length}");
-    } else if (_powerPlayService.completedMatchData.isNotEmpty &&
-        status == MatchStatus.completed.getValue) {
-      completedMatchData = _powerPlayService.completedMatchData;
-    }
+//     if (_powerPlayService.liveMatchData.isNotEmpty &&
+//         status == MatchStatus.active.getValue) {
+//       liveMatchData = _powerPlayService.liveMatchData;
+//     } else if (_powerPlayService.upcomingMatchData.isNotEmpty &&
+//         status == MatchStatus.upcoming.getValue) {
+//       // log("VM -- _powerPlayService.upcomingMatchData: ${_powerPlayService.upcomingMatchData.length}");
 
-    state = ViewState.Idle;
-    notifyListeners();
-  }
+//       upcomingMatchData = _powerPlayService.upcomingMatchData;
+//       // log("VM -- upcomingMatchData: ${upcomingMatchData?.length}");
+//     } else if (_powerPlayService.completedMatchData.isNotEmpty &&
+//         status == MatchStatus.completed.getValue) {
+//       completedMatchData = _powerPlayService.completedMatchData;
+//     }
 
-  void getCardCarousle() {
-    // var appConfigData =
-    //     AppConfig.getValue<Map<String, dynamic>>(AppConfigKey.powerplayConfig);
-    //
-    // appConfigData['predictScreen'].forEach((key, value) {
-    //   log('key => $key');
-    //   log('value => $value');
-    // });
-    //
-    // cardCarousel = appConfigData['predictScreen'];
-  }
-}
+//     state = ViewState.Idle;
+//     notifyListeners();
+//   }
+
+//   void getCardCarousle() {
+//     // var appConfigData =
+//     //     AppConfig.getValue<Map<String, dynamic>>(AppConfigKey.powerplayConfig);
+//     //
+//     // appConfigData['predictScreen'].forEach((key, value) {
+//     //   log('key => $key');
+//     //   log('value => $value');
+//     // });
+//     //
+//     // cardCarousel = appConfigData['predictScreen'];
+//   }
+// }

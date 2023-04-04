@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-MatchStats matchStatsFromJson(String str) =>
-    MatchStats.fromJson(json.decode(str));
+MatchPredictionBoardModel MatchPredictionBoardModelFromJson(String str) =>
+    MatchPredictionBoardModel.fromJson(json.decode(str));
 
-String matchStatsToJson(MatchStats data) => json.encode(data.toJson());
+String MatchPredictionBoardModelToJson(MatchPredictionBoardModel data) =>
+    json.encode(data.toJson());
 
-class MatchStats {
-  MatchStats({
+class MatchPredictionBoardModel {
+  MatchPredictionBoardModel({
     this.message,
     this.data,
   });
@@ -14,16 +15,17 @@ class MatchStats {
   final String? message;
   final List<MatchUserPredictedData>? data;
 
-  MatchStats copyWith({
+  MatchPredictionBoardModel copyWith({
     String? message,
     List<MatchUserPredictedData>? data,
   }) =>
-      MatchStats(
+      MatchPredictionBoardModel(
         message: message ?? this.message,
         data: data ?? this.data,
       );
 
-  factory MatchStats.fromJson(Map<String, dynamic> json) => MatchStats(
+  factory MatchPredictionBoardModel.fromJson(Map<String, dynamic> json) =>
+      MatchPredictionBoardModel(
         message: json["message"],
         data: json["data"] == null
             ? []

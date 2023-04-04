@@ -22,19 +22,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class PredictionLeaderboard extends StatelessWidget {
-  const PredictionLeaderboard(
-      {Key? key, required this.matchData, required this.status})
+  const PredictionLeaderboard({Key? key, required this.matchData})
       : super(key: key);
 
   final MatchData matchData;
-  final MatchStatus status;
 
   @override
   Widget build(BuildContext context) {
     return BaseView<LeaderBoardViewModel>(
       onModelReady: (model) {
         model.getUserPredictedData();
-        model.powerPlayService.getUserTransactionHistory(status);
+        model.powerPlayService.getUserTransactionHistory(MatchStatus.active);
       },
       builder: (context, model, child) {
         return PowerPlayBackgroundUi(
@@ -118,10 +116,7 @@ class PredictionLeaderboard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: IplTeamsScoreWidget(
-                        team1: matchData.teams![0],
-                        team2: matchData.teams![1],
-                        score1: matchData.currentScore![matchData.teams![0]]!,
-                        score2: matchData.currentScore![matchData.teams![1]]!,
+                        matchData: matchData,
                       ),
                     ),
                     //PREDICTIONS END AFTER 19TH OVER OF 1ST INNINGS
@@ -314,12 +309,7 @@ class PredictionLeaderboard extends StatelessWidget {
                             isScrollControlled: true,
                             hapticVibrate: true,
                             content: MakePredictionSheet(
-                              team1: matchData.teams![0],
-                              team2: matchData.teams![1],
-                              score1:
-                                  matchData.currentScore![matchData.teams![0]]!,
-                              score2:
-                                  matchData.currentScore![matchData.teams![1]]!,
+                              matchData: matchData,
                             ));
                       },
                       child: Center(
@@ -406,18 +396,10 @@ class UsersPrediction extends StatelessWidget {
 }
 
 class MakePredictionSheet extends StatefulWidget {
-  const MakePredictionSheet({
-    Key? key,
-    required this.team1,
-    required this.team2,
-    this.score1,
-    this.score2,
-  }) : super(key: key);
+  const MakePredictionSheet({Key? key, required this.matchData})
+      : super(key: key);
 
-  final String team1;
-  final String team2;
-  final int? score1;
-  final int? score2;
+  final MatchData matchData;
 
   @override
   State<MakePredictionSheet> createState() => _MakePredictionSheetState();
@@ -483,12 +465,9 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
                 ),
                 Padding(
                     padding:
-                    EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
                     child: IplTeamsScoreWidget(
-                      team1: widget.team1,
-                      team2: widget.team2,
-                      score1: widget.score1,
-                      score2: widget.score2,
+                      matchData: widget.matchData,
                     )),
                 SizedBox(
                   height: SizeConfig.padding20,
@@ -603,6 +582,44 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class MatchBriefDetailsWidget extends StatelessWidget {
+  final MatchData matchData;
+
+  MatchBriefDetailsWidget({required this.matchData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          matchData.matchTitle ?? "",
+          style: TextStyles.sourceSansB.body2.colour(Colors.white),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins),
+          child: IplTeamsScoreWidget(
+            matchData: matchData,
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Text(
+          matchData.verdictText ?? "",
+          style: TextStyles.sourceSans.body4.colour(Colors.white),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+      ],
     );
   }
 }
@@ -776,7 +793,7 @@ class NoPredictionSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-      EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -814,7 +831,7 @@ class NoPredictionSheet extends StatelessWidget {
           ),
           MaterialButton(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             padding: const EdgeInsets.symmetric(vertical: 10),
             color: Colors.white,
             onPressed: () {

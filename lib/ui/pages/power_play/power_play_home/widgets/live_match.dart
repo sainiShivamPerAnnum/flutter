@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
@@ -46,7 +45,6 @@ class LiveMatch extends StatelessWidget {
                     AppState.delegate!.appState.currentAction = PageAction(
                         widget: PredictionLeaderboard(
                           matchData: matchData!,
-                          status: MatchStatus.active,
                         ),
                         page: PowerPlayLeaderBoardConfig,
                         state: PageState.addWidget);
@@ -72,10 +70,8 @@ class LiveMatch extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
             child: IplTeamsScoreWidget(
-              team1: matchData?.teams?[0] ?? "",
-              team2: matchData?.teams?[1] ?? "",
-              score1: matchData?.currentScore?[matchData?.teams![0]],
-              score2: matchData?.currentScore?[matchData?.teams![1]],
+              matchData: matchData!,
+              padding: const EdgeInsets.symmetric(horizontal: 17),
             ),
           ),
           SizedBox(
@@ -108,10 +104,7 @@ class LiveMatch extends StatelessWidget {
                     isScrollControlled: true,
                     hapticVibrate: true,
                     content: MakePredictionSheet(
-                      team1: matchData?.teams?[0] ?? "",
-                      team2: matchData?.teams?[1] ?? "",
-                      score1: matchData?.currentScore?[matchData?.teams![0]],
-                      score2: matchData?.currentScore?[matchData?.teams![1]],
+                      matchData: matchData!,
                     ));
               },
               child: Center(
