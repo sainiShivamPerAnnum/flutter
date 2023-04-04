@@ -5,6 +5,8 @@
 
 import 'dart:convert';
 
+import 'package:felloapp/core/model/timestamp_model.dart';
+
 MatchesModel matchesModelFromJson(String str) =>
     MatchesModel.fromJson(json.decode(str));
 
@@ -65,11 +67,11 @@ class MatchData {
 
   final String? id;
   final Map<String, int>? currentScore;
-  final DateTime? endsAt;
+  final TimestampModel? endsAt;
   final String? id3P;
   final String? matchTitle;
   final String? scheduledTaskId;
-  final DateTime? startsAt;
+  final TimestampModel? startsAt;
   final String? status;
   final List<String>? teams;
   final Map<String, String>? teamLogoMap;
@@ -81,12 +83,11 @@ class MatchData {
         id: json["_id"],
         currentScore: Map.from(json["currentScore"]!)
             .map((k, v) => MapEntry<String, int>(k, v)),
-        endsAt: json["endsAt"] == null ? null : DateTime.parse(json["endsAt"]),
+        endsAt: TimestampModel.fromMap(json['endsAt']),
         id3P: json["id3P"],
         matchTitle: json["matchTitle"],
         scheduledTaskId: json["scheduledTaskId"],
-        startsAt:
-            json["startsAt"] == null ? null : DateTime.parse(json["startsAt"]),
+        startsAt: TimestampModel.fromMap(json['startsAt']),
         status: json["status"],
         teams: json["teams"] == null
             ? []

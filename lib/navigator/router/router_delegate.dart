@@ -37,6 +37,7 @@ import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_vie
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/power_play/how_it_works/how_it_works_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_home_view.dart';
+import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
@@ -52,7 +53,6 @@ import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referra
 import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
-import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/top_player_leaderboard.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -294,10 +294,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
               const AutosaveUpdateView(), AutosaveUpdateViewPageConfig);
           break;
 
-        case Pages.TopPlayerLeaderboard:
-          _addPageData(
-              const TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
-          break;
+        // case Pages.TopPlayerLeaderboard:
+        //   _addPageData(
+        //       const TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
+        //   break;
         case Pages.JourneyView:
           _addPageData(JourneyView(), JourneyViewPageConfig);
           break;
@@ -328,9 +328,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.PowerPlayHowItWorks:
           _addPageData(const HowItWorks(), pageConfig);
           break;
-        // case Pages.TransactionDetailsPage:
-        //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);
-        //   break;
+        case Pages.PowerPlaySeasonLeaderboard:
+          _addPageData(const SeasonLeaderboard(),
+              PowerPlaySeasonLeaderboardDetailsConfig);
+          break;
 
         default:
           break;
@@ -629,6 +630,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.FppCompletedMatchDetails:
         FppCompletedMatchDetailsConfig.currentPageAction = action;
+        break;
+      case Pages.PowerPlaySeasonLeaderboard:
+        PowerPlaySeasonLeaderboardDetailsConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -940,6 +944,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'settings':
         pageConfiguration = SettingsViewPageConfig;
+        break;
+      case 'seasonLeaderboard':
+        pageConfiguration = PowerPlaySeasonLeaderboardDetailsConfig;
         break;
     }
     if (pageConfiguration != null) {

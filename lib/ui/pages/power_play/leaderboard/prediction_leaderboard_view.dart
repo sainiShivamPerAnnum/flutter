@@ -5,7 +5,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -32,7 +31,7 @@ class PredictionLeaderboard extends StatelessWidget {
     return BaseView<LeaderBoardViewModel>(
       onModelReady: (model) {
         model.getUserPredictedData();
-        model.powerPlayService.getUserTransactionHistory(MatchStatus.active);
+        model.powerPlayService.getUserTransactionHistory(matchData);
       },
       builder: (context, model, child) {
         return PowerPlayBackgroundUi(
@@ -651,11 +650,6 @@ class YourPredictionSheet extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding16,
             ),
-            Container(
-              height: 2,
-              width: 100,
-              color: Colors.white,
-            ),
             SizedBox(
               height: SizeConfig.padding24,
             ),
@@ -676,80 +670,90 @@ class YourPredictionSheet extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Row(
-              children: [
-                Text(
-                  '#',
-                  style: TextStyles.sourceSans.body3
-                      .colour(const Color(0xffB59D9F)),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  'Prediction',
-                  style: TextStyles.sourceSans.body3
-                      .colour(const Color(0xffB59D9F)),
-                ),
-                const Spacer(),
-                Text(
-                  'Time',
-                  style: TextStyles.sourceSans.body3
-                      .colour(const Color(0xffB59D9F)),
-                ),
-                const SizedBox(
-                  width: 30,
-                )
-              ],
-            ),
-            ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: transactions?.length,
-                itemBuilder: (context, index) {
-                  return Column(
+            (transactions ?? []).isEmpty
+                ? Text(
+                    "You haven’t made any predictions yet. Start predicting now to win exciting prizes!",
+                    style: TextStyles.body3.colour(Colors.white54),
+                    textAlign: TextAlign.center,
+                  )
+                : Column(
                     children: [
-                      SizedBox(
-                        height: SizeConfig.padding16,
-                      ),
                       Row(
                         children: [
                           Text(
-                            '${index + 1}',
+                            '#',
                             style: TextStyles.sourceSans.body3
-                                .colour(Colors.white),
+                                .colour(const Color(0xffB59D9F)),
                           ),
                           const SizedBox(
                             width: 20,
                           ),
                           Text(
-                            '${transactions![index].amount.truncate()} Runs',
+                            'Prediction',
                             style: TextStyles.sourceSans.body3
-                                .colour(Colors.white),
+                                .colour(const Color(0xffB59D9F)),
                           ),
                           const Spacer(),
                           Text(
-                            getTime(index),
+                            'Time',
                             style: TextStyles.sourceSans.body3
-                                .colour(Colors.white),
+                                .colour(const Color(0xffB59D9F)),
                           ),
                           const SizedBox(
-                            width: 10,
-                          ),
+                            width: 30,
+                          )
                         ],
                       ),
-                      SizedBox(
-                        height: SizeConfig.padding16,
-                      ),
-                      if (index != 2)
-                        Container(
-                          height: 0.5,
-                          color: Colors.white.withOpacity(0.3),
-                        ),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          itemCount: transactions?.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                SizedBox(
+                                  height: SizeConfig.padding16,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${index + 1}',
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Colors.white),
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Text(
+                                      '${transactions![index].amount.truncate()} Runs',
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Colors.white),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      getTime(index),
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Colors.white),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding16,
+                                ),
+                                if (index != 2)
+                                  Container(
+                                    height: 0.5,
+                                    color: Colors.white.withOpacity(0.3),
+                                  ),
+                              ],
+                            );
+                          }),
                     ],
-                  );
-                }),
+                  ),
             const SizedBox(
               height: 10,
             ),
@@ -759,17 +763,7 @@ class YourPredictionSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
               onPressed: () {
-                BaseUtil.openModalBottomSheet(
-                    isBarrierDismissible: true,
-                    addToScreenStack: true,
-                    backgroundColor: const Color(0xff21284A),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(SizeConfig.roundness32),
-                      topRight: Radius.circular(SizeConfig.roundness32),
-                    ),
-                    isScrollControlled: true,
-                    hapticVibrate: true,
-                    content: const YourPredictionSheet());
+                AppState.backButtonDispatcher!.didPopRoute();
               },
               child: Center(
                 child: Text(

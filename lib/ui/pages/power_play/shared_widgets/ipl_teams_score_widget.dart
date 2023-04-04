@@ -42,7 +42,7 @@ class IplTeamsScoreWidget extends StatelessWidget {
                     style: TextStyles.sourceSansB.body4,
                   ),
                   Text(
-                    score1 > 0 ? 'YET TO BAT' : score1.toString(),
+                    score1 <= 0 ? 'YET TO BAT' : score1.toString(),
                     style: TextStyles.sourceSans
                         .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
                   ),
