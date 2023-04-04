@@ -13,10 +13,6 @@ import 'package:flutter/material.dart';
 class PowerPlayHomeViewModel extends BaseViewModel {
   final PowerPlayService _powerPlayService = locator<PowerPlayService>();
 
-  // PowerPlayHomeViewModel(){
-  //   _powerPlayService.init();
-  // }
-
   TabController? tabController;
   ScrollController? scrollController;
 

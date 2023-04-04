@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
@@ -85,18 +86,20 @@ class LiveMatch extends StatelessWidget {
             ),
           ),
           SizedBox(height: SizeConfig.padding16),
-          Container(
-            margin: const EdgeInsets.symmetric(
-              horizontal: 22,
-            ),
-            child: MaterialButton(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              color: Colors.white,
-              onPressed: () {
-                BaseUtil.openModalBottomSheet(
-                    isBarrierDismissible: true,
-                    addToScreenStack: true,
-                    backgroundColor: const Color(0xff21284A),
+
+          if (matchData?.status == MatchStatus.active.name)
+            Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 22,
+              ),
+              child: MaterialButton(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                color: Colors.white,
+                onPressed: () {
+                  BaseUtil.openModalBottomSheet(
+                      isBarrierDismissible: true,
+                      addToScreenStack: true,
+                      backgroundColor: const Color(0xff21284A),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(SizeConfig.roundness32),
                       topRight: Radius.circular(SizeConfig.roundness32),
@@ -105,19 +108,19 @@ class LiveMatch extends StatelessWidget {
                     hapticVibrate: true,
                     content: MakePredictionSheet(
                       matchData: matchData!,
-                    ));
-              },
-              child: Center(
-                child: Text(
-                  'PREDICT NOW',
-                  style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                      ));
+                },
+                child: Center(
+                  child: Text(
+                    'PREDICT NOW',
+                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
+          // const SizedBox(
+          //   height: 15,
+          // ),
         ],
       ),
     );

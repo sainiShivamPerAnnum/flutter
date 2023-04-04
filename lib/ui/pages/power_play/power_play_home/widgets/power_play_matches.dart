@@ -105,7 +105,7 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                   model: widget.model,
                 );
               }
-            })
+            }),
           ],
         ),
       ),

@@ -1,13 +1,19 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/power_play_matches.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
+import 'package:felloapp/ui/pages/support/faq/faq_page.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -37,151 +43,142 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
           child: PowerPlayBackgroundUi(
             child: Stack(
               children: [
-                SingleChildScrollView(
-                  controller: model.scrollController,
-                  child: SafeArea(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FAppBar(
-                          showAvatar: false,
-                          showCoinBar: false,
-                          showHelpButton: false,
-                          backgroundColor: Colors.transparent,
-                          action: Row(
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  AppState.delegate!.parseRoute(
-                                    Uri.parse('seasonLeaderboard'),
-                                  );
-                                },
-                                child: Text("SLB"),
-                              ),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  side: BorderSide(
-                                      color: Colors.white.withOpacity(0.5),
-                                      width: 0.5),
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                                ),
-                                onPressed: () {},
-                                child: Padding(
-                                  padding: EdgeInsets.zero,
-                                  child: Text(
-                                    "Invite Friends",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.body5,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding12,
-                              ),
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      // color: UiConstants.kArrowButtonBackgroundColor,
-                                      border: Border.all(
-                                          color:
-                                          Colors.white.withOpacity(0.5))),
-                                  padding: const EdgeInsets.all(6),
-                                  child: Icon(
-                                    Icons.question_mark,
-                                    color: Colors.white,
-                                    size: SizeConfig.padding20,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Center(
-                          child: SvgPicture.network(
-                            'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
-                            height: 95,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Center(
-                            child: Text(
-                              'Predict. Save. Win.',
-                              style: TextStyles.sourceSansSB.body2,
-                            )),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => PredictionLeaderboard(
-                                  matchData: MatchData(),
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: 43,
-                            margin: const EdgeInsets.symmetric(horizontal: 50),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.black.withOpacity(0.7),
-                            ),
-                            child: Text(
-                              'Total Won From PowerPlay : ₹100',
-                              style: TextStyles.sourceSansSB.body2,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 14,
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(
-                              left: SizeConfig.pageHorizontalMargins),
-                          height: SizeConfig.screenWidth! * 0.35,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: model.cardCarousel?.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  log('tapped');
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                      right: SizeConfig.padding12),
-                                  height: 105,
-                                  width: 275,
-                                  child: SvgPicture.network(
-                                      model.cardCarousel?[index]['imgUrl'] ??
-                                          ''),
+                Column(
+                  children: [
+                    FAppBar(
+                      showAvatar: false,
+                      showCoinBar: false,
+                      showHelpButton: false,
+                      backgroundColor: Colors.transparent,
+                      type: FaqsType.onboarding,
+                      action: Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Haptic.vibrate();
+                              AppState.delegate!.appState.currentAction =
+                                  PageAction(
+                                state: PageState.addWidget,
+                                page: FaqPageConfig,
+                                widget: const FAQPage(
+                                  type: FaqsType.journey,
                                 ),
                               );
                             },
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        PowerPlayMatches(
-                          model: model,
-                        ),
-                      ],
+                            child: Container(
+                                key: const ValueKey(Constants.HELP_FAB),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding12,
+                                    vertical: SizeConfig.padding6),
+                                height: SizeConfig.avatarRadius * 2,
+                                decoration: BoxDecoration(
+                                  color: UiConstants.kTextFieldColor
+                                      .withOpacity(0.4),
+                                  border: Border.all(color: Colors.white10),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Invite Friends',
+                                      style: TextStyles.body4
+                                          .colour(UiConstants.kTextColor),
+                                    ),
+                                  ],
+                                )),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        controller: model.scrollController,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: SvgPicture.network(
+                                'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
+                                height: 95,
+                              ),
+                            ),
+                            Center(
+                                child: Text(
+                              'Invest your Predictions',
+                              style: TextStyles.sourceSansSB.body2,
+                            )),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => PredictionLeaderboard(
+                                      matchData: MatchData(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height: 43,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 50),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.black.withOpacity(0.7),
+                                ),
+                                child: Text(
+                                  'Total Won From PowerPlay : ₹100',
+                                  style: TextStyles.sourceSansSB.body2,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 14,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: SizeConfig.pageHorizontalMargins),
+                              height: SizeConfig.screenWidth! * 0.35,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: model.cardCarousel?.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      log('tapped');
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                          right: SizeConfig.padding12),
+                                      height: 105,
+                                      width: 275,
+                                      child: SvgPicture.network(model
+                                              .cardCarousel?[index]['imgUrl'] ??
+                                          ''),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            PowerPlayMatches(
+                              model: model,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 if (model.isLoadingMoreCompletedMatches)
                   Align(
