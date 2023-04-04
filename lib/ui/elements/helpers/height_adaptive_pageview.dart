@@ -4,9 +4,11 @@ class HeightAdaptivePageView extends StatefulWidget {
   final List<Widget> children;
   final PageController? controller;
   final ValueChanged<int>? onPageChanged;
+  final ScrollPhysics? physics;
   const HeightAdaptivePageView({
     Key? key,
     required this.children,
+    this.physics,
     this.controller,
     this.onPageChanged,
   }) : super(key: key);
@@ -16,7 +18,7 @@ class HeightAdaptivePageView extends StatefulWidget {
 }
 
 class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   PageController? _pageController;
   late List<double> _heights;
   int _currentPage = 0;
@@ -47,6 +49,8 @@ class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
   }
 
   @override
+  bool get wantKeepAlive => true;
+  @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       curve: Curves.easeInOutCubic,
@@ -54,6 +58,7 @@ class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
       tween: Tween<double>(begin: _heights[0], end: _currentHeight),
       builder: (context, value, child) => SizedBox(height: value, child: child),
       child: PageView(
+        physics: widget.physics ?? ClampingScrollPhysics(),
         onPageChanged: widget.onPageChanged,
         controller: _pageController,
         children: _sizeReportingChildren,

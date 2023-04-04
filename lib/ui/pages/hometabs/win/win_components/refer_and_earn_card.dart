@@ -151,7 +151,7 @@ class ReferEarnCard extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: SizeConfig.padding12,
                                     vertical: SizeConfig.padding12),
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color:
                                       UiConstants.kArrowButtonBackgroundColor,
                                   shape: BoxShape.circle,

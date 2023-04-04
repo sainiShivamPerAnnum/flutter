@@ -572,4 +572,19 @@ class UserRepository extends BaseRepo {
       return ApiResponse.withError("send OTP failed", 400);
     }
   }
+
+  Future<ApiResponse<bool>> isUsernameAvailable(String username) async {
+    try {
+      final query = {
+        'username': username,
+      };
+      final token = await getBearerToken();
+      final res = await APIService.instance.getData(ApiPath.isUsernameAvailable,
+          queryParams: query, cBaseUrl: _baseUrl, token: token);
+      return ApiResponse(code: 200, model: res['data']['isAvailable']);
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }

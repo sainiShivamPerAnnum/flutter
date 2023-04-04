@@ -6,13 +6,11 @@ class NewProfileImage extends StatelessWidget {
   const NewProfileImage({
     Key? key,
     required this.image,
-    required this.isNewUser,
     this.showAction = true,
     this.updateProfilePicture,
     // this.model,
   }) : super(key: key);
 
-  final bool isNewUser;
   final bool showAction;
   final Widget image;
   final Function? updateProfilePicture;
@@ -87,54 +85,55 @@ class NewProfileImage extends StatelessWidget {
           ),
         ),
         if (showAction)
-          isNewUser
-              ? Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: SizeConfig.screenWidth! * 0.3111, // 112
-                    height: SizeConfig.screenWidth! * 0.3111,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      shape: BoxShape.circle,
-                    ),
-                    padding: EdgeInsets.all(
-                      SizeConfig.padding4,
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.add_rounded,
-                        color: Colors.white.withOpacity(0.9),
-                        size: SizeConfig.padding80,
-                      ),
-                      onPressed:
-                          updateProfilePicture as void Function()? ?? () {},
-                    ),
+          // isNewUser
+          //     ? Align(
+          //         alignment: Alignment.center,
+          //         child: Container(
+          //           width: SizeConfig.screenWidth! * 0.3111, // 112
+          //           height: SizeConfig.screenWidth! * 0.3111,
+          //           decoration: BoxDecoration(
+          //             color: Colors.black.withOpacity(0.6),
+          //             shape: BoxShape.circle,
+          //           ),
+          //           padding: EdgeInsets.all(
+          //             SizeConfig.padding4,
+          //           ),
+          //           child: IconButton(
+          //             icon: Icon(
+          //               Icons.add_rounded,
+          //               color: Colors.white.withOpacity(0.9),
+          //               size: SizeConfig.padding80,
+          //             ),
+          //             onPressed:
+          //                 updateProfilePicture as void Function()? ?? () {},
+          //           ),
+          //         ),
+          //       )
+          //     :
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: SizeConfig.screenWidth! * 0.3111, // 112
+              height: SizeConfig.screenWidth! * 0.3111,
+              alignment: Alignment.bottomRight,
+              child: InkWell(
+                onTap: updateProfilePicture as void Function()?,
+                child: Container(
+                  height: SizeConfig.padding40, // 20
+                  width: SizeConfig.padding40, // 20
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: UiConstants.kTextColor,
                   ),
-                )
-              : Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: SizeConfig.screenWidth! * 0.3111, // 112
-                    height: SizeConfig.screenWidth! * 0.3111,
-                    alignment: Alignment.bottomRight,
-                    child: InkWell(
-                      onTap: updateProfilePicture as void Function()?,
-                      child: Container(
-                        height: SizeConfig.padding40, // 20
-                        width: SizeConfig.padding40, // 20
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: UiConstants.kTextColor,
-                        ),
-                        child: Icon(
-                          Icons.camera_alt_rounded,
-                          size: SizeConfig.padding24,
-                          color: UiConstants.kTabBorderColor,
-                        ),
-                      ),
-                    ),
+                  child: Icon(
+                    Icons.camera_alt_rounded,
+                    size: SizeConfig.padding24,
+                    color: UiConstants.kTabBorderColor,
                   ),
-                )
+                ),
+              ),
+            ),
+          )
       ],
     );
   }

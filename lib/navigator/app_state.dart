@@ -47,6 +47,7 @@ class AppState extends ChangeNotifier {
   static Map<String, dynamic>? startupNotifMessage;
   static ScrollController homeCardListController = ScrollController();
   static String? _fcmData;
+  static bool showAutosaveBt = false;
   static bool isFirstTime = false;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
@@ -75,28 +76,28 @@ class AppState extends ChangeNotifier {
   PageAction _currentAction = PageAction();
   // BackButtonDispatcher backButtonDispatcher;
 
-  get rootIndex => this._rootIndex;
+  get rootIndex => _rootIndex;
 
-  Timer? get txnTimer => this._txnTimer;
+  Timer? get txnTimer => _txnTimer;
 
   set txnTimer(Timer? timer) {
-    this._txnTimer = timer;
+    _txnTimer = timer;
   }
 
   set rootIndex(value) {
-    this._rootIndex = value;
+    _rootIndex = value;
     notifyListeners();
   }
 
   set txnFunction(Future function) {
-    this._txnFunction = function;
+    _txnFunction = function;
     notifyListeners();
   }
 
   scrollHome(int cardNo) {
     double scrollDepth = SizeConfig.screenHeight! * 0.2 * cardNo;
     homeCardListController.animateTo(scrollDepth,
-        duration: Duration(milliseconds: 600), curve: Curves.easeInOutSine);
+        duration: const Duration(milliseconds: 600), curve: Curves.easeInOutSine);
     notifyListeners();
   }
 
@@ -147,8 +148,9 @@ class AppState extends ChangeNotifier {
     trackEvent(index);
     Haptic.vibrate();
     if (_rootController.currentNavBarItemModel ==
-        RootController.journeyNavBarItem)
+        RootController.journeyNavBarItem) {
       _journeyService.checkForMilestoneLevelChange();
+    }
     executeNavBarItemFirstClick(index);
   }
 

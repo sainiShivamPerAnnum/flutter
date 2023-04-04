@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, avoid_classes_with_only_static_members
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,10 +18,14 @@ class PreferenceHelper {
   static const FCM_TOKEN = "fcm_token";
   static const CACHE_SHOW_SECURITY_MODALSHEET = "showSecurityModalSheet";
   static const CACHE_IS_USER_JOURNEY_ONBOARDED = "isUserJourneyOnboarded";
+  static const CACHE_IS_AUTOSAVE_FIRST_TIME = "isOpeningAutosaveForFirstTime";
   static const CACHE_IS_DAILY_APP_BONUS_EVENT_ACTIVE =
       "isDailyAppBonusEventActive";
   static const CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY =
       "lastDailyAppBonusRewardClaimDay";
+
+  static const CACHE_SEGMENTS = "user_segments";
+  static const CACHE_LAST_APP_OPEN = "lastAppOpen";
   static SharedPreferences? _prefs;
 
   static Future<SharedPreferences?> initiate() async {
@@ -46,36 +52,33 @@ class PreferenceHelper {
     return _prefs!.setBool(key, value);
   }
 
-  static String getString(String key, {String? def}) {
+  static Future<bool> setStringList(String key, List<String> value) async {
+    return _prefs!.setStringList(key, value);
+  }
+
+  static String getString(String key, {String def = ''}) {
     String? val = _prefs!.getString(key);
-    if (val == null) {
-      val = def ?? '';
-    }
-    return val;
+    return val ?? def;
   }
 
-  static int getInt(String key, {int? def}) {
+  static int getInt(String key, {int def = 0}) {
     int? val = _prefs!.getInt(key);
-    if (val == null) {
-      val = def ?? 0;
-    }
-    return val;
+    return val ?? def;
   }
 
-  static double getDouble(String key, {double? def}) {
+  static double getDouble(String key, {double def = 0.0}) {
     double? val = _prefs!.getDouble(key);
-    if (val == null) {
-      val = def ?? 0.0;
-    }
-    return val;
+    return val ?? def;
   }
 
-  static bool getBool(String key, {bool? def}) {
+  static bool getBool(String key, {bool def = false}) {
     bool? val = _prefs!.getBool(key);
-    if (val == null) {
-      val = def ?? false;
-    }
-    return val;
+    return val ?? def;
+  }
+
+  static List<String> getStringList(String key, {List<String> def = const []}) {
+    List<String>? val = _prefs!.getStringList(key);
+    return val ?? def;
   }
 
   static Future<bool> remove(String key) async {

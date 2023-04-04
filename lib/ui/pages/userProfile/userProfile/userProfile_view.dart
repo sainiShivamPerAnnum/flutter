@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -23,21 +20,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UserProfileDetails extends StatelessWidget {
-  const UserProfileDetails({Key? key, this.isNewUser = false})
-      : super(key: key);
-  final bool isNewUser;
+  const UserProfileDetails({super.key});
+
   @override
   Widget build(BuildContext context) {
     S? locale = S.of(context);
-    log(isNewUser.toString());
     return BaseView<UserProfileVM>(
       onModelReady: (model) {
-        model.init(isNewUser);
+        model.init();
       },
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: ProfileAppBar(
-          isNewUser: model.isNewUser,
+          // isNewUser: model.isNewUser,
           model: model,
         ),
         body: Stack(
@@ -366,155 +361,155 @@ class UserProfileForm extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding16,
             ),
-            if (model.isNewUser)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppTextFieldLabel(locale.obUsernameLabel),
-                  AppTextField(
-                    hintText: locale.obUsernameHint,
-                    onTap: () {},
-                    prefixText: '@',
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    textEditingController: model.usernameController,
-                    isEnabled: model.inEditMode,
-                    inputFormatters: [
-                      LowerCaseTextFormatter(),
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'[A-Za-z0-9.]'),
-                      )
-                    ],
-                    validator: (val) {
-                      if (val == null || val.isEmpty)
-                        return "";
-                      else
-                        return null;
-                    },
-                    onChanged: (String value) {
-                      model.validateUsername();
-                    },
-                  ),
-                  Container(
-                    height: model.errorPadding,
-                  ),
-                  if (model.showResult().runtimeType != SizedBox)
-                    Container(
-                      margin: EdgeInsets.only(
-                        // top: SizeConfig.padding8,
-                        bottom: SizeConfig.padding24,
-                      ),
-                      child: model.showResult(),
-                    ),
-                ],
-              ),
-            if (!model.isNewUser)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppTextFieldLabel(
-                    locale!.obMobileLabel,
-                  ),
-                  AppTextField(
-                    isEnabled: false,
-                    textEditingController: model.mobileController,
-                    validator: (val) {
-                      return null;
-                    },
-                    inputFormatters: [],
-                  ),
-                ],
-              ),
+            // if (model.isNewUser)
+            //   Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       AppTextFieldLabel(locale.obUsernameLabel),
+            //       AppTextField(
+            //         hintText: locale.obUsernameHint,
+            //         onTap: () {},
+            //         prefixText: '@',
+            //         autovalidateMode: AutovalidateMode.onUserInteraction,
+            //         textEditingController: model.usernameController,
+            //         isEnabled: model.inEditMode,
+            //         inputFormatters: [
+            //           LowerCaseTextFormatter(),
+            //           FilteringTextInputFormatter.allow(
+            //             RegExp(r'[A-Za-z0-9.]'),
+            //           )
+            //         ],
+            //         validator: (val) {
+            //           if (val == null || val.isEmpty)
+            //             return "";
+            //           else
+            //             return null;
+            //         },
+            //         onChanged: (String value) {
+            //           model.validateUsername();
+            //         },
+            //       ),
+            //       Container(
+            //         height: model.errorPadding,
+            //       ),
+            //       if (model.showResult().runtimeType != SizedBox)
+            //         Container(
+            //           margin: EdgeInsets.only(
+            //             // top: SizeConfig.padding8,
+            //             bottom: SizeConfig.padding24,
+            //           ),
+            //           child: model.showResult(),
+            //         ),
+            //     ],
+            //   ),
+            // if (!model.isNewUser)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppTextFieldLabel(
+                  locale.obMobileLabel,
+                ),
+                AppTextField(
+                  isEnabled: false,
+                  textEditingController: model.mobileController,
+                  validator: (val) {
+                    return null;
+                  },
+                  inputFormatters: [],
+                ),
+              ],
+            ),
             SizedBox(
               height: SizeConfig.padding28,
             ),
-            !model.isNewUser
-                ? Column(
+            // !model.isNewUser
+            //     ?
+            Column(
+              children: [
+                Divider(
+                  color: UiConstants.kTextColor2,
+                  thickness: 0.5,
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                  onTap: model.navigateToKycScreen,
+                  title: Text(
+                    locale.obKYCDetailsLabel,
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTextColor2),
+                  ),
+                  trailing: Icon(Icons.arrow_forward_ios_rounded,
+                      size: SizeConfig.iconSize2,
+                      color: UiConstants.kTextColor2),
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                  onTap: model.navigateToBankDetailsScreen,
+                  title: Text(
+                    locale.obBankDetails,
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTextColor2),
+                  ),
+                  trailing: Icon(Icons.arrow_forward_ios_rounded,
+                      size: SizeConfig.iconSize2,
+                      color: UiConstants.kTextColor2),
+                ),
+                Divider(
+                  color: UiConstants.kTextColor2,
+                  thickness: 0.5,
+                ),
+                Container(
+                  height: SizeConfig.padding40,
+                  child: Row(
                     children: [
-                      Divider(
-                        color: UiConstants.kTextColor2,
-                        thickness: 0.5,
+                      Text(
+                        locale.obAppLock,
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.kTextColor2),
                       ),
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        onTap: model.navigateToKycScreen,
-                        title: Text(
-                          locale.obKYCDetailsLabel,
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor2),
-                        ),
-                        trailing: Icon(Icons.arrow_forward_ios_rounded,
-                            size: SizeConfig.iconSize2,
-                            color: UiConstants.kTextColor2),
+                      Spacer(),
+                      AppSwitch(
+                        onToggle: (val) =>
+                            model.onAppLockPreferenceChanged(val),
+                        value: model.applock,
+                        isLoading: model.isApplockLoading,
+                        height: SizeConfig.screenWidth! * 0.059,
+                        width: SizeConfig.screenWidth! * 0.087,
+                        toggleSize: SizeConfig.screenWidth! * 0.032,
                       ),
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        onTap: model.navigateToBankDetailsScreen,
-                        title: Text(
-                          locale.obBankDetails,
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor2),
-                        ),
-                        trailing: Icon(Icons.arrow_forward_ios_rounded,
-                            size: SizeConfig.iconSize2,
-                            color: UiConstants.kTextColor2),
-                      ),
-                      Divider(
-                        color: UiConstants.kTextColor2,
-                        thickness: 0.5,
-                      ),
-                      Container(
-                        height: SizeConfig.padding40,
-                        child: Row(
-                          children: [
-                            Text(
-                              locale.obAppLock,
-                              style: TextStyles.sourceSans.body3
-                                  .colour(UiConstants.kTextColor2),
-                            ),
-                            Spacer(),
-                            AppSwitch(
-                              onToggle: (val) =>
-                                  model.onAppLockPreferenceChanged(val),
-                              value: model.applock,
-                              isLoading: model.isApplockLoading,
-                              height: SizeConfig.screenWidth! * 0.059,
-                              width: SizeConfig.screenWidth! * 0.087,
-                              toggleSize: SizeConfig.screenWidth! * 0.032,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        color: UiConstants.kTextColor2,
-                        thickness: 0.5,
-                      ),
-                      SizedBox(height: SizeConfig.padding6),
-                      InkWell(
-                        onTap: () {
-                          Haptic.vibrate();
-                          AppState.delegate!.appState.currentAction =
-                              PageAction(
-                            state: PageState.addPage,
-                            page: FreshDeskHelpPageConfig,
-                          );
-                        },
-                        child: Row(
-                          // padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(locale.obNeedHelp,
-                                style: TextStyles.sourceSansSB.body2
-                                    .colour(UiConstants.kTabBorderColor))
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding54),
                     ],
-                  )
-                : ReactivePositiveAppButton(
-                    width: SizeConfig.screenWidth,
-                    btnText: locale.btnComplete,
-                    onPressed: model.updateDetails),
+                  ),
+                ),
+                Divider(
+                  color: UiConstants.kTextColor2,
+                  thickness: 0.5,
+                ),
+                SizedBox(height: SizeConfig.padding6),
+                InkWell(
+                  onTap: () {
+                    Haptic.vibrate();
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addPage,
+                      page: FreshDeskHelpPageConfig,
+                    );
+                  },
+                  child: Row(
+                    // padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(locale.obNeedHelp,
+                          style: TextStyles.sourceSansSB.body2
+                              .colour(UiConstants.kTabBorderColor))
+                    ],
+                  ),
+                ),
+                SizedBox(height: SizeConfig.padding54),
+              ],
+            ),
+            // : ReactivePositiveAppButton(
+            //     width: SizeConfig.screenWidth,
+            //     btnText: locale.btnComplete,
+            //     onPressed: model.updateDetails),
             SizedBox(height: SizeConfig.padding6),
             Center(
               child: TextButton(

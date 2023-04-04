@@ -34,14 +34,14 @@ class TambolaWidgetController extends ChangeNotifier {
       _tambolaWidgetType = TambolaWidgetType.Tickets;
       diffToChangeWidget = _dateTime.difference(
         DateTime(_dateTime.year, _dateTime.month,
-            _dateTime.add(Duration(days: 1)).day, 00, 1, 0),
+            _dateTime.add(const Duration(days: 1)).day, 00, 1, 0),
       );
     } else {
       _tambolaWidgetType = TambolaWidgetType.Timer;
       diffToChangeWidget = _dateTime.difference(
           DateTime(_dateTime.year, _dateTime.month, _dateTime.day, 18, 0, 0));
       timer = Timer.periodic(
-        Duration(seconds: 1),
+        const Duration(seconds: 1),
         (_) {
           timeLeftForTambola = _dateTime
               .difference(DateTime(

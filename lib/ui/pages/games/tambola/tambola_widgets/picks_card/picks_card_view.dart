@@ -15,6 +15,8 @@ class PicksCardView extends StatelessWidget {
   final TextStyle unselectedTextStyle = TextStyles.sourceSansSB.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
+  PicksCardView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BaseView<PicksCardViewModel>(
@@ -23,18 +25,10 @@ class PicksCardView extends StatelessWidget {
         return Container(
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
-            color: UiConstants.accentColor,
+            color: UiConstants.kSnackBarPositiveContentColor,
             borderRadius: BorderRadius.all(
               Radius.circular(SizeConfig.roundness12),
             ),
-            boxShadow: [
-              BoxShadow(
-                spreadRadius: 5,
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 5,
-                offset: Offset(4, 4),
-              )
-            ],
           ),
           margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.pageHorizontalMargins,
@@ -45,24 +39,30 @@ class PicksCardView extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: TextButton(
-                      onPressed: () => model.switchTab(0),
-                      child: Text(
-                        "Today's Picks",
-                        style: model.tabNo == 0
-                            ? selectedTextStyle
-                            : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 15),
+                      child: TextButton(
+                        onPressed: () => model.switchTab(0),
+                        child: Text(
+                          "Today's Picks",
+                          style: model.tabNo == 0
+                              ? selectedTextStyle
+                              : unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
-                    child: TextButton(
-                      onPressed: () => model.switchTab(1),
-                      child: Text(
-                        'Weekly Picks',
-                        style: model.tabNo == 1
-                            ? selectedTextStyle
-                            : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 15),
+                      child: TextButton(
+                        onPressed: () => model.switchTab(1),
+                        child: Text(
+                          'Weekly Picks',
+                          style: model.tabNo == 1
+                              ? selectedTextStyle
+                              : unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                        ),
                       ),
                     ),
                   )
@@ -71,20 +71,22 @@ class PicksCardView extends StatelessWidget {
               Row(
                 children: [
                   AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
                     height: 5,
                     width: model.tabPosWidthFactor,
                   ),
                   Container(
-                    color: UiConstants.kTabBorderColor,
                     height: 5,
                     width: SizeConfig.screenWidth! / 2 -
                         SizeConfig.pageHorizontalMargins * 2,
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
                   )
                 ],
               ),
               AnimatedContainer(
-                duration: Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInCubic,
                 height: model.tabNo == 0
                     ? SizeConfig.padding32
@@ -99,9 +101,9 @@ class PicksCardView extends StatelessWidget {
                   CurrentPicks(
                     isTambolaCard: false,
                     dailyPicksCount: model.dailyPicksCount,
-                    todaysPicks: model.todaysPicks != null
-                        ? model.todaysPicks
-                        : List.generate(model.dailyPicksCount, (index) => 0),
+                    todaysPicks: model.todaysPicks ??
+                        List.generate(model.dailyPicksCount, (index) => 0),
+                    // totalTicketMatched: model.totalTicketMatched,
                   ),
                   model.weeklyDigits == null
                       ? Center(
@@ -113,6 +115,7 @@ class PicksCardView extends StatelessWidget {
                         )
                       : WeeklyPicks(
                           weeklyDraws: model.weeklyDigits,
+                          model: model,
                         )
                 ],
               ),

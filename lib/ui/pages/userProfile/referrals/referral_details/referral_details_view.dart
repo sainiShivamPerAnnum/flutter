@@ -31,6 +31,8 @@ class ReferralDetailsView extends StatelessWidget {
   final _unselectedTextStyle = TextStyles.sourceSans.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
+  ReferralDetailsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -46,7 +48,7 @@ class ReferralDetailsView extends StatelessWidget {
                   onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.arrow_back_ios,
                     color: Colors.white,
                   )),
@@ -56,7 +58,7 @@ class ReferralDetailsView extends StatelessWidget {
                 const NewSquareBackground(),
                 SingleChildScrollView(
                   controller: _controller,
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -179,7 +181,7 @@ class ReferralDetailsView extends StatelessWidget {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: SizeConfig.padding12,
                                         vertical: SizeConfig.padding12),
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color:
                                           UiConstants.kSecondaryBackgroundColor,
                                       shape: BoxShape.circle,
@@ -245,7 +247,7 @@ class ReferralDetailsView extends StatelessWidget {
                             ),
                             PropertyChangeConsumer<UserService,
                                 UserServiceProperties>(
-                              properties: [
+                              properties: const [
                                 UserServiceProperties.myUserName,
                                 UserServiceProperties.myJourneyStats
                               ],
@@ -284,7 +286,7 @@ class ReferralDetailsView extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  FullScreenLoader(),
+                                  const FullScreenLoader(),
                                   SizedBox(height: SizeConfig.padding20),
                                   Text(
                                     locale.refFetch,
@@ -354,7 +356,7 @@ class ReferralDetailsView extends StatelessWidget {
                                         children: [
                                           AnimatedContainer(
                                             duration:
-                                                Duration(milliseconds: 500),
+                                                const Duration(milliseconds: 500),
                                             height: 5,
                                             width: model.tabPosWidthFactor,
                                           ),
@@ -389,7 +391,7 @@ class ReferralDetailsView extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins),
-                        child: Divider(color: Colors.white, thickness: 0.5),
+                        child: const Divider(color: Colors.white, thickness: 0.5),
                       ),
                       HowToEarnComponment(
                         model: model,
@@ -397,7 +399,7 @@ class ReferralDetailsView extends StatelessWidget {
                         onStateChanged: () {
                           _controller.animateTo(
                               _controller.position.maxScrollExtent,
-                              duration: Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 500),
                               curve: Curves.ease);
                         },
                       ),
@@ -479,7 +481,7 @@ class BonusLockedReferals extends StatelessWidget {
                     ListView.builder(
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, i) {
                           if (!(model.referalList![i].isUserBonusUnlocked ??
                               false)) {
@@ -510,7 +512,7 @@ class BonusLockedReferals extends StatelessWidget {
                                               Container(
                                             width: SizeConfig.iconSize5,
                                             height: SizeConfig.iconSize5,
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               color: Colors.grey,
                                               shape: BoxShape.circle,
                                             ),
@@ -577,7 +579,7 @@ class BonusLockedReferals extends StatelessWidget {
                               ),
                             );
                           } else {
-                            return SizedBox.shrink();
+                            return const SizedBox.shrink();
                           }
                         },
                         itemCount: model.referalList!.length),
@@ -649,7 +651,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                     ListView.builder(
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, i) {
                           if (model.referalList![i].isUserBonusUnlocked ??
                               false) {
@@ -679,7 +681,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                                               Container(
                                             width: SizeConfig.iconSize5,
                                             height: SizeConfig.iconSize5,
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               color: Colors.grey,
                                               shape: BoxShape.circle,
                                             ),
@@ -745,7 +747,7 @@ class BonusUnlockedReferals extends StatelessWidget {
                               ),
                             );
                           } else {
-                            return SizedBox.shrink();
+                            return const SizedBox.shrink();
                           }
                         },
                         itemCount: model.referalList!.length),
@@ -874,7 +876,7 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                     ),
                   ],
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ],
       ),
     );
@@ -887,7 +889,7 @@ class InfoTile extends StatelessWidget {
   final String? title;
   final double? leadSize;
 
-  InfoTile({this.leadingIcon, this.leadingAsset, this.title, this.leadSize});
+  InfoTile({super.key, this.leadingIcon, this.leadingAsset, this.title, this.leadSize});
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -936,12 +938,12 @@ class ReferAndEarnAsset extends StatelessWidget {
   }
 
   final List<Shadow> shadowDrawerList = [
-    Shadow(
+    const Shadow(
       offset: Offset(0.0, 5.0),
       blurRadius: 3.0,
       color: Color.fromARGB(255, 0, 0, 0),
     ),
-    Shadow(
+    const Shadow(
       offset: Offset(0.0, 5.0),
       blurRadius: 3.0,
       color: Color.fromARGB(255, 0, 0, 0),

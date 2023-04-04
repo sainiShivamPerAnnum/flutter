@@ -24,7 +24,7 @@ class StickyNote extends StatelessWidget {
           begin: Alignment.centerLeft,
           tileMode: TileMode.mirror,
           end: Alignment.centerRight,
-          stops: [0, 0.5, 0.5, 1],
+          stops: const [0, 0.5, 0.5, 1],
           colors: [
             UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.2),
             UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.2),
@@ -44,7 +44,7 @@ class StickyNote extends StatelessWidget {
                   "₹$amount",
                   style: TextStyles.sourceSansB.title3,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 8,
                 ),
                 Text(

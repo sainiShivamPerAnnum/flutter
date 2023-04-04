@@ -3,9 +3,11 @@ package `in`.fello.felloapp
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -24,23 +26,29 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.security.MessageDigest
+import java.lang.reflect.Method
 
 
 class MainActivity : FlutterFragmentActivity()  {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
     private val DEVICEDATACHANNEL = "methodChannel/deviceData"
+    private val UPIINTENTCHANNEL = "methodChannel/upiIntent"
     private val getUpiApps="getUpiApps"
     private val intiateTransaction="initiateTransaction"
     private  var res: MethodChannel.Result?=null
     private val successRequestCode = 101
+    private lateinit var paymentMethodChannel:MethodChannel
     private lateinit var context:Context
+    private lateinit var paymentResult: MethodChannel.Result
     override fun configureFlutterEngine( flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-            context=applicationContext
+        context=applicationContext
         flutterEngine.plugins.add(MyPlugin())
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
                 // Note: this method is invoked on the main thread.
@@ -62,7 +70,7 @@ class MainActivity : FlutterFragmentActivity()  {
                 else -> result.notImplemented();
             }
         }
-
+        //METHOD CHANNEL [2]
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, DEVICEDATACHANNEL).setMethodCallHandler {
             // This method is invoked on the main thread.
             call, result ->
@@ -96,8 +104,68 @@ class MainActivity : FlutterFragmentActivity()  {
               result.notImplemented()
             }
           }
-}
 
+       paymentMethodChannel =  MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UPIINTENTCHANNEL)
+        paymentMethodChannel.setMethodCallHandler {
+            // This method is invoked on the main thread.
+                call, result ->
+            when (call.method) {
+                "initiatePsp" -> {
+                    paymentResult = result
+                    var argsData = call.arguments as HashMap<*, *>
+                    val intentUrl:String = argsData["redirectUrl"] as String
+                    val packageName = argsData["packageName"] as String
+                    val i = Intent(Intent.ACTION_VIEW)
+                    i.data = Uri.parse(intentUrl)
+                    i.setPackage(packageName)
+                    startActivityForResult(i, successRequestCode)
+                }
+                "getPhonePeVersion" -> {
+                    val id: Long = getPhonePeVersionCode(context)
+                    result.success(id)
+                }
+                else -> {
+                    result.notImplemented()
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == successRequestCode) {
+            print("On Activity Result"+data.toString())
+            data?.putExtra("resultCode",resultCode)
+         paymentResult.success(data?.getStringExtra("response") as Object?) ; // returnResult(data?.getStringExtra("response") as Object?)
+        }
+    }
+
+    fun getPhonePeVersionCode(context: Context?): Long {
+        // val PHONEPE_PACKAGE_NAME_UAT = "com.phonepe.app.preprod"
+        val PHONEPE_PACKAGE_NAME_PRODUCTION = "com.phonepe.app"
+        var packageInfo: PackageInfo? = null
+        var phonePeVersionCode = -1L
+        try {
+            packageInfo = packageManager.getPackageInfo(
+                PHONEPE_PACKAGE_NAME_PRODUCTION,
+                PackageManager.GET_ACTIVITIES
+            )
+            phonePeVersionCode = if (VERSION.SDK_INT >= VERSION_CODES.P) {
+                packageInfo.getLongVersionCode()
+            } else {
+                packageInfo.versionCode.toLong()
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.e(
+                TAG, String.format(
+                    "failed to get package info for package name = {%s}, exception message = {%s}",
+                    PHONEPE_PACKAGE_NAME_PRODUCTION, e.message
+                )
+            )
+        }
+        return phonePeVersionCode
+    }
+    
     @SuppressLint("HardwareIds")
     private fun getAndroidId(): String? {
         return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID);

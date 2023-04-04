@@ -19,7 +19,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
@@ -48,7 +47,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final CouponRepository? _couponRepo = locator<CouponRepository>();
-  final PaytmService? _paytmService = locator<PaytmService>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
   S locale = locator<S>();
   AssetOptionsModel? assetOptionsModel;
   double? incomingAmount;

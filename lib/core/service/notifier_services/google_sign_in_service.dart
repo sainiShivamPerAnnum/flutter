@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -27,7 +26,7 @@ class GoogleSignInService extends ChangeNotifier {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         BaseUtil.showNegativeAlert(
-        locale.noAccSelected,
+          locale.noAccSelected,
           locale.chooseAnAcc,
         );
         return null;
@@ -52,11 +51,11 @@ class GoogleSignInService extends ChangeNotifier {
       });
       if (res.isSuccess() && res.model!) {
         _userService!.isEmailVerified = true;
-        AppState.backButtonDispatcher!.didPopRoute();
         return userEmail;
       } else
         BaseUtil.showNegativeAlert(
-            res.errorMessage ?? locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
+            res.errorMessage ?? locale.obSomeThingWentWrong,
+            locale.obPleaseTryAgain);
       return null;
     } catch (e) {
       _logger!.d(e.toString());

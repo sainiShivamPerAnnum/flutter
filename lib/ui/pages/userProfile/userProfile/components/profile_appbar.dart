@@ -10,11 +10,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
   const ProfileAppBar({
     Key? key,
-    required this.isNewUser,
+    // required this.isNewUser,
     required this.model,
   }) : super(key: key);
   final UserProfileVM model;
-  final bool isNewUser;
+  // final bool isNewUser;
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -23,9 +23,11 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return AppBar(
-      backgroundColor: isNewUser
-          ? Colors.transparent
-          : UiConstants.kSecondaryBackgroundColor,
+      backgroundColor:
+          //  isNewUser
+          //     ? Colors.transparent
+          //     :
+          UiConstants.kSecondaryBackgroundColor,
       elevation: 0.0,
       title: Text(
         locale.abMyProfile,
@@ -40,44 +42,44 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
         onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
       ),
       actions: [
-        if (!isNewUser)
-          Padding(
-            padding: EdgeInsets.only(right: SizeConfig.padding16),
-            child: model.isUpdaingUserDetails
-                ? Padding(
-                    padding: EdgeInsets.only(right: SizeConfig.padding12),
-                    child: SpinKitThreeBounce(
-                      color: Colors.white,
-                      size: SizeConfig.padding16,
-                    ),
-                  )
-                : (!model.inEditMode
-                    ? TextButton.icon(
-                        icon: Icon(Icons.edit_outlined,
-                            size: SizeConfig.iconSize2,
-                            color: UiConstants.kTextColor),
-                        // SizedBox(width: SizeConfig.padding8),
-                        label: Text(
-                          locale.obEdit,
-                          style: TextStyles.sourceSansSB.body2,
+        // if (!isNewUser)
+        Padding(
+          padding: EdgeInsets.only(right: SizeConfig.padding16),
+          child: model.isUpdaingUserDetails
+              ? Padding(
+                  padding: EdgeInsets.only(right: SizeConfig.padding12),
+                  child: SpinKitThreeBounce(
+                    color: Colors.white,
+                    size: SizeConfig.padding16,
+                  ),
+                )
+              : (!model.inEditMode
+                  ? TextButton.icon(
+                      icon: Icon(Icons.edit_outlined,
+                          size: SizeConfig.iconSize2,
+                          color: UiConstants.kTextColor),
+                      // SizedBox(width: SizeConfig.padding8),
+                      label: Text(
+                        locale.obEdit,
+                        style: TextStyles.sourceSansSB.body2,
+                      ),
+                      onPressed: () => model.enableEdit(),
+                    )
+                  : TextButton(
+                      onPressed: () {
+                        if (!model.isUpdaingUserDetails) {
+                          FocusScope.of(context).unfocus();
+                          model.updateDetails();
+                        }
+                      },
+                      child: Text(
+                        locale.obDone,
+                        style: TextStyles.sourceSansSB.body2.colour(
+                          UiConstants.kTabBorderColor,
                         ),
-                        onPressed: () => model.enableEdit(),
-                      )
-                    : TextButton(
-                        onPressed: () {
-                          if (!model.isUpdaingUserDetails) {
-                            FocusScope.of(context).unfocus();
-                            model.updateDetails();
-                          }
-                        },
-                        child: Text(
-                          locale.obDone,
-                          style: TextStyles.sourceSansSB.body2.colour(
-                            UiConstants.kTabBorderColor,
-                          ),
-                        ),
-                      )),
-          ),
+                      ),
+                    )),
+        ),
       ],
     );
   }

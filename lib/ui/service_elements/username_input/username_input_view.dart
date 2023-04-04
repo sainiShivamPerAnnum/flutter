@@ -72,6 +72,7 @@ class UsernameInputView extends StatelessWidget {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     textEditingController: model.usernameController,
                     isEnabled: model.inEditMode,
+                    textStyle: TextStyles.body2.colour(Colors.white),
                     inputFormatters: [
                       LowerCaseTextFormatter(),
                       FilteringTextInputFormatter.allow(
@@ -85,17 +86,16 @@ class UsernameInputView extends StatelessWidget {
                         return null;
                     },
                     onChanged: (String value) {
-                      model.validateUsername();
+                      model.checkIfUsernameIsAvailable();
                     },
                   ),
                   Container(
                     height: model.errorPadding,
                   ),
-                  if (model.showResult().runtimeType != SizedBox)
-                    Container(
-                      height: SizeConfig.padding20,
-                      child: model.showResult(),
-                    ),
+                  Container(
+                    height: SizeConfig.padding20,
+                    child: model.showResult(),
+                  ),
                   Container(
                     width: SizeConfig.screenWidth,
                     margin: EdgeInsets.symmetric(

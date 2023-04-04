@@ -22,6 +22,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class LendboxBuyInputView extends StatefulWidget {
@@ -124,13 +125,10 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
               SizedBox(
                 height: SizeConfig.padding32,
               ),
-              PropertyChangeConsumer<BankAndPanService,
-                  BankAndPanServiceProperties>(
-                properties: [
-                  BankAndPanServiceProperties.kycVerified,
-                ],
-                builder: (ctx, service, child) {
-                  return (!service!.isKYCVerified)
+              Selector<BankAndPanService, bool>(
+                selector: (p0, p1) => p1.isKYCVerified,
+                builder: (ctx, isKYCVerified, child) {
+                  return (!isKYCVerified)
                       ? _kycWidget(widget.model, context)
                       : widget.model.isBuyInProgress
                           ? Container(

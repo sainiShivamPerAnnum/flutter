@@ -263,7 +263,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                             investmentType:
                                                 InvestmentType.LENDBOXP2P);
                                       } else if (routes.contains('assetBuy')) {
-                                        BaseUtil().openDepositOptionsModalSheet(
+                                        BaseUtil.openDepositOptionsModalSheet(
                                           amount: widget.milestone.value,
                                         );
                                       } else {

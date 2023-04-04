@@ -18,7 +18,7 @@ import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
-import 'package:felloapp/core/repository/subcription_repo.dart';
+import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -48,9 +48,9 @@ import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_vm.dart';
@@ -60,14 +60,14 @@ import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_vm.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
-import 'package:felloapp/ui/pages/finance/autopay/autopay_process/autopay_process_vm.dart';
-import 'package:felloapp/ui/pages/finance/autopay/user_autopay_details/user_autopay_details_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_vm.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transaction_history_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view_model/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_home_vm.dart';
@@ -119,8 +119,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => FcmHandler());
   locator.registerLazySingleton(() => FcmListener(locator()));
 
-  locator.registerLazySingleton(() => PaytmService());
-
   locator.registerLazySingleton(() => AnalyticsProperties());
   locator.registerLazySingleton(() => AnalyticsService());
   locator.registerLazySingleton(() => MixpanelAnalytics());
@@ -150,6 +148,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => RazorpayService());
   locator.registerSingletonAsync(() => SharedPreferences.getInstance());
   locator.registerLazySingleton(() => MarketingEventHandlerService());
+  locator.registerLazySingleton(() => SubService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());
@@ -211,7 +210,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => MultipleScratchCardsViewModel());
   locator.registerFactory(() => TopSaverViewModel());
   locator.registerFactory(() => AutosaveProcessViewModel());
-  locator.registerFactory(() => UserAutosaveDetailsViewModel());
+  locator.registerFactory(() => AutosaveDetailsViewModel());
   locator.registerFactory(() => CampaignRepo());
   locator.registerFactory(() => OnboardingViewModel());
   locator.registerFactory(() => JourneyBannersViewModel());
@@ -228,6 +227,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => SourceAdaptiveAssetViewModel());
   locator.registerFactory(() => SubscriptionCardViewModel());
   locator.registerFactory(() => TambolaCardModel());
+
   // locator.registerFactory<UsernameInputViewModel>(() => UsernameInputViewModel());
   await locator.allReady();
 }

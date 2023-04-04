@@ -1,7 +1,5 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
-import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -11,6 +9,7 @@ import 'package:shimmer/shimmer.dart';
 
 class Ticket extends StatelessWidget {
   Ticket({
+    super.key,
     required this.board,
     required this.calledDigits,
     this.bestBoards,
@@ -36,21 +35,23 @@ class Ticket extends StatelessWidget {
   //   setState(() {});
   // }
 
-  getColor(int index) {
-    if (calledDigits.contains(ticketNumbers[index]))
+  Color getColor(int index) {
+    if (calledDigits.contains(ticketNumbers[index])) {
       return UiConstants.kTicketPeachColor;
-    else
+    } else {
       return Colors.transparent;
+    }
   }
 
-  getTextColor(int index) {
-    if (calledDigits.contains(ticketNumbers[index]))
+  Color getTextColor(int index) {
+    if (calledDigits.contains(ticketNumbers[index])) {
       return Colors.black;
-    else
+    } else {
       return Colors.white;
+    }
   }
 
-  markStatus(int index) {
+  SingleChildRenderObjectWidget markStatus(int index) {
     if (calledDigits.contains(ticketNumbers[index])) {
       return Align(
         alignment: Alignment.center,
@@ -58,7 +59,7 @@ class Ticket extends StatelessWidget {
           angle: -45,
           alignment: Alignment.center,
           child: Container(
-            margin: EdgeInsets.all(2),
+            margin: const EdgeInsets.all(2),
             width: 2,
             decoration: BoxDecoration(
               color: Colors.black,
@@ -68,11 +69,11 @@ class Ticket extends StatelessWidget {
         ),
       );
     } else {
-      return SizedBox();
+      return const SizedBox();
     }
   }
 
-  generateNumberList() {
+  void generateNumberList() {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 9; j++) {
         ticketNumbers.add(board!.tambolaBoard![i][j]);
@@ -108,7 +109,7 @@ class Ticket extends StatelessWidget {
                   children: [
                     (board!.assigned_time.toDate().day == DateTime.now().day)
                         ? Shimmer(
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                               colors: [
                                 UiConstants.primaryLight,
                                 UiConstants.primaryColor,
@@ -122,7 +123,7 @@ class Ticket extends StatelessWidget {
                               style: TextStyles.rajdhaniB.body3,
                             ),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     Row(
                       children: [
                         Text(
@@ -142,8 +143,8 @@ class Ticket extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   itemCount: 27,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 9,
                     mainAxisSpacing: 2,
                     crossAxisSpacing: 1,
@@ -201,8 +202,7 @@ class Ticket extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(SizeConfig.padding6),
             child: Text(
-              locale.tGeneratedOn +
-                  "${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).year}",
+              "${locale.tGeneratedOn}${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board!.assigned_time.millisecondsSinceEpoch).year}",
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: SizeConfig.smallTextSize,
@@ -215,178 +215,178 @@ class Ticket extends StatelessWidget {
   }
 }
 
-/** 
- * 
-class Odds extends StatelessWidget {
-  final DailyPick _digitsObj;
-  final TambolaBoard _board;
-  final List<TambolaBoard> _bestBoards;
-  final bool showBestBoard;
+/**
+ *
+    class Odds extends StatelessWidget {
+    final DailyPick _digitsObj;
+    final TambolaBoard _board;
+    final List<TambolaBoard> _bestBoards;
+    final bool showBestBoard;
 
-  Odds(this._digitsObj, this._board, this._bestBoards, this.showBestBoard);
+    Odds(this._digitsObj, this._board, this._bestBoards, this.showBestBoard);
 
-  @override
-  Widget build(BuildContext cx) {
+    @override
+    Widget build(BuildContext cx) {
     if (_board == null) return Container();
     List<int> _digits = (_digitsObj != null) ? _digitsObj.toList() : [];
     return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        // padding: EdgeInsets.zero,
-        // physics: NeverScrollableScrollPhysics(),
-        // itemCount: 6,
-        children: List.generate(
-          5,
-          (index) {
-            switch (index) {
-              case 0:
-                return _buildRow(
-                    cx,
-                    Icons.border_top,
-                    'Top Row',
-                    _board.getRowOdds(0, _digits).toString() + ' left',
-                    _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
-                    _bestBoards[0],
-                    _digits);
-              case 1:
-                return _buildRow(
-                    cx,
-                    Icons.border_horizontal,
-                    'Middle Row',
-                    _board.getRowOdds(1, _digits).toString() + ' left',
-                    _bestBoards[1].getRowOdds(1, _digits).toString() + ' left',
-                    _bestBoards[1],
-                    _digits);
-              case 2:
-                return _buildRow(
-                    cx,
-                    Icons.border_bottom,
-                    'Bottom Row',
-                    _board.getRowOdds(2, _digits).toString() + ' left',
-                    _bestBoards[2].getRowOdds(2, _digits).toString() + ' left',
-                    _bestBoards[2],
-                    _digits);
-              case 3:
-                return _buildRow(
-                    cx,
-                    Icons.border_outer,
-                    'Corners',
-                    _board.getCornerOdds(_digits).toString() + ' left',
-                    _bestBoards[3].getCornerOdds(_digits).toString() + ' left',
-                    _bestBoards[3],
-                    _digits);
-              case 4:
-                return _buildRow(
-                    cx,
-                    Icons.apps,
-                    'Full House',
-                    _board.getFullHouseOdds(_digits).toString() + ' left',
-                    _bestBoards[4].getFullHouseOdds(_digits).toString() +
-                        ' left',
-                    _bestBoards[4],
-                    _digits);
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    // padding: EdgeInsets.zero,
+    // physics: NeverScrollableScrollPhysics(),
+    // itemCount: 6,
+    children: List.generate(
+    5,
+    (index) {
+    switch (index) {
+    case 0:
+    return _buildRow(
+    cx,
+    Icons.border_top,
+    'Top Row',
+    _board.getRowOdds(0, _digits).toString() + ' left',
+    _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+    _bestBoards[0],
+    _digits);
+    case 1:
+    return _buildRow(
+    cx,
+    Icons.border_horizontal,
+    'Middle Row',
+    _board.getRowOdds(1, _digits).toString() + ' left',
+    _bestBoards[1].getRowOdds(1, _digits).toString() + ' left',
+    _bestBoards[1],
+    _digits);
+    case 2:
+    return _buildRow(
+    cx,
+    Icons.border_bottom,
+    'Bottom Row',
+    _board.getRowOdds(2, _digits).toString() + ' left',
+    _bestBoards[2].getRowOdds(2, _digits).toString() + ' left',
+    _bestBoards[2],
+    _digits);
+    case 3:
+    return _buildRow(
+    cx,
+    Icons.border_outer,
+    'Corners',
+    _board.getCornerOdds(_digits).toString() + ' left',
+    _bestBoards[3].getCornerOdds(_digits).toString() + ' left',
+    _bestBoards[3],
+    _digits);
+    case 4:
+    return _buildRow(
+    cx,
+    Icons.apps,
+    'Full House',
+    _board.getFullHouseOdds(_digits).toString() + ' left',
+    _bestBoards[4].getFullHouseOdds(_digits).toString() +
+    ' left',
+    _bestBoards[4],
+    _digits);
 
-              default:
-                return _buildRow(
-                    cx,
-                    Icons.border_top,
-                    'Top Row',
-                    _board.getRowOdds(0, _digits).toString() + ' left',
-                    _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
-                    _bestBoards[0],
-                    _digits);
-            }
-          },
-        ));
-  }
+    default:
+    return _buildRow(
+    cx,
+    Icons.border_top,
+    'Top Row',
+    _board.getRowOdds(0, _digits).toString() + ' left',
+    _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+    _bestBoards[0],
+    _digits);
+    }
+    },
+    ));
+    }
 
-  Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd,
-      String _oOdd, TambolaBoard _bestBoard, List<int> _digits) {
+    Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd,
+    String _oOdd, TambolaBoard _bestBoard, List<int> _digits) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              flex: showBestBoard ? 1 : 2,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                      radius: SizeConfig.padding20,
-                      backgroundColor:
-                          UiConstants.primaryColor.withOpacity(0.1),
-                      child: Icon(_i,
-                          size: SizeConfig.padding20,
-                          color: UiConstants.primaryColor)),
-                  SizedBox(width: SizeConfig.padding12),
-                  Expanded(
-                    child: Text(_title, maxLines: 2, style: TextStyles.body3),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Text(_tOdd, style: TextStyles.body3),
-                  SizedBox(height: SizeConfig.padding2),
-                  Text('This ticket',
-                      style: TextStyles.body4.colour(Colors.grey))
-                ],
-              ),
-            ),
-            if (showBestBoard)
-              Expanded(
-                child: InkWell(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Text(_oOdd, style: TextStyles.body3),
-                      SizedBox(height: SizeConfig.padding4),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding8,
-                          vertical: SizeConfig.padding2,
-                        ),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: UiConstants.primaryColor.withOpacity(0.2)),
-                        child: Text('Best ticket',
-                            textAlign: TextAlign.center,
-                            style: TextStyles.body4
-                                .colour(UiConstants.primaryColor)),
-                      )
-                    ],
-                  ),
-                  onTap: () {
-                    BaseUtil.openDialog(
-                      addToScreenStack: true,
-                      hapticVibrate: true,
-                      isBarrierDismissable: true,
-                      content: Dialog(
-                        backgroundColor: Colors.transparent,
-                        child: Container(
-                          height: SizeConfig.screenWidth * 1.3,
-                          width: SizeConfig.screenWidth -
-                              SizeConfig.pageHorizontalMargins * 2,
-                          child: Transform.scale(
-                            scale: 1.1,
-                            child: Ticket(
-                                dailyPicks: _digitsObj,
-                                bestBoards: _bestBoards,
-                                board: _bestBoard,
-                                showBestOdds: false,
-                                calledDigits: _digits),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-          ]),
+    padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+    child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: <Widget>[
+    Expanded(
+    flex: showBestBoard ? 1 : 2,
+    child: Row(
+    children: [
+    CircleAvatar(
+    radius: SizeConfig.padding20,
+    backgroundColor:
+    UiConstants.primaryColor.withOpacity(0.1),
+    child: Icon(_i,
+    size: SizeConfig.padding20,
+    color: UiConstants.primaryColor)),
+    SizedBox(width: SizeConfig.padding12),
+    Expanded(
+    child: Text(_title, maxLines: 2, style: TextStyles.body3),
+    ),
+    ],
+    ),
+    ),
+    Expanded(
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: <Widget>[
+    Text(_tOdd, style: TextStyles.body3),
+    SizedBox(height: SizeConfig.padding2),
+    Text('This ticket',
+    style: TextStyles.body4.colour(Colors.grey))
+    ],
+    ),
+    ),
+    if (showBestBoard)
+    Expanded(
+    child: InkWell(
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: <Widget>[
+    Text(_oOdd, style: TextStyles.body3),
+    SizedBox(height: SizeConfig.padding4),
+    Container(
+    padding: EdgeInsets.symmetric(
+    horizontal: SizeConfig.padding8,
+    vertical: SizeConfig.padding2,
+    ),
+    decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(100),
+    color: UiConstants.primaryColor.withOpacity(0.2)),
+    child: Text('Best ticket',
+    textAlign: TextAlign.center,
+    style: TextStyles.body4
+    .colour(UiConstants.primaryColor)),
+    )
+    ],
+    ),
+    onTap: () {
+    BaseUtil.openDialog(
+    addToScreenStack: true,
+    hapticVibrate: true,
+    isBarrierDismissable: true,
+    content: Dialog(
+    backgroundColor: Colors.transparent,
+    child: Container(
+    height: SizeConfig.screenWidth * 1.3,
+    width: SizeConfig.screenWidth -
+    SizeConfig.pageHorizontalMargins * 2,
+    child: Transform.scale(
+    scale: 1.1,
+    child: Ticket(
+    dailyPicks: _digitsObj,
+    bestBoards: _bestBoards,
+    board: _bestBoard,
+    showBestOdds: false,
+    calledDigits: _digits),
+    ),
+    ),
+    ),
     );
-  }
-}
-**/
+    },
+    ),
+    ),
+    ]),
+    );
+    }
+    }
+ **/

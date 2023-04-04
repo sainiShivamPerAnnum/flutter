@@ -105,28 +105,19 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               ),
               Align(
                 alignment: Alignment.topRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(
-                            top: SizeConfig.pageHorizontalMargins / 2,
-                            right: SizeConfig.pageHorizontalMargins),
-                        child: FaqPill(type: FaqsType.onboarding)),
-                  ],
+                child: SafeArea(
+                  child: Container(
+                      margin: EdgeInsets.only(
+                          top: SizeConfig.pageHorizontalMargins / 2,
+                          right: SizeConfig.pageHorizontalMargins),
+                      child: FaqPill(type: FaqsType.onboarding)),
                 ),
               ),
               if (keyboardIsOpen)
                 Positioned(
                   bottom: MediaQuery.of(context).viewInsets.bottom,
                   child: GestureDetector(
-                    onTap: () {
-                      if (BaseUtil.showNoInternetAlert()) return;
-                      if (model.state == ViewState.Idle)
-                        model.processScreenInput(
-                          model.currentPage,
-                        );
-                    },
+                    onTap: () => model.processScreenInput(model.currentPage),
                     child: Container(
                       width: SizeConfig.screenWidth,
                       height: SizeConfig.padding54,

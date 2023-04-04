@@ -210,7 +210,7 @@ class CouponModalSheet extends StatelessWidget {
                     child: Text(
                       desc,
                       style: TextStyles.sourceSans.body3
-                          .setOpecity(0.6)
+                          .setOpacity(0.6)
                           .setHeight(1.5),
                     ),
                   ),
