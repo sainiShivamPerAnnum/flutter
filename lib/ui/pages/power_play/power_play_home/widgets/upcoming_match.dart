@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -117,13 +118,13 @@ class UpcomingMatch extends StatelessWidget {
                                   bottomLeft: Radius.circular(5),
                                   bottomRight: Radius.circular(5))),
                           child: Center(
-                            child: index == 0 && model.liveMatchData == null
-                                ? const TimerWidget()
+                            child: index == 0
+                                ? CountdownTimerWidget(
+                                    endTime:
+                                        model.upcomingMatchData![0]!.startsAt!)
                                 : Text(
-                                    'Predictions start in ${getTime(index)}',
-                                    style: TextStyles.sourceSans.copyWith(
-                                        fontSize:
-                                            SizeConfig.screenWidth! * 0.030),
+                                    'Predictions start on ${getDate(index)}',
+                                    style: TextStyles.sourceSans.body3,
                                   ),
                           ),
                         )
@@ -140,80 +141,56 @@ class UpcomingMatch extends StatelessWidget {
   }
 }
 
-class TimerWidget extends StatefulWidget {
-  const TimerWidget({super.key});
+class CountdownTimerWidget extends StatefulWidget {
+  final TimestampModel endTime;
+
+  CountdownTimerWidget({required this.endTime});
 
   @override
-  _TimerWidgetState createState() => _TimerWidgetState();
+  _CountdownTimerWidgetState createState() => _CountdownTimerWidgetState();
 }
 
-class _TimerWidgetState extends State<TimerWidget> {
-  final MyTimer _timer = MyTimer();
+class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
+  Timer? _timer;
+  int? _timeRemaining;
 
   @override
   void initState() {
     super.initState();
-    DateTime timestamp = DateTime.parse('2023-04-04T14:00:00.000Z');
-    _timer.startTimer(timestamp);
-  }
-
-  @override
-  void dispose() {
-    _timer.stopTimer();
-    super.dispose();
+    _timeRemaining =
+        widget.endTime.toDate().difference(DateTime.now()).inMilliseconds;
+    _startTimer();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<int>(
-      stream: _timer.timerStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          int secondsRemaining = snapshot.data!;
-          Duration duration = Duration(seconds: secondsRemaining);
-          String formattedTime = DateFormat('hh:mm').format(
-            DateTime(0, 0, 0, 0, 0, duration.inSeconds),
-          );
-          return Text(
-            'Time remaining: $formattedTime',
-            style: TextStyles.sourceSans
-                .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
-          );
-        }
-        return SizedBox();
-      },
+    return Text(
+      "Predictions starts in ${_formatDuration(Duration(milliseconds: _timeRemaining!))} Hrs",
+      style: TextStyles.sourceSans.body3,
     );
   }
-}
 
-class MyTimer {
-  int _secondsRemaining = 60;
-  Timer? _timer;
-  final StreamController<int> _timerController = StreamController<int>();
-
-  Stream<int> get timerStream => _timerController.stream;
-
-  void startTimer(DateTime timestamp) {
-    _secondsRemaining = timestamp.difference(DateTime.now()).inSeconds;
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_secondsRemaining > 0) {
-        _secondsRemaining--;
-        _timerController.sink.add(_secondsRemaining);
-      } else {
-        stopTimer();
-      }
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      setState(() {
+        _timeRemaining = _timeRemaining! - 1000;
+        if (_timeRemaining! <= 0) {
+          _timer!.cancel();
+          _timeRemaining = 0;
+        }
+      });
     });
   }
 
-  void stopTimer() {
-    if (_timer != null) {
-      _timer!.cancel();
-      _timer = null;
-      _timerController.sink.addError('Timer stopped');
-    }
+  String _formatDuration(Duration duration) {
+    return "${(duration.inHours % 24).toString().padLeft(2, '0')}:"
+        "${(duration.inMinutes % 60).toString().padLeft(2, '0')}:"
+        "${(duration.inSeconds % 60).toString().padLeft(2, '0')}";
   }
 
+  @override
   void dispose() {
-    _timerController.close();
+    _timer!.cancel();
+    super.dispose();
   }
 }

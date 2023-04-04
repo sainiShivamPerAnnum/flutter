@@ -284,8 +284,10 @@ class CorrectPredictorsListView extends StatelessWidget {
 }
 
 class UserPredictionsButton extends StatelessWidget {
-  const UserPredictionsButton({super.key, required this.model});
-  final CompletedMatchDetailsVM model;
+  const UserPredictionsButton(
+      {super.key, required this.model, this.margin = true});
+  final model;
+  final bool margin;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -302,7 +304,8 @@ class UserPredictionsButton extends StatelessWidget {
           isScrollControlled: true,
           hapticVibrate: true,
           content: YourPredictionSheet(
-            transactions: model.predications, matchData: model.matchData!,
+            transactions: model.predictions,
+            matchData: model.matchData!,
           ),
         );
       },
@@ -317,8 +320,8 @@ class UserPredictionsButton extends StatelessWidget {
           top: SizeConfig.padding12,
           bottom: SizeConfig.padding12,
         ),
-        margin:
-            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+        margin: EdgeInsets.symmetric(
+            horizontal: margin ? SizeConfig.pageHorizontalMargins : 0),
         child: Row(
           children: [
             Text("Your Predictions", style: TextStyles.sourceSans.body2),
@@ -332,7 +335,7 @@ class UserPredictionsButton extends StatelessWidget {
                       size: SizeConfig.padding16,
                     ),
                   )
-                : Text("(${model.predications?.length ?? 0})",
+                : Text("(${model.predictions?.length ?? 0})",
                     style: TextStyles.sourceSans.body2),
             const Spacer(),
             const Icon(

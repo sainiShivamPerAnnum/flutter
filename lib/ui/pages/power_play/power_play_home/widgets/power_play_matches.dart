@@ -30,7 +30,6 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
     return ['Live', 'Upcoming', 'Completed'];
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -94,7 +93,7 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                 return widget.model.liveMatchData?.isEmpty ?? true
                     ? const NoLiveMatch()
                     : LiveMatch(
-                        matchData: widget.model.liveMatchData?[0],
+                        model: widget.model,
                       );
               } else if (widget.model.tabController!.index == 1) {
                 return UpcomingMatch(
