@@ -91,7 +91,10 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         ),
                         isScrollControlled: true,
                         hapticVibrate: true,
-                        content: const MakePredictionSheet());
+                        content: MakePredictionSheet(
+                          team1: 'MI',
+                          team2: 'CSK',
+                        ));
                   },
                   child: Center(
                     child: Text(

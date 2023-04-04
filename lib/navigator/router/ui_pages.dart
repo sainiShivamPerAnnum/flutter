@@ -82,6 +82,8 @@ const String AssetViewPath = '/assetViewSection';
 
 //POWER PLAY PATHS
 const String PowerPlayPath = '/powerPlayPath';
+const String PowerPlayLeaderBoardPath = '/powerPlayLeaderBoardPath';
+const String PowerPlayHowItWorksPath = '/powerPlayHowItWorksPath';
 const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
 
 enum Pages {
@@ -160,9 +162,11 @@ enum Pages {
   WebView,
   SettingsView,
   TransactionDetailsPage,
-
+  
   //POWER PLAY
   PowerPlayHome,
+  PowerPlayLeaderBoard,
+  PowerPlayHowItWorks,
   FppCompletedMatchDetails,
 }
 
@@ -693,6 +697,18 @@ PageConfiguration PowerPlayHomeConfig = PageConfiguration(
     uiPage: Pages.PowerPlayHome,
     name: "PowerPlay Home Screen");
 
+PageConfiguration PowerPlayLeaderBoardConfig = PageConfiguration(
+    key: 'PowerPlayLeaderBoardPath',
+    path: PowerPlayLeaderBoardPath,
+    uiPage: Pages.PowerPlayLeaderBoard,
+    name: "PowerPlay LeaderBoard Screen");
+
+PageConfiguration PowerPlayHowItWorksConfig = PageConfiguration(
+    key: 'PowerPlayHowItWorksPath',
+    path: PowerPlayHowItWorksPath,
+    uiPage: Pages.PowerPlayHowItWorks,
+    name: "PowerPlay HowItWorks Screen");
+    
 PageConfiguration FppCompletedMatchDetailsConfig = PageConfiguration(
     key: 'FppCompletedMatchDetailsPath',
     path: FppCompletedMatchDetailsPath,

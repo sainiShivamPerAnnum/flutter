@@ -1,3 +1,9 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -6,7 +12,10 @@ import 'package:flutter/material.dart';
 class LiveMatch extends StatelessWidget {
   const LiveMatch({
     super.key,
+    required this.matchData,
   });
+
+  final MatchData? matchData;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +40,18 @@ class LiveMatch extends StatelessWidget {
                   style: TextStyles.sourceSansB.body2.colour(Colors.white),
                 ),
                 const Spacer(),
-                Text(
-                  'PREDICTION LEADERBOARD',
-                  style: TextStyles.sourceSans
-                      .colour(Colors.white.withOpacity(0.7))
-                      .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                GestureDetector(
+                  onTap: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.addPage,
+                        page: PowerPlayLeaderBoardConfig);
+                  },
+                  child: Text(
+                    'PREDICTION LEADERBOARD',
+                    style: TextStyles.sourceSans
+                        .colour(Colors.white.withOpacity(0.7))
+                        .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                  ),
                 ),
                 const Icon(
                   Icons.arrow_forward_ios,
@@ -45,25 +61,32 @@ class LiveMatch extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(
-            height: 18,
+          SizedBox(
+            height: SizeConfig.padding16,
           ),
-          IplTeamsScoreWidget(
-            padding: EdgeInsets.symmetric(horizontal: 17),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+            child: IplTeamsScoreWidget(
+              team1: matchData?.teams?[0] ?? "",
+              team2: matchData?.teams?[1] ?? "",
+              score1: matchData?.currentScore?[matchData?.teams![0]],
+              score2: matchData?.currentScore?[matchData?.teams![1]],
+              padding: EdgeInsets.symmetric(horizontal: 17),
+
+            ),
+
           ),
-          const SizedBox(
-            height: 30,
+          SizedBox(
+            height: SizeConfig.padding28,
           ),
           Center(
             child: Text(
-              'PREDICTIONS END AFTER RCB PLAYS 19TH OVER',
+              matchData?.headsUpText ?? '',
               style: TextStyles.sourceSans
                   .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
             ),
           ),
-          const SizedBox(
-            height: 18,
-          ),
+          SizedBox(height: SizeConfig.padding16),
           Container(
             margin: const EdgeInsets.symmetric(
               horizontal: 22,
@@ -71,7 +94,24 @@ class LiveMatch extends StatelessWidget {
             child: MaterialButton(
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: () {
+                BaseUtil.openModalBottomSheet(
+                    isBarrierDismissible: true,
+                    addToScreenStack: true,
+                    backgroundColor: const Color(0xff21284A),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness32),
+                      topRight: Radius.circular(SizeConfig.roundness32),
+                    ),
+                    isScrollControlled: true,
+                    hapticVibrate: true,
+                    content: MakePredictionSheet(
+                      team1: matchData?.teams?[0] ?? "",
+                      team2: matchData?.teams?[1] ?? "",
+                      score1: matchData?.currentScore?[matchData?.teams![0]],
+                      score2: matchData?.currentScore?[matchData?.teams![1]],
+                    ));
+              },
               child: Center(
                 child: Text(
                   'PREDICT NOW',

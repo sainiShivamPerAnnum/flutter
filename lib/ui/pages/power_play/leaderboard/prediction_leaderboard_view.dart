@@ -1,9 +1,12 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribution_sheet.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +18,7 @@ class PredictionLeaderboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return PowerPlayBackgroundUi(
       child: SingleChildScrollView(
         child: SafeArea(
@@ -33,8 +37,9 @@ class PredictionLeaderboard extends StatelessWidget {
                     children: [
                       TextButton(
                         style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          onSurface: Colors.white,
+                          foregroundColor: Colors.white,
+                          disabledForegroundColor:
+                              Colors.white.withOpacity(0.38),
                           side: BorderSide(
                               color: Colors.white.withOpacity(0.5), width: 0.5),
                           shape: const RoundedRectangleBorder(
@@ -75,18 +80,16 @@ class PredictionLeaderboard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Center(
-                  child: SvgPicture.network(
-                    'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
-                    height: 95,
-                  ),
-                ),
+                // Center(
+                //   child: SvgPicture.network(
+                //     'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
+                //     height: 95,
+                //   ),
+                // ),
                 const SizedBox(
                   height: 20,
                 ),
                 MatchBriefDetailsWidget(),
-                //IPL Match 4
-
                 Container(
                   height: 1,
                   color: Colors.white.withOpacity(0.5),
@@ -269,11 +272,18 @@ class PredictionLeaderboard extends StatelessWidget {
                   height: SizeConfig.padding20,
                 ),
                 // WHAT IS A PREDICTION?
-                Text(
-                  "WHAT IS A PREDICTION?",
-                  style: TextStyles.rajdhaniB.body1
-                      .colour(Colors.white)
-                      .copyWith(decoration: TextDecoration.underline),
+                GestureDetector(
+                  onTap: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.addPage,
+                        page: PowerPlayHowItWorksConfig);
+                  },
+                  child: Text(
+                    "WHAT IS A PREDICTION?",
+                    style: TextStyles.rajdhaniB.body1
+                        .colour(Colors.white)
+                        .copyWith(decoration: TextDecoration.underline),
+                  ),
                 ),
                 SizedBox(
                   height: SizeConfig.padding20,
@@ -294,7 +304,10 @@ class PredictionLeaderboard extends StatelessWidget {
                         ),
                         isScrollControlled: true,
                         hapticVibrate: true,
-                        content: const PrizeDistributionSheet());
+                        content: MakePredictionSheet(
+                          team1: '',
+                          team2: '',
+                        ));
                   },
                   child: Center(
                     child: Text(
@@ -349,7 +362,18 @@ class MatchBriefDetailsWidget extends StatelessWidget {
 }
 
 class MakePredictionSheet extends StatefulWidget {
-  const MakePredictionSheet({Key? key}) : super(key: key);
+  const MakePredictionSheet({
+    Key? key,
+    required this.team1,
+    required this.team2,
+    this.score1,
+    this.score2,
+  }) : super(key: key);
+
+  final String team1;
+  final String team2;
+  final int? score1;
+  final int? score2;
 
   @override
   State<MakePredictionSheet> createState() => _MakePredictionSheetState();
@@ -369,210 +393,156 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(
-            left: SizeConfig.pageHorizontalMargins,
-            right: SizeConfig.pageHorizontalMargins,
-            bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            Container(
-              height: 2,
-              width: 100,
-              color: Colors.white,
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Text(
-              "Make your Prediction",
-              style: TextStyles.sourceSansSB.body1.colour(Colors.white),
-            ),
-            SizedBox(
-              height: SizeConfig.padding10,
-            ),
-            Text(
-              "Enter a Prediction for the Chasing Score of the Match",
-              style: TextStyles.sourceSans.body3.colour(Colors.white),
-            ),
+      padding: EdgeInsets.only(
+          left: SizeConfig.pageHorizontalMargins,
+          right: SizeConfig.pageHorizontalMargins,
+          bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          Container(
+            height: 2,
+            width: 100,
+            color: Colors.white,
+          ),
+          SizedBox(
+            height: SizeConfig.padding24,
+          ),
+          Text(
+            "Make your Prediction",
+            style: TextStyles.sourceSansSB.body1.colour(Colors.white),
+          ),
+          SizedBox(
+            height: SizeConfig.padding10,
+          ),
+          Text(
+            "Enter a Prediction for the Chasing Score of the Match",
+            style: TextStyles.sourceSans.body3.colour(Colors.white),
+          ),
 
-            SizedBox(
-              height: SizeConfig.padding28,
+          SizedBox(
+            height: SizeConfig.padding28,
+          ),
+          Container(
+            // height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.black.withOpacity(0.3),
             ),
-            Container(
-              // height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.black.withOpacity(0.3),
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 17),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 30,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white)),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Bengaluru',
-                              style: TextStyles.sourceSansB.body4,
-                            ),
-                            Text(
-                              '140/2 (19)',
-                              style: TextStyles.sourceSans.copyWith(
-                                  fontSize: SizeConfig.screenWidth! * 0.030),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black,
-                          ),
-                          child: Text(
-                            'VS',
-                            style: TextStyles.sourceSansB.body4,
-                          ),
-                        ),
-                        const Spacer(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Chennai',
-                              style: TextStyles.sourceSansB.body4,
-                            ),
-                            Text(
-                              'YET TO BAT',
-                              style: TextStyles.sourceSans.copyWith(
-                                  fontSize: SizeConfig.screenWidth! * 0.030),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 19,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            // Your Prediction
-            Text(
-              "Your Prediction",
-              style: TextStyles.sourceSansSB.body0.colour(Colors.white),
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-
-            AppTextField(
-              margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding12,
-              ),
-              textEditingController: _textController,
-              isEnabled: true,
-              maxLength: 256,
-              keyboardType: TextInputType.number,
-              hintText: 'Enter your prediction',
-              hintStyle:
-                  TextStyles.sourceSans.body3.colour(const Color(0xff21284A)),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              ],
-              fillColor: const Color(0xffD9D9D9).withOpacity(0.8),
-              prefixIcon: const Icon(
-                Icons.star,
-                color: Color(0xff21284A),
-                size: 25,
-              ),
-              // onSubmit: (_) =>null,
-
-              validator: (value) {
-                if (value != null && value.trim().isNotEmpty) {
-                  return null;
-                } else {
-                  return 'Please enter your prediction';
-                }
-              },
-            ),
-            SizedBox(
-              height: SizeConfig.padding40,
-            ),
-            //What is a Prediction?
-            Text(
-              "What is a Prediction?",
-              style: TextStyles.sourceSans.body2
-                  .colour(Colors.white)
-                  .copyWith(decoration: TextDecoration.underline),
-            ),
-            SizedBox(
-              height: SizeConfig.padding10,
-            ),
-
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              color: Colors.white,
-              onPressed: () {
-                // BaseUtil.openModalBottomSheet(
-                //     isBarrierDismissible: true,
-                //     addToScreenStack: true,
-                //     backgroundColor: const Color(0xff21284A),
-                //     borderRadius: BorderRadius.only(
-                //       topLeft: Radius.circular(SizeConfig.roundness32),
-                //       topRight: Radius.circular(SizeConfig.roundness32),
-                //     ),
-                //     isScrollControlled: true,
-                //     hapticVibrate: true,
-                //     content: const YourPredictionSheet());
-              },
-              child: Center(
-                child: Text(
-                  'PREDICT NOW',
-                  style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: SizeConfig.padding20,
                 ),
+                Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+                    child: IplTeamsScoreWidget(
+                      team1: widget.team1,
+                      team2: widget.team2,
+                      score1: widget.score1,
+                      score2: widget.score2,
+                    )),
+                SizedBox(
+                  height: SizeConfig.padding20,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          // Your Prediction
+          Text(
+            "Your Prediction",
+            style: TextStyles.sourceSansSB.body0.colour(Colors.white),
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+
+          AppTextField(
+            margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding12,
+            ),
+            autoFocus: true,
+            textEditingController: _textController,
+            isEnabled: true,
+            maxLength: 256,
+            keyboardType: TextInputType.number,
+            hintText: 'Enter your prediction',
+            textStyle:
+                TextStyles.sourceSansSB.body2.colour(const Color(0xff21284A)),
+            hintStyle:
+                TextStyles.sourceSans.body3.colour(const Color(0xff21284A)),
+            inputFormatters: [
+              //limit of 3 digits
+              LengthLimitingTextInputFormatter(3),
+
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+            ],
+            fillColor: const Color(0xffD9D9D9).withOpacity(0.8),
+            prefixIcon: const Icon(
+              Icons.star,
+              color: Color(0xff21284A),
+              size: 25,
+            ),
+            suffixText: 'Runs',
+            suffixTextStyle:
+                TextStyles.sourceSansSB.body3.colour(const Color(0xff21284A)),
+            onSubmit: (_) => BaseUtil.openDepositOptionsModalSheet(
+              title: 'To predict, Save ₹${_textController.text} in Gold or Flo',
+              subtitle: 'Make as many predictions as you can, to win',
+              amount: int.tryParse(_textController.text),
+            ),
+            validator: (value) {
+              if (value != null && value.trim().isNotEmpty) {
+                return null;
+              } else {
+                return 'Please enter your prediction';
+              }
+            },
+          ),
+          SizedBox(
+            height: SizeConfig.padding40,
+          ),
+          //What is a Prediction?
+          Text(
+            "What is Chasing Score?",
+            style: TextStyles.sourceSans.body2
+                .colour(Colors.white)
+                .copyWith(decoration: TextDecoration.underline),
+          ),
+          SizedBox(
+            height: SizeConfig.padding10,
+          ),
+
+          MaterialButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            color: Colors.white,
+            onPressed: () => BaseUtil.openDepositOptionsModalSheet(
+              title: 'To predict, Save ₹${_textController.text} in Gold or Flo',
+              subtitle: 'Make as many predictions as you can, to win',
+              amount: int.tryParse(_textController.text),
+            ),
+            child: Center(
+              child: Text(
+                'PREDICT NOW',
+                style: TextStyles.rajdhaniB.body1.colour(Colors.black),
               ),
             ),
-            SizedBox(
-              height: SizeConfig.padding20,
-            ),
-          ],
-        ));
+          ),
+          SizedBox(
+            height: SizeConfig.padding20,
+          ),
+        ],
+      ),
+    );
   }
 }
 
