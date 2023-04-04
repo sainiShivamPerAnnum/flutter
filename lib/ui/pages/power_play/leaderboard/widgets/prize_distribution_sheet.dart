@@ -1,3 +1,7 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +9,28 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class PrizeDistributionSheet extends StatelessWidget {
   const PrizeDistributionSheet({Key? key}) : super(key: key);
+
+  String get getRank1 => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionReward'][0]
+      ['winnerDesc'];
+
+  String get rewardDesc1 => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionReward'][0]
+      ['rewardDesc'];
+
+  String get rewardDesc2 => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionReward'][1]
+      ['rewardDesc'];
+
+  String get getRank2 => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionReward'][1]
+      ['winnerDesc'];
+
+  String get asideIcon => AppConfig.getValue<Map<String, dynamic>>(
+      AppConfigKey.powerplayConfig)['howScreen']['seasonReward']['asideIcon'];
+
+  String get rewardDesc3 => AppConfig.getValue<Map<String, dynamic>>(
+      AppConfigKey.powerplayConfig)['howScreen']['seasonReward']['rewardDesc'];
 
   @override
   Widget build(BuildContext context) {
@@ -65,11 +91,11 @@ class PrizeDistributionSheet extends StatelessWidget {
                       //Rank
                       Text('Rank',
                           style:
-                              TextStyles.sourceSans.body4.colour(Colors.white)),
+                          TextStyles.sourceSans.body4.colour(Colors.white)),
                       //Prize
                       Text('Prize',
                           style:
-                              TextStyles.sourceSans.body4.colour(Colors.white)),
+                          TextStyles.sourceSans.body4.colour(Colors.white)),
                     ],
                   ),
                   const SizedBox(
@@ -86,20 +112,26 @@ class PrizeDistributionSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       //Rank
-                      Text('1 to 10',
-                          style:
-                              TextStyles.sourceSans.body4.colour(Colors.white)),
-                      //Prize
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/svg/digital_gold.svg',
-                            height: 25,
-                          ),
-                          Text('Digital Gold worth the Chasing Score',
-                              style: TextStyles.sourceSans.body4
-                                  .colour(Colors.white)),
-                        ],
+                      Flexible(
+                        child: Text(getRank1,
+                            style: TextStyles.sourceSans.body4
+                                .colour(Colors.white)),
+                      ),
+                      // const Spacer(),
+                      Flexible(
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/svg/digital_gold.svg',
+                              height: 25,
+                            ),
+                            Flexible(
+                              child: Text(rewardDesc1,
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(Colors.white)),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -117,11 +149,11 @@ class PrizeDistributionSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       //Rank
-                      Text('10 to 100',
+                      Text(getRank2,
                           style:
                               TextStyles.sourceSans.body4.colour(Colors.white)),
-                      //Prize
-                      Text('Tambola tickets & Tokens',
+
+                      Text(rewardDesc2,
                           style:
                               TextStyles.sourceSans.body4.colour(Colors.white)),
                     ],
@@ -151,8 +183,8 @@ class PrizeDistributionSheet extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  SvgPicture.asset(
-                    'assets/svg/ipl_ticket.svg',
+                  SvgPicture.network(
+                    asideIcon,
                     height: 25,
                   ),
                   SizedBox(
@@ -160,9 +192,10 @@ class PrizeDistributionSheet extends StatelessWidget {
                   ),
                   //Rank 1 on this leaderboard at the end of the IPL season gets 2 tickets to the Final Match
                   Flexible(
-                    child: Text(
-                      "Rank 1 on this leaderboard at the end of the IPL season gets 2 tickets to the Final Match",
-                      style: TextStyles.sourceSans.body4.colour(Colors.white),
+                    child: Container(
+                      child: rewardDesc3.beautify(
+                        style: TextStyles.sourceSans.body4.colour(Colors.white),
+                      ),
                     ),
                   ),
                 ],
@@ -178,17 +211,10 @@ class PrizeDistributionSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
               onPressed: () {
-                // BaseUtil.openModalBottomSheet(
-                //     isBarrierDismissible: true,
-                //     addToScreenStack: true,
-                //     backgroundColor: const Color(0xff21284A),
-                //     borderRadius: BorderRadius.only(
-                //       topLeft: Radius.circular(SizeConfig.roundness32),
-                //       topRight: Radius.circular(SizeConfig.roundness32),
-                //     ),
-                //     isScrollControlled: true,
-                //     hapticVibrate: true,
-                //     content: const YourPredictionSheet());
+                BaseUtil.openDepositOptionsModalSheet(
+                  title: 'To predict, Save in Gold or Flo',
+                  subtitle: 'Make as many predictions as you can, to win',
+                );
               },
               child: Center(
                 child: Text(

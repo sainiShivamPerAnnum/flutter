@@ -1,4 +1,6 @@
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -23,7 +25,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   List<MatchData>? _completedMatchData;
 
   bool _isLive = true;
-  List<Map<String, dynamic>>? cardCarousel;
+  List<dynamic>? cardCarousel;
 
   bool get isLive => _isLive;
 
@@ -73,6 +75,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   Future<void> init() async {
     setState(ViewState.Busy);
     _powerPlayService.init();
+    getCardCarousle();
     scrollController = ScrollController();
     await _powerPlayService.getMatchesByStatus(MatchStatus.active.name, 0, 0);
     if (_powerPlayService.liveMatchData.isNotEmpty) {
@@ -129,14 +132,9 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   }
 
   void getCardCarousle() {
-    // var appConfigData =
-    //     AppConfig.getValue<Map<String, dynamic>>(AppConfigKey.powerplayConfig);
-    //
-    // appConfigData['predictScreen'].forEach((key, value) {
-    //   log('key => $key');
-    //   log('value => $value');
-    // });
-    //
-    // cardCarousel = appConfigData['predictScreen'];
+    var appConfigData =
+        AppConfig.getValue<Map<String, dynamic>>(AppConfigKey.powerplayConfig);
+
+    cardCarousel = appConfigData['predictScreen']['cardCarousel'];
   }
 }
