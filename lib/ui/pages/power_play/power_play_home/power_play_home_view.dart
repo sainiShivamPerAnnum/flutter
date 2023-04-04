@@ -1,13 +1,9 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/power_play_matches.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
@@ -113,30 +109,19 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                             const SizedBox(
                               height: 10,
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => PredictionLeaderboard(
-                                      matchData: MatchData(),
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                height: 43,
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 50),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.black.withOpacity(0.7),
-                                ),
-                                child: Text(
-                                  'Total Won From PowerPlay : ₹100',
-                                  style: TextStyles.sourceSansSB.body2,
-                                ),
+                            Container(
+                              height: 43,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 50),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.black.withOpacity(0.7),
+                              ),
+                              child: Text(
+                                'Total Won From PowerPlay : ₹100',
+                                style: TextStyles.sourceSansSB.body2,
                               ),
                             ),
                             const SizedBox(
@@ -153,7 +138,15 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      log('tapped');
+                                      Haptic.vibrate();
+                                      AppState.delegate!.parseRoute(Uri.parse(
+                                          model
+                                                  .cardCarousel?[index]
+                                                      ["onTapLink"]
+                                                  .isEmpty
+                                              ? getRoute(index)
+                                              : model.cardCarousel?[index]
+                                                  ["onTapLink"]));
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(
@@ -210,5 +203,18 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
         );
       },
     );
+  }
+
+  String getRoute(int index) {
+    switch (index) {
+      case 0:
+        return 'powerPlayWelcome';
+      case 1:
+        return 'powerPlayPrizes';
+      case 2:
+        return "seasonLeaderboard";
+      default:
+        return 'powerPlayPrizes';
+    }
   }
 }

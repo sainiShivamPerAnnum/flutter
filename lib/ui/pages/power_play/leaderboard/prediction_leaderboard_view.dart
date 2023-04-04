@@ -264,8 +264,7 @@ class PredictionLeaderboard extends StatelessWidget {
                                     isScrollControlled: true,
                                     hapticVibrate: true,
                                     content: PrizeDistributionSheet(
-                                      matchData: matchData,
-                                    ));
+                                        matchData: matchData));
                               },
                               child: SizedBox(
                                   width: SizeConfig.screenWidth,
@@ -815,7 +814,6 @@ class YourPredictionSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
               onPressed: () {
-
                 AppState.backButtonDispatcher!.didPopRoute();
 
                 BaseUtil.openModalBottomSheet(

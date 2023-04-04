@@ -11,10 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PrizeDistributionSheet extends StatelessWidget {
-  const PrizeDistributionSheet({Key? key, required this.matchData})
-      : super(key: key);
+  const PrizeDistributionSheet({Key? key, this.matchData}) : super(key: key);
 
-  final MatchData matchData;
+  final MatchData? matchData;
 
   String get getRank1 => AppConfig.getValue<Map<String, dynamic>>(
           AppConfigKey.powerplayConfig)['howScreen']['predictionReward'][0]
@@ -97,11 +96,11 @@ class PrizeDistributionSheet extends StatelessWidget {
                       //Rank
                       Text('Rank',
                           style:
-                          TextStyles.sourceSans.body4.colour(Colors.white)),
+                              TextStyles.sourceSans.body4.colour(Colors.white)),
                       //Prize
                       Text('Prize',
                           style:
-                          TextStyles.sourceSans.body4.colour(Colors.white)),
+                              TextStyles.sourceSans.body4.colour(Colors.white)),
                     ],
                   ),
                   const SizedBox(
@@ -224,19 +223,21 @@ class PrizeDistributionSheet extends StatelessWidget {
 
                 AppState.backButtonDispatcher!.didPopRoute();
 
-                BaseUtil.openModalBottomSheet(
-                    isBarrierDismissible: true,
-                    addToScreenStack: true,
-                    backgroundColor: const Color(0xff21284A),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(SizeConfig.roundness32),
-                      topRight: Radius.circular(SizeConfig.roundness32),
-                    ),
-                    isScrollControlled: true,
-                    hapticVibrate: true,
-                    content: MakePredictionSheet(
-                      matchData: matchData,
-                    ));
+                if (matchData != null) {
+                  BaseUtil.openModalBottomSheet(
+                      isBarrierDismissible: true,
+                      addToScreenStack: true,
+                      backgroundColor: const Color(0xff21284A),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(SizeConfig.roundness32),
+                        topRight: Radius.circular(SizeConfig.roundness32),
+                      ),
+                      isScrollControlled: true,
+                      hapticVibrate: true,
+                      content: MakePredictionSheet(
+                        matchData: matchData!,
+                      ));
+                }
               },
               child: Center(
                 child: Text(

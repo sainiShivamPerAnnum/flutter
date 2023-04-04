@@ -36,6 +36,7 @@ import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_view.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/power_play/how_it_works/how_it_works_view.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribution_sheet.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_home_view.dart';
 import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/welcome_page/power_play_welcome_page.dart';
@@ -61,6 +62,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -953,6 +955,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'seasonLeaderboard':
         pageConfiguration = PowerPlaySeasonLeaderboardDetailsConfig;
         break;
+      case 'powerPlayWelcome':
+        pageConfiguration = PowerPlayFTUXPageConfig;
+        break;
+      case 'powerPlayPrizes':
+        openPowerPlayModalSheet();
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
@@ -1010,6 +1017,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       widget: TransactionsHistory(investmentType: investmentType),
       page: TransactionsHistoryPageConfig,
     );
+  }
+
+  void openPowerPlayModalSheet() {
+    BaseUtil.openModalBottomSheet(
+        isBarrierDismissible: true,
+        addToScreenStack: true,
+        backgroundColor: const Color(0xff21284A),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.roundness32),
+          topRight: Radius.circular(SizeConfig.roundness32),
+        ),
+        isScrollControlled: true,
+        hapticVibrate: true,
+        content: PrizeDistributionSheet());
   }
 
   bool checkForRatingDialog() {
