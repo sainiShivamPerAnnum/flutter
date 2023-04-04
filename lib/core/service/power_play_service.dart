@@ -101,8 +101,8 @@ class PowerPlayService extends ChangeNotifier {
 
     final response =
         await _transactionHistoryRepository.getPowerPlayUserTransactions(
-            startTime: startTime,
-            endTime: endTime,
+            startTime: startTime.toString(),
+            endTime: endTime.toString(),
             type: 'DEPOSIT',
             status: 'COMPLETE');
 
