@@ -9,8 +9,10 @@ class IplTeamsScoreWidget extends StatelessWidget {
     required this.team2,
     this.score1,
     this.score2,
+    this.padding
   });
-
+  
+  EdgeInsets? padding;
   final String team1;
   final String team2;
   final int? score1;
@@ -18,7 +20,11 @@ class IplTeamsScoreWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return 
+    Container(
+    width: SizeConfig.screenWidth,
+    padding: padding ?? EdgeInsets.zero,
+    Row(
       children: [
         Container(
           height: 30,
@@ -73,6 +79,7 @@ class IplTeamsScoreWidget extends StatelessWidget {
               shape: BoxShape.circle, border: Border.all(color: Colors.white)),
         ),
       ],
+    )
     );
   }
 }

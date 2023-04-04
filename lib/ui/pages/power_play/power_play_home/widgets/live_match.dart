@@ -71,7 +71,10 @@ class LiveMatch extends StatelessWidget {
               team2: matchData?.teams?[1] ?? "",
               score1: matchData?.currentScore?[matchData?.teams![0]],
               score2: matchData?.currentScore?[matchData?.teams![1]],
+              padding: EdgeInsets.symmetric(horizontal: 17),
+
             ),
+
           ),
           SizedBox(
             height: SizeConfig.padding28,
