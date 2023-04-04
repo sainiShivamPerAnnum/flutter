@@ -5,6 +5,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -27,10 +28,19 @@ class PowerPlayCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
-        AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addPage,
-          page: PowerPlayHomeConfig,
-        );
+        if (PreferenceHelper.getBool(PreferenceHelper.POWERPLAY_IS_PLAYED)) {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addPage,
+            page: PowerPlayHomeConfig,
+          );
+        } else {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addPage,
+            page: PowerPlayFTUXPageConfig,
+          );
+
+          PreferenceHelper.setBool(PreferenceHelper.POWERPLAY_IS_PLAYED, true);
+        }
       },
       child: Container(
         margin: EdgeInsets.symmetric(

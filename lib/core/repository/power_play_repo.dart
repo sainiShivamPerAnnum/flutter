@@ -16,7 +16,7 @@ class PowerPlayRepository extends BaseRepo {
   final CustomLogger _logger = locator<CustomLogger>();
   final _cacheService = CacheService();
   final String _baseUrl = FlavorConfig.isDevelopment()
-      ? "https://rco4comkpa.execute-api.ap-south-1.amazonaws.com/dev"
+      ? "https://mh8dfvlxl7.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<MatchesModel>> getMatchesByStatus(

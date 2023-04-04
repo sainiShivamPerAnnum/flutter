@@ -114,7 +114,7 @@ class PredictionLeaderboard extends StatelessWidget {
                       height: 20,
                     ),
                     Text(
-                      "IPL Match 4",
+                      matchData.matchTitle ?? 'IPL MATCH',
                       style: TextStyles.sourceSansB.body2.colour(Colors.white),
                     ),
                     const SizedBox(
@@ -215,8 +215,11 @@ class PredictionLeaderboard extends StatelessWidget {
                                 ? YourPredictionSheet(
                                     transactions:
                                         model.powerPlayService.transactions!,
+                                    matchData: matchData,
                                   )
-                                : const NoPredictionSheet());
+                                : NoPredictionSheet(
+                                    matchData: matchData,
+                                  ));
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -622,9 +625,12 @@ class MatchBriefDetailsWidget extends StatelessWidget {
 }
 
 class YourPredictionSheet extends StatelessWidget {
-  const YourPredictionSheet({Key? key, this.transactions}) : super(key: key);
+  const YourPredictionSheet(
+      {Key? key, this.transactions, required this.matchData})
+      : super(key: key);
 
   final List<UserTransaction>? transactions;
+  final MatchData matchData;
 
   String getTime(int index) {
     var time = transactions![index].timestamp;
@@ -766,7 +772,9 @@ class YourPredictionSheet extends StatelessWidget {
                     ),
                     isScrollControlled: true,
                     hapticVibrate: true,
-                    content: const YourPredictionSheet());
+                    content: MakePredictionSheet(
+                      matchData: matchData,
+                    ));
               },
               child: Center(
                 child: Text(
@@ -784,7 +792,10 @@ class YourPredictionSheet extends StatelessWidget {
 }
 
 class NoPredictionSheet extends StatelessWidget {
-  const NoPredictionSheet({Key? key}) : super(key: key);
+  const NoPredictionSheet({Key? key, required this.matchData})
+      : super(key: key);
+
+  final MatchData matchData;
 
   @override
   Widget build(BuildContext context) {
@@ -832,10 +843,19 @@ class NoPredictionSheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 10),
             color: Colors.white,
             onPressed: () {
-              BaseUtil.openDepositOptionsModalSheet(
-                title: 'To predict, Save in Gold or Flo',
-                subtitle: 'Make as many predictions as you can, to win',
-              );
+              BaseUtil.openModalBottomSheet(
+                  isBarrierDismissible: true,
+                  addToScreenStack: true,
+                  backgroundColor: const Color(0xff21284A),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness32),
+                    topRight: Radius.circular(SizeConfig.roundness32),
+                  ),
+                  isScrollControlled: true,
+                  hapticVibrate: true,
+                  content: MakePredictionSheet(
+                    matchData: matchData,
+                  ));
             },
             child: Center(
               child: Text(

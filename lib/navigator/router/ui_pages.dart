@@ -85,6 +85,7 @@ const String PowerPlayPath = '/powerPlayPath';
 const String PowerPlayLeaderBoardPath = '/powerPlayLeaderBoardPath';
 const String PowerPlayHowItWorksPath = '/powerPlayHowItWorksPath';
 const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
+const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
 
 enum Pages {
   Splash,
@@ -168,6 +169,7 @@ enum Pages {
   PowerPlayLeaderBoard,
   PowerPlayHowItWorks,
   FppCompletedMatchDetails,
+  PowerPlayFTUX
 }
 
 class PageConfiguration {
@@ -708,9 +710,15 @@ PageConfiguration PowerPlayHowItWorksConfig = PageConfiguration(
     path: PowerPlayHowItWorksPath,
     uiPage: Pages.PowerPlayHowItWorks,
     name: "PowerPlay HowItWorks Screen");
-    
+
 PageConfiguration FppCompletedMatchDetailsConfig = PageConfiguration(
     key: 'FppCompletedMatchDetailsPath',
     path: FppCompletedMatchDetailsPath,
     uiPage: Pages.FppCompletedMatchDetails,
     name: "PowerPlay Completed Match Details Screen");
+
+PageConfiguration PowerPlayFTUXPageConfig = PageConfiguration(
+    key: 'powerPlayFTUXPath',
+    path: PowerPlayFTUXPath,
+    uiPage: Pages.PowerPlayFTUX,
+    name: "PowerPlay FTUX Screen");

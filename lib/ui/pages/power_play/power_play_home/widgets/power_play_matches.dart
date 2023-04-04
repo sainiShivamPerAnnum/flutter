@@ -30,9 +30,6 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
     return ['Live', 'Upcoming', 'Completed'];
   }
 
-  void _handleTabSelection() {
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,9 +154,7 @@ class NoLiveMatch extends StatelessWidget {
         ),
         const DailyPicksTimer(
             startTime: '2023-04-04T14:00:00.000Z',
-            replacementWidget: Center(
-              child: CircularProgressIndicator(),
-            )),
+            replacementWidget: SizedBox()),
       ],
     );
   }

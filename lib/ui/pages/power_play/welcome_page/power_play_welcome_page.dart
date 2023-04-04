@@ -24,7 +24,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),
               children: [
-                FAppBar(
+                const FAppBar(
                   showAvatar: false,
                   showCoinBar: false,
                   showHelpButton: false,
@@ -262,9 +262,9 @@ class IplReward extends StatelessWidget {
           end: Alignment.centerRight,
           stops: const [0.5, 0.5],
           colors: [
-            Color(0xff000000).withOpacity(0.2),
+            const Color(0xff000000).withOpacity(0.2),
             // Colors.transparent,
-            Color(0xff000000).withOpacity(0.4),
+            const Color(0xff000000).withOpacity(0.4),
           ],
         ),
       ),

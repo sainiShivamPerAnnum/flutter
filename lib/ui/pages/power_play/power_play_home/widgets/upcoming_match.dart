@@ -1,11 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -77,14 +73,14 @@ class _UpcomingMatchState extends State<UpcomingMatch> {
                               const Spacer(),
                               GestureDetector(
                                 onTap: () {
-                                  AppState.delegate!.appState.currentAction =
-                                      PageAction(
-                                          widget: PredictionLeaderboard(
-                                            matchData: widget.model
-                                                .upcomingMatchData![index]!,
-                                          ),
-                                          page: PowerPlayLeaderBoardConfig,
-                                          state: PageState.addWidget);
+                                  // AppState.delegate!.appState.currentAction =
+                                  //     PageAction(
+                                  //         widget: PredictionLeaderboard(
+                                  //           matchData: widget.model
+                                  //               .upcomingMatchData![index]!,
+                                  //         ),
+                                  //         page: PowerPlayLeaderBoardConfig,
+                                  //         state: PageState.addWidget);
                                 },
                                 child: Text(
                                   getDate(index),
