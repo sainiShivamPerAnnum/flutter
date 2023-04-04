@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/completed_match.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/live_match.dart';
@@ -6,6 +7,7 @@ import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/upcoming_ma
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PowerPlayMatches extends StatefulWidget {
   const PowerPlayMatches({Key? key, required this.model}) : super(key: key);
@@ -26,6 +28,10 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
 
   List<String> getTitle() {
     return ['Live', 'Upcoming', 'Completed'];
+  }
+
+  void _handleTabSelection() {
+    setState(() {});
   }
 
   @override
@@ -78,8 +84,18 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                 if (widget.model.state == ViewState.Busy) {
                   return const Center(child: CircularProgressIndicator());
                 }
+
+                if ((widget.model.liveMatchData == null ||
+                        (widget.model.liveMatchData?.isEmpty ?? true)) &&
+                    widget.model.isLive) {
+                  Future.delayed(const Duration(seconds: 1), () {
+                    widget.model.tabController?.animateTo(1);
+                    widget.model.isLive = false;
+                  });
+                }
+
                 return widget.model.liveMatchData?.isEmpty ?? true
-                    ? const Center(child: Text("No Live Match"))
+                    ? const NoLiveMatch()
                     : LiveMatch(
                         matchData: widget.model.liveMatchData?[0],
                       );
@@ -88,9 +104,11 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                   model: widget.model,
                 );
               } else {
-                return CompletedMatch(model: widget.model);
+                return CompletedMatch(
+                  model: widget.model,
+                );
               }
-            }),
+            })
           ],
         ),
       ),
@@ -101,5 +119,48 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
   void dispose() {
     widget.model.tabController?.dispose();
     super.dispose();
+  }
+}
+
+class NoLiveMatch extends StatelessWidget {
+  const NoLiveMatch({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: SizeConfig.padding54,
+        ),
+        SvgPicture.asset(
+          'assets/svg/ipl_ball.svg',
+          height: SizeConfig.padding64,
+        ),
+        SizedBox(
+          height: SizeConfig.padding20,
+        ),
+        //No Live matches at the moment
+        Text(
+          'No Live matches at the moment',
+          style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+        ),
+        SizedBox(
+          height: SizeConfig.padding20,
+        ),
+        Text(
+          'Next match starts in',
+          style: TextStyles.sourceSans.body1.colour(Colors.white),
+        ),
+        SizedBox(
+          height: SizeConfig.padding20,
+        ),
+        const DailyPicksTimer(
+            startTime: '2023-04-04T14:00:00.000Z',
+            replacementWidget: Center(
+              child: CircularProgressIndicator(),
+            )),
+      ],
+    );
   }
 }

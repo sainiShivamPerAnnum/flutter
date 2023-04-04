@@ -321,14 +321,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const PowerPlayHome(), PowerPlayHomeConfig);
           break;
 
-        // case Pages.FppCompletedMatchDetails:
-        //   _addPageData(const CompletedMatchDetailsView(),
-        //       FppCompletedMatchDetailsConfig);
-        //   break;
-
-        // case Pages.PowerPlayLeaderBoard:
-        //   _addPageData(const PredictionLeaderboard(), pageConfig);
-        //   break;
+        case Pages.PowerPlayLeaderBoard:
+          // _addPageData(PredictionLeaderboard(), pageConfig);
+          break;
 
         case Pages.PowerPlayHowItWorks:
           _addPageData(const HowItWorks(), pageConfig);
