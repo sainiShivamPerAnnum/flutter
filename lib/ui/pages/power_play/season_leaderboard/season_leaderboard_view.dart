@@ -36,45 +36,51 @@ class SeasonLeaderboard extends StatelessWidget {
             child: SizedBox(
               height: SizeConfig.screenHeight,
               width: SizeConfig.screenWidth,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const FAppBar(
-                      showAvatar: false,
-                      showCoinBar: false,
-                      type: FaqsType.onboarding,
-                    ),
-                    SizedBox(height: SizeConfig.pageHorizontalMargins),
-                    Text("Season Leaderboard",
-                        style: TextStyles.sourceSansB.title2),
-                    SizedBox(height: SizeConfig.pageHorizontalMargins),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const FAppBar(
+                    showAvatar: false,
+                    showCoinBar: false,
+                    type: FaqsType.onboarding,
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
                         children: [
-                          SvgPicture.network(
-                            Assets.powerPlayMain,
-                            width: SizeConfig.padding80,
-                          ),
-                          SizedBox(width: SizeConfig.padding20),
-                          Expanded(
-                            child: Text(
-                              "Rank 1 on this leaderboard at the end of the IPL season gets 2 tickets to IPL Final",
-                              style: TextStyles.sourceSans.body3
-                                  .colour(Colors.white54),
+                          SizedBox(height: SizeConfig.pageHorizontalMargins),
+                          Text("Season Leaderboard",
+                              style: TextStyles.sourceSansB.title2),
+                          SizedBox(height: SizeConfig.pageHorizontalMargins),
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins),
+                            child: Row(
+                              children: [
+                                SvgPicture.network(
+                                  Assets.powerPlayMain,
+                                  width: SizeConfig.padding80,
+                                ),
+                                SizedBox(width: SizeConfig.padding20),
+                                Expanded(
+                                  child: Text(
+                                    "Rank 1 on this leaderboard at the end of the IPL season gets 2 tickets to IPL Final",
+                                    style: TextStyles.sourceSans.body3
+                                        .colour(Colors.white54),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          SizedBox(height: SizeConfig.padding20),
+                          const Divider(color: Colors.white70, height: 0),
+                          NewWebGameLeaderBoardView(model: model),
+                          SizedBox(height: SizeConfig.navBarHeight)
                         ],
                       ),
                     ),
-                    SizedBox(height: SizeConfig.padding20),
-                    const Divider(color: Colors.white70, height: 0),
-                    NewWebGameLeaderBoardView(model: model),
-                    SizedBox(height: SizeConfig.navBarHeight)
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           );

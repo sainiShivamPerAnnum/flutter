@@ -2,6 +2,9 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -12,7 +15,8 @@ import 'package:flutter/material.dart';
 
 class PowerPlayHomeViewModel extends BaseViewModel {
   final PowerPlayService _powerPlayService = locator<PowerPlayService>();
-
+  final TransactionHistoryRepository _txnRepo =
+      locator<TransactionHistoryRepository>();
   // PowerPlayHomeViewModel(){
   //   _powerPlayService.init();
   // }
@@ -24,10 +28,20 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   List<MatchData?>? _liveMatchData = [];
   List<MatchData?>? _upcomingMatchData = [];
   List<MatchData>? _completedMatchData;
+  List<UserTransaction>? predictions = [];
 
   bool _isLive = true;
   bool hasNoMoreCompletedMatches = false;
   List<dynamic>? cardCarousel;
+
+  bool _isPredictionsLoading = false;
+
+  bool get isPredictionsLoading => _isPredictionsLoading;
+
+  set isPredictionsLoading(bool value) {
+    _isPredictionsLoading = value;
+    notifyListeners();
+  }
 
   bool get isLive => _isLive;
 
@@ -74,6 +88,8 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  MatchData? matchData;
+
   Future<void> init() async {
     setState(ViewState.Busy);
     _powerPlayService.init();
@@ -82,7 +98,9 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     await getMatchesByStatus(MatchStatus.active.name, 0, 0);
     if (liveMatchData!.isNotEmpty) {
       liveMatchData = liveMatchData;
+      matchData = liveMatchData![0]!;
     }
+    getUserPredictionCount();
     setState(ViewState.Idle);
     scrollController!.addListener(() async {
       if (scrollController!.offset >=
@@ -144,5 +162,21 @@ class PowerPlayHomeViewModel extends BaseViewModel {
         AppConfig.getValue<Map<String, dynamic>>(AppConfigKey.powerplayConfig);
 
     cardCarousel = appConfigData['predictScreen']['cardCarousel'];
+  }
+
+  Future<void> getUserPredictionCount() async {
+    if (liveMatchData == null) return;
+    isPredictionsLoading = true;
+    final response = await _txnRepo.getPowerPlayUserTransactions(
+        startTime: liveMatchData![0]!.startsAt.toString(),
+        endTime: TimestampModel.currentTimeStamp().toString(),
+        type: 'DEPOSIT',
+        status: 'COMPLETE');
+    isPredictionsLoading = false;
+    if (response.isSuccess()) {
+      predictions = response.model!.transactions;
+    } else {
+      predictions = [];
+    }
   }
 }
