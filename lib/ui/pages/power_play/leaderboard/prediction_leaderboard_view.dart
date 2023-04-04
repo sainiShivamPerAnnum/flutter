@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -10,6 +12,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/view_model/leaderboard_view_model.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribution_sheet.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -25,6 +28,10 @@ class PredictionLeaderboard extends StatelessWidget {
       : super(key: key);
 
   final MatchData matchData;
+
+  String get image => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['predictScreen']['cardCarousel'][1]
+      ['imgUrl'];
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +113,7 @@ class PredictionLeaderboard extends StatelessWidget {
                       height: 20,
                     ),
                     Text(
-                      "IPL Match 4",
+                      matchData.matchTitle ?? 'IPL MATCH',
                       style: TextStyles.sourceSansB.body2.colour(Colors.white),
                     ),
                     const SizedBox(
@@ -207,8 +214,11 @@ class PredictionLeaderboard extends StatelessWidget {
                                 ? YourPredictionSheet(
                                     transactions:
                                         model.powerPlayService.transactions!,
+                                    matchData: matchData,
                                   )
-                                : const NoPredictionSheet());
+                                : NoPredictionSheet(
+                                    matchData: matchData,
+                                  ));
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -239,36 +249,26 @@ class PredictionLeaderboard extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      // margin: EdgeInsets.only(
-                      //     left: SizeConfig.pageHorizontalMargins),
-                      height: 85,
-                      // width: 275,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 11, horizontal: 18),
-                      decoration: BoxDecoration(
-                        color: const Color(0xffA5E4FF),
-                        borderRadius: BorderRadius.circular(10),
-                        // border: Border.all(color: Colors.white, width: 0.5),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'How it Works?',
-                            style: TextStyles.sourceSansSB.body1
-                                .colour(Colors.black),
-                          ),
-                          Expanded(
-                            child: Text(
-                              'Predict the winning score of today’s match and get a chance to win digital gold equal to the Winning score!',
-                              style: TextStyles.sourceSans.body4
-                                  .colour(Colors.black),
+                    GestureDetector(
+                      onTap: () {
+                        BaseUtil.openModalBottomSheet(
+                            isBarrierDismissible: true,
+                            addToScreenStack: true,
+                            backgroundColor: const Color(0xff21284A),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness32),
+                              topRight: Radius.circular(SizeConfig.roundness32),
                             ),
-                          ),
-                        ],
-                      ),
+                            isScrollControlled: true,
+                            hapticVibrate: true,
+                            content: const PrizeDistributionSheet());
+                      },
+                      child: SizedBox(
+                          width: SizeConfig.screenWidth,
+                          child: SvgPicture.network(
+                            image,
+                            fit: BoxFit.fill,
+                          )),
                     ),
 
                     SizedBox(
@@ -538,6 +538,8 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
           //What is a Prediction?
           GestureDetector(
             onTap: () {
+              AppState.backButtonDispatcher!.didPopRoute();
+
               AppState.delegate!.appState.currentAction = PageAction(
                 state: PageState.addPage,
                 page: PowerPlayHowItWorksConfig,
@@ -561,6 +563,8 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
             color: Colors.white,
             onPressed: () {
               if (_formKey.currentState!.validate() == false) return;
+
+              AppState.backButtonDispatcher!.didPopRoute();
 
               BaseUtil.openDepositOptionsModalSheet(
                   title:
@@ -588,7 +592,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
 class MatchBriefDetailsWidget extends StatelessWidget {
   final MatchData matchData;
 
-  MatchBriefDetailsWidget({required this.matchData});
+  const MatchBriefDetailsWidget({super.key, required this.matchData});
 
   @override
   Widget build(BuildContext context) {
@@ -624,9 +628,12 @@ class MatchBriefDetailsWidget extends StatelessWidget {
 }
 
 class YourPredictionSheet extends StatelessWidget {
-  const YourPredictionSheet({Key? key, this.transactions}) : super(key: key);
+  const YourPredictionSheet(
+      {Key? key, this.transactions, required this.matchData})
+      : super(key: key);
 
   final List<UserTransaction>? transactions;
+  final MatchData matchData;
 
   String getTime(int index) {
     var time = transactions![index].timestamp;
@@ -763,7 +770,22 @@ class YourPredictionSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
               onPressed: () {
+
                 AppState.backButtonDispatcher!.didPopRoute();
+
+                BaseUtil.openModalBottomSheet(
+                    isBarrierDismissible: true,
+                    addToScreenStack: true,
+                    backgroundColor: const Color(0xff21284A),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness32),
+                      topRight: Radius.circular(SizeConfig.roundness32),
+                    ),
+                    isScrollControlled: true,
+                    hapticVibrate: true,
+                    content: MakePredictionSheet(
+                      matchData: matchData,
+                    ));
               },
               child: Center(
                 child: Text(
@@ -781,7 +803,10 @@ class YourPredictionSheet extends StatelessWidget {
 }
 
 class NoPredictionSheet extends StatelessWidget {
-  const NoPredictionSheet({Key? key}) : super(key: key);
+  const NoPredictionSheet({Key? key, required this.matchData})
+      : super(key: key);
+
+  final MatchData matchData;
 
   @override
   Widget build(BuildContext context) {
@@ -829,10 +854,19 @@ class NoPredictionSheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 10),
             color: Colors.white,
             onPressed: () {
-              BaseUtil.openDepositOptionsModalSheet(
-                title: 'To predict, Save in Gold or Flo',
-                subtitle: 'Make as many predictions as you can, to win',
-              );
+              BaseUtil.openModalBottomSheet(
+                  isBarrierDismissible: true,
+                  addToScreenStack: true,
+                  backgroundColor: const Color(0xff21284A),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness32),
+                    topRight: Radius.circular(SizeConfig.roundness32),
+                  ),
+                  isScrollControlled: true,
+                  hapticVibrate: true,
+                  content: MakePredictionSheet(
+                    matchData: matchData,
+                  ));
             },
             child: Center(
               child: Text(

@@ -302,7 +302,7 @@ class UserPredictionsButton extends StatelessWidget {
           isScrollControlled: true,
           hapticVibrate: true,
           content: YourPredictionSheet(
-            transactions: model.predications,
+            transactions: model.predications, matchData: model.matchData!,
           ),
         );
       },

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -30,7 +32,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
       builder: (context, model, child) {
         return RefreshIndicator(
           onRefresh: () async {
-            await Future.delayed(Duration(seconds: 4), () {});
+            await Future.delayed(const Duration(seconds: 4), () {});
           },
           child: PowerPlayBackgroundUi(
             child: Stack(
@@ -63,7 +65,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                       width: 0.5),
                                   shape: const RoundedRectangleBorder(
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(5))),
+                                      BorderRadius.all(Radius.circular(5))),
                                 ),
                                 onPressed: () {},
                                 child: Padding(
@@ -88,7 +90,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                       // color: UiConstants.kArrowButtonBackgroundColor,
                                       border: Border.all(
                                           color:
-                                              Colors.white.withOpacity(0.5))),
+                                          Colors.white.withOpacity(0.5))),
                                   padding: const EdgeInsets.all(6),
                                   child: Icon(
                                     Icons.question_mark,
@@ -111,9 +113,9 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                         ),
                         Center(
                             child: Text(
-                          'Predict. Save. Win.',
-                          style: TextStyles.sourceSansSB.body2,
-                        )),
+                              'Predict. Save. Win.',
+                              style: TextStyles.sourceSansSB.body2,
+                            )),
                         const SizedBox(
                           height: 10,
                         ),
@@ -145,75 +147,30 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                         const SizedBox(
                           height: 14,
                         ),
-                        SizedBox(
-                          height: SizeConfig.screenWidth! * 0.25,
-                          child: ListView(
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: SizeConfig.pageHorizontalMargins),
+                          height: SizeConfig.screenWidth! * 0.35,
+                          child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                    left: SizeConfig.pageHorizontalMargins),
-                                height: 85,
-                                width: 275,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 11, horizontal: 18),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffA5E4FF),
-                                  borderRadius: BorderRadius.circular(10),
-                                  // border: Border.all(color: Colors.white, width: 0.5),
+                            itemCount: model.cardCarousel?.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  log('tapped');
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      right: SizeConfig.padding12),
+                                  height: 105,
+                                  width: 275,
+                                  child: SvgPicture.network(
+                                      model.cardCarousel?[index]['imgUrl'] ??
+                                          ''),
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'How it Works?',
-                                      style: TextStyles.sourceSansSB.body1
-                                          .colour(Colors.black),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        'Predict the winning score of today’s match and get a chance to win digital gold equal to the Winning score!',
-                                        style: TextStyles.sourceSans.body4
-                                            .colour(Colors.black),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins),
-                                height: 85,
-                                width: 275,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 11, horizontal: 18),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffA5E4FF),
-                                  borderRadius: BorderRadius.circular(10),
-                                  // border: Border.all(color: Colors.white, width: 0.5),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'How it Works?',
-                                      style: TextStyles.sourceSansSB.body1
-                                          .colour(Colors.black),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        'Predict the winning score of today’s match and get a chance to win digital gold equal to the Winning score!',
-                                        style: TextStyles.sourceSans.body4
-                                            .colour(Colors.black),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(

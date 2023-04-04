@@ -38,6 +38,7 @@ import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/power_play/how_it_works/how_it_works_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_home_view.dart';
 import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_view.dart';
+import 'package:felloapp/ui/pages/power_play/welcome_page/power_play_welcome_page.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
@@ -321,10 +322,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const PowerPlayHome(), PowerPlayHomeConfig);
           break;
 
-        case Pages.PowerPlayLeaderBoard:
-          // _addPageData(PredictionLeaderboard(), pageConfig);
-          break;
-
         case Pages.PowerPlayHowItWorks:
           _addPageData(const HowItWorks(), pageConfig);
           break;
@@ -332,6 +329,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const SeasonLeaderboard(),
               PowerPlaySeasonLeaderboardDetailsConfig);
           break;
+
+        case Pages.PowerPlayFTUX:
+          _addPageData(const PowerPlayWelcomePage(), pageConfig);
+          break;
+
+        // case Pages.TransactionDetailsPage:
+        //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);
+        //   break;
 
         default:
           break;

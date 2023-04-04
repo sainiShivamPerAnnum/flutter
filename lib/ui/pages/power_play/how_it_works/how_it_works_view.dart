@@ -1,14 +1,52 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HowItWorks extends StatelessWidget {
   const HowItWorks({Key? key}) : super(key: key);
+
+  String get getRank1 => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionReward'][0]
+      ['winnerDesc'];
+
+  String get rewardDesc1 => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionReward'][0]
+      ['rewardDesc'];
+
+  String get rewardDesc2 => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionReward'][1]
+      ['rewardDesc'];
+
+  String get getRank2 => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionReward'][1]
+      ['winnerDesc'];
+
+  String get asideIcon => AppConfig.getValue<Map<String, dynamic>>(
+      AppConfigKey.powerplayConfig)['howScreen']['seasonReward']['asideIcon'];
+
+  String get rewardDesc3 => AppConfig.getValue<Map<String, dynamic>>(
+      AppConfigKey.powerplayConfig)['howScreen']['seasonReward']['rewardDesc'];
+
+  String get calloutText => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionCondition']
+      ['calloutText'];
+
+  String get calloutIconUrl => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionCondition']
+      ['calloutIconUrl'];
+
+  String get calloutSubText => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionCondition']
+      ['subText'];
 
   @override
   Widget build(BuildContext context) {
@@ -210,17 +248,17 @@ class HowItWorks extends StatelessWidget {
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.timer,
-                    size: 15,
-                    color: Colors.white,
+                  SvgPicture.network(
+                    calloutIconUrl,
+                    height: 25,
                   ),
                   const SizedBox(
-                    width: 5,
+                    width: 10,
                   ),
                   Text(
-                    'Predictions begin 2 hours before the match! ',
+                    calloutText,
                     style: TextStyles.sourceSans.body4,
                   ),
                 ],
@@ -234,7 +272,7 @@ class HowItWorks extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
-                  'You can make predictions until 19th over of the 1st Innings or until 9 Wickets of the First Innings.',
+                  calloutSubText,
                   style: TextStyles.sourceSans.body3
                       .colour(Colors.white.withOpacity(0.5)),
                   textAlign: TextAlign.center,
@@ -277,14 +315,14 @@ class HowItWorks extends StatelessWidget {
                         //First 10 to Predict correctly
                         Flexible(
                           child: Text(
-                            'First 10 to Predict correctly',
+                            getRank1,
                             style: TextStyles.sourceSans.body4,
                           ),
                         ),
 
                         Flexible(
                           child: Text(
-                            'Digital Gold = The Chasing Score',
+                            rewardDesc1,
                             style: TextStyles.sourceSans.body4,
                           ),
                         ),
@@ -306,14 +344,14 @@ class HowItWorks extends StatelessWidget {
                         //First 10 to Predict correctly
                         Flexible(
                           child: Text(
-                            'Next 10 - 100',
+                            getRank2,
                             style: TextStyles.sourceSans.body4,
                           ),
                         ),
 
                         Flexible(
                           child: Text(
-                            'Tambola tickets & Tokens',
+                            rewardDesc2,
                             style: TextStyles.sourceSans.body4,
                           ),
                         ),
@@ -326,22 +364,18 @@ class HowItWorks extends StatelessWidget {
             ),
             Row(
               children: [
-                const Icon(
-                  Icons.airplane_ticket,
-                  color: Colors.white,
-                  size: 15,
+                SvgPicture.network(
+                  asideIcon,
+                  height: 25,
                 ),
-                const SizedBox(
-                  width: 5,
+                SizedBox(
+                  width: SizeConfig.padding16,
                 ),
+                //Rank 1 on this leaderboard at the end of the IPL season gets 2 tickets to the Final Match
                 Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                      'Rank 1 at the end of the IPL season gets 2 tickets to the IPL Final Match',
-                      style: TextStyles.sourceSans.body3
-                          .colour(Colors.white.withOpacity(0.5)),
-                      textAlign: TextAlign.center,
+                  child: Container(
+                    child: rewardDesc3.beautify(
+                      style: TextStyles.sourceSans.body4.colour(Colors.white),
                     ),
                   ),
                 ),

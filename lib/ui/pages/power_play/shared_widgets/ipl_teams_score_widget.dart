@@ -11,8 +11,9 @@ class IplTeamsScoreWidget extends StatelessWidget {
   final EdgeInsets? padding;
   final MatchData matchData;
 
-  int get score1 => matchData.currentScore![matchData.teams![0]]!;
-  int get score2 => matchData.currentScore![matchData.teams![1]]!;
+  int get score1 => matchData.currentScore?[matchData.teams?[0]] ?? 0;
+
+  int get score2 => matchData.currentScore?[matchData.teams?[1]] ?? 0;
 
   @override
   Widget build(BuildContext context) {
@@ -25,20 +26,25 @@ class IplTeamsScoreWidget extends StatelessWidget {
               child: Row(
             children: [
               Container(
-                width: SizeConfig.iconSize1 * 2,
-                height: SizeConfig.iconSize1 * 2,
-                decoration: BoxDecoration(shape: BoxShape.circle),
-                child: SvgPicture.network(
-                  matchData.teamLogoMap![matchData.teams![0]]!,
-                  fit: BoxFit.cover,
-                ),
-              ),
+                  width: SizeConfig.iconSize1 * 2,
+                  height: SizeConfig.iconSize1 * 2,
+                  decoration: const BoxDecoration(shape: BoxShape.circle),
+                  child: SvgPicture.network(
+                    matchData.teamLogoMap?[matchData.teams?[0]] ?? "",
+                    fit: BoxFit.cover,
+                    placeholderBuilder: (context) => Center(
+                      child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white))),
+                    ),
+                  )),
               SizedBox(width: SizeConfig.padding12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    matchData.teams![0],
+                    matchData.teams?[0] ?? "",
                     style: TextStyles.sourceSansB.body4,
                   ),
                   Text(
@@ -66,7 +72,7 @@ class IplTeamsScoreWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      matchData.teams![1],
+                      matchData.teams?[1] ?? "",
                       style: TextStyles.sourceSansB.body4,
                     ),
                     Text(
@@ -80,10 +86,16 @@ class IplTeamsScoreWidget extends StatelessWidget {
                 Container(
                   width: SizeConfig.iconSize1 * 2,
                   height: SizeConfig.iconSize1 * 2,
-                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  decoration: const BoxDecoration(shape: BoxShape.circle),
                   child: SvgPicture.network(
-                    matchData.teamLogoMap![matchData.teams![1]]!,
+                    matchData.teamLogoMap?[matchData.teams?[1]] ?? "",
                     fit: BoxFit.cover,
+                    placeholderBuilder: (context) => Center(
+                      child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white))),
+                    ),
                   ),
                 ),
               ],

@@ -1,8 +1,11 @@
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -14,15 +17,30 @@ class PowerPlayCard extends StatelessWidget {
     super.key,
   });
 
+  String get title => AppConfig.getValue<Map<String, dynamic>>(
+      AppConfigKey.powerplayConfig)['saveScreen']['title'];
+
+  String get subtitle => AppConfig.getValue<Map<String, dynamic>>(
+      AppConfigKey.powerplayConfig)['saveScreen']['subtitle'];
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Haptic.vibrate();
-        AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addPage,
-          page: PowerPlayHomeConfig,
-        );
+        if (PreferenceHelper.getBool(PreferenceHelper.POWERPLAY_IS_PLAYED)) {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addPage,
+            page: PowerPlayHomeConfig,
+          );
+        } else {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addPage,
+            page: PowerPlayFTUXPageConfig,
+          );
+
+          PreferenceHelper.setBool(PreferenceHelper.POWERPLAY_IS_PLAYED, true);
+        }
       },
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -67,9 +85,18 @@ class PowerPlayCard extends StatelessWidget {
               SizedBox(
                 width: SizeConfig.padding16,
               ),
-              Text(
-                'Make your Prediction for\nIPL Matches & Win Gold',
-                style: TextStyles.rajdhaniSB.body2,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyles.rajdhaniSB.body2,
+                  ),
+                  Text(
+                    subtitle,
+                    style: TextStyles.rajdhaniSB.body2,
+                  ),
+                ],
               ),
               const Spacer(),
               Icon(
