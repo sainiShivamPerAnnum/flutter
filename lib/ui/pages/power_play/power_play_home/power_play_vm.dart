@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   List<MatchData>? _completedMatchData;
 
   bool _isLive = true;
+  bool hasNoMoreCompletedMatches = false;
   List<dynamic>? cardCarousel;
 
   bool get isLive => _isLive;
@@ -77,16 +79,16 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     _powerPlayService.init();
     getCardCarousle();
     scrollController = ScrollController();
-    await _powerPlayService.getMatchesByStatus(MatchStatus.active.name, 0, 0);
-    if (_powerPlayService.liveMatchData.isNotEmpty) {
-      liveMatchData = _powerPlayService.liveMatchData;
+    await getMatchesByStatus(MatchStatus.active.name, 0, 0);
+    if (liveMatchData!.isNotEmpty) {
+      liveMatchData = liveMatchData;
     }
     setState(ViewState.Idle);
     scrollController!.addListener(() async {
       if (scrollController!.offset >=
           scrollController!.position.maxScrollExtent) {
         if (isLoadingMoreCompletedMatches ||
-            _powerPlayService.hasNoMoreCompletedMatches ||
+            hasNoMoreCompletedMatches ||
             tabController!.index != 2) return;
         isLoadingMoreCompletedMatches = true;
         await getMatchesByStatus(
@@ -97,20 +99,26 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   }
 
   Future<void> getMatchesByStatus(String status, int limit, int offset) async {
-    await _powerPlayService.getMatchesByStatus(status, limit, offset);
+    final res =
+        await _powerPlayService.getMatchesByStatus(status, limit, offset);
 
-    if (_powerPlayService.liveMatchData.isNotEmpty &&
-        status == MatchStatus.active.name) {
-      liveMatchData = _powerPlayService.liveMatchData;
-    } else if (_powerPlayService.upcomingMatchData.isNotEmpty &&
+    if (liveMatchData!.isEmpty && status == MatchStatus.active.name) {
+      liveMatchData = res;
+    } else if (upcomingMatchData!.isEmpty &&
         status == MatchStatus.upcoming.name) {
-      upcomingMatchData = _powerPlayService.upcomingMatchData;
+      upcomingMatchData = res;
     } else if (status == MatchStatus.completed.name) {
-      completedMatchData = _powerPlayService.completedMatchData;
+      if (completedMatchData == null) {
+        completedMatchData = res;
+      } else {
+        completedMatchData!.addAll(res);
+        if (res.length <= limit) hasNoMoreCompletedMatches = true;
+      }
     }
   }
 
   Future<void> handleTabSwitch(index) async {
+    Haptic.vibrate();
     switch (index) {
       case 0:
         break;

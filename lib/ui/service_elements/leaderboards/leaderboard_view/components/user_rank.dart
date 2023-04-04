@@ -1,4 +1,4 @@
-import 'package:felloapp/core/model/scoreboard_model.dart';
+import 'package:felloapp/core/model/power_play_models/season_leaderboard_model.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -13,7 +13,7 @@ class UserRank extends StatelessWidget {
     required this.currentUserRank,
   }) : super(key: key);
 
-  final ScoreBoard currentUserScore;
+  final SeasonLeaderboardItemModel currentUserScore;
   final int currentUserRank;
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class UserRank extends StatelessWidget {
                     style: TextStyles.rajdhani.body3,
                   ),
                   TextSpan(
-                    text: "${currentUserScore.score!.toInt()} "+ locale.points,
+                    text: "${currentUserScore.value} ",
                     style: TextStyles.rajdhaniSB.body3,
                   ),
                 ],

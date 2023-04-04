@@ -21,24 +21,14 @@ class PowerPlayService extends ChangeNotifier {
   final TransactionHistoryRepository _transactionHistoryRepository =
       locator<TransactionHistoryRepository>();
 
-  bool hasNoMoreCompletedMatches = false;
-  List<MatchData> _matchData = [];
+  List<MatchData> matchData = [];
 
-  List<MatchData> _liveMatchData = [];
-  List<MatchData> _upcomingMatchData = [];
-  List<MatchData> _completedMatchData = [];
   List<UserTransaction>? transactions = [];
   List<Map<String, dynamic>>? cardCarousel;
 
   Map<String, int> currentScore = {};
 
-  String _matchId = "";
-
-  String get matchId => _matchId;
-
-  set matchId(String value) {
-    _matchId = value;
-  }
+  String matchId = "";
 
   List<MatchUserPredictedData> _userPredictedData = [];
 
@@ -48,19 +38,7 @@ class PowerPlayService extends ChangeNotifier {
     _userPredictedData = value;
   }
 
-  List<MatchData>? completedMatchData;
-
-  List<MatchData> get liveMatchData => _liveMatchData;
-
-  List<MatchData> get upcomingMatchData => _upcomingMatchData;
-
   // List<MatchData> get completedMatchData => _completedMatchData;
-
-  List<MatchData> get matchData => _matchData;
-
-  set matchData(List<MatchData> value) {
-    _matchData = value;
-  }
 
   void init() {
     _logger.i("PowerPlayService init");
@@ -69,10 +47,10 @@ class PowerPlayService extends ChangeNotifier {
   void dump() {
     matchData = [];
     _logger.i("PowerPlayService dump");
-    hasNoMoreCompletedMatches = false;
   }
 
-  Future<void> getMatchesByStatus(String status, int limit, int offset) async {
+  Future<List<MatchData>> getMatchesByStatus(
+      String status, int limit, int offset) async {
     _logger.i("PowerPlayService -> getMatchesByStatus");
     final response =
         await _powerPlayRepository.getMatchesByStatus(status, limit, offset);
@@ -82,25 +60,12 @@ class PowerPlayService extends ChangeNotifier {
       if (response.isSuccess()) {
         matchId = response.model!.data![0].id!;
         currentScore = response.model!.data![0].currentScore!;
-
-        if (status == 'active') {
-          log("hello");
-          _liveMatchData = response.model!.data!;
-        } else if (status == MatchStatus.upcoming.name) {
-          _upcomingMatchData = response.model!.data!;
-        } else if (status == MatchStatus.completed.name) {
-          if (completedMatchData == null) {
-            completedMatchData = response.model!.data!;
-          } else {
-            completedMatchData!.addAll(response.model!.data!);
-            if (response.model!.data!.length <= limit) {
-              hasNoMoreCompletedMatches = true;
-            }
-          }
-        }
+        return response.model!.data!;
       }
+      return [];
     } catch (e) {
       _logger.d(e.toString());
+      return [];
     }
   }
 
@@ -120,24 +85,24 @@ class PowerPlayService extends ChangeNotifier {
   }
 
   Future<void> getUserTransactionHistory(
-    MatchStatus matchStatus,
+    MatchData matchData,
   ) async {
     _logger.i("PowerPlayService -> getTransactionHistory");
     var startTime;
     var endTime;
 
-    if (matchStatus == MatchStatus.active) {
-      startTime = liveMatchData[0].startsAt;
+    if (matchData.status == MatchStatus.active.name) {
+      startTime = matchData.startsAt;
       endTime = DateTime.now();
-    } else if (matchStatus == MatchStatus.completed) {
-      startTime = completedMatchData![0].startsAt;
-      endTime = completedMatchData![0].endsAt;
+    } else if (matchData.status == MatchStatus.completed.name) {
+      startTime = matchData.startsAt;
+      endTime = matchData.endsAt;
     }
 
     final response =
         await _transactionHistoryRepository.getPowerPlayUserTransactions(
-            startTime: startTime,
-            endTime: endTime,
+            startTime: startTime.toString(),
+            endTime: endTime.toString(),
             type: 'DEPOSIT',
             status: 'COMPLETE');
 

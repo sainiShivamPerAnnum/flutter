@@ -9,7 +9,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class UpcomingMatch extends StatefulWidget {
+class UpcomingMatch extends StatelessWidget {
   const UpcomingMatch({
     super.key,
     required this.model,
@@ -17,32 +17,27 @@ class UpcomingMatch extends StatefulWidget {
 
   final PowerPlayHomeViewModel model;
 
-  @override
-  State<UpcomingMatch> createState() => _UpcomingMatchState();
-}
-
-class _UpcomingMatchState extends State<UpcomingMatch> {
   String getDate(int index) {
     return DateFormat('d MMM ' 'yy')
-        .format(widget.model.upcomingMatchData![index]!.startsAt!);
+        .format(model.upcomingMatchData![index]!.startsAt!.toDate());
   }
 
   String getTime(int index) {
     return DateFormat('hh:mm a')
-        .format(widget.model.upcomingMatchData![index]!.startsAt!);
+        .format(model.upcomingMatchData![index]!.startsAt!.toDate());
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.model.state == ViewState.Busy
+    return model.state == ViewState.Busy
         ? const Center(child: CircularProgressIndicator())
         : ListView.builder(
-            itemCount: widget.model.upcomingMatchData?.length,
+            itemCount: model.upcomingMatchData?.length,
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              log('Upcoming Match Data index: ${widget.model.upcomingMatchData?.length}');
+              log('Upcoming Match Data index: ${model.upcomingMatchData?.length}');
 
               return Column(
                 children: [
@@ -64,8 +59,7 @@ class _UpcomingMatchState extends State<UpcomingMatch> {
                           child: Row(
                             children: [
                               Text(
-                                widget.model.upcomingMatchData?[index]
-                                        ?.matchTitle ??
+                                model.upcomingMatchData?[index]?.matchTitle ??
                                     'IPL MATCH',
                                 style: TextStyles.sourceSansB.body2
                                     .colour(Colors.white),
@@ -76,7 +70,7 @@ class _UpcomingMatchState extends State<UpcomingMatch> {
                                   // AppState.delegate!.appState.currentAction =
                                   //     PageAction(
                                   //         widget: PredictionLeaderboard(
-                                  //           matchData: widget.model
+                                  //           matchData: model
                                   //               .upcomingMatchData![index]!,
                                   //         ),
                                   //         page: PowerPlayLeaderBoardConfig,
@@ -100,17 +94,14 @@ class _UpcomingMatchState extends State<UpcomingMatch> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 17),
                           child: IplTeamsScoreWidget(
-                              matchData:
-                                  widget.model.upcomingMatchData![index]!),
+                              matchData: model.upcomingMatchData![index]!),
                         ),
                         const SizedBox(
                           height: 19,
                         ),
                         Center(
                           child: Text(
-                            widget.model.upcomingMatchData?[index]
-                                    ?.headsUpText ??
-                                '',
+                            model.upcomingMatchData?[index]?.headsUpText ?? '',
                             style: TextStyles.sourceSans.copyWith(
                                 fontSize: SizeConfig.screenWidth! * 0.030),
                           ),
@@ -126,8 +117,7 @@ class _UpcomingMatchState extends State<UpcomingMatch> {
                                   bottomLeft: Radius.circular(5),
                                   bottomRight: Radius.circular(5))),
                           child: Center(
-                            child: index == 0 &&
-                                    widget.model.liveMatchData == null
+                            child: index == 0 && model.liveMatchData == null
                                 ? const TimerWidget()
                                 : Text(
                                     'Predictions start in ${getTime(index)}',

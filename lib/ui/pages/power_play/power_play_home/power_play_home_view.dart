@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
@@ -49,6 +50,14 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                           backgroundColor: Colors.transparent,
                           action: Row(
                             children: [
+                              TextButton(
+                                onPressed: () {
+                                  AppState.delegate!.parseRoute(
+                                    Uri.parse('seasonLeaderboard'),
+                                  );
+                                },
+                                child: Text("SLB"),
+                              ),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   side: BorderSide(

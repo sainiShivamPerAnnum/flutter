@@ -4,6 +4,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_user_predicted_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
+import 'package:felloapp/core/model/power_play_models/season_leaderboard_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -86,6 +87,31 @@ class PowerPlayRepository extends BaseRepo {
             .fromMapArray(response['data']['users']);
       }
       return ApiResponse<List<MatchWinnersLeaderboardItemModel>>(
+        model: winners,
+        code: 200,
+      );
+    } catch (e) {
+      _logger.e("getMatchesByStatus => ${e.toString()}");
+      return ApiResponse.withError(
+        e.toString(),
+        400,
+      );
+    }
+  }
+
+  Future<ApiResponse<List<SeasonLeaderboardItemModel>>>
+      getSeasonLeaderboard() async {
+    List<SeasonLeaderboardItemModel> winners = [];
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath.seasonLeaderboard,
+        cBaseUrl: _baseUrl,
+      );
+      if (response['data'] != null) {
+        winners =
+            SeasonLeaderboardItemModel.helper.fromMapArray(response['data']);
+      }
+      return ApiResponse<List<SeasonLeaderboardItemModel>>(
         model: winners,
         code: 200,
       );

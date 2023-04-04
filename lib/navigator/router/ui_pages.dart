@@ -86,6 +86,7 @@ const String PowerPlayLeaderBoardPath = '/powerPlayLeaderBoardPath';
 const String PowerPlayHowItWorksPath = '/powerPlayHowItWorksPath';
 const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
 const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
+const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
 
 enum Pages {
   Splash,
@@ -163,13 +164,14 @@ enum Pages {
   WebView,
   SettingsView,
   TransactionDetailsPage,
-  
+
   //POWER PLAY
   PowerPlayHome,
   PowerPlayLeaderBoard,
   PowerPlayHowItWorks,
   FppCompletedMatchDetails,
-  PowerPlayFTUX
+  PowerPlayFTUX,
+  PowerPlaySeasonLeaderboard,
 }
 
 class PageConfiguration {
@@ -722,3 +724,9 @@ PageConfiguration PowerPlayFTUXPageConfig = PageConfiguration(
     path: PowerPlayFTUXPath,
     uiPage: Pages.PowerPlayFTUX,
     name: "PowerPlay FTUX Screen");
+
+PageConfiguration PowerPlaySeasonLeaderboardDetailsConfig = PageConfiguration(
+    key: 'PowerPlaySeasonLeaderboardDetailsPath',
+    path: PowerPlaySeasonLeaderboardPath,
+    uiPage: Pages.PowerPlaySeasonLeaderboard,
+    name: "PowerPlay Season Leaderboard Screen");

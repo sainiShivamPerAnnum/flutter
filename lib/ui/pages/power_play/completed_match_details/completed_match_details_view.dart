@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -59,7 +60,9 @@ class CompletedMatchDetailsView extends StatelessWidget {
                                           !matchData.matchStats!.didWon),
                               const CustomDivider(),
                               MatchBriefDetailsWidget(matchData: matchData),
-                              const UserPredictionsButton(),
+                              UserPredictionsButton(
+                                model: model,
+                              ),
                               CorrectPredictorsListView(model: model),
                               SizedBox(height: SizeConfig.navBarHeight * 1.5)
                             ],
@@ -194,6 +197,7 @@ class CorrectPredictorsListView extends StatelessWidget {
                           ),
                         ],
                       ),
+                      SizedBox(height: SizeConfig.padding10),
                       ListView.separated(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -214,9 +218,11 @@ class CorrectPredictorsListView extends StatelessWidget {
                               Expanded(
                                   child: Row(
                                 children: [
-                                  CircleAvatar(
-                                    radius: SizeConfig.iconSize1,
-                                    backgroundColor: Colors.black,
+                                  SvgPicture.asset(
+                                    "assets/vectors/userAvatars/AV${model.winners[i].avatarId}.svg",
+                                    width: SizeConfig.iconSize1 * 2,
+                                    height: SizeConfig.iconSize1 * 2,
+                                    fit: BoxFit.cover,
                                   ),
                                   SizedBox(width: SizeConfig.padding10),
                                   Expanded(
@@ -225,7 +231,7 @@ class CorrectPredictorsListView extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          model.winners[i].uname,
+                                          "@${model.winners[i].uname}",
                                           style: TextStyles.sourceSans.body3,
                                         ),
                                         SizedBox(height: SizeConfig.padding2),
@@ -278,34 +284,63 @@ class CorrectPredictorsListView extends StatelessWidget {
 }
 
 class UserPredictionsButton extends StatelessWidget {
-  const UserPredictionsButton({
-    super.key,
-  });
-
+  const UserPredictionsButton({super.key, required this.model});
+  final CompletedMatchDetailsVM model;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.7),
-        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-      ),
-      padding: EdgeInsets.only(
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.padding12,
-        top: SizeConfig.padding12,
-        bottom: SizeConfig.padding12,
-      ),
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text("Your Predictions (5)", style: TextStyles.sourceSans.body2),
-          const Icon(
-            Icons.navigate_next_rounded,
-            color: Colors.white,
-          )
-        ],
+    return InkWell(
+      onTap: () {
+        if (model.isPredictionsLoading) return;
+        BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          backgroundColor: const Color(0xff21284A),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness32),
+            topRight: Radius.circular(SizeConfig.roundness32),
+          ),
+          isScrollControlled: true,
+          hapticVibrate: true,
+          content: YourPredictionSheet(
+            transactions: model.predications, matchData: model.matchData!,
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+        ),
+        padding: EdgeInsets.only(
+          left: SizeConfig.pageHorizontalMargins,
+          right: SizeConfig.padding12,
+          top: SizeConfig.padding12,
+          bottom: SizeConfig.padding12,
+        ),
+        margin:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+        child: Row(
+          children: [
+            Text("Your Predictions", style: TextStyles.sourceSans.body2),
+            SizedBox(width: SizeConfig.padding12),
+            model.isPredictionsLoading
+                ? SizedBox(
+                    height: SizeConfig.padding16,
+                    width: SizeConfig.padding16,
+                    child: SpinKitWave(
+                      color: Colors.white,
+                      size: SizeConfig.padding16,
+                    ),
+                  )
+                : Text("(${model.predications?.length ?? 0})",
+                    style: TextStyles.sourceSans.body2),
+            const Spacer(),
+            const Icon(
+              Icons.navigate_next_rounded,
+              color: Colors.white,
+            ),
+          ],
+        ),
       ),
     );
   }
