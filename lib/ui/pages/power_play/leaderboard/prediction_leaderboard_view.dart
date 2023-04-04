@@ -262,7 +262,7 @@ class PredictionLeaderboard extends StatelessWidget {
                             ),
                             isScrollControlled: true,
                             hapticVibrate: true,
-                            content: PrizeDistributionSheet());
+                            content: const PrizeDistributionSheet());
                       },
                       child: SizedBox(
                           width: SizeConfig.screenWidth,
@@ -539,6 +539,8 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
           //What is a Prediction?
           GestureDetector(
             onTap: () {
+              AppState.backButtonDispatcher!.didPopRoute();
+
               AppState.delegate!.appState.currentAction = PageAction(
                 state: PageState.addPage,
                 page: PowerPlayHowItWorksConfig,
@@ -562,6 +564,8 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
             color: Colors.white,
             onPressed: () {
               if (_formKey.currentState!.validate() == false) return;
+
+              AppState.backButtonDispatcher!.didPopRoute();
 
               BaseUtil.openDepositOptionsModalSheet(
                   title:
