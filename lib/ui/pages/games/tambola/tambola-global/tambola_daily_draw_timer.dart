@@ -13,12 +13,16 @@ class DailyPicksTimer extends StatefulWidget {
   final Widget replacementWidget;
   final Color? bgColor;
   final MainAxisAlignment? alignment;
+  final String? startTime;
 
-  const DailyPicksTimer({super.key,
+  const DailyPicksTimer({
+    super.key,
     required this.replacementWidget,
     this.bgColor,
     this.alignment,
+    this.startTime,
   });
+
   @override
   _DailyPicksTimerState createState() => _DailyPicksTimerState();
 }
@@ -46,8 +50,15 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
 
   Duration getDifferance() {
     DateTime currentTime = DateTime.now();
-    DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 18, 0, 10);
+    DateTime drawTime;
+    if (widget.startTime != null) {
+      drawTime = DateTime.fromMillisecondsSinceEpoch(
+          DateTime.parse(widget.startTime!).millisecondsSinceEpoch);
+    } else {
+      drawTime = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, 18, 0, 10);
+    }
+
     Duration timeDiff = currentTime.difference(drawTime);
 
     return timeDiff;

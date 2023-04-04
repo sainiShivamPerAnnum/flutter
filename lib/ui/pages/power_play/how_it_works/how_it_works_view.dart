@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
@@ -350,7 +351,12 @@ class HowItWorks extends StatelessWidget {
               height: 20,
             ),
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                BaseUtil.openDepositOptionsModalSheet(
+                    title: 'To predict, Save in Gold or Flo',
+                    subtitle: 'Make as many predictions as you can, to win',
+                    timer: 0);
+              },
               color: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5)),

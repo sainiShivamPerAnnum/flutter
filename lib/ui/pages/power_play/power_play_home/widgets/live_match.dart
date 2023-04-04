@@ -36,15 +36,18 @@ class LiveMatch extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  'IPL Match - 4',
+                  matchData?.matchTitle ?? 'IPL MATCH',
                   style: TextStyles.sourceSansB.body2.colour(Colors.white),
                 ),
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
                     AppState.delegate!.appState.currentAction = PageAction(
-                        state: PageState.addPage,
-                        page: PowerPlayLeaderBoardConfig);
+                        widget: PredictionLeaderboard(
+                          matchData: matchData!,
+                        ),
+                        page: PowerPlayLeaderBoardConfig,
+                        state: PageState.addWidget);
                   },
                   child: Text(
                     'PREDICTION LEADERBOARD',

@@ -22,6 +22,16 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   List<MatchData?>? _upcomingMatchData = [];
   List<MatchData>? _completedMatchData;
 
+  bool _isLive = true;
+  List<Map<String, dynamic>>? cardCarousel;
+
+  bool get isLive => _isLive;
+
+  set isLive(bool value) {
+    _isLive = value;
+    notifyListeners();
+  }
+
   bool _isLoadingMoreCompletedMatches = false;
 
   bool get isLoadingMoreCompletedMatches => _isLoadingMoreCompletedMatches;
@@ -116,5 +126,17 @@ class PowerPlayHomeViewModel extends BaseViewModel {
         }
         break;
     }
+  }
+
+  void getCardCarousle() {
+    // var appConfigData =
+    //     AppConfig.getValue<Map<String, dynamic>>(AppConfigKey.powerplayConfig);
+    //
+    // appConfigData['predictScreen'].forEach((key, value) {
+    //   log('key => $key');
+    //   log('value => $value');
+    // });
+    //
+    // cardCarousel = appConfigData['predictScreen'];
   }
 }
