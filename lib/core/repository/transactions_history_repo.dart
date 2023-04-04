@@ -72,4 +72,45 @@ class TransactionHistoryRepository extends BaseRepo {
           e?.toString() ?? "Unable to fetch transactions", 400);
     }
   }
+
+  Future<ApiResponse<TransactionResponse>> getPowerPlayUserTransactions({
+    String? startTime,
+    String? type,
+    String? endTime,
+    String? status,
+  }) async {
+    List<UserTransaction> events = [];
+    try {
+      final String? _uid = userService!.baseUser!.uid;
+      final _token = await getBearerToken();
+      final _queryParams = {
+        "type": type,
+        "endTime": endTime,
+        "startTime": startTime,
+        "status": status
+      };
+      final response = await APIService.instance.getData(
+        ApiPath.kSingleTransactions(_uid),
+        token: _token,
+        queryParams: _queryParams,
+        cBaseUrl: _baseUrl,
+      );
+
+      final responseData = response["data"];
+      log("Transactions data: $responseData");
+      responseData["transactions"].forEach((e) {
+        events.add(UserTransaction.fromMap(e, e["id"]));
+      });
+
+      final bool isLastPage = responseData["isLastPage"] ?? false;
+      final TransactionResponse txnResponse =
+          TransactionResponse(isLastPage: isLastPage, transactions: events);
+
+      return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
+    } catch (e) {
+      logger!.e(e.toString());
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch transactions", 400);
+    }
+  }
 }

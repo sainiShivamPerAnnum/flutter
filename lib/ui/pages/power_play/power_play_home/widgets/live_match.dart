@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
@@ -36,15 +37,19 @@ class LiveMatch extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  'IPL Match - 4',
+                  matchData?.matchTitle ?? 'IPL MATCH',
                   style: TextStyles.sourceSansB.body2.colour(Colors.white),
                 ),
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
                     AppState.delegate!.appState.currentAction = PageAction(
-                        state: PageState.addPage,
-                        page: PowerPlayLeaderBoardConfig);
+                        widget: PredictionLeaderboard(
+                          matchData: matchData!,
+                          status: MatchStatus.active,
+                        ),
+                        page: PowerPlayLeaderBoardConfig,
+                        state: PageState.addWidget);
                   },
                   child: Text(
                     'PREDICTION LEADERBOARD',

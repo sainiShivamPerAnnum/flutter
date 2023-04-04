@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/core/model/power_play_models/match_user_predicted_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/power_play_repo.dart';
+import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +32,34 @@ class PowerPlayService extends ChangeNotifier {
   final PowerPlayRepository _powerPlayRepository =
       locator<PowerPlayRepository>();
 
+  final TransactionHistoryRepository _transactionHistoryRepository =
+      locator<TransactionHistoryRepository>();
+
   List<MatchData> _matchData = [];
 
   List<MatchData> _liveMatchData = [];
   List<MatchData> _upcomingMatchData = [];
   List<MatchData> _completedMatchData = [];
+  List<UserTransaction>? transactions = [];
+  List<Map<String, dynamic>>? cardCarousel;
+
+  Map<String, int> currentScore = {};
+
+  String _matchId = "";
+
+  String get matchId => _matchId;
+
+  set matchId(String value) {
+    _matchId = value;
+  }
+
+  List<MatchUserPredictedData> _userPredictedData = [];
+
+  List<MatchUserPredictedData> get userPredictedData => _userPredictedData;
+
+  set userPredictedData(List<MatchUserPredictedData> value) {
+    _userPredictedData = value;
+  }
 
   List<MatchData> get liveMatchData => _liveMatchData;
 
@@ -66,6 +92,9 @@ class PowerPlayService extends ChangeNotifier {
 
     try {
       if (response.isSuccess()) {
+        matchId = response.model!.data![0].id!;
+        currentScore = response.model!.data![0].currentScore!;
+
         if (status == 'active') {
           log("hello");
           _liveMatchData = response.model!.data!;
@@ -82,6 +111,55 @@ class PowerPlayService extends ChangeNotifier {
       }
     } catch (e) {
       // BaseUtil.showNegativeAlert("Something went wrong", "Please try again");
+    }
+  }
+
+  Future<void> getUserPredictedStats() async {
+    _logger.i("PowerPlayService -> getMatchStats");
+
+    final response =
+        await _powerPlayRepository.getUserPredictedStats('csk_rcb');
+
+    log("SERVICE response => ${response.model?.data?.toList()}");
+
+    if (response.isSuccess()) {
+      userPredictedData = response.model!.data!;
+    } else {
+      BaseUtil.showNegativeAlert(response.errorMessage, "Please try again");
+    }
+  }
+
+  Future<void> getUserTransactionHistory(
+    MatchStatus matchStatus,
+  ) async {
+    _logger.i("PowerPlayService -> getTransactionHistory");
+    var startTime;
+    var endTime;
+
+    if (matchStatus == MatchStatus.active) {
+      startTime = liveMatchData[0].startsAt;
+      endTime = DateTime.now();
+    } else if (matchStatus == MatchStatus.completed) {
+      startTime = completedMatchData[0].startsAt;
+      endTime = completedMatchData[0].endsAt;
+    }
+
+    final response =
+        await _transactionHistoryRepository.getPowerPlayUserTransactions(
+            startTime: startTime,
+            endTime: endTime,
+            type: 'DEPOSIT',
+            status: 'COMPLETE');
+
+    log("SERVICE response => ${response.model?.transactions?.toList()}");
+
+    if (response.isSuccess()) {
+      transactions = response.model!.transactions;
+
+      log('transactions => ${transactions!.length}');
+      // userPredictedData = response.model!.data!;
+    } else {
+      BaseUtil.showNegativeAlert(response.errorMessage, "Please try again");
     }
   }
 }

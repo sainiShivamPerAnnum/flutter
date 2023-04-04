@@ -17,6 +17,15 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   List<MatchData?>? _liveMatchData = [];
   List<MatchData?>? _upcomingMatchData = [];
   List<MatchData> _completedMatchData = [];
+  bool _isLive = true;
+  List<Map<String, dynamic>>? cardCarousel;
+
+  bool get isLive => _isLive;
+
+  set isLive(bool value) {
+    _isLive = value;
+    notifyListeners();
+  }
 
   List<MatchData?>? get liveMatchData => _liveMatchData;
 
@@ -56,6 +65,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   Future<void> init() async {
     state = ViewState.Busy;
     _powerPlayService.init();
+    getCardCarousle();
 
     await _powerPlayService.getMatchesByStatus("active", 10, 0);
     if (_powerPlayService.liveMatchData.isNotEmpty) {
@@ -88,5 +98,17 @@ class PowerPlayHomeViewModel extends BaseViewModel {
 
     state = ViewState.Idle;
     notifyListeners();
+  }
+
+  void getCardCarousle() {
+    // var appConfigData =
+    //     AppConfig.getValue<Map<String, dynamic>>(AppConfigKey.powerplayConfig);
+    //
+    // appConfigData['predictScreen'].forEach((key, value) {
+    //   log('key => $key');
+    //   log('value => $value');
+    // });
+    //
+    // cardCarousel = appConfigData['predictScreen'];
   }
 }

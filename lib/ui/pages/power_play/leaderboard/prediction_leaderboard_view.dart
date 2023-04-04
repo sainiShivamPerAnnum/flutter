@@ -1,355 +1,407 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/view_model/leaderboard_view_model.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class PredictionLeaderboard extends StatelessWidget {
-  const PredictionLeaderboard({Key? key}) : super(key: key);
+  const PredictionLeaderboard(
+      {Key? key, required this.matchData, required this.status})
+      : super(key: key);
+
+  final MatchData matchData;
+  final MatchStatus status;
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return PowerPlayBackgroundUi(
-      child: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            child: Column(
-              children: [
-                FAppBar(
-                  // type: FaqsType.play,
-                  showAvatar: false,
-                  showCoinBar: false,
-                  showHelpButton: false,
-                  backgroundColor: Colors.transparent,
-                  action: Row(
-                    children: [
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          disabledForegroundColor:
-                              Colors.white.withOpacity(0.38),
-                          side: BorderSide(
-                              color: Colors.white.withOpacity(0.5), width: 0.5),
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
-                        ),
-                        onPressed: () {},
-                        child: Padding(
-                          padding: EdgeInsets.zero,
-                          child: Text(
-                            "Invite Friends",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.body5,
+    return BaseView<LeaderBoardViewModel>(
+      onModelReady: (model) {
+        model.getUserPredictedData();
+        model.powerPlayService.getUserTransactionHistory(status);
+      },
+      builder: (context, model, child) {
+        return PowerPlayBackgroundUi(
+          child: SingleChildScrollView(
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins),
+                child: Column(
+                  children: [
+                    FAppBar(
+                      // type: FaqsType.play,
+                      showAvatar: false,
+                      showCoinBar: false,
+                      showHelpButton: false,
+                      backgroundColor: Colors.transparent,
+                      action: Row(
+                        children: [
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              disabledForegroundColor:
+                                  Colors.white.withOpacity(0.38),
+                              side: BorderSide(
+                                  color: Colors.white.withOpacity(0.5),
+                                  width: 0.5),
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                            ),
+                            onPressed: () {},
+                            child: Padding(
+                              padding: EdgeInsets.zero,
+                              child: Text(
+                                "Invite Friends",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.body5,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding12,
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              // color: UiConstants.kArrowButtonBackgroundColor,
-                              border: Border.all(
-                                  color: Colors.white.withOpacity(0.5))),
-                          padding: const EdgeInsets.all(6),
-                          child: Icon(
-                            Icons.question_mark,
-                            color: Colors.white,
-                            size: SizeConfig.padding20,
+                          SizedBox(
+                            width: SizeConfig.padding12,
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                // Center(
-                //   child: SvgPicture.network(
-                //     'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
-                //     height: 95,
-                //   ),
-                // ),
-                const SizedBox(
-                  height: 20,
-                ),
-                //IPL Match 4
-                Text(
-                  "IPL Match 4",
-                  style: TextStyles.sourceSansB.body2.colour(Colors.white),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: IplTeamsScoreWidget(
-                    team1: "RCB",
-                    team2: "MI",
-                  ),
-                ),
-                //PREDICTIONS END AFTER 19TH OVER OF 1ST INNINGS
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "PREDICTIONS END AFTER 19TH OVER OF 1ST INNINGS",
-                  style: TextStyles.sourceSans.body4.colour(Colors.white),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 1,
-                  color: Colors.white.withOpacity(0.5),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding16,
-                      vertical: SizeConfig.padding14),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xff000000).withOpacity(0.3),
-                  ),
-                  child: Column(
-                    children: [
-                      //Prediction Leaderboard
-                      Text(
-                        "Prediction Leaderboard",
-                        style: TextStyles.sourceSans.body1.colour(Colors.white),
+                          InkWell(
+                            onTap: () {},
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  // color: UiConstants.kArrowButtonBackgroundColor,
+                                  border: Border.all(
+                                      color: Colors.white.withOpacity(0.5))),
+                              padding: const EdgeInsets.all(6),
+                              child: Icon(
+                                Icons.question_mark,
+                                color: Colors.white,
+                                size: SizeConfig.padding20,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                      const SizedBox(
-                        height: 20,
+                    ),
+                    // Center(
+                    //   child: SvgPicture.network(
+                    //     'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg',
+                    //     height: 95,
+                    //   ),
+                    // ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "IPL Match 4",
+                      style: TextStyles.sourceSansB.body2.colour(Colors.white),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      child: IplTeamsScoreWidget(
+                        team1: matchData.teams![0],
+                        team2: matchData.teams![1],
+                        score1: matchData.currentScore![matchData.teams![0]]!,
+                        score2: matchData.currentScore![matchData.teams![1]]!,
                       ),
-                      Row(
+                    ),
+                    //PREDICTIONS END AFTER 19TH OVER OF 1ST INNINGS
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      matchData.headsUpText ?? '',
+                      style: TextStyles.sourceSans.body4.colour(Colors.white),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: 1,
+                      color: Colors.white.withOpacity(0.5),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding16,
+                          vertical: SizeConfig.padding14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: const Color(0xff000000).withOpacity(0.3),
+                      ),
+                      child: Column(
                         children: [
+                          //Prediction Leaderboard
                           Text(
-                            '#',
-                            style: TextStyles.sourceSans.body4
-                                .colour(const Color(0xffB59D9F)),
+                            "Prediction Leaderboard",
+                            style: TextStyles.sourceSans.body1
+                                .colour(Colors.white),
                           ),
                           const SizedBox(
-                            width: 20,
+                            height: 20,
                           ),
-                          Text(
-                            'Users',
-                            style: TextStyles.sourceSans.body4
-                                .colour(const Color(0xffB59D9F)),
+                          Row(
+                            children: [
+                              Text(
+                                '#',
+                                style: TextStyles.sourceSans.body3
+                                    .colour(const Color(0xffB59D9F)),
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                'Users',
+                                style: TextStyles.sourceSans.body3
+                                    .colour(const Color(0xffB59D9F)),
+                              ),
+                              const Spacer(),
+                              Text(
+                                'Runs Predicted',
+                                style: TextStyles.sourceSans.body3
+                                    .colour(const Color(0xffB59D9F)),
+                              ),
+                            ],
                           ),
-                          const Spacer(),
-                          Text(
-                            'Runs Predicted',
-                            style: TextStyles.sourceSans.body4
-                                .colour(const Color(0xffB59D9F)),
+
+                          UsersPrediction(
+                            model: model,
                           ),
                         ],
                       ),
-
-                      ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                SizedBox(
-                                  height: SizeConfig.padding16,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '${index + 1}',
-                                      style: TextStyles.sourceSans.body4
-                                          .colour(Colors.white),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      '100 user predicted',
-                                      style: TextStyles.sourceSans.body4
-                                          .colour(Colors.white),
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      '140 runs',
-                                      style: TextStyles.sourceSans.body4
-                                          .colour(Colors.white),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding16,
-                                ),
-                                if (index != 2)
-                                  Container(
-                                    height: 0.5,
-                                    color: Colors.white.withOpacity(0.3),
-                                  ),
-                              ],
-                            );
-                          }),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    BaseUtil.openModalBottomSheet(
-                        isBarrierDismissible: true,
-                        addToScreenStack: true,
-                        backgroundColor: const Color(0xff21284A),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness32),
-                          topRight: Radius.circular(SizeConfig.roundness32),
-                        ),
-                        isScrollControlled: true,
-                        hapticVibrate: true,
-                        content: const YourPredictionSheet());
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding16,
-                        vertical: SizeConfig.padding16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xff000000).withOpacity(0.3),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Your Predictions (10)",
-                          style:
-                              TextStyles.sourceSans.body3.colour(Colors.white),
-                        ),
-                        // const Spacer(),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: const Color(0xffB59D9F),
-                          size: SizeConfig.padding16,
-                        )
-                      ],
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  // margin: EdgeInsets.only(
-                  //     left: SizeConfig.pageHorizontalMargins),
-                  height: 85,
-                  // width: 275,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 11, horizontal: 18),
-                  decoration: BoxDecoration(
-                    color: const Color(0xffA5E4FF),
-                    borderRadius: BorderRadius.circular(10),
-                    // border: Border.all(color: Colors.white, width: 0.5),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'How it Works?',
-                        style:
-                            TextStyles.sourceSansSB.body1.colour(Colors.black),
+                    GestureDetector(
+                      onTap: () {
+                        BaseUtil.openModalBottomSheet(
+                            isBarrierDismissible: true,
+                            addToScreenStack: true,
+                            backgroundColor: const Color(0xff21284A),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness32),
+                              topRight: Radius.circular(SizeConfig.roundness32),
+                            ),
+                            isScrollControlled: true,
+                            hapticVibrate: true,
+                            content: (model.powerPlayService.transactions
+                                            ?.length ??
+                                        0) >
+                                    0
+                                ? YourPredictionSheet(
+                                    transactions:
+                                        model.powerPlayService.transactions!,
+                                  )
+                                : const NoPredictionSheet());
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding16,
+                            vertical: SizeConfig.padding16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xff000000).withOpacity(0.3),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Your Predictions (${model.powerPlayService.transactions?.length})",
+                              style: TextStyles.sourceSans.body3
+                                  .colour(Colors.white),
+                            ),
+                            // const Spacer(),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: const Color(0xffB59D9F),
+                              size: SizeConfig.padding16,
+                            )
+                          ],
+                        ),
                       ),
-                      Expanded(
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      // margin: EdgeInsets.only(
+                      //     left: SizeConfig.pageHorizontalMargins),
+                      height: 85,
+                      // width: 275,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 11, horizontal: 18),
+                      decoration: BoxDecoration(
+                        color: const Color(0xffA5E4FF),
+                        borderRadius: BorderRadius.circular(10),
+                        // border: Border.all(color: Colors.white, width: 0.5),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'How it Works?',
+                            style: TextStyles.sourceSansSB.body1
+                                .colour(Colors.black),
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Predict the winning score of today’s match and get a chance to win digital gold equal to the Winning score!',
+                              style: TextStyles.sourceSans.body4
+                                  .colour(Colors.black),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: SizeConfig.padding20,
+                    ),
+                    // WHAT IS A PREDICTION?
+                    GestureDetector(
+                      onTap: () {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                            state: PageState.addPage,
+                            page: PowerPlayHowItWorksConfig);
+                      },
+                      child: Text(
+                        "WHAT IS A PREDICTION?",
+                        style: TextStyles.rajdhaniB.body1
+                            .colour(Colors.white)
+                            .copyWith(decoration: TextDecoration.underline),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding20,
+                    ),
+                    MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      color: Colors.white,
+                      onPressed: () {
+                        BaseUtil.openModalBottomSheet(
+                            isBarrierDismissible: true,
+                            addToScreenStack: true,
+                            backgroundColor: const Color(0xff21284A),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness32),
+                              topRight: Radius.circular(SizeConfig.roundness32),
+                            ),
+                            isScrollControlled: true,
+                            hapticVibrate: true,
+                            content: MakePredictionSheet(
+                              team1: matchData.teams![0],
+                              team2: matchData.teams![1],
+                              score1:
+                                  matchData.currentScore![matchData.teams![0]]!,
+                              score2:
+                                  matchData.currentScore![matchData.teams![1]]!,
+                            ));
+                      },
+                      child: Center(
                         child: Text(
-                          'Predict the winning score of today’s match and get a chance to win digital gold equal to the Winning score!',
+                          'PREDICT NOW',
                           style:
-                              TextStyles.sourceSans.body4.colour(Colors.black),
+                              TextStyles.rajdhaniB.body1.colour(Colors.black),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(
-                  height: SizeConfig.padding20,
-                ),
-                // WHAT IS A PREDICTION?
-                GestureDetector(
-                  onTap: () {
-                    AppState.delegate!.appState.currentAction = PageAction(
-                        state: PageState.addPage,
-                        page: PowerPlayHowItWorksConfig);
-                  },
-                  child: Text(
-                    "WHAT IS A PREDICTION?",
-                    style: TextStyles.rajdhaniB.body1
-                        .colour(Colors.white)
-                        .copyWith(decoration: TextDecoration.underline),
-                  ),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding20,
-                ),
-                MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  color: Colors.white,
-                  onPressed: () {
-                    BaseUtil.openModalBottomSheet(
-                        isBarrierDismissible: true,
-                        addToScreenStack: true,
-                        backgroundColor: const Color(0xff21284A),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness32),
-                          topRight: Radius.circular(SizeConfig.roundness32),
-                        ),
-                        isScrollControlled: true,
-                        hapticVibrate: true,
-                        content: MakePredictionSheet(
-                          team1: '',
-                          team2: '',
-                        ));
-                  },
-                  child: Center(
-                    child: Text(
-                      'PREDICT NOW',
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                     ),
-                  ),
+                    SizedBox(
+                      height: SizeConfig.padding20,
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: SizeConfig.padding20,
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
+  }
+}
+
+class UsersPrediction extends StatelessWidget {
+  const UsersPrediction({
+    super.key,
+    required this.model,
+  });
+
+  final LeaderBoardViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return model.state == ViewState.Busy
+        ? const Center(child: CircularProgressIndicator())
+        : ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: model.userPredictedData.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding16,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        '${index + 1}',
+                        style: TextStyles.sourceSans.body3.colour(Colors.white),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        '${model.userPredictedData[index].count} user predicted',
+                        style: TextStyles.sourceSans.body3.colour(Colors.white),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '${model.userPredictedData[index].amount} runs',
+                        style: TextStyles.sourceSans.body3.colour(Colors.white),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding16,
+                  ),
+                  if (index != 2)
+                    Container(
+                      height: 0.5,
+                      color: Colors.white.withOpacity(0.3),
+                    ),
+                ],
+              );
+            },
+          );
   }
 }
 
@@ -373,13 +425,13 @@ class MakePredictionSheet extends StatefulWidget {
 
 class _MakePredictionSheetState extends State<MakePredictionSheet> {
   late TextEditingController _textController;
-  var _formKey;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     _textController = TextEditingController();
-    _formKey = GlobalKey<FormState>();
+    // _formKey = GlobalKey<FormState>();
   }
 
   @override
@@ -431,7 +483,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
                 ),
                 Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+                    EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
                     child: IplTeamsScoreWidget(
                       team1: widget.team1,
                       team2: widget.team2,
@@ -456,57 +508,69 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
             height: SizeConfig.padding16,
           ),
 
-          AppTextField(
-            margin: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding12,
-            ),
-            autoFocus: true,
-            textEditingController: _textController,
-            isEnabled: true,
-            maxLength: 256,
-            keyboardType: TextInputType.number,
-            hintText: 'Enter your prediction',
-            textStyle:
-                TextStyles.sourceSansSB.body2.colour(const Color(0xff21284A)),
-            hintStyle:
-                TextStyles.sourceSans.body3.colour(const Color(0xff21284A)),
-            inputFormatters: [
-              //limit of 3 digits
-              LengthLimitingTextInputFormatter(3),
+          Form(
+            key: _formKey,
+            child: AppTextField(
+              margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding12,
+              ),
+              autoFocus: true,
+              textEditingController: _textController,
+              isEnabled: true,
+              maxLength: 256,
+              keyboardType: TextInputType.number,
+              hintText: 'Enter your prediction',
+              textStyle:
+                  TextStyles.sourceSansSB.body2.colour(const Color(0xff21284A)),
+              hintStyle:
+                  TextStyles.sourceSans.body3.colour(const Color(0xff21284A)),
+              inputFormatters: [
+                //limit of 3 digits
+                LengthLimitingTextInputFormatter(3),
 
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-            ],
-            fillColor: const Color(0xffD9D9D9).withOpacity(0.8),
-            prefixIcon: const Icon(
-              Icons.star,
-              color: Color(0xff21284A),
-              size: 25,
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              ],
+              fillColor: const Color(0xffD9D9D9).withOpacity(0.8),
+              prefixIcon: const Icon(
+                Icons.star,
+                color: Color(0xff21284A),
+                size: 25,
+              ),
+              suffixText: 'Runs',
+              suffixTextStyle:
+                  TextStyles.sourceSansSB.body3.colour(const Color(0xff21284A)),
+              onSubmit: (_) => BaseUtil.openDepositOptionsModalSheet(
+                title:
+                    'To predict, Save ₹${_textController.text} in Gold or Flo',
+                subtitle: 'Make as many predictions as you can, to win',
+                amount: int.tryParse(_textController.text),
+              ),
+              validator: (value) {
+                if (value != null && value.trim().isNotEmpty) {
+                  return null;
+                } else {
+                  return 'Please enter your prediction';
+                }
+              },
             ),
-            suffixText: 'Runs',
-            suffixTextStyle:
-                TextStyles.sourceSansSB.body3.colour(const Color(0xff21284A)),
-            onSubmit: (_) => BaseUtil.openDepositOptionsModalSheet(
-              title: 'To predict, Save ₹${_textController.text} in Gold or Flo',
-              subtitle: 'Make as many predictions as you can, to win',
-              amount: int.tryParse(_textController.text),
-            ),
-            validator: (value) {
-              if (value != null && value.trim().isNotEmpty) {
-                return null;
-              } else {
-                return 'Please enter your prediction';
-              }
-            },
           ),
           SizedBox(
             height: SizeConfig.padding40,
           ),
           //What is a Prediction?
-          Text(
-            "What is Chasing Score?",
-            style: TextStyles.sourceSans.body2
-                .colour(Colors.white)
-                .copyWith(decoration: TextDecoration.underline),
+          GestureDetector(
+            onTap: () {
+              AppState.delegate!.appState.currentAction = PageAction(
+                state: PageState.addPage,
+                page: PowerPlayHowItWorksConfig,
+              );
+            },
+            child: Text(
+              "What is Chasing Score?",
+              style: TextStyles.sourceSans.body2
+                  .colour(Colors.white)
+                  .copyWith(decoration: TextDecoration.underline),
+            ),
           ),
           SizedBox(
             height: SizeConfig.padding10,
@@ -517,11 +581,16 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             padding: const EdgeInsets.symmetric(vertical: 10),
             color: Colors.white,
-            onPressed: () => BaseUtil.openDepositOptionsModalSheet(
-              title: 'To predict, Save ₹${_textController.text} in Gold or Flo',
-              subtitle: 'Make as many predictions as you can, to win',
-              amount: int.tryParse(_textController.text),
-            ),
+            onPressed: () {
+              if (_formKey.currentState!.validate() == false) return;
+
+              BaseUtil.openDepositOptionsModalSheet(
+                  title:
+                      'To predict, Save ₹${_textController.text} in Gold or Flo',
+                  subtitle: 'Make as many predictions as you can, to win',
+                  amount: int.tryParse(_textController.text),
+                  timer: 0);
+            },
             child: Center(
               child: Text(
                 'PREDICT NOW',
@@ -539,7 +608,20 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
 }
 
 class YourPredictionSheet extends StatelessWidget {
-  const YourPredictionSheet({Key? key}) : super(key: key);
+  const YourPredictionSheet({Key? key, this.transactions}) : super(key: key);
+
+  final List<UserTransaction>? transactions;
+
+  String getTime(int index) {
+    var time = transactions![index].timestamp;
+
+    var date =
+        DateTime.fromMillisecondsSinceEpoch(time!.millisecondsSinceEpoch);
+    var formatter = DateFormat('hh:mm a');
+    String formatted = formatter.format(date);
+    log(formatted);
+    return formatted;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -581,7 +663,7 @@ class YourPredictionSheet extends StatelessWidget {
               children: [
                 Text(
                   '#',
-                  style: TextStyles.sourceSans.body4
+                  style: TextStyles.sourceSans.body3
                       .colour(const Color(0xffB59D9F)),
                 ),
                 const SizedBox(
@@ -589,22 +671,25 @@ class YourPredictionSheet extends StatelessWidget {
                 ),
                 Text(
                   'Prediction',
-                  style: TextStyles.sourceSans.body4
+                  style: TextStyles.sourceSans.body3
                       .colour(const Color(0xffB59D9F)),
                 ),
                 const Spacer(),
                 Text(
                   'Time',
-                  style: TextStyles.sourceSans.body4
+                  style: TextStyles.sourceSans.body3
                       .colour(const Color(0xffB59D9F)),
                 ),
+                const SizedBox(
+                  width: 30,
+                )
               ],
             ),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 shrinkWrap: true,
-                itemCount: 3,
+                itemCount: transactions?.length,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
@@ -615,21 +700,21 @@ class YourPredictionSheet extends StatelessWidget {
                         children: [
                           Text(
                             '${index + 1}',
-                            style: TextStyles.sourceSans.body4
+                            style: TextStyles.sourceSans.body3
                                 .colour(Colors.white),
                           ),
                           const SizedBox(
                             width: 20,
                           ),
                           Text(
-                            '100 runs',
-                            style: TextStyles.sourceSans.body4
+                            '${transactions![index].amount.truncate()} Runs',
+                            style: TextStyles.sourceSans.body3
                                 .colour(Colors.white),
                           ),
                           const Spacer(),
                           Text(
-                            '6.04 pm',
-                            style: TextStyles.sourceSans.body4
+                            getTime(index),
+                            style: TextStyles.sourceSans.body3
                                 .colour(Colors.white),
                           ),
                           const SizedBox(
@@ -657,17 +742,17 @@ class YourPredictionSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
               onPressed: () {
-                // BaseUtil.openModalBottomSheet(
-                //     isBarrierDismissible: true,
-                //     addToScreenStack: true,
-                //     backgroundColor: const Color(0xff21284A),
-                //     borderRadius: BorderRadius.only(
-                //       topLeft: Radius.circular(SizeConfig.roundness32),
-                //       topRight: Radius.circular(SizeConfig.roundness32),
-                //     ),
-                //     isScrollControlled: true,
-                //     hapticVibrate: true,
-                //     content: const YourPredictionSheet());
+                BaseUtil.openModalBottomSheet(
+                    isBarrierDismissible: true,
+                    addToScreenStack: true,
+                    backgroundColor: const Color(0xff21284A),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness32),
+                      topRight: Radius.circular(SizeConfig.roundness32),
+                    ),
+                    isScrollControlled: true,
+                    hapticVibrate: true,
+                    content: const YourPredictionSheet());
               },
               child: Center(
                 child: Text(
@@ -691,7 +776,7 @@ class NoPredictionSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -729,23 +814,14 @@ class NoPredictionSheet extends StatelessWidget {
           ),
           MaterialButton(
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             padding: const EdgeInsets.symmetric(vertical: 10),
             color: Colors.white,
             onPressed: () {
-              BaseUtil.openModalBottomSheet(
-                  isBarrierDismissible: true,
-                  addToScreenStack: true,
-                  backgroundColor: const Color(0xff21284A),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(SizeConfig.roundness32),
-                    topRight: Radius.circular(SizeConfig.roundness32),
-                  ),
-                  isScrollControlled: true,
-                  hapticVibrate: true,
-                  content: const SizedBox(
-                    height: 200,
-                  ));
+              BaseUtil.openDepositOptionsModalSheet(
+                title: 'To predict, Save in Gold or Flo',
+                subtitle: 'Make as many predictions as you can, to win',
+              );
             },
             child: Center(
               child: Text(

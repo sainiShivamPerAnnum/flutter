@@ -204,4 +204,6 @@ class ApiPath {
 
   static String powerPlayMatches(String status, int limit, int offset) =>
       '/powerplay/matches/$status?limit=$limit&offset=$offset';
+
+  static String matchStats(String matchId) => '/powerplay/match/$matchId/stats';
 }

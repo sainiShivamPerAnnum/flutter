@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
+import 'package:felloapp/core/model/power_play_models/match_user_predicted_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -39,6 +40,34 @@ class PowerPlayRepository extends BaseRepo {
       );
     } catch (e) {
       _logger.e("getMatchesByStatus => ${e.toString()}");
+      return ApiResponse.withError(
+        e.toString(),
+        400,
+      );
+    }
+  }
+
+  Future<ApiResponse<MatchStats>> getUserPredictedStats(String matchId) async {
+    try {
+      log("REPO getUserPredictedStats => ${ApiPath.matchStats(matchId)}");
+      final response = await APIService.instance.getData(
+        ApiPath.matchStats(matchId),
+        cBaseUrl: _baseUrl,
+      );
+      if (response['data'] != null) {
+        log("REPO getMatchStats => ${response['data']}");
+
+        return ApiResponse<MatchStats>(
+          model: MatchStats.fromJson(response),
+          code: 200,
+        );
+      }
+      return ApiResponse<MatchStats>(
+        model: MatchStats(),
+        code: 200,
+      );
+    } catch (e) {
+      _logger.e("getMatchStats => ${e.toString()}");
       return ApiResponse.withError(
         e.toString(),
         400,

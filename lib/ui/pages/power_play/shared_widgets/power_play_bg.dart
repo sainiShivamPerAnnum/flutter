@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class PowerPlayBackgroundUi extends StatelessWidget {
-  const PowerPlayBackgroundUi({Key? key, required this.child})
+  const PowerPlayBackgroundUi(
+      {Key? key, required this.child, this.floatingActionButton})
       : super(key: key);
 
   final Widget child;
+  final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class PowerPlayBackgroundUi extends StatelessWidget {
           child
         ],
       ),
+      floatingActionButton: floatingActionButton,
     );
   }
 }

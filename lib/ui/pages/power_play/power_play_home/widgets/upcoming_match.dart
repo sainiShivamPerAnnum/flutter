@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/view_model/power_play_view_model.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -71,18 +75,32 @@ class _UpcomingMatchState extends State<UpcomingMatch> {
                           child: Row(
                             children: [
                               Text(
-                                'IPL Match - 4',
+                                widget.model.upcomingMatchData?[index]
+                                        ?.matchTitle ??
+                                    'IPL MATCH',
                                 style: TextStyles.sourceSansB.body2
                                     .colour(Colors.white),
                               ),
                               const Spacer(),
-                              Text(
-                                getDate(index),
-                                style: TextStyles.sourceSans.body5
-                                    .colour(Colors.white.withOpacity(0.7))
-                                    .copyWith(
-                                        fontSize:
-                                            SizeConfig.screenWidth! * 0.030),
+                              GestureDetector(
+                                onTap: () {
+                                  AppState.delegate!.appState.currentAction =
+                                      PageAction(
+                                          widget: PredictionLeaderboard(
+                                              matchData: widget.model
+                                                  .upcomingMatchData![index]!,
+                                              status: MatchStatus.upcoming),
+                                          page: PowerPlayLeaderBoardConfig,
+                                          state: PageState.addWidget);
+                                },
+                                child: Text(
+                                  getDate(index),
+                                  style: TextStyles.sourceSans.body5
+                                      .colour(Colors.white.withOpacity(0.7))
+                                      .copyWith(
+                                          fontSize:
+                                              SizeConfig.screenWidth! * 0.030),
+                                ),
                               ),
                             ],
                           ),
@@ -132,10 +150,9 @@ class _UpcomingMatchState extends State<UpcomingMatch> {
                                   bottomLeft: Radius.circular(5),
                                   bottomRight: Radius.circular(5))),
                           child: Center(
-                            child: index == 0
-                                ? MatchTimer(
-                                    startTime: widget.model
-                                        .upcomingMatchData![index]!.startsAt!)
+                            child: index == 0 &&
+                                    widget.model.liveMatchData == null
+                                ? const TimerWidget()
                                 : Text(
                                     'Predictions start in ${getTime(index)}',
                                     style: TextStyles.sourceSans.copyWith(
@@ -157,55 +174,80 @@ class _UpcomingMatchState extends State<UpcomingMatch> {
   }
 }
 
-class MatchTimer extends StatefulWidget {
-  const MatchTimer({Key? key, required this.startTime}) : super(key: key);
-
-  final DateTime startTime;
+class TimerWidget extends StatefulWidget {
+  const TimerWidget({super.key});
 
   @override
-  State<MatchTimer> createState() => _MatchTimerState();
+  _TimerWidgetState createState() => _TimerWidgetState();
 }
 
-class _MatchTimerState extends State<MatchTimer> with TickerProviderStateMixin {
-  Timer? _timer;
-  int _start = 0;
+class _TimerWidgetState extends State<TimerWidget> {
+  final MyTimer _timer = MyTimer();
 
   @override
   void initState() {
     super.initState();
-    _start = widget.startTime.second;
-  }
-
-  void startTimer() {
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (timer) {
-        if (_start == 0) {
-          setState(() {
-            timer.cancel();
-          });
-        } else {
-          setState(() {
-            _start--;
-          });
-        }
-      },
-    );
+    DateTime timestamp = DateTime.parse('2023-04-04T14:00:00.000Z');
+    _timer.startTimer(timestamp);
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _timer.stopTimer();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'Predictions start in ${_start ~/ 3600} : ${(_start % 3600) ~/ 60} : ${_start % 60}',
-      style: TextStyles.sourceSans
-          .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+    return StreamBuilder<int>(
+      stream: _timer.timerStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          int secondsRemaining = snapshot.data!;
+          Duration duration = Duration(seconds: secondsRemaining);
+          String formattedTime = DateFormat('hh:mm').format(
+            DateTime(0, 0, 0, 0, 0, duration.inSeconds),
+          );
+          return Text(
+            'Time remaining: $formattedTime',
+            style: TextStyles.sourceSans
+                .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+          );
+        }
+        return SizedBox();
+      },
     );
+  }
+}
+
+class MyTimer {
+  int _secondsRemaining = 60;
+  Timer? _timer;
+  final StreamController<int> _timerController = StreamController<int>();
+
+  Stream<int> get timerStream => _timerController.stream;
+
+  void startTimer(DateTime timestamp) {
+    _secondsRemaining = timestamp.difference(DateTime.now()).inSeconds;
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_secondsRemaining > 0) {
+        _secondsRemaining--;
+        _timerController.sink.add(_secondsRemaining);
+      } else {
+        stopTimer();
+      }
+    });
+  }
+
+  void stopTimer() {
+    if (_timer != null) {
+      _timer!.cancel();
+      _timer = null;
+      _timerController.sink.addError('Timer stopped');
+    }
+  }
+
+  void dispose() {
+    _timerController.close();
   }
 }
