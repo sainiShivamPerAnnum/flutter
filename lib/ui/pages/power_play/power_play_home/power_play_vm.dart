@@ -147,6 +147,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
 
   Future<void> getAllMatched() async {
     setState(ViewState.Busy);
+    completedMatchData = null;
     await getMatchesByStatus(MatchStatus.active.name, 0, 0);
     await getMatchesByStatus(MatchStatus.upcoming.name, 0, 0);
     await getMatchesByStatus(MatchStatus.completed.name, 0, 0);
@@ -157,10 +158,9 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     final res =
         await _powerPlayService.getMatchesByStatus(status, limit, offset);
 
-    if (liveMatchData!.isEmpty && status == MatchStatus.active.name) {
+    if (status == MatchStatus.active.name) {
       liveMatchData = res;
-    } else if (upcomingMatchData!.isEmpty &&
-        status == MatchStatus.upcoming.name) {
+    } else if (status == MatchStatus.upcoming.name) {
       upcomingMatchData = res;
     } else if (status == MatchStatus.completed.name) {
       if (completedMatchData == null) {
@@ -220,7 +220,9 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   void predict() async {
     isPredictionInProgress = true;
     await getMatchesByStatus(MatchStatus.active.name, 0, 0);
+
     await getMatchesByStatus(MatchStatus.upcoming.name, 0, 0);
+    print(liveMatchData![0]!.status);
     if (liveMatchData!.isEmpty) {
       BaseUtil.showNegativeAlert("No live matches at the moment",
           "come again tomorrow to make more predictions");
