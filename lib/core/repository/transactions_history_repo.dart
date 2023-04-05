@@ -109,9 +109,9 @@ class TransactionHistoryRepository extends BaseRepo {
         events.add(UserTransaction.fromMap(e, e["id"]));
       });
 
-      final bool isLastPage = responseData["isLastPage"] ?? false;
+      // final bool isLastPage = responseData["isLastPage"] ?? false;
       final TransactionResponse txnResponse =
-          TransactionResponse(isLastPage: isLastPage, transactions: events);
+          TransactionResponse(isLastPage: true, transactions: events);
 
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {

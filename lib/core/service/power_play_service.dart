@@ -120,10 +120,11 @@ class PowerPlayService extends ChangeNotifier {
     MatchData matchData,
   ) async {
     _logger.i("PowerPlayService -> getTransactionHistory");
-    var startTime;
-    var endTime;
+    TimestampModel? startTime;
+    TimestampModel? endTime;
 
-    if (matchData.status == MatchStatus.active.name) {
+    if (matchData.status == MatchStatus.active.name ||
+        matchData.status == MatchStatus.half_complete.name) {
       startTime = matchData.startsAt;
       endTime = TimestampModel.currentTimeStamp();
     } else if (matchData.status == MatchStatus.completed.name) {
