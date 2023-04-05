@@ -220,7 +220,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     }
   }
 
-  void predict() async {
+  Future<void> predict() async {
     isPredictionInProgress = true;
     await getMatchesByStatus(MatchStatus.active.name, 0, 0);
 

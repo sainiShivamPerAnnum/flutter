@@ -129,7 +129,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                             Container(
                               margin: EdgeInsets.only(
                                   left: SizeConfig.pageHorizontalMargins),
-                              height: SizeConfig.screenWidth! * 0.35,
+                              height: SizeConfig.screenWidth! * 0.28,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: model.cardCarousel?.length,
