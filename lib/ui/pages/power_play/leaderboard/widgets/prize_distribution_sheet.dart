@@ -124,18 +124,11 @@ class PrizeDistributionSheet extends StatelessWidget {
                       ),
                       // const Spacer(),
                       Flexible(
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/svg/digital_gold.svg',
-                              height: 25,
-                            ),
-                            Flexible(
-                              child: Text(rewardDesc1,
-                                  style: TextStyles.sourceSans.body4
-                                      .colour(Colors.white)),
-                            ),
-                          ],
+                        child: Text(
+                          rewardDesc1,
+                          style:
+                              TextStyles.sourceSans.body4.colour(Colors.white),
+                          textAlign: TextAlign.end,
                         ),
                       ),
                     ],

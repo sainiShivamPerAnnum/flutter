@@ -4,6 +4,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_user_predicted_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
+import 'package:felloapp/core/model/power_play_models/power_play_reward_model.dart';
 import 'package:felloapp/core/model/power_play_models/season_leaderboard_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -113,6 +114,31 @@ class PowerPlayRepository extends BaseRepo {
       }
       return ApiResponse<List<SeasonLeaderboardItemModel>>(
         model: winners,
+        code: 200,
+      );
+    } catch (e) {
+      _logger.e("getMatchesByStatus => ${e.toString()}");
+      return ApiResponse.withError(
+        e.toString(),
+        400,
+      );
+    }
+  }
+
+  Future<ApiResponse<PowerPlayReward>> getPowerPlayReward() async {
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath.powerPlayReward,
+        cBaseUrl: _baseUrl,
+      );
+      if (response['data'] != null) {
+        return ApiResponse<PowerPlayReward>(
+          model: PowerPlayReward.fromJson(response),
+          code: 200,
+        );
+      }
+      return ApiResponse<PowerPlayReward>(
+        model: PowerPlayReward(),
         code: 200,
       );
     } catch (e) {

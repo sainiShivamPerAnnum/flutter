@@ -6,6 +6,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_video_player.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -47,18 +48,18 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         width: SizeConfig.screenWidth! * 0.7,
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
+                     SizedBox(
+                      height: SizeConfig.padding16,
                     ),
-                    Center(
-                      child: Text(
-                        "Invest your Predictions",
-                        style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    // Center(
+                    //   child: Text(
+                    //     "Invest your Predictions",
+                    //     style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                    //   ),
+                    // ),
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
                     Container(
                       height: SizeConfig.screenHeight! * 0.4,
                       decoration: BoxDecoration(
@@ -68,7 +69,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                       child: TambolaVideoPlayer(link: videoUrl),
                     ),
                     SizedBox(
-                      height: SizeConfig.padding28,
+                      height: SizeConfig.padding16,
                     ),
                     Center(
                       child: Text(
@@ -77,7 +78,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: SizeConfig.padding20,
+                      height: SizeConfig.padding16,
                     ),
                     Column(
                       children: [
@@ -250,6 +251,9 @@ class PowerPlayWelcomePage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   color: Colors.white,
                   onPressed: () {
+                    PreferenceHelper.setBool(
+                        PreferenceHelper.POWERPLAY_IS_PLAYED, true);
+
                     AppState.delegate!.appState.currentAction = PageAction(
                         state: PageState.replace, page: PowerPlayHomeConfig);
                   },

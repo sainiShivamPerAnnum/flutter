@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -10,6 +9,7 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -19,7 +19,6 @@ import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribut
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/support/faq/faq_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -29,6 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class PredictionLeaderboard extends StatelessWidget {
   const PredictionLeaderboard({Key? key, required this.matchData})
@@ -60,43 +60,42 @@ class PredictionLeaderboard extends StatelessWidget {
                     backgroundColor: Colors.transparent,
                     action: Row(
                       children: [
-                        InkWell(
-                          onTap: () {
-                            Haptic.vibrate();
-                            AppState.delegate!.appState.currentAction =
-                                PageAction(
-                              state: PageState.addWidget,
-                              page: FaqPageConfig,
-                              widget: const FAQPage(
-                                type: FaqsType.journey,
-                              ),
-                            );
-                          },
-                          child: Container(
-                              key: const ValueKey(Constants.HELP_FAB),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding12,
-                                  vertical: SizeConfig.padding6),
-                              height: SizeConfig.avatarRadius * 2,
-                              decoration: BoxDecoration(
-                                color: UiConstants.kTextFieldColor
-                                    .withOpacity(0.4),
-                                border: Border.all(color: Colors.white10),
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness12),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                // mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Invite Friends',
-                                    style: TextStyles.body4
-                                        .colour(UiConstants.kTextColor),
-                                  ),
-                                ],
-                              )),
-                        )
+                        Consumer<ReferralService>(
+                            builder: (context, model, child) {
+                          return InkWell(
+                            onTap: () {
+                              Haptic.vibrate();
+                              if (model.isShareAlreadyClicked == false) {
+                                Haptic.vibrate();
+                                model.shareLink();
+                              }
+                            },
+                            child: Container(
+                                key: const ValueKey(Constants.HELP_FAB),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding12,
+                                    vertical: SizeConfig.padding6),
+                                height: SizeConfig.avatarRadius * 2,
+                                decoration: BoxDecoration(
+                                  color: UiConstants.kTextFieldColor
+                                      .withOpacity(0.4),
+                                  border: Border.all(color: Colors.white10),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Invite Friends',
+                                      style: TextStyles.body4
+                                          .colour(UiConstants.kTextColor),
+                                    ),
+                                  ],
+                                )),
+                          );
+                        })
                       ],
                     ),
                   ),
@@ -126,10 +125,21 @@ class PredictionLeaderboard extends StatelessWidget {
                             const SizedBox(
                               height: 20,
                             ),
-                            Text(
-                              matchData.headsUpText ?? '',
-                              style: TextStyles.sourceSans.body4
-                                  .colour(Colors.white),
+                            // Text(
+                            //   matchData.headsUpText ?? '',
+                            //   style: TextStyles.sourceSans.body4
+                            //       .colour(Colors.white),
+                            // ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset('assets/svg/bell_icon.svg'),
+                                Text(
+                                  matchData.headsUpText ?? '',
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(Colors.white),
+                                ),
+                              ],
                             ),
                             const SizedBox(
                               height: 20,
@@ -348,19 +358,27 @@ class PredictionLeaderboard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     color: Colors.white,
                     onPressed: () {
-                      BaseUtil.openModalBottomSheet(
-                          isBarrierDismissible: true,
-                          addToScreenStack: true,
-                          backgroundColor: const Color(0xff21284A),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.roundness32),
-                            topRight: Radius.circular(SizeConfig.roundness32),
-                          ),
-                          isScrollControlled: true,
-                          hapticVibrate: true,
-                          content: MakePredictionSheet(
-                            matchData: matchData,
-                          ));
+                      while (AppState.screenStack.length > 2) {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                      }
+                      AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.replace,
+                        page: PowerPlayHomeConfig,
+                      );
+
+                      // BaseUtil.openModalBottomSheet(
+                      //     isBarrierDismissible: true,
+                      //     addToScreenStack: true,
+                      //     backgroundColor: const Color(0xff21284A),
+                      //     borderRadius: BorderRadius.only(
+                      //       topLeft: Radius.circular(SizeConfig.roundness32),
+                      //       topRight: Radius.circular(SizeConfig.roundness32),
+                      //     ),
+                      //     isScrollControlled: true,
+                      //     hapticVibrate: true,
+                      //     content: MakePredictionSheet(
+                      //       matchData: matchData,
+                      //     ));
                     },
                     child: Center(
                       child: Text(
@@ -460,6 +478,18 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
     _textController = TextEditingController();
     // _formKey = GlobalKey<FormState>();
     PowerPlayService.powerPlayDepositFlow = false;
+  }
+
+  String? _validateValue(String? value) {
+    if (value != null && int.tryParse(value) != null) {
+      int intValue = int.parse(value);
+      if (intValue < 10) {
+        return 'Enter valid prediction';
+      }
+    } else {
+      return 'Please enter your prediction';
+    }
+    return null;
   }
 
   @override
@@ -570,13 +600,16 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
                 subtitle: 'Make as many predictions as you can, to win',
                 amount: int.tryParse(_textController.text),
               ),
-              validator: (value) {
-                if (value != null && value.trim().isNotEmpty) {
-                  return null;
-                } else {
-                  return 'Please enter your prediction';
-                }
-              },
+              validator: _validateValue,
+              // validator: (value) {
+              //   if (value != null && value.trim().isNotEmpty) {
+              //     return null;
+              //   } else if ( (int.tryParse(value ?? "0") ?? 0) <= 10) {
+              //     return 'Enter valid prediction';
+              //   } else {
+              //     return 'Please enter your prediction';
+              //   }
+              // },
             ),
           ),
           SizedBox(
@@ -609,6 +642,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
             color: Colors.white,
             onPressed: () {
               if (_formKey.currentState!.validate() == false) return;
+
               PowerPlayService.powerPlayDepositFlow = true;
               AppState.backButtonDispatcher!.didPopRoute();
 
@@ -842,34 +876,40 @@ class YourPredictionSheet extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 color: Colors.white,
                 onPressed: () {
+                  while (AppState.screenStack.length > 2) {
                   AppState.backButtonDispatcher!.didPopRoute();
+                }
+                AppState.delegate!.appState.currentAction = PageAction(
+                  state: PageState.replace,
+                  page: PowerPlayHomeConfig,
+                );
 
-                  BaseUtil.openModalBottomSheet(
-                      isBarrierDismissible: true,
-                      addToScreenStack: true,
-                      backgroundColor: const Color(0xff21284A),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.roundness32),
-                        topRight: Radius.circular(SizeConfig.roundness32),
-                      ),
-                      isScrollControlled: true,
-                      hapticVibrate: true,
-                      content: MakePredictionSheet(
-                        matchData: matchData,
-                      ));
-                },
-                child: Center(
-                  child: Text(
-                    'PREDICT NOW',
-                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                  ),
+                  // BaseUtil.openModalBottomSheet(
+                //     isBarrierDismissible: true,
+                //     addToScreenStack: true,
+                //     backgroundColor: const Color(0xff21284A),
+                //     borderRadius: BorderRadius.only(
+                //       topLeft: Radius.circular(SizeConfig.roundness32),
+                //       topRight: Radius.circular(SizeConfig.roundness32),
+                //     ),
+                //     isScrollControlled: true,
+                //     hapticVibrate: true,
+                //     content: MakePredictionSheet(
+                //       matchData: matchData,
+                //     ));
+              },
+              child: Center(
+                child: Text(
+                  'PREDICT NOW',
+                  style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                 ),
               ),
-              SizedBox(
-                height: SizeConfig.padding20,
-              ),
-            ],
-          )),
+            ),
+            SizedBox(
+              height: SizeConfig.padding20,
+            ),
+          ],
+        )),
     );
   }
 }

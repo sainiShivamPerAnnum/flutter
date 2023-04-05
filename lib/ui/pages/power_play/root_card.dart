@@ -39,7 +39,7 @@ class PowerPlayCard extends StatelessWidget {
             page: PowerPlayFTUXPageConfig,
           );
 
-          PreferenceHelper.setBool(PreferenceHelper.POWERPLAY_IS_PLAYED, true);
+          // PreferenceHelper.setBool(PreferenceHelper.POWERPLAY_IS_PLAYED, true);
         }
       },
       child: Container(

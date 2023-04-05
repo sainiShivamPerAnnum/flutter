@@ -44,6 +44,14 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   bool hasNoMoreCompletedMatches = false;
   List<dynamic>? cardCarousel;
 
+  int _powerPlayReward = 0;
+
+  int get powerPlayReward => _powerPlayReward;
+
+  set powerPlayReward(int value) {
+    _powerPlayReward = value;
+  }
+
   bool _isPredictionsLoading = false;
 
   bool get isPredictionsLoading => _isPredictionsLoading;
@@ -106,10 +114,21 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     getCardCarousle();
     scrollController = ScrollController();
     await getMatchesByStatus(MatchStatus.active.name, 0, 0);
+    powerPlayReward = await _powerPlayService.getPowerPlayRewards();
+
     if (liveMatchData!.isNotEmpty) {
       liveMatchData = liveMatchData;
       matchData = liveMatchData![0]!;
     }
+
+    if ((liveMatchData == null || (liveMatchData?.isEmpty ?? true)) && isLive) {
+      Future.delayed(const Duration(milliseconds: 200), () {
+        tabController?.animateTo(1);
+        handleTabSwitch(1);
+        isLive = false;
+      });
+    }
+
     getUserPredictionCount();
     setState(ViewState.Idle);
     scrollController!.addListener(() async {
@@ -124,6 +143,14 @@ class PowerPlayHomeViewModel extends BaseViewModel {
         isLoadingMoreCompletedMatches = false;
       }
     });
+  }
+
+  Future<void> getAllMatched() async {
+    setState(ViewState.Busy);
+    await getMatchesByStatus(MatchStatus.active.name, 0, 0);
+    await getMatchesByStatus(MatchStatus.upcoming.name, 0, 0);
+    await getMatchesByStatus(MatchStatus.completed.name, 0, 0);
+    setState(ViewState.Idle);
   }
 
   Future<void> getMatchesByStatus(String status, int limit, int offset) async {

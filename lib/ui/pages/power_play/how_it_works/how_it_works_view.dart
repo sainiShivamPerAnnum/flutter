@@ -1,9 +1,6 @@
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
@@ -388,35 +385,6 @@ class HowItWorks extends StatelessWidget {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-              width: SizeConfig.screenWidth,
-              child: MaterialButton(
-                onPressed: () {
-                  while (AppState.screenStack.length > 2) {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  }
-                  AppState.delegate!.appState.currentAction = PageAction(
-                    state: PageState.replace,
-                    page: PowerPlayHomeConfig,
-                  );
-                },
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Text(
-                    'Predict Now'.toUpperCase(),
-                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                  ),
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );
