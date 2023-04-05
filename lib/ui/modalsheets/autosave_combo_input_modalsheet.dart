@@ -220,6 +220,7 @@ class _AutosaveComboInputFieldsModalSheetState
                     "Please reduce the investing amount and try again");
               if (formKey.currentState!.validate()) {
                 createCombo();
+                widget.model.isComboSelected = false;
                 widget.model.totalInvestingAmount = totalSipAmount;
                 widget.model.deselectOtherComboIfAny(notify: true);
                 AppState.backButtonDispatcher!.didPopRoute();
@@ -245,6 +246,7 @@ class _AutosaveComboInputFieldsModalSheetState
         LENDBOXP2P: int.tryParse(_floController.text)!,
         icon: "",
         isSelected: true);
+    widget.model.trackAutosaveCustomComboSubmit();
   }
 }
 

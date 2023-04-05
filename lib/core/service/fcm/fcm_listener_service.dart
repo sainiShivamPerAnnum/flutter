@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:apxor_flutter/apxor_flutter.dart';
@@ -74,7 +76,7 @@ class FcmListener {
           _handler!.handleMessage(message.data, MsgSource.Foreground);
         } else if (notification != null) {
           logger!.d(
-              "Handle Notification: ${notification.title} ${notification.body} ");
+              "Handle Notification: ${notification.title} ${notification.body}");
           _handler.handleNotification(notification.title, notification.body);
         }
       });
@@ -207,10 +209,10 @@ class FcmListener {
     try {
       if (val) {
         await addSubscription(FcmTopic.TAMBOLAPLAYER);
-        print("subscription added");
+        log("subscription added");
       } else {
         await removeSubscription(FcmTopic.TAMBOLAPLAYER);
-        print("subscription removed");
+        log("subscription removed");
       }
       //_baseUtil.toggleTambolaNotificationStatus(val);
       return true;
@@ -220,12 +222,79 @@ class FcmListener {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Changing Tambola Notification Status failed'
         };
-        _internalOpsService!.logFailure(_userService!.baseUser!.uid,
-            FailType.TambolaDrawNotificationSettingFailed, errorDetails);
+        unawaited(_internalOpsService!.logFailure(_userService!.baseUser!.uid,
+            FailType.TambolaDrawNotificationSettingFailed, errorDetails));
       }
       BaseUtil.showNegativeAlert(
           locale.obSomeThingWentWrong, locale.obPleaseTryAgain);
       return false;
     }
+  }
+
+  Future<void> refreshTopics() async {
+    /**
+   * save the day as iso8601String in cache and whenever app opens, 
+   * check if user has opened on the same day or different day
+   * if(same day) and exit the method
+   * if(different day of empty) update segment and update cache too
+   */
+    final String lastAppOpenTimeStamp =
+        PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_APP_OPEN);
+    if (lastAppOpenTimeStamp.isEmpty) {
+      //first time open
+      await _updateFcmTopics();
+    } else if (DateTime.parse(lastAppOpenTimeStamp).day != DateTime.now().day) {
+      //new day
+      await _updateFcmTopics();
+    }
+    //else :same day open. return
+  }
+
+  Future<void> _updateFcmTopics() async {
+    //Check for last updated segments if any
+    final List<String> cachedSegments =
+        PreferenceHelper.getStringList(PreferenceHelper.CACHE_SEGMENTS);
+    //Get updated segments from baseuser
+    final List<String> updatedSegments =
+        _userService!.baseUser!.segments.cast<String>();
+    if (cachedSegments.isEmpty) {
+      //first time, add all segments
+      for (final segment in updatedSegments) {
+        log("Subscribed to $segment");
+        await _fcm?.subscribeToTopic(segment);
+      }
+    } else {
+      //update segments
+      //Next add new segments if there are any
+      final List<String> updatedSegments =
+          _userService!.baseUser!.segments.cast<String>();
+      for (final segment in updatedSegments) {
+        if (!cachedSegments.contains(segment)) {
+          log("Subscribed to $segment");
+          await _fcm!.subscribeToTopic(segment);
+        }
+      }
+
+      //First remove old segments if they are no more part of
+      for (final segment in cachedSegments) {
+        if (!updatedSegments.contains(segment)) {
+          log("unsubscribed to $segment");
+          await _fcm!.unsubscribeFromTopic(segment);
+        }
+      }
+    }
+    await _fcm?.subscribeToTopic("ALL");
+    unawaited(
+      PreferenceHelper.setString(
+        PreferenceHelper.CACHE_LAST_APP_OPEN,
+        DateTime.now().toIso8601String(),
+      ),
+    );
+    unawaited(
+      PreferenceHelper.setStringList(
+        PreferenceHelper.CACHE_SEGMENTS,
+        updatedSegments,
+      ),
+    );
   }
 }

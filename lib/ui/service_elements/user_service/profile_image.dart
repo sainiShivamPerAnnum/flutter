@@ -14,7 +14,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class ProfileImageSE extends StatelessWidget {
   final double? radius;
   final bool reactive;
-  const ProfileImageSE({super.key, this.radius, this.reactive = true});
+  ProfileImageSE({this.radius, this.reactive = true});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class ProfileImageSE extends StatelessWidget {
     // Listener
 
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: const [
+      properties: [
         UserServiceProperties.myUserDpUrl,
         UserServiceProperties.myAvatarId
       ],
@@ -33,7 +33,7 @@ class ProfileImageSE extends StatelessWidget {
         return GestureDetector(
           onTap: reactive ? () => _baseUtil!.openProfileDetailsScreen() : () {},
           child: CircleAvatar(
-            key: const ValueKey(Constants.PROFILE),
+            key: ValueKey(Constants.PROFILE),
             radius: radius ?? SizeConfig.avatarRadius,
             backgroundColor: Colors.black,
             child: model!.avatarId != null && model.avatarId != 'CUSTOM'
@@ -41,7 +41,7 @@ class ProfileImageSE extends StatelessWidget {
                     "assets/vectors/userAvatars/${model.avatarId}.svg",
                     fit: BoxFit.cover,
                   )
-                : const SizedBox(),
+                : SizedBox(),
             backgroundImage: (model.avatarId != null &&
                     model.avatarId == 'CUSTOM' &&
                     model.myUserDpUrl != null &&
@@ -49,7 +49,7 @@ class ProfileImageSE extends StatelessWidget {
                 ? CachedNetworkImageProvider(
                     model.myUserDpUrl!,
                   )
-                : const AssetImage(
+                : AssetImage(
                     Assets.profilePic,
                   ) as ImageProvider<Object>?,
           ),

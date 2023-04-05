@@ -22,8 +22,6 @@ enum AppConfigKey {
   app_share_message,
   unlock_referral_amt,
   unknown,
-  powerplayConfig,
-  predictScreen,
 }
 
 extension AppConfigKeys on String {
@@ -71,12 +69,6 @@ extension AppConfigKeys on String {
 
       case 'game_tambola_announcement':
         return AppConfigKey.game_tambola_announcement;
-
-      case 'powerplayConfig':
-        return AppConfigKey.powerplayConfig;
-
-      case 'predictScreen':
-        return AppConfigKey.predictScreen;
       default:
         return AppConfigKey.unknown;
     }

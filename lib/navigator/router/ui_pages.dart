@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, constant_identifier_names
+// ignore_for_file: non_constant_identifier_names
 
 import 'package:felloapp/navigator/app_state.dart';
 
@@ -80,14 +80,6 @@ const String TNewUserViewPath = '/tnewUserViewPath';
 const String TransactionDetailsPath = '/transactionDetailsPage';
 const String AssetViewPath = '/assetViewSection';
 
-//POWER PLAY PATHS
-const String PowerPlayPath = '/powerPlayPath';
-const String PowerPlayLeaderBoardPath = '/powerPlayLeaderBoardPath';
-const String PowerPlayHowItWorksPath = '/powerPlayHowItWorksPath';
-const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
-const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
-const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
-
 enum Pages {
   Splash,
   Login,
@@ -163,15 +155,7 @@ enum Pages {
   InfoStoriesView,
   WebView,
   SettingsView,
-  TransactionDetailsPage,
-
-  //POWER PLAY
-  PowerPlayHome,
-  PowerPlayLeaderBoard,
-  PowerPlayHowItWorks,
-  FppCompletedMatchDetails,
-  PowerPlayFTUX,
-  PowerPlaySeasonLeaderboard,
+  TransactionDetailsPage
 }
 
 class PageConfiguration {
@@ -693,40 +677,3 @@ PageConfiguration SettingsViewPageConfig = PageConfiguration(
     path: SettingsScreenPath,
     uiPage: Pages.SettingsView,
     name: "Settings Screen");
-
-//POWER PLAY
-PageConfiguration PowerPlayHomeConfig = PageConfiguration(
-    key: 'PowerPlayPath',
-    path: PowerPlayPath,
-    uiPage: Pages.PowerPlayHome,
-    name: "PowerPlay Home Screen");
-
-PageConfiguration PowerPlayLeaderBoardConfig = PageConfiguration(
-    key: 'PowerPlayLeaderBoardPath',
-    path: PowerPlayLeaderBoardPath,
-    uiPage: Pages.PowerPlayLeaderBoard,
-    name: "PowerPlay LeaderBoard Screen");
-
-PageConfiguration PowerPlayHowItWorksConfig = PageConfiguration(
-    key: 'PowerPlayHowItWorksPath',
-    path: PowerPlayHowItWorksPath,
-    uiPage: Pages.PowerPlayHowItWorks,
-    name: "PowerPlay HowItWorks Screen");
-
-PageConfiguration FppCompletedMatchDetailsConfig = PageConfiguration(
-    key: 'FppCompletedMatchDetailsPath',
-    path: FppCompletedMatchDetailsPath,
-    uiPage: Pages.FppCompletedMatchDetails,
-    name: "PowerPlay Completed Match Details Screen");
-
-PageConfiguration PowerPlayFTUXPageConfig = PageConfiguration(
-    key: 'powerPlayFTUXPath',
-    path: PowerPlayFTUXPath,
-    uiPage: Pages.PowerPlayFTUX,
-    name: "PowerPlay FTUX Screen");
-
-PageConfiguration PowerPlaySeasonLeaderboardDetailsConfig = PageConfiguration(
-    key: 'PowerPlaySeasonLeaderboardDetailsPath',
-    path: PowerPlaySeasonLeaderboardPath,
-    uiPage: Pages.PowerPlaySeasonLeaderboard,
-    name: "PowerPlay Season Leaderboard Screen");
