@@ -29,6 +29,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   final List<String> _tabs = ["Live", "Upcoming", "Completed"];
   List<MatchData?>? _liveMatchData = [];
   List<MatchData?>? _upcomingMatchData = [];
+
   List<MatchData>? _completedMatchData;
   List<UserTransaction>? predictions = [];
   bool _isPredictionInProgress = false;
@@ -233,7 +234,8 @@ class PowerPlayHomeViewModel extends BaseViewModel {
         liveMatchData![0]!.status == MatchStatus.half_complete.name) {
       BaseUtil.showNegativeAlert("Predictions are over", "Try again tomorrow");
     } else {
-      unawaited(BaseUtil.openModalBottomSheet(
+      unawaited(
+        BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,
           backgroundColor: const Color(0xff21284A),
@@ -245,7 +247,9 @@ class PowerPlayHomeViewModel extends BaseViewModel {
           hapticVibrate: true,
           content: MakePredictionSheet(
             matchData: liveMatchData![0]!,
-          )));
+          ),
+        ),
+      );
     }
     isPredictionInProgress = false;
   }

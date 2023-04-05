@@ -351,35 +351,23 @@ class PredictionLeaderboard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5)),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     color: Colors.white,
-                    onPressed: () {
-                      while (AppState.screenStack.length > 1) {
-                        AppState.backButtonDispatcher!.didPopRoute();
-                      }
-                      AppState.delegate!.appState.currentAction = PageAction(
-                        state: PageState.replace,
-                        page: PowerPlayHomeConfig,
-                      );
-
-                      // BaseUtil.openModalBottomSheet(
-                      //     isBarrierDismissible: true,
-                      //     addToScreenStack: true,
-                      //     backgroundColor: const Color(0xff21284A),
-                      //     borderRadius: BorderRadius.only(
-                      //       topLeft: Radius.circular(SizeConfig.roundness32),
-                      //       topRight: Radius.circular(SizeConfig.roundness32),
-                      //     ),
-                      //     isScrollControlled: true,
-                      //     hapticVibrate: true,
-                      //     content: MakePredictionSheet(
-                      //       matchData: matchData,
-                      //     ));
-                    },
-                    child: Center(
-                      child: Text(
-                        'PREDICT NOW',
-                        style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                      ),
-                    ),
+                    onPressed: model.predict,
+                    child: model.isPredictionInProgress
+                        ? SizedBox(
+                            height: SizeConfig.padding20,
+                            width: SizeConfig.padding20,
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 1,
+                              color: Colors.black,
+                            ),
+                          )
+                        : Center(
+                            child: Text(
+                              'PREDICT NOW',
+                              style: TextStyles.rajdhaniB.body1
+                                  .colour(Colors.black),
+                            ),
+                          ),
                   ),
                 ),
               )
@@ -856,30 +844,6 @@ class YourPredictionSheet extends StatelessWidget {
                         ),
                       ],
                     ),
-              const SizedBox(
-                height: 10,
-              ),
-              MaterialButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                color: Colors.white,
-                onPressed: () {
-                  while (AppState.screenStack.length > 1) {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  }
-                  AppState.delegate!.appState.currentAction = PageAction(
-                    state: PageState.replace,
-                    page: PowerPlayHomeConfig,
-                  );
-                },
-                child: Center(
-                  child: Text(
-                    'PREDICT NOW',
-                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                  ),
-                ),
-              ),
               SizedBox(
                 height: SizeConfig.padding20,
               ),
