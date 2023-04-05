@@ -82,13 +82,19 @@ class TransactionHistoryRepository extends BaseRepo {
   }) async {
     List<UserTransaction> events = [];
     try {
+      print(endTime!.toDate().toUtc().toIso8601String());
+      print(startTime!.toDate().toUtc().toIso8601String());
       final String? _uid = userService!.baseUser!.uid;
       final _token = await getBearerToken();
       final _queryParams = {
         "type": type,
         "status": status,
-        "endTime": endTime!.toDate().toIso8601String(),
-        "startTime": startTime!.toDate().toIso8601String(),
+        "endTime": endTime!
+            .toDate()
+            .subtract(Duration(hours: 2))
+            .toUtc()
+            .toIso8601String(),
+        "startTime": startTime!.toDate().toUtc().toIso8601String(),
       };
       final response = await APIService.instance.getData(
         ApiPath.kSingleTransactions(_uid),
@@ -103,9 +109,9 @@ class TransactionHistoryRepository extends BaseRepo {
         events.add(UserTransaction.fromMap(e, e["id"]));
       });
 
-      final bool isLastPage = responseData["isLastPage"] ?? false;
+      // final bool isLastPage = responseData["isLastPage"] ?? false;
       final TransactionResponse txnResponse =
-          TransactionResponse(isLastPage: isLastPage, transactions: events);
+          TransactionResponse(isLastPage: true, transactions: events);
 
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {

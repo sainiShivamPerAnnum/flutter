@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_user_predicted_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/power_play_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
@@ -21,7 +22,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-enum MatchStatus { active, upcoming, completed }
+enum MatchStatus { active, upcoming, completed, half_complete }
 
 class PowerPlayService extends ChangeNotifier {
   final CustomLogger _logger = locator<CustomLogger>();
@@ -118,12 +119,13 @@ class PowerPlayService extends ChangeNotifier {
     MatchData matchData,
   ) async {
     _logger.i("PowerPlayService -> getTransactionHistory");
-    var startTime;
-    var endTime;
+    TimestampModel? startTime;
+    TimestampModel? endTime;
 
-    if (matchData.status == MatchStatus.active.name) {
+    if (matchData.status == MatchStatus.active.name ||
+        matchData.status == MatchStatus.half_complete.name) {
       startTime = matchData.startsAt;
-      endTime = DateTime.now();
+      endTime = TimestampModel.currentTimeStamp();
     } else if (matchData.status == MatchStatus.completed.name) {
       startTime = matchData.startsAt;
       endTime = matchData.endsAt;
