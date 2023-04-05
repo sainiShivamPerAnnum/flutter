@@ -137,11 +137,16 @@ class UpcomingMatch extends StatelessWidget {
                                       bottomLeft: Radius.circular(5),
                                       bottomRight: Radius.circular(5))),
                               child: Center(
-                                child: index == 0
+                                child: model.upcomingMatchData![index]!
+                                            .startsAt!
+                                            .toDate()
+                                            .day ==
+                                        DateTime.now().day
                                     ? CountdownTimerWidget(
                                         model: model,
                                         endTime: model
-                                            .upcomingMatchData![0]!.startsAt!)
+                                            .upcomingMatchData![index]!
+                                            .startsAt!)
                                     : Text(
                                         'Predictions start on ${getDate(index)}',
                                         style: TextStyles.sourceSans.body3
@@ -200,6 +205,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
         _timeRemaining = _timeRemaining! - 1000;
         if (_timeRemaining! <= 0) {
           widget.model.getMatchesByStatus(MatchStatus.active.name, 10, 0);
+          widget.model.getMatchesByStatus(MatchStatus.upcoming.name, 10, 0);
           widget.model.tabController!.animateTo(0);
 
           _timer!.cancel();

@@ -34,15 +34,6 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
 
   @override
   Widget build(BuildContext context) {
-    if ((widget.model.liveMatchData == null ||
-            (widget.model.liveMatchData?.isEmpty ?? true)) &&
-        widget.model.isLive) {
-      Future.delayed(const Duration(milliseconds: 200), () {
-        widget.model.tabController?.animateTo(1);
-        widget.model.handleTabSwitch(1);
-        widget.model.isLive = false;
-      });
-    }
 
     return (widget.model.state == ViewState.Busy && widget.model.isLive)
         ? const Center(child: CircularProgressIndicator())

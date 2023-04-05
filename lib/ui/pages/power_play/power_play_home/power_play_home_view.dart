@@ -33,7 +33,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
       builder: (context, model, child) {
         return RefreshIndicator(
           onRefresh: () async {
-            await Future.delayed(const Duration(seconds: 4), () {});
+            await model.getAllMatched();
           },
           child: PowerPlayBackgroundUi(
             child: Stack(
@@ -107,27 +107,32 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                             const SizedBox(
                               height: 10,
                             ),
-                            Center(
-                              child: Container(
-                                // height: 43,
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 50),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding16,
-                                    vertical: SizeConfig.padding8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.black.withOpacity(0.5),
-                                ),
-                                child: Text(
-                                  'Total Won From PowerPlay : ₹100',
-                                  style: TextStyles.sourceSansSB.body3,
+
+                            /// TODO:get value from backend value
+                            if (false) ...[
+                              Center(
+                                child: Container(
+                                  // height: 43,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 50),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig.padding16,
+                                      vertical: SizeConfig.padding8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.black.withOpacity(0.5),
+                                  ),
+                                  child: Text(
+                                    'Total Won From PowerPlay : ₹100',
+                                    style: TextStyles.sourceSansSB.body3,
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 14,
-                            ),
+                              const SizedBox(
+                                height: 14,
+                              ),
+                            ],
+
                             Container(
                               margin: EdgeInsets.only(
                                   left: SizeConfig.pageHorizontalMargins),
@@ -152,11 +157,13 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                     child: Container(
                                       margin: EdgeInsets.only(
                                           right: SizeConfig.padding12),
-                                      height: 105,
-                                      width: 275,
-                                      child: SvgPicture.network(model
-                                              .cardCarousel?[index]['imgUrl'] ??
-                                          ''),
+                                      // height: SizeConfig.screenHeight! * 0.35,
+                                      // width: 275,
+                                      child: SvgPicture.network(
+                                        model.cardCarousel?[index]['imgUrl'] ??
+                                            '',
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   );
                                 },

@@ -51,22 +51,22 @@ class PowerPlayWelcomePage extends StatelessWidget {
                       Center(
                         child: SvgPicture.network(
                           'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo-lg.svg',
-                          height: 70,
+                          height: SizeConfig.padding54,
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
+                      SizedBox(
+                        height: SizeConfig.padding16,
                       ),
-                      Center(
-                        child: Text(
-                          "Invest your Predictions",
-                          style:
-                          TextStyles.rajdhaniSB.body1.colour(Colors.white),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      // Center(
+                      //   child: Text(
+                      //     "Invest your Predictions",
+                      //     style:
+                      //         TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                      //   ),
+                      // ),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
                       Container(
                         height: SizeConfig.screenHeight! * 0.4,
                         decoration: BoxDecoration(
@@ -76,17 +76,17 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         child: TambolaVideoPlayer(link: videoUrl),
                       ),
                       SizedBox(
-                        height: SizeConfig.padding28,
+                        height: SizeConfig.padding16,
                       ),
                       Center(
                         child: Text(
                           "How it Works?",
                           style:
-                          TextStyles.sourceSans.body0.colour(Colors.white),
+                              TextStyles.sourceSans.body0.colour(Colors.white),
                         ),
                       ),
                       SizedBox(
-                        height: SizeConfig.padding20,
+                        height: SizeConfig.padding16,
                       ),
                       Column(
                         children: [

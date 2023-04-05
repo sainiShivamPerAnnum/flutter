@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widg
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LiveMatch extends StatelessWidget {
   const LiveMatch({
@@ -59,19 +60,24 @@ class LiveMatch extends StatelessWidget {
                                   page: PowerPlayLeaderBoardConfig,
                                   state: PageState.addWidget);
                         },
-                        child: Text(
-                          'PREDICTION LEADERBOARD',
-                          style: TextStyles.sourceSans
-                              .colour(Colors.white.withOpacity(0.7))
-                              .copyWith(
-                                  fontSize: SizeConfig.screenWidth! * 0.030),
+                        child: Row(
+                          children: [
+                            Text(
+                              'PREDICTION LEADERBOARD',
+                              style: TextStyles.sourceSans
+                                  .colour(Colors.white.withOpacity(0.7))
+                                  .copyWith(
+                                      fontSize:
+                                          SizeConfig.screenWidth! * 0.030),
+                            ),
+                            const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 10,
+                              color: Colors.white,
+                            )
+                          ],
                         ),
                       ),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 10,
-                        color: Colors.white,
-                      )
                     ],
                   ),
                 ),
@@ -89,12 +95,16 @@ class LiveMatch extends StatelessWidget {
                 SizedBox(
                   height: SizeConfig.padding28,
                 ),
-                Center(
-                  child: Text(
-                    model.liveMatchData![0]!.headsUpText ?? '',
-                    style: TextStyles.sourceSans
-                        .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/svg/bell_icon.svg'),
+                    Text(
+                      model.liveMatchData![0]!.headsUpText ?? '',
+                      style: TextStyles.sourceSans
+                          .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                    ),
+                  ],
                 ),
                 SizedBox(height: SizeConfig.padding16),
                 if (model.liveMatchData?[0]!.status == MatchStatus.active.name)
