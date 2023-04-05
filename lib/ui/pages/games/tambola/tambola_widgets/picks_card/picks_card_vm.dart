@@ -20,7 +20,7 @@ class PicksCardViewModel extends BaseViewModel {
   DailyPick? _weeklyDigits;
   int? _totalTicketMatched;
 
-  int get totalTicketMatched => _totalTicketMatched ?? 0;
+  int get totalTicketMatched => _tambolaService.matchedTicketCount ?? 0;
 
   set totalTicketMatched(int value) {
     _totalTicketMatched = value;
@@ -132,7 +132,6 @@ class PicksCardViewModel extends BaseViewModel {
     bool exist = false;
     for (final element in data) {
       exist = element.contains(int.tryParse(dailyNumber));
-
       if (exist) break;
     }
 

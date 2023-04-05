@@ -103,7 +103,7 @@ class PicksCardView extends StatelessWidget {
                     dailyPicksCount: model.dailyPicksCount,
                     todaysPicks: model.todaysPicks ??
                         List.generate(model.dailyPicksCount, (index) => 0),
-                    // totalTicketMatched: model.totalTicketMatched,
+                    totalTicketMatched: model.totalTicketMatched,
                   ),
                   model.weeklyDigits == null
                       ? Center(

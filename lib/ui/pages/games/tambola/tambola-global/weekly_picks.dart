@@ -27,6 +27,7 @@ class WeeklyPicks extends StatelessWidget {
         return 'THU';
       case 5:
         return 'FRI';
+
       case 6:
         return 'SAT';
       case 7:

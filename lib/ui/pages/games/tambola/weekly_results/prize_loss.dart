@@ -1,4 +1,4 @@
-import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -52,10 +52,11 @@ class Loser extends StatelessWidget {
               child: AppPositiveBtn(
                   btnText: 'GET MORE TAMBOLA TICKETS',
                   onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.delegate!.appState.setCurrentTabIndex = 0;
+                    BaseUtil.openDepositOptionsModalSheet();
+                    // AppState.backButtonDispatcher!.didPopRoute();
+                    // AppState.backButtonDispatcher!.didPopRoute();
+                    // AppState.backButtonDispatcher!.didPopRoute();
+                    // AppState.delegate!.appState.setCurrentTabIndex = 0;
                   }),
             ),
           ],

@@ -353,6 +353,7 @@ class Assets {
   static const String bottomBannerLottie =
       'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
 
+
   //POWER PLAY ASSETS
   static const String powerPlayMain =
       'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg';
@@ -362,4 +363,8 @@ class Assets {
       "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/KKR.svg";
   static const bangaloreIcon =
       "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/RCB.svg";
+
+  static const String tambolaTopBannerLottie =
+      'assets/lotties/TambolaScreenTopBanner.json';
+
 }
