@@ -209,7 +209,7 @@ class PrizeDistributionSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
               onPressed: () {
-                while (AppState.screenStack.length > 2) {
+                while (AppState.screenStack.length > 1) {
                   AppState.backButtonDispatcher!.didPopRoute();
                 }
                 AppState.delegate!.appState.currentAction = PageAction(

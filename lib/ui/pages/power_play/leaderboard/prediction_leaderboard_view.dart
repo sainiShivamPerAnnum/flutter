@@ -352,7 +352,7 @@ class PredictionLeaderboard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     color: Colors.white,
                     onPressed: () {
-                      while (AppState.screenStack.length > 2) {
+                      while (AppState.screenStack.length > 1) {
                         AppState.backButtonDispatcher!.didPopRoute();
                       }
                       AppState.delegate!.appState.currentAction = PageAction(
@@ -865,26 +865,26 @@ class YourPredictionSheet extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 color: Colors.white,
                 onPressed: () {
-                  while (AppState.screenStack.length > 2) {
-                  AppState.backButtonDispatcher!.didPopRoute();
-                }
-                AppState.delegate!.appState.currentAction = PageAction(
-                  state: PageState.replace,
-                  page: PowerPlayHomeConfig,
-                );
-              },
-              child: Center(
-                child: Text(
-                  'PREDICT NOW',
-                  style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  while (AppState.screenStack.length > 1) {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  }
+                  AppState.delegate!.appState.currentAction = PageAction(
+                    state: PageState.replace,
+                    page: PowerPlayHomeConfig,
+                  );
+                },
+                child: Center(
+                  child: Text(
+                    'PREDICT NOW',
+                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding20,
-            ),
-          ],
-        )),
+              SizedBox(
+                height: SizeConfig.padding20,
+              ),
+            ],
+          )),
     );
   }
 }
