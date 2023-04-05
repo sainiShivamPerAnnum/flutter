@@ -131,16 +131,9 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
                       width: SizeConfig.screenWidth! * 0.3,
                     ),
                     Text(
-                      "Do you think you can top the leaderboard?",
+                      "Winners hall of fame will be updated soon",
                       textAlign: TextAlign.center,
                       style: TextStyles.rajdhani.title4.colour(Colors.white),
-                    ),
-                    SizedBox(height: SizeConfig.padding10),
-                    Text(
-                      "Start saving and get paling now!",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.sourceSans.body3
-                          .colour(UiConstants.kTextColor2),
                     ),
                     SizedBox(height: SizeConfig.padding16),
                   ],
