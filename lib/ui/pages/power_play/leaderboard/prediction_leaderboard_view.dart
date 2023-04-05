@@ -471,6 +471,19 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
     PowerPlayService.powerPlayDepositFlow = false;
   }
 
+
+  String? _validateValue(String? value) {
+    if (value != null && int.tryParse(value) != null) {
+      int intValue = int.parse(value);
+      if (intValue < 10) {
+        return 'Enter valid prediction';
+      }
+    } else {
+      return 'Please enter your prediction';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -579,15 +592,16 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
                 subtitle: 'Make as many predictions as you can, to win',
                 amount: int.tryParse(_textController.text),
               ),
-              validator: (value) {
-                if (value != null && value.trim().isNotEmpty) {
-                  return null;
-                } else if (value != null && (int.tryParse(value) ?? 0) <= 10) {
-                  return 'Enter valid prediction';
-                } else {
-                  return 'Please enter your prediction';
-                }
-              },
+              validator: _validateValue,
+              // validator: (value) {
+              //   if (value != null && value.trim().isNotEmpty) {
+              //     return null;
+              //   } else if ( (int.tryParse(value ?? "0") ?? 0) <= 10) {
+              //     return 'Enter valid prediction';
+              //   } else {
+              //     return 'Please enter your prediction';
+              //   }
+              // },
             ),
           ),
           SizedBox(
