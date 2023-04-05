@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_m
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -27,86 +28,90 @@ class LiveMatch extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            // height: 100,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               color: const Color(0xff3B4E6E).withOpacity(0.8),
             ),
             child: Column(
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          topRight: Radius.circular(5)),
-                      color: Color(0xff273C60)),
-                  child: Row(
+                GestureDetector(
+                  onTap: () {
+                    Haptic.vibrate();
+                    AppState.delegate!.appState.currentAction = PageAction(
+                        widget: PredictionLeaderboard(
+                          matchData: model.liveMatchData![0]!,
+                        ),
+                        page: PowerPlayLeaderBoardConfig,
+                        state: PageState.addWidget);
+                  },
+                  child: Column(
                     children: [
-                      Text(
-                        model!.liveMatchData?[0]!.matchTitle ?? 'IPL MATCH',
-                        style:
-                            TextStyles.sourceSansB.body2.colour(Colors.white),
-                      ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () {
-                          AppState.delegate!.appState.currentAction =
-                              PageAction(
-                                  widget: PredictionLeaderboard(
-                                    matchData: model.liveMatchData![0]!,
-                                  ),
-                                  page: PowerPlayLeaderBoardConfig,
-                                  state: PageState.addWidget);
-                        },
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 22, vertical: 8),
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5),
+                                topRight: Radius.circular(5)),
+                            color: Color(0xff273C60)),
                         child: Row(
                           children: [
                             Text(
-                              'PREDICTION LEADERBOARD',
-                              style: TextStyles.sourceSans
-                                  .colour(Colors.white.withOpacity(0.7))
-                                  .copyWith(
-                                      fontSize:
-                                          SizeConfig.screenWidth! * 0.030),
+                              model!.liveMatchData?[0]!.matchTitle ??
+                                  'IPL MATCH',
+                              style: TextStyles.sourceSansB.body2
+                                  .colour(Colors.white),
                             ),
-                            const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 10,
-                              color: Colors.white,
-                            )
+                            const Spacer(),
+                            Row(
+                              children: [
+                                Text(
+                                  'PREDICTION LEADERBOARD',
+                                  style: TextStyles.sourceSans
+                                      .colour(Colors.white.withOpacity(0.7))
+                                      .copyWith(
+                                          fontSize:
+                                              SizeConfig.screenWidth! * 0.030),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 10,
+                                  color: Colors.white,
+                                )
+                              ],
+                            ),
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding16),
+                        child: IplTeamsScoreWidget(
+                          matchData: model.liveMatchData![0]!,
+                          padding: const EdgeInsets.symmetric(horizontal: 17),
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding28,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/svg/bell_icon.svg'),
+                          Text(
+                            model.liveMatchData![0]!.headsUpText ?? '',
+                            style: TextStyles.sourceSans.copyWith(
+                                fontSize: SizeConfig.screenWidth! * 0.030),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: SizeConfig.padding16),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: SizeConfig.padding16,
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-                  child: IplTeamsScoreWidget(
-                    matchData: model.liveMatchData![0]!,
-                    padding: const EdgeInsets.symmetric(horizontal: 17),
-                  ),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding28,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset('assets/svg/bell_icon.svg'),
-                    Text(
-                      model.liveMatchData![0]!.headsUpText ?? '',
-                      style: TextStyles.sourceSans
-                          .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
-                    ),
-                  ],
-                ),
-                SizedBox(height: SizeConfig.padding16),
                 if (model.liveMatchData?[0]!.status == MatchStatus.active.name)
                   Container(
                     margin: const EdgeInsets.symmetric(
