@@ -675,7 +675,7 @@ class MatchBriefDetailsWidget extends StatelessWidget {
         ),
         Text(
           matchData.verdictText ?? "",
-          style: TextStyles.sourceSans.body4.colour(Colors.white),
+          style: TextStyles.sourceSans.body2.colour(Colors.white),
         ),
         SizedBox(height: SizeConfig.padding4),
         Center(
@@ -684,13 +684,11 @@ class MatchBriefDetailsWidget extends StatelessWidget {
             children: [
               Text(
                 "Chasing score: ",
-                style: TextStyles.sourceSansSB
-                    .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                style: TextStyles.sourceSansSB.body2,
               ),
               Text(
                 "${matchData.target}",
-                style: TextStyles.sourceSans
-                    .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+                style: TextStyles.sourceSans.body2,
               )
             ],
           ),

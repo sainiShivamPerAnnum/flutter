@@ -233,9 +233,6 @@ class PowerPlayWelcomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: SizeConfig.padding20,
-                ),
               ]),
             ),
           )

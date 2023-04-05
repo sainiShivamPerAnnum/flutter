@@ -28,7 +28,7 @@ class CompletedMatch extends StatelessWidget {
         : model.completedMatchData == null
             ? const NoLiveMatch(
                 timeStamp: null,
-                matchStatus: MatchStatus.upcoming,
+                matchStatus: MatchStatus.completed,
               )
             : ListView.separated(
                 itemCount: model.completedMatchData!.length,
@@ -107,8 +107,7 @@ class CompletedMatch extends StatelessWidget {
                           Center(
                             child: Text(
                               model.completedMatchData?[i].verdictText ?? '',
-                              style: TextStyles.sourceSans.copyWith(
-                                  fontSize: SizeConfig.screenWidth! * 0.030),
+                              style: TextStyles.sourceSans.body4,
                             ),
                           ),
                           SizedBox(height: SizeConfig.padding4),
@@ -118,15 +117,11 @@ class CompletedMatch extends StatelessWidget {
                               children: [
                                 Text(
                                   "Chasing score: ",
-                                  style: TextStyles.sourceSansSB.copyWith(
-                                      fontSize:
-                                          SizeConfig.screenWidth! * 0.030),
+                                  style: TextStyles.sourceSansSB.body4,
                                 ),
                                 Text(
                                   "${model.completedMatchData?[i].target}",
-                                  style: TextStyles.sourceSans.copyWith(
-                                      fontSize:
-                                          SizeConfig.screenWidth! * 0.030),
+                                  style: TextStyles.sourceSans.body4,
                                 )
                               ],
                             ),

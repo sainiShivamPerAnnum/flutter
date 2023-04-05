@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/season_leaderboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -11,6 +13,7 @@ import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/winner_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -21,7 +24,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SeasonLeaderboard extends StatelessWidget {
   const SeasonLeaderboard({super.key});
+  String get asideIcon => AppConfig.getValue<Map<String, dynamic>>(
+      AppConfigKey.powerplayConfig)['howScreen']['seasonReward']['asideIcon'];
 
+  String get rewardDesc3 => AppConfig.getValue<Map<String, dynamic>>(
+      AppConfigKey.powerplayConfig)['howScreen']['seasonReward']['rewardDesc'];
   @override
   Widget build(BuildContext context) {
     return BaseView<SeasonLeaderboardViewModel>(
@@ -58,17 +65,15 @@ class SeasonLeaderboard extends StatelessWidget {
                             child: Row(
                               children: [
                                 SvgPicture.network(
-                                  Assets.powerPlayMain,
+                                  asideIcon,
                                   width: SizeConfig.padding80,
                                 ),
                                 SizedBox(width: SizeConfig.padding20),
                                 Expanded(
-                                  child: Text(
-                                    "Rank 1 on this leaderboard at the end of the IPL season gets 2 tickets to IPL Final",
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(Colors.white54),
-                                  ),
-                                ),
+                                    child: rewardDesc3.beautify(
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(Colors.white54),
+                                )),
                               ],
                             ),
                           ),
@@ -166,6 +171,29 @@ class NewLeaderBoardView extends StatelessWidget {
               scoreboard: scoreBoard,
               // userProfilePicUrl: userProfilePicUrl,
             ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: SizeConfig.screenWidth! * 0.12,
+                  child: Text(
+                    "#",
+                    style: TextStyles.sourceSans.body3.colour(Colors.white38),
+                  ),
+                ),
+                Text(
+                  "Username",
+                  style: TextStyles.sourceSans.body3.colour(Colors.white38),
+                ),
+                const Spacer(),
+                Text(
+                  "Correct Prediction",
+                  style: TextStyles.sourceSans.body3.colour(Colors.white38),
+                ),
+              ],
+            ),
+          ),
           if (currentUserRank != -1)
             UserRank(
               currentUserScore: scoreBoard![currentUserRank],
@@ -192,95 +220,66 @@ class RemainingRank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+    return ListView.separated(
+      itemCount:
+          scoreboard!.length <= 2 ? scoreboard!.length : scoreboard!.length - 3,
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        int countedIndex = scoreboard!.length <= 2 ? index : index + 3;
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding20,
+            horizontal: SizeConfig.padding24,
+          ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                width: SizeConfig.screenWidth! * 0.13,
-                child: Text(
-                  "#",
-                  style: TextStyles.sourceSans.body3.colour(Colors.white38),
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(
+                      '${countedIndex + 1}',
+                      style: TextStyles.rajdhaniSB.body2,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding20,
+                    ),
+                    SvgPicture.asset(
+                      getDefaultProfilePicture(countedIndex + 1),
+                      width: SizeConfig.iconSize5,
+                      height: SizeConfig.iconSize5,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding12,
+                    ),
+                    Expanded(
+                      child: Text(
+                        '${_userService!.diplayUsername(scoreboard![countedIndex].uName)}',
+                        style: TextStyles.sourceSans.body3.setOpacity(0.8),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    )
+                  ],
                 ),
               ),
               Text(
-                "Username",
-                style: TextStyles.sourceSans.body3.colour(Colors.white38),
-              ),
-              const Spacer(),
-              Text(
-                "Correct Prediction",
-                style: TextStyles.sourceSans.body3.colour(Colors.white38),
+                '${scoreboard![countedIndex].value} ',
+                style: TextStyles.rajdhaniM.body3,
               ),
             ],
           ),
-        ),
-        SizedBox(height: SizeConfig.padding10),
-        ListView.separated(
-          itemCount: scoreboard!.length <= 2
-              ? scoreboard!.length
-              : scoreboard!.length - 3,
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            int countedIndex = scoreboard!.length <= 2 ? index : index + 3;
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding20,
-                horizontal: SizeConfig.padding24,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Text(
-                          '${countedIndex + 1}',
-                          style: TextStyles.rajdhaniSB.body2,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding20,
-                        ),
-                        SvgPicture.asset(
-                          getDefaultProfilePicture(countedIndex + 1),
-                          width: SizeConfig.iconSize5,
-                          height: SizeConfig.iconSize5,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding12,
-                        ),
-                        Expanded(
-                          child: Text(
-                            '${_userService!.diplayUsername(scoreboard![countedIndex].uName)}',
-                            style: TextStyles.sourceSans.body3.setOpacity(0.8),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Text(
-                    '${scoreboard![countedIndex].value} ',
-                    style: TextStyles.rajdhaniM.body3,
-                  ),
-                ],
-              ),
-            );
-          },
-          separatorBuilder: (context, index) {
-            return Divider(
-              height: SizeConfig.dividerHeight, // 0.5
-              color: UiConstants.kDividerColor,
-            );
-          },
-        ),
-      ],
+        );
+      },
+      separatorBuilder: (context, index) {
+        return Divider(
+          height: SizeConfig.dividerHeight, // 0.5
+          color: UiConstants.kDividerColor,
+        );
+      },
     );
   }
 
