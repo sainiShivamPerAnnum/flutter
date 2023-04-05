@@ -7,6 +7,7 @@ import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -26,6 +27,7 @@ class FcmListener {
   final CustomLogger? logger = locator<CustomLogger>();
   final FcmHandler _handler;
   final UserService? _userService = locator<UserService>();
+  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   S locale = locator<S>();
   FirebaseMessaging? _fcm;
@@ -196,6 +198,12 @@ class FcmListener {
             "FCM changed or app is opened for first time, so updating pref and server token");
         PreferenceHelper.setString(PreferenceHelper.FCM_TOKEN, fcmToken!);
         await _userService!.updateClientToken(fcmToken);
+
+        try {
+          _analyticsService!.trackUninstall(fcmToken);
+        } catch (e) {
+          logger!.e('Track uninstall failed: ', e.toString());
+        }
       } else {
         logger!.d("FCM is already updated");
       }

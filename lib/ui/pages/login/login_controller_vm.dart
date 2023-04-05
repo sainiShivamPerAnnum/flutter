@@ -466,7 +466,7 @@ class LoginControllerViewModel extends BaseViewModel {
           baseUser: userService.baseUser);
 
       BaseAnalytics.analytics!.logSignUp(signUpMethod: 'phoneNumber');
-      _analyticsService!.trackSignup(userService.baseUser!.uid);
+      // _analyticsService!.trackSignup(userService.baseUser!.uid); //NO LONGER NEEDED
 
       logger.d(
           'invoke an API to send device related and install referrer related information to the server');
