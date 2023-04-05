@@ -1,13 +1,11 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/power_play_matches.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
-import 'package:felloapp/ui/pages/support/faq/faq_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -16,6 +14,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class PowerPlayHome extends StatefulWidget {
   const PowerPlayHome({Key? key}) : super(key: key);
@@ -49,42 +48,41 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                       type: FaqsType.onboarding,
                       action: Row(
                         children: [
-                          InkWell(
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.delegate!.appState.currentAction =
-                                  PageAction(
-                                state: PageState.addWidget,
-                                page: FaqPageConfig,
-                                widget: const FAQPage(
-                                  type: FaqsType.journey,
-                                ),
-                              );
-                            },
-                            child: Container(
-                                key: const ValueKey(Constants.HELP_FAB),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding12,
-                                    vertical: SizeConfig.padding6),
-                                height: SizeConfig.avatarRadius * 2,
-                                decoration: BoxDecoration(
-                                  color: UiConstants.kTextFieldColor
-                                      .withOpacity(0.4),
-                                  border: Border.all(color: Colors.white10),
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness12),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  // mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Invite Friends',
-                                      style: TextStyles.body4
-                                          .colour(UiConstants.kTextColor),
+                          Consumer<ReferralService>(
+                            builder: (context, model, child) {
+                              return GestureDetector(
+                                onTap: (){
+                                  if (model.isShareAlreadyClicked == false) {
+                                    Haptic.vibrate();
+                                    model.shareLink();
+                                  }
+                                },
+                                child: Container(
+                                    key: const ValueKey(Constants.HELP_FAB),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding12,
+                                        vertical: SizeConfig.padding6),
+                                    height: SizeConfig.avatarRadius * 2,
+                                    decoration: BoxDecoration(
+                                      color: UiConstants.kTextFieldColor
+                                          .withOpacity(0.4),
+                                      border: Border.all(color: Colors.white10),
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness12),
                                     ),
-                                  ],
-                                )),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      // mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Invite Friends',
+                                          style: TextStyles.body4
+                                              .colour(UiConstants.kTextColor),
+                                        ),
+                                      ],
+                                    )),
+                              );
+                            }
                           )
                         ],
                       ),
@@ -109,19 +107,22 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                             const SizedBox(
                               height: 10,
                             ),
-                            Container(
-                              height: 43,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 50),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.black.withOpacity(0.7),
-                              ),
-                              child: Text(
-                                'Total Won From PowerPlay : ₹100',
-                                style: TextStyles.sourceSansSB.body2,
+                            Center(
+                              child: Container(
+                                // height: 43,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 50),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding16,
+                                    vertical: SizeConfig.padding8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.black.withOpacity(0.5),
+                                ),
+                                child: Text(
+                                  'Total Won From PowerPlay : ₹100',
+                                  style: TextStyles.sourceSansSB.body3,
+                                ),
                               ),
                             ),
                             const SizedBox(

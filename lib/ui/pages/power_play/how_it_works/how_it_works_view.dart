@@ -1,7 +1,9 @@
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
@@ -86,8 +88,8 @@ class HowItWorks extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Text(
                             'Predict how much is the Chasing Score in a match and save the amount in Gold or Flo',
-                            style: TextStyles.sourceSans.body4
-                                .colour(Colors.white),
+                            style: TextStyles.sourceSans.body3
+                                .colour(Colors.white.withOpacity(0.5)),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -101,34 +103,38 @@ class HowItWorks extends StatelessWidget {
                             horizontal: 12, vertical: 5),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: Colors.black.withOpacity(0.7),
+                          color: Colors.black.withOpacity(0.3),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Predict 152 Runs  =   ',
-                              style: TextStyles.sourceSans.body4,
-                            ),
-                            Container(
-                              // margin: const EdgeInsets.symmetric(horizontal: 10),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 2),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(3),
-                                color: const Color(0xff62E3C4),
+                        child: Expanded(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Predict 152 Runs  =   ',
+                                style: TextStyles.sourceSans.body3,
                               ),
-                              child: Text(
-                                '₹',
-                                style: TextStyles.sourceSans.body2
-                                    .colour(Colors.black),
+                              Container(
+                                // margin: const EdgeInsets.symmetric(horizontal: 10),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding6,
+                                    vertical: SizeConfig.padding2),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                  color: const Color(0xff62E3C4),
+                                ),
+                                child: Text(
+                                  '₹',
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(Colors.black),
+                                ),
                               ),
-                            ),
-                            Text(
-                              '  Save ₹152 in Gold or Flo',
-                              style: TextStyles.sourceSans.body4,
-                            ),
-                          ],
+                              Text(
+                                '  Save ₹152 in Gold or Flo',
+                                style: TextStyles.sourceSans.body3,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -158,7 +164,7 @@ class HowItWorks extends StatelessWidget {
                         // height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.black.withOpacity(0.7),
+                          color: Colors.black.withOpacity(0.3),
                         ),
                         child: Column(
                           children: [
@@ -230,8 +236,8 @@ class HowItWorks extends StatelessWidget {
                         ),
                       ),
 
-                      const SizedBox(
-                        height: 20,
+                      SizedBox(
+                        height: SizeConfig.padding16,
                       ),
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -322,7 +328,7 @@ class HowItWorks extends StatelessWidget {
                                     child: Text(
                                       rewardDesc1,
                                       style: TextStyles.sourceSans.body4,
-                                    ),
+                                        textAlign: TextAlign.end),
                                   ),
                                 ]),
                             const SizedBox(
@@ -342,17 +348,16 @@ class HowItWorks extends StatelessWidget {
                                 children: [
                                   //First 10 to Predict correctly
                                   Flexible(
-                                    child: Text(
-                                      getRank2,
-                                      style: TextStyles.sourceSans.body4,
-                                    ),
+                                    child: Text(getRank2,
+                                        style: TextStyles.sourceSans.body4,
+                                        textAlign: TextAlign.end),
                                   ),
 
                                   Flexible(
                                     child: Text(
                                       rewardDesc2,
                                       style: TextStyles.sourceSans.body4,
-                                    ),
+                                        textAlign: TextAlign.end),
                                   ),
                                 ]),
                           ],
@@ -374,8 +379,8 @@ class HowItWorks extends StatelessWidget {
                           Flexible(
                             child: Container(
                               child: rewardDesc3.beautify(
-                                style: TextStyles.sourceSans.body4
-                                    .colour(Colors.white),
+                                style: TextStyles.sourceSans.body3
+                                    .colour(Colors.white.withOpacity(0.7)),
                               ),
                             ),
                           ),
@@ -396,12 +401,13 @@ class HowItWorks extends StatelessWidget {
                 width: SizeConfig.screenWidth,
                 child: MaterialButton(
                   onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-
-                    // BaseUtil.openDepositOptionsModalSheet(
-                    //     title: 'To predict, Save in Gold or Flo',
-                    //     subtitle: 'Make as many predictions as you can, to win',
-                    //     timer: 0);
+                    while (AppState.screenStack.length > 2) {
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    }
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.replace,
+                      page: PowerPlayHomeConfig,
+                    );
                   },
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
