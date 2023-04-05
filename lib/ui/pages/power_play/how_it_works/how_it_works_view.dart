@@ -171,7 +171,12 @@ class HowItWorks extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 17),
                               child: IplTeamsScoreWidget(
-                                matchData: MatchData(),
+                                matchData: MatchData(
+                                  teams: ['Bangalore', 'Kolkata'],
+                                  currentScore: {
+                                    'Bangalore': "Scores 139",
+                                  },
+                                ),
                               ),
                             ),
                             const SizedBox(

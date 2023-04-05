@@ -71,7 +71,7 @@ class PowerPlayService extends ChangeNotifier {
     _logger.i("PowerPlayService -> getMatchesByStatus");
     final response =
         await _powerPlayRepository.getMatchesByStatus(status, limit, offset);
-    log("SERVICE response => ${response.model?.data?.toList()}");
+    log("SERVICE response => ${response.model?.data?.length}");
 
     try {
       if (response.isSuccess()) {
