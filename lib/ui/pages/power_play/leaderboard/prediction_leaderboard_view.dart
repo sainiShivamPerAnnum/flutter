@@ -663,6 +663,24 @@ class MatchBriefDetailsWidget extends StatelessWidget {
           matchData.verdictText ?? "",
           style: TextStyles.sourceSans.body4.colour(Colors.white),
         ),
+        SizedBox(height: SizeConfig.padding4),
+        Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Chasing score: ",
+                style: TextStyles.sourceSansSB
+                    .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+              ),
+              Text(
+                "${matchData.target}",
+                style: TextStyles.sourceSans
+                    .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
+              )
+            ],
+          ),
+        ),
         const SizedBox(
           height: 20,
         ),

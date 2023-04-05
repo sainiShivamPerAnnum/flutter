@@ -63,6 +63,7 @@ class MatchData {
     this.headsUpText,
     this.verdictText,
     this.matchStats,
+    this.target,
   });
 
   final String? id;
@@ -78,6 +79,7 @@ class MatchData {
   final String? headsUpText;
   final String? verdictText;
   final MatchStats? matchStats;
+  final int? target;
 
   factory MatchData.fromJson(Map<String, dynamic> json) => MatchData(
         id: json["_id"],
@@ -97,6 +99,7 @@ class MatchData {
         headsUpText: json["headsUpText"],
         verdictText: json['verdictText'],
         matchStats: MatchStats.fromMap(json['matchStats'] ?? {}),
+        target: json['target'] ?? 0,
       );
 
   @override

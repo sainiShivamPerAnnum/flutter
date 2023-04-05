@@ -15,14 +15,15 @@ class DailyPicksTimer extends StatefulWidget {
   final Color? bgColor;
   final MainAxisAlignment? alignment;
   final TimestampModel? startTime;
+  final Color? timerBgColor;
 
-  const DailyPicksTimer({
-    super.key,
-    required this.replacementWidget,
-    this.bgColor,
-    this.alignment,
-    this.startTime,
-  });
+  const DailyPicksTimer(
+      {super.key,
+      required this.replacementWidget,
+      this.bgColor,
+      this.alignment,
+      this.startTime,
+      this.timerBgColor});
 
   @override
   _DailyPicksTimerState createState() => _DailyPicksTimerState();
@@ -111,11 +112,11 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   }
 
   Widget buildTimeCard({required String time}) => Container(
-        height: SizeConfig.screenWidth! * 0.16,
+    height: SizeConfig.screenWidth! * 0.16,
         width: SizeConfig.screenWidth! * 0.16,
         // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-        decoration: const BoxDecoration(
-          color: UiConstants.kBackgroundColor,
+        decoration: BoxDecoration(
+          color: widget.timerBgColor ?? UiConstants.kBackgroundColor,
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,

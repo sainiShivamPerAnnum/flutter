@@ -325,7 +325,7 @@ class UserPredictionsButton extends StatelessWidget {
         child: Row(
           children: [
             Text("Your Predictions", style: TextStyles.sourceSans.body2),
-            SizedBox(width: SizeConfig.padding12),
+            SizedBox(width: SizeConfig.padding6),
             model.isPredictionsLoading
                 ? SizedBox(
                     height: SizeConfig.padding16,
@@ -417,7 +417,7 @@ class LossOrNoParticipateTextWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SvgPicture.asset(Assets.uhoh, height: SizeConfig.padding54),
+          SvgPicture.asset(Assets.uhoh, height: SizeConfig.padding80),
           SizedBox(height: SizeConfig.padding16),
           Text(
             isLoss

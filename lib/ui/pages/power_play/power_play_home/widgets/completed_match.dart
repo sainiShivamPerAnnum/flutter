@@ -105,13 +105,33 @@ class CompletedMatch extends StatelessWidget {
                                   fontSize: SizeConfig.screenWidth! * 0.030),
                             ),
                           ),
+                          SizedBox(height: SizeConfig.padding4),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Chasing score: ",
+                                  style: TextStyles.sourceSansSB.copyWith(
+                                      fontSize:
+                                          SizeConfig.screenWidth! * 0.030),
+                                ),
+                                Text(
+                                  "${model.completedMatchData?[i].target}",
+                                  style: TextStyles.sourceSans.copyWith(
+                                      fontSize:
+                                          SizeConfig.screenWidth! * 0.030),
+                                )
+                              ],
+                            ),
+                          ),
                           const SizedBox(
                             height: 15,
                           ),
                           Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: SizeConfig.pageHorizontalMargins,
-                                vertical: SizeConfig.padding12),
+                                vertical: SizeConfig.padding8),
                             decoration: BoxDecoration(
                                 color: const Color(0xff000000).withOpacity(0.3),
                                 borderRadius: const BorderRadius.only(

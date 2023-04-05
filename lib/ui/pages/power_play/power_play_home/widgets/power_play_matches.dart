@@ -33,91 +33,98 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-      child: DefaultTabController(
-        length: 3,
-        child: Column(
-          children: [
-            TabBar(
-              controller: widget.model.tabController,
-              labelPadding: EdgeInsets.zero,
-              indicatorColor: Colors.transparent,
-              physics: const BouncingScrollPhysics(),
-              isScrollable: true,
-              splashFactory: NoSplash.splashFactory,
-              onTap: (index) => widget.model.handleTabSwitch(index),
-              tabs: List.generate(
-                3,
-                (index) => Container(
-                  width: 105,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding10,
-                    vertical: SizeConfig.padding10,
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                      color: widget.model.tabController!.index == index
-                          ? Colors.white
-                          : Colors.transparent,
-                      border: Border.all(color: Colors.white)),
-                  child: Text(
-                    getTitle()[index],
-                    textAlign: TextAlign.center,
-                    style: TextStyles.sourceSansSB.body4.colour(
-                        widget.model.tabController!.index == index
-                            ? Colors.black
-                            : Colors.white),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Builder(builder: (_) {
-              if (widget.model.tabController!.index == 0) {
-                if (widget.model.state == ViewState.Busy) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+    if ((widget.model.liveMatchData == null ||
+            (widget.model.liveMatchData?.isEmpty ?? true)) &&
+        widget.model.isLive) {
+      Future.delayed(const Duration(milliseconds: 200), () {
+        widget.model.tabController?.animateTo(1);
+        widget.model.handleTabSwitch(1);
+        widget.model.isLive = false;
+      });
+    }
 
-                if ((widget.model.liveMatchData == null ||
-                        (widget.model.liveMatchData?.isEmpty ?? true)) &&
-                    widget.model.isLive) {
-                  Future.delayed(const Duration(milliseconds: 500), () {
-                    widget.model.tabController?.animateTo(1);
-                    widget.model.handleTabSwitch(1);
-                    widget.model.isLive = false;
-                  });
-                }
+    return (widget.model.state == ViewState.Busy && widget.model.isLive)
+        ? const Center(child: CircularProgressIndicator())
+        : Container(
+            margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
+            child: DefaultTabController(
+              length: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TabBar(
+                    controller: widget.model.tabController,
+                    labelPadding: EdgeInsets.zero,
+                    indicatorColor: Colors.transparent,
+                    physics: const BouncingScrollPhysics(),
+                    isScrollable: true,
+                    splashFactory: NoSplash.splashFactory,
+                    onTap: (index) => widget.model.handleTabSwitch(index),
+                    tabs: List.generate(
+                      3,
+                      (index) => Container(
+                        width: (SizeConfig.screenWidth! -
+                                (SizeConfig.pageHorizontalMargins * 2)) /
+                            3,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding10,
+                          vertical: SizeConfig.padding10,
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5)),
+                            color: widget.model.tabController!.index == index
+                                ? Colors.white
+                                : Colors.transparent,
+                            border: Border.all(color: Colors.white)),
+                        child: Text(
+                          getTitle()[index].toUpperCase(),
+                          textAlign: TextAlign.center,
+                          style: TextStyles.sourceSansSB.body4.colour(
+                              widget.model.tabController!.index == index
+                                  ? Colors.black
+                                  : Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Builder(builder: (_) {
+                    if (widget.model.tabController!.index == 0) {
+                      if (widget.model.state == ViewState.Busy) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                return widget.model.liveMatchData?.isEmpty ?? true
-                    ? (widget.model.upcomingMatchData!.isEmpty ||
-                            widget.model.upcomingMatchData?[0] == null ||
-                            (widget.model.upcomingMatchData?[0]?.startsAt ==
-                                null))
-                        ? const SizedBox()
-                        : NoLiveMatch(
-                            timeStamp:
-                                widget.model.upcomingMatchData![0]!.startsAt!)
-                    : LiveMatch(
+                      return widget.model.liveMatchData?.isEmpty ?? true
+                          ? (widget.model.upcomingMatchData!.isEmpty ||
+                                  widget.model.upcomingMatchData?[0] == null ||
+                                  (widget.model.upcomingMatchData?[0]
+                                          ?.startsAt ==
+                                      null))
+                              ? const SizedBox()
+                              : NoLiveMatch(
+                                  timeStamp: widget
+                                      .model.upcomingMatchData![0]!.startsAt!)
+                          : LiveMatch(
+                              model: widget.model,
+                            );
+                    } else if (widget.model.tabController!.index == 1) {
+                      return UpcomingMatch(
                         model: widget.model,
                       );
-              } else if (widget.model.tabController!.index == 1) {
-                return UpcomingMatch(
-                  model: widget.model,
-                );
-              } else {
-                return CompletedMatch(
-                  model: widget.model,
-                );
-              }
-            }),
-          ],
-        ),
-      ),
-    );
+                    } else {
+                      return CompletedMatch(
+                        model: widget.model,
+                      );
+                    }
+                  }),
+                ],
+              ),
+            ),
+          );
   }
 
   @override
@@ -128,43 +135,54 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
 }
 
 class NoLiveMatch extends StatelessWidget {
-  const NoLiveMatch({Key? key, required this.timeStamp}) : super(key: key);
+  const NoLiveMatch(
+      {Key? key, required this.timeStamp, this.isUpcoming = false})
+      : super(key: key);
 
   final TimestampModel timeStamp;
+  final bool isUpcoming;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          height: SizeConfig.padding54,
-        ),
-        SvgPicture.asset(
-          'assets/svg/ipl_ball.svg',
-          height: SizeConfig.padding64,
-        ),
-        SizedBox(
-          height: SizeConfig.padding20,
-        ),
-        //No Live matches at the moment
-        Text(
-          'No Live matches at the moment',
-          style: TextStyles.rajdhaniB.body1.colour(Colors.white),
-        ),
-        SizedBox(
-          height: SizeConfig.padding20,
-        ),
-        Text(
-          'Next match starts in',
-          style: TextStyles.sourceSans.body1.colour(Colors.white),
-        ),
-        SizedBox(
-          height: SizeConfig.padding20,
-        ),
-        DailyPicksTimer(
-            startTime: timeStamp, replacementWidget: const SizedBox()),
-      ],
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 2,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: SizeConfig.padding54,
+          ),
+          SvgPicture.asset(
+            'assets/svg/ipl_ball.svg',
+            height: SizeConfig.padding70,
+          ),
+          SizedBox(
+            height: SizeConfig.padding20,
+          ),
+          //No Live matches at the moment
+          Text(
+            'No ${isUpcoming ? "Upcoming" : "Live"} matches at the moment',
+            style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+          ),
+          SizedBox(
+            height: SizeConfig.padding20,
+          ),
+          if (!isUpcoming) ...[
+            Text(
+              'Predictions begin in',
+              style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+            ),
+            SizedBox(
+              height: SizeConfig.padding20,
+            ),
+            DailyPicksTimer(
+              startTime: timeStamp,
+              replacementWidget: const SizedBox(),
+              timerBgColor: const Color(0xff785353),
+            ),
+          ]
+        ],
+      ),
     );
   }
 }
