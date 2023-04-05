@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -457,6 +458,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
     super.initState();
     _textController = TextEditingController();
     // _formKey = GlobalKey<FormState>();
+    PowerPlayService.powerPlayDepositFlow = false;
   }
 
   @override
@@ -583,7 +585,6 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
           GestureDetector(
             onTap: () {
               AppState.backButtonDispatcher!.didPopRoute();
-
               AppState.delegate!.appState.currentAction = PageAction(
                 state: PageState.addPage,
                 page: PowerPlayHowItWorksConfig,
@@ -607,7 +608,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
             color: Colors.white,
             onPressed: () {
               if (_formKey.currentState!.validate() == false) return;
-
+              PowerPlayService.powerPlayDepositFlow = true;
               AppState.backButtonDispatcher!.didPopRoute();
 
               BaseUtil.openDepositOptionsModalSheet(

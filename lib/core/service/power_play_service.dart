@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
@@ -7,9 +8,16 @@ import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/power_play_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 enum MatchStatus { active, upcoming, completed }
 
@@ -22,13 +30,16 @@ class PowerPlayService extends ChangeNotifier {
       locator<TransactionHistoryRepository>();
 
   List<MatchData> matchData = [];
+  MatchData? liveMatchData;
 
   List<UserTransaction>? transactions = [];
   List<Map<String, dynamic>>? cardCarousel;
 
-  Map<String, int> currentScore = {};
+  static bool powerPlayDepositFlow = false;
 
-  String matchId = "";
+  // Map<String, int> currentScore = {};
+
+  // String matchId = "";
 
   List<MatchUserPredictedData> _userPredictedData = [];
 
@@ -46,6 +57,8 @@ class PowerPlayService extends ChangeNotifier {
 
   void dump() {
     matchData = [];
+    liveMatchData = null;
+    powerPlayDepositFlow = false;
     _logger.i("PowerPlayService dump");
   }
 
@@ -58,8 +71,9 @@ class PowerPlayService extends ChangeNotifier {
 
     try {
       if (response.isSuccess()) {
-        matchId = response.model!.data![0].id!;
-        currentScore = response.model!.data![0].currentScore!;
+        if (status == MatchStatus.active.name) {
+          liveMatchData = response.model!.data![0];
+        }
         return response.model!.data!;
       }
       return [];
@@ -128,5 +142,97 @@ class PowerPlayService extends ChangeNotifier {
           res.errorMessage, "Please try again after sometime");
       return [];
     }
+  }
+
+  void showPowerPlayWinDialog(String payload) {
+    final response = json.decode(payload);
+    String winString = response["winString"] ?? "";
+    BaseUtil.openDialog(
+      isBarrierDismissible: false,
+      addToScreenStack: true,
+      content: PowerPlayWinDialog(winString: winString),
+    );
+  }
+}
+
+class PowerPlayWinDialog extends StatelessWidget {
+  const PowerPlayWinDialog({
+    super.key,
+    required this.winString,
+  });
+
+  final String winString;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+        gradient: const LinearGradient(
+            colors: [Color(0xff91929C), Color(0xff4E536E)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight),
+      ),
+      padding: const EdgeInsets.all(1),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+            color: UiConstants.kPowerPlayPrimary),
+        width: SizeConfig.screenWidth,
+        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        child: Stack(
+          children: [
+            Column(mainAxisSize: MainAxisSize.min, children: [
+              SvgPicture.network(
+                Assets.powerPlayMain,
+                width: SizeConfig.screenWidth! * 0.3,
+              ),
+              SvgPicture.asset(
+                Assets.wohoo,
+                width: SizeConfig.screenWidth! * 0.5,
+              ),
+              SizedBox(height: SizeConfig.padding10),
+              winString.beautify(
+                  boldStyle: TextStyles.sourceSansB.body3
+                      .colour(UiConstants.primaryColor),
+                  style: TextStyles.sourceSans.body3.colour(Colors.white)),
+              SizedBox(height: SizeConfig.padding16),
+              MaterialButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                color: Colors.white,
+                onPressed: () {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                  AppState.delegate!.parseRoute(Uri.parse('/win/myWinnings'));
+                },
+                child: Center(
+                  child: Text(
+                    'START PREDICTING NOW',
+                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: SizeConfig.padding20,
+              ),
+            ]),
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onDoubleTap: () {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                },
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
