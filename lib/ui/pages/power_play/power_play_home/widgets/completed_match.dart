@@ -1,9 +1,11 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
+import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/power_play_matches.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -18,12 +20,16 @@ class CompletedMatch extends StatelessWidget {
   });
 
   final PowerPlayHomeViewModel model;
+
   @override
   Widget build(BuildContext context) {
     return model.state == ViewState.Busy
         ? const Center(child: CircularProgressIndicator())
         : model.completedMatchData == null
-            ? const SizedBox()
+            ? const NoLiveMatch(
+                timeStamp: null,
+                matchStatus: MatchStatus.upcoming,
+              )
             : ListView.separated(
                 itemCount: model.completedMatchData!.length,
                 padding:

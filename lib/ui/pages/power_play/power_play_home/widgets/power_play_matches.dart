@@ -1,5 +1,6 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/completed_match.dart';
@@ -107,7 +108,8 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                               ? const SizedBox()
                               : NoLiveMatch(
                                   timeStamp: widget
-                                      .model.upcomingMatchData![0]!.startsAt!)
+                                      .model.upcomingMatchData?[0]?.startsAt,
+                                  matchStatus: MatchStatus.active)
                           : LiveMatch(
                               model: widget.model,
                             );
@@ -135,12 +137,25 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
 }
 
 class NoLiveMatch extends StatelessWidget {
-  const NoLiveMatch(
-      {Key? key, required this.timeStamp, this.isUpcoming = false})
-      : super(key: key);
+  const NoLiveMatch({
+    Key? key,
+    required this.timeStamp,
+    required this.matchStatus,
+  }) : super(key: key);
 
-  final TimestampModel timeStamp;
-  final bool isUpcoming;
+  final TimestampModel? timeStamp;
+
+  final MatchStatus matchStatus;
+
+  String get text {
+    if (matchStatus == MatchStatus.upcoming) {
+      return 'upcoming';
+    } else if (matchStatus == MatchStatus.active) {
+      return 'live';
+    } else {
+      return 'completed';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,25 +176,27 @@ class NoLiveMatch extends StatelessWidget {
           ),
           //No Live matches at the moment
           Text(
-            'No ${isUpcoming ? "Upcoming" : "Live"} matches at the moment',
+            'No $text matches at the moment',
             style: TextStyles.rajdhaniB.body1.colour(Colors.white),
           ),
           SizedBox(
             height: SizeConfig.padding20,
           ),
-          if (!isUpcoming) ...[
-            Text(
-              'Predictions begin in',
-              style: TextStyles.rajdhaniB.body1.colour(Colors.white),
-            ),
+          if (matchStatus != MatchStatus.upcoming) ...[
+            if (timeStamp != null)
+              Text(
+                'Predictions begin in',
+                style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+              ),
             SizedBox(
               height: SizeConfig.padding20,
             ),
-            DailyPicksTimer(
-              startTime: timeStamp,
-              replacementWidget: const SizedBox(),
-              timerBgColor: const Color(0xff785353),
-            ),
+            if (timeStamp != null)
+              DailyPicksTimer(
+                startTime: timeStamp,
+                replacementWidget: const SizedBox(),
+                timerBgColor: const Color(0xff785353),
+              ),
           ]
         ],
       ),

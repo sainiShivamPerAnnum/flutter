@@ -1,7 +1,10 @@
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_video_player.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -10,6 +13,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class PowerPlayWelcomePage extends StatelessWidget {
   const PowerPlayWelcomePage({Key? key}) : super(key: key);
+
+  String get videoUrl => AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['howScreen']['predictionCondition']
+      ['explainerUrl'];
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +34,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
                     padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.pageHorizontalMargins),
                     children: [
@@ -53,18 +61,19 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         child: Text(
                           "Invest your Predictions",
                           style:
-                              TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                          TextStyles.rajdhaniSB.body1.colour(Colors.white),
                         ),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
                       Container(
-                        height: 200,
+                        height: SizeConfig.screenHeight! * 0.4,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: Colors.black,
+                          // color: Colors.black,
                         ),
+                        child: TambolaVideoPlayer(link: videoUrl),
                       ),
                       SizedBox(
                         height: SizeConfig.padding28,
@@ -73,7 +82,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         child: Text(
                           "How it Works?",
                           style:
-                              TextStyles.sourceSans.body0.colour(Colors.white),
+                          TextStyles.sourceSans.body0.colour(Colors.white),
                         ),
                       ),
                       SizedBox(
@@ -173,8 +182,11 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         ],
                       ),
                       SizedBox(
-                        height: SizeConfig.padding40,
+                        height: SizeConfig.padding20,
                       ),
+                      SizedBox(
+                        height: SizeConfig.navBarHeight * 2,
+                      )
                     ],
                   ),
                 ),
@@ -188,6 +200,8 @@ class PowerPlayWelcomePage extends StatelessWidget {
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 GestureDetector(
                   onTap: () {
+                    AppState.backButtonDispatcher?.didPopRoute();
+
                     AppState.delegate!.appState.currentAction = PageAction(
                       state: PageState.addPage,
                       page: PowerPlayHowItWorksConfig,
@@ -201,7 +215,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: SizeConfig.padding20,
+                  height: SizeConfig.padding8,
                 ),
                 MaterialButton(
                   shape: RoundedRectangleBorder(

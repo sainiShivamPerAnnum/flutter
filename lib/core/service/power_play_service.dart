@@ -26,7 +26,7 @@ class PowerPlayService extends ChangeNotifier {
   List<UserTransaction>? transactions = [];
   List<Map<String, dynamic>>? cardCarousel;
 
-  Map<String, int> currentScore = {};
+  Map<String, String> currentScore = {};
 
   String matchId = "";
 

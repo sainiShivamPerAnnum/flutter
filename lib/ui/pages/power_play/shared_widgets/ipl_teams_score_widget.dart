@@ -17,9 +17,9 @@ class IplTeamsScoreWidget extends StatelessWidget {
   final MatchData matchData;
   final bool isUpcoming;
 
-  int get score1 => matchData.currentScore?[matchData.teams?[0]] ?? 0;
+  String get score1 => matchData.currentScore?[matchData.teams?[0]] ?? "";
 
-  int get score2 => matchData.currentScore?[matchData.teams?[1]] ?? 0;
+  String get score2 => matchData.currentScore?[matchData.teams?[1]] ?? "";
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,8 @@ class IplTeamsScoreWidget extends StatelessWidget {
                   )),
               SizedBox(width: SizeConfig.padding12),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
                     matchData.teams?[0] ?? "Bangalore",
@@ -57,7 +57,7 @@ class IplTeamsScoreWidget extends StatelessWidget {
                   ),
                   if (!isUpcoming)
                     Text(
-                      score1 <= 0 ? 'YET TO BAT' : score1.toString(),
+                      score1.isEmpty ? 'YET TO BAT' : score1.toString(),
                       style: TextStyles.sourceSans
                           .copyWith(fontSize: SizeConfig.screenWidth! * 0.030),
                     ),
@@ -78,7 +78,7 @@ class IplTeamsScoreWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       matchData.teams?[1] ?? "Kolkata",
@@ -86,7 +86,7 @@ class IplTeamsScoreWidget extends StatelessWidget {
                     ),
                     if (!isUpcoming)
                       Text(
-                        score2 == 0 ? 'YET TO BAT' : score2.toString(),
+                        score2.isEmpty ? 'YET TO BAT' : score2.toString(),
                         style: TextStyles.sourceSans.copyWith(
                             fontSize: SizeConfig.screenWidth! * 0.030),
                       ),

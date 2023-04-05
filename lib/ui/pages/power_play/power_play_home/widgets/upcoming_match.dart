@@ -41,7 +41,7 @@ class UpcomingMatch extends StatelessWidget {
                   seconds: 0,
                   nanoseconds: 0,
                 ),
-                isUpcoming: true,
+                matchStatus: MatchStatus.upcoming,
               )
             : ListView.builder(
                 itemCount: model.upcomingMatchData?.length,
