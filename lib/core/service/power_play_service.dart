@@ -35,12 +35,9 @@ class PowerPlayService extends ChangeNotifier {
   List<UserTransaction>? transactions = [];
   List<Map<String, dynamic>>? cardCarousel;
 
-
   Map<String, String> currentScore = {};
 
   static bool powerPlayDepositFlow = false;
-
-
 
   // String matchId = "";
 
@@ -118,8 +115,8 @@ class PowerPlayService extends ChangeNotifier {
 
     final response =
         await _transactionHistoryRepository.getPowerPlayUserTransactions(
-            startTime: startTime.toString(),
-            endTime: endTime.toString(),
+            startTime: startTime,
+            endTime: endTime,
             type: 'DEPOSIT',
             status: 'COMPLETE');
 
@@ -168,73 +165,82 @@ class PowerPlayWinDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-        gradient: const LinearGradient(
-            colors: [Color(0xff91929C), Color(0xff4E536E)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight),
-      ),
-      padding: const EdgeInsets.all(1),
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-            color: UiConstants.kPowerPlayPrimary),
-        width: SizeConfig.screenWidth,
-        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-        child: Stack(
-          children: [
-            Column(mainAxisSize: MainAxisSize.min, children: [
-              SvgPicture.network(
-                Assets.powerPlayMain,
-                width: SizeConfig.screenWidth! * 0.3,
+    return Center(
+      child: Wrap(
+        children: [
+          Container(
+            margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              gradient: const LinearGradient(
+                  colors: [Color(0xff91929C), Color(0xff4E536E)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight),
+            ),
+            padding: const EdgeInsets.all(1),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                  color: UiConstants.kPowerPlayPrimary),
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              child: Stack(
+                children: [
+                  Column(mainAxisSize: MainAxisSize.min, children: [
+                    SvgPicture.network(
+                      Assets.powerPlayMain,
+                      width: SizeConfig.screenWidth! * 0.3,
+                    ),
+                    SvgPicture.asset(
+                      Assets.wohoo,
+                      width: SizeConfig.screenWidth! * 0.5,
+                    ),
+                    SizedBox(height: SizeConfig.padding10),
+                    winString.beautify(
+                        boldStyle: TextStyles.sourceSansB.body3
+                            .colour(UiConstants.primaryColor),
+                        style:
+                            TextStyles.sourceSans.body3.colour(Colors.white)),
+                    SizedBox(height: SizeConfig.padding16),
+                    MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      color: Colors.white,
+                      onPressed: () {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                        AppState.delegate!
+                            .parseRoute(Uri.parse('/win/myWinnings'));
+                      },
+                      child: Center(
+                        child: Text(
+                          'START PREDICTING NOW',
+                          style:
+                              TextStyles.rajdhaniB.body1.colour(Colors.black),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding20,
+                    ),
+                  ]),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: GestureDetector(
+                      onDoubleTap: () {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                      },
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
               ),
-              SvgPicture.asset(
-                Assets.wohoo,
-                width: SizeConfig.screenWidth! * 0.5,
-              ),
-              SizedBox(height: SizeConfig.padding10),
-              winString.beautify(
-                  boldStyle: TextStyles.sourceSansB.body3
-                      .colour(UiConstants.primaryColor),
-                  style: TextStyles.sourceSans.body3.colour(Colors.white)),
-              SizedBox(height: SizeConfig.padding16),
-              MaterialButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                color: Colors.white,
-                onPressed: () {
-                  AppState.backButtonDispatcher!.didPopRoute();
-                  AppState.delegate!.parseRoute(Uri.parse('/win/myWinnings'));
-                },
-                child: Center(
-                  child: Text(
-                    'START PREDICTING NOW',
-                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.padding20,
-              ),
-            ]),
-            Align(
-              alignment: Alignment.topRight,
-              child: GestureDetector(
-                onDoubleTap: () {
-                  AppState.backButtonDispatcher!.didPopRoute();
-                },
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
-              ),
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

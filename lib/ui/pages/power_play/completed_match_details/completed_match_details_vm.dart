@@ -56,8 +56,8 @@ class CompletedMatchDetailsVM extends BaseViewModel {
   Future<void> getUserPredictions() async {
     isPredictionsLoading = true;
     final response = await _txnRepo.getPowerPlayUserTransactions(
-        startTime: matchData!.startsAt.toString(),
-        endTime: matchData!.endsAt.toString(),
+        startTime: matchData!.startsAt,
+        endTime: matchData!.endsAt,
         type: 'DEPOSIT',
         status: 'COMPLETE');
     isPredictionsLoading = false;

@@ -61,10 +61,9 @@ class CompletedMatchDetailsView extends StatelessWidget {
                                       isLoss: matchData.matchStats!.count > 0 &&
                                           !matchData.matchStats!.didWon),
                               const CustomDivider(),
+                              SizedBox(height: SizeConfig.padding12),
                               MatchBriefDetailsWidget(matchData: matchData),
-                              UserPredictionsButton(
-                                model: model,
-                              ),
+                              UserPredictionsButton(model: model),
                               CorrectPredictorsListView(model: model),
                               SizedBox(height: SizeConfig.navBarHeight * 1.5)
                             ],
@@ -263,12 +262,10 @@ class CorrectPredictorsListView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        separatorBuilder: (ctx, i) => (i == 3)
-                            ? const SizedBox()
-                            : const Divider(
-                                color: Colors.white30,
-                                thickness: 0.3,
-                              ),
+                        separatorBuilder: (ctx, i) => const Divider(
+                          color: Colors.white30,
+                          thickness: 0.3,
+                        ),
                       ),
                     ],
                   )
@@ -367,6 +364,7 @@ class CustomDivider extends StatelessWidget {
     return Divider(
       color: Colors.white70,
       thickness: 0.3,
+      height: SizeConfig.pageHorizontalMargins,
       indent: SizeConfig.pageHorizontalMargins,
       endIndent: SizeConfig.pageHorizontalMargins,
     );

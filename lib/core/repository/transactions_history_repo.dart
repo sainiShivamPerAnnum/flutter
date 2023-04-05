@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/transaction_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
@@ -74,9 +75,9 @@ class TransactionHistoryRepository extends BaseRepo {
   }
 
   Future<ApiResponse<TransactionResponse>> getPowerPlayUserTransactions({
-    String? startTime,
+    TimestampModel? startTime,
     String? type,
-    String? endTime,
+    TimestampModel? endTime,
     String? status,
   }) async {
     List<UserTransaction> events = [];
@@ -85,9 +86,9 @@ class TransactionHistoryRepository extends BaseRepo {
       final _token = await getBearerToken();
       final _queryParams = {
         "type": type,
-        "endTime": endTime,
-        "startTime": startTime,
-        "status": status
+        "status": status,
+        "endTime": endTime!.toDate().toIso8601String(),
+        "startTime": startTime!.toDate().toIso8601String(),
       };
       final response = await APIService.instance.getData(
         ApiPath.kSingleTransactions(_uid),

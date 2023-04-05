@@ -61,7 +61,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         child: Text(
                           "Invest your Predictions",
                           style:
-                          TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                              TextStyles.rajdhaniSB.body1.colour(Colors.white),
                         ),
                       ),
                       const SizedBox(
@@ -82,7 +82,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         child: Text(
                           "How it Works?",
                           style:
-                          TextStyles.sourceSans.body0.colour(Colors.white),
+                              TextStyles.sourceSans.body0.colour(Colors.white),
                         ),
                       ),
                       SizedBox(
@@ -232,9 +232,6 @@ class PowerPlayWelcomePage extends StatelessWidget {
                       style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding20,
                 ),
               ]),
             ),
