@@ -39,8 +39,6 @@ class PowerPlayService extends ChangeNotifier {
 
   static bool powerPlayDepositFlow = false;
 
-  // String matchId = "";
-
   List<MatchUserPredictedData> _userPredictedData = [];
 
   List<MatchUserPredictedData> get userPredictedData => _userPredictedData;
@@ -80,6 +78,22 @@ class PowerPlayService extends ChangeNotifier {
     } catch (e) {
       _logger.d(e.toString());
       return [];
+    }
+  }
+
+  Future<int> getPowerPlayRewards() async {
+    _logger.i("PowerPlayService -> getPowerPlayRewards");
+    final response = await _powerPlayRepository.getPowerPlayReward();
+    log("SERVICE getPowerPlayRewards response => ${response.model?.data?.amount}");
+
+    try {
+      if (response.isSuccess()) {
+        return response.model!.data!.amount!;
+      }
+      return 0;
+    } catch (e) {
+      _logger.d(e.toString());
+      return 0;
     }
   }
 

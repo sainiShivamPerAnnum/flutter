@@ -135,7 +135,7 @@ class PredictionLeaderboard extends StatelessWidget {
                                 SvgPicture.asset('assets/svg/bell_icon.svg'),
                                 Text(
                                   matchData.headsUpText ?? '',
-                                  style: TextStyles.sourceSans.body4
+                                  style: TextStyles.sourceSans.body3
                                       .colour(Colors.white),
                                 ),
                               ],
@@ -357,19 +357,27 @@ class PredictionLeaderboard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     color: Colors.white,
                     onPressed: () {
-                      BaseUtil.openModalBottomSheet(
-                          isBarrierDismissible: true,
-                          addToScreenStack: true,
-                          backgroundColor: const Color(0xff21284A),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.roundness32),
-                            topRight: Radius.circular(SizeConfig.roundness32),
-                          ),
-                          isScrollControlled: true,
-                          hapticVibrate: true,
-                          content: MakePredictionSheet(
-                            matchData: matchData,
-                          ));
+                      while (AppState.screenStack.length > 2) {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                      }
+                      AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.replace,
+                        page: PowerPlayHomeConfig,
+                      );
+
+                      // BaseUtil.openModalBottomSheet(
+                      //     isBarrierDismissible: true,
+                      //     addToScreenStack: true,
+                      //     backgroundColor: const Color(0xff21284A),
+                      //     borderRadius: BorderRadius.only(
+                      //       topLeft: Radius.circular(SizeConfig.roundness32),
+                      //       topRight: Radius.circular(SizeConfig.roundness32),
+                      //     ),
+                      //     isScrollControlled: true,
+                      //     hapticVibrate: true,
+                      //     content: MakePredictionSheet(
+                      //       matchData: matchData,
+                      //     ));
                     },
                     child: Center(
                       child: Text(
@@ -470,7 +478,6 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
     // _formKey = GlobalKey<FormState>();
     PowerPlayService.powerPlayDepositFlow = false;
   }
-
 
   String? _validateValue(String? value) {
     if (value != null && int.tryParse(value) != null) {
@@ -861,21 +868,27 @@ class YourPredictionSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
               onPressed: () {
-                AppState.backButtonDispatcher!.didPopRoute();
+                while (AppState.screenStack.length > 2) {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                }
+                AppState.delegate!.appState.currentAction = PageAction(
+                  state: PageState.replace,
+                  page: PowerPlayHomeConfig,
+                );
 
-                BaseUtil.openModalBottomSheet(
-                    isBarrierDismissible: true,
-                    addToScreenStack: true,
-                    backgroundColor: const Color(0xff21284A),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(SizeConfig.roundness32),
-                      topRight: Radius.circular(SizeConfig.roundness32),
-                    ),
-                    isScrollControlled: true,
-                    hapticVibrate: true,
-                    content: MakePredictionSheet(
-                      matchData: matchData,
-                    ));
+                // BaseUtil.openModalBottomSheet(
+                //     isBarrierDismissible: true,
+                //     addToScreenStack: true,
+                //     backgroundColor: const Color(0xff21284A),
+                //     borderRadius: BorderRadius.only(
+                //       topLeft: Radius.circular(SizeConfig.roundness32),
+                //       topRight: Radius.circular(SizeConfig.roundness32),
+                //     ),
+                //     isScrollControlled: true,
+                //     hapticVibrate: true,
+                //     content: MakePredictionSheet(
+                //       matchData: matchData,
+                //     ));
               },
               child: Center(
                 child: Text(

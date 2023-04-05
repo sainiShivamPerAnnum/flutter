@@ -106,8 +106,8 @@ class UpcomingMatch extends StatelessWidget {
                               height: 14,
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 17),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding16),
                               child: IplTeamsScoreWidget(
                                 matchData: model.upcomingMatchData![index]!,
                                 isUpcoming: true,
@@ -189,7 +189,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "Predictions starts in ${_formatDuration(Duration(milliseconds: _timeRemaining!))} Hrs",
+      "Predictions start in ${_formatDuration(Duration(milliseconds: _timeRemaining!))} Hrs",
       style: TextStyles.sourceSans.body3.colour(Colors.white.withOpacity(0.7)),
     );
   }

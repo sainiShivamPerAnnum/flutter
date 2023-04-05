@@ -91,11 +91,12 @@ class LiveMatch extends StatelessWidget {
                             horizontal: SizeConfig.padding16),
                         child: IplTeamsScoreWidget(
                           matchData: model.liveMatchData![0]!,
-                          padding: const EdgeInsets.symmetric(horizontal: 17),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding8),
                         ),
                       ),
                       SizedBox(
-                        height: SizeConfig.padding28,
+                        height: SizeConfig.padding20,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

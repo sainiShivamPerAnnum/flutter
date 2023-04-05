@@ -31,6 +31,14 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   bool hasNoMoreCompletedMatches = false;
   List<dynamic>? cardCarousel;
 
+  int _powerPlayReward = 0;
+
+  int get powerPlayReward => _powerPlayReward;
+
+  set powerPlayReward(int value) {
+    _powerPlayReward = value;
+  }
+
   bool _isPredictionsLoading = false;
 
   bool get isPredictionsLoading => _isPredictionsLoading;
@@ -93,6 +101,8 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     getCardCarousle();
     scrollController = ScrollController();
     await getMatchesByStatus(MatchStatus.active.name, 0, 0);
+    powerPlayReward = await _powerPlayService.getPowerPlayRewards();
+
     if (liveMatchData!.isNotEmpty) {
       liveMatchData = liveMatchData;
       matchData = liveMatchData![0]!;

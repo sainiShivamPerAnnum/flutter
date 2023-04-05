@@ -108,8 +108,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                               height: 10,
                             ),
 
-                            /// TODO:get value from backend value
-                            if (false) ...[
+                            if (model.powerPlayReward > 0) ...[
                               Center(
                                 child: Container(
                                   // height: 43,
@@ -123,7 +122,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                     color: Colors.black.withOpacity(0.5),
                                   ),
                                   child: Text(
-                                    'Total Won From PowerPlay : ₹100',
+                                    'Total Won From PowerPlay : ₹${model.powerPlayReward}',
                                     style: TextStyles.sourceSansSB.body3,
                                   ),
                                 ),
