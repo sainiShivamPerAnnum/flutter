@@ -28,15 +28,14 @@ class AnalyticsRepository extends BaseRepo {
 
       final _body = {
         'uid': baseUser.uid,
-        'data': {
-          'uid': baseUser.uid,
-          'installReferrerData': installReferrerData,
-          'asid': appSetId,
-          'aifa': advertiserId,
-          'version': osVersion,
-          'andi': deviceId,
-        }
+        'installReferrer': installReferrerData,
+        'asid': appSetId,
+        'aifa': advertiserId,
+        'version': osVersion,
+        'andi': deviceId,
       };
+
+      logger.d('CHECK BODY: $_body');
 
       final res = await APIService.instance.postData(_apiPaths!.kSetInstallInfo,
           cBaseUrl: _baseUrl, body: _body, token: _bearer);
