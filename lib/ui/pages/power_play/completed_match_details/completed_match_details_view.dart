@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_vm.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CompletedMatchDetailsView extends StatelessWidget {
   const CompletedMatchDetailsView({
@@ -100,29 +102,35 @@ class FooterCta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.padding80,
-      width: SizeConfig.screenWidth,
-      padding: EdgeInsets.only(
-          left: SizeConfig.pageHorizontalMargins,
-          right: SizeConfig.pageHorizontalMargins,
-          bottom: SizeConfig.pageHorizontalMargins),
-      child: MaterialButton(
-        height: SizeConfig.padding32,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        color: Colors.white,
-        onPressed: () {
-          Haptic.vibrate();
-        },
-        child: Center(
-          child: Text(
-            'INVITE FRIENDS',
-            style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+    return Consumer<ReferralService>(builder: (context, model, child) {
+      return Container(
+        height: SizeConfig.padding80,
+        width: SizeConfig.screenWidth,
+        padding: EdgeInsets.only(
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins,
+            bottom: SizeConfig.pageHorizontalMargins),
+        child: MaterialButton(
+          height: SizeConfig.padding32,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          color: Colors.white,
+          onPressed: () {
+            Haptic.vibrate();
+            if (model.isShareAlreadyClicked == false) {
+              Haptic.vibrate();
+              model.shareLink();
+            }
+          },
+          child: Center(
+            child: Text(
+              'INVITE FRIENDS',
+              style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

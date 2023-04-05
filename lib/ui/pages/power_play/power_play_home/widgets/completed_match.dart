@@ -23,7 +23,7 @@ class CompletedMatch extends StatelessWidget {
     return model.state == ViewState.Busy
         ? const Center(child: CircularProgressIndicator())
         : model.completedMatchData == null
-            ? SizedBox()
+            ? const SizedBox()
             : ListView.separated(
                 itemCount: model.completedMatchData!.length,
                 padding:
