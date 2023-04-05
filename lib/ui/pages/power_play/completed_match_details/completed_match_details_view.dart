@@ -55,7 +55,7 @@ class CompletedMatchDetailsView extends StatelessWidget {
                               // ),
                               // const PowerPlayTotalWinWidget(),
                               matchData.matchStats!.didWon
-                                  ? const WinTextWidget()
+                                  ? WinTextWidget(model: model)
                                   : LossOrNoParticipateTextWidget(
                                       isLoss: matchData.matchStats!.count > 0 &&
                                           !matchData.matchStats!.didWon),
@@ -365,10 +365,12 @@ class CustomDivider extends StatelessWidget {
 }
 
 class WinTextWidget extends StatelessWidget {
-  const WinTextWidget({
+  WinTextWidget({
     super.key,
+    required this.model,
   });
 
+  CompletedMatchDetailsVM model;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -393,7 +395,7 @@ class WinTextWidget extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding16),
           Text(
-            "You won ₹192 in Digital Gold",
+            model.winString,
             textAlign: TextAlign.center,
             style:
                 TextStyles.sourceSansB.title5.colour(UiConstants.primaryColor),

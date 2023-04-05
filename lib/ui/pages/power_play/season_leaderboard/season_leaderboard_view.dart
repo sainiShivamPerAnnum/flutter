@@ -46,49 +46,57 @@ class SeasonLeaderboard extends StatelessWidget {
               SizedBox(
                 height: SizeConfig.screenHeight,
                 width: SizeConfig.screenWidth,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const FAppBar(
-                      showAvatar: false,
-                      showCoinBar: false,
-                      type: FaqsType.onboarding,
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            SizedBox(height: SizeConfig.pageHorizontalMargins),
-                            Text("Season Leaderboard",
-                                style: TextStyles.sourceSansB.title2),
-                            SizedBox(height: SizeConfig.pageHorizontalMargins),
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.pageHorizontalMargins),
-                              child: Row(
-                                children: [
-                                  SvgPicture.network(
-                                    asideIcon,
-                                    width: SizeConfig.padding80,
-                                  ),
-                                  SizedBox(width: SizeConfig.padding20),
-                                  Expanded(
-                                      child: rewardDesc3.beautify(
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(Colors.white54),
-                                  )),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: SizeConfig.padding20),
-                            const Divider(color: Colors.white70, height: 0),
-                            NewWebGameLeaderBoardView(model: model),
-                            SizedBox(height: SizeConfig.navBarHeight)
-                          ],
-                        ),
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    model.init();
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const FAppBar(
+                        showAvatar: false,
+                        showCoinBar: false,
+                        type: FaqsType.onboarding,
                       ),
-                    )
-                  ],
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                  height: SizeConfig.pageHorizontalMargins),
+                              Text("Season Leaderboard",
+                                  style: TextStyles.sourceSansB.title2),
+                              SizedBox(
+                                  height: SizeConfig.pageHorizontalMargins),
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.network(
+                                      asideIcon,
+                                      width: SizeConfig.padding80,
+                                    ),
+                                    SizedBox(width: SizeConfig.padding20),
+                                    Expanded(
+                                        child: rewardDesc3.beautify(
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Colors.white54),
+                                    )),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: SizeConfig.padding20),
+                              const Divider(color: Colors.white70, height: 0),
+                              NewWebGameLeaderBoardView(model: model),
+                              SizedBox(height: SizeConfig.navBarHeight)
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               const Align(
@@ -135,7 +143,7 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyles.rajdhani.title4.colour(Colors.white),
                     ),
-                    SizedBox(height: SizeConfig.padding16),
+                    SizedBox(height: SizeConfig.screenHeight! * 0.6),
                   ],
                 ),
               );
