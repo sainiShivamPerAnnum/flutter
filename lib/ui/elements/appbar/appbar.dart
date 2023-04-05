@@ -22,11 +22,8 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showLeading;
   final Widget? leading;
   final Widget? subtitle;
-  final bool? centerTitle;
-
   // final bool hasBackButton;
   final TextStyle? style;
-
   const FAppBar({
     Key? key,
     this.type,
@@ -41,7 +38,6 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
     this.action,
     this.leftPad,
     this.subtitle,
-    this.centerTitle,
     // this.hasBackButton = true
   }) : super(key: key);
 
@@ -69,7 +65,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
           ),
         ],
       ),
-      centerTitle: centerTitle ?? false,
+      centerTitle: false,
       elevation: 0,
       backgroundColor: backgroundColor ?? Colors.transparent,
       actions: [
@@ -85,8 +81,8 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
                     svgAsset: Assets.token,
                     key: const ValueKey(Constants.FELLO_COIN_BAR)),
               ),
-            if (action != null) action!,
             if (type != null) FaqPill(type: type),
+            if (action != null) action!,
             SizedBox(width: SizeConfig.padding14)
           ],
         )

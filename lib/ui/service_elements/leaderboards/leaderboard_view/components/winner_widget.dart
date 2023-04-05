@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
-import 'package:felloapp/core/model/power_play_models/season_leaderboard_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/model/scoreboard_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -15,11 +17,11 @@ class WinnerWidgets extends StatelessWidget {
   WinnerWidgets({
     Key? key,
     required this.scoreboard,
-    // required this.userProfilePicUrl,
+    required this.userProfilePicUrl,
     this.isSpotLightVisible = true,
   }) : super(key: key);
-  final List<SeasonLeaderboardItemModel>? scoreboard;
-  // final List<String?> userProfilePicUrl;
+  final List<ScoreBoard>? scoreboard;
+  final List<String?> userProfilePicUrl;
   final bool isSpotLightVisible;
 
   @override
@@ -87,38 +89,71 @@ class WinnerWidgets extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                  margin: EdgeInsets.only(
-                    top: rank == 0
-                        ? SizeConfig.screenWidth! * 0.130
-                        : SizeConfig.screenWidth! * 0.194,
+                margin: EdgeInsets.only(
+                  top: rank == 0
+                      ? SizeConfig.screenWidth! * 0.130
+                      : SizeConfig.screenWidth! * 0.194,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    SizeConfig.screenWidth! * 0.125,
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      SizeConfig.screenWidth! * 0.125,
-                    ),
-                    border: Border.all(
-                      color: rank == 0
-                          ? UiConstants.kWinnerPlayerPrimaryColor
-                          : UiConstants.kOtherPlayerPrimaryColor
-                              .withOpacity(0.4),
-                      width: SizeConfig.border2,
-                    ),
+                  border: Border.all(
+                    color: rank == 0
+                        ? UiConstants.kWinnerPlayerPrimaryColor
+                        : UiConstants.kOtherPlayerPrimaryColor.withOpacity(0.4),
+                    width: SizeConfig.border2,
                   ),
-                  padding: EdgeInsets.all(
-                    rank == 0
-                        ? SizeConfig.screenWidth! * 0.0055
-                        : SizeConfig.screenWidth! * 0.0083,
-                  ),
-                  child: SvgPicture.asset(
-                    getDefaultProfilePicture(rank),
-                    width: rank == 0
-                        ? SizeConfig.screenWidth! * 0.2344
-                        : SizeConfig.screenWidth! * 0.2083,
-                    height: rank == 0
-                        ? SizeConfig.screenWidth! * 0.2344
-                        : SizeConfig.screenWidth! * 0.2083,
-                    fit: BoxFit.cover,
-                  )),
+                ),
+                padding: EdgeInsets.all(
+                  rank == 0
+                      ? SizeConfig.screenWidth! * 0.0055
+                      : SizeConfig.screenWidth! * 0.0083,
+                ),
+                child: userProfilePicUrl[rank] == null ||
+                        userProfilePicUrl[rank]!.isEmpty
+                    ? SvgPicture.asset(
+                        getDefaultProfilePicture(rank),
+                        width: rank == 0
+                            ? SizeConfig.screenWidth! * 0.2344
+                            : SizeConfig.screenWidth! * 0.2083,
+                        height: rank == 0
+                            ? SizeConfig.screenWidth! * 0.2344
+                            : SizeConfig.screenWidth! * 0.2083,
+                        fit: BoxFit.cover,
+                      )
+                    : ClipOval(
+                        child: CachedNetworkImage(
+                            imageUrl: userProfilePicUrl[rank]!,
+                            errorWidget: (a, b, c) => DefaultAvatar(
+                                  size: Size(
+                                    rank == 0
+                                        ? SizeConfig.screenWidth! * 0.2344
+                                        : SizeConfig.screenWidth! * 0.2083,
+                                    rank == 0
+                                        ? SizeConfig.screenWidth! * 0.2344
+                                        : SizeConfig.screenWidth! * 0.2083,
+                                  ),
+                                ),
+                            placeholder: (ctx, a) => DefaultAvatar(
+                                  size: Size(
+                                    rank == 0
+                                        ? SizeConfig.screenWidth! * 0.2344
+                                        : SizeConfig.screenWidth! * 0.2083,
+                                    rank == 0
+                                        ? SizeConfig.screenWidth! * 0.2344
+                                        : SizeConfig.screenWidth! * 0.2083,
+                                  ),
+                                ),
+                            width: rank == 0
+                                ? SizeConfig.screenWidth! * 0.2344
+                                : SizeConfig.screenWidth! * 0.2083,
+                            height: rank == 0
+                                ? SizeConfig.screenWidth! * 0.2344
+                                : SizeConfig.screenWidth! * 0.2083,
+                            fit: BoxFit.cover),
+                      ),
+              ),
               SizedBox(
                 height: SizeConfig.padding4,
               ),
@@ -134,11 +169,12 @@ class WinnerWidgets extends StatelessWidget {
                 height: SizeConfig.padding6,
               ),
               Text(
-                locator<UserService>().diplayUsername(scoreboard![rank].uName),
+                locator<UserService>()
+                    .diplayUsername(scoreboard![rank].username!),
                 style: TextStyles.rajdhaniM.body4,
               ),
               Text(
-                '(${scoreboard![rank].value})',
+                '(${scoreboard![rank].score!.toInt()})',
                 style: TextStyles.rajdhani.body4.setOpacity(0.6),
               ),
             ],

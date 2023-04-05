@@ -18,8 +18,6 @@ import 'package:showcaseview/showcaseview.dart';
 const HtmlEscape htmlEscape = HtmlEscape();
 
 class Save extends StatelessWidget {
-  const Save({super.key});
-
   @override
   Widget build(BuildContext context) {
     return PropertyChangeProvider<BankAndPanService,
@@ -57,14 +55,14 @@ class SaveViewWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: const [UserServiceProperties.mySegments],
+      properties: [UserServiceProperties.mySegments],
       builder: (_, prop, ___) {
         if (prop!.userSegments.contains("NEW_USER")) {
           return NewUserSaveView(
             model: model,
           );
         }
-        return SizedBox(
+        return Container(
           height: SizeConfig.screenHeight,
           child: Column(
             children: [

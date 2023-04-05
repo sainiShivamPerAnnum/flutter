@@ -19,7 +19,7 @@ class LeaderboardShimmer extends StatelessWidget {
         borderRadius: BorderRadius.circular(
           SizeConfig.roundness5,
         ),
-        // color: UiConstants.kSecondaryBackgroundColor,
+        color: UiConstants.kSecondaryBackgroundColor,
       ),
       child: Column(
         children: [

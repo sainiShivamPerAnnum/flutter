@@ -13,7 +13,6 @@ import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/core/repository/power_play_repo.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
@@ -49,7 +48,6 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -84,10 +82,6 @@ import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_vm.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_vm.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_vm.dart';
-import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_vm.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/view_model/leaderboard_view_model.dart';
-import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
-import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_vm.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratch_cards_vm.dart';
@@ -154,7 +148,6 @@ Future<void> setupLocator() async {
   locator.registerSingletonAsync(() => SharedPreferences.getInstance());
   locator.registerLazySingleton(() => MarketingEventHandlerService());
   locator.registerLazySingleton(() => SubService());
-  locator.registerLazySingleton(() => PowerPlayService());
 
   //Repository
   locator.registerLazySingleton(() => DBModel());
@@ -180,19 +173,16 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => PrizingRepo());
   locator.registerLazySingleton(() => UserStatsRepo());
   locator.registerLazySingleton(() => RootController());
-  locator.registerLazySingleton(() => PowerPlayRepository());
-
-  /// SPLASH
+  // SPLASH
   locator.registerFactory(() => LauncherViewModel());
   locator.registerFactory(() => RootViewModel());
-
-  /// Hometabs
+  // Hometabs
   locator.registerFactory(() => PlayViewModel());
   locator.registerFactory(() => SaveViewModel());
   locator.registerFactory(() => WinViewModel());
   locator.registerFactory(() => JourneyPageViewModel());
 
-  /// VIEW MODELS
+  // VIEW MODELS
   locator.registerFactory(() => TransactionsHistoryViewModel());
   locator.registerFactory(() => LoginControllerViewModel());
   locator.registerFactory(() => LoginNameInputViewModel());
@@ -227,10 +217,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => LendboxWithdrawalViewModel());
   locator.registerFactory(() => InfoStoriesViewModel());
   locator.registerFactory(() => SettingsViewModel());
-  locator.registerFactory(() => PowerPlayHomeViewModel());
-  locator.registerFactory(() => LeaderBoardViewModel());
-  locator.registerFactory(() => CompletedMatchDetailsVM());
-  locator.registerFactory(() => SeasonLeaderboardViewModel());
 
   //WIDGETS
   locator.registerFactory(() => MiniTransactionCardViewModel());

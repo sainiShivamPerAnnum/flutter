@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -40,8 +41,8 @@ class SaveNetWorthSection extends StatelessWidget {
               child: SaveCustomCard(
                 title: locale.felloFloMainTitle,
                 subtitle: locale.currentValue,
-                chipText: const ["P2P Asset", "Safe & Secure", "10% Returns"],
-                key: const Key(Constants.ASSET_TYPE_LENDBOX),
+                chipText: ["P2P Asset", "Safe & Secure", "10% Returns"],
+                key: Key(Constants.ASSET_TYPE_LENDBOX),
                 cardBgColor: UiConstants.kSaveStableFelloCardBg,
                 cardAssetName: Assets.felloFlo,
                 investmentType: InvestmentType.LENDBOXP2P,
@@ -79,12 +80,12 @@ class SaveNetWorthSection extends StatelessWidget {
               child: SaveCustomCard(
                 title: locale.digitalGoldMailTitle,
                 subtitle: locale.youOwn,
-                chipText: const [
+                chipText: [
                   "Safe & Secure",
                   "24K Gold",
                   "99.9% Pure",
                 ],
-                key: const Key(Constants.ASSET_TYPE_AUGMONT),
+                key: Key(Constants.ASSET_TYPE_AUGMONT),
                 cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
                 cardAssetName: Assets.digitalGoldBar,
                 investmentType: InvestmentType.AUGGOLD99,
@@ -139,7 +140,7 @@ class SaveNetWorthSection extends StatelessWidget {
           //   height: SizeConfig.padding12,
           // ),
           PropertyChangeConsumer<UserService, UserServiceProperties>(
-            properties: const [UserServiceProperties.myUserFund],
+            properties: [UserServiceProperties.myUserFund],
             builder: (context, model, property) => Container(
               height: SizeConfig.screenWidth! * 0.22,
               child: model?.userFundWallet?.netWorth != null &&
@@ -157,7 +158,7 @@ class SaveNetWorthSection extends StatelessWidget {
                             locale.totalSavings,
                             style: TextStyles.rajdhani.body2
                                 .colour(UiConstants.kTextColor),
-                            key: const ValueKey(Constants.TOTAL_SAVINGS),
+                            key: ValueKey(Constants.TOTAL_SAVINGS),
                           ),
                           NetWorthValue(
                             style: TextStyles.sourceSans.title0.bold,
@@ -179,10 +180,7 @@ class SaveNetWorthSection extends StatelessWidget {
             ),
           ),
           getAssetsOrder(),
-          const SizedBox(
-            height: 15,
-          ),
-          // const SaveAssetsFooter(),
+          SaveAssetsFooter(),
         ],
       ),
     );

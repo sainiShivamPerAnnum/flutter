@@ -2,7 +2,6 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/elements/custom_card/save_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/show_case_key.dart';
@@ -30,7 +29,7 @@ class NewUserSaveView extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                        color: const Color(0xff232326),
+                        color: Color(0xff232326),
                         borderRadius: BorderRadius.vertical(
                             bottom: Radius.circular(SizeConfig.padding24))),
                     child: Column(
@@ -67,7 +66,7 @@ class NewUserSaveView extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.padding10,
                         ),
-                        const SaveAssetsFooter(),
+                        SaveAssetsFooter(),
                         SizedBox(
                           height: SizeConfig.padding10,
                         ),
@@ -129,7 +128,6 @@ class NewUserSaveView extends StatelessWidget {
         }
       },
     );
-    children.add(const PowerPlayCard());
 
     return children;
   }

@@ -63,8 +63,10 @@ class UiConstants {
 
   static const Color kSecondaryBackgroundColor = Color(0xFF39393C);
   static const Color kModalSheetBackgroundColor = Color(0xFF1B262C);
-  static const Color kModalSheetMutedTextBackgroundColor = Color(0xFFA9C6D6);
-  static const Color kModalSheetSecondaryBackgroundColor = Color(0xFF627F8E);
+  static const Color kModalSheetMutedTextBackgroundColor =
+      Color(0xFFA9C6D6);
+  static const Color kModalSheetSecondaryBackgroundColor =
+      Color(0xFF627F8E);
   static const Color kDarkBackgroundColor = Color(0xFF18181B);
   static const Color kTabBorderColor = Color(0xFF62E3C4);
   static const Color kDividerColor = Color(0xFF9EA1A1);
@@ -72,8 +74,7 @@ class UiConstants {
   static const Color kFirstRankPillerColor = Color(0xFFF2B826);
   static const Color kSecondRankPillerColor = Color(0xF5371EE);
   static const Color kThirdRankPillerColor = Color(0xFF34C3A7);
-  static Color kUserRankBackgroundColor =
-      const Color(0xFF000000).withOpacity(0.3);
+  static Color kUserRankBackgroundColor = const Color(0xFF000000).withOpacity(0.3);
   static const Color kWinnerPlayerPrimaryColor = Color(0xFFFFD979);
   static const Color kWinnerPlayerLightPrimaryColor = Color(0xFFFEF5DC);
   static const Color kOtherPlayerPrimaryColor = Color(0xFFFFFFFF);
@@ -126,10 +127,7 @@ class UiConstants {
   );
 
   static LinearGradient kTextFieldGradient2 = LinearGradient(
-    colors: [
-      const Color(0xff111111),
-      UiConstants.kTextFieldColor.withOpacity(0.7)
-    ],
+    colors: [const Color(0xff111111), UiConstants.kTextFieldColor.withOpacity(0.7)],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     stops: const [0.0, 0.4],
@@ -146,10 +144,7 @@ class UiConstants {
       tileMode: TileMode.clamp);
 
   static LinearGradient kCampaignBannerBackgrondGradient = LinearGradient(
-    colors: [
-      const Color(0xff141316),
-      UiConstants.kBackgroundColor.withOpacity(0.2)
-    ],
+    colors: [const Color(0xff141316), UiConstants.kBackgroundColor.withOpacity(0.2)],
     begin: Alignment.bottomCenter,
     end: Alignment.topCenter,
     stops: const [0, 0.7],
@@ -187,12 +182,6 @@ class UiConstants {
   static Color kBuyTicketBg = const Color(0xff30363C);
   static Color kBuyTicketSaveButton = const Color(0xff08D2AD);
   static Color kGreyTextColor = const Color(0xff72767A);
-
-  //POWER PLAY
-  static Color kPowerPlayPrimary = const Color(0xff212A4C);
-  static Color kPowerPlaySecondary = const Color(0xff8c3f31);
-  static Color kPowerPlayPrimaryOff = const Color(0xff373E5E);
-  static Color kPowerPlaySecondaryOff = const Color(0xff9A5445);
 }
 
 extension ColorExtension on String {
