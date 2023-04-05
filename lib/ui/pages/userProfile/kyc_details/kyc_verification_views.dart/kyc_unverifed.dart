@@ -30,44 +30,31 @@ class KycUnVerifiedView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         model.capturedImage != null
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    locale.kycPanUpload,
-                    style: TextStyles.sourceSansM.body2,
+            ? KycBriefTile(
+                label: locale.kycPanUpload,
+                title: model.capturedImage!.name,
+                model: model,
+                subtitle:
+                    "${model.fileSize.toString()}" + locale.mb.toUpperCase(),
+                trailing: Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                  child: IconButton(
+                    icon: Icon(Icons.delete_rounded),
+                    color: Colors.red,
+                    onPressed: () {
+                      if (model.isUpdatingKycDetails) return;
+                      Haptic.vibrate();
+                      model.kycErrorMessage = null;
+                      model.capturedImage = null;
+                    },
                   ),
-                  SizedBox(height: SizeConfig.padding8),
-                  KycBriefTile(
-                    title: model.capturedImage!.name,
-                    model: model,
-                    subtitle:
-                        "${model.fileSize.toString()} ${locale.mb.toUpperCase()}",
-                    trailing: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding12),
-                      child: IconButton(
-                        icon: const Icon(Icons.delete_rounded),
-                        color: Colors.red,
-                        onPressed: () {
-                          if (model.isUpdatingKycDetails) return;
-                          Haptic.vibrate();
-                          model.kycErrorMessage = null;
-                          model.capturedImage = null;
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    locale.kycPanUpload,
-                    style: TextStyles.sourceSansM.body2,
-                  ),
-                  SizedBox(height: SizeConfig.padding12),
+                  AppTextFieldLabel(locale.kycPanUpload),
                   Container(
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.screenWidth! / 2.5,

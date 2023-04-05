@@ -87,10 +87,17 @@ class AutosaveDetailsViewModel extends BaseViewModel {
     if (_subService.isPauseOrResuming) return;
     if (_subService.autosaveState == AutosaveState.PAUSED ||
         _subService.autosaveState == AutosaveState.INACTIVE) {
-      locator<AnalyticsService>()
-          .track(eventName: AnalyticsEvents.asResumeTapped, properties: {
+      _analyticsService
+          .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
         "frequency": activeSubscription!.frequency,
         "amount": activeSubscription!.amount,
+        // "SIP deducted Count": filteredList != null ? filteredList!.length : 0,
+        // "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
+        //     activeSubscription!.createdOn!.microsecondsSinceEpoch),
+        "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
+            AnalyticsProperties.getFelloFloAmount(),
+        "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+        "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
       });
 
       bool response = await _subService.resumeSubscription();
@@ -103,11 +110,18 @@ class AutosaveDetailsViewModel extends BaseViewModel {
       }
     } else {
       _analyticsService
-          .track(eventName: AnalyticsEvents.asPauseTapped, properties: {
+          .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
         "frequency": activeSubscription!.frequency,
         "amount": activeSubscription!.amount,
+        // "SIP deducted Count": filteredList != null ? filteredList!.length : 0,
+        // "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
+        //     activeSubscription!.createdOn!.microsecondsSinceEpoch),
+        "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
+            AnalyticsProperties.getFelloFloAmount(),
+        "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+        "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
       });
-      return BaseUtil.openModalBottomSheet(
+      BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         hapticVibrate: true,
         backgroundColor:

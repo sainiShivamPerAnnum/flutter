@@ -367,7 +367,7 @@
   "kycNameLabel": "Name as per your PAN Card",
   "kycTitle": "Kyc Details",
   "kycVerifyText": "This is required to securely verify your identity.",
-  "kycPanUpload": "Step 1: Upload your PAN Card",
+  "kycPanUpload": "Upload your PAN Card",
   "kycUseCamera": "Use Camera",
   "kycGrantPermissionText": "Please grant camera access permission to continue",
   "someThingWentWrongError": "Something went wrong, please try again.",

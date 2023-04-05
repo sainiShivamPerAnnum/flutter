@@ -19,7 +19,7 @@ import 'package:shimmer/shimmer.dart';
 
 class AutosaveCard extends StatelessWidget {
   final InvestmentType? investmentType;
-  const AutosaveCard({super.key, this.investmentType});
+  AutosaveCard({this.investmentType});
 
   bool showAutosaveCard(SubService service) {
     if (investmentType != null) {
@@ -34,9 +34,8 @@ class AutosaveCard extends StatelessWidget {
               service.subscriptionData!.lbAmt == "0");
         }
       }
-    } else {
+    } else
       return true;
-    }
   }
 
   @override
@@ -46,16 +45,15 @@ class AutosaveCard extends StatelessWidget {
           ? GestureDetector(
               onTap: () async {
                 if (context.read<ConnectivityService>().connectivityStatus ==
-                    ConnectivityStatus.Offline) {
+                    ConnectivityStatus.Offline)
                   return BaseUtil.showNoInternetAlert();
-                }
                 await service.handleTap();
               },
               child: (service.subscriptionData != null)
                   ? ActiveOrPausedAutosaveCard(service: service)
                   : InitAutosaveCard(service: service),
             )
-          : const SizedBox(),
+          : SizedBox(),
     );
   }
 }
@@ -78,7 +76,7 @@ class InitAutosaveCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const TitleSubtitleContainer(
+            TitleSubtitleContainer(
               title: 'Introducing Autosave',
               subTitle: 'Automated payments for Fello Flo & Digital Gold',
             ),
@@ -264,8 +262,11 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                                       .colour(UiConstants.kTextColor),
                                 ),
                                 TextSpan(
-                                  text:
-                                      "/${service.subscriptionData?.frequency.toCamelCase().frequencyRename() ?? ""}",
+                                  text: "/" +
+                                      (service.subscriptionData?.frequency
+                                              .toCamelCase()
+                                              .frequencyRename() ??
+                                          ""),
                                   style: TextStyles.sourceSans.body4
                                       .colour(UiConstants.kTextColor2),
                                 ),

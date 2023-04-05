@@ -1,11 +1,9 @@
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -57,7 +55,7 @@ class AutosaveDetailsView extends StatelessWidget {
             backgroundColor: UiConstants.kBackgroundColor,
             elevation: 0.0,
             leading: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back_ios,
                 color: UiConstants.kTextColor,
               ),
@@ -68,7 +66,7 @@ class AutosaveDetailsView extends StatelessWidget {
           ),
           backgroundColor: UiConstants.kBackgroundColor,
           body: model.state == ViewState.Busy
-              ? Center(
+              ? const Center(
                   child: FullScreenLoader(),
                 )
               : Stack(
@@ -89,7 +87,8 @@ class AutosaveDetailsView extends StatelessWidget {
                                   indent: SizeConfig.padding32,
                                   endIndent: SizeConfig.padding32,
                                   height: SizeConfig.border1,
-                                  color: Color(0xFF999999).withOpacity(0.4),
+                                  color:
+                                      const Color(0xFF999999).withOpacity(0.4),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
@@ -103,7 +102,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                         "Autosave Transactions",
                                         style: TextStyles.rajdhaniSB.title4,
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                       if (!model.isFetchingTransactions &&
                                           (((model.currentPage == 0) &&
                                                   (model.augTxnList?.length ??
@@ -186,7 +185,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                               .txnPageController!
                                                               .animateToPage(0,
                                                                   duration:
-                                                                      Duration(
+                                                                  const Duration(
                                                                           seconds:
                                                                               1),
                                                                   curve: Curves
@@ -219,7 +218,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                               .txnPageController!
                                                               .animateToPage(1,
                                                                   duration:
-                                                                      Duration(
+                                                                  const Duration(
                                                                           seconds:
                                                                               1),
                                                                   curve: Curves
@@ -245,8 +244,8 @@ class AutosaveDetailsView extends StatelessWidget {
                                             Row(
                                               children: [
                                                 AnimatedContainer(
-                                                  duration:
-                                                      Duration(seconds: 1),
+                                                  duration: const Duration(
+                                                      seconds: 1),
                                                   height: 4,
                                                   width: ((SizeConfig
                                                                   .screenWidth! -
@@ -290,8 +289,9 @@ class AutosaveDetailsView extends StatelessWidget {
                                                         ))
                                                       : Container(
                                                           color:
-                                                              Color(0xFF595F5F)
-                                                                  .withOpacity(
+                                                          const Color(
+                                                                  0xFF595F5F)
+                                                              .withOpacity(
                                                                       0.14),
                                                           padding: EdgeInsets
                                                               .symmetric(
@@ -301,7 +301,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                           ),
                                                           child:
                                                               ListView.builder(
-                                                            itemCount: model
+                                                                itemCount: model
                                                                         .augTxnList!
                                                                         .length >
                                                                     5
@@ -311,7 +311,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                                     .length,
                                                             shrinkWrap: true,
                                                             physics:
-                                                                NeverScrollableScrollPhysics(),
+                                                                const NeverScrollableScrollPhysics(),
                                                             itemBuilder:
                                                                 (context,
                                                                     index) {
@@ -342,8 +342,9 @@ class AutosaveDetailsView extends StatelessWidget {
                                                         ))
                                                       : Container(
                                                           color:
-                                                              Color(0xFF595F5F)
-                                                                  .withOpacity(
+                                                          const Color(
+                                                                  0xFF595F5F)
+                                                              .withOpacity(
                                                                       0.14),
                                                           padding: EdgeInsets
                                                               .symmetric(
@@ -353,7 +354,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                           ),
                                                           child:
                                                               ListView.builder(
-                                                            itemCount: model
+                                                                itemCount: model
                                                                         .lbTxnList!
                                                                         .length >
                                                                     5
@@ -363,7 +364,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                                     ?.length,
                                                             shrinkWrap: true,
                                                             physics:
-                                                                NeverScrollableScrollPhysics(),
+                                                                const NeverScrollableScrollPhysics(),
                                                             itemBuilder:
                                                                 (context,
                                                                     index) {
@@ -466,8 +467,6 @@ class AutosaveDetailsView extends StatelessWidget {
           btnText: "UPDATE AUTOSAVE",
           onPressed: () {
             //NOTE: CHECK IN EDIT MODE
-            locator<AnalyticsService>()
-                .track(eventName: AnalyticsEvents.asUpdateTapped);
             AppState.delegate!.appState.currentAction = PageAction(
               page: AutosaveUpdateViewPageConfig,
               state: PageState.addPage,

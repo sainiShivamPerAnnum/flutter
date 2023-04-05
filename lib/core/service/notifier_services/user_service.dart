@@ -29,11 +29,13 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -104,6 +106,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
   bool get hasNewNotifications => _hasNewNotifications;
+  bool get isCompleteKycCompleted => isSimpleKycVerified && isEmailVerified;
 
   List _userSegments = [];
   set baseUser(baseUser) {
@@ -535,6 +538,49 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   diplayUsername(String username) {
     return username.replaceAll('@', '.');
+  }
+
+  Future<String> createDynamicLink(bool short, String source) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix:
+          '${FlavorConfig.instance!.values.dynamicLinkPrefix}/app/referral',
+      link: Uri.parse('https://fello.in/${_baseUser!.uid}'),
+      socialMetaTagParameters: SocialMetaTagParameters(
+          title: 'Download ${Constants.APP_NAME}',
+          description:
+              'Fello makes saving fun, and investing a lot more simple!',
+          imageUrl: Uri.parse(
+              'https://fello-assets.s3.ap-south-1.amazonaws.com/ic_social.png')),
+      googleAnalyticsParameters: GoogleAnalyticsParameters(
+        campaign: 'referrals',
+        medium: 'social',
+        source: source,
+      ),
+      androidParameters: AndroidParameters(
+        packageName: 'in.fello.felloapp',
+        minimumVersion: 0,
+      ),
+      // dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+      //   shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+      // ),
+      iosParameters: IOSParameters(
+        bundleId: 'in.fello.felloappiOS',
+        minimumVersion: '0',
+        appStoreId: '1558445254',
+      ),
+    );
+
+    Uri url;
+    if (short) {
+      final ShortDynamicLink shortLink = await FirebaseDynamicLinksPlatform
+          .instance
+          .buildShortLink(parameters);
+      url = shortLink.shortUrl;
+    } else {
+      url = parameters.link;
+    }
+
+    return url.toString();
   }
 
   Future<bool?> updateClientToken(String? token) async {

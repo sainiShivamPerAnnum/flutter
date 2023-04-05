@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -13,12 +14,17 @@ class DailyPicksTimer extends StatefulWidget {
   final Widget replacementWidget;
   final Color? bgColor;
   final MainAxisAlignment? alignment;
+  final TimestampModel? startTime;
+  final Color? timerBgColor;
 
-  const DailyPicksTimer({super.key,
-    required this.replacementWidget,
-    this.bgColor,
-    this.alignment,
-  });
+  const DailyPicksTimer(
+      {super.key,
+      required this.replacementWidget,
+      this.bgColor,
+      this.alignment,
+      this.startTime,
+      this.timerBgColor});
+
   @override
   _DailyPicksTimerState createState() => _DailyPicksTimerState();
 }
@@ -46,8 +52,14 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
 
   Duration getDifferance() {
     DateTime currentTime = DateTime.now();
-    DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 18, 0, 10);
+    DateTime drawTime;
+    if (widget.startTime != null) {
+      drawTime = widget.startTime!.toDate();
+    } else {
+      drawTime = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, 18, 0, 10);
+    }
+
     Duration timeDiff = currentTime.difference(drawTime);
 
     return timeDiff;
@@ -100,11 +112,11 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   }
 
   Widget buildTimeCard({required String time}) => Container(
-        height: SizeConfig.screenWidth! * 0.16,
+    height: SizeConfig.screenWidth! * 0.16,
         width: SizeConfig.screenWidth! * 0.16,
         // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-        decoration: const BoxDecoration(
-          color: UiConstants.kBackgroundColor,
+        decoration: BoxDecoration(
+          color: widget.timerBgColor ?? UiConstants.kBackgroundColor,
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,

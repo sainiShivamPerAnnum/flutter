@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -12,14 +10,12 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
-import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 // import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -28,7 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ReferralDetailsViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
@@ -197,50 +192,6 @@ class ReferralDetailsViewModel extends BaseViewModel {
     } else {
       return '\'Unavailable\'';
     }
-  }
-
-  Future<void> shareLink() async {
-    _isShareAlreadyClicked = true;
-    notifyListeners();
-
-    if (shareLinkInProgress) return;
-    if (await BaseUtil.showNoInternetAlert()) return;
-
-    _fcmListener!.addSubscription(FcmTopic.REFERRER);
-    BaseAnalytics.analytics!.logShare(
-      contentType: 'referral',
-      itemId: _userService!.baseUser!.uid!,
-      method: 'message',
-    );
-
-    _analyticsService!
-        .track(eventName: AnalyticsEvents.shareReferalCode, properties: {
-      "Referrred Count Success": AnalyticsProperties.getSuccessReferralCount(),
-      "Referred count (total)": AnalyticsProperties.getTotalReferralCount(),
-      "code": _refCode,
-    });
-    shareLinkInProgress = true;
-    refresh();
-
-    String? url = await generateLink();
-
-    shareLinkInProgress = false;
-    refresh();
-
-    if (url == null) {
-      BaseUtil.showNegativeAlert(locale.generatingLinkFailed, locale.tryLater);
-    } else {
-      if (Platform.isIOS) {
-        Share.share(_shareMsg + url);
-      } else {
-        Share.share(_shareMsg + url);
-      }
-    }
-
-    Future.delayed(Duration(seconds: 3), () {
-      _isShareAlreadyClicked = false;
-      notifyListeners();
-    });
   }
 
   bool bonusUnlockedReferalPresent(List<ReferralDetail> list) {

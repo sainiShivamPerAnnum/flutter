@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names, avoid_classes_with_only_static_members
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,10 +21,8 @@ class PreferenceHelper {
       "isDailyAppBonusEventActive";
   static const CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY =
       "lastDailyAppBonusRewardClaimDay";
-
-  static const CACHE_SEGMENTS = "user_segments";
-  static const CACHE_LAST_APP_OPEN = "lastAppOpen";
   static SharedPreferences? _prefs;
+  static const POWERPLAY_IS_PLAYED = "powerplay_is_played";
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {
@@ -52,33 +48,36 @@ class PreferenceHelper {
     return _prefs!.setBool(key, value);
   }
 
-  static Future<bool> setStringList(String key, List<String> value) async {
-    return _prefs!.setStringList(key, value);
-  }
-
-  static String getString(String key, {String def = ''}) {
+  static String getString(String key, {String? def}) {
     String? val = _prefs!.getString(key);
-    return val ?? def;
+    if (val == null) {
+      val = def ?? '';
+    }
+    return val;
   }
 
-  static int getInt(String key, {int def = 0}) {
+  static int getInt(String key, {int? def}) {
     int? val = _prefs!.getInt(key);
-    return val ?? def;
+    if (val == null) {
+      val = def ?? 0;
+    }
+    return val;
   }
 
-  static double getDouble(String key, {double def = 0.0}) {
+  static double getDouble(String key, {double? def}) {
     double? val = _prefs!.getDouble(key);
-    return val ?? def;
+    if (val == null) {
+      val = def ?? 0.0;
+    }
+    return val;
   }
 
-  static bool getBool(String key, {bool def = false}) {
+  static bool getBool(String key, {bool? def}) {
     bool? val = _prefs!.getBool(key);
-    return val ?? def;
-  }
-
-  static List<String> getStringList(String key, {List<String> def = const []}) {
-    List<String>? val = _prefs!.getStringList(key);
-    return val ?? def;
+    if (val == null) {
+      val = def ?? false;
+    }
+    return val;
   }
 
   static Future<bool> remove(String key) async {

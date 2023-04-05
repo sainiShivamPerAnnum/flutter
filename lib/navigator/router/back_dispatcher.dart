@@ -2,9 +2,8 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -27,10 +26,11 @@ import 'package:flutter/material.dart';
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate? _routerDelegate;
   final CustomLogger? logger = locator<CustomLogger>();
-  final UserService _userService = locator<UserService>();
-  final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
-  final JourneyService _journeyService = locator<JourneyService>();
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final UserRepository? _userRepo = locator<UserRepository>();
+  BaseUtil? _baseUtil = locator<BaseUtil>();
+  final UserService? _userService = locator<UserService>();
+  final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
+  final JourneyService? _journeyService = locator<JourneyService>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
@@ -67,7 +67,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     if (AppState.showAutosaveBt &&
         AppState.screenStack.last != ScreenItem.dialog) {
       AppState.showAutosaveBt = false;
-      _analyticsService.track(eventName: AnalyticsEvents.asHardBackTapped);
       BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,

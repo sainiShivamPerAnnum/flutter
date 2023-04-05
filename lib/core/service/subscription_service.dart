@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
@@ -12,7 +11,6 @@ import 'package:felloapp/core/model/subscription_models/subscription_model.dart'
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
@@ -83,7 +81,6 @@ class SubService extends ChangeNotifier {
   final SubscriptionRepo _subscriptionRepo = locator<SubscriptionRepo>();
   final GetterRepository _getterRepo = locator<GetterRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   //DEPENDENCY - END
 
@@ -204,7 +201,7 @@ class SubService extends ChangeNotifier {
 
   startPollingForCreateSubscriptionResponse() {
     timer = Timer.periodic(
-      Duration(seconds: 10),
+      const Duration(seconds: 10),
       (t) {
         pollCount++;
         if (pollCount > 100) {
@@ -243,7 +240,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription updated successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -262,7 +259,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription paused successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -280,7 +277,7 @@ class SubService extends ChangeNotifier {
     isPauseOrResuming = false;
     if (res.isSuccess()) {
       subscriptionData = res.model;
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription resumed successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -459,10 +456,8 @@ class SubService extends ChangeNotifier {
   }
 
   handleTap() {
+    print(_autosaveState);
     Haptic.vibrate();
-    _analyticsService.track(
-        eventName: AnalyticsEvents.asCardTapped,
-        properties: {"status": autosaveState.name, "location": "Save section"});
     switch (autosaveState) {
       case AutosaveState.INIT:
         return BaseUtil.showNegativeAlert(

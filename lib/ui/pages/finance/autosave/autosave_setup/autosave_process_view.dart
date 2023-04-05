@@ -69,7 +69,6 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                           model.pageController.page!.toInt() - 1,
                           duration: Duration(milliseconds: 500),
                           curve: Curves.decelerate);
-                  model.trackAutosaveBackPress();
                 },
               ),
               actions: [
