@@ -856,11 +856,6 @@ class YourPredictionSheet extends StatelessWidget {
                                     SizedBox(
                                       height: SizeConfig.padding16,
                                     ),
-                                    if (index != 2)
-                                      Container(
-                                        height: 0.5,
-                                        color: Colors.white.withOpacity(0.3),
-                                      ),
                                   ],
                                 );
                               }),
@@ -877,39 +872,39 @@ class YourPredictionSheet extends StatelessWidget {
                 color: Colors.white,
                 onPressed: () {
                   while (AppState.screenStack.length > 2) {
-                  AppState.backButtonDispatcher!.didPopRoute();
-                }
-                AppState.delegate!.appState.currentAction = PageAction(
-                  state: PageState.replace,
-                  page: PowerPlayHomeConfig,
-                );
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  }
+                  AppState.delegate!.appState.currentAction = PageAction(
+                    state: PageState.replace,
+                    page: PowerPlayHomeConfig,
+                  );
 
                   // BaseUtil.openModalBottomSheet(
-                //     isBarrierDismissible: true,
-                //     addToScreenStack: true,
-                //     backgroundColor: const Color(0xff21284A),
-                //     borderRadius: BorderRadius.only(
-                //       topLeft: Radius.circular(SizeConfig.roundness32),
-                //       topRight: Radius.circular(SizeConfig.roundness32),
-                //     ),
-                //     isScrollControlled: true,
-                //     hapticVibrate: true,
-                //     content: MakePredictionSheet(
-                //       matchData: matchData,
-                //     ));
-              },
-              child: Center(
-                child: Text(
-                  'PREDICT NOW',
-                  style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  //     isBarrierDismissible: true,
+                  //     addToScreenStack: true,
+                  //     backgroundColor: const Color(0xff21284A),
+                  //     borderRadius: BorderRadius.only(
+                  //       topLeft: Radius.circular(SizeConfig.roundness32),
+                  //       topRight: Radius.circular(SizeConfig.roundness32),
+                  //     ),
+                  //     isScrollControlled: true,
+                  //     hapticVibrate: true,
+                  //     content: MakePredictionSheet(
+                  //       matchData: matchData,
+                  //     ));
+                },
+                child: Center(
+                  child: Text(
+                    'PREDICT NOW',
+                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding20,
-            ),
-          ],
-        )),
+              SizedBox(
+                height: SizeConfig.padding20,
+              ),
+            ],
+          )),
     );
   }
 }

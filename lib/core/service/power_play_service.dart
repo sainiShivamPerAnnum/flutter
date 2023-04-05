@@ -123,13 +123,16 @@ class PowerPlayService extends ChangeNotifier {
     TimestampModel? startTime;
     TimestampModel? endTime;
 
-    if (matchData.status == MatchStatus.active.name ||
-        matchData.status == MatchStatus.half_complete.name) {
+    if (matchData.status == MatchStatus.active.name) {
       startTime = matchData.startsAt;
       endTime = TimestampModel.currentTimeStamp();
+    } else if (matchData.status == MatchStatus.half_complete.name) {
+      startTime = matchData.startsAt;
+      endTime =
+          matchData.predictionEndedAt ?? TimestampModel.currentTimeStamp();
     } else if (matchData.status == MatchStatus.completed.name) {
       startTime = matchData.startsAt;
-      endTime = matchData.endsAt;
+      endTime = matchData.predictionEndedAt ?? matchData.endsAt;
     }
 
     final response =

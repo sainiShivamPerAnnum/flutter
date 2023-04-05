@@ -206,7 +206,10 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     isPredictionsLoading = true;
     final response = await _txnRepo.getPowerPlayUserTransactions(
         startTime: liveMatchData![0]!.startsAt,
-        endTime: TimestampModel.currentTimeStamp(),
+        endTime: liveMatchData![0]!.status == MatchStatus.active.name
+            ? TimestampModel.currentTimeStamp()
+            : (liveMatchData![0]!.predictionEndedAt ??
+                liveMatchData![0]!.endsAt),
         type: 'DEPOSIT',
         status: 'COMPLETE');
     isPredictionsLoading = false;
