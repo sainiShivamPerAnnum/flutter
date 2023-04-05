@@ -850,11 +850,6 @@ class YourPredictionSheet extends StatelessWidget {
                                     SizedBox(
                                       height: SizeConfig.padding16,
                                     ),
-                                    if (index != 2)
-                                      Container(
-                                        height: 0.5,
-                                        color: Colors.white.withOpacity(0.3),
-                                      ),
                                   ],
                                 );
                               }),

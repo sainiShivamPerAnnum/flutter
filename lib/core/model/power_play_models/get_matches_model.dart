@@ -63,6 +63,7 @@ class MatchData {
     this.headsUpText,
     this.verdictText,
     this.matchStats,
+    this.predictionEndedAt,
     this.target,
   });
 
@@ -80,9 +81,10 @@ class MatchData {
   final String? verdictText;
   final MatchStats? matchStats;
   final int? target;
+  final TimestampModel? predictionEndedAt;
 
   factory MatchData.fromJson(Map<String, dynamic> json) => MatchData(
-    id: json["_id"],
+        id: json["_id"],
         currentScore: Map.from(json["currentScore"]!)
             .map((k, v) => MapEntry<String, String>(k, v)),
         endsAt: TimestampModel.fromMap(json['endsAt']),
@@ -100,6 +102,7 @@ class MatchData {
         verdictText: json['verdictText'],
         matchStats: MatchStats.fromMap(json['matchStats'] ?? {}),
         target: json['target'] ?? 0,
+        predictionEndedAt: json['predictionEndedAt'],
       );
 
   @override
