@@ -8,6 +8,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/games/web/reward_leaderboard/components/leaderboard_shimmer.dart';
+import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_view.dart';
 import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_vm.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/leaderboard_view/components/user_rank.dart';
@@ -32,64 +33,73 @@ class SeasonLeaderboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<SeasonLeaderboardViewModel>(
-        onModelDispose: (model) => model.dump(),
-        onModelReady: (model) => model.init(),
-        builder: (
-          context,
-          model,
-          child,
-        ) {
-          return PowerPlayBackgroundUi(
-            child: SizedBox(
-              height: SizeConfig.screenHeight,
-              width: SizeConfig.screenWidth,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const FAppBar(
-                    showAvatar: false,
-                    showCoinBar: false,
-                    type: FaqsType.onboarding,
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(height: SizeConfig.pageHorizontalMargins),
-                          Text("Season Leaderboard",
-                              style: TextStyles.sourceSansB.title2),
-                          SizedBox(height: SizeConfig.pageHorizontalMargins),
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins),
-                            child: Row(
-                              children: [
-                                SvgPicture.network(
-                                  asideIcon,
-                                  width: SizeConfig.padding80,
-                                ),
-                                SizedBox(width: SizeConfig.padding20),
-                                Expanded(
-                                    child: rewardDesc3.beautify(
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(Colors.white54),
-                                )),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: SizeConfig.padding20),
-                          const Divider(color: Colors.white70, height: 0),
-                          NewWebGameLeaderBoardView(model: model),
-                          SizedBox(height: SizeConfig.navBarHeight)
-                        ],
-                      ),
+      onModelDispose: (model) => model.dump(),
+      onModelReady: (model) => model.init(),
+      builder: (
+        context,
+        model,
+        child,
+      ) {
+        return PowerPlayBackgroundUi(
+          child: Stack(
+            children: [
+              SizedBox(
+                height: SizeConfig.screenHeight,
+                width: SizeConfig.screenWidth,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const FAppBar(
+                      showAvatar: false,
+                      showCoinBar: false,
+                      type: FaqsType.onboarding,
                     ),
-                  )
-                ],
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(height: SizeConfig.pageHorizontalMargins),
+                            Text("Season Leaderboard",
+                                style: TextStyles.sourceSansB.title2),
+                            SizedBox(height: SizeConfig.pageHorizontalMargins),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              child: Row(
+                                children: [
+                                  SvgPicture.network(
+                                    asideIcon,
+                                    width: SizeConfig.padding80,
+                                  ),
+                                  SizedBox(width: SizeConfig.padding20),
+                                  Expanded(
+                                      child: rewardDesc3.beautify(
+                                    style: TextStyles.sourceSans.body3
+                                        .colour(Colors.white54),
+                                  )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: SizeConfig.padding20),
+                            const Divider(color: Colors.white70, height: 0),
+                            NewWebGameLeaderBoardView(model: model),
+                            SizedBox(height: SizeConfig.navBarHeight)
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
-        });
+              const Align(
+                alignment: Alignment.bottomCenter,
+                child: FooterCta(),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

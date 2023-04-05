@@ -1,5 +1,5 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
-import 'package:felloapp/core/service/referral_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
@@ -14,7 +14,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
+
+import '../../../../util/locator.dart';
 
 class PowerPlayHome extends StatefulWidget {
   const PowerPlayHome({Key? key}) : super(key: key);
@@ -48,42 +49,35 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                       type: FaqsType.onboarding,
                       action: Row(
                         children: [
-                          Consumer<ReferralService>(
-                            builder: (context, model, child) {
-                              return GestureDetector(
-                                onTap: (){
-                                  if (model.isShareAlreadyClicked == false) {
-                                    Haptic.vibrate();
-                                    model.shareLink();
-                                  }
-                                },
-                                child: Container(
-                                    key: const ValueKey(Constants.HELP_FAB),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig.padding12,
-                                        vertical: SizeConfig.padding6),
-                                    height: SizeConfig.avatarRadius * 2,
-                                    decoration: BoxDecoration(
-                                      color: UiConstants.kTextFieldColor
-                                          .withOpacity(0.4),
-                                      border: Border.all(color: Colors.white10),
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness12),
+                          GestureDetector(
+                            onTap: () {
+                              locator<PowerPlayService>().referFriend();
+                            },
+                            child: Container(
+                                key: const ValueKey(Constants.HELP_FAB),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding12,
+                                    vertical: SizeConfig.padding6),
+                                height: SizeConfig.avatarRadius * 2,
+                                decoration: BoxDecoration(
+                                  color: UiConstants.kTextFieldColor
+                                      .withOpacity(0.4),
+                                  border: Border.all(color: Colors.white10),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Invite Friends',
+                                      style: TextStyles.body4
+                                          .colour(UiConstants.kTextColor),
                                     ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      // mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Invite Friends',
-                                          style: TextStyles.body4
-                                              .colour(UiConstants.kTextColor),
-                                        ),
-                                      ],
-                                    )),
-                              );
-                            }
-                          )
+                                  ],
+                                )),
+                          ),
                         ],
                       ),
                     ),

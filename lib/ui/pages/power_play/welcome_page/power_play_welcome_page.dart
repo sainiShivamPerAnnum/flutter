@@ -8,6 +8,7 @@ import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_vid
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -23,174 +24,200 @@ class PowerPlayWelcomePage extends StatelessWidget {
     return PowerPlayBackgroundUi(
       child: Stack(
         children: [
-          SafeArea(
-            child: Column(
-              children: [
-                const FAppBar(
-                  showAvatar: false,
-                  showCoinBar: false,
-                  showHelpButton: false,
-                  showLeading: false,
-                ),
-                Expanded(
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    children: [
-                      Transform.translate(
-                        offset: Offset(0, SizeConfig.padding14),
-                        child: Center(
-                          child: Text(
-                            "Welcome to",
-                            style: TextStyles.rajdhaniB.title4
-                                .colour(Colors.white),
-                          ),
-                        ),
+          Column(
+            children: [
+              SizedBox(
+                  height: SizeConfig.viewInsets.top + SizeConfig.padding20),
+              Expanded(
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                      vertical: 0,
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  children: [
+                    Center(
+                      child: Text(
+                        "Welcome to",
+                        style: TextStyles.rajdhaniB.title4.colour(Colors.white),
                       ),
-                      Center(
-                        child: SvgPicture.network(
-                          'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo-lg.svg',
-                          height: 70,
-                        ),
+                    ),
+                    Center(
+                      child: SvgPicture.network(
+                        'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo-lg.svg',
+                        width: SizeConfig.screenWidth! * 0.7,
                       ),
-                      const SizedBox(
-                        height: 10,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: Text(
+                        "Invest your Predictions",
+                        style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
                       ),
-                      Center(
-                        child: Text(
-                          "Invest your Predictions",
-                          style:
-                              TextStyles.rajdhaniSB.body1.colour(Colors.white),
-                        ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: SizeConfig.screenHeight! * 0.4,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        // color: Colors.black,
                       ),
-                      const SizedBox(
-                        height: 20,
+                      child: TambolaVideoPlayer(link: videoUrl),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding28,
+                    ),
+                    Center(
+                      child: Text(
+                        "How it Works?",
+                        style: TextStyles.sourceSans.body0.colour(Colors.white),
                       ),
-                      Container(
-                        height: SizeConfig.screenHeight! * 0.4,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          // color: Colors.black,
-                        ),
-                        child: TambolaVideoPlayer(link: videoUrl),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding28,
-                      ),
-                      Center(
-                        child: Text(
-                          "How it Works?",
-                          style:
-                              TextStyles.sourceSans.body0.colour(Colors.white),
-                        ),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding20,
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text('1',
-                                  style: TextStyles.sourceSans.title4
-                                      .colour(Colors.white)),
-                              SizedBox(
-                                width: SizeConfig.padding10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  //Predict the Chasing Score in every IPL Match
-                                  Text(
-                                    "Predict the Chasing Score in every IPL Match",
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(Colors.white),
-                                  ),
-                                  //CSK will chase 172 in the match against RCB
-                                  Text(
-                                    "CSK will chase 172 in the match against RCB",
-                                    style: TextStyles.sourceSans.body4
-                                        .colour(Colors.white.withOpacity(0.5)),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding20,
-                          ),
-                          Row(
-                            children: [
-                              Text('2',
-                                  style: TextStyles.sourceSans.title4
-                                      .colour(Colors.white)),
-                              SizedBox(
-                                width: SizeConfig.padding10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  //Predict the Chasing Score in every IPL Match
-                                  Text(
-                                    "Invest that amount in Fello Flo or Gold",
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(Colors.white),
-                                  ),
-                                  //CSK will chase 172 in the match against RCB
-                                  Text(
-                                    "You invest ₹172 in Digital Gold",
-                                    style: TextStyles.sourceSans.body4
-                                        .colour(Colors.white.withOpacity(0.5)),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding20,
-                          ),
-                          Row(
-                            children: [
-                              Text('3',
-                                  style: TextStyles.sourceSans.title4
-                                      .colour(Colors.white)),
-                              SizedBox(
-                                width: SizeConfig.padding10,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //Predict the Chasing Score in every IPL Match
-                                    Text(
-                                      "Win Digital Gold and other exciting rewards",
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(Colors.white),
-                                    ),
-                                    //CSK will chase 172 in the match against RCB
-                                    Text(
-                                      "Make as many predictions as you want until the 19th over",
-                                      style: TextStyles.sourceSans.body4.colour(
-                                          Colors.white.withOpacity(0.5)),
-                                    ),
-                                  ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding20,
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text('1',
+                                style: TextStyles.sourceSans.title4
+                                    .colour(Colors.white)),
+                            SizedBox(
+                              width: SizeConfig.padding10,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //Predict the Chasing Score in every IPL Match
+                                Text(
+                                  "Predict the Chasing Score in every IPL Match",
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(Colors.white),
                                 ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding20,
-                      ),
-                      SizedBox(
-                        height: SizeConfig.navBarHeight * 2,
-                      )
+                                //CSK will chase 172 in the match against RCB
+                                Text(
+                                  "CSK will chase 172 in the match against RCB",
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(Colors.white.withOpacity(0.5)),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding20,
+                        ),
+                        Row(
+                          children: [
+                            Text('2',
+                                style: TextStyles.sourceSans.title4
+                                    .colour(Colors.white)),
+                            SizedBox(
+                              width: SizeConfig.padding10,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //Predict the Chasing Score in every IPL Match
+                                Text(
+                                  "Invest that amount in Fello Flo or Gold",
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(Colors.white),
+                                ),
+                                //CSK will chase 172 in the match against RCB
+                                Text(
+                                  "You invest ₹172 in Digital Gold",
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(Colors.white.withOpacity(0.5)),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding20,
+                        ),
+                        Row(
+                          children: [
+                            Text('3',
+                                style: TextStyles.sourceSans.title4
+                                    .colour(Colors.white)),
+                            SizedBox(
+                              width: SizeConfig.padding10,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //Predict the Chasing Score in every IPL Match
+                                  Text(
+                                    "Win Digital Gold and other exciting rewards",
+                                    style: TextStyles.sourceSans.body3
+                                        .colour(Colors.white),
+                                  ),
+                                  //CSK will chase 172 in the match against RCB
+                                  Text(
+                                    "Make as many predictions as you want until the 19th over",
+                                    style: TextStyles.sourceSans.body4
+                                        .colour(Colors.white.withOpacity(0.5)),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding20,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.navBarHeight * 2,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              height: SizeConfig.fToolBarHeight,
+              child: const FAppBar(
+                showAvatar: false,
+                showCoinBar: false,
+                showHelpButton: false,
+                showLeading: false,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: IgnorePointer(
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                height: SizeConfig.navBarHeight * 4,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      UiConstants.kPowerPlaySecondary,
+                      UiConstants.kPowerPlaySecondary,
+                      UiConstants.kPowerPlaySecondary,
+                      UiConstants.kPowerPlaySecondary.withOpacity(0.5),
+                      UiConstants.kPowerPlaySecondary.withOpacity(0.3),
+                      UiConstants.kPowerPlaySecondary.withOpacity(0.1),
+                      UiConstants.kPowerPlaySecondary.withOpacity(0)
                     ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
                   ),
                 ),
-              ],
+                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              ),
             ),
           ),
           Align(

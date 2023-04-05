@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -188,8 +190,7 @@ class ReferralDetailsView extends StatelessWidget {
                                     ),
                                     child: GestureDetector(
                                       onTap: () {
-                                        if (model.isShareAlreadyClicked ==
-                                            false) model.shareLink();
+                                        locator<ReferralService>().shareLink();
                                       },
                                       child: Icon(
                                         Icons.share,
@@ -355,8 +356,8 @@ class ReferralDetailsView extends StatelessWidget {
                                       Row(
                                         children: [
                                           AnimatedContainer(
-                                            duration:
-                                                const Duration(milliseconds: 500),
+                                            duration: const Duration(
+                                                milliseconds: 500),
                                             height: 5,
                                             width: model.tabPosWidthFactor,
                                           ),
@@ -391,7 +392,8 @@ class ReferralDetailsView extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins),
-                        child: const Divider(color: Colors.white, thickness: 0.5),
+                        child:
+                            const Divider(color: Colors.white, thickness: 0.5),
                       ),
                       HowToEarnComponment(
                         model: model,
@@ -419,7 +421,7 @@ class ReferralDetailsView extends StatelessWidget {
                       width: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       onPressed: () {
-                        if (!model.isShareAlreadyClicked) model.shareLink();
+                        locator<ReferralService>().shareLink();
                       },
                     ),
                   ),
@@ -889,7 +891,12 @@ class InfoTile extends StatelessWidget {
   final String? title;
   final double? leadSize;
 
-  InfoTile({super.key, this.leadingIcon, this.leadingAsset, this.title, this.leadSize});
+  InfoTile(
+      {super.key,
+      this.leadingIcon,
+      this.leadingAsset,
+      this.title,
+      this.leadSize});
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
