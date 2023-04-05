@@ -137,16 +137,11 @@ class UpcomingMatch extends StatelessWidget {
                                       bottomLeft: Radius.circular(5),
                                       bottomRight: Radius.circular(5))),
                               child: Center(
-                                child: model.upcomingMatchData![index]!
-                                            .startsAt!
-                                            .toDate()
-                                            .day ==
-                                        DateTime.now().day
+                                child: index == 0
                                     ? CountdownTimerWidget(
                                         model: model,
                                         endTime: model
-                                            .upcomingMatchData![index]!
-                                            .startsAt!)
+                                            .upcomingMatchData![0]!.startsAt!)
                                     : Text(
                                         'Predictions start on ${getDate(index)}',
                                         style: TextStyles.sourceSans.body3

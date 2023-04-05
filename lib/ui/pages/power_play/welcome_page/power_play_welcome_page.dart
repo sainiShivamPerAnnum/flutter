@@ -6,6 +6,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_video_player.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -223,6 +224,9 @@ class PowerPlayWelcomePage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   color: Colors.white,
                   onPressed: () {
+                    PreferenceHelper.setBool(
+                        PreferenceHelper.POWERPLAY_IS_PLAYED, true);
+
                     AppState.delegate!.appState.currentAction = PageAction(
                         state: PageState.replace, page: PowerPlayHomeConfig);
                   },

@@ -8,6 +8,7 @@ import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,9 @@ class HowItWorks extends StatelessWidget {
   String get calloutSubText => AppConfig.getValue<Map<String, dynamic>>(
           AppConfigKey.powerplayConfig)['howScreen']['predictionCondition']
       ['subText'];
+
+  bool get showButton =>
+      PreferenceHelper.getBool(PreferenceHelper.POWERPLAY_IS_PLAYED);
 
   @override
   Widget build(BuildContext context) {
@@ -394,17 +398,18 @@ class HowItWorks extends StatelessWidget {
                 ),
               ],
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                width: SizeConfig.screenWidth,
-                child: MaterialButton(
-                  onPressed: () {
-                    while (AppState.screenStack.length > 2) {
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    }
-                    AppState.delegate!.appState.currentAction = PageAction(
+            if (showButton)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  width: SizeConfig.screenWidth,
+                  child: MaterialButton(
+                    onPressed: () {
+                      while (AppState.screenStack.length > 2) {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                      }
+                      AppState.delegate!.appState.currentAction = PageAction(
                       state: PageState.replace,
                       page: PowerPlayHomeConfig,
                     );
