@@ -61,6 +61,8 @@ class PowerPlayService extends ChangeNotifier {
     matchData = [];
     liveMatchData = null;
     powerPlayDepositFlow = false;
+    transactions = [];
+    _userPredictedData = [];
     _logger.i("PowerPlayService dump");
   }
 
@@ -102,7 +104,7 @@ class PowerPlayService extends ChangeNotifier {
   }
 
   Future<void> getUserPredictedStats(String id) async {
-    _logger.i("PowerPlayService -> getMatchStats");
+    _logger.i("PowerPlayService -> getUserPredictedStats");
 
     final response = await _powerPlayRepository.getUserPredictedStats(id);
 
@@ -118,7 +120,7 @@ class PowerPlayService extends ChangeNotifier {
   Future<void> getUserTransactionHistory(
     MatchData matchData,
   ) async {
-    _logger.i("PowerPlayService -> getTransactionHistory");
+    _logger.i("PowerPlayService -> getUserTransactionHistory");
     TimestampModel? startTime;
     TimestampModel? endTime;
 
