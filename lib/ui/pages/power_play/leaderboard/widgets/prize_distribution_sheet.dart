@@ -219,7 +219,7 @@ class PrizeDistributionSheet extends StatelessWidget {
               },
               child: Center(
                 child: Text(
-                  'PREDICT NOW',
+                  'View Live Matches'.toUpperCase(),
                   style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                 ),
               ),
