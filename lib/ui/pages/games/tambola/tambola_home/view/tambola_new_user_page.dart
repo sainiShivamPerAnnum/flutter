@@ -36,6 +36,7 @@ class TambolaNewUserPage extends StatefulWidget {
   final bool showPrizeSection;
   final bool isFromNavigation;
   final bool showWinners;
+
   @override
   State<TambolaNewUserPage> createState() => _TambolaNewUserPageState();
 }
@@ -43,6 +44,7 @@ class TambolaNewUserPage extends StatefulWidget {
 class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
   ScrollController? _scrollController;
   bool isFromNavigation = false;
+
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -178,9 +180,7 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                     key: ShowCaseKeys.TambolaButton,
                     description: 'You get a ticket on every ₹500 you invest!',
                     child: AppPositiveBtn(
-                      btnText: (widget.model.activeTambolaCardCount ?? 0) >= 1
-                          ? locale.getTickets
-                          : locale.tgetFirstTkt,
+                      btnText: 'Save & Get Free Tickets',
                       onPressed: () {
                         locator<AnalyticsService>().track(
                             eventName:
@@ -192,16 +192,18 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                                 .getDefaultPropertiesMap(extraValuesMap: {
                               "Time left for draw Tambola (mins)":
                                   AnalyticsProperties
-                                      .getTimeLeftForTambolaDraw(),
+                                  .getTimeLeftForTambolaDraw(),
                               "Tambola Tickets Owned":
-                                  AnalyticsProperties.getTambolaTicketCount(),
+                              AnalyticsProperties.getTambolaTicketCount(),
                               "Number of Tickets":
-                                  widget.model.activeTambolaCardCount ?? 0,
+                              widget.model.activeTambolaCardCount ?? 0,
                               "Amount": widget.model.ticketSavedAmount,
                             }));
                         widget.model.updateTicketSavedAmount(1);
                         BaseUtil.openDepositOptionsModalSheet(
-                            amount: widget.model.ticketSavedAmount);
+                            amount: widget.model.ticketSavedAmount,
+                            subtitle:
+                            'Save ₹500 in any of the asset & get 1 Free Tambola Ticket');
                       },
                     ),
                   ),

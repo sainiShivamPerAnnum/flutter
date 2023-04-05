@@ -12,7 +12,8 @@ class PrizeService extends ChangeNotifier {
   fetchPrizeByGameType(String game) async {
     ApiResponse<PrizesModel> prizeResult =
         await _gtRepo.getPrizesPerGamePerFreq(game, "weekly");
-    if (prizeResult.isSuccess() && prizeResult.model != null)
+    if (prizeResult.isSuccess() && prizeResult.model != null) {
       gamePrizeMap[game] = prizeResult.model!;
+    }
   }
 }

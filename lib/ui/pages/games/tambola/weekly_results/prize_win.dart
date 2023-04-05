@@ -68,8 +68,8 @@ class _PrizeWinState extends State<PrizeWin> {
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      width: SizeConfig.screenWidth! * 0.7,
-                      height: SizeConfig.screenWidth! * 0.7,
+                      width: SizeConfig.screenWidth! * 0.5,
+                      height: SizeConfig.screenWidth! * 0.5,
                       padding: EdgeInsets.all(SizeConfig.padding16),
                       decoration: BoxDecoration(
                         color: UiConstants.kSliverAppBarBackgroundColor
@@ -77,8 +77,8 @@ class _PrizeWinState extends State<PrizeWin> {
                         shape: BoxShape.circle,
                       ),
                       child: Container(
-                        width: SizeConfig.screenWidth! * 0.6,
-                        height: SizeConfig.screenWidth! * 0.6,
+                        width: SizeConfig.screenWidth! * 0.4,
+                        height: SizeConfig.screenWidth! * 0.4,
                         decoration: const BoxDecoration(
                           color: UiConstants.kSliverAppBarBackgroundColor,
                           shape: BoxShape.circle,
@@ -87,7 +87,7 @@ class _PrizeWinState extends State<PrizeWin> {
                     ),
                     SvgPicture.asset(
                       Assets.tambolaCardAsset,
-                      width: SizeConfig.screenWidth! * 0.6,
+                      width: SizeConfig.screenWidth! * 0.4,
                     )
                   ],
                 ),
@@ -100,12 +100,15 @@ class _PrizeWinState extends State<PrizeWin> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding10,
+                    vertical: SizeConfig.padding6,
                   ),
                   child: Text("Your tickets won!",
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kFAQsAnswerColor)),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 WinnerBox(
                   winningsmap: widget.winningsMap,
@@ -133,8 +136,7 @@ class _PrizeWinState extends State<PrizeWin> {
                   padding: EdgeInsets.symmetric(
                     vertical: SizeConfig.padding20,
                   ),
-                  child: Text(
-                      "Your prizes will be credited in a scratch card.\nShare with your friends in the meanwhile!",
+                  child: Text("Your prizes will be credited in a scratch card",
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kFAQsAnswerColor)),
@@ -145,9 +147,13 @@ class _PrizeWinState extends State<PrizeWin> {
                   child: AppPositiveBtn(
                     width: SizeConfig.screenWidth! * 0.9,
                     onPressed: () {
-                      AppState.backButtonDispatcher!.didPopRoute();
+                      AppState.delegate!.parseRoute(Uri.parse('/myWinnings'));
+
+                      // if (model.isShareAlreadyClicked == false) {
+                      //   model.shareLink();
+                      // }
                     },
-                    btnText: "SAVE MORE",
+                    btnText: "Claim Your Prizes",
                   ),
                 ),
               ],

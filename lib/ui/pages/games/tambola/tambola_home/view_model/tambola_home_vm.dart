@@ -64,6 +64,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   List<TambolaTicket>? _tambolaBoardViews;
   int ticketGenerationTryCount = 0;
   TextEditingController? ticketCountController;
+
   // Ticket? _currentBoardView;
   TambolaBoard? _currentBoard;
   Widget? _widget;
@@ -553,6 +554,14 @@ class TambolaHomeViewModel extends BaseViewModel {
       }
     }
 
+    if ((DateTime.now().weekday == DateTime.sunday &&
+            DateTime.now().hour >= 18) ||
+        (DateTime.now().weekday == DateTime.monday &&
+            DateTime.now().hour < 18)) {
+      showWinCard = true;
+      notifyListeners();
+    }
+
     // double totalInvestedPrinciple =
     //     _userService.userFundWallet.augGoldPrinciple;
     // isEligible = (totalInvestedPrinciple >=
@@ -562,7 +571,6 @@ class TambolaHomeViewModel extends BaseViewModel {
     isEligible = true;
     _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
-    showWinCard = true;
     // if (!tambolaService.winnerDialogCalled)
     //   AppState.delegate.appState.currentAction = PageAction(
     //     state: PageState.addWidget,
