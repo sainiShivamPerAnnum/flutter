@@ -773,54 +773,57 @@ class YourPredictionSheet extends StatelessWidget {
                           )
                         ],
                       ),
-                      ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          itemCount: transactions?.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                SizedBox(
-                                  height: SizeConfig.padding16,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '${index + 1}',
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(Colors.white),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      '${transactions![index].amount.truncate()} Runs',
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(Colors.white),
-                                    ),
-                                    const Spacer(),
-                                    Text(
-                                      getTime(index),
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(Colors.white),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding16,
-                                ),
-                                if (index != 2)
-                                  Container(
-                                    height: 0.5,
-                                    color: Colors.white.withOpacity(0.3),
+                      SizedBox(
+                        height: SizeConfig.screenHeight! * 0.3,
+                        child: ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: transactions?.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  SizedBox(
+                                    height: SizeConfig.padding16,
                                   ),
-                              ],
-                            );
-                          }),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${index + 1}',
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(Colors.white),
+                                      ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Text(
+                                        '${transactions![index].amount.truncate()} Runs',
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(Colors.white),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        getTime(index),
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(Colors.white),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding16,
+                                  ),
+                                  if (index != 2)
+                                    Container(
+                                      height: 0.5,
+                                      color: Colors.white.withOpacity(0.3),
+                                    ),
+                                ],
+                              );
+                            }),
+                      ),
                     ],
                   ),
             const SizedBox(
