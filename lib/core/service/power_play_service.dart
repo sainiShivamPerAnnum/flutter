@@ -100,11 +100,10 @@ class PowerPlayService extends ChangeNotifier {
     }
   }
 
-  Future<void> getUserPredictedStats() async {
+  Future<void> getUserPredictedStats(String id) async {
     _logger.i("PowerPlayService -> getMatchStats");
 
-    final response =
-        await _powerPlayRepository.getUserPredictedStats('csk_rcb');
+    final response = await _powerPlayRepository.getUserPredictedStats(id);
 
     log("SERVICE response => ${response.model?.data?.toList()}");
 
@@ -140,7 +139,7 @@ class PowerPlayService extends ChangeNotifier {
     log("SERVICE response => ${response.model?.transactions?.toList()}");
 
     if (response.isSuccess()) {
-      transactions = response.model!.transactions;
+      transactions = response.model?.transactions;
 
       log('transactions => ${transactions!.length}');
       // userPredictedData = response.model!.data!;

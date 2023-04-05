@@ -21,7 +21,8 @@ class LeaderBoardViewModel extends BaseViewModel {
 
   Future<void> getUserPredictedData() async {
     state = ViewState.Busy;
-    await _powerPlayService.getUserPredictedStats();
+    await _powerPlayService
+        .getUserPredictedStats(powerPlayService.liveMatchData!.id!);
 
     log("userPredictedData: ${_powerPlayService.userPredictedData}");
 
