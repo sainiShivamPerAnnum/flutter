@@ -384,8 +384,8 @@ class HowItWorks extends StatelessWidget {
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
