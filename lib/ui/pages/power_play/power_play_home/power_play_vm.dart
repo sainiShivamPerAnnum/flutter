@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -7,8 +10,10 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 // enum MatchStatus { active, upcoming, completed }
@@ -26,6 +31,14 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   List<MatchData?>? _upcomingMatchData = [];
   List<MatchData>? _completedMatchData;
   List<UserTransaction>? predictions = [];
+  bool _isPredictionInProgress = false;
+
+  get isPredictionInProgress => _isPredictionInProgress;
+
+  set isPredictionInProgress(value) {
+    _isPredictionInProgress = value;
+    notifyListeners();
+  }
 
   bool _isLive = true;
   bool hasNoMoreCompletedMatches = false;
@@ -175,5 +188,33 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     } else {
       predictions = [];
     }
+  }
+
+  void predict() async {
+    isPredictionInProgress = true;
+    await getMatchesByStatus(MatchStatus.active.name, 0, 0);
+    await getMatchesByStatus(MatchStatus.upcoming.name, 0, 0);
+    if (liveMatchData!.isEmpty) {
+      BaseUtil.showNegativeAlert("No live matches at the moment",
+          "come again tomorrow to make more predictions");
+    } else if (liveMatchData!.isNotEmpty &&
+        liveMatchData![0]!.status == MatchStatus.half_complete.name) {
+      BaseUtil.showNegativeAlert("Predictions are over", "Try again tomorrow");
+    } else {
+      unawaited(BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          backgroundColor: const Color(0xff21284A),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness32),
+            topRight: Radius.circular(SizeConfig.roundness32),
+          ),
+          isScrollControlled: true,
+          hapticVibrate: true,
+          content: MakePredictionSheet(
+            matchData: liveMatchData![0]!,
+          )));
+    }
+    isPredictionInProgress = false;
   }
 }

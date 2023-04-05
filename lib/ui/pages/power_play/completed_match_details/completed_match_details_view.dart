@@ -220,8 +220,8 @@ class CorrectPredictorsListView extends StatelessWidget {
                                 children: [
                                   SvgPicture.asset(
                                     "assets/vectors/userAvatars/AV${model.winners[i].avatarId}.svg",
-                                    width: SizeConfig.iconSize1 * 2,
-                                    height: SizeConfig.iconSize1 * 2,
+                                    width: SizeConfig.iconSize1 * 1.5,
+                                    height: SizeConfig.iconSize1 * 1.5,
                                     fit: BoxFit.cover,
                                   ),
                                   SizedBox(width: SizeConfig.padding10),
@@ -231,7 +231,7 @@ class CorrectPredictorsListView extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "@${model.winners[i].uname}",
+                                          "${model.winners[i].uname}",
                                           style: TextStyles.sourceSans.body3,
                                         ),
                                         SizedBox(height: SizeConfig.padding2),
@@ -247,7 +247,7 @@ class CorrectPredictorsListView extends StatelessWidget {
                               )),
                               SizedBox(width: SizeConfig.padding16),
                               Text(
-                                "${model.winners[i].score} | ${DateFormat('h:mm a').format(
+                                "₹${model.winners[i].score} | ${DateFormat('h:mm a').format(
                                   model.winners[i].timestamp.toDate(),
                                 )}",
                                 style: TextStyles.sourceSans.body3,
@@ -267,7 +267,7 @@ class CorrectPredictorsListView extends StatelessWidget {
   }
 
   String getWinningString(MatchWinnersLeaderboardItemModel item) {
-    String wText = "You have won";
+    String wText = "won";
     if (item.amt! > 0) {
       wText += " gold worth ₹${item.amt} ";
     }

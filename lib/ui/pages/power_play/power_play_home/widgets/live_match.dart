@@ -1,4 +1,3 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -105,27 +104,22 @@ class LiveMatch extends StatelessWidget {
                     child: MaterialButton(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       color: Colors.white,
-                      onPressed: () {
-                        BaseUtil.openModalBottomSheet(
-                            isBarrierDismissible: true,
-                            addToScreenStack: true,
-                            backgroundColor: const Color(0xff21284A),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(SizeConfig.roundness32),
-                              topRight: Radius.circular(SizeConfig.roundness32),
-                            ),
-                            isScrollControlled: true,
-                            hapticVibrate: true,
-                            content: MakePredictionSheet(
-                              matchData: model.liveMatchData![0]!,
-                            ));
-                      },
+                      onPressed: model.predict,
                       child: Center(
-                        child: Text(
-                          'PREDICT NOW',
-                          style:
-                              TextStyles.rajdhaniB.body1.colour(Colors.black),
-                        ),
+                        child: model.isPredictionInProgress
+                            ? SizedBox(
+                                height: SizeConfig.padding20,
+                                width: SizeConfig.padding20,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 1,
+                                  color: Colors.black,
+                                ),
+                              )
+                            : Text(
+                                'PREDICT NOW',
+                                style: TextStyles.rajdhaniB.body1
+                                    .colour(Colors.black),
+                              ),
                       ),
                     ),
                   ),
