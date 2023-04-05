@@ -597,6 +597,7 @@ class BaseUtil extends ChangeNotifier {
       isUpiInfoMissing = true;
 
       AppState.delegate!.appState.setCurrentTabIndex = 0;
+      isPostSignupSession = false;
       manualReferralCode = null;
       referrerUserId = null;
       _setRuntimeDefaults();

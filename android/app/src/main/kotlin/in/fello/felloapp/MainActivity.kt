@@ -86,14 +86,6 @@ class MainActivity : FlutterFragmentActivity()  {
                val id: String = getUniqueDeviceId(context)
                  result.success(id)
              }
-            else if(call.method == "getAdvertisingId"){
-                val id: String? = getAdvertisingId()
-                result.success(id)
-            }
-            else if(call.method == "getAppSetId"){
-                val id: String? = getAppSetId()
-                result.success(id);
-            }
             else if(call.method == "getAndroidId"){
                 result.success(getAndroidId())
             }
@@ -198,46 +190,6 @@ class MainActivity : FlutterFragmentActivity()  {
     @SuppressLint("HardwareIds")
     fun getUniqueDeviceId(context: Context): String {
         return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-    }
-
-
-    private fun getAdvertisingId(): String? {
-        var adInfo: com.google.android.gms.ads.identifier.AdvertisingIdClient.Info? = null
-        try {
-            adInfo = AdvertisingIdClient.getAdvertisingIdInfo(applicationContext)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (e: GooglePlayServicesNotAvailableException) {
-            e.printStackTrace()
-        } catch (e: GooglePlayServicesRepairableException) {
-            e.printStackTrace()
-        }
-        var advertisingId: String? = null
-        try {
-            advertisingId = adInfo?.id
-        } catch (e: NullPointerException) {
-            e.printStackTrace()
-        }
-        return advertisingId
-    }
-
-    @SuppressLint("HardwareIds")
-    fun getAppSetId(): String {
-        val androidId = Settings.Secure.getString(
-            applicationContext.contentResolver,
-            Settings.Secure.ANDROID_ID
-        )
-        val deviceId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Build.getSerial()
-        } else {
-            Build.SERIAL
-        }
-        val combinedId = "$androidId$deviceId"
-        val digest = MessageDigest.getInstance("SHA-256")
-        val hash = digest.digest(combinedId.toByteArray(Charsets.UTF_8))
-        return hash.joinToString("") {
-            String.format("%02x", it)
-        }
     }
 
     private var isAlreadyReturend=false
