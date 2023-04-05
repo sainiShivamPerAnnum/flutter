@@ -74,7 +74,7 @@ class FcmListener {
           _handler!.handleMessage(message.data, MsgSource.Foreground);
         } else if (notification != null) {
           logger!.d(
-              "Handle Notification: ${notification.title} ${notification.body}");
+              "Handle Notification: ${notification.title} ${notification.body} ");
           _handler.handleNotification(notification.title, notification.body);
         }
       });

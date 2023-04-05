@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
@@ -111,11 +112,11 @@ class GoldBuySuccessView extends StatelessWidget {
             SizedBox(
               width: SizeConfig.screenWidth! * 0.8,
               child: Text(
-                  _augTxnService
-                          ?.transactionResponseModel?.data?.txnDisplayMsg ??
-                      "",
-                  textAlign: TextAlign.center,
-                  style: TextStyles.sourceSans.body2.setOpacity(0.7)),
+                _augTxnService?.transactionResponseModel?.data?.txnDisplayMsg ??
+                    "",
+                textAlign: TextAlign.center,
+                style: TextStyles.sourceSans.body2.setOpacity(0.7),
+              ),
             )
           else ...[
             Text(
@@ -269,7 +270,9 @@ class GoldBuySuccessView extends StatelessWidget {
               _augTxnService!.showGtIfAvailable();
             },
             child: Text(
-              locale.obDone,
+              PowerPlayService.powerPlayDepositFlow
+                  ? "Make another prediction"
+                  : locale.obDone,
               style:
                   TextStyles.rajdhaniSB.body0.colour(UiConstants.primaryColor),
             ),
