@@ -102,7 +102,7 @@ class MatchData {
         verdictText: json['verdictText'],
         matchStats: MatchStats.fromMap(json['matchStats'] ?? {}),
         target: json['target'] ?? 0,
-        predictionEndedAt: json['predictionEndedAt'],
+        predictionEndedAt: TimestampModel.fromMap(json['predictionEndedAt']),
       );
 
   @override

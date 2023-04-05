@@ -203,7 +203,11 @@ class PowerPlayWinDialog extends StatelessWidget {
       child: Wrap(
         children: [
           Container(
-            margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+            margin: EdgeInsets.only(
+                top: SizeConfig.pageHorizontalMargins,
+                left: SizeConfig.pageHorizontalMargins,
+                right: SizeConfig.pageHorizontalMargins,
+                bottom: SizeConfig.padding10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(SizeConfig.roundness16),
               gradient: const LinearGradient(
@@ -250,7 +254,7 @@ class PowerPlayWinDialog extends StatelessWidget {
                         },
                         child: Center(
                           child: Text(
-                            'START PREDICTING NOW',
+                            'CLAIM REWARDS',
                             style:
                                 TextStyles.rajdhaniB.body1.colour(Colors.black),
                           ),
