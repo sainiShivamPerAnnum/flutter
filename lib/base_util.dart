@@ -70,7 +70,6 @@ class BaseUtil extends ChangeNotifier {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   S locale = locator<S>();
   static Flushbar? flushbar;
-  static bool isPostSignupSession = false;
   BaseUser? _myUser;
   UserFundWallet? _userFundWallet;
   int? _ticketCount;
@@ -597,7 +596,6 @@ class BaseUtil extends ChangeNotifier {
       isUpiInfoMissing = true;
 
       AppState.delegate!.appState.setCurrentTabIndex = 0;
-      isPostSignupSession = false;
       manualReferralCode = null;
       referrerUserId = null;
       _setRuntimeDefaults();

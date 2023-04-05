@@ -471,7 +471,6 @@ class LoginControllerViewModel extends BaseViewModel {
       logger.d(
           'invoke an API to send device related and install referrer related information to the server');
       sendInstallInformation();
-      BaseUtil.isPostSignupSession = true;
     }
 
     BaseAnalytics.logUserProfile(userService.baseUser!);

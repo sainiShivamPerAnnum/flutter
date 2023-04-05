@@ -55,33 +55,14 @@ class SaveNetWorthSection extends StatelessWidget {
                   Haptic.vibrate();
 
                   locator<AnalyticsService>()
-                      .track(eventName: "Save on Asset Banner", properties: {
+                      .track(eventName: "Save on Flo Banner", properties: {
                     "asset name": "LENDBOX",
-                    "isNewUser": BaseUtil.isPostSignupSession,
                     "balance in gold":
                         locator<UserService>().userFundWallet?.augGoldBalance ??
                             0,
                     "balance in flo":
                         locator<UserService>().userFundWallet?.wLbBalance ?? 0,
                   });
-
-                  //requested by marketing to add an explicit event for a user
-                  // who clicked on this banner immediately after signup
-                  if (BaseUtil.isPostSignupSession) {
-                    locator<AnalyticsService>().track(
-                        eventName: "Save on Flo Banner - New User",
-                        properties: {
-                          "asset name": "LENDBOX",
-                          "balance in gold": locator<UserService>()
-                                  .userFundWallet
-                                  ?.augGoldBalance ??
-                              0,
-                          "balance in flo": locator<UserService>()
-                                  .userFundWallet
-                                  ?.wLbBalance ??
-                              0,
-                        });
-                  }
 
                   return BaseUtil().openRechargeModalSheet(
                     investmentType: InvestmentType.LENDBOXP2P,
@@ -117,33 +98,14 @@ class SaveNetWorthSection extends StatelessWidget {
                 onTap: () {
                   Haptic.vibrate();
                   locator<AnalyticsService>()
-                      .track(eventName: "Save on Asset Banner", properties: {
+                      .track(eventName: "Save on Gold Banner", properties: {
                     "asset name": "AUGGOLD99",
-                    "isNewUser": BaseUtil.isPostSignupSession,
                     "balance in gold":
                         locator<UserService>().userFundWallet?.augGoldBalance ??
                             0,
                     "balance in flo":
                         locator<UserService>().userFundWallet?.wLbBalance ?? 0,
                   });
-
-                  //requested by marketing to add an explicit event for a user
-                  // who clicked on this banner immediately after signup
-                  if (BaseUtil.isPostSignupSession) {
-                    locator<AnalyticsService>().track(
-                        eventName: "Save on Gold Banner - New User",
-                        properties: {
-                          "asset name": "AUGGOLD99",
-                          "balance in gold": locator<UserService>()
-                                  .userFundWallet
-                                  ?.augGoldBalance ??
-                              0,
-                          "balance in flo": locator<UserService>()
-                                  .userFundWallet
-                                  ?.wLbBalance ??
-                              0,
-                        });
-                  }
 
                   return BaseUtil().openRechargeModalSheet(
                     investmentType: InvestmentType.AUGGOLD99,

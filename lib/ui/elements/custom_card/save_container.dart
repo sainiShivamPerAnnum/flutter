@@ -205,7 +205,10 @@ class _SaveContainerState extends State<SaveContainer> {
                               height: SizeConfig.screenHeight! * 0.05,
                               onPress: () {
                                 locator<AnalyticsService>().track(
-                                    eventName: "Save on Asset Banner",
+                                    eventName: (widget.investmentType ==
+                                            InvestmentType.AUGGOLD99)
+                                        ? "Save on Gold Banner - New User"
+                                        : "Save on Flo Banner - New User",
                                     properties: {
                                       "asset name": widget.investmentType ==
                                               InvestmentType.AUGGOLD99
@@ -222,31 +225,6 @@ class _SaveContainerState extends State<SaveContainer> {
                                           0,
                                       "amt": value
                                     });
-
-                                if (BaseUtil.isPostSignupSession) {
-                                  locator<AnalyticsService>().track(
-                                      eventName: (widget.investmentType ==
-                                              InvestmentType.AUGGOLD99)
-                                          ? "Save on Gold Banner - New User"
-                                          : "Save on Flo Banner - New User",
-                                      properties: {
-                                        "asset name": widget.investmentType ==
-                                                InvestmentType.AUGGOLD99
-                                            ? "Gold"
-                                            : "Flo",
-                                        "balance in gold":
-                                            locator<UserService>()
-                                                    .userFundWallet
-                                                    ?.augGoldBalance ??
-                                                0,
-                                        "isNewUser": true,
-                                        "balance in flo": locator<UserService>()
-                                                .userFundWallet
-                                                ?.wLbBalance ??
-                                            0,
-                                        "amt": value
-                                      });
-                                }
 
                                 BaseUtil().openRechargeModalSheet(
                                     investmentType: widget.investmentType,
