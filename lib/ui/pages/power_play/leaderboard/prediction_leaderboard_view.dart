@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
@@ -743,132 +744,139 @@ class YourPredictionSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Text(
-              "Your Predictions",
-              style: TextStyles.sourceSansSB.body1.colour(Colors.white),
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            SvgPicture.asset(
-              'assets/svg/prediction_ball.svg',
-              height: 100,
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            (transactions ?? []).isEmpty
-                ? Text(
-                    "You haven’t made any predictions yet. Start predicting now to win exciting prizes!",
-                    style: TextStyles.body3.colour(Colors.white54),
-                    textAlign: TextAlign.center,
-                  )
-                : Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            '#',
-                            style: TextStyles.sourceSans.body3
-                                .colour(const Color(0xffB59D9F)),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            'Prediction',
-                            style: TextStyles.sourceSans.body3
-                                .colour(const Color(0xffB59D9F)),
-                          ),
-                          const Spacer(),
-                          Text(
-                            'Time',
-                            style: TextStyles.sourceSans.body3
-                                .colour(const Color(0xffB59D9F)),
-                          ),
-                          const SizedBox(
-                            width: 30,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: SizeConfig.screenHeight! * 0.3,
-                        child: ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            itemCount: transactions?.length,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                children: [
-                                  SizedBox(
-                                    height: SizeConfig.padding16,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '${index + 1}',
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(Colors.white),
-                                      ),
-                                      const SizedBox(
-                                        width: 20,
-                                      ),
-                                      Text(
-                                        '${transactions![index].amount.truncate()} Runs',
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(Colors.white),
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        getTime(index),
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(Colors.white),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding16,
-                                  ),
-                                  if (index != 2)
-                                    Container(
-                                      height: 0.5,
-                                      color: Colors.white.withOpacity(0.3),
+    return WillPopScope(
+      onWillPop: () async {
+        if (AppState.screenStack.last != ScreenItem.page) {
+          AppState.screenStack.removeLast();
+        }
+        return Future.value(true);
+      },
+      child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+              Text(
+                "Your Predictions",
+                style: TextStyles.sourceSansSB.body1.colour(Colors.white),
+              ),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
+              SvgPicture.asset(
+                'assets/svg/prediction_ball.svg',
+                height: 100,
+              ),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              (transactions ?? []).isEmpty
+                  ? Text(
+                      "You haven’t made any predictions yet. Start predicting now to win exciting prizes!",
+                      style: TextStyles.body3.colour(Colors.white54),
+                      textAlign: TextAlign.center,
+                    )
+                  : Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '#',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(const Color(0xffB59D9F)),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              'Prediction',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(const Color(0xffB59D9F)),
+                            ),
+                            const Spacer(),
+                            Text(
+                              'Time',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(const Color(0xffB59D9F)),
+                            ),
+                            const SizedBox(
+                              width: 30,
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: SizeConfig.screenHeight! * 0.3,
+                          child: ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              itemCount: transactions?.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    SizedBox(
+                                      height: SizeConfig.padding16,
                                     ),
-                                ],
-                              );
-                            }),
-                      ),
-                    ],
-                  ),
-            const SizedBox(
-              height: 10,
-            ),
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              color: Colors.white,
-              onPressed: () {
-                while (AppState.screenStack.length > 2) {
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${index + 1}',
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(Colors.white),
+                                        ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        Text(
+                                          '${transactions![index].amount.truncate()} Runs',
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(Colors.white),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          getTime(index),
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(Colors.white),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding16,
+                                    ),
+                                    if (index != 2)
+                                      Container(
+                                        height: 0.5,
+                                        color: Colors.white.withOpacity(0.3),
+                                      ),
+                                  ],
+                                );
+                              }),
+                        ),
+                      ],
+                    ),
+              const SizedBox(
+                height: 10,
+              ),
+              MaterialButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                color: Colors.white,
+                onPressed: () {
+                  while (AppState.screenStack.length > 2) {
                   AppState.backButtonDispatcher!.didPopRoute();
                 }
                 AppState.delegate!.appState.currentAction = PageAction(
@@ -876,7 +884,7 @@ class YourPredictionSheet extends StatelessWidget {
                   page: PowerPlayHomeConfig,
                 );
 
-                // BaseUtil.openModalBottomSheet(
+                  // BaseUtil.openModalBottomSheet(
                 //     isBarrierDismissible: true,
                 //     addToScreenStack: true,
                 //     backgroundColor: const Color(0xff21284A),
@@ -901,7 +909,8 @@ class YourPredictionSheet extends StatelessWidget {
               height: SizeConfig.padding20,
             ),
           ],
-        ));
+        )),
+    );
   }
 }
 

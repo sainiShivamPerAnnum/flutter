@@ -8,10 +8,12 @@ import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/power_play_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -31,6 +33,7 @@ class PowerPlayService extends ChangeNotifier {
 
   List<MatchData> matchData = [];
   MatchData? liveMatchData;
+  bool isLinkSharing = false;
 
   List<UserTransaction>? transactions = [];
   List<Map<String, dynamic>>? cardCarousel;
@@ -167,6 +170,17 @@ class PowerPlayService extends ChangeNotifier {
       content: PowerPlayWinDialog(winString: winString),
     );
   }
+
+  Future<void> referFriend() async {
+    if (isLinkSharing) return;
+    Haptic.vibrate();
+    String powerPlayReferralString =
+        "Hey! I am predicting in Fello's Powerplay and winning FREE Digital Gold! Sending you an exclusive invite to predict the Chasing score of every IPL match and start your savings journey with Fello. Here's the link -";
+    isLinkSharing = true;
+    await locator<ReferralService>()
+        .shareLink(customMessage: powerPlayReferralString);
+    isLinkSharing = false;
+  }
 }
 
 class PowerPlayWinDialog extends StatelessWidget {
@@ -200,44 +214,47 @@ class PowerPlayWinDialog extends StatelessWidget {
               padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
               child: Stack(
                 children: [
-                  Column(mainAxisSize: MainAxisSize.min, children: [
-                    SvgPicture.network(
-                      Assets.powerPlayMain,
-                      width: SizeConfig.screenWidth! * 0.3,
-                    ),
-                    SvgPicture.asset(
-                      Assets.wohoo,
-                      width: SizeConfig.screenWidth! * 0.5,
-                    ),
-                    SizedBox(height: SizeConfig.padding10),
-                    winString.beautify(
-                        boldStyle: TextStyles.sourceSansB.body3
-                            .colour(UiConstants.primaryColor),
-                        style:
-                            TextStyles.sourceSans.body3.colour(Colors.white)),
-                    SizedBox(height: SizeConfig.padding16),
-                    MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      color: Colors.white,
-                      onPressed: () {
-                        AppState.backButtonDispatcher!.didPopRoute();
-                        AppState.delegate!
-                            .parseRoute(Uri.parse('/win/myWinnings'));
-                      },
-                      child: Center(
-                        child: Text(
-                          'START PREDICTING NOW',
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.network(
+                        Assets.powerPlayMain,
+                        width: SizeConfig.screenWidth! * 0.3,
+                      ),
+                      SvgPicture.asset(
+                        Assets.wohoo,
+                        width: SizeConfig.screenWidth! * 0.5,
+                      ),
+                      SizedBox(height: SizeConfig.padding10),
+                      winString.beautify(
+                          boldStyle: TextStyles.sourceSansB.body3
+                              .colour(UiConstants.primaryColor),
                           style:
-                              TextStyles.rajdhaniB.body1.colour(Colors.black),
+                              TextStyles.sourceSans.body3.colour(Colors.white)),
+                      SizedBox(height: SizeConfig.padding16),
+                      MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        color: Colors.white,
+                        onPressed: () {
+                          AppState.backButtonDispatcher!.didPopRoute();
+                          AppState.delegate!
+                              .parseRoute(Uri.parse('/win/myWinnings'));
+                        },
+                        child: Center(
+                          child: Text(
+                            'START PREDICTING NOW',
+                            style:
+                                TextStyles.rajdhaniB.body1.colour(Colors.black),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding20,
-                    ),
-                  ]),
+                      SizedBox(
+                        height: SizeConfig.padding20,
+                      ),
+                    ],
+                  ),
                   Align(
                     alignment: Alignment.topRight,
                     child: GestureDetector(

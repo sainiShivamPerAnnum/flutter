@@ -50,10 +50,12 @@ class HowItWorks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PowerPlayBackgroundUi(
-      child: SafeArea(
-        child: Stack(
-          children: [
-            Column(
+      child: Stack(
+        children: [
+          SizedBox(
+            height: SizeConfig.screenHeight,
+            width: SizeConfig.screenWidth,
+            child: Column(
               children: [
                 const FAppBar(
                   showAvatar: false,
@@ -80,15 +82,14 @@ class HowItWorks extends StatelessWidget {
                         height: SizeConfig.padding12,
                       ),
 
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'Predict how much is the Chasing Score in a match and save the amount in Gold or Flo',
-                            style: TextStyles.sourceSans.body3
-                                .colour(Colors.white.withOpacity(0.5)),
-                            textAlign: TextAlign.center,
-                          ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins),
+                        child: Text(
+                          'Predict how much is the Chasing Score in a match and save the amount in Gold or Flo',
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white.withOpacity(0.5)),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       const SizedBox(
@@ -102,36 +103,34 @@ class HowItWorks extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5),
                           color: Colors.black.withOpacity(0.3),
                         ),
-                        child: Expanded(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Predict 152 Runs  =   ',
-                                style: TextStyles.sourceSans.body3,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Predict 152 Runs  =   ',
+                              style: TextStyles.sourceSans.body3,
+                            ),
+                            Container(
+                              // margin: const EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding6,
+                                  vertical: SizeConfig.padding2),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3),
+                                color: const Color(0xff62E3C4),
                               ),
-                              Container(
-                                // margin: const EdgeInsets.symmetric(horizontal: 10),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding6,
-                                    vertical: SizeConfig.padding2),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  color: const Color(0xff62E3C4),
-                                ),
-                                child: Text(
-                                  '₹',
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(Colors.black),
-                                ),
+                              child: Text(
+                                '₹',
+                                style: TextStyles.sourceSans.body3
+                                    .colour(Colors.black),
                               ),
-                              Text(
-                                '  Save ₹152 in Gold or Flo',
-                                style: TextStyles.sourceSans.body3,
-                              ),
-                            ],
-                          ),
+                            ),
+                            Text(
+                              '  Save ₹152 in Gold or Flo',
+                              style: TextStyles.sourceSans.body3,
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(
@@ -203,15 +202,13 @@ class HowItWorks extends StatelessWidget {
                       const SizedBox(
                         height: 12,
                       ),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            'The score being chased by the playing team in the 2nd innings.',
-                            style: TextStyles.sourceSans.body3
-                                .colour(Colors.white.withOpacity(0.5)),
-                            textAlign: TextAlign.center,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          'The score being chased by the playing team in the 2nd innings.',
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white.withOpacity(0.5)),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       const SizedBox(
@@ -267,15 +264,13 @@ class HowItWorks extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(
-                            calloutSubText,
-                            style: TextStyles.sourceSans.body3
-                                .colour(Colors.white.withOpacity(0.5)),
-                            textAlign: TextAlign.center,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text(
+                          calloutSubText,
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white.withOpacity(0.5)),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       const SizedBox(
@@ -322,9 +317,8 @@ class HowItWorks extends StatelessWidget {
                                   ),
 
                                   Flexible(
-                                    child: Text(
-                                      rewardDesc1,
-                                      style: TextStyles.sourceSans.body4,
+                                    child: Text(rewardDesc1,
+                                        style: TextStyles.sourceSans.body4,
                                         textAlign: TextAlign.end),
                                   ),
                                 ]),
@@ -351,9 +345,8 @@ class HowItWorks extends StatelessWidget {
                                   ),
 
                                   Flexible(
-                                    child: Text(
-                                      rewardDesc2,
-                                      style: TextStyles.sourceSans.body4,
+                                    child: Text(rewardDesc2,
+                                        style: TextStyles.sourceSans.body4,
                                         textAlign: TextAlign.end),
                                   ),
                                 ]),
