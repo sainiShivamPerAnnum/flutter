@@ -121,15 +121,9 @@ class PredictionLeaderboard extends StatelessWidget {
                                 matchData: matchData,
                               ),
                             ),
-                            //PREDICTIONS END AFTER 19TH OVER OF 1ST INNINGS
                             const SizedBox(
                               height: 20,
                             ),
-                            // Text(
-                            //   matchData.headsUpText ?? '',
-                            //   style: TextStyles.sourceSans.body4
-                            //       .colour(Colors.white),
-                            // ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -223,7 +217,7 @@ class PredictionLeaderboard extends StatelessWidget {
                                             0
                                         ? YourPredictionSheet(
                                             transactions: model
-                                                .powerPlayService.transactions!,
+                                                .powerPlayService.transactions,
                                             matchData: matchData,
                                           )
                                         : NoPredictionSheet(
@@ -872,39 +866,25 @@ class YourPredictionSheet extends StatelessWidget {
                 color: Colors.white,
                 onPressed: () {
                   while (AppState.screenStack.length > 2) {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  }
-                  AppState.delegate!.appState.currentAction = PageAction(
-                    state: PageState.replace,
-                    page: PowerPlayHomeConfig,
-                  );
-
-                  // BaseUtil.openModalBottomSheet(
-                  //     isBarrierDismissible: true,
-                  //     addToScreenStack: true,
-                  //     backgroundColor: const Color(0xff21284A),
-                  //     borderRadius: BorderRadius.only(
-                  //       topLeft: Radius.circular(SizeConfig.roundness32),
-                  //       topRight: Radius.circular(SizeConfig.roundness32),
-                  //     ),
-                  //     isScrollControlled: true,
-                  //     hapticVibrate: true,
-                  //     content: MakePredictionSheet(
-                  //       matchData: matchData,
-                  //     ));
-                },
-                child: Center(
-                  child: Text(
-                    'PREDICT NOW',
-                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                  ),
+                  AppState.backButtonDispatcher!.didPopRoute();
+                }
+                AppState.delegate!.appState.currentAction = PageAction(
+                  state: PageState.replace,
+                  page: PowerPlayHomeConfig,
+                );
+              },
+              child: Center(
+                child: Text(
+                  'PREDICT NOW',
+                  style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                 ),
               ),
-              SizedBox(
-                height: SizeConfig.padding20,
-              ),
-            ],
-          )),
+            ),
+            SizedBox(
+              height: SizeConfig.padding20,
+            ),
+          ],
+        )),
     );
   }
 }

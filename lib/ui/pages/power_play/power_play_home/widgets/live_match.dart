@@ -113,35 +113,40 @@ class LiveMatch extends StatelessWidget {
                   ),
                 ),
                 if (model.liveMatchData?[0]!.status == MatchStatus.active.name)
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                    ),
-                    child: MaterialButton(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      color: Colors.white,
-                      onPressed: model.predict,
-                      child: Center(
-                        child: model.isPredictionInProgress
-                            ? SizedBox(
-                                height: SizeConfig.padding20,
-                                width: SizeConfig.padding20,
-                                child: const CircularProgressIndicator(
-                                  strokeWidth: 1,
-                                  color: Colors.black,
-                                ),
-                              )
-                            : Text(
-                                'PREDICT NOW',
-                                style: TextStyles.rajdhaniB.body1
-                                    .colour(Colors.black),
-                              ),
+                  ...[
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                      ),
+                      child: MaterialButton(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        color: Colors.white,
+                        onPressed: model.predict,
+                        child: Center(
+                          child: model.isPredictionInProgress
+                              ? SizedBox(
+                            height: SizeConfig.padding20,
+                            width: SizeConfig.padding20,
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 1,
+                              color: Colors.black,
+                            ),
+                          )
+                              : Text(
+                            'PREDICT NOW',
+                            style: TextStyles.rajdhaniB.body1
+                                .colour(Colors.black),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                SizedBox(
-                  height: SizeConfig.padding16,
-                ),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                  ]
+
+
+
               ],
             ),
           ),

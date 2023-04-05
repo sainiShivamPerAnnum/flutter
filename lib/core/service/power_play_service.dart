@@ -61,6 +61,8 @@ class PowerPlayService extends ChangeNotifier {
     matchData = [];
     liveMatchData = null;
     powerPlayDepositFlow = false;
+    transactions = [];
+    _userPredictedData = [];
     _logger.i("PowerPlayService dump");
   }
 
@@ -101,11 +103,10 @@ class PowerPlayService extends ChangeNotifier {
     }
   }
 
-  Future<void> getUserPredictedStats() async {
-    _logger.i("PowerPlayService -> getMatchStats");
+  Future<void> getUserPredictedStats(String id) async {
+    _logger.i("PowerPlayService -> getUserPredictedStats");
 
-    final response =
-        await _powerPlayRepository.getUserPredictedStats('csk_rcb');
+    final response = await _powerPlayRepository.getUserPredictedStats(id);
 
     log("SERVICE response => ${response.model?.data?.toList()}");
 
@@ -119,7 +120,7 @@ class PowerPlayService extends ChangeNotifier {
   Future<void> getUserTransactionHistory(
     MatchData matchData,
   ) async {
-    _logger.i("PowerPlayService -> getTransactionHistory");
+    _logger.i("PowerPlayService -> getUserTransactionHistory");
     TimestampModel? startTime;
     TimestampModel? endTime;
 
@@ -145,7 +146,7 @@ class PowerPlayService extends ChangeNotifier {
     log("SERVICE response => ${response.model?.transactions?.toList()}");
 
     if (response.isSuccess()) {
-      transactions = response.model!.transactions;
+      transactions = response.model?.transactions;
 
       log('transactions => ${transactions!.length}');
       // userPredictedData = response.model!.data!;
