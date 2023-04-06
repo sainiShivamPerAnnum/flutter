@@ -50,7 +50,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
         if (widget.winningsmap!.isNotEmpty) {
           _pageController!.jumpToPage(2);
         } else {
-          _pageController!.jumpToPage(2);
+          _pageController!.jumpToPage(1);
         }
       }
     });

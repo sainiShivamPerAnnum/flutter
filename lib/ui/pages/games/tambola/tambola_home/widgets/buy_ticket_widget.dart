@@ -45,10 +45,10 @@ class ButTicketsComponent extends StatelessWidget {
             amount: AppConfig.getValue(AppConfigKey.tambola_cost).toString(),
           ),
           SizedBox(
-            height: SizeConfig.padding12,
+            height: SizeConfig.padding8,
           ),
           Text(
-            'Buy more tickets to increase your chances',
+            'Buy more tickets to increase your chances of winning',
             style: TextStyles.sourceSans.body4
                 .colour(UiConstants.kTextFieldTextColor),
           ),
@@ -58,11 +58,12 @@ class ButTicketsComponent extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: SizeConfig.screenWidth! * 0.25,
+                width: SizeConfig.screenWidth! * 0.30,
                 decoration: BoxDecoration(
-                    // color: const Color(0xff000000).withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness40),
-                    border: Border.all(color: Colors.white, width: 1)),
+                  // color: const Color(0xff000000).withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness40),
+                  border: Border.all(color: Colors.white, width: 1),
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -79,34 +80,52 @@ class ButTicketsComponent extends StatelessWidget {
                       // color: Colors.white,
                       // onPressed: model.decreaseTicketCount,
                     ),
+
                     SizedBox(
-                      width: SizeConfig.screenHeight! * 0.03,
-                      height: SizeConfig.padding35,
-                      child: Center(
-                        child: TextField(
-                          style: TextStyles.sourceSans.body2.setHeight(2),
-                          textAlign: TextAlign.center,
-                          controller: model.ticketCountController,
-                          enableInteractiveSelection: false,
-                          enabled: false,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              signed: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          onChanged: (text) {
-                            model.updateTicketCount();
-                          },
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(
+                            width: 2,
                           ),
-                        ),
+                          SvgPicture.asset(
+                            'assets/svg/ticket_icon.svg',
+                            height: 12,
+                          ),
+                          SizedBox(
+                            width: SizeConfig.screenHeight! * 0.03,
+                            height: SizeConfig.padding35,
+                            child: Center(
+                              child: TextField(
+                                style: TextStyles.sourceSans.body2.setHeight(2),
+                                textAlign: TextAlign.center,
+                                controller: model.ticketCountController,
+                                enableInteractiveSelection: false,
+                                enabled: false,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        signed: true),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                onChanged: (text) {
+                                  model.updateTicketCount();
+                                },
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+
+                    // Spacer(),
                     GestureDetector(
                       onTap: model.increaseTicketCount,
                       child: Icon(
@@ -153,7 +172,10 @@ class ButTicketsComponent extends StatelessWidget {
                           "Amount": model.ticketSavedAmount,
                         }));
                     BaseUtil.openDepositOptionsModalSheet(
-                        amount: model.ticketSavedAmount);
+                        amount: model.ticketSavedAmount,
+                        subtitle:
+                            'Save ₹500 in any of the asset & get 1 Free Tambola Ticket',
+                        timer: 0);
                   },
                   child: Center(
                     child: Text(

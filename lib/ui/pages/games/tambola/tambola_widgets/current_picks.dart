@@ -1,3 +1,4 @@
+import 'dart:developer' as i;
 import 'dart:math';
 
 import 'package:felloapp/navigator/app_state.dart';
@@ -10,12 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CurrentPicks extends StatelessWidget {
-  const CurrentPicks(
-      {super.key,
-      this.todaysPicks,
-      this.dailyPicksCount,
-      this.isTambolaCard = true,
-      this.totalTicketMatched = 0});
+  const CurrentPicks({super.key,
+    this.todaysPicks,
+    this.dailyPicksCount,
+    this.isTambolaCard = true,
+    this.totalTicketMatched = 0});
 
   final List<int>? todaysPicks;
   final int? dailyPicksCount;
@@ -25,6 +25,7 @@ class CurrentPicks extends StatelessWidget {
   // int renderedTimes = 0;
 
   String getText(S locale) {
+    i.log("totalTicketMatched: $totalTicketMatched");
     if ((totalTicketMatched ?? 0) > 0) {
       /// Todo: logic incorrect
       return "Today’s draw matches your $totalTicketMatched tickets!";
@@ -32,7 +33,7 @@ class CurrentPicks extends StatelessWidget {
 
     return todaysPicks == [-1, -1, -1]
         ? locale.tDrawnAtText1
-        : locale.tDrawnAtText2;
+        : "Picks drawn at 6 PM";
   }
 
   @override
@@ -52,7 +53,7 @@ class CurrentPicks extends StatelessWidget {
                 top: SizeConfig.padding24, bottom: SizeConfig.padding16),
             child: Text(
               getText(locale),
-              style: TextStyles.sourceSansSB.body4,
+              style: TextStyles.sourceSansSB.body3,
             ),
           )
       ],
@@ -61,12 +62,11 @@ class CurrentPicks extends StatelessWidget {
 }
 
 class TodayPicksBallsAnimation extends StatelessWidget {
-  const TodayPicksBallsAnimation(
-      {Key? key,
-      required this.picksList,
-      this.ballHeight,
-      this.ballWidth,
-      this.margin})
+  const TodayPicksBallsAnimation({Key? key,
+    required this.picksList,
+    this.ballHeight,
+    this.ballWidth,
+    this.margin})
       : super(key: key);
   final List<int> picksList;
   final double? ballHeight;
@@ -90,7 +90,7 @@ class TodayPicksBallsAnimation extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
             picksList.length,
-            (index) => Container(
+                (index) => Container(
               height: ballHeight ?? SizeConfig.screenWidth! * 0.14,
               margin: margin ??
                   EdgeInsets.symmetric(horizontal: SizeConfig.padding4),
@@ -230,18 +230,18 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
               isAnimationDone
                   ? _buildBalls(widget.number, false, widget.ballColor)
                   : ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: randomList.length,
-                      itemBuilder: (context, index) {
-                        return _buildBalls(
-                            randomList[index],
-                            index == 0,
-                            Colors.primaries[
-                                Random().nextInt(Colors.primaries.length)]);
-                      },
-                    ),
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: randomList.length,
+                itemBuilder: (context, index) {
+                  return _buildBalls(
+                      randomList[index],
+                      index == 0,
+                      Colors.primaries[
+                      Random().nextInt(Colors.primaries.length)]);
+                },
+              ),
               _buildBalls(widget.number, false, widget.ballColor),
             ],
           ),
