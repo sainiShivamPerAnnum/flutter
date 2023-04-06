@@ -90,11 +90,7 @@ class TransactionHistoryRepository extends BaseRepo {
         "type": type,
         "status": status,
         "endTime": endTime.toDate().toUtc().toIso8601String(),
-        "startTime": startTime
-            .toDate()
-            .subtract(Duration(hours: 2))
-            .toUtc()
-            .toIso8601String(),
+        "startTime": startTime.toDate().toUtc().toIso8601String(),
       };
       final response = await APIService.instance.getData(
         ApiPath.kSingleTransactions(_uid),

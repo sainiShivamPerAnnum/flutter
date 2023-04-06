@@ -46,7 +46,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                       showCoinBar: false,
                       showHelpButton: false,
                       backgroundColor: Colors.transparent,
-                      type: FaqsType.onboarding,
+                      type: FaqsType.powerPlay,
                       action: Row(
                         children: [
                           GestureDetector(

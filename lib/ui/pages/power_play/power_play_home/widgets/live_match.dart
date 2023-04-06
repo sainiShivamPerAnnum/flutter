@@ -28,9 +28,16 @@ class LiveMatch extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: const Color(0xff3B4E6E).withOpacity(0.8),
-            ),
+                borderRadius: BorderRadius.circular(5),
+                color: const Color(0xff3B4E6E).withOpacity(0.8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(2, 2),
+                    blurRadius: SizeConfig.roundness5,
+                    spreadRadius: SizeConfig.padding2,
+                  )
+                ]),
             child: Column(
               children: [
                 GestureDetector(
@@ -65,7 +72,7 @@ class LiveMatch extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  'PREDICTION LEADERBOARD',
+                                  'POPULAR PREDICTIONS',
                                   style: TextStyles.sourceSans
                                       .colour(Colors.white.withOpacity(0.7))
                                       .copyWith(
@@ -112,41 +119,38 @@ class LiveMatch extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (model.liveMatchData?[0]!.status == MatchStatus.active.name)
-                  ...[
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 22,
-                      ),
-                      child: MaterialButton(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        color: Colors.white,
-                        onPressed: model.predict,
-                        child: Center(
-                          child: model.isPredictionInProgress
-                              ? SizedBox(
-                            height: SizeConfig.padding20,
-                            width: SizeConfig.padding20,
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 1,
-                              color: Colors.black,
-                            ),
-                          )
-                              : Text(
-                            'PREDICT NOW',
-                            style: TextStyles.rajdhaniB.body1
-                                .colour(Colors.black),
-                          ),
-                        ),
+                if (model.liveMatchData?[0]!.status ==
+                    MatchStatus.active.name) ...[
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 22,
+                    ),
+                    child: MaterialButton(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      color: Colors.white,
+                      onPressed: model.predict,
+                      child: Center(
+                        child: model.isPredictionInProgress
+                            ? SizedBox(
+                                height: SizeConfig.padding20,
+                                width: SizeConfig.padding20,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 1,
+                                  color: Colors.black,
+                                ),
+                              )
+                            : Text(
+                                'PREDICT NOW',
+                                style: TextStyles.rajdhaniB.body1
+                                    .colour(Colors.black),
+                              ),
                       ),
                     ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    ),
-                  ]
-
-
-
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding16,
+                  ),
+                ]
               ],
             ),
           ),
@@ -155,6 +159,43 @@ class LiveMatch extends StatelessWidget {
             model: model,
             margin: false,
           ),
+          InkWell(
+            onTap: () {
+              Haptic.vibrate();
+              AppState.delegate!.appState.currentAction = PageAction(
+                  widget: PredictionLeaderboard(
+                    matchData: model.liveMatchData![0]!,
+                  ),
+                  page: PowerPlayLeaderBoardConfig,
+                  state: PageState.addWidget);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+              ),
+              padding: EdgeInsets.only(
+                left: SizeConfig.pageHorizontalMargins,
+                right: SizeConfig.padding12,
+                top: SizeConfig.padding12,
+                bottom: SizeConfig.padding12,
+              ),
+              margin: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding10,
+              ),
+              child: Row(
+                children: [
+                  Text('POPULAR PREDICTIONS',
+                      style: TextStyles.sourceSans.body2),
+                  const Spacer(),
+                  const Icon(
+                    Icons.navigate_next_rounded,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );

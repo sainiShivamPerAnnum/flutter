@@ -157,7 +157,7 @@ class PredictionLeaderboard extends StatelessWidget {
                                 children: [
                                   //Prediction Leaderboard
                                   Text(
-                                    "Prediction Leaderboard",
+                                    "Popular Predictions",
                                     style: TextStyles.sourceSans.body1
                                         .colour(Colors.white),
                                   ),

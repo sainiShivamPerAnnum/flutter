@@ -48,9 +48,16 @@ class CompletedMatch extends StatelessWidget {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: const Color(0xff3B4E6E).withOpacity(0.8),
-                      ),
+                          borderRadius: BorderRadius.circular(5),
+                          color: const Color(0xff3B4E6E).withOpacity(0.8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(2, 2),
+                              blurRadius: SizeConfig.roundness5,
+                              spreadRadius: SizeConfig.padding2,
+                            )
+                          ]),
                       child: Column(
                         children: [
                           Container(

@@ -3,8 +3,8 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -12,7 +12,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class AutosaveOnboardingView extends StatefulWidget {
   const AutosaveOnboardingView({Key? key}) : super(key: key);
@@ -66,10 +65,9 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Scaffold(
-      backgroundColor: Color(0xFF032A2E),
+      backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(
         children: [
-          const NewSquareBackground(),
           Row(
             children: [
               Container(
@@ -84,69 +82,52 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
               )
             ],
           ),
-          // Positioned(
-          //   top: 0,
-          //   child: Container(
-          //     width: SizeConfig.screenWidth,
-          //     height: SizeConfig.screenHeight!,
-          //     decoration: BoxDecoration(
-          //       gradient: LinearGradient(
-          //           begin: Alignment.topCenter,
-          //           end: Alignment.bottomCenter,
-          //           colors: [
-          //             Color(0xff0B867C).withOpacity(0.95),
-          //             Color(0xff0B867C).withOpacity(0.2),
-          //             Color(0xff0B867C).withOpacity(0.05),
-          //             Colors.transparent
-          //           ]),
-          //     ),
-          //   ),
-          // ),
-          Container(
+          SizedBox(
             height: SizeConfig.screenHeight,
             width: SizeConfig.screenWidth,
             child: SafeArea(
               child: Column(
                 children: [
                   SizedBox(height: SizeConfig.padding12),
-                  ClipPath(
-                    clipper: LottieClipper(),
+                  const TambolaVideoPlayer(
+                      link:
+                          "https://d37gtxigg82zaw.cloudfront.net/sip-pros.mp4"),
+                  Transform.translate(
+                    offset: Offset(0, -SizeConfig.padding16),
                     child: Container(
-                      width: SizeConfig.screenWidth,
-                      child: Lottie.asset(
-                        "assets/lotties/autosave.json",
-                        fit: BoxFit.cover,
-                        width: SizeConfig.screenWidth,
+                      padding: EdgeInsets.all(
+                        SizeConfig.pageHorizontalMargins,
                       ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins,
-                    ),
-                    // color: Colors.red,
-                    width: SizeConfig.screenWidth,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Introducing Autosave",
-                            style: TextStyles.rajdhaniB.title1),
-                        ...List.generate(
-                          storyData.length,
-                          (index) => ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(
-                              Icons.check_circle_outline_rounded,
-                              color: UiConstants.primaryColor,
-                              // size: SizeConfig.iconSize1,
+                      decoration: BoxDecoration(
+                        color: UiConstants.kBackgroundColor,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness12),
+                            topRight: Radius.circular(SizeConfig.roundness12)),
+                      ),
+                      // color: Colors.red,
+                      width: SizeConfig.screenWidth,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Introducing Autosave",
+                              style: TextStyles.rajdhaniB.title1),
+                          ...List.generate(
+                            storyData.length,
+                            (index) => ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(
+                                Icons.check_circle_outline_rounded,
+                                color: UiConstants.primaryColor,
+                                // size: SizeConfig.iconSize1,
+                              ),
+                              title: Text(
+                                storyData[index][1],
+                                style: TextStyles.sourceSansM.body2,
+                              ),
                             ),
-                            title: Text(
-                              storyData[index][1],
-                              style: TextStyles.sourceSansM.body2,
-                            ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   const Spacer(),
