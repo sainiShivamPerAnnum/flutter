@@ -1,4 +1,6 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -51,7 +53,8 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              locator<PowerPlayService>().referFriend();
+                              locator<PowerPlayService>()
+                                  .referFriend("Power play home view");
                             },
                             child: Container(
                                 key: const ValueKey(Constants.HELP_FAB),
@@ -136,6 +139,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                   return GestureDetector(
                                     onTap: () {
                                       Haptic.vibrate();
+
                                       AppState.delegate!.parseRoute(Uri.parse(
                                           model
                                                   .cardCarousel?[index]
@@ -144,6 +148,14 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                               ? getRoute(index)
                                               : model.cardCarousel?[index]
                                                   ["onTapLink"]));
+                                      locator<AnalyticsService>().track(
+                                        eventName:
+                                            AnalyticsEvents.iplLiveCardTapped,
+                                        properties: {
+                                          "url": model.cardCarousel?[index]
+                                              ["onTapLink"],
+                                        },
+                                      );
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(

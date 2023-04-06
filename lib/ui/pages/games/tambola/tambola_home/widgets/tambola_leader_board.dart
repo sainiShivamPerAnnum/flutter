@@ -94,25 +94,16 @@ class TambolaLeaderBoard extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Text(
-                            //   "#",
-                            //   style: TextStyles.sourceSans.body3
-                            //       .colour(UiConstants.kTextColor2),
-                            // ),
-                            // SizedBox(width: SizeConfig.padding12),
-                            // SizedBox(width: SizeConfig.padding12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(locale.names,
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(UiConstants.kTextColor2)),
-                                  SizedBox(height: SizeConfig.padding4),
-                                ],
-                              ),
+                            Text(
+                              "#",
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
                             ),
+                            SizedBox(width: SizeConfig.padding32),
+                            Text(locale.names,
+                                style: TextStyles.sourceSans.body3
+                                    .colour(UiConstants.kTextColor2)),
+                            Spacer(),
                             Text(
                               'Tickets Owned',
                               style: TextStyles.sourceSans.body3
@@ -149,12 +140,12 @@ class TambolaLeaderBoard extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        // Text(
-                                        //   "${i + 1}",
-                                        //   style: TextStyles.sourceSans.body2
-                                        //       .colour(Colors.white),
-                                        // ),
-                                        // SizedBox(width: SizeConfig.padding12),
+                                        Text(
+                                          "${i + 1}",
+                                          style: TextStyles.sourceSans.body2
+                                              .colour(Colors.white),
+                                        ),
+                                        SizedBox(width: SizeConfig.padding24),
                                         FutureBuilder(
                                           future: model.getProfileDpWithUid(
                                               model.winners[i].userid),
@@ -236,7 +227,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                                         ),
                                         // SizedBox(width: SizeConfig.padding16),
                                         SizedBox(
-                                          width: SizeConfig.padding54,
+                                          width: SizeConfig.padding64,
                                           // color: Colors.blue,
                                           child: Text(
                                             "₹ ${model.winners[i].amount!.toInt() ?? "00"}",

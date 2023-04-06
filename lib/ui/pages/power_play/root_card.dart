@@ -1,10 +1,13 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -27,7 +30,12 @@ class PowerPlayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        AppState.isFirstTime = false;
         Haptic.vibrate();
+        locator<AnalyticsService>().track(
+          eventName: AnalyticsEvents.iplBannerTapped,
+          properties: {"subtitle": subtitle},
+        );
         if (PreferenceHelper.getBool(PreferenceHelper.POWERPLAY_IS_PLAYED)) {
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.addPage,
