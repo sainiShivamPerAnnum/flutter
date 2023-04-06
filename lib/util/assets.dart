@@ -1,3 +1,6 @@
+// ignore_for_file: constant_identifier_names
+
+// ignore: avoid_classes_with_only_static_members
 class Assets {
   static const String logoMaxSize = 'images/fello_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
@@ -351,4 +354,14 @@ class Assets {
       'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
   static const String tambolaTopBannerLottie =
       'assets/lotties/TambolaScreenTopBanner.json';
+
+  //POWER PLAY ASSETS
+  static const String powerPlayMain =
+      'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg';
+  static const String uhoh = 'assets/vectors/uhoh.svg';
+
+  static const kolkataIcon =
+      "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/KKR.svg";
+  static const bangaloreIcon =
+      "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/RCB.svg";
 }

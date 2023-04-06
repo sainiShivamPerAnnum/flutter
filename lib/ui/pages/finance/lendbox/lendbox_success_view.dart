@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
@@ -264,7 +265,9 @@ class LendboxSuccessView extends StatelessWidget {
                 this.showGtIfAvailable();
               },
               child: Text(
-                locale.obDone,
+                PowerPlayService.powerPlayDepositFlow
+                    ? "Make another prediction"
+                    : locale.obDone,
                 style: TextStyles.rajdhaniSB.body0
                     .colour(UiConstants.primaryColor),
               ),

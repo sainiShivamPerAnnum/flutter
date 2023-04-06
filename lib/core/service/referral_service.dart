@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
@@ -98,7 +99,7 @@ class ReferralService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> shareLink() async {
+  Future<void> shareLink({String? customMessage}) async {
     _isShareAlreadyClicked = true;
     notifyListeners();
 
@@ -107,11 +108,11 @@ class ReferralService extends ChangeNotifier {
     if (shareLinkInProgress) return;
     if (await BaseUtil.showNoInternetAlert()) return;
 
-    BaseAnalytics.analytics!.logShare(
+    unawaited(BaseAnalytics.analytics!.logShare(
       contentType: 'referral',
       itemId: _userService.baseUser!.uid!,
       method: 'message',
-    );
+    ));
 
     _analyticsService
         .track(eventName: AnalyticsEvents.shareReferalCode, properties: {
@@ -122,7 +123,7 @@ class ReferralService extends ChangeNotifier {
     shareLinkInProgress = true;
     notifyListeners();
 
-    String? url = await this.generateLink();
+    String? url = await generateLink();
 
     shareLinkInProgress = false;
     notifyListeners();
@@ -130,10 +131,10 @@ class ReferralService extends ChangeNotifier {
     if (url == null) {
       BaseUtil.showNegativeAlert(locale.generatingLinkFailed, locale.tryLater);
     } else {
-      if (Platform.isIOS) {
-        Share.share(_shareMsg! + url);
+      if (customMessage != null) {
+        await Share.share(customMessage + url);
       } else {
-        Share.share(_shareMsg! + url);
+        await Share.share(_shareMsg! + url);
       }
     }
 

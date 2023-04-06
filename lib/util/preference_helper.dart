@@ -22,6 +22,7 @@ class PreferenceHelper {
   static const CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY =
       "lastDailyAppBonusRewardClaimDay";
   static SharedPreferences? _prefs;
+  static const POWERPLAY_IS_PLAYED = "powerplay_is_played";
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/transaction_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
@@ -68,6 +69,53 @@ class TransactionHistoryRepository extends BaseRepo {
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {
       logger!.e(e.toString());
+      return ApiResponse.withError(
+          e?.toString() ?? "Unable to fetch transactions", 400);
+    }
+  }
+
+  Future<ApiResponse<TransactionResponse>> getPowerPlayUserTransactions({
+    TimestampModel? startTime,
+    String? type,
+    TimestampModel? endTime,
+    String? status,
+  }) async {
+    List<UserTransaction> events = [];
+    try {
+      print(endTime!.toDate().toUtc().toIso8601String());
+      print(startTime!.toDate().toUtc().toIso8601String());
+      final String? _uid = userService!.baseUser!.uid;
+      final _token = await getBearerToken();
+      final _queryParams = {
+        "type": type,
+        "status": status,
+        "endTime": endTime!
+            .toDate()
+            .subtract(Duration(hours: 2))
+            .toUtc()
+            .toIso8601String(),
+        "startTime": startTime!.toDate().toUtc().toIso8601String(),
+      };
+      final response = await APIService.instance.getData(
+        ApiPath.kSingleTransactions(_uid),
+        token: _token,
+        queryParams: _queryParams,
+        cBaseUrl: _baseUrl,
+      );
+
+      final responseData = response["data"];
+      log("Transactions data: $responseData");
+      responseData["transactions"].forEach((e) {
+        events.add(UserTransaction.fromMap(e, e["id"]));
+      });
+
+      // final bool isLastPage = responseData["isLastPage"] ?? false;
+      final TransactionResponse txnResponse =
+          TransactionResponse(isLastPage: true, transactions: events);
+
+      return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
       return ApiResponse.withError(
           e?.toString() ?? "Unable to fetch transactions", 400);
     }

@@ -7,9 +7,9 @@ import 'package:video_player/video_player.dart';
 class TambolaVideoPlayer extends StatefulWidget {
   const TambolaVideoPlayer(
       {Key? key,
-        required this.link,
-        this.showShimmer = false,
-        this.aspectRatio})
+      required this.link,
+      this.showShimmer = false,
+      this.aspectRatio})
       : super(key: key);
   final String link;
   final bool showShimmer;
@@ -44,27 +44,27 @@ class _TambolaVideoPlayerState extends State<TambolaVideoPlayer> {
   Widget build(BuildContext context) {
     return _controller?.value.isInitialized ?? false
         ? ClipRRect(
-      borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-      child: AspectRatio(
-        aspectRatio: widget.aspectRatio ?? _controller!.value.aspectRatio,
-        child: VideoPlayer(_controller!),
-      ),
-    )
+            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            child: AspectRatio(
+              aspectRatio: widget.aspectRatio ?? _controller!.value.aspectRatio,
+              child: VideoPlayer(_controller!),
+            ),
+          )
         : widget.showShimmer
-        ? Shimmer.fromColors(
-      baseColor: UiConstants.kUserRankBackgroundColor,
-      highlightColor: Colors.grey.shade800,
-      child: AspectRatio(
-        aspectRatio: 1.4,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius:
-            BorderRadius.circular(SizeConfig.roundness12),
-          ),
-        ),
-      ),
-    )
-        : Container();
+            ? Shimmer.fromColors(
+                baseColor: UiConstants.kUserRankBackgroundColor,
+                highlightColor: Colors.grey.shade800,
+                child: AspectRatio(
+                  aspectRatio: 1.4,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                    ),
+                  ),
+                ),
+              )
+            : Container();
   }
 }

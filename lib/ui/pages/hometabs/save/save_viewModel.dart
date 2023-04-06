@@ -23,6 +23,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.da
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
+import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
@@ -102,15 +103,23 @@ class SaveViewModel extends BaseViewModel {
     Assets.flatIsland,
   ];
 
-  List<EventModel>? get ongoingEvents => this._ongoingEvents;
-  List<BlogPostModel>? get blogPosts => this._blogPosts;
+  List<EventModel>? get ongoingEvents => _ongoingEvents;
+
+  List<BlogPostModel>? get blogPosts => _blogPosts;
+
   List<BlogPostModelByCategory>? get blogPostsByCategory =>
-      this._blogPostsByCategory;
+      _blogPostsByCategory;
+
   bool get isLoading => _isLoading;
+
   bool get isChallengesLoading => _isChallenegsLoading;
+
   List<String> get sellingReasons => _sellingReasons;
+
   String get selectedReasonForSelling => _selectedReasonForSelling;
+
   Map<String, dynamic> get filteredBlogList => _filteredList;
+
   // bool get isKYCVerified => _isKYCVerified;
   // bool get isVPAVerified => _isVPAVerified;
   bool get isGoldSaleActive => _isGoldSaleActive;
@@ -123,27 +132,27 @@ class SaveViewModel extends BaseViewModel {
   double get withdrawableQnt => _withdrawableQnt;
 
   set ongoingEvents(List<EventModel>? value) {
-    this._ongoingEvents = value;
+    _ongoingEvents = value;
     notifyListeners();
   }
 
   set blogPosts(List<BlogPostModel>? value) {
-    this._blogPosts = value;
+    _blogPosts = value;
     notifyListeners();
   }
 
   set setWithdrawableQnt(double value) {
-    this._withdrawableQnt = value;
+    _withdrawableQnt = value;
     notifyListeners();
   }
 
   set setNonWithdrawableQnt(double value) {
-    this._nonWithdrawableQnt = value;
+    _nonWithdrawableQnt = value;
     notifyListeners();
   }
 
   set selectedReasonForSelling(String val) {
-    this._selectedReasonForSelling = val;
+    _selectedReasonForSelling = val;
     notifyListeners();
   }
 
@@ -178,6 +187,7 @@ class SaveViewModel extends BaseViewModel {
   getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
     saveViewItems.add(SaveNetWorthSection(saveViewModel: smodel));
+    saveViewItems.add(const PowerPlayCard());
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
         case 'NAS':
@@ -235,7 +245,7 @@ class SaveViewModel extends BaseViewModel {
     blogPosts = response.model;
     blogPosts!
         .sort(((a, b) => a.acf!.categories!.compareTo(b.acf!.categories!)));
-    this._blogPostsByCategory = getAllBlogsByCategory();
+    _blogPostsByCategory = getAllBlogsByCategory();
     print(blogPosts!.length);
     updateIsLoading(false);
     notifyListeners();
@@ -274,12 +284,12 @@ class SaveViewModel extends BaseViewModel {
   List<BlogPostModelByCategory> getAllBlogsByCategory() {
     List<BlogPostModelByCategory> result = [];
 
-    String? cat = this.blogPosts![0].acf!.categories;
+    String? cat = blogPosts![0].acf!.categories;
     List<BlogPostModel> blogs = [];
 
-    this.blogPosts!.forEach((blog) {
+    blogPosts!.forEach((blog) {
       if (blog.acf!.categories != cat) {
-        result.add(new BlogPostModelByCategory(category: cat, blogs: blogs));
+        result.add(BlogPostModelByCategory(category: cat, blogs: blogs));
         cat = blog.acf!.categories;
         blogs = [blog];
       } else {
@@ -287,7 +297,7 @@ class SaveViewModel extends BaseViewModel {
       }
     });
 
-    result.add(new BlogPostModelByCategory(category: cat, blogs: blogs));
+    result.add(BlogPostModelByCategory(category: cat, blogs: blogs));
     return result;
   }
 

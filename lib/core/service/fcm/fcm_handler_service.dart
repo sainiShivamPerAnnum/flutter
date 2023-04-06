@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
@@ -18,21 +19,20 @@ import 'package:intl/intl.dart';
 enum MsgSource { Foreground, Background, Terminated }
 
 class FcmHandler extends ChangeNotifier {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserService? _userservice = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserService _userservice = locator<UserService>();
 
-  // final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
-  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads =
+  final FcmHandlerDataPayloads _fcmHandlerDataPayloads =
       locator<FcmHandlerDataPayloads>();
-  final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
-  final AutosaveProcessViewModel? _autosaveProcessViewModel =
+  final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
+  final AutosaveProcessViewModel _autosaveProcessViewModel =
       locator<AutosaveProcessViewModel>();
-  // final PaytmService? _paytmService = locator<PaytmService>();
-  final AugmontTransactionService? _augTxnService =
+  final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
+  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
 
-  final JourneyService? _journeyService = locator<JourneyService>();
-  final GoldSellViewModel? _augOps = locator<GoldSellViewModel>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final GoldSellViewModel _augOps = locator<GoldSellViewModel>();
   ValueChanged<Map>? notifListener;
   // Timestamp latestFcmtimeStamp;
   String? latestFcmCommand;
@@ -48,6 +48,7 @@ class FcmHandler extends ChangeNotifier {
         _logger!.d(
           "Duplicate Fcm Data, exiting method",
         );
+        lastFcmData = data;
         return false;
       }
     } else {
@@ -120,11 +121,9 @@ class FcmHandler extends ChangeNotifier {
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
           await _fcmHandlerDataPayloads!.userPrizeWinPrompt();
           break;
-        // case FcmCommands.COMMAND_SUBSCRIPTION_RESPONSE:
-        //   if (_paytmService!.isOnSubscriptionFlow)
-        //     await _autosaveProcessViewModel!
-        //         .handleSubscriptionPayload(data as Map<String, dynamic>);
-        //   break;
+        case FcmCommands.COMMAND_IPL_WIN_RESPONSE:
+          _powerPlayService.showPowerPlayWinDialog(data["payload"]);
+          break;
         default:
       }
     }
