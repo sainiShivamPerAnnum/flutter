@@ -126,9 +126,6 @@ class TambolaService extends ChangeNotifier {
         // _currentBoardView = null;
         ticketCount = boards.length;
 
-        matchedTicketCount = 0;
-        highlightDailyPicks(userWeeklyBoards!);
-
         completer.complete(boards);
       } else {
         completer.complete(null);
@@ -169,6 +166,8 @@ class TambolaService extends ChangeNotifier {
         .navItems
         .containsValue(RootController.tambolaNavBar)) {
       await fetchTambolaBoard();
+      matchedTicketCount = 0;
+      highlightDailyPicks(userWeeklyBoards!);
 
       completer.future.then((value) {
         initialTicketCount = value?.length;
@@ -177,10 +176,13 @@ class TambolaService extends ChangeNotifier {
   }
 
   void highlightDailyPicks(List<TambolaBoard?> boards) {
+    matchedTicketCount = 0;
+    _ticketsNumbers.clear();
+
     for (final board in boards) {
       Iterable<int> numsList =
           board!.tambolaBoard!.expand((numbers) => numbers);
-      ticketsNumbers.add(numsList.toList());
+      _ticketsNumbers.add(numsList.toList());
 
       for (int i = 0; i < todaysPicks.length; i++) {
         if (numsList.contains(todaysPicks[i])) {
@@ -189,7 +191,25 @@ class TambolaService extends ChangeNotifier {
         }
       }
     }
+
+    notifyListeners();
   }
+
+  // void highlightDailyPicks(List<TambolaBoard?> boards) {
+  //   Set<int> todaysPicksSet = todaysPicks.toSet();
+  //   for (final board in boards) {
+  //     List<int> boardNumbers =
+  //         board!.tambolaBoard!.expand((numbers) => numbers).toList();
+  //     ticketsNumbers.add(boardNumbers);
+  //
+  //     for (int i = 0; i < boardNumbers.length; i++) {
+  //       if (todaysPicksSet.contains(boardNumbers[i])) {
+  //         matchedTicketCount++;
+  //         break;
+  //       }
+  //     }
+  //   }
+  // }
 
   void dump() {
     _dailyPicksCount = null;
