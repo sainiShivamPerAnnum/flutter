@@ -31,7 +31,6 @@ class KYCDetailsViewModel extends BaseViewModel {
   bool _isUpdatingKycDetails = false;
   bool _isEmailUpdating = false;
   get isEmailUpdating => this._isEmailUpdating;
-
   bool isPanTileOpen = false;
   bool isEmailTileOpen = false;
 
@@ -227,9 +226,19 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   Future<void> onSubmit(context) async {
     kycErrorMessage = null;
-    if (capturedImage == null)
+    if (isEmailUpdating) {
+      return BaseUtil.showNegativeAlert(
+          "Updating your email", "please wait for this process to finish");
+    }
+
+    if (capturedImage == null) {
       return BaseUtil.showNegativeAlert(
           locale.noFileSelected, locale.selectValidPan);
+    }
+    if (!_userService.isEmailVerified) {
+      return BaseUtil.showNegativeAlert(
+          "Email not verified", "please verify an email to continue");
+    }
     if (isUpdatingKycDetails) return;
     isUpdatingKycDetails = true;
     AppState.blockNavigation();

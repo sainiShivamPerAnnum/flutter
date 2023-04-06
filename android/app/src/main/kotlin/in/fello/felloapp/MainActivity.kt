@@ -13,17 +13,23 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.provider.Settings
 import android.util.Base64
 import android.util.Log
 import android.view.View
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.security.MessageDigest
 import java.lang.reflect.Method
 
 
@@ -40,10 +46,10 @@ class MainActivity : FlutterFragmentActivity()  {
     private lateinit var paymentResult: MethodChannel.Result
     override fun configureFlutterEngine( flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        GeneratedPluginRegistrant.registerWith(flutterEngine)
         context=applicationContext
+        flutterEngine.plugins.add(MyPlugin())
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
 
-        //METHOD CHANNEL [1]
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
                 // Note: this method is invoked on the main thread.
                 call, result ->
@@ -80,10 +86,17 @@ class MainActivity : FlutterFragmentActivity()  {
                val id: String = getUniqueDeviceId(context)
                  result.success(id)
              }
+            else if(call.method == "getAndroidId"){
+                result.success(getAndroidId())
+            }
+            else if(call.method == "isDeviceRooted"){
+                result.success(RootCheckService().isDeviceRooted())
+            }
             else {
               result.notImplemented()
             }
           }
+
        paymentMethodChannel =  MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UPIINTENTCHANNEL)
         paymentMethodChannel.setMethodCallHandler {
             // This method is invoked on the main thread.
@@ -143,6 +156,11 @@ class MainActivity : FlutterFragmentActivity()  {
             )
         }
         return phonePeVersionCode
+    }
+    
+    @SuppressLint("HardwareIds")
+    private fun getAndroidId(): String? {
+        return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID);
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -288,10 +306,6 @@ class MainActivity : FlutterFragmentActivity()  {
             res?.error("400", "exception",ex.message )
         }
     }
-
-
-
-
 
 
     override fun onStart() {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
@@ -14,6 +16,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:showcaseview/showcaseview.dart';
 

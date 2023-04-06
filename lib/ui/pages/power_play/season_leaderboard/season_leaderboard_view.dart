@@ -56,7 +56,7 @@ class SeasonLeaderboard extends StatelessWidget {
                       const FAppBar(
                         showAvatar: false,
                         showCoinBar: false,
-                        type: FaqsType.onboarding,
+                        type: FaqsType.powerPlay,
                       ),
                       Expanded(
                         child: SingleChildScrollView(
@@ -182,6 +182,8 @@ class NewLeaderBoardView extends StatelessWidget {
               scoreboard: scoreBoard,
               // userProfilePicUrl: userProfilePicUrl,
             ),
+          if (scoreBoard!.length < 4)
+            SizedBox(height: SizeConfig.pageHorizontalMargins),
           Container(
             margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
             child: Row(

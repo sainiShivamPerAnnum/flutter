@@ -1,13 +1,18 @@
+// ignore_for_file: lines_longer_than_80_chars
+
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/fello_dialog/apxor_dialog.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
@@ -19,20 +24,21 @@ import 'package:intl/intl.dart';
 enum MsgSource { Foreground, Background, Terminated }
 
 class FcmHandler extends ChangeNotifier {
-  final CustomLogger _logger = locator<CustomLogger>();
-  final UserService _userservice = locator<UserService>();
+  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService? _userservice = locator<UserService>();
 
-  final FcmHandlerDataPayloads _fcmHandlerDataPayloads =
+  // final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
+  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads =
       locator<FcmHandlerDataPayloads>();
-  final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
-  final AutosaveProcessViewModel _autosaveProcessViewModel =
+  final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
+  final AutosaveProcessViewModel? _autosaveProcessViewModel =
       locator<AutosaveProcessViewModel>();
-  final AugmontTransactionService _augTxnService =
+  // final PaytmService? _paytmService = locator<PaytmService>();
+  final AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
-  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
 
-  final JourneyService _journeyService = locator<JourneyService>();
-  final GoldSellViewModel _augOps = locator<GoldSellViewModel>();
+  final JourneyService? _journeyService = locator<JourneyService>();
+  final GoldSellViewModel? _augOps = locator<GoldSellViewModel>();
   ValueChanged<Map>? notifListener;
   // Timestamp latestFcmtimeStamp;
   String? latestFcmCommand;
@@ -121,9 +127,31 @@ class FcmHandler extends ChangeNotifier {
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
           await _fcmHandlerDataPayloads!.userPrizeWinPrompt();
           break;
-        case FcmCommands.COMMAND_IPL_WIN_RESPONSE:
-          _powerPlayService.showPowerPlayWinDialog(data["payload"]);
-          break;
+        case FcmCommands.COMMAND_APPXOR_DIALOG:
+          print("fcm handler: appxor");
+          if (AppState.isOnboardingInProgress ||
+              AppState.isWebGamePInProgress ||
+              AppState.isWebGameLInProgress ||
+              AppState.isUpdateScreen ||
+              AppState.isInstantGtViewInView ||
+              AppState.showAutosaveBt ||
+              AppState.screenStack.last == ScreenItem.loader) return true;
+          if (data["payload"] != null && data["payload"].isNotEmpty) {
+            unawaited(
+              BaseUtil.openDialog(
+                isBarrierDismissible: false,
+                barrierColor: Colors.black12,
+                addToScreenStack: true,
+                hapticVibrate: true,
+                content: ApxorDialog(
+                  dialogContent:
+                      json.decode(data["payload"]) as Map<String, dynamic>,
+                ),
+              ),
+            );
+          }
+          return true;
+
         default:
       }
     }

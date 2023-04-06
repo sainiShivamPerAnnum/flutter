@@ -176,7 +176,6 @@ class _SaveContainerState extends State<SaveContainer> {
                             child: BlackWhiteButton.inverse(
                                 height: SizeConfig.screenHeight! * 0.05,
                                 onPress: () {
-                                
                                   locator<AnalyticsService>().track(
                                       eventName: "Asset Learn More Tapped",
                                       properties: {
@@ -206,7 +205,10 @@ class _SaveContainerState extends State<SaveContainer> {
                               height: SizeConfig.screenHeight! * 0.05,
                               onPress: () {
                                 locator<AnalyticsService>().track(
-                                    eventName: "Save on Asset Banner",
+                                    eventName: (widget.investmentType ==
+                                            InvestmentType.AUGGOLD99)
+                                        ? "Save on Gold Banner - New User"
+                                        : "Save on Flo Banner - New User",
                                     properties: {
                                       "asset name": widget.investmentType ==
                                               InvestmentType.AUGGOLD99
@@ -223,6 +225,7 @@ class _SaveContainerState extends State<SaveContainer> {
                                           0,
                                       "amt": value
                                     });
+
                                 BaseUtil().openRechargeModalSheet(
                                     investmentType: widget.investmentType,
                                     amt: value);

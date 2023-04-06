@@ -10,4 +10,5 @@ enum FaqsType {
   flo,
   journey,
   onboarding,
+  powerPlay,
 }

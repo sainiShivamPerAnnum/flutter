@@ -312,9 +312,12 @@ class APIService implements API {
       case 200:
         return responseJson;
       case 400:
+      case 404:
         logger!.d(response.body);
         throw BadRequestException(responseJson['message']);
+
       case 401:
+
       case 403:
         throw UnauthorizedException(response.body.toString());
       case 500:

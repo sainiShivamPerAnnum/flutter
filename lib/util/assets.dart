@@ -1,6 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
-// ignore: avoid_classes_with_only_static_members
 class Assets {
   static const String logoMaxSize = 'images/fello_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';

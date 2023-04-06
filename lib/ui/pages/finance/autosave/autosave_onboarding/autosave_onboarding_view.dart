@@ -3,6 +3,8 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -10,7 +12,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class AutosaveOnboardingView extends StatefulWidget {
   const AutosaveOnboardingView({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class AutosaveOnboardingView extends StatefulWidget {
 }
 
 class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   PageController? _controller;
   double dragStartPosition = 0, dragUpdatePosition = 0;
 
@@ -51,10 +52,6 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
           setState(() {});
         }
       });
-    // PreferenceHelper.setBool(
-    //     PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME, false);
-    _analyticsService!
-        .track(eventName: AnalyticsEvents.autosaveDetailsScreenView);
     super.initState();
   }
 
@@ -68,221 +65,128 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xFF032A2E),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff0B867C),
-        onPressed: () {
-          if (currentPage == 2)
-            AppState.delegate!.appState.currentAction = PageAction(
-              state: PageState.replace,
-              page: AutosaveProcessViewPageConfig,
-            );
-          else
-            _controller!.animateToPage(currentPage + 1,
-                duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-        },
-        child: Container(
-          width: SizeConfig.padding64,
-          height: SizeConfig.padding64,
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(
-              color: Color(0xFF009D91),
-              width: 2,
-            ),
-            shape: BoxShape.circle,
+      backgroundColor: UiConstants.kBackgroundColor,
+      body: Stack(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: SizeConfig.screenWidth! / 2,
+                height: SizeConfig.fToolBarHeight,
+                color: Color(0xff025155),
+              ),
+              Container(
+                width: SizeConfig.screenWidth! / 2,
+                height: SizeConfig.fToolBarHeight,
+                color: const Color(0xff01646B),
+              )
+            ],
           ),
-          child: Icon(Icons.arrow_forward_ios_rounded,
-              size: SizeConfig.padding20, color: Colors.white),
-        ),
-      ),
-      body: GestureDetector(
-        onHorizontalDragEnd: (details) {
-          bool leftSwipe = dragStartPosition > dragUpdatePosition;
-          double swipeCount = (dragStartPosition - dragUpdatePosition).abs();
-          if (swipeCount >= 40) {
-            if (leftSwipe) {
-              if (currentPage == 2) {
-                AppState.delegate!.appState.currentAction = PageAction(
-                  state: PageState.replace,
-                  page: AutosaveProcessViewPageConfig,
-                );
-                return;
-              } else {
-                _controller!.nextPage(
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.easeIn,
-                );
-              }
-            } else {
-              _controller!.previousPage(
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeIn,
-              );
-            }
-          }
-        },
-        onHorizontalDragStart: (details) {
-          dragStartPosition = details.globalPosition.dx;
-        },
-        onHorizontalDragUpdate: (details) {
-          dragUpdatePosition = details.globalPosition.dx;
-        },
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF097178).withOpacity(0.2),
-                    Color(0xFF0C867C),
-                    Color(0xff0B867C),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              child: Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight! * 0.6,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        Color(0xff0B867C),
-                        Color(0xff0B867C),
-                        Color(0xff0B867C),
-                        Color(0xff0B867C),
-                        Color(0xff0B867C).withOpacity(0.95),
-                        Color(0xff0B867C).withOpacity(0.2),
-                        Color(0xff0B867C).withOpacity(0.05),
-                        Colors.transparent
-                      ]),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                  margin: EdgeInsets.only(top: SizeConfig.fToolBarHeight),
-                  width: SizeConfig.screenWidth,
-                  alignment: Alignment.center,
-                  height: SizeConfig.title1,
-                  child: Text("Autosave", style: TextStyles.rajdhaniB.title1)),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SafeArea(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: SizeConfig.screenWidth! * 1.5,
-                      child: PageView.builder(
-                        controller: _controller,
-                        // physics: NeverScrollableScrollPhysics(),
-                        onPageChanged: (val) {},
-                        itemCount: 3,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              SvgPicture.asset(
-                                storyData[index][0],
-                                width: SizeConfig.screenWidth,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins),
-                                child: Text(
-                                  storyData[index][1],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyles.rajdhaniB.title2,
-                                ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding16,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding32),
-                                child: Text(
-                                  storyData[index][2],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyles.sourceSans.body2,
-                                ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding24,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        3,
-                        (index) {
-                          return Container(
-                            width: SizeConfig.padding8,
-                            height: SizeConfig.padding8,
-                            margin: EdgeInsets.symmetric(horizontal: 3),
-                            decoration: BoxDecoration(
-                              color: currentPage == index
-                                  ? Colors.white
-                                  : Colors.transparent,
-                              border: Border.all(color: Colors.white),
-                              shape: BoxShape.circle,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.padding40)
-                  ],
-                ),
-              ),
-            ),
-            if (currentPage < 2)
-              Align(
-                alignment: Alignment.topRight,
-                child: SafeArea(
-                  child: GestureDetector(
-                    onTap: () {
-                      AppState.delegate!.appState.currentAction = PageAction(
-                        state: PageState.replace,
-                        page: AutosaveProcessViewPageConfig,
-                      );
-                    },
+          SizedBox(
+            height: SizeConfig.screenHeight,
+            width: SizeConfig.screenWidth,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  SizedBox(height: SizeConfig.padding12),
+                  const TambolaVideoPlayer(
+                      link:
+                          "https://d37gtxigg82zaw.cloudfront.net/sip-pros.mp4"),
+                  Transform.translate(
+                    offset: Offset(0, -SizeConfig.padding16),
                     child: Container(
-                      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness40),
-                        border: Border.all(color: Colors.white, width: 1),
-                        color: UiConstants.darkPrimaryColor,
+                      padding: EdgeInsets.all(
+                        SizeConfig.pageHorizontalMargins,
                       ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding12,
-                          vertical: SizeConfig.padding10),
-                      child: Text(
-                        "SKIP",
-                        style: TextStyles.rajdhaniSB.body3,
+                      decoration: BoxDecoration(
+                        color: UiConstants.kBackgroundColor,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness12),
+                            topRight: Radius.circular(SizeConfig.roundness12)),
+                      ),
+                      // color: Colors.red,
+                      width: SizeConfig.screenWidth,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Introducing Autosave",
+                              style: TextStyles.rajdhaniB.title1),
+                          ...List.generate(
+                            storyData.length,
+                            (index) => ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(
+                                Icons.check_circle_outline_rounded,
+                                color: UiConstants.primaryColor,
+                                // size: SizeConfig.iconSize1,
+                              ),
+                              title: Text(
+                                storyData[index][1],
+                                style: TextStyles.sourceSansM.body2,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
-                ),
+                  const Spacer(),
+                  Padding(
+                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    child: AppPositiveBtn(
+                      btnText: "Setup",
+                      onPressed: () {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          state: PageState.replace,
+                          page: AutosaveProcessViewPageConfig,
+                        );
+                        _analyticsService.track(
+                            eventName: AnalyticsEvents.asBenefitsTapped);
+                      },
+                    ),
+                  )
+                ],
               ),
-          ],
-        ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SafeArea(
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                },
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
+}
+
+class LottieClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height);
+
+    var controlPoint = Offset(size.width / 2, size.height / 1.3);
+
+    var secondEndPoint = Offset(size.width, size.height);
+    path.quadraticBezierTo(
+        controlPoint.dx, controlPoint.dy, secondEndPoint.dx, secondEndPoint.dy);
+
+    path.lineTo(size.width, size.height);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

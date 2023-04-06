@@ -54,7 +54,7 @@ class SaveNetWorthSection extends StatelessWidget {
                   Haptic.vibrate();
 
                   locator<AnalyticsService>()
-                      .track(eventName: "Save on Asset Banner", properties: {
+                      .track(eventName: "Save on Flo Banner", properties: {
                     "asset name": "LENDBOX",
                     "balance in gold":
                         locator<UserService>().userFundWallet?.augGoldBalance ??
@@ -62,6 +62,7 @@ class SaveNetWorthSection extends StatelessWidget {
                     "balance in flo":
                         locator<UserService>().userFundWallet?.wLbBalance ?? 0,
                   });
+
                   return BaseUtil().openRechargeModalSheet(
                     investmentType: InvestmentType.LENDBOXP2P,
                   );
@@ -96,15 +97,15 @@ class SaveNetWorthSection extends StatelessWidget {
                 onTap: () {
                   Haptic.vibrate();
                   locator<AnalyticsService>()
-                      .track(eventName: "Save on Asset Banner", properties: {
-                    "asset name": "LENDBOX",
-                    "isNewUser": false,
+                      .track(eventName: "Save on Gold Banner", properties: {
+                    "asset name": "AUGGOLD99",
                     "balance in gold":
                         locator<UserService>().userFundWallet?.augGoldBalance ??
                             0,
                     "balance in flo":
                         locator<UserService>().userFundWallet?.wLbBalance ?? 0,
                   });
+
                   return BaseUtil().openRechargeModalSheet(
                     investmentType: InvestmentType.AUGGOLD99,
                   );

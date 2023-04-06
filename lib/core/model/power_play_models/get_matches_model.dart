@@ -91,7 +91,7 @@ class MatchData {
         id3P: json["id3P"],
         matchTitle: json["matchTitle"],
         scheduledTaskId: json["scheduledTaskId"],
-        startsAt: TimestampModel.fromMap(json['startsAt']),
+        startsAt: TimestampModel.fromMap(json['predictionStartsAt']),
         status: json["status"],
         teams: json["teams"] == null
             ? []
