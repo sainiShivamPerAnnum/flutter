@@ -130,9 +130,11 @@ class PicksCardViewModel extends BaseViewModel {
   bool isNumberPresent(String dailyNumber) {
     var data = _tambolaService.ticketsNumbers;
     bool exist = false;
-    for (final element in data) {
-      exist = element.contains(int.tryParse(dailyNumber));
-      if (exist) break;
+    if (dailyNumber != '-') {
+      for (final element in data) {
+        exist = element.contains(int.tryParse(dailyNumber));
+        if (exist) break;
+      }
     }
 
     return exist;
