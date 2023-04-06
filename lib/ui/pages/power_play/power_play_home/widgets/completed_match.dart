@@ -28,7 +28,7 @@ class CompletedMatch extends StatelessWidget {
   Widget build(BuildContext context) {
     return model.state == ViewState.Busy
         ? const Center(child: CircularProgressIndicator())
-        : model.completedMatchData == null
+        : model.completedMatchData == null || model.completedMatchData!.isEmpty
             ? const NoLiveMatch(
                 timeStamp: null,
                 matchStatus: MatchStatus.completed,
