@@ -153,6 +153,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     await getMatchesByStatus(MatchStatus.upcoming.name, 0, 0);
     await getMatchesByStatus(MatchStatus.completed.name, 0, 0);
     powerPlayReward = await _powerPlayService.getPowerPlayRewards();
+    await getUserPredictionCount();
     setState(ViewState.Idle);
   }
 
