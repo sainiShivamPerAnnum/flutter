@@ -122,7 +122,9 @@ class AnalyticsEvents {
   static const iplLiveTabTapped = "IPL Live Tab Tapped";
   static const iplUpcomingTabTapped = "IPL Live Tab Tapped";
   static const iplCompletedTabTapped = "IPL Completed Tab Tapped";
-  static const iplPredictNowTapped = "IPL Predict Now Tapped Lobby";
+  static const iplPredictNowTapped = "Ipl Predict now tapped";
+  static const iplPredictNowBottomSheetButtonTapped =
+      "IPL Predict Now bottomsheet button Tapped";
 
   //Added in alnalytics-phase 1
   static const resendOtpTapped = "Resend OTP Tapped";

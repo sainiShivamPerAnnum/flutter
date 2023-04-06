@@ -1,4 +1,6 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -7,6 +9,7 @@ import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -43,12 +46,22 @@ class LiveMatch extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Haptic.vibrate();
+
                     AppState.delegate!.appState.currentAction = PageAction(
                         widget: PredictionLeaderboard(
                           matchData: model.liveMatchData![0]!,
                         ),
                         page: PowerPlayLeaderBoardConfig,
                         state: PageState.addWidget);
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.iplLiveCardTapped,
+                      properties: {
+                        "team1": model.liveMatchData![0]!.teams![0],
+                        "team2": model.liveMatchData![0]!.teams![1],
+                        "totalWonFromPowerPay": model.powerPlayReward ?? 0,
+                        "announcementText": model.liveMatchData![0]!.headsUpText
+                      },
+                    );
                   },
                   child: Column(
                     children: [
@@ -72,7 +85,7 @@ class LiveMatch extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  'POPULAR PREDICTIONS',
+                                  'Popular Predictions',
                                   style: TextStyles.sourceSans
                                       .colour(Colors.white.withOpacity(0.7))
                                       .copyWith(
@@ -171,7 +184,7 @@ class LiveMatch extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(SizeConfig.roundness8),
               ),
               padding: EdgeInsets.only(
@@ -185,7 +198,7 @@ class LiveMatch extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Text('POPULAR PREDICTIONS',
+                  Text('View Popular Predications',
                       style: TextStyles.sourceSans.body2),
                   const Spacer(),
                   const Icon(

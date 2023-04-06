@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -60,7 +62,8 @@ class PredictionLeaderboard extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            locator<PowerPlayService>().referFriend();
+                            locator<PowerPlayService>()
+                                .referFriend("Prediction leaderboard view");
                           },
                           child: Container(
                               key: const ValueKey(Constants.HELP_FAB),
@@ -641,6 +644,13 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
                   subtitle: 'Make as many predictions as you can, to win',
                   amount: int.tryParse(_textController.text),
                   timer: 0);
+              locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.iplPredictNowBottomSheetButtonTapped,
+                properties: {
+                  "runs": _textController.text,
+                  "matchId": widget.matchData.id
+                },
+              );
             },
             child: Center(
               child: Text(

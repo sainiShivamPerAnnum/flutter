@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
@@ -254,5 +256,8 @@ class PowerPlayHomeViewModel extends BaseViewModel {
       );
     }
     isPredictionInProgress = false;
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.iplPredictNowTapped,
+    );
   }
 }

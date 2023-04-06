@@ -101,7 +101,9 @@ class SeasonLeaderboard extends StatelessWidget {
               ),
               const Align(
                 alignment: Alignment.bottomCenter,
-                child: FooterCta(),
+                child: FooterCta(
+                  location: "Season leaderboard",
+                ),
               )
             ],
           ),

@@ -1,5 +1,7 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -8,6 +10,7 @@ import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart'
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/power_play_matches.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -45,6 +48,20 @@ class CompletedMatch extends StatelessWidget {
                           widget: CompletedMatchDetailsView(
                               matchData: model.completedMatchData![i]),
                           state: PageState.addWidget);
+                      locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.iplLiveCardTapped,
+                        properties: {
+                          "team1": model.completedMatchData![i].teams![0],
+                          "team2": model.completedMatchData![i].teams![1],
+                          "prediction count":
+                              model.completedMatchData![i].matchStats!.count,
+                          "reward won":
+                              model.completedMatchData![i].matchStats?.didWon,
+                          "Chasing score": model.completedMatchData![i].target,
+                          "total Won from PowerPay": model.powerPlayReward,
+                          "verdict Text": model.liveMatchData![0]!.verdictText
+                        },
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(

@@ -1,9 +1,7 @@
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -209,13 +207,7 @@ class PrizeDistributionSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
               color: Colors.white,
               onPressed: () {
-                while (AppState.screenStack.length > 1) {
-                  AppState.backButtonDispatcher!.didPopRoute();
-                }
-                AppState.delegate!.appState.currentAction = PageAction(
-                  state: PageState.addPage,
-                  page: PowerPlayHomeConfig,
-                );
+                AppState.backButtonDispatcher!.didPopRoute();
               },
               child: Center(
                 child: Text(

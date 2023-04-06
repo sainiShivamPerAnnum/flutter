@@ -19,6 +19,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
@@ -354,6 +355,7 @@ class GoldBuyViewModel extends BaseViewModel {
       //     ? true
       //     : false,
       // "Error message": errorMessage,
+      "iplPrediction": PowerPlayService.powerPlayDepositFlow,
       "Asset": "Gold",
       "Coupon Code":
           appliedCoupon != null ? appliedCoupon?.code : "Not Applied",
