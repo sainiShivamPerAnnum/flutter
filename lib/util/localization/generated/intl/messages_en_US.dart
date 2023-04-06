@@ -139,7 +139,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "autoPayApproveReq":
             MessageLookupByLibrary.simpleMessage("Approve Request"),
         "autoPayBanksSupported": MessageLookupByLibrary.simpleMessage(
-            "Supported by 60+ banks for AutoPay"),
+            "Supported by 60+ banks for Autosave"),
         "autoSIP": MessageLookupByLibrary.simpleMessage("ACTIVE SIP"),
         "autoSave": MessageLookupByLibrary.simpleMessage("Autosave"),
         "autoSaveDelay": MessageLookupByLibrary.simpleMessage(
@@ -245,7 +245,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "btnStart": MessageLookupByLibrary.simpleMessage("Start"),
         "btnStartPlaying":
             MessageLookupByLibrary.simpleMessage("Start Playing"),
-        "btnSumbit": MessageLookupByLibrary.simpleMessage("Submit"),
+        "btnSubmit": MessageLookupByLibrary.simpleMessage("Submit"),
         "btnUpdate": MessageLookupByLibrary.simpleMessage("Update"),
         "btnVerified": MessageLookupByLibrary.simpleMessage("Verified"),
         "btnWin": MessageLookupByLibrary.simpleMessage("WIN"),
@@ -1171,7 +1171,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "txnApplyCoupon":
             MessageLookupByLibrary.simpleMessage("Apply a Coupon"),
         "txnApprovePaymentReq": MessageLookupByLibrary.simpleMessage(
-            "Approve payment\nrequest on your UPI app"),
+            "Approve payment\nrequest on your UPI app.(Ignore if already done)"),
         "txnApproveUPIReq":
             MessageLookupByLibrary.simpleMessage("Approve Request on UPI app"),
         "txnBankDetailsLabel":

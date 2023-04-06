@@ -73,8 +73,9 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                     horizontal: SizeConfig.pageHorizontalMargins,
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: Lottie.asset(Assets.tambolaTopBannerLottie),
+                      borderRadius: BorderRadius.circular(5),
+                      child: Lottie.asset(
+                          Assets.tambolaTopBannerLottie),
                   ),
                 ),
                 TodayWeeklyPicksCard(
