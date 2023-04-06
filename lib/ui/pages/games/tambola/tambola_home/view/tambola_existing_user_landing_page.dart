@@ -68,16 +68,15 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Container(
-                //   padding: EdgeInsets.symmetric(
-                //     horizontal: SizeConfig.pageHorizontalMargins,
-                //   ),
-                //   child: ClipRRect(
-                //       borderRadius: BorderRadius.circular(5),
-                //       child: Lottie.asset(
-                //           Assets.tambolaTopBannerLottie),
-                //   ),
-                // ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: Lottie.asset(Assets.tambolaTopBannerLottie),
+                  ),
+                ),
                 TodayWeeklyPicksCard(
                   model: widget.model,
                 ),

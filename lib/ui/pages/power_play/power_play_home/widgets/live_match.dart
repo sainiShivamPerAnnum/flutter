@@ -198,7 +198,7 @@ class LiveMatch extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Text('View Popular Predications',
+                  Text('View Popular Predictions',
                       style: TextStyles.sourceSans.body2),
                   const Spacer(),
                   const Icon(
