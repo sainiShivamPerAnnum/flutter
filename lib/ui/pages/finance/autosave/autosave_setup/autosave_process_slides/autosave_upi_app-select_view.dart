@@ -73,6 +73,7 @@ class UpiAppSelectView extends StatelessWidget {
                             onTap: () {
                               Haptic.vibrate();
                               model.selectedUpiApp = model.appsList[index];
+                              model.trackAutosaveUpiAppTapped();
                             },
                             child: Container(
                               padding: const EdgeInsets.all(10),

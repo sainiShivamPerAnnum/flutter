@@ -273,11 +273,13 @@ class PredictionLeaderboard extends StatelessWidget {
                                         matchData: matchData));
                               },
                               child: SizedBox(
-                                  width: SizeConfig.screenWidth,
-                                  child: SvgPicture.network(
-                                    image,
-                                    fit: BoxFit.fill,
-                                  )),
+                                width: SizeConfig.screenWidth,
+                                height: SizeConfig.screenWidth! * 0.35,
+                                child: SvgPicture.network(
+                                  image,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                             ),
 
                             SizedBox(
@@ -300,7 +302,7 @@ class PredictionLeaderboard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(
-                              height: SizeConfig.navBarHeight,
+                              height: SizeConfig.navBarHeight * 2,
                             ),
                             // MaterialButton(
                             //   shape: RoundedRectangleBorder(
@@ -428,11 +430,10 @@ class UsersPrediction extends StatelessWidget {
                   SizedBox(
                     height: SizeConfig.padding16,
                   ),
-                  if (index != 2)
-                    Container(
-                      height: 0.5,
-                      color: Colors.white.withOpacity(0.3),
-                    ),
+                  Container(
+                    height: 0.5,
+                    color: Colors.white.withOpacity(0.3),
+                  ),
                 ],
               );
             },

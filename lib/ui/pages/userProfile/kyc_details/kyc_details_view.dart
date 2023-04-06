@@ -73,7 +73,7 @@ class KYCDetailsView extends StatelessWidget {
                 actions: [
                   if (!model.isUpdatingKycDetails)
                     Row(
-                      children: [
+                      children: const [
                         FaqPill(type: FaqsType.yourAccount),
                       ],
                     ),
@@ -82,237 +82,177 @@ class KYCDetailsView extends StatelessWidget {
               ),
               backgroundColor: UiConstants.kBackgroundColor,
               body: model.state == ViewState.Busy
-                  ? Center(
+                  ? const Center(
                       child: FullScreenLoader(),
                     )
-                  : Container(
+                  : SizedBox(
                       width: SizeConfig.screenWidth,
                       height:
                           SizeConfig.screenHeight! - SizeConfig.fToolBarHeight,
-                      child: SingleChildScrollView(
-                        child: Theme(
-                          data: ThemeData.dark(),
-                          child: ExpansionPanelList(
-                            dividerColor: Colors.white.withOpacity(0.1),
-                            expansionCallback: (panelIndex, isExpanded) {
-                              if (panelIndex == 0) {
-                                model.isPanTileOpen = !isExpanded;
-                              } else {
-                                model.isEmailTileOpen = !isExpanded;
-                              }
-                              model.notifyListeners();
-                            },
-                            expandedHeaderPadding: EdgeInsets.zero,
-                            elevation: 0,
-                            // padding: EdgeInsets.symmetric(
-                            //     vertical: SizeConfig.pageHorizontalMargins),
-
+                      child: Stack(
+                        children: [
+                          ListView(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.symmetric(
+                                vertical: SizeConfig.pageHorizontalMargins),
                             children: [
-                              ExpansionPanel(
-                                backgroundColor: UiConstants.kBackgroundColor,
-                                isExpanded: model.isPanTileOpen,
-                                canTapOnHeader: !model.isEmailUpdating &&
-                                    !model.isUpdatingKycDetails,
-                                headerBuilder: (context, isExpanded) => Padding(
-                                  padding: EdgeInsets.only(
-                                      left: SizeConfig.padding12),
-                                  child: Row(
-                                    children: [
-                                      if (model.hasDetails)
-                                        Icon(
-                                          Icons.check,
-                                          color: UiConstants.primaryColor,
-                                        ),
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (model.kycVerificationStatus ==
+                                        KycVerificationStatus.UNVERIFIED)
                                       Text(
-                                        "  STEP 1: VERIFY PAN",
-                                        style: TextStyles.rajdhaniM.title4,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                body: Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.pageHorizontalMargins),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      getKycView(model),
-                                      model.kycVerificationStatus ==
-                                                  KycVerificationStatus
-                                                      .UNVERIFIED ||
-                                              model.kycVerificationStatus ==
-                                                  KycVerificationStatus.FAILED
-                                          ? Column(
-                                              children: [
-                                                SizedBox(
-                                                    height:
-                                                        SizeConfig.padding90),
-                                                Container(
-                                                  margin: EdgeInsets.symmetric(
-                                                      vertical: SizeConfig
-                                                          .pageHorizontalMargins),
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical:
-                                                          SizeConfig.padding16,
-                                                      horizontal:
-                                                          SizeConfig.padding20),
-                                                  decoration: BoxDecoration(
-                                                    color: UiConstants
-                                                        .kBackgroundColor3,
-                                                    borderRadius: BorderRadius
-                                                        .all(Radius.circular(
-                                                            SizeConfig
-                                                                .roundness12)),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                        "assets/svg/safety_asset.svg",
-                                                        width: SizeConfig
-                                                            .padding24,
-                                                      ),
-                                                      SizedBox(
-                                                        width: SizeConfig
-                                                            .padding14,
-                                                      ),
-                                                      Expanded(
-                                                        child: Text(
-                                                          'Name on your PAN Card should be the same as Name on your Bank Account',
-                                                          style: TextStyles
-                                                              .sourceSans.body3
-                                                              .colour(UiConstants
-                                                                  .kTextColor2),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                model.isUpdatingKycDetails
-                                                    ? LinearProgressIndicator(
-                                                        backgroundColor:
-                                                            Colors.black,
-                                                      )
-                                                    : AppPositiveBtn(
-                                                        onPressed: () async {
-                                                          await model.onSubmit(
-                                                              context);
-                                                        },
-                                                        btnText:
-                                                            locale.btnSubmit,
-                                                        width: SizeConfig
-                                                            .screenWidth,
-                                                      ),
-                                              ],
-                                            )
-                                          : SizedBox(),
-                                      SizedBox(height: SizeConfig.padding16),
-                                    ],
-                                  ),
+                                          "Complete your PAN and Email Account verification to be KYC verified",
+                                          style: TextStyles.sourceSansSB.body1),
+                                    SizedBox(height: SizeConfig.padding16),
+                                    getKycView(model),
+                                    Divider(
+                                      height: SizeConfig.pageHorizontalMargins,
+                                      color: Colors.white30,
+                                      thickness: 1,
+                                    ),
+                                    EmailVerificationTile(model: model),
+                                  ],
                                 ),
                               ),
-                              ExpansionPanel(
-                                  backgroundColor: UiConstants.kBackgroundColor,
-                                  isExpanded:
-                                      // !model.hasDetails ||
-                                      model.isEmailTileOpen,
-                                  canTapOnHeader: !model.isEmailUpdating &&
-                                      !model.isUpdatingKycDetails,
-                                  headerBuilder: (context, isExpanded) =>
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: SizeConfig.padding12),
-                                        child: Row(
-                                          children: [
-                                            if (model.isEmailVerified)
-                                              Icon(
-                                                Icons.check,
-                                                color: UiConstants.primaryColor,
-                                              ),
-                                            Text(
-                                              "  STEP 2: VERIFY EMAIL",
-                                              style:
-                                                  TextStyles.rajdhaniM.title4,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                  // iconColor: Colors.white,
-                                  // collapsedIconColor: Colors.white,
-                                  // initiallyExpanded:
-                                  //     model.hasDetails && !model.isEmailVerified,
-                                  // tilePadding: EdgeInsets.zero,
-                                  // title: ,
-                                  body: Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal:
-                                            SizeConfig.pageHorizontalMargins),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        model.veryGmail();
-                                      },
-                                      child: KycBriefTile(
-                                          model: model,
-                                          leading: Assets.google,
-                                          trailing: Padding(
-                                            padding: EdgeInsets.only(
-                                                right: SizeConfig.padding10),
-                                            child: model.isEmailVerified
-                                                ? Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: SizeConfig
-                                                            .pageHorizontalMargins),
-                                                    child: Icon(
-                                                      Icons.verified,
-                                                      color: UiConstants
-                                                          .primaryColor,
-                                                    ),
-                                                  )
-                                                : model.isEmailUpdating
-                                                    ? Padding(
-                                                        padding: EdgeInsets.only(
-                                                            right: SizeConfig
-                                                                .pageHorizontalMargins),
-                                                        child:
-                                                            SpinKitThreeBounce(
-                                                          size: SizeConfig
-                                                              .iconSize0,
-                                                          color: UiConstants
-                                                              .tertiarySolid,
-                                                        ),
-                                                      )
-                                                    : Padding(
-                                                        padding: EdgeInsets.only(
-                                                            right: SizeConfig
-                                                                .pageHorizontalMargins),
-                                                        child: Icon(
-                                                          Icons
-                                                              .arrow_forward_ios,
-                                                          color: Colors.white,
-                                                          size: SizeConfig
-                                                              .iconSize0,
-                                                        ),
-                                                      ),
-                                          ),
-                                          subtitle: model.isEmailVerified
-                                              ? null
-                                              : "to verify email",
-                                          label: model.isEmailVerified
-                                              ? "Linked Account"
-                                              : "Choose a google account",
-                                          title: model.isEmailVerified
-                                              ? model.email!
-                                              : "Select an account"),
-                                    ),
-                                  ))
                             ],
                           ),
-                        ),
+                          model.kycVerificationStatus ==
+                                      KycVerificationStatus.UNVERIFIED ||
+                                  model.kycVerificationStatus ==
+                                      KycVerificationStatus.FAILED
+                              ? Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                        SizeConfig.pageHorizontalMargins),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SizedBox(height: SizeConfig.padding90),
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: SizeConfig
+                                                  .pageHorizontalMargins),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: SizeConfig.padding16,
+                                              horizontal: SizeConfig.padding20),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                UiConstants.kBackgroundColor3,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                    SizeConfig.roundness12)),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/svg/safety_asset.svg",
+                                                width: SizeConfig.padding24,
+                                              ),
+                                              SizedBox(
+                                                width: SizeConfig.padding14,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  'Name on your PAN Card should be the same as Name on your Bank Account',
+                                                  style: TextStyles
+                                                      .sourceSans.body3
+                                                      .colour(UiConstants
+                                                          .kTextColor2),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        model.isUpdatingKycDetails
+                                            ? const LinearProgressIndicator(
+                                                backgroundColor: Colors.black,
+                                              )
+                                            : AppPositiveBtn(
+                                                onPressed: () async {
+                                                  await model.onSubmit(context);
+                                                },
+                                                btnText: locale.btnSubmit,
+                                                width: SizeConfig.screenWidth,
+                                              ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox(),
+//////////////////////////////
+                        ],
                       ),
                     ),
             ),
+    );
+  }
+}
+
+class EmailVerificationTile extends StatelessWidget {
+  final KYCDetailsViewModel model;
+  const EmailVerificationTile({super.key, required this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            model.isEmailVerified
+                ? "Linked Account"
+                : "Step 2: Choose a google account",
+            style: TextStyles.sourceSansM.body2,
+          ),
+          SizedBox(height: SizeConfig.padding12),
+          GestureDetector(
+            onTap: model.veryGmail,
+            child: KycBriefTile(
+                model: model,
+                leading: Assets.google,
+                trailing: Padding(
+                  padding: EdgeInsets.only(right: SizeConfig.padding10),
+                  child: model.isEmailVerified
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                              right: SizeConfig.pageHorizontalMargins),
+                          child: Icon(
+                            Icons.verified,
+                            color: UiConstants.primaryColor,
+                          ),
+                        )
+                      : model.isEmailUpdating
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                  right: SizeConfig.pageHorizontalMargins),
+                              child: SpinKitThreeBounce(
+                                size: SizeConfig.iconSize0,
+                                color: UiConstants.primaryColor,
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                  right: SizeConfig.pageHorizontalMargins),
+                              child: Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.white,
+                                size: SizeConfig.iconSize0,
+                              ),
+                            ),
+                ),
+                subtitle: model.isEmailVerified ? null : "to verify email",
+                title:
+                    model.isEmailVerified ? model.email! : "Select an account"),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -322,7 +262,7 @@ class KycBriefTile extends StatelessWidget {
       {Key? key,
       required this.model,
       required this.trailing,
-      required this.label,
+      this.label,
       this.subtitle,
       this.leading,
       required this.title})
@@ -331,7 +271,7 @@ class KycBriefTile extends StatelessWidget {
   final KYCDetailsViewModel model;
   final Widget trailing;
   final String title;
-  final String label;
+  final String? label;
   final String? subtitle;
   final String? leading;
 
@@ -340,7 +280,7 @@ class KycBriefTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppTextFieldLabel(label),
+        if (label != null) AppTextFieldLabel(label!, leftPadding: 0),
         Container(
           width: SizeConfig.screenWidth,
           padding: EdgeInsets.symmetric(

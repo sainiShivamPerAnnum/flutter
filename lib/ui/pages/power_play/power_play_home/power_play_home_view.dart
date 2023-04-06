@@ -101,7 +101,6 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                             const SizedBox(
                               height: 10,
                             ),
-
                             if (model.powerPlayReward > 0) ...[
                               Center(
                                 child: Container(
@@ -125,11 +124,10 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                 height: 14,
                               ),
                             ],
-
                             Container(
                               margin: EdgeInsets.only(
                                   left: SizeConfig.pageHorizontalMargins),
-                              height: SizeConfig.screenWidth! * 0.28,
+                              height: SizeConfig.screenWidth! * 0.3,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: model.cardCarousel?.length,

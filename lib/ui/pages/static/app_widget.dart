@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class AppTextFieldLabel extends StatelessWidget {
   final String text;
   final double? leftPadding;
-  const AppTextFieldLabel(this.text, {super.key, this.leftPadding});
+  AppTextFieldLabel(this.text, {this.leftPadding});
 
   @override
   Widget build(BuildContext context) {
@@ -364,7 +364,7 @@ class AppPositiveBtn extends StatelessWidget {
             borderRadius: BorderRadius.circular(
               SizeConfig.buttonBorderRadius,
             ),
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               colors: [
                 Color(0xff12BC9D),
                 Color(0xff249680),
@@ -427,7 +427,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                 SizeConfig.buttonBorderRadius,
               ),
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 colors: [
                   Color(0xff12BC9D),
                   Color(0xff249680),
@@ -507,9 +507,9 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
                           Colors.black,
                         ]
                       : [
-                          const Color.fromARGB(255, 168, 230, 219),
-                          const Color(0xff12BC9D),
-                          const Color(0xff249680),
+                          Color.fromARGB(255, 168, 230, 219),
+                          Color(0xff12BC9D),
+                          Color(0xff249680),
                         ],
                   stops: [0.01, 0.3, 1],
                   begin: Alignment.topCenter,
@@ -569,7 +569,7 @@ class AppNegativeBtn extends StatelessWidget {
         style: ButtonStyle(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           side: MaterialStateProperty.all<BorderSide>(
-            const BorderSide(
+            BorderSide(
               color: UiConstants.kTextColor,
               width: 1,
             ),
@@ -619,13 +619,13 @@ class AppDateField extends StatelessWidget {
         style: TextStyles.sourceSans.body2,
         decoration: InputDecoration(
           counterText: "",
-          border: const UnderlineInputBorder(
+          border: UnderlineInputBorder(
             borderSide: BorderSide.none,
           ),
-          enabledBorder: const UnderlineInputBorder(
+          enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide.none,
           ),
-          focusedBorder: const UnderlineInputBorder(
+          focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide.none,
           ),
           hintText: labelText,
@@ -685,7 +685,7 @@ class AppSwitch extends StatelessWidget {
         ),
         child: AnimatedAlign(
           alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-          duration: const Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 300),
           child: isLoading
               ? Padding(
                   padding: EdgeInsets.symmetric(
@@ -748,7 +748,7 @@ class CustomKeyboardSubmitButton extends StatelessWidget {
                 ),
               ),
             )
-          : const SizedBox(),
+          : SizedBox(),
     );
   }
 }
