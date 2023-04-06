@@ -74,7 +74,7 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                 //   ),
                 //   child: ClipRRect(
                 //       borderRadius: BorderRadius.circular(5),
-                //       child: LottieBuilder.asset(
+                //       child: Lottie.asset(
                 //           Assets.tambolaTopBannerLottie),
                 //   ),
                 // ),
