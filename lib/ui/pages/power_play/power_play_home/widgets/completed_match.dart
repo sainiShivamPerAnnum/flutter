@@ -152,7 +152,7 @@ class CompletedMatch extends StatelessWidget {
                                             0 &&
                                         model.completedMatchData![i].matchStats!
                                             .didWon)
-                                    ? 'Congratulations! you won something'
+                                    ? 'Congratulations! you won a reward'
                                     : model.completedMatchData![i].matchStats!
                                                 .count >
                                             0

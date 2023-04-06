@@ -974,11 +974,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   openWebGame(String game) {
-    // AppState.delegate!.appState.currentAction = PageAction(
-    //   state: PageState.addWidget,
-    //   widget: WebHomeView(game: game),
-    //   page: WebHomeViewPageConfig,
-    // );
     bool isLocked = false;
     double netWorth = locator<UserService>().userFundWallet!.augGoldPrinciple +
         (locator<UserService>().userFundWallet!.wLbPrinciple ?? 0.0);

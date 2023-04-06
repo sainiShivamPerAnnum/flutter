@@ -27,7 +27,9 @@ class PowerPlayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        AppState.isFirstTime = false;
         Haptic.vibrate();
+
         if (PreferenceHelper.getBool(PreferenceHelper.POWERPLAY_IS_PLAYED)) {
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.addPage,
