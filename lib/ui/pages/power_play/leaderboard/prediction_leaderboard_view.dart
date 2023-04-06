@@ -20,6 +20,7 @@ import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribut
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -163,10 +164,21 @@ class PredictionLeaderboard extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     //Prediction Leaderboard
-                                    Text(
-                                      "Popular Predictions",
-                                      style: TextStyles.sourceSans.body1
-                                          .colour(Colors.white),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                          Assets.graph,
+                                          width: SizeConfig.padding20,
+                                        ),
+                                        SizedBox(width: SizeConfig.padding4),
+                                        Text(
+                                          "Popular Predictions",
+                                          style: TextStyles.sourceSans.body1
+                                              .colour(Colors.white),
+                                        ),
+                                      ],
                                     ),
                                     const SizedBox(
                                       height: 20,

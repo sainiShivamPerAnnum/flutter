@@ -121,10 +121,13 @@ class LiveMatch extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SvgPicture.asset('assets/svg/bell_icon.svg'),
-                          Text(
-                            model.liveMatchData![0]!.headsUpText ?? '',
-                            style: TextStyles.sourceSans.copyWith(
-                                fontSize: SizeConfig.screenWidth! * 0.030),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              model.liveMatchData![0]!.headsUpText ?? '',
+                              style: TextStyles.sourceSans.copyWith(
+                                  fontSize: SizeConfig.screenWidth! * 0.030),
+                            ),
                           ),
                         ],
                       ),
