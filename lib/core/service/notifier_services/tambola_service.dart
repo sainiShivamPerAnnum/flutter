@@ -34,17 +34,10 @@ class TambolaService extends ChangeNotifier {
   int? _atomicTicketDeletionLeftCount;
   int? ticketGenerateCount;
   int? initialTicketCount;
-  int _matchedTicketCount = 0;
+  int matchedTicketCount = 0;
   List<List<int>> _ticketsNumbers = [];
 
   late Completer<List<TambolaBoard?>?> completer;
-
-  int get matchedTicketCount => _matchedTicketCount;
-
-  set matchedTicketCount(int value) {
-    _matchedTicketCount = value;
-    notifyListeners();
-  }
 
   signOut() {
     _weeklyDrawFetched = false;
@@ -54,7 +47,7 @@ class TambolaService extends ChangeNotifier {
     _todaysPicks = null;
     // _ticketCount = null;
     _userWeeklyBoards = null;
-    _matchedTicketCount = 0;
+    matchedTicketCount = 0;
     _ticketsNumbers = [];
   }
 
@@ -133,6 +126,9 @@ class TambolaService extends ChangeNotifier {
         // _currentBoardView = null;
         ticketCount = boards.length;
 
+        matchedTicketCount = 0;
+        highlightDailyPicks(userWeeklyBoards!);
+
         completer.complete(boards);
       } else {
         completer.complete(null);
@@ -176,7 +172,6 @@ class TambolaService extends ChangeNotifier {
 
       completer.future.then((value) {
         initialTicketCount = value?.length;
-        highlightDailyPicks(userWeeklyBoards!);
       });
     }
   }
@@ -207,7 +202,7 @@ class TambolaService extends ChangeNotifier {
     _atomicTicketGenerationLeftCount = 0;
     _atomicTicketDeletionLeftCount = 0;
     _ticketsNumbers = [];
-    _matchedTicketCount = 0;
+    matchedTicketCount = 0;
   }
 
   fetchWeeklyPicks({bool forcedRefresh = false}) async {
