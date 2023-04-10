@@ -15,13 +15,18 @@ class TicketsView extends StatelessWidget {
   const TicketsView({super.key, this.model});
 
   String getText(S locale) {
-    return '${locale.tgenerated} ${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount} ${locale.tgeneratedCount(model!.tambolaService!.ticketGenerateCount.toString())}';
+    if (model != null) {
+      return '${locale.tgenerated} ${model!.tambolaService!.ticketGenerateCount! - model!.tambolaService!.atomicTicketGenerationLeftCount} ${locale.tgeneratedCount(model!.tambolaService!.ticketGenerateCount.toString())}';
+    }
+    return '';
   }
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    if (!model!.weeklyTicksFetched || !model!.weeklyDrawFetched) {
+    if (model == null ||
+        !model!.weeklyTicksFetched ||
+        !model!.weeklyDrawFetched) {
       return const SizedBox();
     } else if (model!.userWeeklyBoards == null ||
         model!.activeTambolaCardCount == 0) {
