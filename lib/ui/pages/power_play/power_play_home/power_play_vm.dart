@@ -53,6 +53,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
 
   set powerPlayReward(int value) {
     _powerPlayReward = value;
+    notifyListeners();
   }
 
   bool _isPredictionsLoading = false;

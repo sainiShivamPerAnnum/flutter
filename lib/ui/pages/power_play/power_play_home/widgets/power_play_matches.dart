@@ -32,9 +32,38 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
     return ['Live', 'Upcoming', 'Completed'];
   }
 
+  Widget _buildLiveTab() {
+    if (widget.model.state == ViewState.Busy) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return widget.model.liveMatchData?.isEmpty ?? true
+        ? (widget.model.upcomingMatchData!.isEmpty ||
+                widget.model.upcomingMatchData?[0] == null ||
+                (widget.model.upcomingMatchData?[0]?.startsAt == null))
+            ? const SizedBox()
+            : NoLiveMatch(
+                timeStamp: widget.model.upcomingMatchData?[0]?.startsAt,
+                matchStatus: MatchStatus.active)
+        : LiveMatch(
+            model: widget.model,
+          );
+  }
+
+  Widget _buildUpcomingTab() {
+    return UpcomingMatch(
+      model: widget.model,
+    );
+  }
+
+  Widget _buildCompletedTab() {
+    return CompletedMatch(
+      model: widget.model,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return (widget.model.state == ViewState.Busy && widget.model.isLive)
         ? const Center(child: CircularProgressIndicator())
         : Container(
@@ -84,36 +113,12 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                   const SizedBox(
                     height: 20,
                   ),
-                  Builder(builder: (_) {
-                    if (widget.model.tabController!.index == 0) {
-                      if (widget.model.state == ViewState.Busy) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      return widget.model.liveMatchData?.isEmpty ?? true
-                          ? (widget.model.upcomingMatchData!.isEmpty ||
-                                  widget.model.upcomingMatchData?[0] == null ||
-                                  (widget.model.upcomingMatchData?[0]
-                                          ?.startsAt ==
-                                      null))
-                              ? const SizedBox()
-                              : NoLiveMatch(
-                                  timeStamp: widget
-                                      .model.upcomingMatchData?[0]?.startsAt,
-                                  matchStatus: MatchStatus.active)
-                          : LiveMatch(
-                              model: widget.model,
-                            );
-                    } else if (widget.model.tabController!.index == 1) {
-                      return UpcomingMatch(
-                        model: widget.model,
-                      );
-                    } else {
-                      return CompletedMatch(
-                        model: widget.model,
-                      );
-                    }
-                  }),
+                  if (widget.model.tabController!.index == 0)
+                    _buildLiveTab()
+                  else if (widget.model.tabController!.index == 1)
+                    _buildUpcomingTab()
+                  else
+                    _buildCompletedTab(),
                 ],
               ),
             ),

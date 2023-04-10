@@ -36,7 +36,7 @@ class LiveMatch extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black26,
-                    offset: Offset(2, 2),
+                    offset: const Offset(2, 2),
                     blurRadius: SizeConfig.roundness5,
                     spreadRadius: SizeConfig.padding2,
                   )

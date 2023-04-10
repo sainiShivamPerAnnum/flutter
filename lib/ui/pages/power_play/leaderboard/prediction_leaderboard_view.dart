@@ -129,7 +129,7 @@ class PredictionLeaderboard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SvgPicture.asset('assets/svg/bell_icon.svg'),
-                                  Expanded(
+                                  Flexible(
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
@@ -398,16 +398,29 @@ class UsersPrediction extends StatelessWidget {
 
   final LeaderBoardViewModel model;
 
+  String getTitle(int index) {
+    return model.userPredictedData[index].count == 1
+        ? 'User Prediction'
+        : 'Users Predictions';
+  }
+
   @override
   Widget build(BuildContext context) {
     return model.state == ViewState.Busy
         ? const Center(child: CircularProgressIndicator())
-        : ListView.builder(
+        : ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             itemCount: model.userPredictedData.length,
+            separatorBuilder: (context, index) {
+              return Container(
+                height: 0.5,
+                color: Colors.white.withOpacity(0.3),
+              );
+            },
             itemBuilder: (context, index) {
+              final data = model.userPredictedData[index];
               return Column(
                 children: [
                   SizedBox(
@@ -419,32 +432,28 @@ class UsersPrediction extends StatelessWidget {
                         '${index + 1}',
                         style: TextStyles.sourceSans.body3.colour(Colors.white),
                       ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        '${model.userPredictedData[index].count} user predicted',
+                const SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  '${data.count} ${getTitle(index)}',
                         style: TextStyles.sourceSans.body3.colour(Colors.white),
                       ),
-                      const Spacer(),
-                      Text(
-                        '${model.userPredictedData[index].amount} runs',
+                const Spacer(),
+                Text(
+                  '${data.amount} runs',
                         style: TextStyles.sourceSans.body3.colour(Colors.white),
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding16,
-                  ),
-                  Container(
-                    height: 0.5,
-                    color: Colors.white.withOpacity(0.3),
-                  ),
-                ],
-              );
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding16,
+            ),
+          ],
+        );
             },
           );
   }
@@ -593,15 +602,6 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
                 amount: int.tryParse(_textController.text),
               ),
               validator: _validateValue,
-              // validator: (value) {
-              //   if (value != null && value.trim().isNotEmpty) {
-              //     return null;
-              //   } else if ( (int.tryParse(value ?? "0") ?? 0) <= 10) {
-              //     return 'Enter valid prediction';
-              //   } else {
-              //     return 'Please enter your prediction';
-              //   }
-              // },
             ),
           ),
           SizedBox(
