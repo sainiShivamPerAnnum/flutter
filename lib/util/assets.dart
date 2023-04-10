@@ -350,7 +350,7 @@ class Assets {
   static const String bottomBannerLottie =
       'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
   static const String tambolaTopBannerLottie =
-      'assets/lotties/TambolaScreenTopBanner.json';
+      'assets/lotties/tambola_animation.json';
 
   //POWER PLAY ASSETS
   static const String powerPlayMain =

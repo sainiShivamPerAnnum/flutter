@@ -192,18 +192,18 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                                 .getDefaultPropertiesMap(extraValuesMap: {
                               "Time left for draw Tambola (mins)":
                                   AnalyticsProperties
-                                  .getTimeLeftForTambolaDraw(),
+                                      .getTimeLeftForTambolaDraw(),
                               "Tambola Tickets Owned":
-                              AnalyticsProperties.getTambolaTicketCount(),
+                                  AnalyticsProperties.getTambolaTicketCount(),
                               "Number of Tickets":
-                              widget.model.activeTambolaCardCount ?? 0,
+                                  widget.model.activeTambolaCardCount ?? 0,
                               "Amount": widget.model.ticketSavedAmount,
                             }));
                         widget.model.updateTicketSavedAmount(1);
                         BaseUtil.openDepositOptionsModalSheet(
                             amount: widget.model.ticketSavedAmount,
                             subtitle:
-                            'Save ₹500 in any of the asset & get 1 Free Tambola Ticket');
+                                'Save ₹500 in any of the asset & get 1 Free Tambola Ticket');
                       },
                     ),
                   ),
