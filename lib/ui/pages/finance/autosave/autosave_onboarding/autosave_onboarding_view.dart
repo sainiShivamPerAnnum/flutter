@@ -29,17 +29,17 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
     [
       Assets.autosaveBenefitsAssets[0],
       "Power of Compounding",
-      "Invest in Autosave and grow it exponentially. The longer your hold, the more it compounds."
+      "Set Daily, Monthly or weekly Autosave and be a regular saver"
     ],
     [
       Assets.autosaveBenefitsAssets[1],
       "Never run out of tokens",
-      "Get tokens on every Autosave transaction. Use tokens to play games and win more rewards!"
+      "Choose to invest in Flo, Gold or both and grab benefits of both assets"
     ],
     [
       Assets.autosaveBenefitsAssets[2],
       "Automated Investments",
-      "Sit back and relax as your savings automatically get invested and you enjoy the returns."
+      "Never run out of tokens and enjoy unlimited gameplay"
     ],
   ];
   int currentPage = 0;
@@ -89,9 +89,12 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
               child: Column(
                 children: [
                   SizedBox(height: SizeConfig.padding12),
-                  const TambolaVideoPlayer(
-                      link:
-                          "https://d37gtxigg82zaw.cloudfront.net/sip-pros.mp4"),
+                  SizedBox(
+                    height: SizeConfig.screenWidth! * 0.84,
+                    child: const TambolaVideoPlayer(
+                        link:
+                            "https://d37gtxigg82zaw.cloudfront.net/sip-pros.mp4"),
+                  ),
                   Transform.translate(
                     offset: Offset(0, -SizeConfig.padding16),
                     child: Container(
@@ -111,6 +114,7 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
                         children: [
                           Text("Introducing Autosave",
                               style: TextStyles.rajdhaniB.title1),
+                          SizedBox(height: SizeConfig.padding10),
                           ...List.generate(
                             storyData.length,
                             (index) => ListTile(
@@ -121,7 +125,7 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
                                 // size: SizeConfig.iconSize1,
                               ),
                               title: Text(
-                                storyData[index][1],
+                                storyData[index][2],
                                 style: TextStyles.sourceSansM.body2,
                               ),
                             ),

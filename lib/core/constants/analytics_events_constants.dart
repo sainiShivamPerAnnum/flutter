@@ -111,6 +111,21 @@ class AnalyticsEvents {
   static const asPauseTwoWeeks = "Autosave paused for two weeks";
   static const asPauseOneMonth = "Autosave paused for one month";
 
+  //Powerplay
+  static const iplBannerTapped = "IPL Banner tapped";
+  static const iplLiveCardTapped = "IPL Live Card Tapped";
+  static const iplCompleteCardTapped = "IPL Completed Card Tapped";
+  static const iplInviteFriendsTapped = "IPL Invite Friends Tapped";
+  static const iplYourPredictionsTapped = "IPL Your Predictions Tapped";
+  static const iplPrizeBannerTapped = "IPL Prize Banner Tapped";
+  static const iplSeasonLeaderboardTapped = "IPL Season Leaderboard Tapped";
+  static const iplLiveTabTapped = "IPL Live Tab Tapped";
+  static const iplUpcomingTabTapped = "IPL Live Tab Tapped";
+  static const iplCompletedTabTapped = "IPL Completed Tab Tapped";
+  static const iplPredictNowTapped = "Ipl Predict now tapped";
+  static const iplPredictNowBottomSheetButtonTapped =
+      "IPL Predict Now bottomsheet button Tapped";
+
   //Added in alnalytics-phase 1
   static const resendOtpTapped = "Resend OTP Tapped";
   static const proceedToSignUp = "Proceed to Signup";

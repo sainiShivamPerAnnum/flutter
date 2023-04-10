@@ -76,7 +76,7 @@ class APIService implements API {
         if (headers != null) ...headers
       });
       log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-      logger!.d("response from $finalPath");
+      logger!.d("response from $token");
       logger!.d("Get Response: ${response.statusCode}");
       logger!.d("Get Response: ${response.body}");
       if (decryptData) {

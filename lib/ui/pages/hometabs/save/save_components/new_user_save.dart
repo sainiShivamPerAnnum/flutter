@@ -129,7 +129,8 @@ class NewUserSaveView extends StatelessWidget {
         }
       },
     );
-    children.add(const PowerPlayCard());
+    if (DynamicUiUtils.saveViewOrder[1].contains("PP"))
+      children.add(const PowerPlayCard());
 
     return children;
   }
