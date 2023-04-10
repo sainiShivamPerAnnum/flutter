@@ -55,6 +55,7 @@ class TambolaService extends ChangeNotifier {
 
   set ticketsNumbers(List<List<int>> value) {
     _ticketsNumbers = value;
+    notifyListeners();
   } // int? get ticketCount => _ticketCount;
 
   get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
@@ -103,36 +104,36 @@ class TambolaService extends ChangeNotifier {
 
   bool isTambolaBoardUpdated = false;
 
-  Future<void> fetchTambolaBoard() async {
-    completer = Completer();
-    if (!_weeklyTicksFetched) {
-      _weeklyTicksFetched = true;
-      _logger.d("Fetching Tambola tickets ${DateTime.now().second}");
-      // ticketsLoaded = false;
-      final tickets = await _tambolaRepo.getTickets();
-      if (tickets.code == 200) {
-        List<TambolaBoard?>? boards =
-            tickets.model!.map((e) => e.board).toList();
-
-        if (userWeeklyBoards != null &&
-            userWeeklyBoards!.length != boards.length) {
-          isTambolaBoardUpdated = true;
-          notifyListeners();
-          isTambolaBoardUpdated = false;
-        }
-        _logger!.d("Fetched Tambola tickets ${DateTime.now().second}");
-        userWeeklyBoards = boards;
-        // _currentBoard = null;
-        // _currentBoardView = null;
-        ticketCount = boards.length;
-
-        completer.complete(boards);
-      } else {
-        completer.complete(null);
-        _logger!.d(tickets.errorMessage);
-      }
-    }
-  }
+  // Future<void> fetchTambolaBoard() async {
+  //   completer = Completer();
+  //   if (!_weeklyTicksFetched) {
+  //     _weeklyTicksFetched = true;
+  //     _logger.d("Fetching Tambola tickets ${DateTime.now().second}");
+  //     // ticketsLoaded = false;
+  //     final tickets = await _tambolaRepo.getTickets();
+  //     if (tickets.code == 200) {
+  //       List<TambolaBoard?>? boards =
+  //           tickets.model!.map((e) => e.board).toList();
+  //
+  //       if (userWeeklyBoards != null &&
+  //           userWeeklyBoards!.length != boards.length) {
+  //         isTambolaBoardUpdated = true;
+  //         notifyListeners();
+  //         isTambolaBoardUpdated = false;
+  //       }
+  //       _logger!.d("Fetched Tambola tickets ${DateTime.now().second}");
+  //       userWeeklyBoards = boards;
+  //       // _currentBoard = null;
+  //       // _currentBoardView = null;
+  //       ticketCount = boards.length;
+  //
+  //       completer.complete(boards);
+  //     } else {
+  //       completer.complete(null);
+  //       _logger!.d(tickets.errorMessage);
+  //     }
+  //   }
+  // }
 
   set weeklyDrawFetched(value) {
     _weeklyDrawFetched = value;
@@ -175,41 +176,58 @@ class TambolaService extends ChangeNotifier {
     }
   }
 
+  Future<void> fetchTambolaBoard() async {
+    completer = Completer();
+    if (_weeklyTicksFetched) {
+      completer.complete(null);
+      return;
+    }
+
+    _weeklyTicksFetched = true;
+    _logger.d("Fetching Tambola tickets ${DateTime.now().second}");
+
+    final tickets = await _tambolaRepo.getTickets();
+
+    if (tickets.code != 200) {
+      _logger.d(tickets.errorMessage);
+      return;
+    }
+
+    List<TambolaBoard?> boards = tickets.model!.map((e) => e.board).toList();
+
+    if (userWeeklyBoards != null && userWeeklyBoards!.length != boards.length) {
+      isTambolaBoardUpdated = true;
+      notifyListeners();
+      isTambolaBoardUpdated = false;
+    }
+
+    _logger!.d("Fetched Tambola tickets ${DateTime.now().second}");
+    userWeeklyBoards = boards;
+    ticketCount = boards.length;
+    completer.complete(boards);
+  }
+
   void highlightDailyPicks(List<TambolaBoard?> boards) {
     matchedTicketCount = 0;
     _ticketsNumbers.clear();
+    final List<List<int>> ticketNumbersList = [];
 
     for (final board in boards) {
-      Iterable<int> numsList =
-          board!.tambolaBoard!.expand((numbers) => numbers);
-      _ticketsNumbers.add(numsList.toList());
+      List<int> numsList =
+          board!.tambolaBoard!.expand((numbers) => numbers).toList();
+      ticketNumbersList.add(numsList);
 
-      for (int i = 0; i < todaysPicks.length; i++) {
-        if (numsList.contains(todaysPicks[i])) {
+      for (final int pick in todaysPicks) {
+        if (numsList.contains(pick)) {
           matchedTicketCount++;
           break;
         }
       }
     }
+    _ticketsNumbers = ticketNumbersList;
 
     notifyListeners();
   }
-
-  // void highlightDailyPicks(List<TambolaBoard?> boards) {
-  //   Set<int> todaysPicksSet = todaysPicks.toSet();
-  //   for (final board in boards) {
-  //     List<int> boardNumbers =
-  //         board!.tambolaBoard!.expand((numbers) => numbers).toList();
-  //     ticketsNumbers.add(boardNumbers);
-  //
-  //     for (int i = 0; i < boardNumbers.length; i++) {
-  //       if (todaysPicksSet.contains(boardNumbers[i])) {
-  //         matchedTicketCount++;
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
 
   void dump() {
     _dailyPicksCount = null;

@@ -73,9 +73,8 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                     horizontal: SizeConfig.pageHorizontalMargins,
                   ),
                   child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: Lottie.asset(
-                          Assets.tambolaTopBannerLottie),
+                      borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                    child: Lottie.asset(Assets.tambolaTopBannerLottie),
                   ),
                 ),
                 TodayWeeklyPicksCard(
@@ -127,6 +126,7 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                   height: SizeConfig.padding28,
                 ),
                 AnimatedBuilder(
+                  key: widget.model.itemKey,
                   animation: animationController,
                   builder: (ctx, child) {
                     final sineValue =

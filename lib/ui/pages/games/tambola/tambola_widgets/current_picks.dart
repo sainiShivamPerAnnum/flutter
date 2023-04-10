@@ -1,8 +1,8 @@
-import 'dart:developer' as i;
 import 'dart:math';
 
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_daily_draw_timer.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -11,30 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CurrentPicks extends StatelessWidget {
-  const CurrentPicks({super.key,
-    this.todaysPicks,
-    this.dailyPicksCount,
+  const CurrentPicks({
+    Key? key,
+    required this.todaysPicks,
+    required this.dailyPicksCount,
     this.isTambolaCard = true,
-    this.totalTicketMatched = 0});
+  }) : super(key: key);
 
   final List<int>? todaysPicks;
   final int? dailyPicksCount;
   final bool isTambolaCard;
-  final int? totalTicketMatched;
-
-  // int renderedTimes = 0;
-
-  String getText(S locale) {
-    i.log("totalTicketMatched: $totalTicketMatched");
-    if ((totalTicketMatched ?? 0) > 0) {
-      /// Todo: logic incorrect
-      return "Today’s draw matches your $totalTicketMatched tickets!";
-    }
-
-    return todaysPicks == [-1, -1, -1]
-        ? locale.tDrawnAtText1
-        : "Picks drawn at 6 PM";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,25 +34,42 @@ class CurrentPicks extends StatelessWidget {
           ),
         ),
         if (!isTambolaCard)
-          Container(
-            padding: EdgeInsets.only(
-                top: SizeConfig.padding24, bottom: SizeConfig.padding16),
-            child: Text(
-              getText(locale),
-              style: TextStyles.sourceSansSB.body3,
-            ),
-          )
+          Consumer<PicksCardViewModel>(
+            builder: (context, provider, child) {
+              if ((provider.totalTicketMatched ?? 0) > 0) {
+                return Container(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.padding24, bottom: SizeConfig.padding16),
+                  child: Text(
+                    "Today’s draw matches your ${provider.totalTicketMatched} tickets!",
+                    style: TextStyles.sourceSansSB.body3,
+                  ),
+                );
+              }
+              return Container(
+                padding: EdgeInsets.only(
+                    top: SizeConfig.padding24, bottom: SizeConfig.padding16),
+                child: Text(
+                  todaysPicks == [-1, -1, -1]
+                      ? locale.tDrawnAtText1
+                      : "Picks drawn at 6 PM",
+                  style: TextStyles.sourceSansSB.body3,
+                ),
+              );
+            },
+          ),
       ],
     );
   }
 }
 
 class TodayPicksBallsAnimation extends StatelessWidget {
-  const TodayPicksBallsAnimation({Key? key,
-    required this.picksList,
-    this.ballHeight,
-    this.ballWidth,
-    this.margin})
+  const TodayPicksBallsAnimation(
+      {Key? key,
+      required this.picksList,
+      this.ballHeight,
+      this.ballWidth,
+      this.margin})
       : super(key: key);
   final List<int> picksList;
   final double? ballHeight;
@@ -230,18 +233,18 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
               isAnimationDone
                   ? _buildBalls(widget.number, false, widget.ballColor)
                   : ListView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: randomList.length,
-                itemBuilder: (context, index) {
-                  return _buildBalls(
-                      randomList[index],
-                      index == 0,
-                      Colors.primaries[
-                      Random().nextInt(Colors.primaries.length)]);
-                },
-              ),
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: randomList.length,
+                      itemBuilder: (context, index) {
+                        return _buildBalls(
+                            randomList[index],
+                            index == 0,
+                            Colors.primaries[
+                                Random().nextInt(Colors.primaries.length)]);
+                      },
+                    ),
               _buildBalls(widget.number, false, widget.ballColor),
             ],
           ),
@@ -249,14 +252,5 @@ class _AnimatedPicksDisplayState extends State<AnimatedPicksDisplay> {
       ),
     );
     ;
-  }
-}
-
-class TicketNumber extends StatelessWidget {
-  const TicketNumber({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

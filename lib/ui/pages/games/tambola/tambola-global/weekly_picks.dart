@@ -69,8 +69,6 @@ class WeeklyPicks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final todayWeekday = DateTime.now().weekday;
-
     final columns = List<Widget>.generate(
       7,
       (i) => Row(

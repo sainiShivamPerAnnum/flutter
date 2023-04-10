@@ -14,14 +14,12 @@ class TodayWeeklyPicksCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return model.show1CrCard
-        ? const TambolaTopBanner()
-        : Container(
-            padding: EdgeInsets.only(
-              top: SizeConfig.pageHorizontalMargins,
-              bottom: SizeConfig.padding8,
-            ),
-            child: PicksCardView(),
-          );
+    return Container(
+      padding: EdgeInsets.only(
+        top: SizeConfig.pageHorizontalMargins,
+        bottom: SizeConfig.padding8,
+      ),
+      child: model.show1CrCard ? const TambolaTopBanner() : PicksCardView(),
+    );
   }
 }

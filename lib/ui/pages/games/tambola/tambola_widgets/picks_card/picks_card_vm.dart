@@ -127,19 +127,6 @@ class PicksCardViewModel extends BaseViewModel {
     tabNo = tab;
   }
 
-  // bool isNumberPresent(String dailyNumber) {
-  //   var data = _tambolaService.ticketsNumbers;
-  //   bool exist = false;
-  //   if (dailyNumber != '-') {
-  //     for (final element in data) {
-  //       exist = element.contains(int.tryParse(dailyNumber));
-  //       if (exist) break;
-  //     }
-  //   }
-  //
-  //   return exist;
-  // }
-
   bool isNumberPresent(String dailyNumber) {
     if (dailyNumber == '-') {
       return false;
