@@ -657,6 +657,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
     return BaseUtil.openModalBottomSheet(
       isBarrierDismissible: true,
       addToScreenStack: true,
+      enableDrag: Platform.isIOS,
       backgroundColor: UiConstants.kBackgroundColor,
       isScrollControlled: true,
       borderRadius: BorderRadius.only(
