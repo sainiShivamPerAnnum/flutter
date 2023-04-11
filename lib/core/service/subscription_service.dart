@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -19,6 +20,7 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_proce
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -122,7 +124,7 @@ class SubService extends ChangeNotifier {
   SubscriptionModel? _subscriptionData;
   SubscriptionModel? get subscriptionData => this._subscriptionData;
   set subscriptionData(value) {
-    if (value == null) return;
+    // if (value == null) return;
     this._subscriptionData = value;
     setSubscriptionState();
   }
@@ -182,14 +184,24 @@ class SubService extends ChangeNotifier {
         augAmt: augAmt);
     if (res.isSuccess()) {
       try {
-        getSubscription();
+        await getSubscription();
         const platform = MethodChannel("methodChannel/upiIntent");
         autosaveState = AutosaveState.INIT;
-        final result = await platform.invokeMethod(
-            'initiatePsp', {'redirectUrl': res.model, 'packageName': package});
-        log("Result from initiatePsp: $result");
-        if (subscriptionData != null)
+        if (Platform.isIOS) {
+          BaseUtil.launchUrl(res.model!);
+        } else {
+          final result = await platform.invokeMethod('initiatePsp', {
+            'redirectUrl': res.model,
+            'packageName': FlavorConfig.isDevelopment()
+                ? "com.phonepe.app.preprod"
+                : package
+          });
+          log("Result from initiatePsp: $result");
+        }
+        if (subscriptionData != null) {
           startPollingForCreateSubscriptionResponse();
+        }
+
         return true;
       } catch (e) {
         _logger.e("Create subscription failed: Platform Exception");
@@ -202,9 +214,9 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  startPollingForCreateSubscriptionResponse() {
+  void startPollingForCreateSubscriptionResponse() {
     timer = Timer.periodic(
-      Duration(seconds: 10),
+      const Duration(seconds: 10),
       (t) {
         pollCount++;
         if (pollCount > 100) {
@@ -214,7 +226,7 @@ class SubService extends ChangeNotifier {
         getSubscription().then((_) {
           if (subscriptionData!.status != AutosaveState.INIT.name &&
               subscriptionData!.status != AutosaveState.CANCELLED.name) {
-            print("reached here too");
+            _logger.i("Autosave Polling cancelled.");
             t.cancel();
           }
         });
@@ -228,7 +240,6 @@ class SubService extends ChangeNotifier {
       subscriptionData = res.model;
     } else {
       subscriptionData = null;
-      autosaveState = AutosaveState.IDLE;
     }
   }
 
@@ -397,42 +408,81 @@ class SubService extends ChangeNotifier {
   Future<List<ApplicationMeta>> getUPIApps() async {
     S locale = locator<S>();
     List<ApplicationMeta> appMetaList = [];
-    try {
-      List<ApplicationMeta> allUpiApps =
-          await UpiPay.getInstalledUpiApplications(
-              statusType: UpiApplicationDiscoveryAppStatusType.all);
+    print("Apps: getting upi apps");
 
-      allUpiApps.forEach((element) {
-        if (element.upiApplication.appName == "Paytm" &&
-            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                .contains('P')) {
-          appMetaList.add(element);
+    if (Platform.isIOS) {
+      const platform = MethodChannel("methodChannel/deviceData");
+      try {
+        if (AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+            .contains('E')) {
+          final result = await platform
+              .invokeMethod('isAppInstalled', {"appName": "phonepe"});
+          if (result) {
+            appMetaList.add(ApplicationMeta.ios(UpiApplication.phonePe));
+          }
         }
-        if (element.upiApplication.appName == "PhonePe" &&
-            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                .contains('E')) {
-          appMetaList.add(element);
+        if (AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+            .contains('P')) {
+          final result = await platform
+              .invokeMethod('isAppInstalled', {"appName": "paytm"});
+          if (result) {
+            appMetaList.add(ApplicationMeta.ios(UpiApplication.paytm));
+          }
         }
-        if (element.upiApplication.appName == "PhonePe Preprod" &&
-            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                .contains('E')) {
-          appMetaList.add(element);
+        if (AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+            .contains('G')) {
+          final result = await platform
+              .invokeMethod('isAppInstalled', {"appName": "gpay"});
+          if (result) {
+            appMetaList.add(ApplicationMeta.ios(UpiApplication.googlePay));
+          }
         }
-        if (element.upiApplication.appName == "Google Pay" &&
-            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                .contains('G')) {
-          appMetaList.add(element);
-        }
-      });
-      return appMetaList;
-    } catch (e) {
-      BaseUtil.showNegativeAlert(locale.unableToGetUpi, locale.tryLater);
-      return [];
+        return appMetaList;
+      } on PlatformException catch (e) {
+        print("Failed to fetch installed applications on ios $e");
+        return appMetaList;
+      }
+    } else {
+      try {
+        List<ApplicationMeta> allUpiApps =
+            await UpiPay.getInstalledUpiApplications(
+                statusType: UpiApplicationDiscoveryAppStatusType.all);
+        print("Apps: found ${allUpiApps.length.toString()}");
+
+        allUpiApps.forEach((element) {
+          if (element.upiApplication.appName == "Paytm" &&
+              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                  .contains('P')) {
+            appMetaList.add(element);
+          }
+          if (element.upiApplication.appName == "PhonePe" &&
+              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                  .contains('E')) {
+            appMetaList.add(element);
+          }
+          if (element.upiApplication.appName == "PhonePe Preprod" &&
+              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                  .contains('E')) {
+            appMetaList.add(element);
+          }
+          if (element.upiApplication.appName == "Google Pay" &&
+              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                  .contains('G')) {
+            appMetaList.add(element);
+          }
+        });
+        return appMetaList;
+      } catch (e) {
+        print("Apps: No Apps found");
+
+        BaseUtil.showNegativeAlert(locale.unableToGetUpi, locale.tryLater);
+        return [];
+      }
     }
   }
 
   setSubscriptionState() {
-    switch (subscriptionData!.status) {
+    switch (subscriptionData?.status) {
       case "INIT":
         autosaveState = AutosaveState.INIT;
         break;
@@ -453,7 +503,7 @@ class SubService extends ChangeNotifier {
         autosaveState = AutosaveState.CANCELLED;
         break;
       default:
-        autosaveState = AutosaveState.INIT;
+        autosaveState = AutosaveState.IDLE;
         break;
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -379,7 +381,9 @@ class AutosaveProcessViewModel extends BaseViewModel {
       lbAmt: int.tryParse(floAmountFieldController?.text ?? '0')!,
       augAmt: int.tryParse(goldAmountFieldController?.text ?? '0')!,
       package: FlavorConfig.isDevelopment()
-          ? "com.phonepe.app.preprod"
+          ? (Platform.isAndroid
+              ? "com.phonepe.app.preprod"
+              : "com.phonepe.app.preprod")
           : selectedUpiApp!.packageName,
     );
   }
@@ -738,7 +742,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   void trackAutosaveCustomComboSubmit() {
     _analyticsService.track(
-      eventName: AnalyticsEvents.asSelectComboTapped,
+      eventName: AnalyticsEvents.asCustomComboSubmit,
       properties: {
         "gold": customComboModel?.AUGGOLD99 ?? 0,
         "flo": customComboModel?.LENDBOXP2P ?? 0,
@@ -761,7 +765,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
     _analyticsService.track(
       eventName: AnalyticsEvents.asChipsTapped,
       properties: {
-        "appName": selectedUpiApp,
+        "appName": selectedUpiApp?.upiApplication.appName,
         "gold": goldAmountFieldController?.text,
         "flo": floAmountFieldController?.text,
         "frequency": selectedFrequency.name,
@@ -773,7 +777,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
     _analyticsService.track(
       eventName: AnalyticsEvents.asChipsTapped,
       properties: {
-        "appName": selectedUpiApp,
+        "appName": selectedUpiApp?.upiApplication.appName,
         "gold": goldAmountFieldController?.text,
         "flo": floAmountFieldController?.text,
         "frequency": selectedFrequency.name,

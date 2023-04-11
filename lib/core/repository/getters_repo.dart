@@ -94,7 +94,7 @@ class GetterRepository extends BaseRepo {
       final token = await getBearerToken();
       return await _cacheService.cachedApi(
         'AssetsOptions-$freq-$type',
-        TTL.ONE_DAY * 7,
+        TTL.ONE_HOUR,
         () => APIService.instance.getData(ApiPath.getAssetOptions(freq, type),
             cBaseUrl: _baseUrl, token: token),
         (p0) => ApiResponse<AssetOptionsModel>(

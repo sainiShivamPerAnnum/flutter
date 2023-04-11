@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -221,6 +222,7 @@ class PredictionLeaderboard extends StatelessWidget {
                                   BaseUtil.openModalBottomSheet(
                                       isBarrierDismissible: true,
                                       addToScreenStack: true,
+                                      enableDrag: Platform.isIOS,
                                       backgroundColor: const Color(0xff21284A),
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(
@@ -280,6 +282,7 @@ class PredictionLeaderboard extends StatelessWidget {
                                   BaseUtil.openModalBottomSheet(
                                       isBarrierDismissible: true,
                                       addToScreenStack: true,
+                                      enableDrag: Platform.isIOS,
                                       backgroundColor: const Color(0xff21284A),
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(

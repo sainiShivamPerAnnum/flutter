@@ -49,7 +49,7 @@ class CompletedMatch extends StatelessWidget {
                               matchData: model.completedMatchData![i]),
                           state: PageState.addWidget);
                       locator<AnalyticsService>().track(
-                        eventName: AnalyticsEvents.iplLiveCardTapped,
+                        eventName: AnalyticsEvents.iplCompleteCardTapped,
                         properties: {
                           "team1": model.completedMatchData![i].teams![0],
                           "team2": model.completedMatchData![i].teams![1],
