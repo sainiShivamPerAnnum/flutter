@@ -65,6 +65,8 @@ class PowerPlayService extends ChangeNotifier {
     powerPlayDepositFlow = false;
     transactions = [];
     _userPredictedData = [];
+    cardCarousel = null;
+    currentScore = {};
     _logger.i("PowerPlayService dump");
   }
 

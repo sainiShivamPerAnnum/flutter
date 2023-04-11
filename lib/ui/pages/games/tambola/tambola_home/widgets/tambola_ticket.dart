@@ -80,8 +80,11 @@ class TambolaTicket extends StatelessWidget {
   }
 
   String getTag() {
-    return (board!.assigned_time.toDate().weekday == DateTime.sunday &&
-            DateTime.now().weekday == DateTime.sunday &&
+    final assignedWeekday = board!.assigned_time.toDate().weekday;
+    final currentWeekday = DateTime.now().weekday;
+
+    return (assignedWeekday == DateTime.sunday &&
+            currentWeekday == DateTime.sunday &&
             board!.assigned_time.toDate().hour < 24 &&
             board!.assigned_time.toDate().hour >= 18)
         ? "NEXT WEEK"
@@ -106,7 +109,7 @@ class TambolaTicket extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    if (ticketNumbers.isEmpty) generateNumberList();
+    if (ticketNumbers.isEmpty && board != null) generateNumberList();
 
     return Stack(
       children: [

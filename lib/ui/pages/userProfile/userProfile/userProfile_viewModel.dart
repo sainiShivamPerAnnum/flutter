@@ -88,6 +88,8 @@ class UserProfileVM extends BaseViewModel {
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
   final DBModel? dbProvider = locator<DBModel>();
   final ScratchCardService? _gtService = locator<ScratchCardService>();
+  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
+
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
   final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
@@ -546,6 +548,7 @@ class UserProfileVM extends BaseViewModel {
                 _tambolaService!.signOut();
                 _analyticsService!.signOut();
                 _bankAndKycService!.dump();
+                _powerPlayService.dump();
                 ScratchCardService.dump();
                 _tambolaRepo.dump();
                 locator<JourneyRepository>().dump();

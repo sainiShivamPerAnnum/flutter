@@ -37,7 +37,8 @@ class TicketWidget extends StatelessWidget {
             activeTambolaCardCount: model.activeTambolaCardCount ?? 0,
             scrollController: scrollController,
             animationController: animationController,
-            locale: locale),
+            locale: locale,
+            buyTicketWidgetKey: model.itemKey),
         SizedBox(
           height: SizeConfig.padding6,
         ),
@@ -57,12 +58,14 @@ class TicketHeader extends StatelessWidget {
     required this.animationController,
     required this.locale,
     required this.activeTambolaCardCount,
+    required this.buyTicketWidgetKey,
   });
 
   final int activeTambolaCardCount;
   final ScrollController scrollController;
   final AnimationController animationController;
   final S locale;
+  final GlobalKey buyTicketWidgetKey;
 
   @override
   Widget build(BuildContext context) {
@@ -127,8 +130,11 @@ class TicketHeader extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              scrollController.animateTo(
-                  scrollController.position.maxScrollExtent,
+              final RenderBox renderBox = buyTicketWidgetKey.currentContext!
+                  .findRenderObject() as RenderBox;
+              final offset = renderBox.localToGlobal(Offset.zero);
+
+              scrollController.animateTo(offset.dy,
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.fastOutSlowIn);
               animationController

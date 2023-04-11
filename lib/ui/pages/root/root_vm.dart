@@ -21,6 +21,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -61,12 +62,14 @@ class RootViewModel extends BaseViewModel {
   final TambolaService? _tambolaService = locator<TambolaService>();
   final ScratchCardService? _gtService = locator<ScratchCardService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
+  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
   final AppState appState = locator<AppState>();
   final SubService _subscriptionService = locator<SubService>();
   final S locale;
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
+
   // final WinnerService? winnerService = locator<WinnerService>();
   final ReferralRepo _refRepo = locator<ReferralRepo>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
@@ -325,6 +328,7 @@ class RootViewModel extends BaseViewModel {
               _analyticsService.signOut();
               _bankAndKycService?.dump();
               _subscriptionService.dispose();
+              _powerPlayService.dump();
               AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(

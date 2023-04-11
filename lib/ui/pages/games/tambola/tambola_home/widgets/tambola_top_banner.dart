@@ -85,8 +85,8 @@ class TambolaTopBanner extends StatelessWidget {
                 width: SizeConfig.padding8,
               ),
               Text(
-                'Today’s draw in 12: 00: 11',
-                style: TextStyles.sourceSans.body4,
+                'Today’s draw at 6 PM',
+                style: TextStyles.sourceSansSB.body3,
               ),
               SizedBox(
                 width: SizeConfig.padding8,

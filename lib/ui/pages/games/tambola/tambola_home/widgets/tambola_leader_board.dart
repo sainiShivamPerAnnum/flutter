@@ -23,16 +23,22 @@ class TambolaLeaderBoard extends StatelessWidget {
     MatchMap? data = model.winners[index].matchMap;
     List<String> temp = [];
     if ((data?.corners ?? 0) > 0) {
-      temp.add('Corner');
+      data!.corners == 1
+          ? temp.add('1 Corner')
+          : temp.add('${data.corners} Corners');
     }
     if ((data?.fullHouse ?? 0) > 0) {
-      temp.add('Full House');
+      temp.add('${data!.fullHouse} Full House');
     }
     if ((data?.oneRow ?? 0) > 0) {
-      temp.add('One Row');
+      data!.oneRow == 1
+          ? temp.add('1 One Row')
+          : temp.add('${data!.oneRow} One Rows');
     }
     if ((data?.twoRows ?? 0) > 0) {
-      temp.add('Two Rows');
+      data!.twoRows == 1
+          ? temp.add('1 Two Row')
+          : temp.add('${data!.twoRows} Two Rows');
     }
 
     return temp.length > 1

@@ -85,6 +85,7 @@ class TambolaHomeViewModel extends BaseViewModel {
   Map<String, int> ticketCodeWinIndex = {};
   bool _isEligible = false;
   bool _show1CrCard = false;
+  final itemKey = GlobalKey();
 
   bool get show1CrCard => _show1CrCard;
 
@@ -554,10 +555,8 @@ class TambolaHomeViewModel extends BaseViewModel {
       }
     }
 
-    if ((DateTime.now().weekday == DateTime.sunday &&
-            DateTime.now().hour >= 18) ||
-        (DateTime.now().weekday == DateTime.monday &&
-            DateTime.now().hour < 18)) {
+    if (DateTime.now().weekday == DateTime.sunday &&
+        DateTime.now().hour >= 18) {
       showWinCard = true;
       notifyListeners();
     }
