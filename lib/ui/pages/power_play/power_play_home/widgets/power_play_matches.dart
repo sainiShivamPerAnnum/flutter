@@ -4,7 +4,6 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/completed_match.dart';
-import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/live_match.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/upcoming_match.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -29,21 +28,7 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
   }
 
   Widget _buildLiveTab() {
-    if (widget.model.state == ViewState.Busy) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    return widget.model.liveMatchData?.isEmpty ?? true
-        ? (widget.model.upcomingMatchData!.isEmpty ||
-                widget.model.upcomingMatchData?[0] == null ||
-                (widget.model.upcomingMatchData?[0]?.startsAt == null))
-            ? const SizedBox()
-            : NoLiveMatch(
-                timeStamp: widget.model.upcomingMatchData?[0]?.startsAt,
-                matchStatus: MatchStatus.active)
-        : LiveMatch(
-            model: widget.model,
-          );
+    return widget.model.buildLiveTab();
   }
 
   Widget _buildUpcomingTab() {
