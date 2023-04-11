@@ -36,7 +36,7 @@ class CurrentPicks extends StatelessWidget {
         if (!isTambolaCard)
           Consumer<PicksCardViewModel>(
             builder: (context, provider, child) {
-              if ((provider.totalTicketMatched ?? 0) > 0) {
+              if ((provider.totalTicketMatched) > 0) {
                 return Container(
                   padding: EdgeInsets.only(
                       top: SizeConfig.padding24, bottom: SizeConfig.padding16),
