@@ -34,14 +34,15 @@ class CurrentPicks extends StatelessWidget {
           ),
         ),
         if (!isTambolaCard)
-          Consumer<PicksCardViewModel>(
-            builder: (context, provider, child) {
-              if ((provider.totalTicketMatched) > 0) {
+          Selector<PicksCardViewModel, int>(
+            selector: (context, provider) => provider.totalTicketMatched,
+            builder: (context, totalTicketMatched, child) {
+              if (totalTicketMatched > 0) {
                 return Container(
                   padding: EdgeInsets.only(
                       top: SizeConfig.padding24, bottom: SizeConfig.padding16),
                   child: Text(
-                    "Today’s draw matches your ${provider.totalTicketMatched} tickets!",
+                    "Today’s draw matches your $totalTicketMatched tickets!",
                     style: TextStyles.sourceSansSB.body3,
                   ),
                 );

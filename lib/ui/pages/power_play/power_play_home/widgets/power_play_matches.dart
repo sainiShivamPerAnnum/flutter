@@ -28,10 +28,6 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
     widget.model.tabController!.addListener(() => setState(() {}));
   }
 
-  List<String> getTitle() {
-    return ['Live', 'Upcoming', 'Completed'];
-  }
-
   Widget _buildLiveTab() {
     if (widget.model.state == ViewState.Busy) {
       return const Center(child: CircularProgressIndicator());
@@ -100,7 +96,7 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                                 : Colors.transparent,
                             border: Border.all(color: Colors.white)),
                         child: Text(
-                          getTitle()[index].toUpperCase(),
+                          widget.model.tabs[index].toUpperCase(),
                           textAlign: TextAlign.center,
                           style: TextStyles.sourceSansSB.body4.colour(
                               widget.model.tabController!.index == index

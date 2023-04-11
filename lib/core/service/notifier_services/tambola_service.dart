@@ -188,7 +188,7 @@ class TambolaService extends ChangeNotifier {
   Future<void> highlightDailyPicks(List<List<int>> ticketNumbersList) async {
     matchedTicketCount = 0;
 
-    if (ticketsNumbers.isEmpty) return;
+    if (ticketNumbersList.isEmpty) return;
 
     await Future.forEach(ticketNumbersList, (List<int> numsList) async {
       log('numsList $numsList --  todaysPicks $todaysPicks');
