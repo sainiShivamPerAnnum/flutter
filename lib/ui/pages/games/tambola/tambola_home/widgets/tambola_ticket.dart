@@ -34,7 +34,7 @@ class TambolaTicket extends StatelessWidget {
   List<int?> ticketNumbers = [];
 
   Color getColor(int index) {
-    if (calledDigits.contains(ticketNumbers[index])) {
+    if (calledDigits.contains(ticketNumbers[index]) && shouldScrached()) {
       return UiConstants.kSaveDigitalGoldCardBg;
     } else {
       return Colors.transparent;
@@ -42,7 +42,7 @@ class TambolaTicket extends StatelessWidget {
   }
 
   Color getTextColor(int index) {
-    if (calledDigits.contains(ticketNumbers[index])) {
+    if (calledDigits.contains(ticketNumbers[index]) && shouldScrached()) {
       return UiConstants.kBlogTitleColor;
     } else {
       return Colors.white;
@@ -80,20 +80,36 @@ class TambolaTicket extends StatelessWidget {
   }
 
   String getTag() {
-    return (board!.assigned_time.toDate().day == DateTime.sunday &&
-            DateTime.now().day == DateTime.sunday &&
+    final assignedWeekday = board!.assigned_time.toDate().weekday;
+    final currentWeekday = DateTime.now().weekday;
+
+    return (assignedWeekday == DateTime.sunday &&
+            currentWeekday == DateTime.sunday &&
             board!.assigned_time.toDate().hour < 24 &&
-            (board!.assigned_time.toDate().hour >= 18))
+            board!.assigned_time.toDate().hour >= 18)
         ? "NEXT WEEK"
         : (board!.assigned_time.toDate().day == DateTime.now().day)
             ? "NEW"
             : "";
   }
 
+  bool shouldScrached() {
+    // debugPrint("${DateTime.now().hour} -- ${DateTime.now().weekday}");
+    if (board!.assigned_time.toDate().weekday == DateTime.sunday) {
+      if (DateTime.now().weekday == DateTime.sunday) {
+        return false;
+      } else if ((DateTime.now().weekday == DateTime.monday) &&
+          DateTime.now().hour < 18) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    if (ticketNumbers.isEmpty) generateNumberList();
+    if (ticketNumbers.isEmpty && board != null) generateNumberList();
 
     return Stack(
       children: [
@@ -103,7 +119,7 @@ class TambolaTicket extends StatelessWidget {
           child: ClipPath(
             clipper: TicketPainter(),
             child: Container(
-              height: 175,
+              // height: 175,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
@@ -147,12 +163,15 @@ class TambolaTicket extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: getColor(i),
-                          borderRadius: calledDigits.contains(ticketNumbers[i])
-                              ? null
-                              : BorderRadius.circular(
-                                  SizeConfig.blockSizeHorizontal * 1),
+                          borderRadius:
+                              (calledDigits.contains(ticketNumbers[i]) &&
+                                      shouldScrached())
+                                  ? null
+                                  : BorderRadius.circular(
+                                      SizeConfig.blockSizeHorizontal * 1),
                           border: Border.all(
-                              color: calledDigits.contains(ticketNumbers[i])
+                              color: (calledDigits.contains(ticketNumbers[i]) &&
+                                      shouldScrached())
                                   ? const Color(0xff93B5FE)
                                   : Colors.white.withOpacity(
                                       ticketNumbers[i] == 0 ? 0.4 : 0.7),
@@ -161,7 +180,8 @@ class TambolaTicket extends StatelessWidget {
                                   : ticketNumbers[i] == 0
                                       ? 0.5
                                       : 0.7),
-                          shape: calledDigits.contains(ticketNumbers[i])
+                          shape: (calledDigits.contains(ticketNumbers[i]) &&
+                                  shouldScrached())
                               ? BoxShape.circle
                               : BoxShape.rectangle,
                         ),
@@ -177,12 +197,13 @@ class TambolaTicket extends StatelessWidget {
                                     .colour(getTextColor(i)),
                               ),
                             ),
-                            markStatus(i)
+                            if (shouldScrached()) markStatus(i)
                           ],
                         ),
                       );
                     },
                   ),
+                  SizedBox(height: SizeConfig.padding8),
                 ],
               ),
             ),

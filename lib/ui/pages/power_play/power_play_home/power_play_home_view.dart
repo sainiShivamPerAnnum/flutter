@@ -1,4 +1,6 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -46,12 +48,13 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                       showCoinBar: false,
                       showHelpButton: false,
                       backgroundColor: Colors.transparent,
-                      type: FaqsType.onboarding,
+                      type: FaqsType.powerPlay,
                       action: Row(
                         children: [
                           GestureDetector(
                             onTap: () {
-                              locator<PowerPlayService>().referFriend();
+                              locator<PowerPlayService>()
+                                  .referFriend("Power play home view");
                             },
                             child: Container(
                                 key: const ValueKey(Constants.HELP_FAB),
@@ -101,7 +104,6 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                             const SizedBox(
                               height: 10,
                             ),
-
                             if (model.powerPlayReward > 0) ...[
                               Center(
                                 child: Container(
@@ -125,11 +127,10 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                 height: 14,
                               ),
                             ],
-
                             Container(
                               margin: EdgeInsets.only(
                                   left: SizeConfig.pageHorizontalMargins),
-                              height: SizeConfig.screenWidth! * 0.28,
+                              height: SizeConfig.screenWidth! * 0.3,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: model.cardCarousel?.length,
@@ -138,6 +139,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                   return GestureDetector(
                                     onTap: () {
                                       Haptic.vibrate();
+
                                       AppState.delegate!.parseRoute(Uri.parse(
                                           model
                                                   .cardCarousel?[index]
@@ -146,6 +148,14 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                               ? getRoute(index)
                                               : model.cardCarousel?[index]
                                                   ["onTapLink"]));
+                                      locator<AnalyticsService>().track(
+                                        eventName:
+                                            AnalyticsEvents.iplCarouselTapped,
+                                        properties: {
+                                          "url": model.cardCarousel?[index]
+                                              ["onTapLink"],
+                                        },
+                                      );
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
@@ -11,12 +13,14 @@ import 'package:felloapp/core/model/subscription_models/subscription_model.dart'
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -81,6 +85,7 @@ class SubService extends ChangeNotifier {
   final SubscriptionRepo _subscriptionRepo = locator<SubscriptionRepo>();
   final GetterRepository _getterRepo = locator<GetterRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   //DEPENDENCY - END
 
@@ -119,7 +124,7 @@ class SubService extends ChangeNotifier {
   SubscriptionModel? _subscriptionData;
   SubscriptionModel? get subscriptionData => this._subscriptionData;
   set subscriptionData(value) {
-    if (value == null) return;
+    // if (value == null) return;
     this._subscriptionData = value;
     setSubscriptionState();
   }
@@ -179,14 +184,24 @@ class SubService extends ChangeNotifier {
         augAmt: augAmt);
     if (res.isSuccess()) {
       try {
-        getSubscription();
+        await getSubscription();
         const platform = MethodChannel("methodChannel/upiIntent");
         autosaveState = AutosaveState.INIT;
-        final result = await platform.invokeMethod(
-            'initiatePsp', {'redirectUrl': res.model, 'packageName': package});
-        log("Result from initiatePsp: $result");
-        if (subscriptionData != null)
+        if (Platform.isIOS) {
+          BaseUtil.launchUrl(res.model!);
+        } else {
+          final result = await platform.invokeMethod('initiatePsp', {
+            'redirectUrl': res.model,
+            'packageName': FlavorConfig.isDevelopment()
+                ? "com.phonepe.app.preprod"
+                : package
+          });
+          log("Result from initiatePsp: $result");
+        }
+        if (subscriptionData != null) {
           startPollingForCreateSubscriptionResponse();
+        }
+
         return true;
       } catch (e) {
         _logger.e("Create subscription failed: Platform Exception");
@@ -199,7 +214,7 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  startPollingForCreateSubscriptionResponse() {
+  void startPollingForCreateSubscriptionResponse() {
     timer = Timer.periodic(
       const Duration(seconds: 10),
       (t) {
@@ -211,7 +226,7 @@ class SubService extends ChangeNotifier {
         getSubscription().then((_) {
           if (subscriptionData!.status != AutosaveState.INIT.name &&
               subscriptionData!.status != AutosaveState.CANCELLED.name) {
-            print("reached here too");
+            _logger.i("Autosave Polling cancelled.");
             t.cancel();
           }
         });
@@ -225,7 +240,6 @@ class SubService extends ChangeNotifier {
       subscriptionData = res.model;
     } else {
       subscriptionData = null;
-      autosaveState = AutosaveState.IDLE;
     }
   }
 
@@ -240,7 +254,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription updated successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -259,7 +273,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription paused successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -277,7 +291,7 @@ class SubService extends ChangeNotifier {
     isPauseOrResuming = false;
     if (res.isSuccess()) {
       subscriptionData = res.model;
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription resumed successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -394,42 +408,81 @@ class SubService extends ChangeNotifier {
   Future<List<ApplicationMeta>> getUPIApps() async {
     S locale = locator<S>();
     List<ApplicationMeta> appMetaList = [];
-    try {
-      List<ApplicationMeta> allUpiApps =
-          await UpiPay.getInstalledUpiApplications(
-              statusType: UpiApplicationDiscoveryAppStatusType.all);
+    print("Apps: getting upi apps");
 
-      allUpiApps.forEach((element) {
-        if (element.upiApplication.appName == "Paytm" &&
-            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                .contains('P')) {
-          appMetaList.add(element);
+    if (Platform.isIOS) {
+      const platform = MethodChannel("methodChannel/deviceData");
+      try {
+        if (AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+            .contains('E')) {
+          final result = await platform
+              .invokeMethod('isAppInstalled', {"appName": "phonepe"});
+          if (result) {
+            appMetaList.add(ApplicationMeta.ios(UpiApplication.phonePe));
+          }
         }
-        if (element.upiApplication.appName == "PhonePe" &&
-            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                .contains('E')) {
-          appMetaList.add(element);
+        if (AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+            .contains('P')) {
+          final result = await platform
+              .invokeMethod('isAppInstalled', {"appName": "paytm"});
+          if (result) {
+            appMetaList.add(ApplicationMeta.ios(UpiApplication.paytm));
+          }
         }
-        if (element.upiApplication.appName == "PhonePe Preprod" &&
-            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                .contains('E')) {
-          appMetaList.add(element);
+        if (AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+            .contains('G')) {
+          final result = await platform
+              .invokeMethod('isAppInstalled', {"appName": "gpay"});
+          if (result) {
+            appMetaList.add(ApplicationMeta.ios(UpiApplication.googlePay));
+          }
         }
-        if (element.upiApplication.appName == "Google Pay" &&
-            AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                .contains('G')) {
-          appMetaList.add(element);
-        }
-      });
-      return appMetaList;
-    } catch (e) {
-      BaseUtil.showNegativeAlert(locale.unableToGetUpi, locale.tryLater);
-      return [];
+        return appMetaList;
+      } on PlatformException catch (e) {
+        print("Failed to fetch installed applications on ios $e");
+        return appMetaList;
+      }
+    } else {
+      try {
+        List<ApplicationMeta> allUpiApps =
+            await UpiPay.getInstalledUpiApplications(
+                statusType: UpiApplicationDiscoveryAppStatusType.all);
+        print("Apps: found ${allUpiApps.length.toString()}");
+
+        allUpiApps.forEach((element) {
+          if (element.upiApplication.appName == "Paytm" &&
+              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                  .contains('P')) {
+            appMetaList.add(element);
+          }
+          if (element.upiApplication.appName == "PhonePe" &&
+              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                  .contains('E')) {
+            appMetaList.add(element);
+          }
+          if (element.upiApplication.appName == "PhonePe Preprod" &&
+              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                  .contains('E')) {
+            appMetaList.add(element);
+          }
+          if (element.upiApplication.appName == "Google Pay" &&
+              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                  .contains('G')) {
+            appMetaList.add(element);
+          }
+        });
+        return appMetaList;
+      } catch (e) {
+        print("Apps: No Apps found");
+
+        BaseUtil.showNegativeAlert(locale.unableToGetUpi, locale.tryLater);
+        return [];
+      }
     }
   }
 
   setSubscriptionState() {
-    switch (subscriptionData!.status) {
+    switch (subscriptionData?.status) {
       case "INIT":
         autosaveState = AutosaveState.INIT;
         break;
@@ -450,14 +503,16 @@ class SubService extends ChangeNotifier {
         autosaveState = AutosaveState.CANCELLED;
         break;
       default:
-        autosaveState = AutosaveState.INIT;
+        autosaveState = AutosaveState.IDLE;
         break;
     }
   }
 
   handleTap() {
-    print(_autosaveState);
     Haptic.vibrate();
+    _analyticsService.track(
+        eventName: AnalyticsEvents.asCardTapped,
+        properties: {"status": autosaveState.name, "location": "Save section"});
     switch (autosaveState) {
       case AutosaveState.INIT:
         return BaseUtil.showNegativeAlert(

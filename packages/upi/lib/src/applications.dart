@@ -53,7 +53,7 @@ class UpiApplication {
     discoveryCustomScheme: 'phonepe',
   );
 
-  /// PhonePe
+  /// PhonePe preprod
   static final phonePePreprod = UpiApplication(
     androidPackageName: 'com.phonepe.app.preprod',
     iosBundleId: 'com.phonepe.PhonePeApp.preprod',

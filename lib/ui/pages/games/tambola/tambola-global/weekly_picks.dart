@@ -15,113 +15,98 @@ class WeeklyPicks extends StatelessWidget {
     required this.model,
   }) : super(key: key);
 
-  String getDayName(int weekday) {
-    switch (weekday) {
-      case 1:
-        return 'MON';
-      case 2:
-        return 'TUE';
-      case 3:
-        return 'WED';
-      case 4:
-        return 'THU';
-      case 5:
-        return 'FRI';
-      case 6:
-        return 'SAT';
-      case 7:
-        return 'SUN';
-      default:
-        return 'N/A';
-    }
-  }
+  static const List<String> _dayNames = [
+    'MON',
+    'TUE',
+    'WED',
+    'THU',
+    'FRI',
+    'SAT',
+    'SUN'
+  ];
+  static const List<int> _emptyBalls = [-1, -1, -1];
 
   Widget _getDrawBallRow(DailyPick? draws, int day) {
-    List<Widget> balls = [];
-    DateTime today = DateTime.now();
-    int colCount = today.weekday;
-    if (draws != null &&
-        draws.getWeekdayDraws(day - 1) != null &&
-        !draws.getWeekdayDraws(day - 1)!.contains(-1)) {
-      for (final element in draws.getWeekdayDraws(day - 1)!) {
-        balls.add(_getDrawBall(element.toString(), colCount == day));
-      }
-    } else {
-      for (int i = 0; i < 3; i++) {
-        balls.add(_getDrawBall('-', colCount == day));
-      }
-    }
+    final weekdayDraws = draws?.getWeekdayDraws(day - 1) ?? _emptyBalls;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: balls,
+      children: weekdayDraws.map((ball) => _getDrawBall(ball, day)).toList(),
     );
   }
 
-  Widget _getDrawBall(String digit, bool isToday) {
+  Widget _getDrawBall(int ball, int todayWeekday) {
+    final isNumberPresent = model.isNumberPresent(ball.toString());
+    final borderColor = isNumberPresent ? const Color(0xffFFD979) : null;
+
     return Container(
       margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding4, vertical: SizeConfig.padding6),
+        horizontal: SizeConfig.padding4,
+        vertical: SizeConfig.padding6,
+      ),
       width: SizeConfig.screenWidth! * 0.07,
       height: SizeConfig.screenWidth! * 0.07,
       decoration: BoxDecoration(
-        color: isToday ? UiConstants.darkPrimaryColor : Colors.white.withOpacity(0.1),
-        border: model.isNumberPresent(digit)
-            ? Border.all(color: const Color(0xffFFD979))
-            : null,
+        color: todayWeekday == DateTime.now().weekday
+            ? UiConstants.darkPrimaryColor
+            : Colors.white.withOpacity(0.1),
+        border: borderColor != null ? Border.all(color: borderColor) : null,
         shape: BoxShape.circle,
       ),
       child: Center(
-          child: Text(
-        digit,
-        style: TextStyle(
+        child: Text(
+          ball == -1 ? '-' : ball.toString(),
+          style: TextStyle(
             fontSize: SizeConfig.mediumTextSize! * 1,
             fontWeight: FontWeight.w500,
-            color: Colors.white),
-        textAlign: TextAlign.center,
-      )),
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    DateTime today = DateTime.now();
-    List<Widget> colElems = [];
-    int colCount = today.weekday;
-    for (int i = 0; i < 7; i++) {
-      colElems.add(Row(
+    final columns = List<Widget>.generate(
+      7,
+      (i) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(getDayName(i + 1).toUpperCase(),
-              style: TextStyles.sourceSans.body3.colour(Colors.white)),
-          SizedBox(
-            width: SizeConfig.padding12,
+          Text(
+            _dayNames[i],
+            style: TextStyles.sourceSans.body3.colour(Colors.white),
           ),
+          SizedBox(width: SizeConfig.padding12),
           _getDrawBallRow(weeklyDraws, i + 1),
         ],
-      ));
-    }
+      ),
+    );
 
-    //Divind the list in two parts
-    List<Widget> side1 = colElems.sublist(0, 4);
-    List<Widget> side2 = colElems.sublist(4);
+    // Divide the list in two parts
+    final side1 = columns.sublist(0, 4);
+    final side2 = columns.sublist(4);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: ListView(
+          child: ListView.builder(
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            children: side1,
+            itemCount: side1.length,
+            itemBuilder: (context, index) => side1[index],
           ),
         ),
         Expanded(
-          child: ListView(
+          child: ListView.builder(
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            children: side2,
+            itemCount: side2.length,
+            itemBuilder: (context, index) => side2[index],
           ),
         ),
       ],

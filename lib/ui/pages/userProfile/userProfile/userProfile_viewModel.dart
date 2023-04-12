@@ -23,6 +23,7 @@ import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -87,6 +88,8 @@ class UserProfileVM extends BaseViewModel {
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
   final DBModel? dbProvider = locator<DBModel>();
   final ScratchCardService? _gtService = locator<ScratchCardService>();
+  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
+
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
   final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
@@ -545,13 +548,14 @@ class UserProfileVM extends BaseViewModel {
                 _tambolaService!.signOut();
                 _analyticsService!.signOut();
                 _bankAndKycService!.dump();
+                _powerPlayService.dump();
                 ScratchCardService.dump();
                 _tambolaRepo.dump();
                 locator<JourneyRepository>().dump();
                 _appstate.dump();
                 locator<SubService>().dump();
                 AppState.backButtonDispatcher!.didPopRoute();
-
+                locator<PowerPlayService>().dump();
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(

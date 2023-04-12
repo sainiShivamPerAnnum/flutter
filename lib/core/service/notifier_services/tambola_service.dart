@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../repository/ticket_repo.dart';
 
@@ -33,11 +35,12 @@ class TambolaService extends ChangeNotifier {
   int? _atomicTicketDeletionLeftCount;
   int? ticketGenerateCount;
   int? initialTicketCount;
+  int matchedTicketCount = 0;
   List<List<int>> _ticketsNumbers = [];
 
   late Completer<List<TambolaBoard?>?> completer;
 
-  signOut() {
+  void signOut() {
     _weeklyDrawFetched = false;
     _weeklyTicksFetched = false;
     _winnerDialogCalled = false;
@@ -45,13 +48,16 @@ class TambolaService extends ChangeNotifier {
     _todaysPicks = null;
     // _ticketCount = null;
     _userWeeklyBoards = null;
+    matchedTicketCount = 0;
+    _ticketsNumbers = [];
   }
 
   List<List<int>> get ticketsNumbers => _ticketsNumbers;
 
   set ticketsNumbers(List<List<int>> value) {
     _ticketsNumbers = value;
-  } // int? get ticketCount => _ticketCount;
+    notifyListeners();
+  }
 
   get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
 
@@ -76,7 +82,7 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  get todaysPicks => _todaysPicks;
+  List<int>? get todaysPicks => _todaysPicks;
 
   set todaysPicks(value) {
     _todaysPicks = value;
@@ -98,37 +104,6 @@ class TambolaService extends ChangeNotifier {
   }
 
   bool isTambolaBoardUpdated = false;
-
-  Future<void> fetchTambolaBoard() async {
-    completer = Completer();
-    if (!_weeklyTicksFetched) {
-      _weeklyTicksFetched = true;
-      _logger.d("Fetching Tambola tickets ${DateTime.now().second}");
-      // ticketsLoaded = false;
-      final tickets = await _tambolaRepo.getTickets();
-      if (tickets.code == 200) {
-        List<TambolaBoard?>? boards =
-            tickets.model!.map((e) => e.board).toList();
-
-        if (userWeeklyBoards != null &&
-            userWeeklyBoards!.length != boards.length) {
-          isTambolaBoardUpdated = true;
-          notifyListeners();
-          isTambolaBoardUpdated = false;
-        }
-        _logger!.d("Fetched Tambola tickets ${DateTime.now().second}");
-        userWeeklyBoards = boards;
-        // _currentBoard = null;
-        // _currentBoardView = null;
-        ticketCount = boards.length;
-
-        completer.complete(boards);
-      } else {
-        completer.complete(null);
-        _logger!.d(tickets.errorMessage);
-      }
-    }
-  }
 
   set weeklyDrawFetched(value) {
     _weeklyDrawFetched = value;
@@ -161,29 +136,75 @@ class TambolaService extends ChangeNotifier {
     if (locator<RootController>()
         .navItems
         .containsValue(RootController.tambolaNavBar)) {
-      fetchTambolaBoard();
-      completer.future.then((value) {
+      await fetchTambolaBoard();
+
+      await completer.future.then((value) {
         initialTicketCount = value?.length;
-        highlightDailyPicks(userWeeklyBoards!);
+        highlightDailyPicks(_ticketsNumbers);
       });
     }
   }
 
-  void highlightDailyPicks(List<TambolaBoard?> boards) {
-    boards.forEach((element) {
+  Future<void> fetchTambolaBoard() async {
+    completer = Completer();
+    if (_weeklyTicksFetched) {
+      completer.complete(null);
+      return;
+    }
+
+    _weeklyTicksFetched = true;
+    _logger.d("Fetching Tambola tickets ${DateTime.now().second}");
+
+    final tickets = await _tambolaRepo.getTickets();
+
+    if (tickets.code != 200) {
+      _logger.d(tickets.errorMessage);
+      return;
+    }
+
+    List<TambolaBoard?> boards = tickets.model!.map((e) => e.board).toList();
+
+    if (userWeeklyBoards != null && userWeeklyBoards!.length != boards.length) {
+      isTambolaBoardUpdated = true;
+      notifyListeners();
+      isTambolaBoardUpdated = false;
+    }
+
+    _ticketsNumbers.clear();
+
+    await Future.forEach(boards, (board) async {
       ticketsNumbers
-          .add(element!.tambolaBoard!.expand((element) => element).toList());
+          .add(board!.tambolaBoard!.expand((numbers) => numbers).toList());
     });
+    log('ticketsNumbers $ticketsNumbers');
+    notifyListeners();
+
+    _logger!.d("Fetched Tambola tickets ${DateTime.now().second}");
+    userWeeklyBoards = boards;
+    ticketCount = boards.length;
+    completer.complete(boards);
   }
 
-  // Future<void> getTicketCount() async {
-  //   final count = await _tambolaRepo!.getTicketCount();
-  //   if (count.code == 200) {
-  //     setTicketCount = count.model;
-  //   } else {
-  //     BaseUtil.showNegativeAlert(count.errorMessage, '');
-  //   }
-  // }
+  Future<void> highlightDailyPicks(List<List<int>> ticketNumbersList) async {
+    matchedTicketCount = 0;
+
+    if (ticketNumbersList.isEmpty) return;
+
+    await Future.forEach(ticketNumbersList, (List<int> numsList) async {
+      log('numsList $numsList --  todaysPicks $todaysPicks');
+
+      if (_todaysPicks != null) {
+        for (final int pick in _todaysPicks!) {
+          if (numsList.contains(pick)) {
+            matchedTicketCount++;
+            break;
+          }
+        }
+      }
+    });
+
+    notifyListeners();
+  }
 
   void dump() {
     _dailyPicksCount = null;
@@ -195,10 +216,11 @@ class TambolaService extends ChangeNotifier {
     _winnerDialogCalled = false;
     _atomicTicketGenerationLeftCount = 0;
     _atomicTicketDeletionLeftCount = 0;
-    ticketsNumbers = [];
+    _ticketsNumbers = [];
+    matchedTicketCount = 0;
   }
 
-  fetchWeeklyPicks({bool forcedRefresh = false}) async {
+  Future<void> fetchWeeklyPicks({bool forcedRefresh = false}) async {
     if (forcedRefresh) weeklyDrawFetched = false;
     if (!weeklyDrawFetched) {
       try {
@@ -245,7 +267,7 @@ class TambolaService extends ChangeNotifier {
     }
   }
 
-  setUpDailyPicksCount() {
+  void setUpDailyPicksCount() {
     String _dpc = (AppConfig.getValue(AppConfigKey.tambola_daily_pick_count)
             .toString()) ??
         '';

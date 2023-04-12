@@ -36,7 +36,7 @@ class TambolaCardModel extends BaseViewModel {
   init() async {
     setState(ViewState.Busy);
     await getGameDetails();
-    await _tambolaService!.fetchWeeklyPicks();
+    await _tambolaService.fetchWeeklyPicks();
     fetchPickCounts();
     setState(ViewState.Idle);
   }

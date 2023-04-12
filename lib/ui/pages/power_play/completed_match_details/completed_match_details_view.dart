@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
@@ -84,7 +86,7 @@ class CompletedMatchDetailsView extends StatelessWidget {
                 ),
                 const Align(
                   alignment: Alignment.bottomCenter,
-                  child: FooterCta(),
+                  child: FooterCta(location: "Completed match details"),
                 )
               ],
             ),
@@ -94,10 +96,8 @@ class CompletedMatchDetailsView extends StatelessWidget {
 }
 
 class FooterCta extends StatelessWidget {
-  const FooterCta({
-    super.key,
-  });
-
+  const FooterCta({super.key, required this.location});
+  final String location;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -113,7 +113,7 @@ class FooterCta extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10),
         color: Colors.white,
         onPressed: () {
-          locator<PowerPlayService>().referFriend();
+          locator<PowerPlayService>().referFriend(location);
         },
         child: Center(
           child: Text(
@@ -294,6 +294,7 @@ class UserPredictionsButton extends StatelessWidget {
         BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,
+          enableDrag: Platform.isIOS,
           backgroundColor: const Color(0xff21284A),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness32),
@@ -309,7 +310,7 @@ class UserPredictionsButton extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.7),
+          color: Colors.black.withOpacity(0.5),
           borderRadius: BorderRadius.circular(SizeConfig.roundness8),
         ),
         padding: EdgeInsets.only(

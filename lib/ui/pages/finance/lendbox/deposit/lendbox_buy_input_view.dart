@@ -1,11 +1,9 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
@@ -24,6 +22,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class LendboxBuyInputView extends StatefulWidget {
@@ -126,13 +125,10 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
               SizedBox(
                 height: SizeConfig.padding32,
               ),
-              PropertyChangeConsumer<UserService, UserServiceProperties>(
-                properties: [
-                  UserServiceProperties.myEmailVerification,
-                  UserServiceProperties.mySimpleKycVerified,
-                ],
-                builder: (ctx, service, child) {
-                  return (!service!.isCompleteKycCompleted)
+              Selector<BankAndPanService, bool>(
+                selector: (p0, p1) => p1.isKYCVerified,
+                builder: (ctx, isKYCVerified, child) {
+                  return (!isKYCVerified)
                       ? _kycWidget(widget.model, context)
                       : widget.model.isBuyInProgress
                           ? Container(

@@ -73,6 +73,7 @@ class UpiAppSelectView extends StatelessWidget {
                             onTap: () {
                               Haptic.vibrate();
                               model.selectedUpiApp = model.appsList[index];
+                              model.trackAutosaveUpiAppTapped();
                             },
                             child: Container(
                               padding: const EdgeInsets.all(10),
@@ -107,9 +108,14 @@ class UpiAppSelectView extends StatelessWidget {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    model.appsList[index]
-                                        .iconImage(SizeConfig.padding40),
-                                    SizedBox(
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness12,
+                                      ),
+                                      child: model.appsList[index]
+                                          .iconImage(SizeConfig.padding40),
+                                    ),
+                                    const SizedBox(
                                       height: 10,
                                     ),
                                     Text(
@@ -177,10 +183,11 @@ class UpiAppSelectView extends StatelessWidget {
                           btnText: locale.btnSubmit,
                           onPressed: () async {
                             Haptic.vibrate();
-                            if (model.selectedUpiApp == null)
+                            if (model.selectedUpiApp == null) {
                               return BaseUtil.showNegativeAlert(
                                   "No app selected",
                                   'Please choose a upi app to continue');
+                            }
                             await model.createSubscription();
                           },
                           width: SizeConfig.screenWidth! * 0.88,

@@ -86,27 +86,47 @@ class AnalyticsEvents {
   static const flcTokensExhasuted = 'Fello Tokens Exhausted';
 
   //autosave section
-  static const autosaveDetailsScreenView = "Autosave details Screen Viewed";
-  static const autosaveExampleView = "Autosave example viewed";
-  static const autosaveSetupViewed = "Autosave Setup View entered";
-  static const autosaveSetupInitiated = "Autosave setup initiated";
-  static const autosaveUpiEntered = "Autosave UPI Entered";
-  static const autosaveMandateGenerated = "Autosave mandate generated";
-  static const autosaveMandateTimeout = "Autosave Mandate Expired";
-  static const autosaveWeeklySaver = "Autosave weekly frequency selected";
-  static const autosaveCompleteScreenClosed =
-      "Autosave setup complete screen closed";
-  static const autosaveSetupGTReceived =
-      "Autosave Setup GT received and opened";
+  static const asCardTapped = "Autosave Card Tapped";
+  static const asBenefitsTapped = "Autosave Benefits Next Tapped";
+  static const asChooseAssetNextTapped = "Autosave Choose asset next Tapped";
+  static const asAssetTapped = "Autosave Asset tapped";
+  static const asDoKycNowTapped = "Autosave - Do KYC now Tap";
+  static const asSetupConfirmation = "Setup Autosave Confirmation";
+  static const asSelectComboTapped = "Autosave Combo tapped";
+  static const asCustomComboTapped = "Autosave Custom combo tapped";
+  static const asCustomComboSubmit = "Autosave Custom combo Submit";
+  static const asChipsTapped = "Autosave Chips tapped";
+  static const asCancelContinueTapped = "Autosave Cancel - Continue Tapped";
+  static const asCancelOTPTapped = "Autosave Cancel - One time payment Tapped";
+  static const asUpiAppTapped = "Autosave UPI App Tapped";
+  static const asUpiSubmitTapped = "Autosave UPI Submit Tapped";
+  static const asHardBackTapped = "Autosave Hard Back Tapped";
+  static const asDoneTapped = "Autosave success done tapped";
+  static const asPrevTapped = "Autosave Previous Tapped";
+  static const asUpdateTapped = "Update Autosave Tapped";
+  static const asPauseTapped = "Pause Autosave Tapped";
+  static const asResumeTapped = "Resume Autosave Tapped";
 
-  static const autosaveDailyToWeeklySaver =
-      "Autosave user switched from daily to weekly";
-  static const autosaveWeeklyToDailySaver =
-      "Autosave user switched weekly to daily";
+  static const asPauseOneWeek = "Autosave paused for one week";
+  static const asPauseTwoWeeks = "Autosave paused for two weeks";
+  static const asPauseOneMonth = "Autosave paused for one month";
 
-  static const autosavePauseOneWeek = "Autosave paused for one week";
-  static const autosavePauseTwoWeeks = "Autosave paused for two weeks";
-  static const autosavePauseOneMonth = "Autosave paused for one month";
+  //Powerplay
+  static const iplBannerTapped = "IPL Banner tapped";
+  static const iplLiveCardTapped = "IPL Live Card Tapped";
+  static const iplPopularPredictionsTapped = "IPL View Popular Predictions";
+  static const iplCompleteCardTapped = "IPL Completed Card Tapped";
+  static const iplInviteFriendsTapped = "IPL Invite Friends Tapped";
+  static const iplYourPredictionsTapped = "IPL Your Predictions Tapped";
+  static const iplPrizeBannerTapped = "IPL Prize Banner Tapped";
+  static const iplSeasonLeaderboardTapped = "IPL Season Leaderboard Tapped";
+  static const iplLiveTabTapped = "IPL Live Tab Tapped";
+  static const iplUpcomingTabTapped = "IPL Live Tab Tapped";
+  static const iplCompletedTabTapped = "IPL Completed Tab Tapped";
+  static const iplPredictNowTapped = "Ipl Predict now tapped";
+  static const iplPredictNowBottomSheetButtonTapped =
+      "IPL Predict Now bottomsheet button Tapped";
+  static const iplCarouselTapped = "Ipl Carousel Tapped";
 
   //Added in alnalytics-phase 1
   static const resendOtpTapped = "Resend OTP Tapped";

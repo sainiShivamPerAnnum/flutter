@@ -3612,7 +3612,7 @@ class S {
   /// `Upload your PAN Card`
   String get kycPanUpload {
     return Intl.message(
-      'Upload your PAN Card',
+      'Step 1: Upload your PAN Card',
       name: 'kycPanUpload',
       desc: '',
       args: [],
@@ -4493,10 +4493,10 @@ class S {
     );
   }
 
-  /// `Supported by 60+ banks for AutoPay`
+  /// `Supported by 60+ banks for Autosave`
   String get autoPayBanksSupported {
     return Intl.message(
-      'Supported by 60+ banks for AutoPay',
+      'Supported by 60+ banks for Autosave',
       name: 'autoPayBanksSupported',
       desc: '',
       args: [],
@@ -5295,10 +5295,10 @@ class S {
     );
   }
 
-  /// `Approve payment\nrequest on your UPI app`
+  /// `Approve payment\nrequest on your UPI app.(Ignore if already done)`
   String get txnApprovePaymentReq {
     return Intl.message(
-      'Approve payment\nrequest on your UPI app',
+      'Approve payment\nrequest on your UPI app.(Ignore if already done)',
       name: 'txnApprovePaymentReq',
       desc: '',
       args: [],

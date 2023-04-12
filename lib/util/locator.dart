@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/analytics_repo.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
@@ -26,6 +27,7 @@ import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
+import 'package:felloapp/core/service/analytics/singular_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
@@ -129,6 +131,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => MixpanelAnalytics());
   locator.registerLazySingleton(() => WebEngageAnalytics());
   locator.registerLazySingleton(() => AppFlyerAnalytics());
+  locator.registerLazySingleton(() => SingularAnalytics());
 
   locator.registerLazySingleton(() => InternalOpsService());
   locator.registerLazySingleton(() => BankAndPanService());
@@ -161,6 +164,7 @@ Future<void> setupLocator() async {
   // locator.registerLazySingleton(() => LocalDBModel());
   locator.registerLazySingleton(() => AugmontService());
   locator.registerLazySingleton(() => UserRepository());
+  locator.registerLazySingleton(() => AnalyticsRepository());
   locator.registerLazySingleton(() => TambolaRepo());
   locator.registerLazySingleton(() => InvestmentActionsRepository());
   locator.registerLazySingleton(() => BankingRepository());

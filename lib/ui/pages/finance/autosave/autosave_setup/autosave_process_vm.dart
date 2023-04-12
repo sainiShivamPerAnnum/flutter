@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -27,7 +29,7 @@ enum STATUS { Pending, Complete, Init }
 
 class AutosaveProcessViewModel extends BaseViewModel {
   final BankAndPanService _bankingService = locator<BankAndPanService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final ScratchCardService _gtService = ScratchCardService();
   final SubService _subService = locator<SubService>();
   final S locale = locator<S>();
@@ -62,6 +64,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   int _totalInvestingAmount = 0;
   bool isUpdateFlow = false;
   String? minMaxCapString;
+  bool isComboSelected = false;
 
   int get totalInvestingAmount => this._totalInvestingAmount;
 
@@ -208,6 +211,9 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   void proceed() {
+    if (pageController.page!.toInt() == 1) {
+      trackAssetChoiceNext();
+    }
     pageController
         .animateToPage(pageController.page!.toInt() + 1,
             duration: Duration(milliseconds: 500), curve: Curves.decelerate)
@@ -368,13 +374,16 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   Future<void> createSubscription() async {
     AppState.showAutosaveBt = false;
+    trackAutosaveUpiSubmit();
     await _subService.createSubscription(
       amount: totalInvestingAmount,
       freq: selectedFrequency.name.toUpperCase(),
       lbAmt: int.tryParse(floAmountFieldController?.text ?? '0')!,
       augAmt: int.tryParse(goldAmountFieldController?.text ?? '0')!,
       package: FlavorConfig.isDevelopment()
-          ? "com.phonepe.app.preprod"
+          ? (Platform.isAndroid
+              ? "com.phonepe.app.preprod"
+              : "com.phonepe.app.preprod")
           : selectedUpiApp!.packageName,
     );
   }
@@ -383,14 +392,16 @@ class AutosaveProcessViewModel extends BaseViewModel {
     if (isSubscriptionCreationInProgress) return;
     if (checkForLowAmount()) return;
     isSubscriptionCreationInProgress = true;
-    if (isUpdateFlow)
+    if (isUpdateFlow) {
       await _subService.updateSubscription(
           freq: selectedFrequency.name.toUpperCase(),
           amount: totalInvestingAmount,
           lbAmt: int.tryParse(floAmountFieldController?.text ?? '0')!,
           augAmt: int.tryParse(goldAmountFieldController?.text ?? '0')!);
-    else
+    } else {
       proceed();
+      _trackAutosaveSetup();
+    }
     isSubscriptionCreationInProgress = false;
   }
 
@@ -446,26 +457,38 @@ class AutosaveProcessViewModel extends BaseViewModel {
       goldAmountFieldController!.text = val.toString();
     }
     updateMinMaxCapString(val.toString());
-
     totalInvestingAmount =
         int.tryParse(goldAmountFieldController?.text ?? '0')! +
             int.tryParse(floAmountFieldController?.text ?? '0')!;
     _deselectOtherChipIfAny();
     switch (selectedFrequency) {
       case FREQUENCY.daily:
-        selectedFrequency == 1
-            ? lbDailyChips[index].isSelected = true
-            : augDailyChips[index].isSelected = true;
+        if (selectedAssetOption == 1) {
+          lbDailyChips[index].isSelected = true;
+          trackAutosaveChipsTapped(lbDailyChips[index]);
+        } else {
+          augDailyChips[index].isSelected = true;
+          trackAutosaveChipsTapped(augDailyChips[index]);
+        }
+
         break;
       case FREQUENCY.weekly:
-        selectedFrequency == 1
-            ? lbWeeklyChips[index].isSelected = true
-            : augWeeklyChips[index].isSelected = true;
+        if (selectedAssetOption == 1) {
+          lbWeeklyChips[index].isSelected = true;
+          trackAutosaveChipsTapped(lbWeeklyChips[index]);
+        } else {
+          augWeeklyChips[index].isSelected = true;
+          trackAutosaveChipsTapped(augWeeklyChips[index]);
+        }
         break;
       case FREQUENCY.monthly:
-        selectedFrequency == 1
-            ? lbMonthlyChips[index].isSelected = true
-            : augMonthlyChips[index].isSelected = true;
+        if (selectedAssetOption == 1) {
+          lbMonthlyChips[index].isSelected = true;
+          trackAutosaveChipsTapped(lbMonthlyChips[index]);
+        } else {
+          augMonthlyChips[index].isSelected = true;
+          trackAutosaveChipsTapped(augMonthlyChips[index]);
+        }
         break;
     }
     notifyListeners();
@@ -570,14 +593,17 @@ class AutosaveProcessViewModel extends BaseViewModel {
     Haptic.vibrate();
     if (customComboModel != null) customComboModel!.isSelected = false;
     minMaxCapString = null;
+    isComboSelected = true;
     deselectOtherComboIfAny();
     switch (selectedFrequency) {
       case FREQUENCY.daily:
         dailyCombos[index].isSelected = true;
+
         floAmountFieldController!.text =
             dailyCombos[index].LENDBOXP2P.toString();
         goldAmountFieldController!.text =
             dailyCombos[index].AUGGOLD99.toString();
+        trackAutosaveComboTapped(dailyCombos[index]);
 
         break;
       case FREQUENCY.weekly:
@@ -586,6 +612,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
             weeklyCombos[index].LENDBOXP2P.toString();
         goldAmountFieldController!.text =
             weeklyCombos[index].AUGGOLD99.toString();
+        trackAutosaveComboTapped(weeklyCombos[index]);
+
         break;
       case FREQUENCY.monthly:
         monthlyCombos[index].isSelected = true;
@@ -593,6 +621,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
             monthlyCombos[index].LENDBOXP2P.toString();
         goldAmountFieldController!.text =
             monthlyCombos[index].AUGGOLD99.toString();
+        trackAutosaveComboTapped(monthlyCombos[index]);
+
         break;
     }
     totalInvestingAmount = int.tryParse(goldAmountFieldController!.text)! +
@@ -617,16 +647,17 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   onCompleteClose() {
-    _analyticsService!
-        .track(eventName: AnalyticsEvents.autosaveCompleteScreenClosed);
+    _analyticsService!.track(eventName: AnalyticsEvents.asDoneTapped);
     AppState.backButtonDispatcher!.didPopRoute();
     _gtService.fetchAndVerifyScratchCardByID();
   }
 
   openCustomInputModalSheet(model, {bool isNew = true}) {
+    trackAutosaveCustomComboTapped();
     return BaseUtil.openModalBottomSheet(
       isBarrierDismissible: true,
       addToScreenStack: true,
+      enableDrag: Platform.isIOS,
       backgroundColor: UiConstants.kBackgroundColor,
       isScrollControlled: true,
       borderRadius: BorderRadius.only(
@@ -638,27 +669,127 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   Future<void> setupCtaOnPressed() async {
-    if (selectedAssetOption == 1)
+    if (selectedAssetOption == 1) {
       updateMinMaxCapString(floAmountFieldController!.text);
-    if (selectedAssetOption == 2)
+    }
+    if (selectedAssetOption == 2) {
       updateMinMaxCapString(goldAmountFieldController!.text);
+    }
     if (selectedAssetOption != 0 &&
         minMaxCapString != null &&
-        minMaxCapString!.isNotEmpty)
+        minMaxCapString!.isNotEmpty) {
       return BaseUtil.showNegativeAlert(
           "Invalid amount entered", "Please enter a valid amount to proceed");
+    }
     Haptic.vibrate();
     await updateSubscription();
   }
 
-  onCenterGoldTextFieldChange(val) {
+  void onCenterGoldTextFieldChange(_) {
     totalInvestingAmount =
         int.tryParse(goldAmountFieldController?.text ?? '0') ?? 0;
   }
 
-  onCenterLbTextFieldChange(val) {
+  void onCenterLbTextFieldChange(_) {
     totalInvestingAmount =
         int.tryParse(floAmountFieldController?.text ?? '0') ?? 0;
+  }
+
+  void trackAssetChoice(bool isVerified) {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.asAssetTapped, properties: {
+      "assetName": autosaveAssetOptionList[selectedAssetOption].asset,
+      "isKycVerified": isVerified,
+    });
+  }
+
+  void trackAssetChoiceNext() {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.asChooseAssetNextTapped, properties: {
+      "assetName": autosaveAssetOptionList[selectedAssetOption].asset,
+    });
+  }
+
+  void trackAssetChoiceKyc() {
+    _analyticsService.track(eventName: AnalyticsEvents.asDoKycNowTapped);
+  }
+
+  void _trackAutosaveSetup() {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.asSetupConfirmation, properties: {
+      "gold": goldAmountFieldController?.text ?? "0",
+      "flo": floAmountFieldController?.text ?? "0",
+      "asset": autosaveAssetOptionList[selectedAssetOption].title,
+      "Frequency": selectedFrequency.name,
+      "combo selected": isComboSelected
+    });
+  }
+
+  void trackAutosaveComboTapped(SubComboModel model) {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.asSelectComboTapped, properties: {
+      "gold": model.AUGGOLD99,
+      "flo": model.LENDBOXP2P,
+      "popular": model.popular,
+      "combo name": model.title
+    });
+  }
+
+  void trackAutosaveCustomComboTapped() {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.asCustomComboTapped,
+    );
+  }
+
+  void trackAutosaveCustomComboSubmit() {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.asCustomComboSubmit,
+      properties: {
+        "gold": customComboModel?.AUGGOLD99 ?? 0,
+        "flo": customComboModel?.LENDBOXP2P ?? 0,
+      },
+    );
+  }
+
+  void trackAutosaveChipsTapped(AmountChipsModel model) {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.asChipsTapped,
+      properties: {
+        "asset": selectedAssetOption == 1 ? "Flo" : "Gold",
+        "amount": model.value,
+        "best": model.best
+      },
+    );
+  }
+
+  void trackAutosaveUpiAppTapped() {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.asChipsTapped,
+      properties: {
+        "appName": selectedUpiApp?.upiApplication.appName,
+        "gold": goldAmountFieldController?.text,
+        "flo": floAmountFieldController?.text,
+        "frequency": selectedFrequency.name,
+      },
+    );
+  }
+
+  void trackAutosaveUpiSubmit() {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.asChipsTapped,
+      properties: {
+        "appName": selectedUpiApp?.upiApplication.appName,
+        "gold": goldAmountFieldController?.text,
+        "flo": floAmountFieldController?.text,
+        "frequency": selectedFrequency.name,
+      },
+    );
+  }
+
+  void trackAutosaveBackPress() {
+    _analyticsService.track(
+        eventName: AnalyticsEvents.asPrevTapped,
+        properties: {"step": pageController.page?.toInt() ?? 0});
   }
 }
 

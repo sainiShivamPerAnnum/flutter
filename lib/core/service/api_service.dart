@@ -76,7 +76,7 @@ class APIService implements API {
         if (headers != null) ...headers
       });
       log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-      logger!.d("response from $finalPath");
+      logger!.d("response from $token");
       logger!.d("Get Response: ${response.statusCode}");
       logger!.d("Get Response: ${response.body}");
       if (decryptData) {
@@ -312,9 +312,12 @@ class APIService implements API {
       case 200:
         return responseJson;
       case 400:
+      case 404:
         logger!.d(response.body);
         throw BadRequestException(responseJson['message']);
+
       case 401:
+
       case 403:
         throw UnauthorizedException(response.body.toString());
       case 500:

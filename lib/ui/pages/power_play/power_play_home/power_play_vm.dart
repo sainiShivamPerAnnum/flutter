@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -8,9 +10,12 @@ import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
+import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/live_match.dart';
+import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/power_play_matches.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -51,6 +56,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
 
   set powerPlayReward(int value) {
     _powerPlayReward = value;
+    notifyListeners();
   }
 
   bool _isPredictionsLoading = false;
@@ -152,6 +158,8 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     await getMatchesByStatus(MatchStatus.active.name, 0, 0);
     await getMatchesByStatus(MatchStatus.upcoming.name, 0, 0);
     await getMatchesByStatus(MatchStatus.completed.name, 0, 0);
+    powerPlayReward = await _powerPlayService.getPowerPlayRewards();
+    await getUserPredictionCount();
     setState(ViewState.Idle);
   }
 
@@ -238,6 +246,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
         BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,
+          enableDrag: Platform.isIOS,
           backgroundColor: const Color(0xff21284A),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness32),
@@ -252,5 +261,24 @@ class PowerPlayHomeViewModel extends BaseViewModel {
       );
     }
     isPredictionInProgress = false;
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.iplPredictNowTapped,
+    );
+  }
+
+  Widget buildLiveTab() {
+    if (state == ViewState.Busy) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return liveMatchData?.isEmpty ?? true
+        ? (upcomingMatchData!.isEmpty ||
+                upcomingMatchData?[0] == null ||
+                (upcomingMatchData?[0]?.startsAt == null))
+            ? const SizedBox()
+            : NoLiveMatch(
+                timeStamp: upcomingMatchData?[0]?.startsAt,
+                matchStatus: MatchStatus.active)
+        : LiveMatch(model: this);
   }
 }

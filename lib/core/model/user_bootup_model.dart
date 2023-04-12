@@ -479,16 +479,20 @@ class GamesBanMap {
   AssetBanMap? bottleFlipMap;
   AssetBanMap? rollyVortex;
   AssetBanMap? knifeHit;
+  AssetBanMap? fruitMania;
+  AssetBanMap? twoDots;
   GamesBanMap({
-    @required this.cricketMap,
-    @required this.tambolaMap,
-    @required this.poolClubMap,
-    @required this.footballMap,
-    @required this.candyFiestaMap,
-    @required this.bowlingMap,
-    @required this.bottleFlipMap,
-    @required this.rollyVortex,
-    @required this.knifeHit,
+    required this.cricketMap,
+    required this.tambolaMap,
+    required this.poolClubMap,
+    required this.footballMap,
+    required this.candyFiestaMap,
+    required this.bowlingMap,
+    required this.bottleFlipMap,
+    required this.rollyVortex,
+    required this.knifeHit,
+    required this.fruitMania,
+    required this.twoDots,
   });
 
   GamesBanMap.base() {
@@ -501,6 +505,8 @@ class GamesBanMap {
     bottleFlipMap = AssetBanMap.base();
     rollyVortex = AssetBanMap.base();
     knifeHit = AssetBanMap.base();
+    fruitMania = AssetBanMap.base();
+    twoDots = AssetBanMap.base();
   }
 
   GamesBanMap copyWith(
@@ -514,16 +520,17 @@ class GamesBanMap {
       AssetBanMap? rollyVortex,
       AssetBanMap? knifeHit}) {
     return GamesBanMap(
-      cricketMap: cricketMap ?? this.cricketMap,
-      tambolaMap: tambolaMap ?? this.tambolaMap,
-      poolClubMap: poolClubMap ?? this.poolClubMap,
-      footballMap: footballMap ?? this.footballMap,
-      candyFiestaMap: candyFiestaMap ?? this.candyFiestaMap,
-      bowlingMap: bowlingMap ?? this.bowlingMap,
-      bottleFlipMap: bottleFlipMap ?? this.bottleFlipMap,
-      rollyVortex: rollyVortex ?? this.rollyVortex,
-      knifeHit: knifeHit ?? this.knifeHit,
-    );
+        cricketMap: cricketMap ?? this.cricketMap,
+        tambolaMap: tambolaMap ?? this.tambolaMap,
+        poolClubMap: poolClubMap ?? this.poolClubMap,
+        footballMap: footballMap ?? this.footballMap,
+        candyFiestaMap: candyFiestaMap ?? this.candyFiestaMap,
+        bowlingMap: bowlingMap ?? this.bowlingMap,
+        bottleFlipMap: bottleFlipMap ?? this.bottleFlipMap,
+        rollyVortex: rollyVortex ?? this.rollyVortex,
+        knifeHit: knifeHit ?? this.knifeHit,
+        fruitMania: fruitMania ?? this.fruitMania,
+        twoDots: twoDots ?? this.twoDots);
   }
 
   Map<String, dynamic> toMap() {
@@ -537,6 +544,8 @@ class GamesBanMap {
       'bottleFlipMap': bottleFlipMap!.toMap(),
       'rollyVortex': rollyVortex!.toMap(),
       'knifeHit': knifeHit!.toMap(),
+      'fruitMania': fruitMania!.toMap(),
+      'twoDots': twoDots!.toMap(),
     };
   }
 
@@ -586,6 +595,16 @@ class GamesBanMap {
           ? AssetBanMap.fromMap(
               map[Constants.GAME_TYPE_KNIFEHIT] as Map<String, dynamic>,
               Constants.GAME_TYPE_KNIFEHIT)
+          : null,
+      fruitMania: map[Constants.GAME_TYPE_FRUITMAINA] != null
+          ? AssetBanMap.fromMap(
+              map[Constants.GAME_TYPE_FRUITMAINA] as Map<String, dynamic>,
+              Constants.GAME_TYPE_FRUITMAINA)
+          : null,
+      twoDots: map[Constants.GAME_TYPE_TWODOTS] != null
+          ? AssetBanMap.fromMap(
+              map[Constants.GAME_TYPE_TWODOTS] as Map<String, dynamic>,
+              Constants.GAME_TYPE_TWODOTS)
           : null,
     );
   }

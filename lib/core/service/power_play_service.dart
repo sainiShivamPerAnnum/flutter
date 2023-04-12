@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_user_predicted_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
@@ -9,6 +10,7 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/power_play_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
@@ -63,6 +65,8 @@ class PowerPlayService extends ChangeNotifier {
     powerPlayDepositFlow = false;
     transactions = [];
     _userPredictedData = [];
+    cardCarousel = null;
+    currentScore = {};
     _logger.i("PowerPlayService dump");
   }
 
@@ -177,9 +181,13 @@ class PowerPlayService extends ChangeNotifier {
     );
   }
 
-  Future<void> referFriend() async {
+  Future<void> referFriend(String location) async {
     if (isLinkSharing) return;
     Haptic.vibrate();
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.iplInviteFriendsTapped,
+      properties: {"location": location},
+    );
     String powerPlayReferralString =
         "Hey! I am predicting in Fello's Powerplay and winning FREE Digital Gold! Sending you an exclusive invite to predict the Chasing score of every IPL match and start your savings journey with Fello. Here's the link -";
     isLinkSharing = true;

@@ -55,9 +55,16 @@ class UpcomingMatch extends StatelessWidget {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: const Color(0xff3B4E6E).withOpacity(0.8),
-                        ),
+                            borderRadius: BorderRadius.circular(5),
+                            color: const Color(0xff3B4E6E).withOpacity(0.8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                offset: Offset(2, 2),
+                                blurRadius: SizeConfig.roundness5,
+                                spreadRadius: SizeConfig.padding2,
+                              )
+                            ]),
                         child: Column(
                           children: [
                             Container(
@@ -201,7 +208,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
         if (_timeRemaining! <= 0) {
           widget.model.getMatchesByStatus(MatchStatus.active.name, 10, 0);
           widget.model.getMatchesByStatus(MatchStatus.upcoming.name, 10, 0);
-          widget.model.tabController!.animateTo(0);
+          // widget.model.tabController!.animateTo(0);
 
           _timer!.cancel();
           _timeRemaining = 0;

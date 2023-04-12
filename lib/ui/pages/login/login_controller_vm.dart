@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:advertising_id/advertising_id.dart';
+import 'package:app_set_id/app_set_id.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -10,6 +13,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/analytics_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -34,15 +38,15 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
-
-import '../../../util/haptic.dart';
 
 enum LoginSource { FIREBASE, TRUECALLER }
 
@@ -53,11 +57,12 @@ class LoginControllerViewModel extends BaseViewModel {
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final UserService userService = locator<UserService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final CustomLogger? logger = locator<CustomLogger>();
+  final CustomLogger logger = locator<CustomLogger>();
   final ApiPath? apiPaths = locator<ApiPath>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
   final DBModel? dbProvider = locator<DBModel>();
   final UserRepository? _userRepo = locator<UserRepository>();
+  final AnalyticsRepository? _analyticsRepo = locator<AnalyticsRepository>();
   final JourneyService? _journeyService = locator<JourneyService>();
   final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
   final ReferralService _referralService = locator<ReferralService>();
@@ -290,6 +295,72 @@ class LoginControllerViewModel extends BaseViewModel {
     }
   }
 
+  void sendInstallInformation() async {
+    String? _appSetId;
+    String? _androidId;
+    String? _advertisingId;
+    String? _osVersion;
+    String? installReferrerData;
+    const BASE_CHANNEL = 'methodChannel/deviceData';
+    final platform = MethodChannel(BASE_CHANNEL);
+    try {
+      _appSetId = await AppSetId().getIdentifier();
+      logger.d('AppSetId: Package found an appropriate ID value: $_appSetId');
+    } catch (e) {
+      logger.e('AppSetId: Package failed to set an appropriate ID value');
+    }
+
+    if (Platform.isAndroid) {
+      try {
+        _androidId = await platform.invokeMethod('getAndroidId');
+        logger.d('AndroidId: Service found an Android Id: $_androidId');
+      } catch (e) {
+        logger.e('AndroidId: Service failed to find a Android Id');
+      }
+    }
+
+    try {
+      _advertisingId = await AdvertisingId.id(true);
+      logger
+          .d('AdvertisingId: Service found an Advertising Id: $_advertisingId');
+    } catch (e) {
+      logger.e('AdvertisingId: Service failed to find a Advertising Id');
+    }
+
+    try {
+      if (!_internalOpsService!.isDeviceInfoInitiated)
+        await _internalOpsService!.initDeviceInfo();
+      _osVersion = _internalOpsService!.osVersion;
+    } catch (e) {
+      logger.e('DeviceData: Service failed to find a Device Data');
+    }
+
+    try {
+      const _channel = MethodChannel('my_plugin');
+      installReferrerData = await _channel.invokeMethod('getInstallReferrer');
+
+      //cleanup data
+      RegExp nullPattern = RegExp(r'null');
+      installReferrerData = installReferrerData!.replaceAll(nullPattern, '');
+    } catch (e) {
+      logger
+          .e('InstallReferrer: Service failed to find a Install Referrer Data');
+    }
+
+    logger.d(
+        'Received the following information: {InstallReferrerData: $installReferrerData,' +
+            'AppSetId: $_appSetId, AndroidId: $_androidId, AdvertisingId: $_advertisingId, OSVersion: $_osVersion}');
+
+    final ApiResponse response = await _analyticsRepo!.setInstallInfo(
+        userService.baseUser!,
+        installReferrerData,
+        _appSetId,
+        _androidId,
+        _osVersion,
+        _advertisingId);
+    logger.d('Data sent to API with the following response: ${response.model}');
+  }
+
   void _onSignInSuccess(LoginSource source) async {
     logger!.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
@@ -395,7 +466,11 @@ class LoginControllerViewModel extends BaseViewModel {
           baseUser: userService.baseUser);
 
       BaseAnalytics.analytics!.logSignUp(signUpMethod: 'phoneNumber');
-      _analyticsService!.trackSignup(userService.baseUser!.uid);
+      // _analyticsService!.trackSignup(userService.baseUser!.uid); //NO LONGER NEEDED
+
+      logger.d(
+          'invoke an API to send device related and install referrer related information to the server');
+      sendInstallInformation();
     }
 
     BaseAnalytics.logUserProfile(userService.baseUser!);
@@ -422,15 +497,16 @@ class LoginControllerViewModel extends BaseViewModel {
         final String? brand = response["brand"];
         final bool? isPhysicalDevice = response["isPhysicalDevice"];
         final String? version = response["version"];
+        final String? integrity = response["integrity"];
         _userRepo!.setNewDeviceId(
-          uid: userService.baseUser!.uid,
-          deviceId: deviceId,
-          platform: platform,
-          model: model,
-          brand: brand,
-          version: version,
-          isPhysicalDevice: isPhysicalDevice,
-        );
+            uid: userService.baseUser!.uid,
+            deviceId: deviceId,
+            platform: platform,
+            model: model,
+            brand: brand,
+            version: version,
+            isPhysicalDevice: isPhysicalDevice,
+            integrity: integrity);
       }
     });
     setState(ViewState.Idle);

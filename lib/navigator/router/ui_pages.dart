@@ -723,7 +723,7 @@ PageConfiguration PowerPlayFTUXPageConfig = PageConfiguration(
     key: 'powerPlayFTUXPath',
     path: PowerPlayFTUXPath,
     uiPage: Pages.PowerPlayFTUX,
-    name: "PowerPlay FTUX Screen");
+    name: "PowerPlay Welcome Screen");
 
 PageConfiguration PowerPlaySeasonLeaderboardDetailsConfig = PageConfiguration(
     key: 'PowerPlaySeasonLeaderboardDetailsPath',

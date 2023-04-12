@@ -1,6 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
-// ignore: avoid_classes_with_only_static_members
 class Assets {
   static const String logoMaxSize = 'images/fello_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
@@ -265,6 +262,7 @@ class Assets {
       "assets/vectors/icons/ic_upload_success.svg";
 
   static const String wohoo = "assets/vectors/wohoo.svg";
+  static const String graph = "assets/vectors/icons/graph.svg";
 
   //Prize claim assets
   static final List<String> prizeClaimAssets = [
@@ -352,6 +350,8 @@ class Assets {
   static const String one_cr_bg = 'assets/svg/1_cr.svg';
   static const String bottomBannerLottie =
       'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
+  static const String tambolaTopBannerLottie =
+      'assets/lotties/tambola_animation.json';
 
   //POWER PLAY ASSETS
   static const String powerPlayMain =

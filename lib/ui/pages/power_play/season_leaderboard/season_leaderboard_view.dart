@@ -56,7 +56,7 @@ class SeasonLeaderboard extends StatelessWidget {
                       const FAppBar(
                         showAvatar: false,
                         showCoinBar: false,
-                        type: FaqsType.onboarding,
+                        type: FaqsType.powerPlay,
                       ),
                       Expanded(
                         child: SingleChildScrollView(
@@ -101,7 +101,9 @@ class SeasonLeaderboard extends StatelessWidget {
               ),
               const Align(
                 alignment: Alignment.bottomCenter,
-                child: FooterCta(),
+                child: FooterCta(
+                  location: "Season leaderboard",
+                ),
               )
             ],
           ),
@@ -182,29 +184,32 @@ class NewLeaderBoardView extends StatelessWidget {
               scoreboard: scoreBoard,
               // userProfilePicUrl: userProfilePicUrl,
             ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: SizeConfig.screenWidth! * 0.12,
-                  child: Text(
-                    "#",
+          if (scoreBoard!.length < 4)
+            SizedBox(height: SizeConfig.pageHorizontalMargins),
+          if (scoreBoard!.length == 3)
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: SizeConfig.screenWidth! * 0.12,
+                    child: Text(
+                      "#",
+                      style: TextStyles.sourceSans.body3.colour(Colors.white38),
+                    ),
+                  ),
+                  Text(
+                    "Username",
                     style: TextStyles.sourceSans.body3.colour(Colors.white38),
                   ),
-                ),
-                Text(
-                  "Username",
-                  style: TextStyles.sourceSans.body3.colour(Colors.white38),
-                ),
-                const Spacer(),
-                Text(
-                  "Correct Prediction",
-                  style: TextStyles.sourceSans.body3.colour(Colors.white38),
-                ),
-              ],
+                  const Spacer(),
+                  Text(
+                    "Correct Prediction",
+                    style: TextStyles.sourceSans.body3.colour(Colors.white38),
+                  ),
+                ],
+              ),
             ),
-          ),
           if (currentUserRank != -1)
             UserRank(
               currentUserScore: scoreBoard![currentUserRank],

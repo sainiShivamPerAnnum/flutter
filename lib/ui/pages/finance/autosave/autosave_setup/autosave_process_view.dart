@@ -62,13 +62,14 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 ),
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  (model.pageController.page == 0 ||
-                          autosaveState == AutosaveState.INIT)
+                  (autosaveState == AutosaveState.INIT ||
+                          model.pageController.page == 0)
                       ? AppState.backButtonDispatcher!.didPopRoute()
                       : model.pageController.animateToPage(
                           model.pageController.page!.toInt() - 1,
                           duration: Duration(milliseconds: 500),
                           curve: Curves.decelerate);
+                  model.trackAutosaveBackPress();
                 },
               ),
               actions: [
@@ -168,7 +169,8 @@ class AutosaveSuccessView extends StatelessWidget {
             margin: EdgeInsets.symmetric(
               horizontal: SizeConfig.padding24,
             ),
-            padding: EdgeInsets.symmetric(vertical: SizeConfig.padding40),
+            padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.pageHorizontalMargins),
             width: double.infinity,
             decoration: BoxDecoration(
               color: Color(0xFF57A6B0).withOpacity(0.22),
@@ -245,10 +247,14 @@ class AutosavePendingView extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding32,
           ),
-          Text(
-            locale.txnApprovePaymentReq,
-            style: TextStyles.sourceSans.body1,
-            textAlign: TextAlign.center,
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
+            child: Text(
+              locale.txnApprovePaymentReq,
+              style: TextStyles.sourceSans.body1,
+              textAlign: TextAlign.center,
+            ),
           ),
           Expanded(
               child: Center(

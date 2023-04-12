@@ -446,8 +446,11 @@ class TransactionSIPTile extends StatelessWidget {
             status: txn!.status,
           ),
           Text(
-            _txnHistoryService!
-                .getFormattedTxnAmount(double.tryParse(txn!.amount!)!),
+            _txnHistoryService!.getFormattedTxnAmount(double.tryParse(
+                    model!.investmentType == InvestmentType.AUGGOLD99
+                        ? txn!.augMap?.amount ?? '0'
+                        : txn!.lbMap?.amount ?? '0') ??
+                0),
             style: TextStyles.sourceSansM.body3,
           ),
         ],

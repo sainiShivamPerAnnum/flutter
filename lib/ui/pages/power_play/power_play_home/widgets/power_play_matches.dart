@@ -4,7 +4,6 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/completed_match.dart';
-import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/live_match.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/upcoming_match.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -28,13 +27,24 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
     widget.model.tabController!.addListener(() => setState(() {}));
   }
 
-  List<String> getTitle() {
-    return ['Live', 'Upcoming', 'Completed'];
+  Widget _buildLiveTab() {
+    return widget.model.buildLiveTab();
+  }
+
+  Widget _buildUpcomingTab() {
+    return UpcomingMatch(
+      model: widget.model,
+    );
+  }
+
+  Widget _buildCompletedTab() {
+    return CompletedMatch(
+      model: widget.model,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-
     return (widget.model.state == ViewState.Busy && widget.model.isLive)
         ? const Center(child: CircularProgressIndicator())
         : Container(
@@ -71,7 +81,7 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                                 : Colors.transparent,
                             border: Border.all(color: Colors.white)),
                         child: Text(
-                          getTitle()[index].toUpperCase(),
+                          widget.model.tabs[index].toUpperCase(),
                           textAlign: TextAlign.center,
                           style: TextStyles.sourceSansSB.body4.colour(
                               widget.model.tabController!.index == index
@@ -84,36 +94,12 @@ class _PowerPlayMatchesState extends State<PowerPlayMatches>
                   const SizedBox(
                     height: 20,
                   ),
-                  Builder(builder: (_) {
-                    if (widget.model.tabController!.index == 0) {
-                      if (widget.model.state == ViewState.Busy) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      return widget.model.liveMatchData?.isEmpty ?? true
-                          ? (widget.model.upcomingMatchData!.isEmpty ||
-                                  widget.model.upcomingMatchData?[0] == null ||
-                                  (widget.model.upcomingMatchData?[0]
-                                          ?.startsAt ==
-                                      null))
-                              ? const SizedBox()
-                              : NoLiveMatch(
-                                  timeStamp: widget
-                                      .model.upcomingMatchData?[0]?.startsAt,
-                                  matchStatus: MatchStatus.active)
-                          : LiveMatch(
-                              model: widget.model,
-                            );
-                    } else if (widget.model.tabController!.index == 1) {
-                      return UpcomingMatch(
-                        model: widget.model,
-                      );
-                    } else {
-                      return CompletedMatch(
-                        model: widget.model,
-                      );
-                    }
-                  }),
+                  if (widget.model.tabController!.index == 0)
+                    _buildLiveTab()
+                  else if (widget.model.tabController!.index == 1)
+                    _buildUpcomingTab()
+                  else
+                    _buildCompletedTab(),
                 ],
               ),
             ),

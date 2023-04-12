@@ -15,41 +15,37 @@ class ChipsAndCombos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: AnimatedSwitcher(
-        duration: Duration(seconds: 1),
-        child: model.selectedAssetOption == 0
-            ? Container(
-                margin: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
-                child: HeightAdaptivePageView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: model.comboController,
-                  children: [
-                    AutosaveComboGrid(model: model, frequency: FREQUENCY.daily),
-                    AutosaveComboGrid(
-                        model: model, frequency: FREQUENCY.weekly),
-                    AutosaveComboGrid(
-                        model: model, frequency: FREQUENCY.monthly),
-                  ],
-                ),
-              )
-            : Container(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.padding70,
-                child: PageView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: model.chipsController,
-                  children: [
-                    AutosaveSuggestionChipsRow(
-                        model: model, frequency: FREQUENCY.daily),
-                    AutosaveSuggestionChipsRow(
-                        model: model, frequency: FREQUENCY.weekly),
-                    AutosaveSuggestionChipsRow(
-                        model: model, frequency: FREQUENCY.monthly),
-                  ],
-                ),
+    return AnimatedSwitcher(
+      duration: const Duration(seconds: 1),
+      child: model.selectedAssetOption == 0
+          ? Container(
+              margin: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+              child: HeightAdaptivePageView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: model.comboController,
+                children: [
+                  AutosaveComboGrid(model: model, frequency: FREQUENCY.daily),
+                  AutosaveComboGrid(model: model, frequency: FREQUENCY.weekly),
+                  AutosaveComboGrid(model: model, frequency: FREQUENCY.monthly),
+                ],
               ),
-      ),
+            )
+          : SizedBox(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.padding70,
+              child: PageView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: model.chipsController,
+                children: [
+                  AutosaveSuggestionChipsRow(
+                      model: model, frequency: FREQUENCY.daily),
+                  AutosaveSuggestionChipsRow(
+                      model: model, frequency: FREQUENCY.weekly),
+                  AutosaveSuggestionChipsRow(
+                      model: model, frequency: FREQUENCY.monthly),
+                ],
+              ),
+            ),
     );
   }
 }
