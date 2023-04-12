@@ -65,6 +65,9 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   bool get isMoreTxnsBeingFetched => _isMoreTxnsBeingFetched;
   InvestmentType _investmentType = InvestmentType.AUGGOLD99;
 
+  InvestmentType get investmentType => _investmentType;
+
+  set investmentType(InvestmentType value) => _investmentType = value;
   //setters
   set filter(int val) {
     _filter = val;
