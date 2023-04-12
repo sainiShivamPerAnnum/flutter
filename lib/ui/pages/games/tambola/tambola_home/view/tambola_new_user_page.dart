@@ -203,7 +203,8 @@ class _TambolaNewUserPageState extends State<TambolaNewUserPage> {
                         BaseUtil.openDepositOptionsModalSheet(
                             amount: widget.model.ticketSavedAmount,
                             subtitle:
-                                'Save ₹500 in any of the asset & get 1 Free Tambola Ticket');
+                                'Save ₹500 in any of the asset & get 1 Free Tambola Ticket',
+                            timer: 0);
                       },
                     ),
                   ),

@@ -180,7 +180,7 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
                     ),
                     child: Icon(
                       Icons.tune,
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withOpacity(0.5),
                     )),
                 Expanded(
                   child: TabBar(
@@ -213,7 +213,7 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
                           style: TextStyles.body4.colour(
                             _tabController!.index == index
                                 ? UiConstants.kBlogCardRandomColor5
-                                : Colors.white.withOpacity(0.5),
+                                : Colors.white,
                           ),
                         ),
                       ),
