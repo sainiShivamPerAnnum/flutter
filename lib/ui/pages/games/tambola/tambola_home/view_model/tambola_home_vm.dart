@@ -471,39 +471,44 @@ class TambolaHomeViewModel extends BaseViewModel {
   // }
 
   List<TambolaBoard?>? refreshBestBoards() {
-    if (userWeeklyBoards == null || userWeeklyBoards!.isEmpty) {
+    if (userWeeklyBoards == null || (userWeeklyBoards?.isEmpty ?? false)) {
       return List<TambolaBoard?>.filled(5, null);
     }
-    _bestTambolaBoards = [];
-    for (int i = 0; i < 4; i++) {
-      _bestTambolaBoards!.add(userWeeklyBoards![0]!);
-    }
+
+    _bestTambolaBoards = [
+      userWeeklyBoards![0]!,
+      userWeeklyBoards![0]!,
+      userWeeklyBoards![0]!,
+      userWeeklyBoards![0]!,
+    ];
 
     if (weeklyDigits == null || weeklyDigits!.toList().isEmpty) {
       return _bestTambolaBoards;
     }
 
-    for (final board in userWeeklyBoards!) {
-      if (_bestTambolaBoards?[0] == null) _bestTambolaBoards![0] = board!;
-      if (_bestTambolaBoards?[1] == null) _bestTambolaBoards![1] = board!;
-      if (_bestTambolaBoards?[2] == null) _bestTambolaBoards![2] = board!;
-      if (_bestTambolaBoards?[3] == null) _bestTambolaBoards![3] = board!;
+    final weeklyDigitsList = weeklyDigits?.toList() ?? [];
 
-      if (_bestTambolaBoards![0].getCornerOdds(weeklyDigits!.toList()) >
-          board!.getCornerOdds(weeklyDigits!.toList())) {
-        _bestTambolaBoards![0] = board;
+    for (final board in userWeeklyBoards!) {
+      final cornerOdds = board?.getCornerOdds(weeklyDigitsList);
+      final oneRowOdds = board?.getOneRowOdds(weeklyDigitsList);
+      final twoRowOdds = board?.getTwoRowOdds(weeklyDigitsList);
+      final fullHouseOdds = board?.getFullHouseOdds(weeklyDigitsList);
+
+      if (_bestTambolaBoards![0].getCornerOdds(weeklyDigitsList) >
+          cornerOdds!) {
+        _bestTambolaBoards![0] = board!;
       }
-      if (_bestTambolaBoards![1].getOneRowOdds(weeklyDigits!.toList()) >
-          board.getOneRowOdds(weeklyDigits!.toList())) {
-        _bestTambolaBoards![1] = board;
+      if (_bestTambolaBoards![1].getOneRowOdds(weeklyDigitsList) >
+          oneRowOdds!) {
+        _bestTambolaBoards![1] = board!;
       }
-      if (_bestTambolaBoards![2].getTwoRowOdds(weeklyDigits!.toList()) >
-          board.getTwoRowOdds(weeklyDigits!.toList())) {
-        _bestTambolaBoards![2] = board;
+      if (_bestTambolaBoards![2].getTwoRowOdds(weeklyDigitsList) >
+          twoRowOdds!) {
+        _bestTambolaBoards![2] = board!;
       }
-      if (_bestTambolaBoards![3].getFullHouseOdds(weeklyDigits!.toList()) >
-          board.getFullHouseOdds(weeklyDigits!.toList())) {
-        _bestTambolaBoards![3] = board;
+      if (_bestTambolaBoards![3].getFullHouseOdds(weeklyDigitsList) >
+          fullHouseOdds!) {
+        _bestTambolaBoards![3] = board!;
       }
     }
 
