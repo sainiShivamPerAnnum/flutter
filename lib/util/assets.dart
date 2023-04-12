@@ -262,6 +262,7 @@ class Assets {
       "assets/vectors/icons/ic_upload_success.svg";
 
   static const String wohoo = "assets/vectors/wohoo.svg";
+  static const String graph = "assets/vectors/icons/graph.svg";
 
   //Prize claim assets
   static final List<String> prizeClaimAssets = [

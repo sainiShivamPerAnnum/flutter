@@ -58,7 +58,7 @@ class AnalyticsService extends BaseAnalyticsService {
     bool webEngage = true,
     bool appFlyer = true,
     bool singular = true,
-    bool apxor = true,
+    bool apxor = false,
   }) {
     try {
       if (FirebaseAuth.instance.currentUser != null) {

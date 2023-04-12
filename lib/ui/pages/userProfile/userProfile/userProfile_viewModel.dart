@@ -555,7 +555,7 @@ class UserProfileVM extends BaseViewModel {
                 _appstate.dump();
                 locator<SubService>().dump();
                 AppState.backButtonDispatcher!.didPopRoute();
-
+                locator<PowerPlayService>().dump();
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(

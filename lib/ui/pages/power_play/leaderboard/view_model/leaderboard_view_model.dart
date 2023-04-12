@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -89,6 +90,7 @@ class LeaderBoardViewModel extends BaseViewModel {
         BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,
+          enableDrag: Platform.isIOS,
           backgroundColor: const Color(0xff21284A),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness32),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -245,6 +246,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
         BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,
+          enableDrag: Platform.isIOS,
           backgroundColor: const Color(0xff21284A),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness32),

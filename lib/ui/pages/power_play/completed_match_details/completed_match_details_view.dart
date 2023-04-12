@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
@@ -292,6 +294,7 @@ class UserPredictionsButton extends StatelessWidget {
         BaseUtil.openModalBottomSheet(
           isBarrierDismissible: true,
           addToScreenStack: true,
+          enableDrag: Platform.isIOS,
           backgroundColor: const Color(0xff21284A),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness32),

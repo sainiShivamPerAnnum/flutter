@@ -150,7 +150,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                                   ["onTapLink"]));
                                       locator<AnalyticsService>().track(
                                         eventName:
-                                            AnalyticsEvents.iplLiveCardTapped,
+                                            AnalyticsEvents.iplCarouselTapped,
                                         properties: {
                                           "url": model.cardCarousel?[index]
                                               ["onTapLink"],

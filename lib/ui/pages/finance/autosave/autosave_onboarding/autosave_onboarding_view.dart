@@ -95,48 +95,50 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
                         link:
                             "https://d37gtxigg82zaw.cloudfront.net/sip-pros.mp4"),
                   ),
-                  Transform.translate(
-                    offset: Offset(0, -SizeConfig.padding16),
-                    child: Container(
-                      padding: EdgeInsets.all(
-                        SizeConfig.pageHorizontalMargins,
-                      ),
-                      decoration: BoxDecoration(
-                        color: UiConstants.kBackgroundColor,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.roundness12),
-                            topRight: Radius.circular(SizeConfig.roundness12)),
-                      ),
-                      // color: Colors.red,
-                      width: SizeConfig.screenWidth,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Introducing Autosave",
-                              style: TextStyles.rajdhaniB.title1),
-                          SizedBox(height: SizeConfig.padding10),
-                          ...List.generate(
-                            storyData.length,
-                            (index) => ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: const Icon(
-                                Icons.check_circle_outline_rounded,
-                                color: UiConstants.primaryColor,
-                                // size: SizeConfig.iconSize1,
-                              ),
-                              title: Text(
-                                storyData[index][2],
-                                style: TextStyles.sourceSansM.body2,
-                              ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: SizeConfig.pageHorizontalMargins,
+                      right: SizeConfig.pageHorizontalMargins,
+                      top: SizeConfig.pageHorizontalMargins,
+                    ),
+                    decoration: BoxDecoration(
+                      color: UiConstants.kBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(SizeConfig.roundness12),
+                          topRight: Radius.circular(SizeConfig.roundness12)),
+                    ),
+                    // color: Colors.red,
+                    width: SizeConfig.screenWidth,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Introducing Autosave",
+                            style: TextStyles.rajdhaniB.title1),
+                        SizedBox(height: SizeConfig.padding6),
+                        ...List.generate(
+                          storyData.length,
+                          (index) => ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: const Icon(
+                              Icons.check_circle_outline_rounded,
+                              color: UiConstants.primaryColor,
+                              // size: SizeConfig.iconSize1,
                             ),
-                          )
-                        ],
-                      ),
+                            title: Text(
+                              storyData[index][2],
+                              style: TextStyles.sourceSansM.body2,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   const Spacer(),
                   Padding(
-                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    padding: EdgeInsets.only(
+                        left: SizeConfig.pageHorizontalMargins,
+                        right: SizeConfig.pageHorizontalMargins,
+                        bottom: SizeConfig.pageHorizontalMargins),
                     child: AppPositiveBtn(
                       btnText: "Setup",
                       onPressed: () {

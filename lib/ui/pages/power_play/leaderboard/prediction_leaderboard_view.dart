@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -20,6 +21,7 @@ import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribut
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -163,10 +165,21 @@ class PredictionLeaderboard extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     //Prediction Leaderboard
-                                    Text(
-                                      "Popular Predictions",
-                                      style: TextStyles.sourceSans.body1
-                                          .colour(Colors.white),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                          Assets.graph,
+                                          width: SizeConfig.padding20,
+                                        ),
+                                        SizedBox(width: SizeConfig.padding4),
+                                        Text(
+                                          "Popular Predictions",
+                                          style: TextStyles.sourceSans.body1
+                                              .colour(Colors.white),
+                                        ),
+                                      ],
                                     ),
                                     const SizedBox(
                                       height: 20,
@@ -209,6 +222,7 @@ class PredictionLeaderboard extends StatelessWidget {
                                   BaseUtil.openModalBottomSheet(
                                       isBarrierDismissible: true,
                                       addToScreenStack: true,
+                                      enableDrag: Platform.isIOS,
                                       backgroundColor: const Color(0xff21284A),
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(
@@ -268,6 +282,7 @@ class PredictionLeaderboard extends StatelessWidget {
                                   BaseUtil.openModalBottomSheet(
                                       isBarrierDismissible: true,
                                       addToScreenStack: true,
+                                      enableDrag: Platform.isIOS,
                                       backgroundColor: const Color(0xff21284A),
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(

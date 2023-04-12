@@ -114,6 +114,7 @@ class AnalyticsEvents {
   //Powerplay
   static const iplBannerTapped = "IPL Banner tapped";
   static const iplLiveCardTapped = "IPL Live Card Tapped";
+  static const iplPopularPredictionsTapped = "IPL View Popular Predictions";
   static const iplCompleteCardTapped = "IPL Completed Card Tapped";
   static const iplInviteFriendsTapped = "IPL Invite Friends Tapped";
   static const iplYourPredictionsTapped = "IPL Your Predictions Tapped";
@@ -125,6 +126,7 @@ class AnalyticsEvents {
   static const iplPredictNowTapped = "Ipl Predict now tapped";
   static const iplPredictNowBottomSheetButtonTapped =
       "IPL Predict Now bottomsheet button Tapped";
+  static const iplCarouselTapped = "Ipl Carousel Tapped";
 
   //Added in alnalytics-phase 1
   static const resendOtpTapped = "Resend OTP Tapped";
