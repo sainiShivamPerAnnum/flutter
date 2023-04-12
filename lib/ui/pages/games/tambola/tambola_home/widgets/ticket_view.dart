@@ -149,8 +149,8 @@ class TabViewGenerator extends StatefulWidget {
 
 class _TabViewGeneratorState extends State<TabViewGenerator>
     with TickerProviderStateMixin {
-  TabController? _tabController;
-  List<TambolaBoard?>? _bestBoards;
+  late final TabController _tabController;
+  late final List<TambolaBoard?> _bestBoards;
 
   @override
   void initState() {
@@ -158,7 +158,7 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
     _tabController =
         TabController(vsync: this, length: widget.model!.tabList.length);
     _tabController!.addListener(_handleTabSelection);
-    _bestBoards = widget.model!.refreshBestBoards();
+    _bestBoards = widget.model!.refreshBestBoards() ?? [];
   }
 
   void _handleTabSelection() {
@@ -168,243 +168,105 @@ class _TabViewGeneratorState extends State<TabViewGenerator>
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: widget.model!.tabList.length,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                    margin: EdgeInsets.only(
-                      left: SizeConfig.screenWidth! * 0.06,
-                      right: SizeConfig.padding8,
-                    ),
-                    child: Icon(
-                      Icons.tune,
-                      color: Colors.white.withOpacity(0.7),
-                    )),
-                Expanded(
-                  child: TabBar(
-                    controller: _tabController,
-                    labelPadding: EdgeInsets.zero,
-                    indicatorColor: Colors.transparent,
-                    physics: const BouncingScrollPhysics(),
-                    isScrollable: true,
-                    splashFactory: NoSplash.splashFactory,
-                    tabs: List.generate(
-                      widget.model!.tabList.length,
-                      (index) => Container(
+      length: widget.model!.tabList.length,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                  margin: EdgeInsets.only(
+                    left: SizeConfig.screenWidth! * 0.06,
+                    right: SizeConfig.padding8,
+                  ),
+                  child: Icon(
+                    Icons.tune,
+                    color: Colors.white.withOpacity(0.5),
+                  )),
+              Expanded(
+                child: TabBar(
+                  controller: _tabController,
+                  labelPadding: EdgeInsets.zero,
+                  indicatorColor: Colors.transparent,
+                  physics: const BouncingScrollPhysics(),
+                  isScrollable: true,
+                  splashFactory: NoSplash.splashFactory,
+                  tabs: widget.model!.tabList.map(
+                    (tabName) {
+                      final index = widget.model!.tabList.indexOf(tabName);
+                      final isActive = _tabController.index == index;
+                      return Container(
                         margin: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding4,
-                        ),
+                            horizontal: SizeConfig.padding4),
                         padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding10,
-                          vertical: SizeConfig.padding10,
-                        ),
+                            horizontal: SizeConfig.padding10,
+                            vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(SizeConfig.padding14)),
-                          color: _tabController!.index == index
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.padding14),
+                          color: isActive
                               ? UiConstants.kTambolaTabColor
                               : Colors.transparent,
                         ),
                         child: Text(
-                          widget.model!.tabList[index],
+                          tabName,
                           textAlign: TextAlign.center,
                           style: TextStyles.body4.colour(
-                            _tabController!.index == index
+                            isActive
                                 ? UiConstants.kBlogCardRandomColor5
-                                : Colors.white.withOpacity(0.5),
+                                : Colors.white,
                           ),
                         ),
-                      ),
-                    ),
-                  ),
+                      );
+                    },
+                  ).toList(),
                 ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            child: _buildTabContent(),
+          ),
+        ],
+      ),
+    );
+  }
 
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
-              child: _tabController?.index == 0
-                  ? PageViewWithIndicator(
-                      model: widget.model,
-                      showIndicator: widget.showIndicatorForAll,
-                    )
-                  : _tabController?.index == 1
-                      ? widget.model!.userWeeklyBoards != null &&
-                              widget.model!.userWeeklyBoards!.isNotEmpty
-                          ? TambolaTicket(
-                              dailyPicks: widget.model!.weeklyDigits,
-                              bestBoards: _bestBoards,
-                              board: _bestBoards![0],
-                              showBestOdds: false,
-                              calledDigits:
-                                  widget.model!.weeklyDigits!.toList(),
-                            )
-                          : const NoTicketWidget()
-                      : _tabController?.index == 2
-                          ? widget.model!.userWeeklyBoards != null &&
-                                  widget.model!.userWeeklyBoards!.isNotEmpty
-                              ? TambolaTicket(
-                                  dailyPicks: widget.model!.weeklyDigits,
-                                  bestBoards: _bestBoards,
-                                  board: _bestBoards![1],
-                                  showBestOdds: false,
-                                  calledDigits:
-                                      widget.model!.weeklyDigits!.toList(),
-                                )
-                              : const NoTicketWidget()
-                          : _tabController?.index == 3
-                              ? widget.model!.userWeeklyBoards != null &&
-                                      widget.model!.userWeeklyBoards!.isNotEmpty
-                                  ? TambolaTicket(
-                                      dailyPicks: widget.model!.weeklyDigits,
-                                      bestBoards: _bestBoards,
-                                      board: _bestBoards![2],
-                                      showBestOdds: false,
-                                      calledDigits:
-                                          widget.model!.weeklyDigits!.toList(),
-                                    )
-                                  : const NoTicketWidget()
-                              : _tabController?.index == 4
-                                  ? widget.model!.userWeeklyBoards != null &&
-                                          widget.model!.userWeeklyBoards!
-                                              .isNotEmpty
-                                      ? TambolaTicket(
-                                          dailyPicks:
-                                              widget.model!.weeklyDigits,
-                                          bestBoards: _bestBoards,
-                                          board: _bestBoards![3],
-                                          showBestOdds: false,
-                                          calledDigits: widget
-                                              .model!.weeklyDigits!
-                                              .toList(),
-                                        )
-                                      : const NoTicketWidget()
-                                  : const NoTicketWidget(),
-            ),
+  Widget _buildTabContent() {
+    switch (_tabController.index) {
+      case 0:
+        return PageViewWithIndicator(
+          model: widget.model,
+          showIndicator: widget.showIndicatorForAll,
+        );
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        final tabIndex = _tabController.index - 1;
+        final board =
+            _bestBoards.length > tabIndex ? _bestBoards[tabIndex] : null;
+        return widget.model!.userWeeklyBoards != null &&
+                widget.model!.userWeeklyBoards!.isNotEmpty
+            ? TambolaTicket(
+                dailyPicks: widget.model!.weeklyDigits,
+                bestBoards: _bestBoards,
+                board: board,
+                showBestOdds: false,
+                calledDigits: widget.model!.weeklyDigits!.toList(),
+              )
+            : const NoTicketWidget();
+      default:
+        return const NoTicketWidget();
+    }
+  }
 
-            /*Builder(builder: (_){
-              if (_tabController?.index == 0 ) {
-                return PageViewWithIndicator(
-                  model: widget.model,
-                  showIndicator: widget.showIndicatorForAll,
-                );
-              }else if(_tabController?.index == 1){
-                return widget.model!.userWeeklyBoards != null &&
-                    widget.model!.userWeeklyBoards!.isNotEmpty
-                    ? TambolaTicket(
-                  dailyPicks: widget.model!.weeklyDigits,
-                  bestBoards: _bestBoards,
-                  board: _bestBoards![0],
-                  showBestOdds: false,
-                  calledDigits: widget.model!.weeklyDigits!.toList(),
-                )
-                    : const NoTicketWidget();
-              }else if (_tabController?.index == 2){
-                return widget.model!.userWeeklyBoards != null &&
-                    widget.model!.userWeeklyBoards!.isNotEmpty
-                    ? TambolaTicket(
-                  dailyPicks: widget.model!.weeklyDigits,
-                  bestBoards: _bestBoards,
-                  board: _bestBoards![1],
-                  showBestOdds: false,
-                  calledDigits: widget.model!.weeklyDigits!.toList(),
-                )
-                    : const NoTicketWidget();
-
-              } else if(_tabController?.index == 3){
-                return widget.model!.userWeeklyBoards != null &&
-                    widget.model!.userWeeklyBoards!.isNotEmpty
-                    ? TambolaTicket(
-                  dailyPicks: widget.model!.weeklyDigits,
-                  bestBoards: _bestBoards,
-                  board: _bestBoards![2],
-                  showBestOdds: false,
-                  calledDigits: widget.model!.weeklyDigits!.toList(),
-                )
-                    : const NoTicketWidget();
-              }else if(_tabController?.index == 4) {
-                return widget.model!.userWeeklyBoards != null &&
-                    widget.model!.userWeeklyBoards!.isNotEmpty
-                    ? TambolaTicket(
-                  dailyPicks: widget.model!.weeklyDigits,
-                  bestBoards: _bestBoards,
-                  board: _bestBoards![3],
-                  showBestOdds: false,
-                  calledDigits: widget.model!.weeklyDigits!.toList(),
-                )
-                    : const NoTicketWidget();
-              }
-              return const NoTicketWidget();
-            }),*/
-
-            // SizedBox(
-            //   height: SizeConfig.screenWidth! * 0.52,
-            //   child: TabBarView(
-            //     controller: _tabController,
-            //     physics: const NeverScrollableScrollPhysics(),
-            //     children: [
-            //       ///All tickets
-            //       PageViewWithIndicator(
-            //         model: widget.model,
-            //         showIndicator: widget.showIndicatorForAll,
-            //       ),
-            //
-            //       ///Corner
-            //       widget.model!.userWeeklyBoards != null &&
-            //               widget.model!.userWeeklyBoards!.isNotEmpty
-            //           ? TambolaTicket(
-            //               dailyPicks: widget.model!.weeklyDigits,
-            //               bestBoards: _bestBoards,
-            //               board: _bestBoards![0],
-            //               showBestOdds: false,
-            //               calledDigits: widget.model!.weeklyDigits!.toList(),
-            //             )
-            //           : const NoTicketWidget(),
-            //
-            //       ///first rows
-            //       widget.model!.userWeeklyBoards != null &&
-            //               widget.model!.userWeeklyBoards!.isNotEmpty
-            //           ? TambolaTicket(
-            //               dailyPicks: widget.model!.weeklyDigits,
-            //               bestBoards: _bestBoards,
-            //               board: _bestBoards![1],
-            //               showBestOdds: false,
-            //               calledDigits: widget.model!.weeklyDigits!.toList())
-            //           : const NoTicketWidget(),
-            //
-            //       /// two rows
-            //       widget.model!.userWeeklyBoards != null &&
-            //               widget.model!.userWeeklyBoards!.isNotEmpty
-            //           ? TambolaTicket(
-            //               dailyPicks: widget.model!.weeklyDigits,
-            //               bestBoards: _bestBoards,
-            //               board: _bestBoards![2],
-            //               showBestOdds: false,
-            //               calledDigits: widget.model!.weeklyDigits!.toList())
-            //           : const NoTicketWidget(),
-            //
-            //       /// Full House
-            //       widget.model!.userWeeklyBoards != null &&
-            //               widget.model!.userWeeklyBoards!.isNotEmpty
-            //           ? TambolaTicket(
-            //               dailyPicks: widget.model!.weeklyDigits,
-            //               bestBoards: _bestBoards,
-            //               board: _bestBoards![3],
-            //               showBestOdds: false,
-            //               calledDigits: widget.model!.weeklyDigits!.toList())
-            //           : const NoTicketWidget(),
-            //       //
-            //       // /// Corner
-            //       // const NoTicketWidget(),
-            //     ],
-            //   ),
-            // )
-          ],
-        ));
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }
