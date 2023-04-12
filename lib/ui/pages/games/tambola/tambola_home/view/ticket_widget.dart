@@ -134,7 +134,8 @@ class TicketHeader extends StatelessWidget {
                   .findRenderObject() as RenderBox;
               final offset = renderBox.localToGlobal(Offset.zero);
 
-              scrollController.animateTo(offset.dy,
+              scrollController.animateTo(
+                  offset.dy - SizeConfig.screenWidth! * 0.5,
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.fastOutSlowIn);
               animationController
