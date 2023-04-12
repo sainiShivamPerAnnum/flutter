@@ -197,9 +197,9 @@ class AutosaveProcessViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  PageController pageController = PageController();
-  PageController? chipsController = PageController();
-  PageController? comboController = PageController();
+  PageController? get pageController => _subService.pageController;
+  PageController chipsController = PageController();
+  PageController comboController = PageController();
   PageController? optionsController;
   TextEditingController? goldAmountFieldController;
   TextEditingController? floAmountFieldController;
@@ -211,21 +211,17 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   void proceed() {
-    if (pageController.page!.toInt() == 1) {
+    if (_subService.pageController!.page!.toInt() == 1) {
       trackAssetChoiceNext();
     }
-    pageController
-        .animateToPage(pageController.page!.toInt() + 1,
+    _subService.pageController!
+        .animateToPage(_subService.pageController!.page!.toInt() + 1,
             duration: Duration(milliseconds: 500), curve: Curves.decelerate)
         .then(
       (_) {
-        if (pageController.page!.toInt() == 1) {
+        if (_subService.pageController!.page!.toInt() == 1) {
           PreferenceHelper.setBool(
               PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME, false);
-        }
-        if (pageController.page!.toInt() > 2) {
-          AppState.showAutosaveBt = true;
-          print("--------------------------------");
         }
       },
     );
@@ -233,7 +229,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   init() async {
     state = ViewState.Busy;
-
+    AppState.showAutosaveBt = true;
+    _subService.pageController = PageController();
     await _subService.getSubscription();
     if (_subService.autosaveState == AutosaveState.IDLE) {
       goldAmountFieldController = TextEditingController();
@@ -279,10 +276,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
       if (selectedAssetOption == 0) {
         dailyCombos[2].isSelected = true;
       }
-      pageController.addListener(
+      _subService.pageController!.addListener(
         () {
-          if ((pageController.page ?? 0).toInt() != currentPage) {
-            currentPage = pageController.page!.toInt();
+          if ((_subService.pageController!.page ?? 0).toInt() != currentPage) {
+            currentPage = _subService.pageController!.page!.toInt();
           }
         },
       );
@@ -292,12 +289,12 @@ class AutosaveProcessViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!PreferenceHelper.getBool(
           PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME))
-        pageController.jumpToPage(1);
+        _subService.pageController!.jumpToPage(1);
     });
   }
 
   dump() {
-    pageController.dispose();
+    _subService.pageController!.dispose();
     optionsController?.dispose();
     goldAmountFieldController?.dispose();
     floAmountFieldController?.dispose();
@@ -310,6 +307,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
     isUpdateFlow = true;
     finalButtonCta = "UPDATE";
     state = ViewState.Busy;
+    _subService.pageController = PageController();
     // if (_subService.autosaveState == AutosaveState.IDLE) {
     goldAmountFieldController = TextEditingController(
         text: _subService.subscriptionData!.augAmt ?? '0');
@@ -351,10 +349,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
     floAmountFieldController =
         TextEditingController(text: _subService.subscriptionData!.lbAmt ?? '0');
     selectedAssetOption = _bankingService.isKYCVerified ? 0 : 2;
-    pageController.addListener(
+    _subService.pageController!.addListener(
       () {
-        if ((pageController.page ?? 0).toInt() != currentPage) {
-          currentPage = pageController.page!.toInt();
+        if ((_subService.pageController!.page ?? 0).toInt() != currentPage) {
+          currentPage = _subService.pageController!.page!.toInt();
         }
       },
     );
@@ -363,7 +361,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   updateDump() {
-    pageController.dispose();
+    _subService.pageController!.dispose();
     optionsController?.dispose();
     goldAmountFieldController?.dispose();
     floAmountFieldController?.dispose();
@@ -789,7 +787,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   void trackAutosaveBackPress() {
     _analyticsService.track(
         eventName: AnalyticsEvents.asPrevTapped,
-        properties: {"step": pageController.page?.toInt() ?? 0});
+        properties: {"step": _subService.pageController!.page?.toInt() ?? 0});
   }
 }
 

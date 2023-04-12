@@ -10,6 +10,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -126,10 +127,16 @@ class MiniTransactionCard extends StatelessWidget {
                       child: Center(
                         child: InkWell(
                           onTap: () {
+                            Haptic.vibrate();
                             AppState.delegate!.appState.currentAction =
                                 PageAction(
-                                    page: AutosaveDetailsViewPageConfig,
-                                    state: PageState.addPage);
+                              state: PageState.addWidget,
+                              widget: TransactionsHistory(
+                                investmentType: investmentType,
+                                showAutosave: true,
+                              ),
+                              page: TransactionsHistoryPageConfig,
+                            );
                           },
                           child: Text(
                             "View Autosave Transactions",

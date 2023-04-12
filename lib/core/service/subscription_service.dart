@@ -102,6 +102,7 @@ class SubService extends ChangeNotifier {
   bool hasNoMoreAugSubsTxns = false;
   UpiApplication? upiApplication;
   String? selectedUpiApplicationName;
+  PageController? pageController;
 
   //LOCAL VARIABLES - END
 
@@ -309,7 +310,8 @@ class SubService extends ChangeNotifier {
       if (hasNoMoreSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
           limit: 30,
-          offset: allSubTxnList.isEmpty ? null : allSubTxnList.length);
+          offset: allSubTxnList.isEmpty ? null : allSubTxnList.length,
+          asset: '');
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreSubsTxns = true;
         allSubTxnList.addAll(res.model!);
@@ -348,7 +350,9 @@ class SubService extends ChangeNotifier {
       }
       if (hasNoMoreLbSubsTxns) return;
       final res = await _subscriptionRepo.getSubscriptionTransactionHistory(
-          limit: 30, offset: lbSubTxnList.isEmpty ? null : lbSubTxnList.length);
+          limit: 30,
+          offset: lbSubTxnList.isEmpty ? null : lbSubTxnList.length,
+          asset: asset);
       if (res.isSuccess()) {
         if (res.model!.length < 30) hasNoMoreLbSubsTxns = true;
         lbSubTxnList.addAll(res.model!);

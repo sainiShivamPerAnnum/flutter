@@ -161,7 +161,7 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
                                       margin: EdgeInsets.only(
                                           right: SizeConfig.padding12),
                                       // height: SizeConfig.screenHeight! * 0.35,
-                                      // width: 275,
+                                      width: SizeConfig.screenWidth! * 0.78,
                                       child: SvgPicture.network(
                                         model.cardCarousel?[index]['imgUrl'] ??
                                             '',

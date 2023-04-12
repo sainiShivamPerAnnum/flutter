@@ -28,7 +28,7 @@ class UpiAppSelectView extends StatelessWidget {
   final S locale = locator<S>();
   @override
   Widget build(BuildContext context) {
-    return model.appsList.length > 1
+    return model.appsList.isNotEmpty
         ? Stack(
             children: [
               SingleChildScrollView(

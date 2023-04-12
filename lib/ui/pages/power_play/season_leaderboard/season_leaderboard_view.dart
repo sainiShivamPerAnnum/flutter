@@ -186,7 +186,7 @@ class NewLeaderBoardView extends StatelessWidget {
             ),
           if (scoreBoard!.length < 4)
             SizedBox(height: SizeConfig.pageHorizontalMargins),
-          if (scoreBoard!.length == 3)
+          if (scoreBoard!.length != 3)
             Container(
               margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
               child: Row(

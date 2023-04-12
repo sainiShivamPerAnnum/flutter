@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
@@ -63,24 +64,25 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   @override
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
+    print("Page Controller: ${locator<SubService>().pageController}");
 
-    if (AppState.showAutosaveBt &&
-        AppState.screenStack.last != ScreenItem.dialog) {
-      AppState.showAutosaveBt = false;
-      _analyticsService.track(eventName: AnalyticsEvents.asHardBackTapped);
-      BaseUtil.openModalBottomSheet(
-          isBarrierDismissible: true,
-          addToScreenStack: true,
-          backgroundColor: UiConstants.kBackgroundColor,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.roundness32),
-            topRight: Radius.circular(SizeConfig.roundness32),
-          ),
-          isScrollControlled: true,
-          hapticVibrate: true,
-          content: AutosaveConfirmExitModalSheet());
-      return Future.value(true);
-    }
+    // if (AppState.showAutosaveBt &&
+    //     AppState.screenStack.last != ScreenItem.dialog) {
+    //   AppState.showAutosaveBt = false;
+    //   _analyticsService.track(eventName: AnalyticsEvents.asHardBackTapped);
+    //   BaseUtil.openModalBottomSheet(
+    //       isBarrierDismissible: true,
+    //       addToScreenStack: true,
+    //       backgroundColor: UiConstants.kBackgroundColor,
+    //       borderRadius: BorderRadius.only(
+    //         topLeft: Radius.circular(SizeConfig.roundness32),
+    //         topRight: Radius.circular(SizeConfig.roundness32),
+    //       ),
+    //       isScrollControlled: true,
+    //       hapticVibrate: true,
+    //       content: AutosaveConfirmExitModalSheet());
+    //   return Future.value(true);
+    // }
 
     if (SpotLightController.instance.startShowCase) {
       SpotLightController.instance.startShowCase = false;
@@ -122,6 +124,34 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     if (SpotLightController.instance.isTourStarted) {
       SpotLightController.instance.dismissSpotLight();
       return Future.value(true);
+    }
+
+    if (AppState.showAutosaveBt) {
+      if (locator<SubService>().pageController?.hasClients ?? false) {
+        final PageController apgController =
+            locator<SubService>().pageController!;
+        if (apgController.page!.toInt() > 0) {
+          apgController.animateToPage(apgController.page!.toInt() - 1,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.decelerate);
+          return Future.value(true);
+        } else {
+          AppState.showAutosaveBt = false;
+          _analyticsService.track(eventName: AnalyticsEvents.asHardBackTapped);
+          BaseUtil.openModalBottomSheet(
+              isBarrierDismissible: true,
+              addToScreenStack: true,
+              backgroundColor: UiConstants.kBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness32),
+                topRight: Radius.circular(SizeConfig.roundness32),
+              ),
+              isScrollControlled: true,
+              hapticVibrate: true,
+              content: AutosaveConfirmExitModalSheet());
+          return Future.value(true);
+        }
+      }
     }
 
     // If onboarding is in progress

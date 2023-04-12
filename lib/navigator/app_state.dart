@@ -64,6 +64,7 @@ class AppState extends ChangeNotifier {
   static int ticketCount = 0;
   static bool isFirstTimeJourneyOpened = false;
   static bool isJourneyFirstTab = false;
+  static bool isAutosaveFlow = false;
 
   static List<ScreenItem> screenStack = [];
   static FelloRouterDelegate? delegate;
@@ -97,7 +98,8 @@ class AppState extends ChangeNotifier {
   scrollHome(int cardNo) {
     double scrollDepth = SizeConfig.screenHeight! * 0.2 * cardNo;
     homeCardListController.animateTo(scrollDepth,
-        duration: const Duration(milliseconds: 600), curve: Curves.easeInOutSine);
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOutSine);
     notifyListeners();
   }
 

@@ -20,7 +20,7 @@ class SubscriptionRepo extends BaseRepo {
 
   Future<ApiResponse<List<SubscriptionTransactionModel>>>
       getSubscriptionTransactionHistory(
-          {int? offset, int? limit, String? asset}) async {
+          {int? offset, int? limit, required String asset}) async {
     try {
       final String token = await getBearerToken();
       final res = await APIService.instance.getData(
@@ -28,7 +28,7 @@ class SubscriptionRepo extends BaseRepo {
         cBaseUrl: baseUrl,
         queryParams: {
           "limit": limit.toString(),
-          "asset": asset ?? '',
+          if (asset.isNotEmpty) "asset": asset,
           if (offset != null) ...{
             "offset": offset.toString(),
           }
