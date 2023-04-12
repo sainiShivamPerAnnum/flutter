@@ -79,9 +79,11 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                                           if (isSimpleKycVerified) {
                                             model.selectedAssetOption = index;
                                           } else {
-                                            BaseUtil.showNegativeAlert(
-                                                "Complete your KYC to autosave in both Flo & Gold",
-                                                "Option not available");
+                                            if (index != 2) {
+                                              BaseUtil.showNegativeAlert(
+                                                  "Complete your KYC to autosave in both Flo & Gold",
+                                                  "Option not available");
+                                            }
                                           }
                                           model.trackAssetChoice(
                                               isSimpleKycVerified);

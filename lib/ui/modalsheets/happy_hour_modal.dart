@@ -27,7 +27,7 @@ class HappyHourModel extends StatefulWidget {
   }) : super(key: key);
   @override
   State<HappyHourModel> createState() =>
-      _HappyHourModalState(DateTime.parse(model.data!.startTime!));
+      _HappyHourModalState(DateTime.parse(model.data!.endTime!));
 }
 
 enum ButtonType { save, notify }
