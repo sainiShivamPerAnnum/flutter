@@ -12,6 +12,7 @@ import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -104,6 +105,7 @@ class _MyAppState extends State<MyApp> {
               create: (_) => locator<AugmontTransactionService>()),
           ChangeNotifierProvider(
               create: (_) => locator<LendboxTransactionService>()),
+          ChangeNotifierProvider(create: (_) => locator<PowerPlayService>()),
         ],
         child: PropertyChangeProvider<UserService, UserServiceProperties>(
           value: locator<UserService>(),

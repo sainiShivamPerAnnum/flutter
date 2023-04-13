@@ -176,7 +176,7 @@ class TambolaService extends ChangeNotifier {
       ticketsNumbers
           .add(board!.tambolaBoard!.expand((numbers) => numbers).toList());
     });
-    log('ticketsNumbers $ticketsNumbers');
+    // log('ticketsNumbers $ticketsNumbers');
     notifyListeners();
 
     _logger!.d("Fetched Tambola tickets ${DateTime.now().second}");

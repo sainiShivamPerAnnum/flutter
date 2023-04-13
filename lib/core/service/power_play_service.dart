@@ -38,7 +38,7 @@ class PowerPlayService extends ChangeNotifier {
   MatchData? liveMatchData;
   bool isLinkSharing = false;
 
-  List<UserTransaction>? transactions = [];
+  List<UserTransaction>? _transactions = [];
   List<Map<String, dynamic>>? cardCarousel;
 
   Map<String, String> currentScore = {};
@@ -51,6 +51,13 @@ class PowerPlayService extends ChangeNotifier {
 
   set userPredictedData(List<MatchUserPredictedData> value) {
     _userPredictedData = value;
+  }
+
+  List<UserTransaction>? get transactions => _transactions;
+
+  set transactions(List<UserTransaction>? value) {
+    _transactions = value;
+    notifyListeners();
   }
 
   // List<MatchData> get completedMatchData => _completedMatchData;
@@ -121,14 +128,19 @@ class PowerPlayService extends ChangeNotifier {
     }
   }
 
-  Future<void> getUserTransactionHistory(
-    MatchData matchData,
-  ) async {
-    _logger.i("PowerPlayService -> getUserTransactionHistory");
+  Future<void> getUserTransactionHistory(MatchData matchData,
+      {bool live = false}) async {
+    _logger.i(
+        "PowerPlayService -> getUserTransactionHistory -- MatchData $matchData");
     TimestampModel? startTime;
     TimestampModel? endTime;
 
-    if (matchData.status == MatchStatus.active.name) {
+    if (live) {
+      startTime = liveMatchData?.startsAt;
+      endTime = TimestampModel.currentTimeStamp();
+
+      log('live => $startTime $endTime');
+    } else if (matchData.status == MatchStatus.active.name) {
       startTime = matchData.startsAt;
       endTime = TimestampModel.currentTimeStamp();
     } else if (matchData.status == MatchStatus.half_complete.name) {
@@ -151,9 +163,8 @@ class PowerPlayService extends ChangeNotifier {
 
     if (response.isSuccess()) {
       transactions = response.model?.transactions;
-
       log('transactions => ${transactions!.length}');
-      // userPredictedData = response.model!.data!;
+      notifyListeners();
     } else {
       BaseUtil.showNegativeAlert(response.errorMessage, "Please try again");
     }
