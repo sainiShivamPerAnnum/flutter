@@ -36,13 +36,24 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   List<MatchData?>? _upcomingMatchData = [];
 
   List<MatchData>? _completedMatchData;
-  List<UserTransaction>? predictions = [];
+  List<UserTransaction>? _predictions = [];
   bool _isPredictionInProgress = false;
 
   get isPredictionInProgress => _isPredictionInProgress;
 
   set isPredictionInProgress(value) {
     _isPredictionInProgress = value;
+    notifyListeners();
+  }
+
+  PowerPlayService get powerPlayService => _powerPlayService;
+
+  List<UserTransaction>? get transactions => powerPlayService.transactions;
+
+  List<UserTransaction>? get predictions => _predictions;
+
+  set predictions(List<UserTransaction>? value) {
+    _predictions = value;
     notifyListeners();
   }
 
@@ -136,7 +147,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
       });
     }
 
-    getUserPredictionCount();
+    await getUserPredictionCount();
     setState(ViewState.Idle);
     scrollController!.addListener(() async {
       if (scrollController!.offset >=

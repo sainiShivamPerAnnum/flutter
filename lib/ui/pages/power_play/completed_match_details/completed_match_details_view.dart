@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_winners_leaderboard_item_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
@@ -18,6 +20,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../power_play_home/power_play_vm.dart';
 
 class CompletedMatchDetailsView extends StatelessWidget {
   const CompletedMatchDetailsView({
@@ -45,7 +50,7 @@ class CompletedMatchDetailsView extends StatelessWidget {
                     children: [
                       SizedBox(
                           height:
-                              SizeConfig.viewInsets.top + kToolbarHeight / 2),
+                          SizeConfig.viewInsets.top + kToolbarHeight / 2),
                       Expanded(
                         child: SingleChildScrollView(
                           physics: const BouncingScrollPhysics(),
@@ -59,8 +64,8 @@ class CompletedMatchDetailsView extends StatelessWidget {
                               matchData.matchStats!.didWon
                                   ? WinTextWidget(model: model)
                                   : LossOrNoParticipateTextWidget(
-                                      isLoss: matchData.matchStats!.count > 0 &&
-                                          !matchData.matchStats!.didWon),
+                                  isLoss: matchData.matchStats!.count > 0 &&
+                                      !matchData.matchStats!.didWon),
                               const CustomDivider(),
                               SizedBox(height: SizeConfig.padding12),
                               MatchBriefDetailsWidget(matchData: matchData),
@@ -97,7 +102,9 @@ class CompletedMatchDetailsView extends StatelessWidget {
 
 class FooterCta extends StatelessWidget {
   const FooterCta({super.key, required this.location});
+
   final String location;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -148,120 +155,120 @@ class CorrectPredictorsListView extends StatelessWidget {
         SizedBox(height: SizeConfig.padding16),
         model.isWinnersLoading
             ? SizedBox(
-                height: SizeConfig.padding80,
-                child: Center(
-                  child: SpinKitWave(
-                    color: Colors.white,
-                    size: SizeConfig.padding34,
+          height: SizeConfig.padding80,
+          child: Center(
+            child: SpinKitWave(
+              color: Colors.white,
+              size: SizeConfig.padding34,
+            ),
+          ),
+        )
+            : model.winners.isEmpty
+            ? Column(
+          children: [
+            SizedBox(height: SizeConfig.padding54),
+            SvgPicture.asset(
+              Assets.noTransactionAsset,
+              width: SizeConfig.screenWidth! * 0.4,
+            ),
+            SizedBox(height: SizeConfig.padding16),
+            Text(
+              "No winners to show",
+              style: TextStyles.sourceSans.body2.colour(Colors.white),
+            ),
+            SizedBox(height: SizeConfig.padding32),
+          ],
+        )
+            : Column(
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  width: SizeConfig.screenWidth! * 0.13,
+                  child: Text(
+                    "#Rank",
+                    style: TextStyles.sourceSans.body3
+                        .colour(Colors.white38),
                   ),
                 ),
-              )
-            : model.winners.isEmpty
-                ? Column(
-                    children: [
-                      SizedBox(height: SizeConfig.padding54),
-                      SvgPicture.asset(
-                        Assets.noTransactionAsset,
-                        width: SizeConfig.screenWidth! * 0.4,
+                Text(
+                  "Username",
+                  style: TextStyles.sourceSans.body3
+                      .colour(Colors.white38),
+                ),
+                const Spacer(),
+                Text(
+                  "Prediction",
+                  style: TextStyles.sourceSans.body3
+                      .colour(Colors.white38),
+                ),
+              ],
+            ),
+            SizedBox(height: SizeConfig.padding10),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: model.winners.length,
+              itemBuilder: (ctx, i) => Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding10),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: SizeConfig.screenWidth! * 0.13,
+                      child: Text(
+                        "#${i + 1}",
+                        style: TextStyles.sourceSansSB.body1,
                       ),
-                      SizedBox(height: SizeConfig.padding16),
-                      Text(
-                        "No winners to show",
-                        style: TextStyles.sourceSans.body2.colour(Colors.white),
-                      ),
-                      SizedBox(height: SizeConfig.padding32),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: SizeConfig.screenWidth! * 0.13,
-                            child: Text(
-                              "#Rank",
-                              style: TextStyles.sourceSans.body3
-                                  .colour(Colors.white38),
+                    ),
+                    Expanded(
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              "assets/vectors/userAvatars/AV${model.winners[i].avatarId}.svg",
+                              width: SizeConfig.iconSize1 * 1.5,
+                              height: SizeConfig.iconSize1 * 1.5,
+                              fit: BoxFit.cover,
                             ),
-                          ),
-                          Text(
-                            "Username",
-                            style: TextStyles.sourceSans.body3
-                                .colour(Colors.white38),
-                          ),
-                          const Spacer(),
-                          Text(
-                            "Prediction",
-                            style: TextStyles.sourceSans.body3
-                                .colour(Colors.white38),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: SizeConfig.padding10),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        itemCount: model.winners.length,
-                        itemBuilder: (ctx, i) => Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding10),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: SizeConfig.screenWidth! * 0.13,
-                                child: Text(
-                                  "#${i + 1}",
-                                  style: TextStyles.sourceSansSB.body1,
-                                ),
-                              ),
-                              Expanded(
-                                  child: Row(
+                            SizedBox(width: SizeConfig.padding10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
-                                  SvgPicture.asset(
-                                    "assets/vectors/userAvatars/AV${model.winners[i].avatarId}.svg",
-                                    width: SizeConfig.iconSize1 * 1.5,
-                                    height: SizeConfig.iconSize1 * 1.5,
-                                    fit: BoxFit.cover,
+                                  Text(
+                                    "${model.winners[i].uname}",
+                                    style: TextStyles.sourceSans.body3,
                                   ),
-                                  SizedBox(width: SizeConfig.padding10),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "${model.winners[i].uname}",
-                                          style: TextStyles.sourceSans.body3,
-                                        ),
-                                        SizedBox(height: SizeConfig.padding2),
-                                        Text(
-                                          getWinningString(model.winners[i]),
-                                          style: TextStyles.sourceSans.body4
-                                              .colour(Colors.white70),
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                  SizedBox(height: SizeConfig.padding2),
+                                  Text(
+                                    getWinningString(model.winners[i]),
+                                    style: TextStyles.sourceSans.body4
+                                        .colour(Colors.white70),
+                                  )
                                 ],
-                              )),
-                              SizedBox(width: SizeConfig.padding16),
-                              Text(
-                                "₹${model.winners[i].score} | ${DateFormat('h:mm a').format(
-                                  model.winners[i].timestamp.toDate(),
-                                )}",
-                                style: TextStyles.sourceSans.body3,
-                              )
-                            ],
-                          ),
-                        ),
-                        separatorBuilder: (ctx, i) => const Divider(
-                          color: Colors.white30,
-                          thickness: 0.3,
-                        ),
-                      ),
-                    ],
-                  )
+                              ),
+                            ),
+                          ],
+                        )),
+                    SizedBox(width: SizeConfig.padding16),
+                    Text(
+                      "₹${model.winners[i].score} | ${DateFormat('h:mm a').format(
+                        model.winners[i].timestamp.toDate(),
+                      )}",
+                      style: TextStyles.sourceSans.body3,
+                    )
+                  ],
+                ),
+              ),
+              separatorBuilder: (ctx, i) => const Divider(
+                color: Colors.white30,
+                thickness: 0.3,
+              ),
+            ),
+          ],
+        )
       ]),
     );
   }
@@ -282,68 +289,75 @@ class CorrectPredictorsListView extends StatelessWidget {
 }
 
 class UserPredictionsButton extends StatelessWidget {
-  const UserPredictionsButton(
-      {super.key, required this.model, this.margin = true});
+  const UserPredictionsButton({super.key, required this.model, this.margin = true});
+
   final model;
   final bool margin;
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (model.isPredictionsLoading) return;
-        BaseUtil.openModalBottomSheet(
-          isBarrierDismissible: true,
-          addToScreenStack: true,
-          enableDrag: Platform.isIOS,
-          backgroundColor: const Color(0xff21284A),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.roundness32),
-            topRight: Radius.circular(SizeConfig.roundness32),
-          ),
-          isScrollControlled: true,
-          hapticVibrate: true,
-          content: YourPredictionSheet(
-            transactions: model.predictions,
-            matchData: model.matchData!,
+    return Selector<PowerPlayHomeViewModel, List<UserTransaction>?>(
+      selector: (context, provider) => provider.powerPlayService.transactions,
+      builder: (context, transactions, child) {
+        log("UserPredictionsButton: ${transactions?.length}");
+        return InkWell(
+          onTap: () {
+            if (model.isPredictionsLoading) return;
+            BaseUtil.openModalBottomSheet(
+              isBarrierDismissible: true,
+              addToScreenStack: true,
+              enableDrag: Platform.isIOS,
+              backgroundColor: const Color(0xff21284A),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness32),
+                topRight: Radius.circular(SizeConfig.roundness32),
+              ),
+              isScrollControlled: true,
+              hapticVibrate: true,
+              content: YourPredictionSheet(
+                transactions: model.predictions,
+                matchData: model.matchData!,
+              ),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+            ),
+            padding: EdgeInsets.only(
+              left: SizeConfig.pageHorizontalMargins,
+              right: SizeConfig.padding12,
+              top: SizeConfig.padding12,
+              bottom: SizeConfig.padding12,
+            ),
+            margin: EdgeInsets.symmetric(
+                horizontal: margin ? SizeConfig.pageHorizontalMargins : 0),
+            child: Row(
+              children: [
+                Text("Your Predictions", style: TextStyles.sourceSans.body2),
+                SizedBox(width: SizeConfig.padding6),
+                model.isPredictionsLoading
+                    ? SizedBox(
+                        height: SizeConfig.padding16,
+                        width: SizeConfig.padding16,
+                        child: SpinKitWave(
+                          color: Colors.white,
+                          size: SizeConfig.padding16,
+                        ),
+                      )
+                    : Text("(${model.predictions?.length ?? 0})",
+                        style: TextStyles.sourceSans.body2),
+                const Spacer(),
+                const Icon(
+                  Icons.navigate_next_rounded,
+                  color: Colors.white,
+                ),
+              ],
+            ),
           ),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-        ),
-        padding: EdgeInsets.only(
-          left: SizeConfig.pageHorizontalMargins,
-          right: SizeConfig.padding12,
-          top: SizeConfig.padding12,
-          bottom: SizeConfig.padding12,
-        ),
-        margin: EdgeInsets.symmetric(
-            horizontal: margin ? SizeConfig.pageHorizontalMargins : 0),
-        child: Row(
-          children: [
-            Text("Your Predictions", style: TextStyles.sourceSans.body2),
-            SizedBox(width: SizeConfig.padding6),
-            model.isPredictionsLoading
-                ? SizedBox(
-                    height: SizeConfig.padding16,
-                    width: SizeConfig.padding16,
-                    child: SpinKitWave(
-                      color: Colors.white,
-                      size: SizeConfig.padding16,
-                    ),
-                  )
-                : Text("(${model.predictions?.length ?? 0})",
-                    style: TextStyles.sourceSans.body2),
-            const Spacer(),
-            const Icon(
-              Icons.navigate_next_rounded,
-              color: Colors.white,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -372,6 +386,7 @@ class WinTextWidget extends StatelessWidget {
   });
 
   CompletedMatchDetailsVM model;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -399,7 +414,7 @@ class WinTextWidget extends StatelessWidget {
             model.winString,
             textAlign: TextAlign.center,
             style:
-                TextStyles.sourceSansB.title5.colour(UiConstants.primaryColor),
+            TextStyles.sourceSansB.title5.colour(UiConstants.primaryColor),
           )
         ],
       ),
@@ -411,6 +426,7 @@ class LossOrNoParticipateTextWidget extends StatelessWidget {
   const LossOrNoParticipateTextWidget({super.key, this.isLoss = true});
 
   final bool isLoss;
+
   @override
   Widget build(BuildContext context) {
     return Padding(

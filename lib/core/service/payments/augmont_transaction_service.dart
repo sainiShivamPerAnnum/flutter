@@ -13,6 +13,7 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -27,6 +28,7 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -44,6 +46,7 @@ class AugmontTransactionService extends BaseTransactionService {
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+
   // final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
   final TambolaService? _tambolaService = locator<TambolaService>();
@@ -54,6 +57,7 @@ class AugmontTransactionService extends BaseTransactionService {
   bool _isGoldSellInProgress = false;
 
   late GoldPurchaseDetails currentGoldPurchaseDetails;
+
   get isGoldBuyInProgress => this._isGoldBuyInProgress;
 
   set isGoldBuyInProgress(value) {
@@ -267,14 +271,19 @@ class AugmontTransactionService extends BaseTransactionService {
           if (!txnStatus.data!.isUpdating!) {
             await _newUserCheck();
             PowerPlayService.powerPlayDepositFlow = false;
+            locator<PowerPlayHomeViewModel>()
+                .powerPlayService
+                .getUserTransactionHistory(MatchData(), live: true);
+
             transactionResponseModel = res.model;
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
             if (res.model!.data != null &&
                 res.model!.data!.goldInTxnBought != null &&
-                res.model!.data!.goldInTxnBought! > 0)
+                res.model!.data!.goldInTxnBought! > 0) {
               currentTxnGms = res.model!.data!.goldInTxnBought;
+            }
             timer!.cancel();
             return transactionResponseUpdate(
                 // gtId: transactionResponseModel?.data?.gtId ?? "",
