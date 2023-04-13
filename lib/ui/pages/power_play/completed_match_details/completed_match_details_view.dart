@@ -22,8 +22,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../power_play_home/power_play_vm.dart';
-
 class CompletedMatchDetailsView extends StatelessWidget {
   const CompletedMatchDetailsView({
     super.key,
@@ -296,7 +294,7 @@ class UserPredictionsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<PowerPlayHomeViewModel, List<UserTransaction>?>(
+    return Selector<PowerPlayService, List<UserTransaction>?>(
       selector: (context, provider) => provider.transactions,
       builder: (context, transactions, child) {
         log("UserPredictionsButton: ${transactions?.length}");
