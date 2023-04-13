@@ -15,7 +15,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 class MyPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
-    private lateinit var referrerClient: InstallReferrerClient
+    private var referrerClient: InstallReferrerClient? = null
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(binding.binaryMessenger, "my_plugin")
@@ -30,14 +30,19 @@ class MyPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         }
     }
 
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        channel.setMethodCallHandler(null)
+        referrerClient?.endConnection()
+    }
+
     private fun getInstallReferrer(result: Result) {
         referrerClient = InstallReferrerClient.newBuilder(context).build()
-        referrerClient.startConnection(object : InstallReferrerStateListener {
+        referrerClient!!.startConnection(object : InstallReferrerStateListener {
             override fun onInstallReferrerSetupFinished(responseCode: Int) {
                 when (responseCode) {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         try {
-                            val response: ReferrerDetails = referrerClient.installReferrer
+                            val response: ReferrerDetails = referrerClient!!.installReferrer
                             val referrerUrl: String = response.installReferrer
                             val referrerClickTime: Long = response.referrerClickTimestampSeconds
                             val appInstallTime: Long = response.installBeginTimestampSeconds
@@ -68,10 +73,7 @@ class MyPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         })
     }
 
-    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
-        referrerClient.endConnection()
-    }
+
 
     companion object {
         @JvmStatic

@@ -18,45 +18,53 @@ class ApxorDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(SizeConfig.roundness16),
             ),
             backgroundColor: Colors.black,
-            child: Container(
-                // margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                height: SizeConfig.screenWidth,
-                width: SizeConfig.screenWidth,
-                decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(SizeConfig.roundness16)),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: SizeConfig.screenWidth,
-                      width: SizeConfig.screenWidth,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness16),
-                        image: DecorationImage(
-                          image: NetworkImage(dialogContent["asset"]),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: -SizeConfig.padding12,
-                      right: -SizeConfig.padding12,
-                      child: Padding(
-                        padding:
-                            EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.black,
-                          child: IconButton(
-                            icon: const Icon(Icons.close, color: Colors.white),
-                            onPressed: () =>
-                                AppState.backButtonDispatcher!.didPopRoute(),
+            child: GestureDetector(
+              onTap: () {
+                AppState.backButtonDispatcher!.didPopRoute();
+                AppState.delegate!
+                    .parseRoute(Uri.parse(dialogContent["ctaAction"]));
+              },
+              child: Container(
+                  // margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  height: SizeConfig.screenWidth,
+                  width: SizeConfig.screenWidth,
+                  decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness16)),
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: SizeConfig.screenWidth,
+                        width: SizeConfig.screenWidth,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness16),
+                          image: DecorationImage(
+                            image: NetworkImage(dialogContent["asset"]),
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                    )
-                  ],
-                )),
+                      Positioned(
+                        top: -SizeConfig.padding12,
+                        right: -SizeConfig.padding12,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.black,
+                            child: IconButton(
+                              icon:
+                                  const Icon(Icons.close, color: Colors.white),
+                              onPressed: () =>
+                                  AppState.backButtonDispatcher!.didPopRoute(),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )),
+            ),
           )
         : FelloInfoDialog(
             nPng: dialogContent["asset"],

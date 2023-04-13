@@ -55,29 +55,28 @@ class FelloInfoDialog extends StatelessWidget {
                   ),
                 if (png != null)
                   SizedBox(height: SizeConfig.screenHeight! * 0.04),
-                if (nPng != null)
-                  SizedBox(height: SizeConfig.screenHeight! * 0.04),
+                // if (nPng != null)
+                //   SizedBox(height: SizeConfig.screenHeight! * 0.04),
                 if (nPng != null)
                   Image.network(
                     nPng!,
-                    height: SizeConfig.screenHeight! * 0.16,
+                    width: SizeConfig.screenWidth! * 0.7,
                     fit: BoxFit.cover,
                   ),
-                if (nPng != null)
-                  SizedBox(height: SizeConfig.screenHeight! * 0.04),
+                if (nPng != null) SizedBox(height: SizeConfig.padding10),
                 if ((title ?? '').isNotEmpty)
                   Text(
                     title!,
-                    style: TextStyles.title3.bold,
+                    style: TextStyles.rajdhaniB.title3.colour(Colors.white),
                     textAlign: TextAlign.center,
                   ),
                 if ((title ?? '').isNotEmpty)
-                  SizedBox(height: SizeConfig.padding16),
+                  SizedBox(height: SizeConfig.padding10),
                 if ((subtitle ?? '').isNotEmpty)
                   Text(
                     subtitle!,
                     textAlign: TextAlign.center,
-                    style: TextStyles.body2.colour(Colors.grey),
+                    style: TextStyles.sourceSans.body2.colour(Colors.grey),
                   ),
                 if ((subtitle ?? '').isNotEmpty)
                   SizedBox(height: SizeConfig.screenHeight! * 0.02),

@@ -187,7 +187,7 @@ class SubService extends ChangeNotifier {
       try {
         await getSubscription();
         const platform = MethodChannel("methodChannel/upiIntent");
-        autosaveState = AutosaveState.INIT;
+        // autosaveState = AutosaveState.INIT;
         if (Platform.isIOS) {
           BaseUtil.launchUrl(res.model!);
         } else {

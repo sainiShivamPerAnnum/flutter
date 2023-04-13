@@ -59,7 +59,7 @@ class AutosaveConfirmExitModalSheet extends StatelessWidget {
                   onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
                     AppState.backButtonDispatcher!.didPopRoute();
-                    BaseUtil.openDepositOptionsModalSheet();
+                    BaseUtil.openDepositOptionsModalSheet(timer: 800);
                     locator<AnalyticsService>()
                         .track(eventName: AnalyticsEvents.asCancelOTPTapped);
                   },
