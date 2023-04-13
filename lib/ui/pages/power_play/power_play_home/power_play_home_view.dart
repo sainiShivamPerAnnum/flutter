@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -5,6 +8,7 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/power_play_matches.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
@@ -16,6 +20,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../util/locator.dart';
 
@@ -227,5 +232,76 @@ class _PowerPlayHomeState extends State<PowerPlayHome> {
       default:
         return 'powerPlayPrizes';
     }
+  }
+}
+
+class LiveUserPredictionsButton extends StatelessWidget {
+  const LiveUserPredictionsButton({super.key, this.margin = true});
+
+  final bool margin;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<PowerPlayService>(
+      builder: (context, powerPlayService, child) {
+        return InkWell(
+          onTap: () {
+            if (powerPlayService.isPredictionsLoading) return;
+            BaseUtil.openModalBottomSheet(
+              isBarrierDismissible: true,
+              addToScreenStack: true,
+              enableDrag: Platform.isIOS,
+              backgroundColor: const Color(0xff21284A),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness32),
+                topRight: Radius.circular(SizeConfig.roundness32),
+              ),
+              isScrollControlled: true,
+              hapticVibrate: true,
+              content: YourPredictionSheet(
+                transactions: powerPlayService.transactions,
+                matchData: powerPlayService.liveMatchData!,
+              ),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+            ),
+            padding: EdgeInsets.only(
+              left: SizeConfig.pageHorizontalMargins,
+              right: SizeConfig.padding12,
+              top: SizeConfig.padding12,
+              bottom: SizeConfig.padding12,
+            ),
+            margin: EdgeInsets.symmetric(
+                horizontal: margin ? SizeConfig.pageHorizontalMargins : 0),
+            child: Row(
+              children: [
+                Text("Your Predictions", style: TextStyles.sourceSans.body2),
+                SizedBox(width: SizeConfig.padding6),
+                powerPlayService.isPredictionsLoading
+                    ? SizedBox(
+                        height: SizeConfig.padding16,
+                        width: SizeConfig.padding16,
+                        child: SpinKitWave(
+                          color: Colors.white,
+                          size: SizeConfig.padding16,
+                        ),
+                      )
+                    : Text("(${powerPlayService.transactions?.length ?? 0})",
+                        style: TextStyles.sourceSans.body2),
+                const Spacer(),
+                const Icon(
+                  Icons.navigate_next_rounded,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

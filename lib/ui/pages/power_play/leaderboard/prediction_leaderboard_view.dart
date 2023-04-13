@@ -47,7 +47,7 @@ class PredictionLeaderboard extends StatelessWidget {
     return BaseView<LeaderBoardViewModel>(
       onModelReady: (model) {
         model.getUserPredictedData();
-        model.powerPlayService.getUserTransactionHistory(matchData);
+        model.powerPlayService.getUserTransactionHistory(matchData: matchData);
       },
       builder: (context, model, child) {
         return PowerPlayBackgroundUi(
@@ -100,7 +100,7 @@ class PredictionLeaderboard extends StatelessWidget {
                       onRefresh: () async {
                         await model.getUserPredictedData();
                         await model.powerPlayService
-                            .getUserTransactionHistory(matchData);
+                            .getUserTransactionHistory(matchData: matchData);
                         return Future.value();
                       },
                       child: SingleChildScrollView(
@@ -447,28 +447,28 @@ class UsersPrediction extends StatelessWidget {
                         '${index + 1}',
                         style: TextStyles.sourceSans.body3.colour(Colors.white),
                       ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  '${data.count} ${getTitle(index)}',
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        '${data.count} ${getTitle(index)}',
                         style: TextStyles.sourceSans.body3.colour(Colors.white),
                       ),
-                const Spacer(),
-                Text(
-                  '${data.amount} runs',
+                      const Spacer(),
+                      Text(
+                        '${data.amount} runs',
                         style: TextStyles.sourceSans.body3.colour(Colors.white),
                       ),
-                const SizedBox(
-                  width: 10,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-          ],
-        );
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding16,
+                  ),
+                ],
+              );
             },
           );
   }

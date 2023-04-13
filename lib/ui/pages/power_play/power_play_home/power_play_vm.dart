@@ -135,8 +135,9 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     if (liveMatchData!.isNotEmpty) {
       liveMatchData = liveMatchData;
       matchData = liveMatchData![0]!;
+      unawaited(
+          _powerPlayService.getUserTransactionHistory(matchData: matchData!));
     }
-
     if ((liveMatchData == null || (liveMatchData?.isEmpty ?? true)) && isLive) {
       Future.delayed(const Duration(milliseconds: 200), () {
         tabController?.animateTo(1);

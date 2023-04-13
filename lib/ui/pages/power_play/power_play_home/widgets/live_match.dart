@@ -4,8 +4,8 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_view.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
+import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_home_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -171,8 +171,7 @@ class LiveMatch extends StatelessWidget {
             ),
           ),
           SizedBox(height: SizeConfig.padding16),
-          UserPredictionsButton(
-            model: model,
+          const LiveUserPredictionsButton(
             margin: false,
           ),
           InkWell(

@@ -28,7 +28,6 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -232,23 +231,14 @@ class AugmontTransactionService extends BaseTransactionService {
     // }
   }
 
-  transactionResponseUpdate({List<String>? gtIds}) async {
+  Future<void> transactionResponseUpdate({List<String>? gtIds}) async {
     _logger!.d("Polling response processing");
     try {
       //add this to augmontBuyVM
-      _userCoinService!.getUserCoinBalance();
-      _userService!.getUserFundWalletData();
+      unawaited(_userCoinService!.getUserCoinBalance());
+      unawaited(_userService!.getUserFundWalletData());
       if (currentTransactionState == TransactionState.ongoing) {
-        // ScratchCardService.scratchCardId = gtId;
         ScratchCardService.scratchCardsList = gtIds;
-        //TESTING MULTIPLE SCRATCH CARD VIEW
-        // ScratchCardService.scratchCardsList!.addAll([
-        //   "Acd92NN53WWpJZbxZ4UW",
-        //   "Bv8CzzI40pfwLpbuPM6Z",
-        //   "M83UzvsZGzMJlEcVezsj",
-        //   "WrffUHSSJ95hqxO5iv73"
-        // ]);
-        // await _gtService.fetchAndVerifyScratchCardByID();
         await _userService!.getUserJourneyStats();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
@@ -257,8 +247,8 @@ class AugmontTransactionService extends BaseTransactionService {
       _txnHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
     } catch (e) {
       _logger!.e(e);
-      _internalOpsService!.logFailure(_userService!.baseUser!.uid,
-          FailType.DepositPayloadError, e as Map<String, dynamic>);
+      unawaited(_internalOpsService!.logFailure(_userService!.baseUser!.uid,
+          FailType.DepositPayloadError, e as Map<String, dynamic>));
     }
   }
 
@@ -271,9 +261,12 @@ class AugmontTransactionService extends BaseTransactionService {
           if (!txnStatus.data!.isUpdating!) {
             await _newUserCheck();
             PowerPlayService.powerPlayDepositFlow = false;
-            locator<PowerPlayService>()
-                .getUserTransactionHistory(MatchData(), live: true);
-
+            MatchData? liveMatchData =
+                locator<PowerPlayService>().liveMatchData;
+            if (liveMatchData != null) {
+              unawaited(locator<PowerPlayService>()
+                  .getUserTransactionHistory(matchData: liveMatchData));
+            }
             transactionResponseModel = res.model;
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
@@ -284,9 +277,8 @@ class AugmontTransactionService extends BaseTransactionService {
               currentTxnGms = res.model!.data!.goldInTxnBought;
             }
             timer!.cancel();
-            return transactionResponseUpdate(
-                // gtId: transactionResponseModel?.data?.gtId ?? "",
-                gtIds: transactionResponseModel?.data?.gtIds ?? []);
+            unawaited(transactionResponseUpdate(
+                gtIds: transactionResponseModel?.data?.gtIds ?? []));
           }
           break;
         case Constants.TXN_STATUS_RESPONSE_PENDING:

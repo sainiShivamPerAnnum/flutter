@@ -37,6 +37,14 @@ class PowerPlayService extends ChangeNotifier {
   List<MatchData> matchData = [];
   MatchData? liveMatchData;
   bool isLinkSharing = false;
+  bool _isPredictionsLoading = false;
+
+  bool get isPredictionsLoading => _isPredictionsLoading;
+
+  set isPredictionsLoading(bool value) {
+    _isPredictionsLoading = value;
+    notifyListeners();
+  }
 
   List<UserTransaction>? _transactions = [];
   List<Map<String, dynamic>>? cardCarousel;
@@ -128,19 +136,13 @@ class PowerPlayService extends ChangeNotifier {
     }
   }
 
-  Future<void> getUserTransactionHistory(MatchData matchData,
-      {bool live = false}) async {
+  Future<void> getUserTransactionHistory({required MatchData matchData}) async {
     _logger.i(
         "PowerPlayService -> getUserTransactionHistory -- MatchData $matchData");
     TimestampModel? startTime;
     TimestampModel? endTime;
-
-    if (live) {
-      startTime = liveMatchData?.startsAt;
-      endTime = TimestampModel.currentTimeStamp();
-
-      log('live => $startTime $endTime');
-    } else if (matchData.status == MatchStatus.active.name) {
+    isPredictionsLoading = true;
+    if (matchData.status == MatchStatus.active.name) {
       startTime = matchData.startsAt;
       endTime = TimestampModel.currentTimeStamp();
     } else if (matchData.status == MatchStatus.half_complete.name) {
@@ -168,6 +170,7 @@ class PowerPlayService extends ChangeNotifier {
     } else {
       BaseUtil.showNegativeAlert(response.errorMessage, "Please try again");
     }
+    isPredictionsLoading = false;
   }
 
   Future<List<MatchWinnersLeaderboardItemModel>?>

@@ -63,6 +63,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                 onPressed: () {
                   FocusScope.of(context).unfocus();
                   (autosaveState == AutosaveState.INIT ||
+                          autosaveState == AutosaveState.ACTIVE ||
                           model.pageController!.page == 0)
                       ? AppState.backButtonDispatcher!.didPopRoute()
                       : model.pageController!.animateToPage(

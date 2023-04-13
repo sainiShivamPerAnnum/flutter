@@ -37,8 +37,10 @@ class GoldBuySuccessView extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {
+                    AppState.isRepeated = true;
+                    AppState.unblockNavigation();
                     AppState.backButtonDispatcher!.didPopRoute();
-                    _augTxnService!.showGtIfAvailable();
+                    // _augTxnService!.showGtIfAvailable();
                   },
                   icon: Icon(
                     Icons.close,
@@ -258,6 +260,7 @@ class GoldBuySuccessView extends StatelessWidget {
           TextButton(
             onPressed: () {
               AppState.isRepeated = true;
+              AppState.unblockNavigation();
               AppState.backButtonDispatcher!.didPopRoute();
               AppState.delegate!.appState.setCurrentTabIndex = DynamicUiUtils
                   .navBar

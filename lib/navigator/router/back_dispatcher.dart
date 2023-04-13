@@ -64,7 +64,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   @override
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
-    print("Page Controller: ${locator<SubService>().pageController}");
 
     // if (AppState.showAutosaveBt &&
     //     AppState.screenStack.last != ScreenItem.dialog) {
@@ -109,8 +108,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       }
     }
     if (AppState.isInstantGtViewInView) return Future.value(true);
+
     if (AppState.screenStack.last == ScreenItem.loader)
       return Future.value(true);
+    print("Page Controller: ${locator<SubService>().pageController}");
 
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog ||

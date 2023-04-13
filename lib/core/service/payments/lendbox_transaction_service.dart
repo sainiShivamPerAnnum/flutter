@@ -22,7 +22,6 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -164,8 +163,12 @@ class LendboxTransactionService extends BaseTransactionService {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
             PowerPlayService.powerPlayDepositFlow = false;
-            unawaited(locator<PowerPlayService>()
-                .getUserTransactionHistory(MatchData(), live: true));
+            MatchData? liveMatchData =
+                locator<PowerPlayService>().liveMatchData;
+            if (liveMatchData != null) {
+              unawaited(locator<PowerPlayService>()
+                  .getUserTransactionHistory(matchData: liveMatchData));
+            }
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
             await _newUserCheck();
