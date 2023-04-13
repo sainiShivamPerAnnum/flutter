@@ -46,9 +46,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  PowerPlayService get powerPlayService => _powerPlayService;
-
-  List<UserTransaction>? get transactions => powerPlayService.transactions;
+  List<UserTransaction>? get transactions => _powerPlayService.transactions;
 
   List<UserTransaction>? get predictions => _predictions;
 

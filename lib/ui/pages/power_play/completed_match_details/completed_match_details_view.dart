@@ -297,7 +297,7 @@ class UserPredictionsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Selector<PowerPlayHomeViewModel, List<UserTransaction>?>(
-      selector: (context, provider) => provider.powerPlayService.transactions,
+      selector: (context, provider) => provider.transactions,
       builder: (context, transactions, child) {
         log("UserPredictionsButton: ${transactions?.length}");
         return InkWell(

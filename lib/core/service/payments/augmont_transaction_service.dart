@@ -271,8 +271,7 @@ class AugmontTransactionService extends BaseTransactionService {
           if (!txnStatus.data!.isUpdating!) {
             await _newUserCheck();
             PowerPlayService.powerPlayDepositFlow = false;
-            locator<PowerPlayHomeViewModel>()
-                .powerPlayService
+            locator<PowerPlayService>()
                 .getUserTransactionHistory(MatchData(), live: true);
 
             transactionResponseModel = res.model;

@@ -164,8 +164,7 @@ class LendboxTransactionService extends BaseTransactionService {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
             PowerPlayService.powerPlayDepositFlow = false;
-            unawaited(locator<PowerPlayHomeViewModel>()
-                .powerPlayService
+            unawaited(locator<PowerPlayService>()
                 .getUserTransactionHistory(MatchData(), live: true));
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
