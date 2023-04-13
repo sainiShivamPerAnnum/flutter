@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -99,11 +98,11 @@ class FcmListener {
       ///setup android notification channels
       if (Platform.isAndroid) {
         _androidNativeSetup();
-        ApxorFlutter.setDeeplinkListener((url) {
-          // interpret the URL and handle redirection within the application
-          logger!.d("rerouting to Apxor" + url!);
-          AppState.delegate!.parseRoute(Uri.parse(url));
-        });
+        // ApxorFlutter.setDeeplinkListener((url) {
+        //   // interpret the URL and handle redirection within the application
+        //   logger!.d("rerouting to Apxor" + url!);
+        //   AppState.delegate!.parseRoute(Uri.parse(url));
+        // });
       }
     } catch (e) {
       logger!.e(e.toString());

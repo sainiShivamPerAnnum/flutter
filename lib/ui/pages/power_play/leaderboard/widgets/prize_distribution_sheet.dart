@@ -214,7 +214,7 @@ class PrizeDistributionSheet extends StatelessWidget {
                 }
 
                 AppState.delegate!.appState.currentAction = PageAction(
-                    state: PageState.replace, page: PowerPlayHomeConfig);
+                    state: PageState.addPage, page: PowerPlayHomeConfig);
               },
               child: Center(
                 child: Text(

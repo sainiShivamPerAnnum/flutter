@@ -1,7 +1,7 @@
 //Project Imports
 import 'dart:developer';
 
-import 'package:apxor_flutter/observer.dart';
+// import 'package:apxor_flutter/observer.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -103,7 +103,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      observers: [ApxNavigationObserver()],
+      // observers: [ApxNavigationObserver()],
       key: navigatorKey,
       onPopPage: _onPopPage,
       pages: buildPages(),

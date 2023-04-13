@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:app_install_date/app_install_date_imp.dart';
-import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -78,9 +75,6 @@ class AnalyticsService extends BaseAnalyticsService {
         _appFlyer!.track(eventName: eventName, properties: properties);
       if (singular)
         _singular!.track(eventName: eventName, properties: properties);
-      if (Platform.isAndroid && apxor) {
-        ApxorFlutter.logAppEvent(eventName!, attributes: properties);
-      }
     } catch (e) {
       String error = e as String ?? "Unable to track event: $eventName";
       _logger!.e(error);
@@ -90,10 +84,6 @@ class AnalyticsService extends BaseAnalyticsService {
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     _mixpanel!.track(eventName: screen, properties: properties);
     _webengage!.track(eventName: screen, properties: properties);
-
-    if (Platform.isAndroid) {
-      ApxorFlutter.trackScreen(screen!);
-    }
   }
 
   void trackSignup(String? userId) async {

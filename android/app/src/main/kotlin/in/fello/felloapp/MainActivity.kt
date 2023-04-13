@@ -13,24 +13,19 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.util.Base64
 import android.util.Log
 import android.view.View
-import com.google.android.gms.ads.identifier.AdvertisingIdClient
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.security.MessageDigest
-import java.lang.reflect.Method
 
 
 class MainActivity : FlutterFragmentActivity()  {
@@ -52,7 +47,8 @@ class MainActivity : FlutterFragmentActivity()  {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
                 // Note: this method is invoked on the main thread.
-                call, result ->
+                call, rawResult ->
+            val result: MethodChannel.Result = MethodResultWrapper(rawResult)
             isAlreadyReturend=false
             res=result
 
@@ -73,7 +69,8 @@ class MainActivity : FlutterFragmentActivity()  {
         //METHOD CHANNEL [2]
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, DEVICEDATACHANNEL).setMethodCallHandler {
             // This method is invoked on the main thread.
-            call, result ->
+            call, rawResult ->
+            val result: MethodChannel.Result = MethodResultWrapper(rawResult)
             if (call.method == "getInstalledApps") {
               val installedAppsList = getInstalledApplications()
               if (installedAppsList.size != 0) {
@@ -100,7 +97,9 @@ class MainActivity : FlutterFragmentActivity()  {
        paymentMethodChannel =  MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UPIINTENTCHANNEL)
         paymentMethodChannel.setMethodCallHandler {
             // This method is invoked on the main thread.
-                call, result ->
+                call, rawResult ->
+            val result: MethodChannel.Result = MethodResultWrapper(rawResult)
+
             when (call.method) {
                 "initiatePsp" -> {
                     paymentResult = result
@@ -357,4 +356,30 @@ class MainActivity : FlutterFragmentActivity()  {
         return bmp
     }
 
+}
+
+
+private class MethodResultWrapper internal constructor(private val methodResult: MethodChannel.Result) :
+    MethodChannel.Result {
+    private val handler: Handler
+    override fun success(result: Any?) {
+        handler.post(
+            Runnable { methodResult.success(result) })
+    }
+
+    override fun error(
+        errorCode: String, errorMessage: String?, errorDetails: Any?
+    ) {
+        handler.post(
+            Runnable { methodResult.error(errorCode, errorMessage, errorDetails) })
+    }
+
+    override fun notImplemented() {
+        handler.post(
+            Runnable { methodResult.notImplemented() })
+    }
+
+    init {
+        handler = Handler(Looper.getMainLooper())
+    }
 }
