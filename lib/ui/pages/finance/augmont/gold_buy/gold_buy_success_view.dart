@@ -55,7 +55,7 @@ class GoldBuySuccessView extends StatelessWidget {
               children: [
                 Align(
                   alignment: Alignment.center,
-                  child: Lottie.asset(
+                  child: Lottie.network(
                     Assets.goldDepostSuccessLottie,
                     fit: BoxFit.cover,
                   ),
@@ -67,7 +67,7 @@ class GoldBuySuccessView extends StatelessWidget {
                       margin: EdgeInsets.only(
                           left: SizeConfig.padding12,
                           bottom: SizeConfig.padding24),
-                      child: Lottie.asset(
+                      child: Lottie.network(
                         Assets.floatingTokenIslandLottie,
                         width: SizeConfig.screenWidth! * 0.3,
                         fit: BoxFit.cover,
@@ -82,7 +82,7 @@ class GoldBuySuccessView extends StatelessWidget {
                         right: SizeConfig.padding12,
                         top: SizeConfig.padding24,
                       ),
-                      child: Lottie.asset(
+                      child: Lottie.network(
                         Assets.floatingScratchCardIslandLottie,
                         width: SizeConfig.screenWidth! * 0.3,
                         fit: BoxFit.cover,
@@ -93,7 +93,7 @@ class GoldBuySuccessView extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      child: Lottie.asset(
+                      child: Lottie.network(
                         Assets.floatingTambolaTicketIslandLottie,
                         width: SizeConfig.screenWidth! * 0.3,
                         fit: BoxFit.cover,

@@ -65,7 +65,7 @@ class LendboxSuccessView extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.center,
-                    child: Lottie.asset(
+                    child: Lottie.network(
                       Assets.floDepositSuccessLottie,
                       fit: BoxFit.cover,
                     ),
@@ -78,7 +78,7 @@ class LendboxSuccessView extends StatelessWidget {
                           left: SizeConfig.padding12,
                           bottom: SizeConfig.padding24,
                         ),
-                        child: Lottie.asset(
+                        child: Lottie.network(
                           Assets.floatingTokenIslandLottie,
                           width: SizeConfig.screenWidth! * 0.3,
                           fit: BoxFit.cover,
@@ -93,7 +93,7 @@ class LendboxSuccessView extends StatelessWidget {
                           right: SizeConfig.padding12,
                           top: SizeConfig.padding24,
                         ),
-                        child: Lottie.asset(
+                        child: Lottie.network(
                           Assets.floatingScratchCardIslandLottie,
                           width: SizeConfig.screenWidth! * 0.3,
                           fit: BoxFit.cover,
@@ -104,7 +104,7 @@ class LendboxSuccessView extends StatelessWidget {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
-                        child: Lottie.asset(
+                        child: Lottie.network(
                           Assets.floatingTambolaTicketIslandLottie,
                           width: SizeConfig.screenWidth! * 0.3,
                           fit: BoxFit.cover,

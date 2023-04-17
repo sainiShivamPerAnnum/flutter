@@ -35,14 +35,14 @@ class JourneyErrorScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Lottie.asset(Assets.fullScreenLoaderLottie,
+          Lottie.network(Assets.fullScreenLoaderLottie,
               height: SizeConfig.screenWidth! / 2),
-          SizedBox(height: 20),
+          SizedBox(height: SizeConfig.padding20),
           Text(
             locale.jFailed,
             style: TextStyles.rajdhaniEB.title2,
           ),
-          SizedBox(height: 20),
+          SizedBox(height: SizeConfig.padding20),
           AppNegativeBtn(
               btnText: locale.btnRetry,
               onPressed: () {

@@ -74,7 +74,7 @@ class _TambolaExistingUserScreenState extends State<TambolaExistingUserScreen>
                   ),
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                    child: Lottie.asset(Assets.tambolaTopBannerLottie),
+                    child: Lottie.network(Assets.tambolaTopBannerLottie),
                   ),
                 ),
                 TodayWeeklyPicksCard(

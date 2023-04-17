@@ -1,3 +1,7 @@
+//ignore_for_file: avoid_classes_with_only_static_members
+
+const assetBaseUrl = 'https://d37gtxigg82zaw.cloudfront.net/';
+
 class Assets {
   static const String logoMaxSize = 'images/fello_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
@@ -10,8 +14,6 @@ class Assets {
       'images/onboard_collage-small.png';
 
   static const String noTransaction = "assets/vectors/no-transactions.png";
-  static const inAppScrollAnimation =
-      "assets/lotties/Inapp scroll animation.json";
   static const String augmontShare = "images/augmont-share.png";
   static const String preAutosave = "assets/images/preautosave.png";
   static const String customAvatar = 'assets/vectors/userAvatars/CUSTOM.svg';
@@ -20,6 +22,7 @@ class Assets {
   static const String autoSaveOngoing = 'assets/svg/auto_save_ongoing.svg';
   static const String upi = 'assets/images/upi.png';
   static const String rupee = 'assets/vectors/icons/indian_rupee.svg';
+
   //APPBAR
 
   static const String alerts = "assets/vectors/icons/alerts.svg";
@@ -48,8 +51,10 @@ class Assets {
 // ONBOARDING
   static const String bankLottie = "assets/lotties/bank.json";
   static const String truecaller = "assets/images/truecaller.png";
-  static const String journeyOnbLottie = "assets/lotties/journey_onb.json";
+
+  // static const String journeyOnbLottie = "assets/lotties/journey_onb.json";
   static const String support = "assets/images/support.png";
+
   // WANT MORE MODAL
   static const String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
   static const String wmtShare = "assets/vectors/icons/wmt_share.svg";
@@ -64,6 +69,7 @@ class Assets {
 
   static const String sprout = "assets/vectors/sprout.svg";
   static const String star = "assets/vectors/star.svg";
+
   //HOME TAB//
 
   // PLAY
@@ -82,6 +88,7 @@ class Assets {
   static const String tambola_instant_view =
       "assets/svg/tambola_instant_view.svg";
   static const String tambola_space = "assets/svg/tambola_space.svg";
+
   // SAVE
   static const String whiteRays = "assets/images/white_rays.png";
   static const String moneyIcon = "assets/images/icons/money.png";
@@ -169,6 +176,7 @@ class Assets {
 
   static const String aTambolaTicket = 'assets/vectors/icons/frame_svg.svg';
   static const String gift = 'assets/vectors/icons/gift_svg.svg';
+
   // Play Info Section Asset
   // static final String ludoGameAsset = 'assets/svg/play_ludo.svg';
   // static final String leaderboardGameAsset = 'assets/svg/play_leaderboard.svg';
@@ -236,6 +244,7 @@ class Assets {
   static const String chevRonRightArrow =
       "assets/vectors/icons/chevron_right_arrow.svg";
   static const String arrowTreading = "assets/svg/arrow_trending.svg";
+
   //Golden Tickeets screen
   static const String unredemmedScratchCardBG = "assets/svg/unredeemed_gt.svg";
   static const String levelUpUnRedeemedScratchCardBG =
@@ -310,31 +319,32 @@ class Assets {
   static const String felloSplashZoomOutLogo =
       'assets/lotties/fello_splash_out.json';
   static const String goldDepostLoadingLottie =
-      "assets/lotties/gold_deposit_progress.json";
+      "${assetBaseUrl}lotties/gold_deposit_progress.json";
   static const String goldDepostSuccessLottie =
-      "assets/lotties/gold_deposit_complete.json";
+      "${assetBaseUrl}lotties/gold_deposit_complete.json";
   static const String goldSellCompleteLottie =
-      "assets/lotties/gold_sell_complete.json";
+      "${assetBaseUrl}lotties/gold_sell_complete.json";
   static const String floDepostLoadingLottie =
-      "assets/lotties/flo_deposit_progress.json";
+      "${assetBaseUrl}lotties/flo_deposit_progress.json";
   static const String floDepositSuccessLottie =
-      "assets/lotties/flo_deposit_complete.json";
+      "${assetBaseUrl}lotties/flo_deposit_complete.json";
   static const String floSellCompleteLottie =
-      "assets/lotties/flo_sell_complete.json";
-  static const String fullScreenLoaderLottie = "assets/lotties/loader.json";
+      "${assetBaseUrl}lotties/flo_sell_complete.json";
+  static const String fullScreenLoaderLottie =
+      "${assetBaseUrl}lotties/loader.json";
 
   static const String floatingTokenIslandLottie =
-      "assets/lotties/floating_token.json";
+      "${assetBaseUrl}lotties/floating_token.json";
   static const String floatingTambolaTicketIslandLottie =
-      "assets/lotties/floating_tambola_ticket.json";
+      "${assetBaseUrl}lotties/floating_tambola_ticket.json";
   static const String floatingScratchCardIslandLottie =
-      "assets/lotties/floating_golden_ticket.json";
-  static const String jarLottie = "assets/lotties/jarLottie.json";
+      "${assetBaseUrl}lotties/floating_golden_ticket.json";
+  static const String jarLottie = "${assetBaseUrl}lotties/jar_lottie.json";
 
-  static const String levelUpLottie = "assets/lotties/levelup.json";
-  static const String wohooLottie = "assets/lotties/woohoo.json";
-  static const String gtScratch = "assets/lotties/scratch.json";
-  static const String multiReward = "assets/lotties/multiReward.json";
+  static const String levelUpLottie = "${assetBaseUrl}lotties/levelup.json";
+
+  // static const String wohooLottie = "assets/lotties/woohoo.json";
+  // static const String gtScratch = "assets/lotties/scratch.json";
 
   static const String crypto = "assets/svg/crypto.svg";
   static const String single_gold_brick = "assets/svg/single_gold_brick.svg";
@@ -351,7 +361,7 @@ class Assets {
   static const String bottomBannerLottie =
       'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
   static const String tambolaTopBannerLottie =
-      'assets/lotties/tambola_animation.json';
+      '${assetBaseUrl}lotties/tambola_animation.json';
 
   //POWER PLAY ASSETS
   static const String powerPlayMain =
