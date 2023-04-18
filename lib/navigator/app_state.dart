@@ -1,5 +1,6 @@
 //Project imports
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -39,7 +40,8 @@ class AppState extends ChangeNotifier {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final RootController _rootController = locator<RootController>();
   int _rootIndex = 0;
-  static PageController homeTabPageController = PageController(initialPage: 0);
+  PageController homeTabPageController = PageController(initialPage: 0);
+
   // Future _txnFunction;
   Timer? _txnTimer;
   Future? _txnFunction;
@@ -75,6 +77,7 @@ class AppState extends ChangeNotifier {
   static double? amt;
   static bool isRepeated = false;
   PageAction _currentAction = PageAction();
+
   // BackButtonDispatcher backButtonDispatcher;
 
   get rootIndex => _rootIndex;
@@ -134,11 +137,7 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
-    //First Call check for journey
-    executeForFirstJourneyTabClick(index);
-    executeNavBarItemFirstClick(index);
-    _rootController.onChange(_rootController.navItems.values.toList()[index]);
-    print(_rootIndex);
+    debugPrint("$_rootIndex");
     notifyListeners();
   }
 
@@ -147,23 +146,24 @@ class AppState extends ChangeNotifier {
     if (JourneyService.isAvatarAnimationInProgress) return;
     _rootController.onChange(_rootController.navItems.values.toList()[index]);
     AppState.delegate!.appState.setCurrentTabIndex = index;
+    homeTabPageController.jumpToPage(index);
     trackEvent(index);
     Haptic.vibrate();
     if (_rootController.currentNavBarItemModel ==
         RootController.journeyNavBarItem) {
       _journeyService.checkForMilestoneLevelChange();
     }
-    executeNavBarItemFirstClick(index);
+    // executeNavBarItemFirstClick(index);
   }
 
   bool showTourStrip = false;
 
-  setTourStripValue() {
+  void setTourStripValue() {
     showTourStrip = false;
     notifyListeners();
   }
 
-  void setShowStripValue() async {
+  Future<void> setShowStripValue() async {
     final sharePreference = await SharedPreferences.getInstance();
     final value = sharePreference.getInt('showTour');
     final appSession = value ?? 0;
@@ -176,9 +176,9 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  returnHome() {
+  void returnHome() {
     _rootIndex = 0;
-    print(_rootIndex);
+    log("$_rootIndex");
 
     notifyListeners();
   }
@@ -194,19 +194,15 @@ class AppState extends ChangeNotifier {
     _currentAction = PageAction();
   }
 
-  _saveLastTapIndex(int index) {
-    SharedPreferences.getInstance().then((instance) {
-      instance.setInt('lastTab', index);
-    });
-  }
-
-  dump() {
+  void dump() {
     isRootAvailableForIncomingTaskExecution = true;
     isFirstTimeJourneyOpened = false;
     isJourneyFirstTab = false;
     isFirstTime = false;
     _rootController.navItems.clear();
+    homeTabPageController.dispose();
   }
+
   // setLastTapIndex() {
   //   SharedPreferences.getInstance().then((instance) {
   //     rootIndex = instance.getInt('lastTab');
@@ -254,6 +250,7 @@ class AppState extends ChangeNotifier {
   }
 
   executeForFirstSaveTabClick(index) {}
+
   executeForFirstPlayTabClick(index) {
     SpotLightController.instance.userFlow = UserFlow.onPlayTab;
   }

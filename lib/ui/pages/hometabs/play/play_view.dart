@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class Play extends StatelessWidget {
-  Play({Key? key}) : super(key: key);
+  const Play({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BaseView<PlayViewModel>(
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
-        return Container(
+        return SizedBox(
             height: SizeConfig.screenHeight,
             child: ShowCaseWidget(
               enableAutoScroll: true,

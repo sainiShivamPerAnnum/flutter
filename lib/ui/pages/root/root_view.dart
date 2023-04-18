@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
-GlobalKey felloAppBarKey = new GlobalKey();
+GlobalKey felloAppBarKey = GlobalKey();
 
 class Root extends StatelessWidget {
   const Root({super.key});
@@ -43,20 +43,21 @@ class Root extends StatelessWidget {
               children: [
                 const NewSquareBackground(),
 
-                RootAppBar(),
-                RefreshIndicator(
-                  triggerMode: RefreshIndicatorTriggerMode.onEdge,
-                  color: UiConstants.primaryColor,
-                  backgroundColor: Colors.black,
-                  onRefresh: model.refresh,
-                  child: Consumer<AppState>(
-                    builder: (ctx, m, child) {
-                      return IndexedStack(
-                        children: model.navBarItems.keys.toList(),
-                        index: m.getCurrentTabIndex,
-                      );
-                    },
-                  ),
+                const RootAppBar(),
+                Consumer<AppState>(
+                  builder: (ctx, m, child) {
+                    return PageView(
+                      scrollDirection: Axis.vertical,
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: m.homeTabPageController,
+                      children: model.navBarItems.keys.toList(),
+                    );
+
+                    // return IndexedStack(
+                    //   index: m.getCurrentTabIndex,
+                    //   children: model.navBarItems.keys.toList(),
+                    // );
+                  },
                 ),
 
                 PropertyChangeProvider<MarketingEventHandlerService,
@@ -64,7 +65,9 @@ class Root extends StatelessWidget {
                   value: locator<MarketingEventHandlerService>(),
                   child: PropertyChangeConsumer<MarketingEventHandlerService,
                       MarketingEventsHandlerProperties>(
-                    properties: [MarketingEventsHandlerProperties.HappyHour],
+                    properties: const [
+                      MarketingEventsHandlerProperties.HappyHour
+                    ],
                     builder: (context, state, _) {
                       return !state!.showHappyHourBanner
                           ? Container()
@@ -76,7 +79,7 @@ class Root extends StatelessWidget {
                                         !_showHappyHour())
                                     ? SizeConfig.navBarHeight
                                     : -50,
-                                duration: Duration(milliseconds: 400),
+                                duration: const Duration(milliseconds: 400),
                                 child: HappyHourBanner(
                                     model: locator<HappyHourCampign>()),
                               ),
@@ -91,6 +94,13 @@ class Root extends StatelessWidget {
                 const QABanner(),
               ],
             ),
+            // floatingActionButton: RefreshIndicator(
+            //   triggerMode: RefreshIndicatorTriggerMode.onEdge,
+            //   color: UiConstants.primaryColor,
+            //   backgroundColor: Colors.black,
+            //   onRefresh: model.refresh,
+            //   child: const SizedBox(),
+            // ),
           );
         });
   }
@@ -99,26 +109,28 @@ class Root extends StatelessWidget {
 bool _showHappyHour() {
   if (locator<RootController>().currentNavBarItemModel ==
       RootController.tambolaNavBar) {
-    return ((locator<TambolaService>().userWeeklyBoards?.length ?? 0) > 0);
+    return (locator<TambolaService>().userWeeklyBoards?.length ?? 0) > 0;
   }
   return true;
 }
 
 class RootAppBar extends StatelessWidget {
-  RootAppBar({super.key});
+  const RootAppBar({super.key});
+
   FaqsType getFaqType() {
     final NavBarItemModel navItem =
         locator<RootController>().currentNavBarItemModel;
-    if (navItem == RootController.playNavBarItem)
+    if (navItem == RootController.playNavBarItem) {
       return FaqsType.play;
-    else if (navItem == RootController.saveNavBarItem)
+    } else if (navItem == RootController.saveNavBarItem) {
       return FaqsType.savings;
-    else if (navItem == RootController.winNavBarItem)
+    } else if (navItem == RootController.winNavBarItem) {
       return FaqsType.winnings;
-    else if (navItem == RootController.tambolaNavBar)
+    } else if (navItem == RootController.tambolaNavBar) {
       return FaqsType.play;
-    else
+    } else {
       return FaqsType.gettingStarted;
+    }
   }
 
   @override
@@ -127,7 +139,7 @@ class RootAppBar extends StatelessWidget {
       top: 0,
       left: 0,
       child: PropertyChangeConsumer<UserService, UserServiceProperties>(
-          properties: [UserServiceProperties.mySegments],
+          properties: const [UserServiceProperties.mySegments],
           builder: (_, userservice, ___) {
             return Consumer<AppState>(
               builder: (ctx, appState, child) {
@@ -156,7 +168,7 @@ class RootAppBar extends StatelessWidget {
                           showAvatar: true,
                         ),
                       )
-                    : SizedBox();
+                    : const SizedBox();
               },
             );
           }),

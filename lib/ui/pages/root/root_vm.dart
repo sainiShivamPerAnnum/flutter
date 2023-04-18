@@ -49,19 +49,19 @@ class RootViewModel extends BaseViewModel {
       : locale = l ?? locator<S>(),
         super();
 
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
 
   final FcmListener _fcmListener = locator<FcmListener>();
   final FcmHandler _fcmHandler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final JourneyService _journeyService = locator<JourneyService>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  final TambolaService? _tambolaService = locator<TambolaService>();
-  final ScratchCardService? _gtService = locator<ScratchCardService>();
-  final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final TambolaService _tambolaService = locator<TambolaService>();
+  final ScratchCardService _gtService = locator<ScratchCardService>();
+  final BankAndPanService _bankAndKycService = locator<BankAndPanService>();
   final PowerPlayService _powerPlayService = locator<PowerPlayService>();
   final AppState appState = locator<AppState>();
   final SubService _subscriptionService = locator<SubService>();
@@ -78,48 +78,67 @@ class RootViewModel extends BaseViewModel {
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
+
   Future<void> refresh() async {
-    if (_rootController.currentNavBarItemModel == RootController.tambolaNavBar)
+    if (_rootController.currentNavBarItemModel ==
+        RootController.tambolaNavBar) {
       return;
-    await _userCoinService.getUserCoinBalance();
-    await _userService.getUserFundWalletData();
-    _txnHistoryService.signOut();
-    // _paytmService.getActiveSubscriptionDetails();
-    await _journeyService.checkForMilestoneLevelChange();
-    await _gtService?.updateUnscratchedGTCount();
-    await _journeyService.getUnscratchedGT();
-    await _subscriptionService.getSubscription();
+    }
+    // await _userCoinService.getUserCoinBalance();
+    // await _userService.getUserFundWalletData();
+    // _txnHistoryService.signOut();
+    // // _paytmService.getActiveSubscriptionDetails();
+    // await _journeyService.checkForMilestoneLevelChange();
+    // await _gtService?.updateUnscratchedGTCount();
+    // await _journeyService.getUnscratchedGT();
+    // await _subscriptionService.getSubscription();
+
+    await Future.wait([
+      _userCoinService.getUserCoinBalance(),
+      _userService.getUserFundWalletData(),
+      _journeyService.checkForMilestoneLevelChange(),
+      _gtService.updateUnscratchedGTCount(),
+      _journeyService.getUnscratchedGT(),
+      _subscriptionService.getSubscription(),
+    ]);
   }
 
-  onInit() {
+  Future<void> onInit() async {
     AppState.isUserSignedIn = true;
     appState.setRootLoadValue = true;
-    _referralService.verifyReferral();
-    _referralService.initDynamicLinks();
+
+    await Future.wait([
+      _referralService.verifyReferral(),
+      _referralService.initDynamicLinks(),
+      // _tambolaService.init(),
+      _subscriptionService.init(),
+    ]);
 
     _rootController.currentNavBarItemModel =
         _rootController.navItems.values.first;
 
-    _tambolaService!.init();
-    _subscriptionService.init();
-    initialize();
+    await initialize();
   }
 
-  initialize() async {
+  Future<void> initialize() async {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
-        await _userService.userBootUpEE();
         await verifyUserBootupDetails();
         await checkForBootUpAlerts();
-        await _fcmListener.refreshTopics();
-        await _userService.getUserFundWalletData();
-        if (AppState.isFirstTime)
-          Future.delayed(Duration(seconds: 1), () {
-            SpotLightController.instance.showTourDialog();
-          });
+
+        await Future.wait([
+          _userService.userBootUpEE(),
+          _fcmListener.refreshTopics(),
+          _userService.getUserFundWalletData()
+        ]);
+
+        if (AppState.isFirstTime) {
+          Future.delayed(const Duration(seconds: 1),
+              SpotLightController.instance.showTourDialog);
+        }
         await handleStartUpNotificationData();
 
-        _journeyService.getUnscratchedGT();
+        await _journeyService.getUnscratchedGT();
 
         _userService.checkForNewNotifications();
         _userService.getProfilePicture();
@@ -130,21 +149,19 @@ class RootViewModel extends BaseViewModel {
   }
 
   void showMarketingCampings() {
-    Future.delayed(Duration(seconds: 2), () {
-      _marketingService.getCampaigns();
-    });
+    Future.delayed(const Duration(seconds: 2), _marketingService.getCampaigns);
   }
 
   Map<Widget, NavBarItemModel> get navBarItems =>
       locator<RootController>().navItems;
 
-  onDispose() {
+  void onDispose() {
     AppState.isUserSignedIn = false;
     appState.setRootLoadValue = false;
     _fcmHandler.addIncomingMessageListener(null);
   }
 
-  _initAdhocNotifications() {
+  void _initAdhocNotifications() {
     if (_fcmListener != null && _baseUtil != null) {
       _fcmHandler.addIncomingMessageListener((valueMap) {
         if (valueMap['title'] != null && valueMap['body'] != null) {
@@ -175,7 +192,7 @@ class RootViewModel extends BaseViewModel {
       addToScreenStack: true,
       isBarrierDismissible: false,
       borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0),
+          topLeft: const Radius.circular(30.0),
           topRight: Radius.circular(SizeConfig.roundness12)),
       backgroundColor:
           UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
@@ -189,7 +206,7 @@ class RootViewModel extends BaseViewModel {
     });
   }
 
-  checkForBootUpAlerts() async {
+  Future<void> checkForBootUpAlerts() async {
     bool updateAvailable =
         PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
     bool isMsgNoticeAvailable =
@@ -209,10 +226,11 @@ class RootViewModel extends BaseViewModel {
           cancelBtnText: "Not now",
           confirmAction: () {
             try {
-              if (Platform.isIOS)
+              if (Platform.isIOS) {
                 BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
-              else if (Platform.isAndroid)
+              } else if (Platform.isAndroid) {
                 BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
+              }
             } catch (e) {
               _logger?.e(e.toString());
             }
@@ -249,18 +267,18 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  handleStartUpNotificationData() {
+  Future<void> handleStartUpNotificationData() async {
     if (AppState.isRootAvailableForIncomingTaskExecution == true &&
         AppState.startupNotifMessage != null) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
-      _fcmHandler.handleMessage(
+      await _fcmHandler.handleMessage(
         AppState.startupNotifMessage,
         MsgSource.Terminated,
       );
     }
   }
 
-  checkIfAppLockModalSheetIsRequired() async {
+  Future<void> checkIfAppLockModalSheetIsRequired() async {
     // show security modal
     if (!canExecuteStartupNotification) return;
 
@@ -274,7 +292,7 @@ class RootViewModel extends BaseViewModel {
                 .getPreference(Preferences.APPLOCK) ==
             0) {
       canExecuteStartupNotification = false;
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () {
         _showSecurityBottomSheet();
         PreferenceHelper.setBool(
             PreferenceHelper.CACHE_SHOW_SECURITY_MODALSHEET, false);
@@ -343,8 +361,9 @@ class RootViewModel extends BaseViewModel {
         if (_userService.userBootUp!.data!.isAppUpdateRequired != null) {
           PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE,
               _userService.userBootUp!.data!.isAppUpdateRequired!);
-        } else
+        } else {
           PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE, false);
+        }
 
         //5. Clear all the caches
         if (_userService.userBootUp!.data!.cache!.keys != null) {
@@ -369,10 +388,11 @@ class RootViewModel extends BaseViewModel {
               _userService.userBootUp!.data!.notice!.url != "") {
             AppState.isRootAvailableForIncomingTaskExecution = false;
             try {
-              if (Platform.isIOS)
+              if (Platform.isIOS) {
                 BaseUtil.launchUrl(_userService.userBootUp!.data!.notice!.url!);
-              else if (Platform.isAndroid)
+              } else if (Platform.isAndroid) {
                 BaseUtil.launchUrl(_userService.userBootUp!.data!.notice!.url!);
+              }
             } catch (e) {
               _logger?.d(e.toString());
             }

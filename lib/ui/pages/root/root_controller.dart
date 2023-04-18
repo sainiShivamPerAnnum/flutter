@@ -28,8 +28,6 @@ class RootController {
 
   void onChange(NavBarItemModel model) {
     currentNavBarItemModel = model;
-    
-      
   }
 
   void getNavItems(String navItem) {
@@ -50,10 +48,10 @@ class RootController {
 
       case "WN":
       case "AC":
-        navItems.putIfAbsent(Win(), () => RootController.winNavBarItem);
+        navItems.putIfAbsent(const Win(), () => RootController.winNavBarItem);
         break;
       case "PL":
-        navItems.putIfAbsent(Play(), () => RootController.playNavBarItem);
+        navItems.putIfAbsent(const Play(), () => RootController.playNavBarItem);
         break;
 
       default:

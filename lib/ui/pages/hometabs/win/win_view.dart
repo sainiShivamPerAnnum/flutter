@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
@@ -16,11 +14,12 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class Win extends StatelessWidget {
+  const Win({super.key});
+
   @override
   Widget build(BuildContext context) {
     final S locale = locator<S>();
@@ -62,7 +61,7 @@ class Win extends StatelessWidget {
                         Showcase(
                           key: ShowCaseKeys.CurrentWinnings,
                           description:
-                              'Your winnings from scratch cards and coupons show here. Redeem your winnings as Digital Gold when you reach ₹200',
+                          'Your winnings from scratch cards and coupons show here. Redeem your winnings as Digital Gold when you reach ₹200',
                           child: const CurrentWinningsInfo(),
                         ),
                         //Refer and Earn

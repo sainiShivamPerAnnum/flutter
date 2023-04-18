@@ -806,12 +806,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             .indexOf(RootController.saveNavBarItem);
         break;
       case 'play':
-        appState.setCurrentTabIndex = appState.setCurrentTabIndex =
-            locator<RootController>()
-                .navItems
-                .values
-                .toList()
-                .indexOf(RootController.playNavBarItem);
+        appState.setCurrentTabIndex = locator<RootController>()
+            .navItems
+            .values
+            .toList()
+            .indexOf(RootController.playNavBarItem);
         break;
       case 'win':
         appState.setCurrentTabIndex = locator<RootController>()
