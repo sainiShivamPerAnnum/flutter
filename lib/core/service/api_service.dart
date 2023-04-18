@@ -82,9 +82,12 @@ class APIService implements API {
         'uid': userService?.firebaseUser?.uid ?? '',
         if (headers != null) ...headers
       });
+
+      logger?.i(
+          "GET REQUEST \n=> PATH: $url  \n=> StatusCode: ${response.statusCode} \n"
+          "=> Response Body: ${response.body}");
+
       // log("API:: $url");
-      logger!.d("GET API:: $url  \nResponse StatusCode: ${response.statusCode}"
-          "\nResponse Body: ${response.body} \nresponse token $token");
       // logger!.d("Get Response: ${response.statusCode}");
       // logger!.d("Get Response: ${response.body}");
       if (decryptData) {
