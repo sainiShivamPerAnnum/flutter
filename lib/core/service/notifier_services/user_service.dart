@@ -65,6 +65,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   String? _myUserName;
   String? _name;
   String? _kycName;
+
   // String _myUpiId;
   String? _dob;
   String? _gender;
@@ -82,30 +83,44 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool? _isSimpleKycVerified;
   bool _isConfirmationDialogOpen = false;
   bool _hasNewNotifications = false;
+
   // bool showOnboardingTutorial = true;
   bool? showSecurityPrompt;
   bool isAnyUnscratchedGTAvailable = false;
 
   User? get firebaseUser => _firebaseUser;
+
   BaseUser? get baseUser => _baseUser;
 
   String? get avatarId => _avatarId;
+
   String? get myUserDpUrl => _myUserDpUrl;
+
   String? get myUserName => _myUserName;
+
   String? get name =>
       (_kycName != null && _kycName!.isNotEmpty) ? _kycName : _name;
+
   String? get idToken => _idToken;
+
   String? get dob => _dob;
+
   String? get gender => _gender;
+
   String? get email => _email;
+
   // String get upiId => _myUpiId;
 
   bool get isEmailVerified => _isEmailVerified ?? false;
+
   bool get isSimpleKycVerified => _isSimpleKycVerified ?? false;
+
   bool get isConfirmationDialogOpen => _isConfirmationDialogOpen;
+
   bool get hasNewNotifications => _hasNewNotifications;
 
   List _userSegments = [];
+
   set baseUser(baseUser) {
     _baseUser = baseUser;
   }
@@ -125,6 +140,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   List<dynamic> get userSegments => _userSegments;
 
   UserFundWallet? get userFundWallet => _userFundWallet;
+
   UserJourneyStatsModel? get userJourneyStats => _userJourneyStats;
 
   set firebaseUser(User? firebaseUser) => _firebaseUser = firebaseUser;
@@ -259,7 +275,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   Future<void> userBootUpEE() async {
     if (FirebaseAuth.instance.currentUser != null) {
       await setLastOpened();
-      dayOPenCount();
+      await dayOPenCount();
 
       String? userId, deviceId, platform, appVersion, lastOpened;
       int dayOpenCount;
@@ -309,11 +325,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         //Increase the count
         int currentCount = prefs.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
         currentCount = currentCount + 1;
-        prefs.setInt(Constants.DAY_OPENED_COUNT, currentCount);
+        await prefs.setInt(Constants.DAY_OPENED_COUNT, currentCount);
       } else {
         //Date has changed
-        prefs.setString(Constants.DATE_TODAY, today);
-        prefs.setInt(Constants.DAY_OPENED_COUNT, 0);
+        await prefs.setString(Constants.DATE_TODAY, today);
+        await prefs.setInt(Constants.DAY_OPENED_COUNT, 0);
       }
     } catch (e) {
       log(e.toString());
@@ -440,7 +456,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           _logger.d("No profile picture found in cache, fetched from server");
         }
       } else {
-        debugPrint(PreferenceHelper.getString('dpUrl'));
+        // debugPrint(PreferenceHelper.getString('dpUrl'));
         setMyUserDpUrl(PreferenceHelper.getString('dpUrl'));
       }
     }
@@ -501,9 +517,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         : _userFundWallet;
   }
 
-  void checkForNewNotifications() {
+  Future<void> checkForNewNotifications() async {
     _logger.d("Looking for new notifications");
-    _userRepo!.checkIfUserHasNewNotifications().then((value) {
+    await _userRepo!.checkIfUserHasNewNotifications().then((value) {
       if (value.code == 200) {
         if (value.model!) hasNewNotifications = true;
       }
@@ -738,10 +754,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return {};
   }
 
-  // Package _parseData(Map<dynamic, dynamic> data) {
-  //   final appName = data["app_name"];
-  //   final packageName = data["package_name"];
-  //   final icon = data["icon"];
-  //   return {"appName": appName, "packageName": packageName};
-  // }
+// Package _parseData(Map<dynamic, dynamic> data) {
+//   final appName = data["app_name"];
+//   final packageName = data["package_name"];
+//   final icon = data["icon"];
+//   return {"appName": appName, "packageName": packageName};
+// }
 }

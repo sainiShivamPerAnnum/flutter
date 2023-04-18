@@ -84,14 +84,6 @@ class RootViewModel extends BaseViewModel {
         RootController.tambolaNavBar) {
       return;
     }
-    // await _userCoinService.getUserCoinBalance();
-    // await _userService.getUserFundWalletData();
-    // _txnHistoryService.signOut();
-    // // _paytmService.getActiveSubscriptionDetails();
-    // await _journeyService.checkForMilestoneLevelChange();
-    // await _gtService?.updateUnscratchedGTCount();
-    // await _journeyService.getUnscratchedGT();
-    // await _subscriptionService.getSubscription();
 
     await Future.wait([
       _userCoinService.getUserCoinBalance(),
@@ -101,6 +93,8 @@ class RootViewModel extends BaseViewModel {
       _journeyService.getUnscratchedGT(),
       _subscriptionService.getSubscription(),
     ]);
+
+    _txnHistoryService.signOut();
   }
 
   Future<void> onInit() async {
@@ -110,7 +104,6 @@ class RootViewModel extends BaseViewModel {
     await Future.wait([
       _referralService.verifyReferral(),
       _referralService.initDynamicLinks(),
-      // _tambolaService.init(),
       _subscriptionService.init(),
     ]);
 
@@ -136,12 +129,14 @@ class RootViewModel extends BaseViewModel {
           Future.delayed(const Duration(seconds: 1),
               SpotLightController.instance.showTourDialog);
         }
-        await handleStartUpNotificationData();
 
-        await _journeyService.getUnscratchedGT();
+        await Future.wait([
+          handleStartUpNotificationData(),
+          _journeyService.getUnscratchedGT(),
+          _userService.checkForNewNotifications(),
+          _userService.getProfilePicture(),
+        ]);
 
-        _userService.checkForNewNotifications();
-        _userService.getProfilePicture();
         _initAdhocNotifications();
         if (!AppState.isFirstTime) showMarketingCampings();
       },

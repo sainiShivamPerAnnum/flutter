@@ -26,7 +26,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
-import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -245,7 +244,6 @@ class TambolaHomeViewModel extends BaseViewModel {
     }
 
     ///next get the tambola tickets of this week
-
     await fetchTambola();
 
     log("Fetch Tambola:${DateTime.now().second}");
