@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 class TambolaWrapper extends StatelessWidget {
   const TambolaWrapper({Key? key, this.vm}) : super(key: key);
   final RootViewModel? vm;
+
   @override
   Widget build(BuildContext context) {
     return BaseView<TambolaHomeViewModel>(
@@ -33,14 +34,14 @@ class TambolaWrapper extends StatelessWidget {
           child: Scaffold(
             body: (model.activeTambolaCardCount ?? 0) > 0
                 ? TambolaExistingUserScreen(
-              model: model,
-            )
+                    model: model,
+                  )
                 : TambolaNewUserPage(
-              model: model,
-              isFromNavigation: locator<RootController>()
-                  .navItems
-                  .containsValue(RootController.tambolaNavBar),
-            ),
+                    model: model,
+                    isFromNavigation: locator<RootController>()
+                        .navItems
+                        .containsValue(RootController.tambolaNavBar),
+                  ),
           ),
         );
       },

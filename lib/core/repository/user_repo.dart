@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -22,13 +21,12 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:app_set_id/app_set_id.dart';
 
 import 'base_repo.dart';
 
 class UserRepository extends BaseRepo {
   final AppFlyerAnalytics? _appsFlyerService = locator<AppFlyerAnalytics>();
-  final _cacheService = new CacheService();
+  final _cacheService = CacheService();
 
   final Api? _api = locator<Api>();
   final ApiPath? _apiPaths = locator<ApiPath>();
@@ -93,7 +91,7 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
 
-      return await (_cacheService.cachedApi(
+      return await _cacheService.cachedApi(
           CacheKeys.USER,
           TTL.ONE_DAY,
           () => APIService.instance.getData(
@@ -105,8 +103,9 @@ class UserRepository extends BaseRepo {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
             final _user = BaseUser.fromMap(res['data'], id!);
             return ApiResponse<BaseUser>(model: _user, code: 200);
-          } else
+          } else {
             return ApiResponse<BaseUser>(model: null, code: 200);
+          }
         } catch (e) {
           locator<InternalOpsService>().logFailure(
             id,
@@ -115,7 +114,7 @@ class UserRepository extends BaseRepo {
           );
           return ApiResponse.withError("User data corrupted", 400);
         }
-      }));
+      });
     } catch (e) {
       logger!.d(e.toString());
       return ApiResponse.withError(e.toString() ?? "Unable to get user", 400);
@@ -299,7 +298,7 @@ class UserRepository extends BaseRepo {
       final token = await getBearerToken();
       final augmontRespone = await APIService.instance.getData(
         ApiPath.getAugmontDetail(
-          this.userService!.baseUser!.uid,
+          userService!.baseUser!.uid,
         ),
         cBaseUrl: _baseUrl,
         token: token,
@@ -317,7 +316,7 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       final latestNotificationsResponse = await APIService.instance.getData(
-        ApiPath.getLatestNotification(this.userService!.baseUser!.uid),
+        ApiPath.getLatestNotification(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         token: token,
       );
@@ -326,18 +325,19 @@ class UserRepository extends BaseRepo {
         latestNotificationsResponse["data"],
       );
 
-      String? latestNotifTime = await (CacheManager.readCache(
-          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME));
+      String? latestNotifTime = await CacheManager.readCache(
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
       if (latestNotifTime != null) {
         int latestTimeInSeconds = int.tryParse(latestNotifTime)!;
         AlertModel latestAlert = notifications[0].createdTime!.seconds >
                 notifications[1].createdTime!.seconds
             ? notifications[0]
             : notifications[1];
-        if (latestAlert.createdTime!.seconds > latestTimeInSeconds)
+        if (latestAlert.createdTime!.seconds > latestTimeInSeconds) {
           return ApiResponse<bool>(model: true, code: 200);
-        else
+        } else {
           return ApiResponse<bool>(model: false, code: 200);
+        }
       } else {
         logger.d("No past notification time found");
         return ApiResponse<bool>(model: false, code: 200);
@@ -357,7 +357,7 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       final userNotifications = await APIService.instance.getData(
-        ApiPath.getNotifications(this.userService!.baseUser!.uid),
+        ApiPath.getNotifications(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           "lastDocId": lastDocId,

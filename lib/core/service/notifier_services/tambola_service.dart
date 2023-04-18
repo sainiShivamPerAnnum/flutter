@@ -38,7 +38,7 @@ class TambolaService extends ChangeNotifier {
   int matchedTicketCount = 0;
   List<List<int>> _ticketsNumbers = [];
 
-  late Completer<List<TambolaBoard?>?> completer;
+  Completer<List<TambolaBoard?>?> completer = Completer();
 
   void signOut() {
     _weeklyDrawFetched = false;

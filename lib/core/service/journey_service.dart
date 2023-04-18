@@ -389,7 +389,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     }
   }
 
-  getUnscratchedGT() async {
+  Future<void> getUnscratchedGT() async {
     final ApiResponse<List<ScratchCard>> res =
         await _gtRepo.getUnscratchedScratchCards();
     if (res.isSuccess()) {
@@ -398,7 +398,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   //Fetch Levels of Journey
-  getJourneyLevels() async {
+  Future<void> getJourneyLevels() async {
     final res = await _journeyRepo
         .getJourneyLevels(_userService.userJourneyStats?.version ?? 'v1');
     if (res.isSuccess())

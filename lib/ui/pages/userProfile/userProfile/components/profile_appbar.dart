@@ -17,7 +17,7 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
   // final bool isNewUser;
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
       centerTitle: false,
       leading: IconButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.arrow_back_ios_rounded,
           color: UiConstants.kTextColor,
         ),

@@ -129,26 +129,26 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   set firebaseUser(User? firebaseUser) => _firebaseUser = firebaseUser;
 
-  setMyUserDpUrl(String url) {
+  void setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
     notifyListeners(UserServiceProperties.myUserDpUrl);
   }
 
-  setMyAvatarId(String? avId) {
+  void setMyAvatarId(String? avId) {
     _avatarId = avId;
     notifyListeners(UserServiceProperties.myAvatarId);
     _logger.d(
         "My user avatar Id updated in userservice, property listeners notified");
   }
 
-  setMyUserName(String? name) {
+  void setMyUserName(String? name) {
     _myUserName = name;
     notifyListeners(UserServiceProperties.myUserName);
     _logger
         .d("My user name updated in userservice, property listeners notified");
   }
 
-  setName(String? name) {
+  void setName(String? name) {
     _name = name;
     notifyListeners(UserServiceProperties.myName);
     _logger.d(" name updated in userservice, property listeners notified");
@@ -161,21 +161,21 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   //       "My user upi Id updated in userservice, property listeners notified");
   // }
 
-  setDateOfBirth(String? dob) {
+  void setDateOfBirth(String? dob) {
     _dob = dob;
     notifyListeners(UserServiceProperties.myDob);
     _logger
         .d("My user dob updated in userservice, property listeners notified");
   }
 
-  setGender(String? gender) {
+  void setGender(String? gender) {
     _gender = gender;
     notifyListeners(UserServiceProperties.myGender);
     _logger.d(
         "My user gender updated in userservice, property listeners notified");
   }
 
-  setEmail(String? email) {
+  void setEmail(String? email) {
     _email = email;
     notifyListeners(UserServiceProperties.myEmail);
     _logger
@@ -189,9 +189,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   set userJourneyStats(UserJourneyStatsModel? stats) {
-    if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype ?? '' as bool)
+    if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype ?? '' as bool) {
       ScratchCardService.previousPrizeSubtype =
           _userJourneyStats?.prizeSubtype ?? '';
+    }
     _userJourneyStats = stats;
     notifyListeners(UserServiceProperties.myJourneyStats);
     _logger
@@ -257,7 +258,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> userBootUpEE() async {
     if (FirebaseAuth.instance.currentUser != null) {
-      setLastOpened();
+      await setLastOpened();
       dayOPenCount();
 
       String? userId, deviceId, platform, appVersion, lastOpened;
@@ -293,12 +294,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  void dayOPenCount() async {
+  Future<void> dayOPenCount() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      var now = new DateTime.now();
-      var formatter = new DateFormat('dd-MM-yyyy');
+      var now = DateTime.now();
+      var formatter = DateFormat('dd-MM-yyyy');
       String today = formatter.format(now);
 
       String savedDate = prefs.getString(Constants.DATE_TODAY) ?? "";
@@ -319,11 +320,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  void setLastOpened() async {
+  Future<void> setLastOpened() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var now = new DateTime.now();
-      var formatter = new DateFormat('dd-MM-yyyy');
+      var now = DateTime.now();
+      var formatter = DateFormat('dd-MM-yyyy');
       String formattedTime = DateFormat('kk:mm:ss:a').format(now);
       String formattedDate = formatter.format(now);
 
@@ -421,28 +422,25 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  getProfilePicture() async {
+  Future<void> getProfilePicture() async {
     if (baseUser!.avatarId == null ||
         baseUser!.avatarId!.isEmpty ||
         baseUser!.avatarId == "CUSTOM") {
       if (!PreferenceHelper.exists('dpUrl')) {
-        // try {
         _logger.d("Fetching profile picture");
 
         String? myUserDpUrl;
-        if (baseUser != null)
+        if (baseUser != null) {
           myUserDpUrl = await _dbModel!.getUserDP(baseUser!.uid);
+        }
         if (myUserDpUrl != null) {
           await CacheManager.writeCache(
               key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
           setMyUserDpUrl(myUserDpUrl);
           _logger.d("No profile picture found in cache, fetched from server");
         }
-        // } catch (e) {
-        //   _logger.e(e.toString());
-        // }
       } else {
-        print(PreferenceHelper.getString('dpUrl'));
+        debugPrint(PreferenceHelper.getString('dpUrl'));
         setMyUserDpUrl(PreferenceHelper.getString('dpUrl'));
       }
     }
@@ -472,10 +470,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   Future<void> getUserFundWalletData() async {
     if (baseUser != null) {
       UserFundWallet? temp = (await _userRepo!.getFundBalance()).model;
-      if (temp == null)
+      if (temp == null) {
         _compileUserWallet();
-      else
+      } else {
         userFundWallet = temp;
+      }
     }
   }
 
@@ -495,14 +494,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return false;
   }
 
-  _compileUserWallet() {
+  void _compileUserWallet() {
     _logger.d("Creating new fund wallet");
     userFundWallet = (_userFundWallet == null)
         ? UserFundWallet.newWallet()
         : _userFundWallet;
   }
 
-  checkForNewNotifications() {
+  void checkForNewNotifications() {
     _logger.d("Looking for new notifications");
     _userRepo!.checkIfUserHasNewNotifications().then((value) {
       if (value.code == 200) {
@@ -511,7 +510,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     });
   }
 
-  setPageConfigs(DynamicUI dynamicUi) {
+  void setPageConfigs(DynamicUI dynamicUi) {
     DynamicUiUtils.playViewOrder = dynamicUi.play;
     DynamicUiUtils.saveViewOrder = [
       dynamicUi.save.assets,
@@ -529,11 +528,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
     DynamicUiUtils.isGoldTrending =
         dynamicUi.save.trendingAsset != "LENDBOXP2P";
-    if (dynamicUi.save.ctaText != null)
+    if (dynamicUi.save.ctaText != null) {
       DynamicUiUtils.ctaText = dynamicUi.save.ctaText!;
+    }
   }
 
-  diplayUsername(String username) {
+  String diplayUsername(String username) {
     return username.replaceAll('@', '.');
   }
 
@@ -599,8 +599,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         //_baseUtil.setDisplayPictureUrl(url);
         _logger.d('Final DP Uri: $url');
         return true;
-      } else
+      } else {
         return false;
+      }
     } catch (e) {
       if (baseUser!.uid != null) {
         Map<String, dynamic> errorDetails = {

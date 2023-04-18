@@ -109,31 +109,39 @@ class SubService extends ChangeNotifier {
   //GETTERS & SETTERS - START
 
   bool _autosaveVisible = true;
-  bool get autosaveVisible => this._autosaveVisible;
+
+  bool get autosaveVisible => _autosaveVisible;
+
   set autosaveVisible(bool value) {
-    this._autosaveVisible = value;
+    _autosaveVisible = value;
     notifyListeners();
   }
 
   AutosaveState _autosaveState = AutosaveState.IDLE;
-  AutosaveState get autosaveState => this._autosaveState;
+
+  AutosaveState get autosaveState => _autosaveState;
+
   set autosaveState(AutosaveState value) {
-    this._autosaveState = value;
+    _autosaveState = value;
     notifyListeners();
   }
 
   SubscriptionModel? _subscriptionData;
-  SubscriptionModel? get subscriptionData => this._subscriptionData;
+
+  SubscriptionModel? get subscriptionData => _subscriptionData;
+
   set subscriptionData(value) {
     // if (value == null) return;
-    this._subscriptionData = value;
+    _subscriptionData = value;
     setSubscriptionState();
   }
 
   bool _isPauseOrResuming = false;
-  get isPauseOrResuming => this._isPauseOrResuming;
+
+  get isPauseOrResuming => _isPauseOrResuming;
+
   set isPauseOrResuming(value) {
-    this._isPauseOrResuming = value;
+    _isPauseOrResuming = value;
     notifyListeners();
   }
 
@@ -141,13 +149,13 @@ class SubService extends ChangeNotifier {
 
   // SUBSCRIPTION SERVICE CORE METHODS - START
 
-  init() {
+  Future<void> init() async {
     autosaveVisible = AppConfig.getValue(AppConfigKey.showNewAutosave) as bool;
-    print("-----------autosave visible $autosaveVisible");
-    if (autosaveVisible) getSubscription();
+    debugPrint("-----------autoSave visible $autosaveVisible");
+    if (autosaveVisible) await getSubscription();
   }
 
-  dump() {
+  void dump() {
     pollCount = 0;
     _subscriptionData = null;
     hasNoMoreSubsTxns = false;
@@ -359,6 +367,7 @@ class SubService extends ChangeNotifier {
       }
     }
   }
+
   // SUBSCRIPTION CORE METHODS - END
 
   //Helpers
@@ -542,22 +551,22 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  // onAmountValueChanged(String val) {
-  //   if (val == "00000") amountController.text = '0';
-  //   if (val != null && val.isNotEmpty) {
-  //     if (int.tryParse(val)! < minValue)
-  //       showMinAlert = true;
-  //     else
-  //       showMinAlert = false;
-  //     if (int.tryParse(val)! > maxValue) {
-  //       amountController.text = maxValue.toString();
-  //       val = maxValue.toString();
-  //       FocusManager.instance.primaryFocus!.unfocus();
-  //     }
-  //   } else {
-  //     val = '0';
-  //   }
-  //   // saveAmount = calculateSaveAmount(int.tryParse(val ?? '0')!);
-  //   notifyListeners();
-  // }
+// onAmountValueChanged(String val) {
+//   if (val == "00000") amountController.text = '0';
+//   if (val != null && val.isNotEmpty) {
+//     if (int.tryParse(val)! < minValue)
+//       showMinAlert = true;
+//     else
+//       showMinAlert = false;
+//     if (int.tryParse(val)! > maxValue) {
+//       amountController.text = maxValue.toString();
+//       val = maxValue.toString();
+//       FocusManager.instance.primaryFocus!.unfocus();
+//     }
+//   } else {
+//     val = '0';
+//   }
+//   // saveAmount = calculateSaveAmount(int.tryParse(val ?? '0')!);
+//   notifyListeners();
+// }
 }

@@ -13,13 +13,19 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 abstract class API {
   void setBaseUrl(String url);
+
   dynamic returnResponse(http.Response response);
 
   Future<dynamic> getData(String url);
+
   Future<dynamic> postData(String url, {Map<String, dynamic>? body});
+
   Future<dynamic> deleteData(String url, {Map<String, dynamic>? body});
+
   Future<dynamic> patchData(String url, {Map<String, dynamic>? body});
+
   Future<dynamic> putData(String url);
+
   Future<dynamic> paytmSubscriptionPostRequest(
       {String? orderId,
       String? vpa,
@@ -36,6 +42,7 @@ class APIService implements API {
   String _versionString = "";
 
   APIService._();
+
   static final instance = APIService._();
 
   final _CACHE_ENCRYPTION_KEY = "264a239b0d87e175509b2aeb2a44b28c";
@@ -44,18 +51,18 @@ class APIService implements API {
   @override
   Future<dynamic> getData(
     String url, {
-    String? token,
-    Map<String, dynamic>? queryParams,
-    Map<String, dynamic>? headers,
-    String? cBaseUrl,
-    bool decryptData = false,
+    final String? token,
+    final Map<String, dynamic>? queryParams,
+    final Map<String, dynamic>? headers,
+    final String? cBaseUrl,
+    final bool decryptData = false,
   }) async {
     // final HttpMetric metric =
     //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
     // await metric.start();
     int startTime = DateTime.now().millisecondsSinceEpoch;
 
-    var responseJson;
+    // var responseJson;
     // token = Preference.getString('token');
     try {
       String finalPath = _baseUrl + url;
@@ -85,15 +92,17 @@ class APIService implements API {
 
         return json.decode(data);
       }
-      responseJson = returnResponse(response);
-    } on SocketException {
-      throw FetchDataException('No Internet connection');
-    } on UnauthorizedException {
-      throw UnauthorizedException("Token Expired, Signout current user");
-    } finally {
-      // await metric.stop();
+      return returnResponse(response);
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet connection');
+      } else if (e is UnauthorizedException) {
+        throw UnauthorizedException("Token Expired, Signout current user");
+      } else {
+        rethrow;
+      }
     }
-    return responseJson;
+    // return responseJson;
   }
 
   @override
@@ -120,8 +129,9 @@ class APIService implements API {
         'uid': userService?.baseUser?.uid ?? '',
       };
       if (headers != null) _headers.addAll(headers);
-      if (token != null)
+      if (token != null) {
         _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+      }
       logger!.d(_headers);
 
       if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
