@@ -146,14 +146,13 @@ class AppState extends ChangeNotifier {
     if (JourneyService.isAvatarAnimationInProgress) return;
     _rootController.onChange(_rootController.navItems.values.toList()[index]);
     AppState.delegate!.appState.setCurrentTabIndex = index;
-    homeTabPageController.jumpToPage(index);
     trackEvent(index);
     Haptic.vibrate();
     if (_rootController.currentNavBarItemModel ==
         RootController.journeyNavBarItem) {
       _journeyService.checkForMilestoneLevelChange();
     }
-    // executeNavBarItemFirstClick(index);
+    executeForFirstJourneyTabClick(index);
   }
 
   bool showTourStrip = false;

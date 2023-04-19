@@ -71,18 +71,18 @@ class LauncherViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init() {
+  void init() {
     isFetchingData = true;
     _logoWatch = Stopwatch()..start();
     // _togglePerformanceCollection();
 
     initLogic();
-    _timer3 = new Timer(const Duration(seconds: 6), () {
+    _timer3 = Timer(const Duration(seconds: 6), () {
       isSlowConnection = true;
     });
   }
 
-  exit() {
+  void exit() {
     _timer3.cancel();
     _logoWatch.stop();
   }
@@ -98,9 +98,9 @@ class LauncherViewModel extends BaseViewModel {
 
       //Initialize only if user is onboarded
       if (userService.isUserOnboarded) {
-        await _journeyRepo.init();
+        // await _journeyRepo.init();
         await Future.wait([
-          _journeyService.init(),
+          // _journeyService.init(),
           CacheService.checkIfInvalidationRequired(),
           _analyticsService.login(
               isOnBoarded: true, baseUser: userService.baseUser),

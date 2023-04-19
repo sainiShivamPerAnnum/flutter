@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -76,7 +77,7 @@ class RootViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final ReferralService _referralService = locator<ReferralService>();
   final MarketingEventHandlerService _marketingService =
-      locator<MarketingEventHandlerService>();
+  locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
 
   Future<void> refresh() async {
@@ -98,6 +99,8 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<void> onInit() async {
+    log("onInit called");
+
     AppState.isUserSignedIn = true;
     appState.setRootLoadValue = true;
 
@@ -115,7 +118,7 @@ class RootViewModel extends BaseViewModel {
 
   Future<void> initialize() async {
     WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) async {
+          (timeStamp) async {
         await verifyUserBootupDetails();
         await checkForBootUpAlerts();
 
@@ -130,9 +133,9 @@ class RootViewModel extends BaseViewModel {
               SpotLightController.instance.showTourDialog);
         }
 
+        handleStartUpNotificationData();
         await Future.wait([
-          handleStartUpNotificationData(),
-          _journeyService.getUnscratchedGT(),
+          // _journeyService.getUnscratchedGT(),
           _userService.checkForNewNotifications(),
           _userService.getProfilePicture(),
         ]);
@@ -190,7 +193,7 @@ class RootViewModel extends BaseViewModel {
           topLeft: const Radius.circular(30.0),
           topRight: Radius.circular(SizeConfig.roundness12)),
       backgroundColor:
-          UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+      UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
       content: SecurityModalSheet(),
     );
     _fcmHandler.addIncomingMessageListener((valueMap) {
@@ -203,9 +206,9 @@ class RootViewModel extends BaseViewModel {
 
   Future<void> checkForBootUpAlerts() async {
     bool updateAvailable =
-        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
+    PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
     bool isMsgNoticeAvailable =
-        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
+    PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
     if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
     if (updateAvailable) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
@@ -216,7 +219,7 @@ class RootViewModel extends BaseViewModel {
         content: ConfirmationDialog(
           title: "App Update Available",
           description:
-              "A new version of the app is available. Update now to enjoy the hassle free experience.",
+          "A new version of the app is available. Update now to enjoy the hassle free experience.",
           buttonText: "Update Now",
           cancelBtnText: "Not now",
           confirmAction: () {
@@ -284,7 +287,7 @@ class RootViewModel extends BaseViewModel {
         _userService.baseUser!.isAugmontOnboarded! &&
         _userService.userFundWallet!.augGoldQuantity > 0 &&
         _userService.baseUser!.userPreferences
-                .getPreference(Preferences.APPLOCK) ==
+            .getPreference(Preferences.APPLOCK) ==
             0) {
       canExecuteStartupNotification = false;
       Future.delayed(const Duration(seconds: 2), () {
@@ -363,7 +366,7 @@ class RootViewModel extends BaseViewModel {
         //5. Clear all the caches
         if (_userService.userBootUp!.data!.cache!.keys != null) {
           for (String id
-              in _userService.userBootUp!.data!.cache!.keys as List<String>) {
+          in _userService.userBootUp!.data!.cache!.keys as List<String>) {
             CacheService.invalidateByKey(id);
           }
         }

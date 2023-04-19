@@ -363,7 +363,7 @@ class APIService implements API {
     } catch (e) {
       print(e);
     }
-    _versionString = _versionString;
+    // _versionString = _versionString;
     return _versionString;
   }
 

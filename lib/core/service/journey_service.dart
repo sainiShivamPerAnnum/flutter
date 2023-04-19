@@ -75,51 +75,53 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   bool _showLevelUpAnimation = false;
   bool _isUserJourneyOnboarded = false;
   bool _showFocusRing = false;
-  get showFocusRing => this._showFocusRing;
+  get showFocusRing => _showFocusRing;
 
   set showFocusRing(value) {
-    this._showFocusRing = value;
+    _showFocusRing = value;
     notifyListeners(JourneyServiceProperties.Onboarding);
   }
 
-  get isUserJourneyOnboarded => this._isUserJourneyOnboarded;
+  get isUserJourneyOnboarded => _isUserJourneyOnboarded;
   List<ScratchCard>? _unscratchedGTList;
 
-  get unscratchedGTList => this._unscratchedGTList;
+  get unscratchedGTList => _unscratchedGTList;
 
   set unscratchedGTList(value) {
-    this._unscratchedGTList = value;
+    _unscratchedGTList = value;
     notifyListeners(JourneyServiceProperties.Prizes);
   }
 
   set isUserJourneyOnboarded(value) {
-    this._isUserJourneyOnboarded = value;
+    _isUserJourneyOnboarded = value;
     notifyListeners(JourneyServiceProperties.Onboarding);
     _logger.d("User Journey Onboarded");
   }
 
   bool _isRefreshing = false;
-  bool get isRefreshing => this._isRefreshing;
+
+  bool get isRefreshing => _isRefreshing;
 
   set isRefreshing(bool value) {
-    this._isRefreshing = value;
+    _isRefreshing = value;
     notifyListeners();
   }
 
   bool _isLoading = false;
-  bool get isLoading => this._isLoading;
+
+  bool get isLoading => _isLoading;
 
   set isLoading(bool value) {
-    this._isLoading = value;
+    _isLoading = value;
     notifyListeners();
   }
 
   bool _isLoaderRequired = false;
 
-  get isLoaderRequired => this._isLoaderRequired;
+  get isLoaderRequired => _isLoaderRequired;
 
   set isLoaderRequired(value) {
-    this._isLoaderRequired = value;
+    _isLoaderRequired = value;
     notifyListeners();
   }
 
@@ -129,53 +131,55 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   //Getters and Setters
 
-  TickerProvider? get vsync => this._vsync;
-  set vsync(TickerProvider? value) => this._vsync = value;
+  TickerProvider? get vsync => _vsync;
 
-  get getController => this.controller;
+  set vsync(TickerProvider? value) => _vsync = value;
+
+  get getController => controller;
 
   set setController(c) {
-    this.controller = c;
+    controller = c;
     // notifyListeners();
   }
 
-  get avatarAnimation => this._avatarAnimation;
+  get avatarAnimation => _avatarAnimation;
 
   set avatarAnimation(value) {
-    this._avatarAnimation = value;
+    _avatarAnimation = value;
     // notifyListeners();
   }
 
   List<JourneyPage>? get pages => _pages;
 
   set pages(List<JourneyPage>? value) {
-    this._pages = value;
+    _pages = value;
     setPageItemsAndProperties();
     notifyListeners(JourneyServiceProperties.Pages);
   }
 
   addMorePages(List<JourneyPage> newPages) {
     newPages.forEach((page) {
-      this._pages!.add(page);
+      _pages!.add(page);
     });
     setPageItemsAndProperties();
     notifyListeners(JourneyServiceProperties.Pages);
   }
 
-  get avatarCachedMlIndex => this._avatarCachedMlIndex;
+  get avatarCachedMlIndex => _avatarCachedMlIndex;
 
-  set avatarCachedMlIndex(value) => this._avatarCachedMlIndex = value;
+  set avatarCachedMlIndex(value) => _avatarCachedMlIndex = value;
 
-  get avatarRemoteMlIndex => this._avatarRemoteMlIndex;
-  double get baseGlow => this._baseGlow;
+  get avatarRemoteMlIndex => _avatarRemoteMlIndex;
+
+  double get baseGlow => _baseGlow;
 
   set baseGlow(double value) {
-    this._baseGlow = value;
+    _baseGlow = value;
     notifyListeners(JourneyServiceProperties.BaseGlow);
   }
 
   set avatarRemoteMlIndex(value) {
-    this._avatarRemoteMlIndex = value;
+    _avatarRemoteMlIndex = value;
     notifyListeners(JourneyServiceProperties.AvatarRemoteMilestoneIndex);
   }
 
@@ -186,42 +190,42 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //   notifyListeners(JourneyServiceProperties.UserJourneyStats);
   // }
 
-  get avatarPath => this._avatarPath;
+  get avatarPath => _avatarPath;
 
   set avatarPath(value) {
-    this._avatarPath = value;
+    _avatarPath = value;
     // notifyListeners();
   }
 
-  Offset? get avatarPosition => this._avatarPosition;
+  Offset? get avatarPosition => _avatarPosition;
 
   set avatarPosition(Offset? value) {
-    this._avatarPosition = value;
+    _avatarPosition = value;
     notifyListeners(JourneyServiceProperties.AvatarPosition);
   }
 
-  get journeyBuildFailure => this._journeyBuildFailure;
+  get journeyBuildFailure => _journeyBuildFailure;
 
   set journeyBuildFailure(value) {
-    this._journeyBuildFailure = value;
+    _journeyBuildFailure = value;
     notifyListeners(JourneyServiceProperties.JourneyBuildFailure);
   }
 
-  List<JourneyLevel>? get levels => this._levels;
+  List<JourneyLevel>? get levels => _levels;
 
   set levels(value) {
-    this._levels = value;
+    _levels = value;
     _logger.d("Levels updated: ${levels![0].toString()}");
   }
 
-  ScrollController? get mainController => this._mainController;
+  ScrollController? get mainController => _mainController;
 
-  set mainController(ScrollController? value) => this._mainController = value;
+  set mainController(ScrollController? value) => _mainController = value;
 
-  get showLevelUpAnimation => this._showLevelUpAnimation;
+  get showLevelUpAnimation => _showLevelUpAnimation;
 
   set showLevelUpAnimation(value) {
-    this._showLevelUpAnimation = value;
+    _showLevelUpAnimation = value;
     notifyListeners(JourneyServiceProperties.LevelCompletion);
   }
 
@@ -250,7 +254,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     log("Journey Service dumped");
   }
 
-  void buildJourney() async {
+  buildJourney() async {
     _logger.d("BUILD JOURNEY CALLED");
     getAvatarCachedMilestoneIndex();
     await updateUserJourneyStats();
@@ -268,17 +272,19 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
           duration: const Duration(seconds: 2),
           curve: Curves.easeOutCubic,
         );
-      } else
+      } else {
         await scrollPageToAvatarPosition();
+      }
       if (avatarRemoteMlIndex == 1) showFocusRing = true;
       await animateAvatar();
       updateRewardSTooltips();
       mainController!.addListener(() {
         if (mainController!.offset > mainController!.position.maxScrollExtent) {
-          if (!canMorePagesBeFetched())
+          if (!canMorePagesBeFetched()) {
             return updatingJourneyView();
-          else
+          } else {
             return addPageToTop();
+          }
         }
       });
     });
@@ -303,12 +309,13 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     final prevPageslength = pages!.length;
     await fetchMoreNetworkPages();
     _logger.d("Total Pages length: ${pages!.length}");
-    if (prevPageslength < pages!.length)
+    if (prevPageslength < pages!.length) {
       await mainController!.animateTo(
         mainController!.offset + 100,
         curve: Curves.easeOutCubic,
         duration: Duration(seconds: 1),
       );
+    }
     placeAvatarAtTheCurrentMileStone();
     // _journeyService.refreshJourneyPath();
     isLoaderRequired = false;
@@ -336,10 +343,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         );
         return BaseUtil.showNegativeAlert("", response.errorMessage);
       } else {
-        if (pages == null || pages!.isEmpty)
+        if (pages == null || pages!.isEmpty) {
           pages = response.model;
-        else
+        } else {
           addMorePages(response.model!);
+        }
       }
     }
   }
@@ -367,10 +375,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       return BaseUtil.showNegativeAlert("", response.errorMessage);
     } else {
       if ((response.model ?? []).isEmpty) return;
-      if (pages == null || pages!.isEmpty)
+      if (pages == null || pages!.isEmpty) {
         pages = response.model;
-      else
+      } else {
         addMorePages(response.model!);
+      }
     }
   }
 
@@ -401,9 +410,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   Future<void> getJourneyLevels() async {
     final res = await _journeyRepo
         .getJourneyLevels(_userService.userJourneyStats?.version ?? 'v1');
-    if (res.isSuccess())
+    if (res.isSuccess()) {
       levels = res.model;
-    else {
+    } else {
       journeyBuildFailure = true;
       _internalOpsService.logFailure(
         _userService.baseUser?.uid ?? '',
@@ -418,10 +427,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     avatarRemoteMlIndex = int.tryParse(data["mlIndex"]);
     ScratchCardService.scratchCardId = data["gtId"];
     _logger.d("Avatar Remote start level: $avatarRemoteMlIndex");
-    if (!userIsAtJourneyScreen())
+    if (!userIsAtJourneyScreen()) {
       BaseUtil.showPositiveAlert(
           locale.newMileStoneAlert1, locale.newMileStoneAlert2,
           seconds: 2);
+    }
     checkAndAnimateAvatar();
   }
 
@@ -476,12 +486,14 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     int? existingLevel = 1;
     int? updatedLevel = 1;
     levels!.forEach((l) {
-      if (avatarCachedMlIndex <= l.end && avatarCachedMlIndex >= l.start)
+      if (avatarCachedMlIndex <= l.end && avatarCachedMlIndex >= l.start) {
         existingLevel = l.level;
+      }
     });
     levels!.forEach((l) {
-      if (avatarRemoteMlIndex <= l.end && avatarRemoteMlIndex >= l.start)
+      if (avatarRemoteMlIndex <= l.end && avatarRemoteMlIndex >= l.start) {
         updatedLevel = l.level;
+      }
     });
     print("Existing level : $existingLevel || Updated Level: $updatedLevel");
     return (existingLevel != updatedLevel);
@@ -490,10 +502,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //Returns if there is any cached mlIndex
   //else sets mlIndex to 1 and cache it to shared prefs
   getAvatarCachedMilestoneIndex() {
-    if (PreferenceHelper.exists(AVATAR_CURRENT_MILESTONE_LEVEL))
+    if (PreferenceHelper.exists(AVATAR_CURRENT_MILESTONE_LEVEL)) {
       avatarCachedMlIndex =
           PreferenceHelper.getInt(AVATAR_CURRENT_MILESTONE_LEVEL);
-    else {
+    } else {
       avatarCachedMlIndex = 1;
       PreferenceHelper.setInt(
           AVATAR_CURRENT_MILESTONE_LEVEL, avatarCachedMlIndex);
@@ -547,8 +559,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       if (currentlevelData != null &&
           lastMileStoneIndex! > currentlevelData.end!) {
         return currentlevelData;
-      } else
+      } else {
         return null;
+      }
     } catch (e) {
       return null;
     }
@@ -565,9 +578,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
         .firstWhere((milestone) => milestone.index == cMLIndex);
     double offset = cMl.y! * pageHeight! + (cMl.page - 1) * pageHeight!;
     await Future.delayed(Duration(seconds: 1), () {
-      if (mainController!.hasClients)
+      if (mainController!.hasClients) {
         mainController!.animateTo(offset - SizeConfig.screenHeight! * 0.5,
             duration: const Duration(seconds: 2), curve: Curves.easeOutCubic);
+      }
     });
   }
 
@@ -592,8 +606,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   void updateRewardStatus(String prizeSubtype) {
     int activeRewardIndex = completedMilestonesPrizeList!.indexWhere((reward) =>
         reward != ScratchCard.none() && reward.prizeSubtype == prizeSubtype);
-    if (unscratchedGTList != null)
+    if (unscratchedGTList != null) {
       unscratchedGTList!.removeWhere((gt) => gt.prizeSubtype == prizeSubtype);
+    }
     if (activeRewardIndex != -1) {
       completedMilestonesPrizeList![activeRewardIndex] = ScratchCard.none();
       notifyListeners(JourneyServiceProperties.Prizes);
@@ -620,8 +635,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   getMilestoneLevelFromIndex(int index) {
     int? levelData;
     levels!.forEach((levelData) {
-      if (index >= levelData.start! && index <= levelData.end!)
+      if (index >= levelData.start! && index <= levelData.end!) {
         levelData = levelData.level as JourneyLevel;
+      }
     });
     return levelData;
   }
@@ -671,8 +687,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   setCompletedMilestonesList() {
     completedMilestoneList!.clear();
     currentMilestoneList.forEach((milestone) {
-      if (milestone.index! < avatarRemoteMlIndex)
+      if (milestone.index! < avatarRemoteMlIndex) {
         completedMilestoneList!.add(milestone);
+      }
     });
   }
 
@@ -703,10 +720,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     int startPos =
         customPathDataList.lastIndexWhere((path) => path.mlIndex == start);
     for (int i = startPos; i < customPathDataList.length; i++) {
-      if (customPathDataList[i].mlIndex <= end)
+      if (customPathDataList[i].mlIndex <= end) {
         requiredPathItems.add(customPathDataList[i]);
-      else
+      } else {
         break;
+      }
     }
     _logger.d("Calculated Path list length: ${requiredPathItems.length}");
     drawPath(requiredPathItems);

@@ -44,11 +44,13 @@ class PlayViewModel extends BaseViewModel {
       "Maintain savings to play all games"
     ]);
   }
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final UserService? _userService = locator<UserService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final UserService _userService = locator<UserService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final GameRepo? gamesRepo = locator<GameRepo>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+
   // final WinnerService _winnerService = locator<WinnerService>();
   final UserStatsRepo _userStatsRepo = locator<UserStatsRepo>();
   bool _showSecurityMessageAtTop = true;
@@ -78,7 +80,7 @@ class PlayViewModel extends BaseViewModel {
 
   List<GameModel>? get gamesListData => _gamesListData;
 
-  get isGamesListDataLoading => this._isGamesListDataLoading;
+  get isGamesListDataLoading => _isGamesListDataLoading;
 
   set gamesListData(List<GameModel>? games) {
     _gamesListData = games;
@@ -88,10 +90,11 @@ class PlayViewModel extends BaseViewModel {
       gow = gamesListData?.firstWhere((game) => game.isGOW!,
           orElse: () => gamesListData![0]);
       _gamesListData!.forEach((game) {
-        if (game.isTrending!)
+        if (game.isTrending!) {
           trendingGamesListData.add(game);
-        else
+        } else {
           moreGamesListData.add(game);
+        }
       });
     }
 
@@ -99,14 +102,14 @@ class PlayViewModel extends BaseViewModel {
   }
 
   set isGamesListDataLoading(value) {
-    this._isGamesListDataLoading = value;
+    _isGamesListDataLoading = value;
     notifyListeners();
   }
 
-  get showSecurityMessageAtTop => this._showSecurityMessageAtTop;
+  get showSecurityMessageAtTop => _showSecurityMessageAtTop;
 
   set showSecurityMessageAtTop(value) {
-    this._showSecurityMessageAtTop = value;
+    _showSecurityMessageAtTop = value;
     notifyListeners();
   }
 
@@ -123,7 +126,7 @@ class PlayViewModel extends BaseViewModel {
     }
   }
 
-  init() async {
+  Future<void> init() async {
     isGamesListDataLoading = true;
 
     final response = await gamesRepo!.getGames();
@@ -145,9 +148,7 @@ class PlayViewModel extends BaseViewModel {
     } else {
       BaseUtil.showNegativeAlert("", response.errorMessage);
     }
-    _userStatsRepo.addListener(() {
-      setGameStatus();
-    });
+    _userStatsRepo.addListener(setGameStatus);
   }
 
   GameTiers? gameTier;
@@ -181,7 +182,7 @@ class PlayViewModel extends BaseViewModel {
           playViewChildren.add(GOWCard(model: model));
           break;
         case 'ST':
-          playViewChildren.add(SafetyWidget());
+          playViewChildren.add(const SafetyWidget());
           break;
         case 'MG':
           playViewChildren.add(MoreGamesSection(model: model));

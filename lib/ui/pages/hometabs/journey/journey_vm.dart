@@ -4,12 +4,14 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -107,6 +109,12 @@ class JourneyPageViewModel extends BaseViewModel {
 
   init(TickerProvider ticker) async {
     log("Journey VM init Called");
+
+    setState(ViewState.Busy);
+    await locator<JourneyRepository>().init();
+    await _journeyService!.init();
+    setState(ViewState.Idle);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _journeyService!.isLoading = true;
       _journeyService!.vsync = ticker;

@@ -68,8 +68,11 @@ class ReferralService extends ChangeNotifier {
   int? _minWithdrawPrizeAmt;
 
   String? get minWithdrawPrize => _minWithdrawPrize;
+
   String? get refUnlock => _refUnlock;
+
   int? get refUnlockAmt => _refUnlockAmt;
+
   int? get minWithdrawPrizeAmt => _minWithdrawPrizeAmt;
   bool _isShareAlreadyClicked = false;
 
@@ -78,10 +81,13 @@ class ReferralService extends ChangeNotifier {
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
   bool _isShareLoading = false;
+
   bool get isShareLoading => _isShareLoading;
   String _refUrl = "";
+
   get refUrl => _refUrl;
-  init() {
+
+  void init() {
     fetchBasicConstantValues();
     fetchReferralCode();
   }
@@ -247,8 +253,9 @@ class ReferralService extends ChangeNotifier {
               '${FlavorConfig.instance!.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}'));
       Uri? deepLink = dynamicLinkData?.link;
       _logger.d(deepLink.toString());
-      if (deepLink != null)
+      if (deepLink != null) {
         return _processDynamicLink(_userService.baseUser!.uid, deepLink);
+      }
     } catch (e) {
       _logger.e(e.toString());
     }

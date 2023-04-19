@@ -34,7 +34,7 @@ class RootController {
     switch (navItem) {
       case "JN":
         navItems.putIfAbsent(
-            JourneyView(), () => RootController.journeyNavBarItem);
+            const JourneyView(), () => RootController.journeyNavBarItem);
 
         break;
 

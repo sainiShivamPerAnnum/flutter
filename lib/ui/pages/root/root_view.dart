@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/util/lazy_load_indexed_stack.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -44,19 +45,13 @@ class Root extends StatelessWidget {
                 const NewSquareBackground(),
 
                 const RootAppBar(),
+
                 Consumer<AppState>(
-                  builder: (ctx, m, child) {
-                    return PageView(
-                      scrollDirection: Axis.vertical,
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: m.homeTabPageController,
+                  builder: (context, m, child) {
+                    return LazyLoadIndexedStack(
+                      index: m.getCurrentTabIndex,
                       children: model.navBarItems.keys.toList(),
                     );
-
-                    // return IndexedStack(
-                    //   index: m.getCurrentTabIndex,
-                    //   children: model.navBarItems.keys.toList(),
-                    // );
                   },
                 ),
 
@@ -94,16 +89,44 @@ class Root extends StatelessWidget {
                 const QABanner(),
               ],
             ),
-            // floatingActionButton: RefreshIndicator(
-            //   triggerMode: RefreshIndicatorTriggerMode.onEdge,
-            //   color: UiConstants.primaryColor,
-            //   backgroundColor: Colors.black,
-            //   onRefresh: model.refresh,
-            //   child: const SizedBox(),
-            // ),
           );
         });
   }
+}
+
+class RootPageView extends StatefulWidget {
+  const RootPageView({
+    Key? key,
+    required this.model,
+  }) : super(key: key);
+
+  final RootViewModel model;
+
+  @override
+  State<RootPageView> createState() => _RootPageViewState();
+}
+
+class _RootPageViewState extends State<RootPageView>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    // return PageView(
+    //   physics: const NeverScrollableScrollPhysics(),
+    //   controller: AppState.homeTabPageController,
+    //   children: widget.model.navBarItems.keys.toList(),
+    // );
+
+    return Consumer<AppState>(builder: (context, m, child) {
+      return LazyLoadIndexedStack(
+        index: m.getCurrentTabIndex,
+        children: widget.model.navBarItems.keys.toList(),
+      );
+    });
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 bool _showHappyHour() {

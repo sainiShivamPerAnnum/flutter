@@ -194,7 +194,7 @@ class SaveViewModel extends BaseViewModel {
           saveViewItems.add(const PowerPlayCard());
           break;
         case 'NAS':
-          saveViewItems.add(AutosaveCard());
+          saveViewItems.add(const AutosaveCard());
           break;
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));
@@ -409,7 +409,7 @@ class SaveViewModel extends BaseViewModel {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: ViewAllBlogsViewConfig,
-      widget: ViewAllBlogsView(),
+      widget: const ViewAllBlogsView(),
     );
   }
 }
