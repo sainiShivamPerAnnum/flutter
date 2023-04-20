@@ -681,17 +681,17 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
                       : CupertinoAlertDialog(
                           title: Column(
                             children: [
-                              Text("Please Authenticate"),
+                              const Text("Please Authenticate"),
                               SizedBox(height: SizeConfig.padding8),
                               SvgPicture.asset(Assets.securityCheck,
                                   width: SizeConfig.screenWidth! * 0.16),
                             ],
                           ),
-                          content: Text(
+                    content: const Text(
                               "Fello protects your data to avoid unauthorized access. Please unlock Fello to continue."),
                           actions: [
                             CupertinoDialogAction(
-                              child: Text("Unlock"),
+                              child: const Text("Unlock"),
                               onPressed: () {
                                 Navigator.of(AppState
                                         .delegate!.navigatorKey.currentContext!)

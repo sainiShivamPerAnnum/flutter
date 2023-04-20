@@ -129,7 +129,7 @@ class LauncherViewModel extends BaseViewModel {
     delayedSecond = loopLottieDuration - delayedSecond;
     await Future.delayed(Duration(milliseconds: delayedSecond));
     isFetchingData = false;
-    loopOutlottieAnimationController!.forward();
+    unawaited(loopOutlottieAnimationController!.forward());
     await Future.delayed(const Duration(milliseconds: 900));
 
     if (!userService.isUserOnboarded) {

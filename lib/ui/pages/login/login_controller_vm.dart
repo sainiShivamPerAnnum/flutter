@@ -161,7 +161,7 @@ class LoginControllerViewModel extends BaseViewModel {
             _analyticsService!.track(
                 eventName: AnalyticsEvents.signupEnterMobile,
                 properties: {'mobile': this.userMobile});
-            this._verificationId = '+91' + this.userMobile!;
+            this._verificationId = '+91${this.userMobile!}';
             _verifyPhone();
             // FocusScope.of(_mobileScreenKey.currentContext).unfocus();
             setState(ViewState.Busy);
@@ -258,8 +258,9 @@ class LoginControllerViewModel extends BaseViewModel {
                 response.model['flag'] ? flag = true : flag = false;
 
                 logger!.d("Is Scratch Card Rewarded: $gtId");
-                if (gtId != null && gtId.toString().isNotEmpty)
+                if (gtId != null && gtId.toString().isNotEmpty) {
                   ScratchCardService.scratchCardId = gtId;
+                }
               }
             } catch (e) {
               logger!.d(e);
@@ -302,7 +303,7 @@ class LoginControllerViewModel extends BaseViewModel {
     String? _osVersion;
     String? installReferrerData;
     const BASE_CHANNEL = 'methodChannel/deviceData';
-    final platform = MethodChannel(BASE_CHANNEL);
+    const platform = MethodChannel(BASE_CHANNEL);
     try {
       _appSetId = await AppSetId().getIdentifier();
       logger.d('AppSetId: Package found an appropriate ID value: $_appSetId');
@@ -328,8 +329,9 @@ class LoginControllerViewModel extends BaseViewModel {
     }
 
     try {
-      if (!_internalOpsService!.isDeviceInfoInitiated)
+      if (!_internalOpsService!.isDeviceInfoInitiated) {
         await _internalOpsService!.initDeviceInfo();
+      }
       _osVersion = _internalOpsService!.osVersion;
     } catch (e) {
       logger.e('DeviceData: Service failed to find a Device Data');
@@ -364,7 +366,7 @@ class LoginControllerViewModel extends BaseViewModel {
   void _onSignInSuccess(LoginSource source) async {
     logger!.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
-    logger!.d("User is set: " + userService.firebaseUser!.uid);
+    logger!.d("User is set: ${userService.firebaseUser!.uid}");
     _otpScreenKey.currentState?.model?.otpFocusNode.requestFocus();
     await CacheService.invalidateByKey(CacheKeys.USER);
     ApiResponse<BaseUser> user =
@@ -375,7 +377,8 @@ class LoginControllerViewModel extends BaseViewModel {
           locale.customerSupportText);
       setState(ViewState.Idle);
       _controller!.animateToPage(LoginMobileView.index,
-          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInToLinear);
     } else if (user.model == null ||
         (user.model != null && user.model!.hasIncompleteDetails())) {
       if (user.model == null) {
@@ -390,16 +393,17 @@ class LoginControllerViewModel extends BaseViewModel {
           "No existing user details found or found incomplete details for user. Moving to details page");
       AppState.isFirstTime = true;
 
-      if (source == LoginSource.TRUECALLER)
+      if (source == LoginSource.TRUECALLER) {
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerSignup);
+      }
       //Move to name input page
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
-      if (source == LoginSource.FIREBASE)
+      if (source == LoginSource.FIREBASE) {
         _controller!
             .animateToPage(
           LoginNameInputView.index,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInToLinear,
         )
             .then((_) {
@@ -409,7 +413,7 @@ class LoginControllerViewModel extends BaseViewModel {
                 "123456";
           }
         });
-      else if (source == LoginSource.TRUECALLER) {
+      } else if (source == LoginSource.TRUECALLER) {
         _controller!.jumpToPage(
           LoginNameInputView.index,
         );
@@ -417,10 +421,10 @@ class LoginControllerViewModel extends BaseViewModel {
       }
 
       loginUsingTrueCaller = false;
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         nameViewScrollController.animateTo(
             nameViewScrollController.position.maxScrollExtent,
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             curve: Curves.easeIn);
       });
       AppState.isOnboardingInProgress = true;
@@ -429,9 +433,10 @@ class LoginControllerViewModel extends BaseViewModel {
       ///Existing user
 
       await BaseAnalytics.analytics?.logLogin(loginMethod: 'phonenumber');
-      logger!.d("User details available: Name: " + user.model!.name!);
-      if (source == LoginSource.TRUECALLER)
+      logger!.d("User details available: Name: ${user.model!.name!}");
+      if (source == LoginSource.TRUECALLER) {
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerLogin);
+      }
       userService.baseUser = user.model;
       userService.logUserInstalledApps().then(
         (value) {
@@ -455,6 +460,7 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   Future _onSignUpComplete() async {
+    ///TODO:  WHy userService is here
     await userService.init();
     baseProvider!.init();
     AnalyticsProperties().init();
@@ -539,13 +545,13 @@ class LoginControllerViewModel extends BaseViewModel {
         _controller!
             .animateToPage(
           LoginOtpView.index,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInToLinear,
         )
             .then((_) {
           setState(ViewState.Idle);
         });
-        Future.delayed(Duration(seconds: 1), () {
+        Future.delayed(const Duration(seconds: 1), () {
           _otpScreenKey.currentState!.model!.otpFocusNode.requestFocus();
         });
       } else {
@@ -602,10 +608,11 @@ class LoginControllerViewModel extends BaseViewModel {
   Color getCTATextColor() {
     if (currentPage == 0) {
       if (_mobileScreenKey.currentState!.model.mobileController.text.length ==
-          10)
+          10) {
         return UiConstants.primaryColor;
-      else
+      } else {
         return UiConstants.gameCardColor;
+      }
     }
     return UiConstants.gameCardColor;
   }
@@ -643,7 +650,8 @@ class LoginControllerViewModel extends BaseViewModel {
     if (this.state == ViewState.Idle) {
       AppState.isOnboardingInProgress = false;
       _controller!.animateToPage(LoginMobileView.index,
-          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInToLinear);
     }
   }
 
