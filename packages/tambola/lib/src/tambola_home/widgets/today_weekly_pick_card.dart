@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tambola/src/tambola_home/widgets/tambola_top_banner.dart';
 import 'package:tambola/src/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:tambola/src/utils/styles/styles.dart';
-import 'package:tambola/tambola/tambola_home/widgets/tambola_top_banner.dart';
 
 class TodayWeeklyPicksCard extends StatelessWidget {
   const TodayWeeklyPicksCard({
