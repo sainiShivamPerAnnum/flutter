@@ -137,7 +137,7 @@ class PlayViewModel extends BaseViewModel {
             "", "Something went wrong please try again"));
 
     showSecurityMessageAtTop =
-        _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
+        (_userService?.userJourneyStats?.mlIndex ?? 0) > 6 ? false : true;
 
     if (res.isSuccess()) {
       gameTier = res.model;

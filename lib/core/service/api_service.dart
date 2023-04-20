@@ -36,7 +36,7 @@ abstract class API {
 }
 
 class APIService implements API {
-  String _baseUrl = 'https://' + FlavorConfig.instance!.values.baseUriAsia;
+  String _baseUrl = 'https://${FlavorConfig.instance!.values.baseUriAsia}';
   final CustomLogger? logger = locator<CustomLogger>();
   final UserService? userService = locator<UserService>();
   String _versionString = "";

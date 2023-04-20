@@ -145,7 +145,7 @@ class AppState extends ChangeNotifier {
     final JourneyService _journeyService = locator<JourneyService>();
     if (JourneyService.isAvatarAnimationInProgress) return;
     _rootController.onChange(_rootController.navItems.values.toList()[index]);
-    AppState.delegate!.appState.setCurrentTabIndex = index;
+    setCurrentTabIndex = index;
     trackEvent(index);
     Haptic.vibrate();
     if (_rootController.currentNavBarItemModel ==
@@ -231,7 +231,7 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  executeForFirstJourneyTabClick(int index) {
+  Future<void> executeForFirstJourneyTabClick(int index) async {
     final JourneyService _journeyService = locator<JourneyService>();
     int journeyIndex = _rootController.navItems.values
         .toList()
@@ -243,6 +243,7 @@ class AppState extends ChangeNotifier {
     if (!isFirstTimeJourneyOpened) {
       if (index == journeyIndex) {
         isFirstTimeJourneyOpened = true;
+        log("isFirstTimeJourneyOpened: $isFirstTimeJourneyOpened");
         _journeyService.buildJourney();
       }
     }

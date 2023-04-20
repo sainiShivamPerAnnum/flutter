@@ -227,16 +227,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
               const TransactionsHistory(), TransactionsHistoryPageConfig);
           break;
         case Pages.KycDetails:
-          _addPageData(KYCDetailsView(), KycDetailsPageConfig);
+          _addPageData(const KYCDetailsView(), KycDetailsPageConfig);
           break;
         case Pages.BankDetails:
-          _addPageData(BankDetailsView(), BankDetailsPageConfig);
+          _addPageData(const BankDetailsView(), BankDetailsPageConfig);
           break;
         case Pages.UpdateRequired:
           _addPageData(const UpdateRequiredScreen(), UpdateRequiredConfig);
           break;
         case Pages.RefPolicy:
-          _addPageData(ReferralPolicy(), RefPolicyPageConfig);
+          _addPageData(const ReferralPolicy(), RefPolicyPageConfig);
           break;
         case Pages.VerifyEmail:
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);
@@ -289,10 +289,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
               const AutosaveProcessView(), AutosaveProcessViewPageConfig);
           break;
         case Pages.AutosaveDetailsView:
-          _addPageData(AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
+          _addPageData(
+              const AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
           break;
         case Pages.AutosaveUpdateView:
-          _addPageData(AutosaveUpdateView(), AutosaveUpdateViewPageConfig);
+          _addPageData(
+              const AutosaveUpdateView(), AutosaveUpdateViewPageConfig);
           break;
 
         // case Pages.TopPlayerLeaderboard:
@@ -300,7 +302,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         //       const TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
         //   break;
         case Pages.JourneyView:
-          _addPageData(JourneyView(), JourneyViewPageConfig);
+          _addPageData(const JourneyView(), JourneyViewPageConfig);
           break;
         case Pages.OnBoardingView:
           _addPageData(const OnBoardingView(), OnBoardingViewPageConfig);
@@ -1022,7 +1024,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         ),
         isScrollControlled: true,
         hapticVibrate: true,
-        content: PrizeDistributionSheet());
+        content: const PrizeDistributionSheet());
   }
 
   bool checkForRatingDialog() {

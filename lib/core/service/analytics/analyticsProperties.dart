@@ -60,8 +60,9 @@ class AnalyticsProperties {
 
   static getPendingReferalCount() {
     int? pendingCount = 0;
-    if (getTotalReferralCount() >= getSuccessReferralCount())
+    if (getTotalReferralCount() >= getSuccessReferralCount()) {
       pendingCount = getTotalReferralCount() - getSuccessReferralCount();
+    }
     return pendingCount;
   }
 
@@ -109,18 +110,19 @@ class AnalyticsProperties {
   }
 
   static int getCurrentLevel() {
-    return _userService!.userJourneyStats!.level ?? -1;
+    return _userService?.userJourneyStats?.level ?? -1;
   }
 
   static int getCurrentMilestone() {
-    return _userService!.userJourneyStats!.mlIndex ?? -1;
+    return _userService?.userJourneyStats?.mlIndex ?? -1;
   }
 
   static int getMileStonesCompleted() {
-    if (_userService!.userJourneyStats!.mlIndex! > 1)
+    if ((_userService?.userJourneyStats?.mlIndex ?? 0) > 1) {
       return _userService!.userJourneyStats!.mlIndex! - 1;
-    else
+    } else {
       return 0;
+    }
   }
 
   static int getTokens() {
@@ -144,11 +146,12 @@ class AnalyticsProperties {
   }
 
   static double getAutoSIPAmount() {
-    if (_subService.subscriptionData == null)
+    if (_subService.subscriptionData == null) {
       return 0.0;
-    else
+    } else {
       return (double.tryParse(_subService.subscriptionData!.amount ?? '0') ??
           0.0);
+    }
   }
 
   static String getJouneryCapsuleText() {

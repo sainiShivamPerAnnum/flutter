@@ -496,12 +496,12 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       }
     });
     print("Existing level : $existingLevel || Updated Level: $updatedLevel");
-    return (existingLevel != updatedLevel);
+    return existingLevel != updatedLevel;
   }
 
   //Returns if there is any cached mlIndex
   //else sets mlIndex to 1 and cache it to shared prefs
-  getAvatarCachedMilestoneIndex() {
+  void getAvatarCachedMilestoneIndex() {
     if (PreferenceHelper.exists(AVATAR_CURRENT_MILESTONE_LEVEL)) {
       avatarCachedMlIndex =
           PreferenceHelper.getInt(AVATAR_CURRENT_MILESTONE_LEVEL);
@@ -619,9 +619,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 //-------------------------------|-HELPER METHODS-START-|---------------------------------
 
   userIsAtJourneyScreen() {
-    return (AppState.screenStack.length == 1 &&
+    return AppState.screenStack.length == 1 &&
         _rootController.currentNavBarItemModel ==
-            RootController.journeyNavBarItem);
+            RootController.journeyNavBarItem;
   }
 
   setAvatarPostion() => avatarPosition = calculatePosition(0);

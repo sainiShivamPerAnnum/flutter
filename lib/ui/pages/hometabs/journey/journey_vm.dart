@@ -107,7 +107,7 @@ class JourneyPageViewModel extends BaseViewModel {
   isOngoing(int index) => (_journeyService!.avatarRemoteMlIndex == index);
   isInComplete(int? index) => (_journeyService!.avatarRemoteMlIndex < index);
 
-  init(TickerProvider ticker) async {
+  Future<void> init(TickerProvider ticker) async {
     log("Journey VM init Called");
 
     setState(ViewState.Busy);

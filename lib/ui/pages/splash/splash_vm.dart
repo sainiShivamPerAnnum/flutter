@@ -109,7 +109,7 @@ class LauncherViewModel extends BaseViewModel {
                     _userRepo.updateUserAppFlyer(userService.baseUser!, token),
               ),
         ]);
-        _userCoinService.init();
+        // _userCoinService.init();
         _referralService.init();
         _baseUtil.init();
         _fcmListener.setupFcm();
@@ -130,7 +130,7 @@ class LauncherViewModel extends BaseViewModel {
     await Future.delayed(Duration(milliseconds: delayedSecond));
     isFetchingData = false;
     loopOutlottieAnimationController!.forward();
-    await Future.delayed(new Duration(milliseconds: 900));
+    await Future.delayed(const Duration(milliseconds: 900));
 
     if (!userService.isUserOnboarded) {
       _logger.d("New user. Moving to Onboarding..");

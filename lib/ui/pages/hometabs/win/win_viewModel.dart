@@ -17,6 +17,7 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -71,9 +72,10 @@ class WinViewModel extends BaseViewModel {
   double get getUnclaimedPrizeBalance =>
       _userService!.userFundWallet!.unclaimedBalance;
 
-  init() {
+  void init() async {
     getFelloFacts();
     _lbService!.fetchReferralLeaderBoard();
+    locator<ReferralService>().fetchReferralCode();
   }
 
   // Future<void> shareWhatsApp() async {

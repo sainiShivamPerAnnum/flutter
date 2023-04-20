@@ -42,6 +42,8 @@ class JourneyRepository extends BaseRepo {
 
   //Initiating instance for local directory of Android || iOS
   Future<void> init() async {
+    ///TODO: 'directory.exists()' Avoid slow async `dart:io` methods
+    /// find better way
     if (_filePathDirectory == null) {
       if (Platform.isAndroid) {
         final directory = await getApplicationDocumentsDirectory();

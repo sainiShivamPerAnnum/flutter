@@ -356,7 +356,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _firebaseUser = FirebaseAuth.instance.currentUser;
       await setBaseUser();
       if (baseUser != null) {
-        await getUserJourneyStats();
+        // await getUserJourneyStats();
         final res = await _gettersRepo.getPageConfigs();
         if (res.isSuccess()) {
           setPageConfigs(res.model!);

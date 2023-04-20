@@ -89,7 +89,7 @@ class ReferralService extends ChangeNotifier {
 
   void init() {
     fetchBasicConstantValues();
-    fetchReferralCode();
+    // fetchReferralCode();
   }
 
   Future<void> fetchReferralCode() async {
@@ -144,7 +144,7 @@ class ReferralService extends ChangeNotifier {
       }
     }
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       _isShareAlreadyClicked = false;
       notifyListeners();
     });
@@ -181,7 +181,7 @@ class ReferralService extends ChangeNotifier {
       final link = await _appFlyer.inviteLink();
       if (link['status'] == 'success') {
         url = link['payload']['userInviteUrl'];
-        if (url == null) url = link['payload']['userInviteURL'];
+        url ??= link['payload']['userInviteURL'];
       }
       _logger.d('appflyer invite link as $url');
     } catch (e) {
@@ -197,12 +197,13 @@ class ReferralService extends ChangeNotifier {
       final link = await _appFlyer!.inviteLink();
       if (link['status'] == 'success') {
         url = link['payload']['userInviteUrl'];
-        if (url == null) url = link['payload']['userInviteURL'];
+        url ??= link['payload']['userInviteURL'];
       }
 
-      if (url != null)
+      if (url != null) {
         caputure(
             'Hey, I won ₹${prizeAmount.toInt()} on Fello! \nLet\'s save and play together: $url');
+      }
     } catch (e) {
       _logger!.e(e.toString());
       BaseUtil.showNegativeAlert(locale.errorOccured, locale.tryLater);
@@ -272,10 +273,12 @@ class ReferralService extends ChangeNotifier {
           return _refRepo.createReferral(userId, referee).then((res) {
             return res.model!;
           });
-        } else
+        } else {
           return false;
-      } else
+        }
+      } else {
         return false;
+      }
     } catch (e) {
       _logger.e(e);
       return false;
@@ -441,10 +444,11 @@ class ReferralService extends ChangeNotifier {
   Future<String> getGramsWon(double amount) async {
     AugmontService? augmontService = locator<AugmontService>();
     AugmontRates? goldRates = await augmontService.getRates();
-    if (goldRates != null && goldRates.goldSellPrice != 0.0)
+    if (goldRates != null && goldRates.goldSellPrice != 0.0) {
       return '${BaseUtil.digitPrecision(amount / goldRates.goldSellPrice!, 4, false)}gm';
-    else
+    } else {
       return '0.0gm';
+    }
   }
 
   showSuccessPrizeWithdrawalDialog(PrizeClaimChoice choice, String subtitle,
@@ -488,7 +492,7 @@ class ReferralService extends ChangeNotifier {
   }
 
   Widget getSubtitleWidget(String subtitle) {
-    if (subtitle == "gold" || subtitle == "amazon")
+    if (subtitle == "gold" || subtitle == "amazon") {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -504,6 +508,7 @@ class ReferralService extends ChangeNotifier {
           ],
         ),
       );
+    }
     return Text(
       subtitle,
       textAlign: TextAlign.center,
@@ -517,12 +522,12 @@ class ReferralService extends ChangeNotifier {
   ///
 
   caputure(String shareMessage) {
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       captureCard().then((image) {
         AppState.backButtonDispatcher!.didPopRoute();
-        if (image != null)
+        if (image != null) {
           shareCard(image, shareMessage);
-        else {
+        } else {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {

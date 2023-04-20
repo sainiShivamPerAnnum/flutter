@@ -77,7 +77,7 @@ class RootViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final ReferralService _referralService = locator<ReferralService>();
   final MarketingEventHandlerService _marketingService =
-  locator<MarketingEventHandlerService>();
+      locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
 
   Future<void> refresh() async {
@@ -104,29 +104,24 @@ class RootViewModel extends BaseViewModel {
     AppState.isUserSignedIn = true;
     appState.setRootLoadValue = true;
 
-    await Future.wait([
-      _referralService.verifyReferral(),
-      _referralService.initDynamicLinks(),
-      _subscriptionService.init(),
-    ]);
+    if (!await verifyUserBootupDetails()) return;
+    await checkForBootUpAlerts();
 
     _rootController.currentNavBarItemModel =
         _rootController.navItems.values.first;
+
+    await Future.wait([
+      _referralService.verifyReferral(),
+      _referralService.initDynamicLinks(),
+    ]);
 
     await initialize();
   }
 
   Future<void> initialize() async {
     WidgetsBinding.instance.addPostFrameCallback(
-          (timeStamp) async {
-        await verifyUserBootupDetails();
-        await checkForBootUpAlerts();
-
-        await Future.wait([
-          _userService.userBootUpEE(),
-          _fcmListener.refreshTopics(),
-          _userService.getUserFundWalletData()
-        ]);
+      (timeStamp) async {
+        await _userService.userBootUpEE();
 
         if (AppState.isFirstTime) {
           Future.delayed(const Duration(seconds: 1),
@@ -135,9 +130,9 @@ class RootViewModel extends BaseViewModel {
 
         handleStartUpNotificationData();
         await Future.wait([
-          // _journeyService.getUnscratchedGT(),
           _userService.checkForNewNotifications(),
           _userService.getProfilePicture(),
+          _fcmListener.refreshTopics(),
         ]);
 
         _initAdhocNotifications();
@@ -193,7 +188,7 @@ class RootViewModel extends BaseViewModel {
           topLeft: const Radius.circular(30.0),
           topRight: Radius.circular(SizeConfig.roundness12)),
       backgroundColor:
-      UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+          UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
       content: SecurityModalSheet(),
     );
     _fcmHandler.addIncomingMessageListener((valueMap) {
@@ -206,9 +201,9 @@ class RootViewModel extends BaseViewModel {
 
   Future<void> checkForBootUpAlerts() async {
     bool updateAvailable =
-    PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
+        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
     bool isMsgNoticeAvailable =
-    PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
+        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
     if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
     if (updateAvailable) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
@@ -219,7 +214,7 @@ class RootViewModel extends BaseViewModel {
         content: ConfirmationDialog(
           title: "App Update Available",
           description:
-          "A new version of the app is available. Update now to enjoy the hassle free experience.",
+              "A new version of the app is available. Update now to enjoy the hassle free experience.",
           buttonText: "Update Now",
           cancelBtnText: "Not now",
           confirmAction: () {
@@ -287,7 +282,7 @@ class RootViewModel extends BaseViewModel {
         _userService.baseUser!.isAugmontOnboarded! &&
         _userService.userFundWallet!.augGoldQuantity > 0 &&
         _userService.baseUser!.userPreferences
-            .getPreference(Preferences.APPLOCK) ==
+                .getPreference(Preferences.APPLOCK) ==
             0) {
       canExecuteStartupNotification = false;
       Future.delayed(const Duration(seconds: 2), () {
@@ -303,7 +298,8 @@ class RootViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> verifyUserBootupDetails() async {
+  Future<bool> verifyUserBootupDetails() async {
+    bool flag = true;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (_userService.baseUser != null && _userService.userBootUp != null) {
         //1.check if the account is blocked
@@ -316,6 +312,8 @@ class RootViewModel extends BaseViewModel {
             state: PageState.replaceAll,
             page: BlockedUserPageConfig,
           );
+
+          flag = false;
           return;
         }
         // //2.Checking for forced App Update
@@ -325,6 +323,7 @@ class RootViewModel extends BaseViewModel {
           AppState.isRootAvailableForIncomingTaskExecution = false;
           AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.replaceAll, page: UpdateRequiredConfig);
+          flag = false;
           return;
         }
 
@@ -353,6 +352,8 @@ class RootViewModel extends BaseViewModel {
               );
             }
           });
+          flag = false;
+          return;
         }
 
         //4. App update present (Not forced)
@@ -366,7 +367,7 @@ class RootViewModel extends BaseViewModel {
         //5. Clear all the caches
         if (_userService.userBootUp!.data!.cache!.keys != null) {
           for (String id
-          in _userService.userBootUp!.data!.cache!.keys as List<String>) {
+              in _userService.userBootUp!.data!.cache!.keys as List<String>) {
             CacheService.invalidateByKey(id);
           }
         }
@@ -398,5 +399,6 @@ class RootViewModel extends BaseViewModel {
         }
       }
     });
+    return flag;
   }
 }

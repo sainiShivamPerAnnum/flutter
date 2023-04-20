@@ -96,7 +96,7 @@ class BankAndPanService
     this._withdrawableQnt = val;
   }
 
-  init() async {
+  Future<void> init() async {
     // await _userService.fetchUserAugmontDetail();
     await checkForUserBankAccountDetails();
     await checkForUserPanDetails();
