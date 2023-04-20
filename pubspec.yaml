@@ -100,6 +100,7 @@ dependencies:
   webengage_flutter: ^1.2.1
   webview_flutter: ^3.0.4
   advertising_id: ^2.4.0
+  flutter_hooks: ^0.18.6
 
 
 
