@@ -17,17 +17,12 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_rating_dialog.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
-import 'package:felloapp/ui/pages/finance/augmont/augmont_gold_details/save_assets_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_update/autosave_update_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
-import 'package:felloapp/ui/pages/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
-import 'package:felloapp/ui/pages/games/tambola/show_all_tickets.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_wrapper.dart';
-import 'package:felloapp/ui/pages/games/tambola/weekly_results/weekly_result.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
@@ -244,19 +239,22 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Support:
           _addPageData(const SupportPage(), SupportPageConfig);
           break;
-
-        case Pages.THome:
-          _addPageData(const TambolaWrapper(), THomePageConfig);
-          break;
-        case Pages.TPickDraw:
-          _addPageData(PicksDraw(), TPickDrawPageConfig);
-          break;
-        case Pages.TShowAllTickets:
-          _addPageData(ShowAllTickets(), TShowAllTicketsPageConfig);
-          break;
-        case Pages.TWeeklyResult:
-          _addPageData(const WeeklyResult(), TWeeklyResultPageConfig);
-          break;
+        //TODO: REVERT WHEN PACAKGE IS SETUP
+        // case Pages.THome:
+        //   _addPageData(const TambolaHomeView(), THomePageConfig);
+        //   break;
+        //TODO: REVERT WHEN PACAKGE IS SETUP
+        // case Pages.TPickDraw:
+        //   _addPageData(PicksDraw(), TPickDrawPageConfig);
+        //   break;
+        // case Pages.TShowAllTickets:
+        //   _addPageData(ShowAllTickets(), TShowAllTicketsPageConfig);
+        //   break;
+        //TODO: REVERT WHEN PACAKGE IS SETUP
+        // case Pages.TWeeklyResult:
+        //   _addPageData(const WeeklyResult(), TWeeklyResultPageConfig);
+        //   break;
+        //TODO: REVERT WHEN PACAKGE IS SETUP
         case Pages.Notifications:
           _addPageData(NotificationsPage(), NotificationsConfig);
           break;
@@ -311,9 +309,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.CampaignView:
           _addPageData(CampaignView(), CampaignViewPageConfig);
           break;
-        case Pages.SaveAssetView:
-          _addPageData(const SaveAssetView(), SaveAssetsViewConfig);
-          break;
+        // case Pages.SaveAssetView:
+        //   _addPageData(const SaveAssetView(), SaveAssetsViewConfig);
+        //   break;
         case Pages.SettingsView:
           _addPageData(const SettingsView(), SettingsViewPageConfig);
           break;
@@ -591,9 +589,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.CampaignView:
         CampaignViewPageConfig.currentPageAction = action;
         break;
-      case Pages.SaveAssetView:
-        SaveAssetsViewConfig.currentPageAction = action;
-        break;
+      // case Pages.SaveAssetView:
+      //   SaveAssetsViewConfig.currentPageAction = action;
+      //   break;
       case Pages.SellConfirmationView:
         SellConfirmationViewConfig.currentPageAction = action;
         break;
@@ -824,9 +822,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
-      case 'augDetails':
-        pageConfiguration = SaveAssetsViewConfig;
-        break;
+      // case 'augDetails':
+      //   pageConfiguration = SaveAssetsViewConfig;
+      //   break;
       case 'lboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;
         break;
@@ -938,9 +936,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
-      case 'autosaveDetails':
-        pageConfiguration = AutosaveDetailsViewPageConfig;
-        break;
+
       case 'autosaveTxns':
         openTransactions(InvestmentType.AUGGOLD99);
         break;

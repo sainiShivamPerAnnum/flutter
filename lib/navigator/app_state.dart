@@ -9,11 +9,9 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -225,7 +223,9 @@ class AppState extends ChangeNotifier {
         executeForFirstPlayTabClick(index);
         break;
       case "Tambola":
-        executeForFirstTambolaClick(index);
+        //TODO: REVERT WHEN PACAKGE IS SETUP
+        // executeForFirstTambolaClick(index);
+        //TODO: REVERT WHEN PACAKGE IS SETUP
         break;
       case "Account":
       case "Win":
@@ -262,34 +262,36 @@ class AppState extends ChangeNotifier {
     SpotLightController.instance.userFlow = UserFlow.onWinPage;
   }
 
-  executeForFirstTambolaClick(index) {
-    final TambolaService _tambolaService = locator<TambolaService>();
-    _tambolaService.completer.future.then(
-      (value) {
-        if ((_tambolaService.initialTicketCount ?? -1) == 0) {
-          if (_tambolaService.userWeeklyBoards!.length > 0) {
-            _tambolaService.initialTicketCount =
-                _tambolaService.userWeeklyBoards!.length;
-            WidgetsBinding.instance.addPostFrameCallback(
-              (timeStamp) {
-                AppState.screenStack.add(ScreenItem.dialog);
-                Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
-                    .push(
-                  PageRouteBuilder(
-                    opaque: false,
-                    pageBuilder: (BuildContext context, _, __) =>
-                        TambolaInstantView(
-                      ticketCount: _tambolaService.userWeeklyBoards!.length,
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-        }
-      },
-    );
-  }
+  //TODO: REVERT WHEN PACAKGE IS SETUP
+  // executeForFirstTambolaClick(index) {
+  //   final TambolaService _tambolaService = locator<TambolaService>();
+  //   _tambolaService.completer.future.then(
+  //     (value) {
+  //       if ((_tambolaService.initialTicketCount ?? -1) == 0) {
+  //         if (_tambolaService.userWeeklyBoards!.length > 0) {
+  //           _tambolaService.initialTicketCount =
+  //               _tambolaService.userWeeklyBoards!.length;
+  //           WidgetsBinding.instance.addPostFrameCallback(
+  //             (timeStamp) {
+  //               AppState.screenStack.add(ScreenItem.dialog);
+  //               Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
+  //                   .push(
+  //                 PageRouteBuilder(
+  //                   opaque: false,
+  //                   pageBuilder: (BuildContext context, _, __) =>
+  //                       TambolaInstantView(
+  //                     ticketCount: _tambolaService.userWeeklyBoards!.length,
+  //                   ),
+  //                 ),
+  //               );
+  //             },
+  //           );
+  //         }
+  //       }
+  //     },
+  //   );
+  // }
+  //TODO: REVERT WHEN PACAKGE IS SETUP
 
   void trackEvent(int index) {
     final ScratchCardService _gtService = locator<ScratchCardService>();
@@ -328,7 +330,7 @@ class AppState extends ChangeNotifier {
     } else if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
       _analyticsService.track(eventName: "Tambola tab tapped", properties: {
-        "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
+        // "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
         "index": index
       });
     }

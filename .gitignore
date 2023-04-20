@@ -58,7 +58,6 @@ ios/fastlane/metadata/trade_representative_contact_information
 .gradle/
 
 # Web related
-lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols

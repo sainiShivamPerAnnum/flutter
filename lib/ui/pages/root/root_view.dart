@@ -4,7 +4,6 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
@@ -42,21 +41,26 @@ class Root extends StatelessWidget {
             body: Stack(
               children: [
                 const NewSquareBackground(),
-
-                RootAppBar(),
-                RefreshIndicator(
-                  triggerMode: RefreshIndicatorTriggerMode.onEdge,
-                  color: UiConstants.primaryColor,
-                  backgroundColor: Colors.black,
-                  onRefresh: model.refresh,
-                  child: Consumer<AppState>(
-                    builder: (ctx, m, child) {
-                      return IndexedStack(
-                        children: model.navBarItems.keys.toList(),
-                        index: m.getCurrentTabIndex,
-                      );
-                    },
-                  ),
+                Column(
+                  children: [
+                    RootAppBar(),
+                    Expanded(
+                      child: RefreshIndicator(
+                        triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                        color: UiConstants.primaryColor,
+                        backgroundColor: Colors.black,
+                        onRefresh: model.refresh,
+                        child: Consumer<AppState>(
+                          builder: (ctx, m, child) {
+                            return IndexedStack(
+                              index: m.getCurrentTabIndex,
+                              children: model.navBarItems.keys.toList(),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
                 PropertyChangeProvider<MarketingEventHandlerService,
@@ -97,10 +101,11 @@ class Root extends StatelessWidget {
 }
 
 bool _showHappyHour() {
-  if (locator<RootController>().currentNavBarItemModel ==
-      RootController.tambolaNavBar) {
-    return ((locator<TambolaService>().userWeeklyBoards?.length ?? 0) > 0);
-  }
+  //TODO: REVERT WHEN PACAKGE IS SETUP
+  // if (locator<RootController>().currentNavBarItemModel ==
+  //     RootController.tambolaNavBar) {
+  //   return ((locator<TambolaService>().userWeeklyBoards?.length ?? 0) > 0);
+  // }
   return true;
 }
 
@@ -109,57 +114,56 @@ class RootAppBar extends StatelessWidget {
   FaqsType getFaqType() {
     final NavBarItemModel navItem =
         locator<RootController>().currentNavBarItemModel;
-    if (navItem == RootController.playNavBarItem)
+    if (navItem == RootController.playNavBarItem) {
       return FaqsType.play;
-    else if (navItem == RootController.saveNavBarItem)
+    } else if (navItem == RootController.saveNavBarItem) {
       return FaqsType.savings;
-    else if (navItem == RootController.winNavBarItem)
+    } else if (navItem == RootController.winNavBarItem) {
       return FaqsType.winnings;
-    else if (navItem == RootController.tambolaNavBar)
+    } else if (navItem == RootController.tambolaNavBar) {
       return FaqsType.play;
-    else
+    } else if (navItem == RootController.tambolaNavBar) {
+      return FaqsType.tambola;
+    } else {
       return FaqsType.gettingStarted;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      child: PropertyChangeConsumer<UserService, UserServiceProperties>(
-          properties: [UserServiceProperties.mySegments],
-          builder: (_, userservice, ___) {
-            return Consumer<AppState>(
-              builder: (ctx, appState, child) {
-                return (locator<RootController>().currentNavBarItemModel !=
-                        RootController.journeyNavBarItem)
-                    ? Container(
-                        width: SizeConfig.screenWidth,
-                        height: kToolbarHeight + SizeConfig.viewInsets.top,
-                        alignment: Alignment.bottomCenter,
-                        color: (locator<RootController>()
+    return PropertyChangeConsumer<UserService, UserServiceProperties>(
+        properties: [UserServiceProperties.mySegments],
+        builder: (_, userservice, ___) {
+          return Consumer<AppState>(
+            builder: (ctx, appState, child) {
+              return (locator<RootController>().currentNavBarItemModel !=
+                      RootController.journeyNavBarItem)
+                  ? Container(
+                      width: SizeConfig.screenWidth,
+                      height: kToolbarHeight + SizeConfig.viewInsets.top,
+                      alignment: Alignment.bottomCenter,
+                      color:
+                          (locator<RootController>().currentNavBarItemModel ==
+                                  RootController.saveNavBarItem)
+                              ? (userservice!.userSegments.contains("NEW_USER"))
+                                  ? UiConstants.kBackgroundColor
+                                  : UiConstants.kSecondaryBackgroundColor
+                              : UiConstants.kBackgroundColor,
+                      child: FAppBar(
+                        type: getFaqType(),
+                        backgroundColor: (locator<RootController>()
                                     .currentNavBarItemModel ==
                                 RootController.saveNavBarItem)
                             ? (userservice!.userSegments.contains("NEW_USER"))
                                 ? UiConstants.kBackgroundColor
                                 : UiConstants.kSecondaryBackgroundColor
                             : UiConstants.kBackgroundColor,
-                        child: FAppBar(
-                          type: getFaqType(),
-                          backgroundColor: (locator<RootController>()
-                                      .currentNavBarItemModel ==
-                                  RootController.saveNavBarItem)
-                              ? (userservice!.userSegments.contains("NEW_USER"))
-                                  ? UiConstants.kBackgroundColor
-                                  : UiConstants.kSecondaryBackgroundColor
-                              : UiConstants.kBackgroundColor,
-                          showAvatar: true,
-                        ),
-                      )
-                    : SizedBox();
-              },
-            );
-          }),
-    );
+                        showAvatar: true,
+                      ),
+                    )
+                  : SizedBox();
+            },
+          );
+        });
   }
 }

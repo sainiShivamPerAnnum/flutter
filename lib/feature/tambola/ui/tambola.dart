@@ -1,0 +1,3 @@
+class Tambola {
+  void initialise() {}
+}

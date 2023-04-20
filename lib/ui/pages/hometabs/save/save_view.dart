@@ -10,7 +10,6 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/new_user_save.da
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -60,24 +59,11 @@ class SaveViewWrapper extends StatelessWidget {
       properties: const [UserServiceProperties.mySegments],
       builder: (_, prop, ___) {
         if (prop!.userSegments.contains("NEW_USER")) {
-          return NewUserSaveView(
-            model: model,
-          );
+          return NewUserSaveView(model: model);
         }
-        return SizedBox(
-          height: SizeConfig.screenHeight,
-          child: Column(
-            children: [
-              SizedBox(height: SizeConfig.fToolBarHeight),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  cacheExtent: SizeConfig.screenHeight,
-                  children: model.getSaveViewItems(model),
-                ),
-              ),
-            ],
-          ),
+        return ListView(
+          padding: EdgeInsets.zero,
+          children: model.getSaveViewItems(model),
         );
       },
     );

@@ -14,14 +14,11 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/elements/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/more_games_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/games_widget/games_widget.dart';
-import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
-import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -52,7 +49,7 @@ class PlayViewModel extends BaseViewModel {
   // final WinnerService _winnerService = locator<WinnerService>();
   final UserStatsRepo _userStatsRepo = locator<UserStatsRepo>();
   bool _showSecurityMessageAtTop = true;
-  final TambolaWidgetController _tambolaController = TambolaWidgetController();
+  // final TambolaWidgetController _tambolaController = TambolaWidgetController();
   String? _message;
   String? _sessionId;
   bool _isOfferListLoading = true;
@@ -157,15 +154,15 @@ class PlayViewModel extends BaseViewModel {
 
     DynamicUiUtils.playViewOrder.forEach((key) {
       switch (key) {
-        case 'TM':
-          if (!locator<RootController>()
-              .navItems
-              .containsValue(RootController.tambolaNavBar)) {
-            playViewChildren.add(TambolaCard(
-              tambolaController: _tambolaController,
-            ));
-          }
-          break;
+        // case 'TM':
+        //   if (!locator<RootController>()
+        //       .navItems
+        //       .containsValue(RootController.tambolaNavBar)) {
+        //     playViewChildren.add(TambolaCard(
+        //       tambolaController: _tambolaController,
+        //     ));
+        //   }
+        //   break;
         case 'AG':
           playViewChildren.add(GamesWidget(model: model));
           break;

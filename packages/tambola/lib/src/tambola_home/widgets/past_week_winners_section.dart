@@ -1,0 +1,224 @@
+import 'package:flutter/material.dart';
+import 'package:tambola/src/models/winners_model.dart';
+import 'package:tambola/src/tambola_home/widgets/loader.dart';
+import 'package:tambola/src/tambola_home/widgets/no_record_display_widget.dart';
+import 'package:tambola/src/utils/assets.dart';
+import 'package:tambola/src/utils/styles/styles.dart';
+
+class TambolaLeaderBoard extends StatelessWidget {
+  const TambolaLeaderBoard({
+    Key? key,
+    required this.winners,
+  }) : super(key: key);
+
+  final List<Winners>? winners;
+
+  String? getWinnersCategory(int index) {
+    MatchMap? data = winners![index].matchMap;
+    List<String> temp = [];
+    if ((data?.corners ?? 0) > 0) {
+      data!.corners == 1
+          ? temp.add('1 Corner')
+          : temp.add('${data.corners} Corners');
+    }
+    if ((data?.fullHouse ?? 0) > 0) {
+      temp.add('${data!.fullHouse} Full House');
+    }
+    if ((data?.oneRow ?? 0) > 0) {
+      data!.oneRow == 1
+          ? temp.add('1 One Row')
+          : temp.add('${data.oneRow} One Rows');
+    }
+    if ((data?.twoRows ?? 0) > 0) {
+      data!.twoRows == 1
+          ? temp.add('1 Two Row')
+          : temp.add('${data.twoRows} Two Rows');
+    }
+
+    return temp.length > 1
+        ? temp.join(", ")
+        : temp.isEmpty
+            ? ""
+            : temp[0];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // S locale = S.of(context);
+    return Container(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.pageHorizontalMargins,
+          ),
+          Text(
+            "Last week winners",
+            style: TextStyles.rajdhaniSB.body0,
+          ),
+          SizedBox(
+            height: SizeConfig.pageHorizontalMargins,
+          ),
+          winners == null
+              ? Center(
+                  child: Column(
+                    children: [
+                      FullScreenLoader(size: SizeConfig.padding80),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      Text(
+                        "Fetching last week winners..",
+                        style: TextStyles.rajdhaniB.body2.colour(Colors.white),
+                      ),
+                    ],
+                  ),
+                )
+              : (winners!.isEmpty
+                  ? Container(
+                      margin:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding24),
+                      color: Colors.transparent,
+                      alignment: Alignment.center,
+                      width: SizeConfig.screenWidth,
+                      child: NoRecordDisplayWidget(
+                        topPadding: false,
+                        assetSvg: Assets.noWinnersAsset,
+                        text: "Leaderboard will be updated soon",
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "#",
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                            ),
+                            SizedBox(width: SizeConfig.padding32),
+                            Text("Names",
+                                style: TextStyles.sourceSans.body3
+                                    .colour(UiConstants.kTextColor2)),
+                            Spacer(),
+                            Text(
+                              'Tickets Owned',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                              maxLines: 2,
+                            ),
+                            SizedBox(width: SizeConfig.padding16),
+                            Text(
+                              'Rewards',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTextColor2),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: List.generate(
+                            winners!.length,
+                            (i) {
+                              return Column(
+                                children: [
+                                  Container(
+                                    width: SizeConfig.screenWidth,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: SizeConfig.padding12),
+                                    margin: EdgeInsets.symmetric(
+                                      vertical: SizeConfig.padding4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16),
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "${i + 1}",
+                                          style: TextStyles.sourceSans.body2
+                                              .colour(Colors.white),
+                                        ),
+                                        SizedBox(width: SizeConfig.padding24),
+                                        // DefaultAvatar(),
+                                        SizedBox(width: SizeConfig.padding12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                  //"avc",
+                                                  winners![i]
+                                                      .username!
+                                                      .replaceAll('@', '.'),
+                                                  style: TextStyles
+                                                      .sourceSans.body2
+                                                      .colour(Colors.white)),
+                                              SizedBox(
+                                                  height: SizeConfig.padding4),
+                                              Text(
+                                                getWinnersCategory(i) ?? "",
+                                                style: TextStyles
+                                                    .sourceSans.body4
+                                                    .colour(Colors.white
+                                                        .withOpacity(0.5)),
+                                                maxLines: 2,
+                                                textAlign: TextAlign.start,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: SizeConfig.padding64,
+                                        ),
+                                        SizedBox(
+                                          // color: Colors.red,
+                                          width: SizeConfig.padding54,
+                                          child: Text(
+                                            "${winners![i].ticketOwned ?? "00"}",
+                                            style: TextStyles.sourceSans.body2
+                                                .colour(Colors.white),
+                                          ),
+                                        ),
+                                        // SizedBox(width: SizeConfig.padding16),
+                                        SizedBox(
+                                          width: SizeConfig.padding64,
+                                          // color: Colors.blue,
+                                          child: Text(
+                                            "₹ ${winners![i].amount?.toInt() ?? "00"}",
+                                            style: TextStyles.sourceSans.body2
+                                                .colour(Colors.white),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  if (i + 1 < winners!.length)
+                                    const Divider(
+                                      color: Colors.white,
+                                      thickness: 0.2,
+                                    )
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                      ],
+                    )),
+        ],
+      ),
+    );
+  }
+}
