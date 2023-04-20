@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tambola/src/tambola_home/view/tambola_home_details_view.dart';
 import 'package:tambola/src/tambola_home/view/tambola_home_tickets_view.dart';
-import 'package:tambola/src/tambola_home/view_model/tambola_controller.dart';
-import 'package:tambola/src/tambola_home/widgets/loader.dart';
 import 'package:tambola/src/utils/styles/ui_constants.dart';
+
+class Service extends ChangeNotifier {
+  int activeTambolaCardCount = 0;
+
+  void refreshTambolaTickets() async {}
+}
 
 class TambolaHomeView extends StatelessWidget {
   const TambolaHomeView(
@@ -14,7 +18,7 @@ class TambolaHomeView extends StatelessWidget {
   final dynamic service;
   @override
   Widget build(BuildContext context) {
-    return Consumer<service>(
+    return Consumer<Service>(
         // onModelReady: (model) {
         //   model.init();
         // },
@@ -100,19 +104,19 @@ class TambolaHomeView extends StatelessWidget {
               body: RefreshIndicator(
                 color: UiConstants.primaryColor,
                 backgroundColor: Colors.black,
-                onRefresh: model.refreshTambolaTickets,
+                onRefresh: () async => model.refreshTambolaTickets(),
                 child: (model.activeTambolaCardCount ?? 0) > 0
-                    ? TambolaHomeTicketsView(model: model)
-                    : TambolaHomeDetailsView(model: model),
+                    ? TambolaHomeTicketsView()
+                    : TambolaHomeDetailsView(),
               ),
             )
           : RefreshIndicator(
               color: UiConstants.primaryColor,
               backgroundColor: Colors.black,
-              onRefresh: model.refreshTambolaTickets,
+              onRefresh: () async => model.refreshTambolaTickets(),
               child: (model.activeTambolaCardCount ?? 0) < 0
-                  ? TambolaHomeTicketsView(model: model)
-                  : TambolaHomeDetailsView(model: model),
+                  ? TambolaHomeTicketsView()
+                  : TambolaHomeDetailsView(),
             );
     });
   }
