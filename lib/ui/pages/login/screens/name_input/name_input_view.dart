@@ -99,8 +99,9 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                       // suffix: SizedBox(),
                       validator: (value) {
                         if (value != null && value.trim().isNotEmpty) {
-                          if (value.trim().length < 3)
+                          if (value.trim().length < 3) {
                             return locale.obNameRules;
+                          }
                           return null;
                         } else {
                           return locale.obNameAsPerPan;
@@ -201,10 +202,11 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                                 )
                               ],
                               validator: (val) {
-                                if (val!.trim().length == 0) return null;
+                                if (val!.trim().isEmpty) return null;
                                 if (val.trim().length < 6 ||
-                                    val.trim().length > 10)
+                                    val.trim().length > 10) {
                                   return locale.refInvalid;
+                                }
                                 return null;
                               },
                             ),
@@ -215,8 +217,9 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                           children: [
                             MaterialButton(
                               onPressed: () {
-                                if (widget.loginModel.state == ViewState.Busy)
+                                if (widget.loginModel.state == ViewState.Busy) {
                                   return;
+                                }
                                 model.hasReferralCode = true;
                               },
                               child: Padding(

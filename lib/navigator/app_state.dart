@@ -244,7 +244,7 @@ class AppState extends ChangeNotifier {
       if (index == journeyIndex) {
         isFirstTimeJourneyOpened = true;
         log("isFirstTimeJourneyOpened: $isFirstTimeJourneyOpened");
-        _journeyService.buildJourney();
+        // _journeyService.buildJourney();
       }
     }
   }

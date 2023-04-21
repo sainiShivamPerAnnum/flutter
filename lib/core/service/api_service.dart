@@ -84,7 +84,7 @@ class APIService implements API {
       });
 
       logger?.i(
-          "GET REQUEST \n=> PATH: $url  \n=> StatusCode: ${response.statusCode} \n"
+          "API:: GET REQUEST \n=> PATH: $url  \n=> StatusCode: ${response.statusCode} \n"
           "=> Response Body: ${response.body}");
 
       // log("API:: $url");
@@ -153,7 +153,12 @@ class APIService implements API {
         headers: _headers,
         body: jsonEncode(body ?? {}),
       );
-      log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
+      // log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
+
+      logger?.i("API:: POST REQUEST \n=> PATH: $url  "
+          "\n=> StatusCode: ${response.statusCode} "
+          "\nRequest Body: $body \n"
+          "=> Response Body: ${response.body}");
 
       responseJson = returnResponse(response);
     } on SocketException {
@@ -199,6 +204,12 @@ class APIService implements API {
         headers: headers,
         body: jsonEncode(body ?? {}),
       );
+
+      logger?.i("API:: PUT REQUEST \n=> PATH: $url  "
+          "\n=> StatusCode: ${response.statusCode} "
+          "\nRequest Body: $body \n"
+          "=> Response Body: ${response.body}");
+
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -270,6 +281,12 @@ class APIService implements API {
         },
         body: body == null ? null : jsonEncode(body),
       );
+
+      logger?.i("API:: PATCH REQUEST \n=> PATH: $url  "
+          "\n=> StatusCode: ${response.statusCode} "
+          "\nRequest Body: $body \n"
+          "=> Response Body: ${response.body}");
+
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');

@@ -34,33 +34,46 @@ class JourneyPageViewModel extends BaseViewModel {
   DocumentSnapshot? lastDoc;
 
   get avatarAnimation => _journeyService!.avatarAnimation;
+
   List<JourneyPage>? get pages => _journeyService!.pages;
+
   List<AvatarPathModel> get customPathDataList =>
       _journeyService!.customPathDataList;
+
   List<MilestoneModel> get currentMilestoneList =>
       _journeyService!.currentMilestoneList;
+
   List<JourneyPathModel> get journeyPathItemsList =>
       _journeyService!.journeyPathItemsList;
 
   List<MilestoneModel> get completedMilestoneList =>
       _journeyService!.completedMilestoneList;
+
   List<ScratchCard> get completedMilestonePrizeList =>
       _journeyService!.completedMilestonesPrizeList;
+
   ScrollController? get mainController => _journeyService!.mainController;
 
   // set avatarAnimation(value) => this._avatarAnimation = value;
   double? get pageWidth => _journeyService!.pageWidth;
+
   double? get pageHeight => _journeyService!.pageHeight;
+
   double? get currentFullViewHeight => _journeyService!.currentFullViewHeight;
+
   int get lastPage => _journeyService!.lastPage;
+
   int get startPage => _journeyService!.startPage;
+
   int get pageCount => _journeyService!.pageCount;
+
   int? get avatarActiveMilestoneLevel => _journeyService!.avatarRemoteMlIndex;
   int userMilestoneLevel = 1, userJourneyLevel = 1;
   bool
       // _isLoading = false,
       isEnd = false,
       _isRefreshing = false;
+
   // _isLoaderRequired = false;
 
   AnimationController? get controller => _journeyService!.controller;
@@ -103,16 +116,21 @@ class JourneyPageViewModel extends BaseViewModel {
   }
 
 //Milestones helper getter methods
-  isComplete(int index) => (_journeyService!.avatarRemoteMlIndex > index);
-  isOngoing(int index) => (_journeyService!.avatarRemoteMlIndex == index);
-  isInComplete(int? index) => (_journeyService!.avatarRemoteMlIndex < index);
+  isComplete(int index) => _journeyService!.avatarRemoteMlIndex > index;
+
+  isOngoing(int index) => _journeyService!.avatarRemoteMlIndex == index;
+
+  isInComplete(int? index) => _journeyService!.avatarRemoteMlIndex < index;
 
   Future<void> init(TickerProvider ticker) async {
     log("Journey VM init Called");
 
     setState(ViewState.Busy);
-    await locator<JourneyRepository>().init();
-    await _journeyService!.init();
+    await Future.wait([
+      locator<JourneyRepository>().init(),
+      _journeyService!.init(),
+    ]);
+
     setState(ViewState.Idle);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -121,7 +139,7 @@ class JourneyPageViewModel extends BaseViewModel {
       logger!.d("Pages length: ${_journeyService!.pages!.length ?? 0}");
       _journeyService!.mainController =
           ScrollController(initialScrollOffset: 600);
-      if (AppState.isJourneyFirstTab) _journeyService!.buildJourney();
+      _journeyService!.buildJourney();
     });
 
     // _journeyService!.getAvatarCachedMilestoneIndex();
@@ -330,21 +348,21 @@ class JourneyPageViewModel extends BaseViewModel {
 
   ///---------- TEST METHODS [[ ONLY FOR DEV USE ]]  ----------///
 
-  // testCreateAvatarPath(List<AvatarPathModel> pathListData) {
-  //   _journeyService.drawPath(pathListData);
-  // }
+// testCreateAvatarPath(List<AvatarPathModel> pathListData) {
+//   _journeyService.drawPath(pathListData);
+// }
 
-  // void testReadyAvatarToPath() {
-  //   _journeyService.setAvatarPostion();
-  //   _journeyService.createAvatarAnimationObject();
-  // }
+// void testReadyAvatarToPath() {
+//   _journeyService.setAvatarPostion();
+//   _journeyService.createAvatarAnimationObject();
+// }
 
-  // void testAnimate() {
-  //   _journeyService.animateAvatar();
-  // }
-  // setDimensions(BuildContext context) {
-  //   JourneyPageViewModel.pageHeight = MediaQuery.of(context).size.width * 2.165;
-  //   JourneyPageViewModel.pageWidth = MediaQuery.of(context).size.width;
-  //   JourneyPageViewModel.currentFullViewHeight = JourneyPageViewModel.pageHeight * noOfSlides;
-  // }
+// void testAnimate() {
+//   _journeyService.animateAvatar();
+// }
+// setDimensions(BuildContext context) {
+//   JourneyPageViewModel.pageHeight = MediaQuery.of(context).size.width * 2.165;
+//   JourneyPageViewModel.pageWidth = MediaQuery.of(context).size.width;
+//   JourneyPageViewModel.currentFullViewHeight = JourneyPageViewModel.pageHeight * noOfSlides;
+// }
 }
