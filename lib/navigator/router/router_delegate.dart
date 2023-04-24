@@ -239,22 +239,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Support:
           _addPageData(const SupportPage(), SupportPageConfig);
           break;
-        //TODO: REVERT WHEN PACAKGE IS SETUP
-        // case Pages.THome:
-        //   _addPageData(const TambolaHomeView(), THomePageConfig);
-        //   break;
-        //TODO: REVERT WHEN PACAKGE IS SETUP
-        // case Pages.TPickDraw:
-        //   _addPageData(PicksDraw(), TPickDrawPageConfig);
-        //   break;
-        // case Pages.TShowAllTickets:
-        //   _addPageData(ShowAllTickets(), TShowAllTicketsPageConfig);
-        //   break;
-        //TODO: REVERT WHEN PACAKGE IS SETUP
-        // case Pages.TWeeklyResult:
-        //   _addPageData(const WeeklyResult(), TWeeklyResultPageConfig);
-        //   break;
-        //TODO: REVERT WHEN PACAKGE IS SETUP
         case Pages.Notifications:
           _addPageData(NotificationsPage(), NotificationsConfig);
           break;

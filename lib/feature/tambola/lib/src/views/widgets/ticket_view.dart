@@ -11,16 +11,15 @@ class TicketsView extends StatefulWidget {
     Key? key,
     required this.tickets,
     required this.weeklyPicks,
-    required this.tabList,
+    // required this.tabList,
     // required this.model,
-    required this.showIndicatorForAll,
+    // required this.showIndicatorForAll,
   }) : super(key: key);
 
   // final TambolaHomeViewModel? model;
-  final bool showIndicatorForAll;
+  // final bool showIndicatorForAll;
   final List<TambolaTicketModel> tickets;
   final DailyPick weeklyPicks;
-  final List<String> tabList;
 
   @override
   State<TicketsView> createState() => _TicketsViewState();
@@ -30,7 +29,13 @@ class _TicketsViewState extends State<TicketsView>
     with TickerProviderStateMixin {
   late final TabController _tabController;
   late final List<TambolaTicketModel?> _bestBoards;
-
+  final List<String> tabList = const [
+    "All",
+    "One Row",
+    "Two Rows",
+    "Corners",
+    "Full House"
+  ];
   @override
   void initState() {
     super.initState();
@@ -76,9 +81,9 @@ class _TicketsViewState extends State<TicketsView>
                     physics: const BouncingScrollPhysics(),
                     isScrollable: true,
                     splashFactory: NoSplash.splashFactory,
-                    tabs: widget.tabList.map(
+                    tabs: tabList.map(
                       (tabName) {
-                        final index = widget.tabList.indexOf(tabName);
+                        final index = tabList.indexOf(tabName);
                         final isActive = _tabController.index == index;
                         return Container(
                           margin: EdgeInsets.symmetric(
@@ -126,7 +131,7 @@ class _TicketsViewState extends State<TicketsView>
     switch (_tabController.index) {
       case 0:
         return PageViewWithIndicator(
-          showIndicator: widget.showIndicatorForAll,
+          showIndicator: true,
           children: widget.tickets
               .map(
                 (e) => TambolaTicket(

@@ -360,7 +360,7 @@ class GoldSellViewModel extends BaseViewModel {
     _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
     _userService!.getUserFundWalletData();
     final response = json.decode(data);
-    _tambolaService!.weeklyTicksFetched = false;
+    // _tambolaService!.weeklyTicksFetched = false;
     AppState.unblockNavigation();
     print(response['status']);
     if (_augTxnService!.currentTransactionState == TransactionState.ongoing) {

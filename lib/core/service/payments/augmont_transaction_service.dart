@@ -268,7 +268,6 @@ class AugmontTransactionService extends BaseTransactionService {
                   .getUserTransactionHistory(matchData: liveMatchData));
             }
             transactionResponseModel = res.model;
-            _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
             if (res.model!.data != null &&

@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +19,7 @@ class PrizeProcessing extends StatelessWidget {
             const Spacer(
               flex: 1,
             ),
-            //TODO: REVERT WHEN PACAKGE IS SETUP
-            // const FullScreenLoader(),
+            const FullScreenLoader(),
             SizedBox(
               height: SizeConfig.padding24,
             ),

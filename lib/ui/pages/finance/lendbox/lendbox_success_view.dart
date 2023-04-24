@@ -263,7 +263,7 @@ class LendboxSuccessView extends StatelessWidget {
                     .indexWhere((element) => element == 'SV');
 
                 final _tambolaService = locator<TambolaService>();
-                _tambolaService.weeklyTicksFetched = false;
+                // _tambolaService.weeklyTicksFetched = false;
                 _tambolaService.getTambolaTickets();
 
                 this.showGtIfAvailable();

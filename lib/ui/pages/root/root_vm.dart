@@ -324,7 +324,7 @@ class RootViewModel extends BaseViewModel {
           }).then((flag) async {
             if (flag) {
               await BaseUtil().signOut();
-              _tambolaService?.signOut();
+              _tambolaService?.dispose();
               _analyticsService.signOut();
               _bankAndKycService?.dump();
               _subscriptionService.dispose();

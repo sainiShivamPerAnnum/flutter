@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/model/cache_model/cache_model.dart';
-// import '../../../../packages/tambola/lib/src/models/tambola_ticket_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -26,29 +25,32 @@ class TambolaRepo extends BaseRepo {
       : 'https://7icbm6j9e7.execute-api.ap-south-1.amazonaws.com/prod';
 
   Future<ApiResponse<List<TambolaTicketModel>>> getTickets() async {
-    // try {
-    final uid = userService.baseUser!.uid;
-    final token = await getBearerToken();
+    try {
+      final uid = userService.baseUser!.uid;
+      final token = await getBearerToken();
 
-    await preProcessTambolaTickets();
+      await preProcessTambolaTickets();
 
-    final response = await APIService.instance.getData(
-      ApiPath.tambolaTickets(uid),
-      token: token,
-      queryParams: lastTimeStamp != null
-          ? {'lastTimestamp': lastTimeStamp?.toDate().toUtc().toIso8601String()}
-          : {},
-      cBaseUrl: _baseUrl,
-    );
-    await postProcessTambolaTickets(response);
-    return ApiResponse<List<TambolaTicketModel>>(
-      model: activeTambolaTickets,
-      code: 200,
-    );
-    // } catch (e) {
-    //   logger.e('get all tambola tickets $e');
-    //   return ApiResponse.withError(e.toString(), 400);
-    // }
+      final response = await APIService.instance.getData(
+        ApiPath.tambolaTickets(uid),
+        token: token,
+        queryParams: lastTimeStamp != null
+            ? {
+                'lastTimestamp':
+                    lastTimeStamp?.toDate().toUtc().toIso8601String()
+              }
+            : {},
+        cBaseUrl: _baseUrl,
+      );
+      await postProcessTambolaTickets(response);
+      return ApiResponse<List<TambolaTicketModel>>(
+        model: activeTambolaTickets,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e('get all tambola tickets $e');
+      return ApiResponse.withError(e.toString(), 400);
+    }
   }
 
   Future<void> preProcessTambolaTickets() async {
@@ -62,7 +64,7 @@ class TambolaRepo extends BaseRepo {
     }
   }
 
-  Future<void> postProcessTambolaTickets(dynamic response) async {
+  Future<void> postProcessTambolaTickets(response) async {
     final List<TambolaTicketModel> tickets =
         TambolaTicketModel.helper.fromMapArray(response["data"]["tickets"]);
     final List<TambolaTicketModel> deletedTickets = TambolaTicketModel.helper
@@ -86,7 +88,7 @@ class TambolaRepo extends BaseRepo {
     }
   }
 
-  arrangeTambolaTickets(List<TambolaTicketModel> tickets,
+  void arrangeTambolaTickets(List<TambolaTicketModel> tickets,
       List<TambolaTicketModel> deletedTickets) {
     if (activeTambolaTickets.isEmpty) {
       activeTambolaTickets = tickets;
@@ -114,7 +116,7 @@ class TambolaRepo extends BaseRepo {
     activeTambolaTickets.forEach((tt) {
       if (lastTimeStamp == null) {
         lastTimeStamp = tt.assignedTime;
-      } else if (tt.assignedTime!.toDate().isAfter(lastTimeStamp!.toDate())) {
+      } else if (tt.assignedTime.toDate().isAfter(lastTimeStamp!.toDate())) {
         lastTimeStamp = tt.assignedTime;
       }
     });
@@ -128,7 +130,7 @@ class TambolaRepo extends BaseRepo {
 
       // cache till 6 PM only
       final now = DateTime.now();
-      final ttl = ((18 - now.hour) % 24) * 60 - now.minute;
+      // final ttl = ((18 - now.hour) % 24) * 60 - now.minute;
 
       return await _cacheService.cachedApi(
           CacheKeys.TAMBOLA_PICKS,

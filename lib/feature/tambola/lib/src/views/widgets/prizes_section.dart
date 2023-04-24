@@ -102,11 +102,9 @@ class TambolaPrize extends StatelessWidget {
                                                 .colour(Colors.white),
                                           ),
                                           Text(
-                                            //TODO: REVERT WHEN PACAKGE IS SETUP
                                             locale.tCompleteToGet(prizes
                                                 .prizesA![index].displayName
                                                 .toString()),
-
                                             style: TextStyles.sourceSans.body4
                                                 .colour(Colors.white
                                                     .withOpacity(0.5)),

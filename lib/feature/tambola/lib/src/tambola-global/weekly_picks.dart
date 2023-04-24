@@ -68,7 +68,7 @@ class WeeklyPicks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Selector<TambolaService, DailyPick?>(
-      selector: (_, tambolaService) => tambolaService.weeklyDigits,
+      selector: (_, tambolaService) => tambolaService.weeklyPicks,
       builder: (context, weeklyPicks, child) {
         final columns = List<Widget>.generate(
           7,

@@ -1,3 +1,5 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -43,17 +45,14 @@ class Loser extends StatelessWidget {
             const Spacer(
               flex: 3,
             ),
-            //TODO: REVERT WHEN PACAKGE IS SETUP
-            // Container(
-            //   margin: EdgeInsets.symmetric(
-            //       vertical: SizeConfig.pageHorizontalMargins),
-            //   width: SizeConfig.navBarWidth,
-            //   child: AppPositiveBtn(
-            //       btnText: 'GET MORE TAMBOLA TICKETS',
-            //       onPressed: () {
-            //         BaseUtil.openDepositOptionsModalSheet();
-            //       }),
-            // ),
+            Container(
+              margin: EdgeInsets.symmetric(
+                  vertical: SizeConfig.pageHorizontalMargins),
+              width: SizeConfig.navBarWidth,
+              child: const AppPositiveBtn(
+                  btnText: 'GET MORE TAMBOLA TICKETS',
+                  onPressed: BaseUtil.openDepositOptionsModalSheet),
+            ),
           ],
         ),
       ),

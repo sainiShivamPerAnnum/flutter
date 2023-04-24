@@ -7,12 +7,14 @@ class TambolaHomeTicketsViewModel extends BaseViewModel {
   void init() {
     tambolaService = locator<TambolaService>();
     tambolaService!.getPastWeekWinners();
-    tambolaService!.fetchWeeklyPicks();
+    tambolaService!
+        .fetchWeeklyPicks()
+        .then((value) => tambolaService!.examineTicketsForWins());
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    tambolaService = null;
     super.dispose();
   }
 }

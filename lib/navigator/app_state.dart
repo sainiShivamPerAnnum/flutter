@@ -223,9 +223,7 @@ class AppState extends ChangeNotifier {
         executeForFirstPlayTabClick(index);
         break;
       case "Tambola":
-        //TODO: REVERT WHEN PACAKGE IS SETUP
         // executeForFirstTambolaClick(index);
-        //TODO: REVERT WHEN PACAKGE IS SETUP
         break;
       case "Account":
       case "Win":

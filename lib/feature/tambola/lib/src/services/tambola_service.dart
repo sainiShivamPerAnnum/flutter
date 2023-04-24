@@ -1,94 +1,111 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
-// import '../../../../packages/tambola/lib/src/models/tambola_ticket_model.dart';
-import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/feature/tambola/lib/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/lib/src/models/tambola_ticket_model.dart';
 import 'package:felloapp/feature/tambola/lib/src/repos/tambola_repo.dart';
-import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/feature/tambola/lib/src/utils/ticket_odds_calculator.dart';
+import 'package:felloapp/feature/tambola/lib/src/views/weekly_results/weekly_result.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class TambolaService extends ChangeNotifier {
+  //LOCATORS
   final CustomLogger _logger = locator<CustomLogger>();
-  final UserService _userService = locator<UserService>();
   final TambolaRepo _tambolaRepo = locator<TambolaRepo>();
-  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
-
-  // final TambolaController _controller = locator<TambolaController>();
-
-  //TEMP
-
   final ScratchCardRepository _scRepo = locator<ScratchCardRepository>();
   final WinnerService _winnerService = locator<WinnerService>();
   final GameRepo _gameRepo = locator<GameRepo>();
-  DailyPick? weeklyPicks;
+
+  //STATIC VARIABLES
+  static int? ticketCount;
+  static List<int>? _todaysPicks;
+
+  //LOCAL VARIABLES
+  DailyPick? _weeklyPicks;
   GameModel? tambolaGameData;
   PrizesModel? tambolaPrizes;
   List<Winners>? pastWeekWinners;
+  List<TambolaTicketModel>? tambolaTickets;
+  Map<String, int> ticketCodeWinIndex = {};
   int activeTambolaCardCount = 0;
+  int _matchedTicketCount = 0;
   bool _isScreenLoading = true;
   bool _isLoading = false;
-  List<TambolaTicketModel>? tambolaTickets;
+  bool isEligible = false;
+  bool showWinScreen = false;
 
-  get isLoading => _isLoading;
+  //GETTERS SETTERS
+  bool get isLoading => _isLoading;
 
-  set isLoading(value) {
+  set isLoading(bool value) {
     _isLoading = value;
     notifyListeners();
   }
 
-  get isScreenLoading => _isScreenLoading;
+  bool get isScreenLoading => _isScreenLoading;
 
-  set isScreenLoading(value) {
+  set isScreenLoading(bool value) {
     _isScreenLoading = value;
-    print("Value changed to $value");
     notifyListeners();
   }
 
-  Future<void> tempInit() async {
-    //set state to busy
-    //fetch tickets
-    //if tickets > 0 ? Existing screen : New screen
-    //set state to idle
+  List<int>? get todaysPicks => _todaysPicks;
 
-    /**
-     * If tickets > 0
-     * fetch weekly picks
-     * update tickets with marked digits
-     * fetch last week winners
-     * 
-     * 
-     * If tickets == 0
-     * fetch prizes, fetch last week winners
-     * 
-     * refresh: init
-     */
-
-    _isScreenLoading = true;
+  set todaysPicks(List<int>? value) {
+    _todaysPicks = value;
+    notifyListeners();
   }
+
+  DailyPick? get weeklyPicks => this._weeklyPicks;
+
+  set weeklyPicks(DailyPick? value) {
+    _weeklyPicks = value;
+    notifyListeners();
+  }
+
+  int get matchedTicketCount => _matchedTicketCount;
+
+  set matchedTicketCount(int value) {
+    _matchedTicketCount = value;
+    notifyListeners();
+  }
+
+  //CORE METHODS
+
+  void init() {}
 
   @override
-  Future<void> dispose() async {
+  void dispose() {
     super.dispose();
+    _weeklyPicks = null;
+    _todaysPicks = null;
+    matchedTicketCount = 0;
+    tambolaTickets = null;
+    log("Tambola service Dispose called");
   }
 
-  void refreshTambolaTickets() async {}
+  //CORE METHODS -- END
+
+  //MAIN METHODS
 
   Future<bool> getGameDetails() async {
     final gameRes =
@@ -116,181 +133,21 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getPastWeekWinners() async {
+  Future<void> getPastWeekWinners({bool refresh = false}) async {
+    if (pastWeekWinners != null && !refresh) return;
     final winnersModel = await _winnerService
         .fetchWinnersByGameCode(Constants.GAME_TYPE_TAMBOLA);
     pastWeekWinners = winnersModel!.winners!;
     notifyListeners();
   }
 
-  //TEMP
-  static int? ticketCount;
-  static int? _dailyPicksCount = 3;
-  static List<int>? _todaysPicks;
-  static DailyPick? _weeklyDigits;
-  //TODO: REVERT WHEN PACAKGE IS SETUP
-  // static List<TambolaTicketModel?>? _userWeeklyBoards;
-  static bool _weeklyDrawFetched = false;
-  static bool _weeklyTicksFetched = false;
-  static bool _winnerDialogCalled = false;
-  int? _atomicTicketGenerationLeftCount;
-  int? _atomicTicketDeletionLeftCount;
-  int? ticketGenerateCount;
-  int? initialTicketCount;
-  int matchedTicketCount = 0;
-  List<List<int>> _ticketsNumbers = [];
-
-  //TODO: REVERT WHEN PACAKGE IS SETUP
-  // late Completer<List<TambolaTicketModel?>?> completer;
-
-  void signOut() {
-    _weeklyDrawFetched = false;
-    _weeklyTicksFetched = false;
-    _winnerDialogCalled = false;
-    _weeklyDigits = null;
-    _todaysPicks = null;
-    // _ticketCount = null;
-    // _userWeeklyBoards = null;
-    matchedTicketCount = 0;
-    _ticketsNumbers = [];
-  }
-
-  List<List<int>> get ticketsNumbers => _ticketsNumbers;
-
-  set ticketsNumbers(List<List<int>> value) {
-    _ticketsNumbers = value;
-    notifyListeners();
-  }
-
-  get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
-
-  get atomicTicketDeletionLeftCount => _atomicTicketDeletionLeftCount;
-
-  get winnerDialogCalled => _winnerDialogCalled;
-
-  get weeklyTicksFetched => _weeklyTicksFetched;
-
-  get weeklyDrawFetched => _weeklyDrawFetched;
-
-  get dailyPicksCount => _dailyPicksCount;
-
-  // set setTicketCount(int? val) {
-  //   _ticketCount = val;
-  //   _logger!.d("Ticket Wallet updated");
-  //   notifyListeners();
-  // }
-
-  set dailyPicksCount(value) {
-    _dailyPicksCount = value;
-    notifyListeners();
-  }
-
-  List<int>? get todaysPicks => _todaysPicks;
-
-  set todaysPicks(value) {
-    _todaysPicks = value;
-    notifyListeners();
-  }
-
-  get weeklyDigits => _weeklyDigits;
-
-  set weeklyDigits(value) {
-    _weeklyDigits = value;
-    notifyListeners();
-  }
-  //TODO: REVERT WHEN PACAKGE IS SETUP
-  // List<TambolaTicketModel?>? get userWeeklyBoards => _userWeeklyBoards;
-
-  // set userWeeklyBoards(List<TambolaTicketModel?>? value) {
-  //   _userWeeklyBoards = value;
-  //   notifyListeners();
-  // }
-
-  bool areTicketsUpdated = false;
-
-  set weeklyDrawFetched(value) {
-    _weeklyDrawFetched = value;
-  }
-
-  set weeklyTicksFetched(value) {
-    _weeklyTicksFetched = value;
-  }
-
-  set winnerDialogCalled(value) {
-    _winnerDialogCalled = value;
-    notifyListeners();
-  }
-
-  set atomicTicketGenerationLeftCount(value) {
-    _atomicTicketGenerationLeftCount = value;
-    notifyListeners();
-  }
-
-  set atomicTicketDeletionLeftCount(val) {
-    _atomicTicketDeletionLeftCount = val;
-    notifyListeners();
-  }
-
-  Future<void> init() async {
-    _atomicTicketGenerationLeftCount = 0;
-    _atomicTicketDeletionLeftCount = 0;
-
-    setUpDailyPicksCount();
-    if (locator<RootController>()
-        .navItems
-        .containsValue(RootController.tambolaNavBar)) {
-      await getTambolaTickets();
-      //TODO: REVERT WHEN PACAKGE IS SETUP
-      // await completer.future.then((value) {
-      //   initialTicketCount = value?.length;
-      //   highlightDailyPicks(_ticketsNumbers);
-      // });
-    }
-  }
-
   Future<void> getTambolaTickets() async {
     final ticketsResponse = await _tambolaRepo.getTickets();
     if (ticketsResponse.isSuccess()) {
       tambolaTickets = ticketsResponse.model;
-    } else {}
-    //TODO: REVERT WHEN PACAKGE IS SETUP
-    // completer = Completer();
-    // if (_weeklyTicksFetched) {
-    //   completer.complete(null);
-    //   return;
-    // }
-
-    // _weeklyTicksFetched = true;
-    // _logger.d("Fetching Tambola tickets ${DateTime.now().second}");
-
-    // final tickets = await _tambolaRepo.getTickets();
-
-    // if (tickets.code != 200) {
-    //   _logger.d(tickets.errorMessage);
-    //   return;
-    // }
-
-    // List<TambolaTicketModel?> boards = tickets.model!;
-
-    // if (userWeeklyBoards != null && userWeeklyBoards!.length != boards.length) {
-    //   areTicketsUpdated = true;
-    //   notifyListeners();
-    //   areTicketsUpdated = false;
-    // }
-
-    // _ticketsNumbers.clear();
-
-    // await Future.forEach(boards, (board) async {
-    //   ticketsNumbers
-    //       .add(board!.tambolaBoard!.expand((numbers) => numbers).toList());
-    // });
-    // // log('ticketsNumbers $ticketsNumbers');
-    // notifyListeners();
-
-    // _logger!.d("Fetched Tambola tickets ${DateTime.now().second}");
-    // userWeeklyBoards = boards;
-    // ticketCount = boards.length;
-    // completer.complete(boards);
+    } else {
+      //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE
+    }
   }
 
   Future<void> highlightDailyPicks(List<List<int>> ticketNumbersList) async {
@@ -314,83 +171,128 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void dump() {
-    _dailyPicksCount = null;
-    _todaysPicks = null;
-    _weeklyDigits = null;
-    //TODO: REVERT WHEN PACAKGE IS SETUP
-    // _userWeeklyBoards = null;
-    _weeklyDrawFetched = false;
-    _weeklyTicksFetched = false;
-    _winnerDialogCalled = false;
-    _atomicTicketGenerationLeftCount = 0;
-    _atomicTicketDeletionLeftCount = 0;
-    _ticketsNumbers = [];
-    matchedTicketCount = 0;
+  Future<void> fetchWeeklyPicks({bool forcedRefresh = false}) async {
+    try {
+      _logger.i('Requesting for weekly picks');
+      final ApiResponse picksResponse = await _tambolaRepo.getWeeklyPicks();
+      if (picksResponse.isSuccess()) {
+        weeklyPicks = picksResponse.model!;
+        // weeklyDrawFetched = true;
+        switch (DateTime.now().weekday) {
+          case 1:
+            todaysPicks = weeklyPicks!.mon;
+            break;
+          case 2:
+            todaysPicks = weeklyPicks!.tue;
+            break;
+          case 3:
+            todaysPicks = weeklyPicks!.wed;
+            break;
+          case 4:
+            todaysPicks = weeklyPicks!.thu;
+            break;
+          case 5:
+            todaysPicks = weeklyPicks!.fri;
+            break;
+          case 6:
+            todaysPicks = weeklyPicks!.sat;
+            break;
+          case 7:
+            todaysPicks = weeklyPicks!.sun;
+            break;
+        }
+        if (todaysPicks == null) {
+          _logger.i("Today's picks are not generated yet");
+        }
+        notifyListeners();
+      } else {}
+    } catch (e) {
+      _logger.e('$e');
+    }
   }
 
-  Future<void> fetchWeeklyPicks({bool forcedRefresh = false}) async {
-    if (forcedRefresh) weeklyDrawFetched = false;
-    if (!weeklyDrawFetched) {
-      try {
-        _logger.i('Requesting for weekly picks');
-        final ApiResponse picksResponse = await _tambolaRepo!.getWeeklyPicks();
-        if (picksResponse.isSuccess()) {
-          final DailyPick _picks = picksResponse.model!;
-          weeklyDrawFetched = true;
-          _logger.d("Weekly pickst: ${_picks.toList().toString()}");
-          weeklyDigits = _picks;
-          switch (DateTime.now().weekday) {
-            case 1:
-              todaysPicks = weeklyDigits.mon;
-              break;
-            case 2:
-              todaysPicks = weeklyDigits.tue;
-              break;
-            case 3:
-              todaysPicks = weeklyDigits.wed;
-              break;
-            case 4:
-              todaysPicks = weeklyDigits.thu;
-              break;
-            case 5:
-              todaysPicks = weeklyDigits.fri;
-              break;
-            case 6:
-              todaysPicks = weeklyDigits.sat;
-              break;
-            case 7:
-              todaysPicks = weeklyDigits.sun;
-              break;
-          }
-          if (todaysPicks == null) {
-            _logger!.i("Today's picks are not generated yet");
-          }
-          notifyListeners();
-        } else {
-          //BaseUtil.showNegativeAlert(picksResponse.errorMessage, '');
+  Future<void> examineTicketsForWins() async {
+    if (tambolaTickets == null ||
+        tambolaTickets!.isEmpty ||
+        weeklyPicks == null ||
+        weeklyPicks!.toList().length != 7 * 3 ||
+        weeklyPicks!.toList().contains(-1) ||
+        DateTime.now().weekday != 7) {
+      _logger.i('Testing is not ready yet');
+      return;
+    }
+
+    for (final boardObj in tambolaTickets!) {
+      if (getCornerOdds(
+              boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
+          0) {
+        if (boardObj.getTicketNumber() != 'NA') {
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.CORNERS_COMPLETED;
         }
-      } catch (e) {
-        _logger.e('$e');
+      }
+      if (getOneRowOdds(
+              boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
+          0) {
+        if (boardObj.getTicketNumber() != 'NA') {
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.ONE_ROW_COMPLETED;
+        }
+      }
+      if (getTwoRowOdds(
+              boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
+          0) {
+        if (boardObj.getTicketNumber() != 'NA') {
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.TWO_ROWS_COMPLETED;
+        }
+      }
+      if (getFullHouseOdds(
+              boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
+          0) {
+        if (boardObj.getTicketNumber() != 'NA') {
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.FULL_HOUSE_COMPLETED;
+        }
       }
     }
-  }
+    showWinScreen = PreferenceHelper.getBool(
+        PreferenceHelper.SHOW_TAMBOLA_PROCESSING,
+        def: true);
 
-  void setUpDailyPicksCount() {
-    String _dpc = (AppConfig.getValue(AppConfigKey.tambola_daily_pick_count)
-            .toString()) ??
-        '';
-    if (_dpc.isEmpty) _dpc = '3';
-    dailyPicksCount = 3;
-    try {
-      dailyPicksCount = int.parse(_dpc);
-    } catch (e) {
-      _logger!.e('key parsing failed: $e');
-      Map<String, String> errorDetails = {'error_msg': e.toString()};
-      _internalOpsService!.logFailure(_userService!.baseUser!.uid,
-          FailType.DailyPickParseFailed, errorDetails);
-      dailyPicksCount = 3;
+    double totalInvestedPrinciple =
+        locator<UserService>().userFundWallet!.augGoldPrinciple;
+    isEligible = totalInvestedPrinciple >=
+        BaseUtil.toInt(BaseRemoteConfig.remoteConfig
+            .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT));
+
+    isEligible = true;
+    _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
+
+    if (showWinScreen) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: TWeeklyResultPageConfig,
+        widget: WeeklyResult(
+          winningsMap: ticketCodeWinIndex,
+          isEligible: isEligible,
+        ),
+      );
     }
-    _logger!.d("Daily picks count: $_dailyPicksCount");
+    showWinScreen = false;
+    S locale = locator<S>();
+    if (ticketCodeWinIndex.isNotEmpty) {
+      BaseUtil.showPositiveAlert(
+        locale.tambolaTicketWinAlert1,
+        locale.tambolaTicketWinAlert2,
+      );
+    }
+
+    if (DateTime.now().weekday == DateTime.sunday &&
+        DateTime.now().hour >= 18) {
+      notifyListeners();
+    }
+    unawaited(PreferenceHelper.setBool(
+        PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false));
   }
 }

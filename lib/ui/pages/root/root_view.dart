@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/tambola/lib/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -101,11 +102,10 @@ class Root extends StatelessWidget {
 }
 
 bool _showHappyHour() {
-  //TODO: REVERT WHEN PACAKGE IS SETUP
-  // if (locator<RootController>().currentNavBarItemModel ==
-  //     RootController.tambolaNavBar) {
-  //   return ((locator<TambolaService>().userWeeklyBoards?.length ?? 0) > 0);
-  // }
+  if (locator<RootController>().currentNavBarItemModel ==
+      RootController.tambolaNavBar) {
+    return (locator<TambolaService>().tambolaTickets?.length ?? 0) > 0;
+  }
   return true;
 }
 

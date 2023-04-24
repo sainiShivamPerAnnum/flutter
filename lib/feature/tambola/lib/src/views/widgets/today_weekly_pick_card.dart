@@ -1,4 +1,4 @@
-import 'package:felloapp/feature/tambola/lib/src/views/widgets/picks_card_view.dart';
+import 'package:felloapp/feature/tambola/lib/src/tambola_widgets/picks_card/picks_card_view.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 

@@ -2,67 +2,60 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/feature/tambola/lib/src/services/tambola_service.dart';
 import 'package:felloapp/feature/tambola/lib/src/views/widgets/countdown_timer.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CurrentPicks extends StatelessWidget {
   const CurrentPicks({
     Key? key,
   }) : super(key: key);
-
-  // final List<int>? todaysPicks;
-  // final int? dailyPicksCount;
-
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        //TODO: REVERT WHEN PACAKGE IS SETUP
-        // Selector<TambolaService, List<int>?>(
-        //   selector: (_, tambolaService) => tambolaService.todaysPicks,
-        //   builder: (context, todaysPicks, child) => todaysPicks != null
-        //       ? TodayPicksBallsAnimation(picksList: todaysPicks)
-        //       : child!,
-        //   child:
-        AppCountdownTimer(
-          endTime: TimestampModel.fromTimestamp(
-            Timestamp.fromDate(
-              DateTime(
-                DateTime.now().year,
-                DateTime.now().month,
-                DateTime.now().day,
-                18,
-                0,
-                10,
+        Selector<TambolaService, List<int>?>(
+          selector: (_, tambolaService) => tambolaService.todaysPicks,
+          builder: (context, todaysPicks, child) => todaysPicks != null
+              ? TodayPicksBallsAnimation(picksList: todaysPicks)
+              : child!,
+          child: AppCountdownTimer(
+            endTime: TimestampModel.fromTimestamp(
+              Timestamp.fromDate(
+                DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                  18,
+                  0,
+                  10,
+                ),
               ),
             ),
+            onTimerEnd: () =>
+                locator<TambolaService>().fetchWeeklyPicks(forcedRefresh: true),
           ),
-          // onTimerEnd: () =>
-          //TODO: REVERT WHEN PACAKGE IS SETUP
-
-          // locator<TambolaService>().fetchWeeklyPicks(forcedRefresh: true),
         ),
-        // ),
-        // Selector<PicksCardViewModel, int>(
-        //   selector: (context, provider) => provider.totalTicketMatched,
-        //   builder: (context, totalTicketMatched, child) {
-        //     if (totalTicketMatched > 0) {
-        // return
-        Container(
-          padding: EdgeInsets.only(
-              top: SizeConfig.padding24, bottom: SizeConfig.padding16),
-          child: Text(
-            // "Today’s draw matches your $totalTicketMatched tickets!",
-            "TODO: REVERT",
-            style: TextStyles.sourceSansSB.body3,
-          ),
-        )
-        // }
-        //     return SizedBox(height: SizeConfig.padding28);
-        //   },
-        // ),
+        Selector<TambolaService, int>(
+          selector: (context, provider) => provider.matchedTicketCount,
+          builder: (context, totalTicketMatched, child) {
+            if (totalTicketMatched > 0) {
+              return Container(
+                padding: EdgeInsets.only(
+                    top: SizeConfig.padding24, bottom: SizeConfig.padding16),
+                child: Text(
+                  "Today’s draw matches your $totalTicketMatched tickets!",
+                  style: TextStyles.sourceSansSB.body3,
+                ),
+              );
+            }
+            return SizedBox(height: SizeConfig.padding28);
+          },
+        ),
       ],
     );
   }

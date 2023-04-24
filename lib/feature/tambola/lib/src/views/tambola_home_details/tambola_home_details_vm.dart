@@ -16,6 +16,7 @@ class TambolaHomeDetailsViewModel extends BaseViewModel {
   @override
   void dispose() {
     // TODO: implement dispose
+    tambolaService = null;
     super.dispose();
   }
 }

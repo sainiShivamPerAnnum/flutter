@@ -1,3 +1,5 @@
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +33,7 @@ class TambolaInstantView extends StatelessWidget {
                   alignment: Alignment.topRight,
                   child: GestureDetector(
                     onTap: () {
-                      //TODO: REVERT WHEN PACAKGE IS SETUP
-
-                      // AppState.backButtonDispatcher!.didPopRoute();
+                      AppState.backButtonDispatcher!.didPopRoute();
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8),
@@ -68,17 +68,15 @@ class TambolaInstantView extends StatelessWidget {
                       .colour(Colors.white.withOpacity(0.6)),
                 ),
                 const Spacer(),
-                //TODO: REVERT WHEN PACAKGE IS SETUP
-
-                // Padding(
-                //   padding: const EdgeInsets.only(right: 14),
-                //   child: AppPositiveBtn(
-                //     btnText: "GET STARTED",
-                //     onPressed: () {
-                //       AppState.backButtonDispatcher!.didPopRoute();
-                //     },
-                //   ),
-                // )
+                Padding(
+                  padding: const EdgeInsets.only(right: 14),
+                  child: AppPositiveBtn(
+                    btnText: "GET STARTED",
+                    onPressed: () {
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    },
+                  ),
+                )
               ]
             ],
           ),

@@ -271,20 +271,6 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
                 child: MaterialButton(
                   // padding: EdgeInsets.zero,
                   onPressed: () {
-                    // _analyticsService.track(
-                    //     eventName: AnalyticsEvents.tambolaSaveTapped,
-                    //     properties: AnalyticsProperties
-                    //         .getDefaultPropertiesMap(extraValuesMap: {
-                    //       "Time left for draw Tambola (mins)":
-                    //           AnalyticsProperties.getTimeLeftForTambolaDraw(),
-                    //       "Tambola Tickets Owned":
-                    //           AnalyticsProperties.getTambolaTicketCount(),
-                    //       "Number of Tickets":
-                    //           model.ticketCountController!.text ?? "",
-                    //       "Amount": model.ticketSavedAmount,
-                    //     }));
-                    //TODO: REVERT WHEN PACAKGE IS SETUP
-
                     BaseUtil.openDepositOptionsModalSheet(
                         amount: ticketCost,
                         subtitle:

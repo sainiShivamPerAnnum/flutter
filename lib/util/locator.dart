@@ -201,22 +201,17 @@ Future<void> setupLocator() async {
   locator.registerFactory(LoginNameInputViewModel.new);
   locator.registerFactory(LoginOtpViewModel.new);
   locator.registerFactory(LoginMobileViewModel.new);
-  // locator.registerFactory(() => DailyPicksDrawViewModel());
   locator.registerFactory(UserProfileVM.new);
   locator.registerFactory(KYCDetailsViewModel.new);
   locator.registerFactory(BankDetailsViewModel.new);
   locator.registerFactory(GoldBuyViewModel.new);
   locator.registerFactory(GoldSellViewModel.new);
-  // locator.registerFactory(TambolaController.new);
   locator.registerFactory(TambolaHomeViewModel.new);
   locator.registerFactory(TambolaHomeTicketsViewModel.new);
   locator.registerFactory(TambolaHomeDetailsViewModel.new);
-  // locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(WebHomeViewModel.new);
-  // locator.registerFactory(() => RewardLeaderboardViewModel());
   locator.registerFactory(WebGameViewModel.new);
-  //TODO: REVERT WHEN PACAKGE IS SETUP
-  // locator.registerFactory(PicksCardViewModel.new);
+
   locator.registerFactory(ReferralDetailsViewModel.new);
   locator.registerFactory(MyWinningsViewModel.new);
   locator.registerFactory(NotificationsViewModel.new);

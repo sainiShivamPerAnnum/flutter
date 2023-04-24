@@ -11,6 +11,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import 'ticket_view.dart';
 
@@ -26,28 +27,25 @@ class TicketSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<TambolaService, List<TambolaTicketModel>?>(
-      selector: (_, tambolaService) => tambolaService.tambolaTickets,
-      builder: (ctx, tickets, child) => Column(
+    return Selector<TambolaService,
+        Tuple2<List<TambolaTicketModel>?, DailyPick?>>(
+      selector: (_, tambolaService) => Tuple2(
+        tambolaService.tambolaTickets,
+        tambolaService.weeklyPicks,
+      ),
+      builder: (ctx, data, child) => Column(
         children: [
           TicketHeader(
-            activeTambolaCardCount: tickets?.length ?? 0,
+            activeTambolaCardCount: data.item1?.length ?? 0,
             getTicketsTapped: getTicketsTapped,
           ),
           SizedBox(
             height: SizeConfig.padding6,
           ),
           TicketsView(
-            tabList: const [
-              "All",
-              "One Row",
-              "Two Rows",
-              "Corners",
-              "Full House"
-            ],
-            tickets: tickets ?? [],
-            showIndicatorForAll: true,
-            weeklyPicks: DailyPick.noPicks(),
+            tickets: data.item1 ?? [],
+            // showIndicatorForAll: true,
+            weeklyPicks: data.item2 ?? DailyPick.noPicks(),
           ),
           const ViewAllTicketsBar()
         ],

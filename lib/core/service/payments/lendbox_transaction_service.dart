@@ -172,7 +172,6 @@ class LendboxTransactionService extends BaseTransactionService {
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
             await _newUserCheck();
-            _tambolaService!.weeklyTicksFetched = false;
             transactionReponseModel = res.model!;
             timer!.cancel();
             return transactionResponseUpdate(

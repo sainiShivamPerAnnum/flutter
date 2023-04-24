@@ -1,4 +1,6 @@
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -7,9 +9,9 @@ import 'prize_win.dart';
 import 'processing.dart';
 
 class WeeklyResult extends StatefulWidget {
-  final Map<String, int>? winningsmap;
+  final Map<String, int>? winningsMap;
   final bool? isEligible;
-  const WeeklyResult({Key? key, this.isEligible, this.winningsmap})
+  const WeeklyResult({Key? key, this.isEligible, this.winningsMap})
       : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
   @override
   void initState() {
     debugPrint(widget.isEligible.toString());
-    debugPrint(widget.winningsmap.toString());
+    debugPrint(widget.winningsMap.toString());
     _pageController = PageController();
     // tPrizes = _prizeService!.gamePrizeMap[Constants.GAME_TYPE_TAMBOLA];
     super.initState();
@@ -42,7 +44,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
         });
         // if (!widget.isEligible && widget.winningsmap.isNotEmpty)
         //   _pageController.jumpToPage(3);
-        if (widget.winningsmap!.isNotEmpty) {
+        if (widget.winningsMap!.isNotEmpty) {
           _pageController!.jumpToPage(2);
         } else {
           _pageController!.jumpToPage(1);
@@ -58,24 +60,22 @@ class _WeeklyResultState extends State<WeeklyResult> {
       backgroundColor: UiConstants.kBackgroundColor2,
       body: Column(
         children: [
-          //TODO: REVERT WHEN PACAKGE IS SETUP
-
-          // FelloAppBar(
-          //   showAppBar: false,
-          //   backgroundColor: UiConstants.kBackgroundColor2,
-          //   actions: [
-          //     IconButton(
-          //       onPressed: showBack == true
-          //           ? () => AppState.backButtonDispatcher!.didPopRoute()
-          //           : () {},
-          //       icon: Icon(
-          //         Icons.close,
-          //         color: Colors.white,
-          //         size: SizeConfig.padding28,
-          //       ),
-          //     )
-          //   ],
-          // ),
+          FelloAppBar(
+            showAppBar: false,
+            backgroundColor: UiConstants.kBackgroundColor2,
+            actions: [
+              IconButton(
+                onPressed: showBack == true
+                    ? () => AppState.backButtonDispatcher!.didPopRoute()
+                    : () {},
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: SizeConfig.padding28,
+                ),
+              )
+            ],
+          ),
           Expanded(
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
@@ -84,7 +84,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
                 const PrizeProcessing(),
                 const Loser(),
                 PrizeWin(
-                  winningsMap: widget.winningsmap,
+                  winningsMap: widget.winningsMap,
                   tPrizes: tPrizes,
                 ),
               ],

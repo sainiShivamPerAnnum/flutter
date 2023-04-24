@@ -60,7 +60,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                     //Weekly/Daily Picks Card
                     const TodayWeeklyPicksCard(),
                     //Tambola Results Card
-                    const TambolaResultCard(showCard: false),
+                    const TambolaResultCard(),
                     //Tickets Section
                     TicketSection(
                       getTicketsTapped: () {

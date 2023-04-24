@@ -1,3 +1,5 @@
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -66,22 +68,21 @@ class _PrizePWinState extends State<PrizePWin> {
               ),
             ),
             const Spacer(flex: 3),
-            //TODO: REVERT WHEN PACKAGE IS SET
-            // SizedBox(
-            //   width: SizeConfig.navBarWidth,
-            //   child: FelloButtonLg(
-            //       color: UiConstants.tertiarySolid,
-            //       child: Text(
-            //         "Save",
-            //         style: TextStyles.body3.bold.colour(Colors.white),
-            //       ),
-            //       onPressed: () {
-            //         AppState.backButtonDispatcher!.didPopRoute();
-            //         AppState.backButtonDispatcher!.didPopRoute();
-            //         AppState.backButtonDispatcher!.didPopRoute();
-            //         AppState.delegate!.appState.setCurrentTabIndex = 0;
-            //       }),
-            // ),
+            SizedBox(
+              width: SizeConfig.navBarWidth,
+              child: FelloButtonLg(
+                  color: UiConstants.tertiarySolid,
+                  child: Text(
+                    "Save",
+                    style: TextStyles.body3.bold.colour(Colors.white),
+                  ),
+                  onPressed: () {
+                    while (AppState.screenStack.length > 1) {
+                      AppState.backButtonDispatcher!.didPopRoute();
+                    }
+                    AppState.delegate!.appState.setCurrentTabIndex = 0;
+                  }),
+            ),
             const Spacer(
               flex: 3,
             )

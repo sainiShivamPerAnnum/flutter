@@ -545,7 +545,7 @@ class UserProfileVM extends BaseViewModel {
                 _journeyService!.dump();
                 _marketingService.dump();
                 _txnHistoryService!.signOut();
-                _tambolaService!.signOut();
+                _tambolaService!.dispose();
                 _analyticsService!.signOut();
                 _bankAndKycService!.dump();
                 _powerPlayService.dump();
