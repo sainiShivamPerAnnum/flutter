@@ -7,7 +7,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/feature/tambola/services/tambola_service.dart';
+import 'package:felloapp/feature/tambola/lib/tambola.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 

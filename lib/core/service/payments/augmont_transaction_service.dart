@@ -26,7 +26,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
-import 'package:felloapp/feature/tambola/services/tambola_service.dart';
+import 'package:felloapp/feature/tambola/lib/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';

@@ -52,8 +52,11 @@ import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/feature/tambola/repos/tambola_repo.dart';
-import 'package:felloapp/feature/tambola/services/tambola_service.dart';
+import 'package:felloapp/feature/tambola/lib/src/repos/tambola_repo.dart';
+import 'package:felloapp/feature/tambola/lib/src/services/tambola_service.dart';
+import 'package:felloapp/feature/tambola/lib/src/views/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/feature/tambola/lib/src/views/tambola_home_details/tambola_home_details_vm.dart';
+import 'package:felloapp/feature/tambola/lib/src/views/tambola_home_tickets/tambola_home_tickets_vm.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_vm.dart';
@@ -204,8 +207,10 @@ Future<void> setupLocator() async {
   locator.registerFactory(BankDetailsViewModel.new);
   locator.registerFactory(GoldBuyViewModel.new);
   locator.registerFactory(GoldSellViewModel.new);
-  //TODO: REVERT WHEN PACAKGE IS SETUP
-  // locator.registerFactory(TambolaHomeViewModel.new);
+  // locator.registerFactory(TambolaController.new);
+  locator.registerFactory(TambolaHomeViewModel.new);
+  locator.registerFactory(TambolaHomeTicketsViewModel.new);
+  locator.registerFactory(TambolaHomeDetailsViewModel.new);
   // locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(WebHomeViewModel.new);
   // locator.registerFactory(() => RewardLeaderboardViewModel());
