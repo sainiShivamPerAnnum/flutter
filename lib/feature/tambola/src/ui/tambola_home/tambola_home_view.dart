@@ -28,7 +28,10 @@ class _TambolaHomeViewState extends State<TambolaHomeView> {
       onModelReady: (model) => model.init(),
       onModelDispose: (model) => model.dispose(),
       builder: (context, model, child) => model.state == ViewState.Busy
-          ? const FullScreenLoader()
+          ? SizedBox(
+              width: SizeConfig.screenWidth,
+              child: const FullScreenLoader(),
+            )
           : widget.standAloneScreen
               ? Scaffold(
                   backgroundColor: UiConstants.kBackgroundColor,

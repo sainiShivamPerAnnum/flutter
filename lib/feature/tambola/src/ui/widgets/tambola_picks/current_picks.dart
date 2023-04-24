@@ -15,48 +15,51 @@ class CurrentPicks extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Selector<TambolaService, List<int>?>(
-          selector: (_, tambolaService) => tambolaService.todaysPicks,
-          builder: (context, todaysPicks, child) => todaysPicks != null
-              ? TodayPicksBallsAnimation(picksList: todaysPicks)
-              : child!,
-          child: AppCountdownTimer(
-            endTime: TimestampModel.fromTimestamp(
-              Timestamp.fromDate(
-                DateTime(
-                  DateTime.now().year,
-                  DateTime.now().month,
-                  DateTime.now().day,
-                  18,
-                  0,
-                  10,
+    return SizedBox(
+      height: SizeConfig.screenWidth! * 0.25,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Selector<TambolaService, List<int>?>(
+            selector: (_, tambolaService) => tambolaService.todaysPicks,
+            builder: (context, todaysPicks, child) => todaysPicks != null
+                ? TodayPicksBallsAnimation(picksList: todaysPicks)
+                : child!,
+            child: AppCountdownTimer(
+              endTime: TimestampModel.fromTimestamp(
+                Timestamp.fromDate(
+                  DateTime(
+                    DateTime.now().year,
+                    DateTime.now().month,
+                    DateTime.now().day,
+                    18,
+                    0,
+                    10,
+                  ),
                 ),
               ),
+              onTimerEnd: () => locator<TambolaService>()
+                  .fetchWeeklyPicks(forcedRefresh: true),
             ),
-            onTimerEnd: () =>
-                locator<TambolaService>().fetchWeeklyPicks(forcedRefresh: true),
           ),
-        ),
-        Selector<TambolaService, int>(
-          selector: (context, provider) => provider.matchedTicketCount,
-          builder: (context, totalTicketMatched, child) {
-            if (totalTicketMatched > 0) {
-              return Container(
-                padding: EdgeInsets.only(
-                    top: SizeConfig.padding24, bottom: SizeConfig.padding16),
-                child: Text(
-                  "Today’s draw matches your $totalTicketMatched tickets!",
-                  style: TextStyles.sourceSansSB.body3,
-                ),
-              );
-            }
-            return SizedBox(height: SizeConfig.padding28);
-          },
-        ),
-      ],
+          Selector<TambolaService, int>(
+            selector: (context, provider) => provider.matchedTicketCount,
+            builder: (context, totalTicketMatched, child) {
+              if (totalTicketMatched > 0) {
+                return Container(
+                  padding: EdgeInsets.only(
+                      top: SizeConfig.padding24, bottom: SizeConfig.padding16),
+                  child: Text(
+                    "Today’s draw matches your $totalTicketMatched tickets!",
+                    style: TextStyles.sourceSansSB.body3,
+                  ),
+                );
+              }
+              return SizedBox(height: SizeConfig.padding28);
+            },
+          ),
+        ],
+      ),
     );
   }
 }
