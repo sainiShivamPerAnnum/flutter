@@ -1,5 +1,5 @@
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
-import 'package:felloapp/feature/tambola/lib/tambola.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
