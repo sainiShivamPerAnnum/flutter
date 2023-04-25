@@ -106,12 +106,12 @@ class ReferralService extends ChangeNotifier {
   }
 
   Future<void> shareLink({String? customMessage}) async {
-    _isShareAlreadyClicked = true;
-    notifyListeners();
+    // _isShareAlreadyClicked = true;
+    // notifyListeners();
     Haptic.vibrate();
     // _getterrepo.getScratchCards(); //TR
 
-    if (shareLinkInProgress) return;
+    if (shareLinkInProgress || _isShareAlreadyClicked == true) return;
     if (await BaseUtil.showNoInternetAlert()) return;
 
     unawaited(BaseAnalytics.analytics!.logShare(
@@ -137,6 +137,9 @@ class ReferralService extends ChangeNotifier {
     if (url == null) {
       BaseUtil.showNegativeAlert(locale.generatingLinkFailed, locale.tryLater);
     } else {
+      _isShareAlreadyClicked = true;
+      notifyListeners();
+
       if (customMessage != null) {
         await Share.share(customMessage + url);
       } else {

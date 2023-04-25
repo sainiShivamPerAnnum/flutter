@@ -72,7 +72,7 @@ class WinViewModel extends BaseViewModel {
   double get getUnclaimedPrizeBalance =>
       _userService!.userFundWallet!.unclaimedBalance;
 
-  void init() async {
+  Future<void> init() async {
     getFelloFacts();
     _lbService!.fetchReferralLeaderBoard();
     locator<ReferralService>().fetchReferralCode();
