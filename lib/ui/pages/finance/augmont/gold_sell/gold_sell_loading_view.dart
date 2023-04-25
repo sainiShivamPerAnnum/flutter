@@ -16,7 +16,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
 class GoldSellLoadingView extends StatelessWidget {
@@ -46,7 +45,7 @@ class GoldSellLoadingView extends StatelessWidget {
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
         Expanded(
-          child: Lottie.asset(Assets.goldDepostLoadingLottie,
+          child: Lottie.network(Assets.goldDepostLoadingLottie,
               height: SizeConfig.screenHeight! * 0.7),
         ),
         Column(

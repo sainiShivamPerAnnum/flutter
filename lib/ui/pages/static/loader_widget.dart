@@ -15,7 +15,7 @@ class FullScreenLoader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Lottie.asset(
+        Lottie.network(
           Assets.fullScreenLoaderLottie,
           height: size ?? SizeConfig.screenWidth! / 2,
         ),
