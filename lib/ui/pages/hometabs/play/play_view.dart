@@ -28,18 +28,11 @@ class Play extends StatelessWidget {
               },
               builder: Builder(builder: (context) {
                 SpotLightController.instance.playViewContext = context;
-                return Column(
-                  children: [
-                    SizedBox(height: SizeConfig.fToolBarHeight),
-                    Expanded(
-                      child: ListView(
-                        cacheExtent: 500,
-                        padding: EdgeInsets.zero,
-                        physics: const BouncingScrollPhysics(),
-                        children: model.getOrderedPlayViewItems(model),
-                      ),
-                    ),
-                  ],
+                return ListView(
+                  cacheExtent: 500,
+                  padding: EdgeInsets.zero,
+                  physics: const BouncingScrollPhysics(),
+                  children: model.getOrderedPlayViewItems(model),
                 );
               }),
             ));

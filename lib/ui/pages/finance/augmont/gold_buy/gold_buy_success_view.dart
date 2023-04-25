@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
@@ -267,8 +267,8 @@ class GoldBuySuccessView extends StatelessWidget {
                   .indexWhere((element) => element == 'SV');
 
               final _tambolaService = locator<TambolaService>();
-              _tambolaService.weeklyTicksFetched = false;
-              _tambolaService.fetchTambolaBoard();
+              // _tambolaService.weeklyTicksFetched = false;
+              _tambolaService.getTambolaTickets();
 
               _augTxnService!.showGtIfAvailable();
             },

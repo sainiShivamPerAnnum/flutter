@@ -82,14 +82,15 @@ class APIService implements API {
         'uid': userService?.firebaseUser?.uid ?? '',
         if (headers != null) ...headers
       });
+      // log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
+      // logger!.d("response from $token");
+      // logger!.d("Get Response: ${response.statusCode}");
+      // logger!.d("Get Response: ${response.body}");
 
       logger?.i(
           "API:: GET REQUEST \n=> PATH: $url  \n=> StatusCode: ${response.statusCode} \n"
           "=> Response Body: ${response.body}");
 
-      // log("API:: $url");
-      // logger!.d("Get Response: ${response.statusCode}");
-      // logger!.d("Get Response: ${response.body}");
       if (decryptData) {
         final data = await _decryptData(response.body);
         log("decryptData  ${data!}");
@@ -122,7 +123,7 @@ class APIService implements API {
     var responseJson;
     String queryString = '';
 
-    int startTime = DateTime.now().millisecondsSinceEpoch;
+    // int startTime = DateTime.now().millisecondsSinceEpoch;
 
     try {
       Map<String, String> _headers = {
@@ -136,14 +137,13 @@ class APIService implements API {
       if (token != null) {
         _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
       }
-      logger!.d(_headers);
 
       if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
 
       String _url = _baseUrl + url;
 
       if (cBaseUrl != null) _url = cBaseUrl + url;
-      logger!.d("response from $_url");
+      // logger!.d("response from $_url");
       if (queryParams != null) {
         queryString = Uri(queryParameters: queryParams).query;
         _url += '?$queryString';
@@ -188,7 +188,7 @@ class APIService implements API {
       String _url = _baseUrl + url;
 
       if (cBaseUrl != null) _url = cBaseUrl + url;
-      logger!.d("response from $_url");
+      // logger!.d("response from $_url");
       final headers = {
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
@@ -197,8 +197,6 @@ class APIService implements API {
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.baseUser?.uid as String,
       };
-      logger!.d("Body : $body");
-      logger!.d("Headers : $headers");
       final response = await http.put(
         Uri.parse(_url),
         headers: headers,
@@ -231,7 +229,7 @@ class APIService implements API {
 
     dynamic responseJson;
     try {
-      logger!.d("response from $url");
+      // logger!.d("response from $url");
       final response = await http.delete(
         Uri.parse('$_baseUrl$url'),
         headers: <String, String>{
@@ -265,15 +263,14 @@ class APIService implements API {
     String _url = _baseUrl + url;
 
     if (cBaseUrl != null) _url = cBaseUrl + url;
-    logger!.d("response from $_url");
+    // logger!.d("response from $_url");
     var responseJson;
     try {
       final response = await http.patch(
         Uri.parse(_url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader:
-              token != null ? token : 'Bearer $token',
+          HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version':
               _versionString.isEmpty ? await _getAppVersion() : _versionString,
@@ -321,12 +318,12 @@ class APIService implements API {
 
       if (response.statusCode == 200) {
         responseString = await response.stream.bytesToString();
-        logger!.d(responseString);
+        // logger!.d(responseString);
         String identifierString =
             "Check pending requests and approve payment by entering UPI PIN";
         if (responseString.contains(identifierString)) return true;
       } else {
-        logger!.d(response.reasonPhrase);
+        // logger!.d(response.reasonPhrase);
         return false;
       }
     } catch (e) {
@@ -338,13 +335,13 @@ class APIService implements API {
   @override
   dynamic returnResponse(http.Response response) {
     var responseJson = json.decode(response.body);
-    logger!.d("$responseJson with code  ${response.statusCode}");
+    // logger!.d("$responseJson with code  ${response.statusCode}");
     switch (response.statusCode) {
       case 200:
         return responseJson;
       case 400:
       case 404:
-        logger!.d(response.body);
+        // logger!.d(response.body);
         throw BadRequestException(responseJson['message']);
 
       case 401:
