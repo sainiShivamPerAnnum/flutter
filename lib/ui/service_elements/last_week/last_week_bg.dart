@@ -12,6 +12,8 @@ class LastWeekBg extends StatelessWidget {
       body: Stack(
         children: [
           Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins, vertical: 0),
             height: SizeConfig.screenHeight,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -22,26 +24,61 @@ class LastWeekBg extends StatelessWidget {
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                // stops: [  0.1, 0.455],
+                stops: [0.1, 0.455],
               ),
             ),
             child: child,
           ),
           Positioned(
-            bottom: SizeConfig.padding20,
-            right: SizeConfig.padding20,
+            top: SizeConfig.padding54,
+            right: SizeConfig.padding80 + SizeConfig.padding64,
             child: Container(
-              height: SizeConfig.padding54,
+              width: SizeConfig.padding6,
+              height: SizeConfig.padding6,
               decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.red),
+                  shape: BoxShape.circle, color: Color(0xff61CFC6)),
             ),
           ),
-          // Align(
-          //   alignment: Alignment.topRight,
-          //   child: Container(
-          //     child: ,
-          //   ),
-          // ),
+          Positioned(
+            top: SizeConfig.padding70,
+            right: SizeConfig.padding80 + SizeConfig.padding40,
+            child: Container(
+              width: SizeConfig.padding3,
+              height: SizeConfig.padding3,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Color(0xff61CFC6)),
+            ),
+          ),
+          Positioned(
+            top: SizeConfig.padding90 + SizeConfig.padding40,
+            right: SizeConfig.padding20,
+            child: Container(
+              width: SizeConfig.padding6,
+              height: SizeConfig.padding6,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Color(0xff61CFC6)),
+            ),
+          ),
+          Positioned(
+            top: SizeConfig.padding90 + SizeConfig.padding20,
+            left: SizeConfig.padding40,
+            child: Container(
+              width: SizeConfig.padding4,
+              height: SizeConfig.padding4,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Color(0xff61CFC6)),
+            ),
+          ),
+          Positioned(
+            top: SizeConfig.padding64,
+            left: SizeConfig.padding54,
+            child: Container(
+              width: SizeConfig.padding6,
+              height: SizeConfig.padding6,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Color(0xff61CFC6)),
+            ),
+          ),
         ],
       ),
     );
