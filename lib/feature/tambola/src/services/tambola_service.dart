@@ -95,12 +95,12 @@ class TambolaService extends ChangeNotifier {
 
   @override
   void dispose() {
-    super.dispose();
     _weeklyPicks = null;
     _todaysPicks = null;
     matchedTicketCount = 0;
     tambolaTickets = null;
     log("Tambola service Dispose called");
+    super.dispose();
   }
 
   //CORE METHODS -- END
