@@ -1,5 +1,5 @@
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_wrapper.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
@@ -42,8 +42,8 @@ class RootController {
         navItems.putIfAbsent(const Save(), () => RootController.saveNavBarItem);
         break;
       case "TM":
-        navItems.putIfAbsent(
-            const TambolaWrapper(), () => RootController.tambolaNavBar);
+        navItems.putIfAbsent(const TambolaHomeView(standAloneScreen: false),
+            () => RootController.tambolaNavBar);
         break;
 
       case "WN":

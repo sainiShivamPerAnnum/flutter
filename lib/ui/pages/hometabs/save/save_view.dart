@@ -59,36 +59,17 @@ class SaveViewWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      triggerMode: RefreshIndicatorTriggerMode.onEdge,
-      color: UiConstants.primaryColor,
-      backgroundColor: Colors.black,
-      onRefresh: locator<RootViewModel>().refresh,
-      child: PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: const [UserServiceProperties.mySegments],
-        builder: (_, prop, ___) {
-          if (prop!.userSegments.contains("NEW_USER")) {
-            return NewUserSaveView(
-              model: model,
-            );
-          }
-          return SizedBox(
-            height: SizeConfig.screenHeight,
-            child: Column(
-              children: [
-                SizedBox(height: SizeConfig.fToolBarHeight),
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    cacheExtent: SizeConfig.screenHeight,
-                    children: model.getSaveViewItems(model),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+    return PropertyChangeConsumer<UserService, UserServiceProperties>(
+      properties: const [UserServiceProperties.mySegments],
+      builder: (_, prop, ___) {
+        if (prop!.userSegments.contains("NEW_USER")) {
+          return NewUserSaveView(model: model);
+        }
+        return ListView(
+          padding: EdgeInsets.zero,
+          children: model.getSaveViewItems(model),
+        );
+      },
     );
   }
 }

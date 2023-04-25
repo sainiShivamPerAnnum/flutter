@@ -5,6 +5,7 @@ enum FaqsType {
   autosave,
   withdrawals,
   play,
+  tambola,
   winnings,
   gold,
   flo,

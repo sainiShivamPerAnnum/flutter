@@ -18,7 +18,7 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: Lottie.asset(
+            child: Lottie.network(
               Assets.floSellCompleteLottie,
             ),
           ),

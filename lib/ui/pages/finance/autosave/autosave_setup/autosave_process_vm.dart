@@ -774,7 +774,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   void trackAutosaveUpiSubmit() {
     _analyticsService.track(
-      eventName: AnalyticsEvents.asChipsTapped,
+      eventName: AnalyticsEvents.upiSubmitTappped,
       properties: {
         "appName": selectedUpiApp?.upiApplication.appName,
         "gold": goldAmountFieldController?.text,

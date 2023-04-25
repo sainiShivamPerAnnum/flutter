@@ -49,7 +49,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                Lottie.asset(
+                Lottie.network(
                   Assets.goldDepostSuccessLottie,
                   width: double.infinity,
                 ),

@@ -17,78 +17,63 @@ class NewUserSaveView extends StatelessWidget {
   final SaveViewModel model;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenHeight,
-      child: Column(
-        children: [
-          SizedBox(height: SizeConfig.fToolBarHeight),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: const Color(0xff232326),
-                        borderRadius: BorderRadius.vertical(
-                            bottom: Radius.circular(SizeConfig.padding24))),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: SizeConfig.padding8,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding16),
-                          child: Text(
-                            "Take your first step towards healthy Savings",
-                            textAlign: TextAlign.center,
-                            style: TextStyles.rajdhaniSB.title4
-                                .colour(Colors.white),
-                          ),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding14,
-                        ),
-                        ...getAssetWidget(),
-
-                        // Center(
-                        //   child: Text(
-                        //     "100% SAFE & SECURE",
-                        //     style: TextStyles.sourceSans.body3
-                        //         .colour(
-                        //           Colors.white.withOpacity(0.6),
-                        //         )
-                        //         .copyWith(letterSpacing: 1.12),
-                        //   ),
-                        // ),
-
-                        SizedBox(
-                          height: SizeConfig.padding10,
-                        ),
-                        const SaveAssetsFooter(),
-                        SizedBox(
-                          height: SizeConfig.padding10,
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (DynamicUiUtils.saveViewOrder[1].contains("CH")) ...[
-                    Campaigns(model: model),
-                    SizedBox(
-                      height: SizeConfig.padding40,
-                    )
-                  ],
-                  LottieBuilder.network(
-                      "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
-                  SizedBox(height: SizeConfig.navBarHeight),
-                ],
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              color: const Color(0xff232326),
+              borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(SizeConfig.padding24))),
+          child: Column(
+            children: [
+              SizedBox(
+                height: SizeConfig.padding8,
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+                child: Text(
+                  "Take your first step towards healthy Savings",
+                  textAlign: TextAlign.center,
+                  style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
+                ),
+              ),
+              SizedBox(
+                height: SizeConfig.padding14,
+              ),
+              ...getAssetWidget(),
+
+              // Center(
+              //   child: Text(
+              //     "100% SAFE & SECURE",
+              //     style: TextStyles.sourceSans.body3
+              //         .colour(
+              //           Colors.white.withOpacity(0.6),
+              //         )
+              //         .copyWith(letterSpacing: 1.12),
+              //   ),
+              // ),
+
+              SizedBox(
+                height: SizeConfig.padding10,
+              ),
+              const SaveAssetsFooter(),
+              SizedBox(
+                height: SizeConfig.padding10,
+              ),
+            ],
           ),
+        ),
+        if (DynamicUiUtils.saveViewOrder[1].contains("CH")) ...[
+          Campaigns(model: model),
+          SizedBox(
+            height: SizeConfig.padding40,
+          )
         ],
-      ),
+        LottieBuilder.network(
+            "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+        SizedBox(height: SizeConfig.navBarHeight),
+      ],
     );
   }
 

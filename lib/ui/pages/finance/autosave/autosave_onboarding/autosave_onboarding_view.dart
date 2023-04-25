@@ -3,7 +3,9 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home.dart';
+import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
+// import '../../../../../../packages/tambola/lib/tambola/tambola_home/widgets/tambola_video_player.dart';
+// import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -91,9 +93,8 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
                   SizedBox(height: SizeConfig.padding12),
                   SizedBox(
                     height: SizeConfig.screenWidth! * 0.84,
-                    child: const TambolaVideoPlayer(
-                        link:
-                            "https://d37gtxigg82zaw.cloudfront.net/sip-pros.mp4"),
+                    child: const AppVideoPlayer(
+                        "https://d37gtxigg82zaw.cloudfront.net/sip-pros.mp4"),
                   ),
                   Container(
                     padding: EdgeInsets.only(

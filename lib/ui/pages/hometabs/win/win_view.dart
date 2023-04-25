@@ -28,30 +28,21 @@ class Win extends StatelessWidget {
       onModelDispose: (model) => model.clear(),
       builder: (ctx, model, child) {
         return Builder(builder: (context) {
-          return Container(
-            child: Column(
-              children: [
-                SizedBox(height: SizeConfig.fToolBarHeight),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Salutation(),
-                        AccountInfoTiles(
-                          title: 'App Walkthrough',
-                          uri: "",
-                          onTap: () {
-                            locator<AnalyticsService>()
-                                .track(eventName: 'App Walkthrough');
-                            SpotLightController.instance.startQuickTour();
-                          },
-                        ),
-                        AccountInfoTiles(
-                            title: locale.abMyProfile, uri: "/profile"),
-                        AccountInfoTiles(
-                            title: locale.kycTitle, uri: "/kycVerify"),
+          return ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const Salutation(),
+              AccountInfoTiles(
+                title: 'App Walkthrough',
+                uri: "",
+                onTap: () {
+                  locator<AnalyticsService>()
+                      .track(eventName: 'App Walkthrough');
+                  SpotLightController.instance.startQuickTour();
+                },
+              ),
+              AccountInfoTiles(title: locale.abMyProfile, uri: "/profile"),
+              AccountInfoTiles(title: locale.kycTitle, uri: "/kycVerify"),
 
                         AccountInfoTiles(
                             title: locale.bankAccDetails, uri: "/bankDetails"),
@@ -76,16 +67,11 @@ class Win extends StatelessWidget {
                           height: SizeConfig.padding10,
                         ),
 
-                        LottieBuilder.network(
-                            "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+              LottieBuilder.network(
+                  "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
 
-                        SizedBox(height: SizeConfig.navBarHeight),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              SizedBox(height: SizeConfig.navBarHeight),
+            ],
           );
         });
       },
