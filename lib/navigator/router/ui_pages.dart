@@ -79,6 +79,7 @@ const String TExistingUserViewPath = '/texistingUserPath';
 const String TNewUserViewPath = '/tnewUserViewPath';
 const String TransactionDetailsPath = '/transactionDetailsPage';
 const String AssetViewPath = '/assetViewSection';
+const String LastWeekOverviewPath = '/lastWeekOverview';
 
 //POWER PLAY PATHS
 const String PowerPlayPath = '/powerPlayPath';
@@ -164,6 +165,7 @@ enum Pages {
   WebView,
   SettingsView,
   TransactionDetailsPage,
+  LastWeekOverview,
 
   //POWER PLAY
   PowerPlayHome,
@@ -730,3 +732,9 @@ PageConfiguration PowerPlaySeasonLeaderboardDetailsConfig = PageConfiguration(
     path: PowerPlaySeasonLeaderboardPath,
     uiPage: Pages.PowerPlaySeasonLeaderboard,
     name: "PowerPlay Season Leaderboard Screen");
+
+PageConfiguration LastWeekOverviewConfig = PageConfiguration(
+    key: 'LastWeekOverviewPath',
+    path: LastWeekOverviewPath,
+    uiPage: Pages.LastWeekOverview,
+    name: "Last Week Overview Screen");

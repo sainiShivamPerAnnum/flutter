@@ -30,6 +30,14 @@ class LastWeekBg extends StatelessWidget {
             child: child,
           ),
           Positioned(
+              top: SizeConfig.padding64,
+              left: SizeConfig.padding80 + SizeConfig.padding34,
+              child: CustomPaint(
+                size: Size(SizeConfig.padding34,
+                    (SizeConfig.padding34 * 0.30303030303030304).toDouble()),
+                painter: RPSCustomPainter(),
+              )),
+          Positioned(
             top: SizeConfig.padding54,
             right: SizeConfig.padding80 + SizeConfig.padding64,
             child: Container(
@@ -82,5 +90,56 @@ class LastWeekBg extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class RPSCustomPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(size.width, size.height);
+    path_0.lineTo(size.width * 0.1538462, size.height);
+    path_0.cubicTo(
+        size.width * 0.1986482,
+        size.height * 0.6516680,
+        size.width * 0.3548462,
+        size.height * -0.03570790,
+        size.width * 0.6212154,
+        size.height * 0.001447510);
+    path_0.cubicTo(
+        size.width * 0.8875872,
+        size.height * 0.03860300,
+        size.width * 0.9847256,
+        size.height * 0.6826310,
+        size.width,
+        size.height);
+    path_0.close();
+
+    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    paint_0_fill.color = Colors.white.withOpacity(0.3);
+    canvas.drawPath(path_0, paint_0_fill);
+
+    Path path_1 = Path();
+    path_1.moveTo(0, size.height);
+    path_1.lineTo(size.width * 0.2307692, size.height);
+    path_1.cubicTo(
+        size.width * 0.2223079,
+        size.height * 0.8733720,
+        size.width * 0.1873856,
+        size.height * 0.6162200,
+        size.width * 0.1153851,
+        size.height * 0.6006350);
+    path_1.cubicTo(size.width * 0.04338487, size.height * 0.5850500,
+        size.width * 0.008461564, size.height * 0.8603840, 0, size.height);
+    path_1.close();
+
+    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
+    paint_1_fill.color = Colors.white.withOpacity(0.3);
+    canvas.drawPath(path_1, paint_1_fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }

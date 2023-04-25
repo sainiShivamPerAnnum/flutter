@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
+import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
@@ -320,6 +321,31 @@ class GetterRepository extends BaseRepo {
           logger.d("Page Config: $responseData");
           return ApiResponse<DynamicUI>(model: pageConfig, code: 200);
         },
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
+  Future<ApiResponse<LastWeekModel>> getLastWeekData() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.kStory,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      final responseData = response["data"];
+
+      if (responseData == null) {
+        return ApiResponse.withError("Unable to fetch stories", 400);
+      }
+
+      return ApiResponse<LastWeekModel>(
+        model: LastWeekModel.fromJson(response),
+        code: 200,
       );
     } catch (e) {
       logger.e(e.toString());
