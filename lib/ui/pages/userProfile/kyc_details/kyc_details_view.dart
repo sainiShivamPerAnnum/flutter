@@ -35,7 +35,9 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 }
 
 class KYCDetailsView extends StatelessWidget {
-  bool _showKycDetails = false;
+  // bool _showKycDetails = false;
+
+  const KYCDetailsView({super.key});
 
   getKycView(KYCDetailsViewModel model) {
     switch (model.kycVerificationStatus) {

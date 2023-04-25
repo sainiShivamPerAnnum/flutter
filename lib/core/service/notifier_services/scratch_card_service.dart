@@ -212,10 +212,11 @@ Future<void>  showInstantScratchCardView(
 
   Future<void> updateUnscratchedGTCount() async {
     final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
-    if (res.isSuccess())
+    if (res.isSuccess()) {
       unscratchedTicketsCount = res.model!.length;
-    else
+    } else {
       unscratchedTicketsCount = 0;
+    }
   }
 
   //HELPERS
@@ -238,9 +239,10 @@ Future<void>  showInstantScratchCardView(
           if (url == null) url = link['payload']['userInviteURL'];
         }
 
-        if (url != null)
+        if (url != null) {
           caputure(
               'Hey, I won ${ticket.rewardArr!.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
+        }
       } catch (e) {
         _logger!.e(e.toString());
         BaseUtil.showNegativeAlert(
@@ -252,9 +254,9 @@ Future<void>  showInstantScratchCardView(
   caputure(String shareMessage) {
     Future.delayed(Duration(seconds: 1), () {
       captureCard().then((image) {
-        if (image != null)
+        if (image != null) {
           shareCard(image, shareMessage);
-        else {
+        } else {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {

@@ -9,7 +9,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
@@ -46,7 +45,7 @@ class GoldSellSuccessView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Lottie.asset(
+            child: Lottie.network(
               Assets.goldSellCompleteLottie,
             ),
           ),

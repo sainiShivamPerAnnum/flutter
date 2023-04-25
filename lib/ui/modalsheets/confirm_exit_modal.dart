@@ -37,7 +37,7 @@ class ConfirmExitModal extends StatelessWidget {
               Color(0xffD9D9D9),
             ),
           ),
-          LottieBuilder.asset(
+          LottieBuilder.network(
             Assets.goldDepostSuccessLottie,
             height: SizeConfig.screenHeight! * 0.25,
           ),

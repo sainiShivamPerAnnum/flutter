@@ -16,21 +16,21 @@ class _CircularAnimState extends State<CircularAnim>
   late Animation<double> _holeAnimation;
   double _scaleFactor = 1;
 
-  double get scaleFactor => this._scaleFactor;
+  double get scaleFactor => _scaleFactor;
 
   set scaleFactor(double value) {
     setState(() {
-      this._scaleFactor = value;
+      _scaleFactor = value;
     });
   }
 
   bool _isAnimationInProgress = true;
 
-  get isAnimationInProgress => this._isAnimationInProgress;
+  get isAnimationInProgress => _isAnimationInProgress;
 
   set isAnimationInProgress(value) {
     setState(() {
-      this._isAnimationInProgress = value;
+      _isAnimationInProgress = value;
     });
   }
 
@@ -69,7 +69,7 @@ class _CircularAnimState extends State<CircularAnim>
 
   void animate() {
     Future.delayed(
-      Duration(milliseconds: 200),
+      const Duration(milliseconds: 200),
       () {
         _controller.reset();
         scaleFactor = 1;
@@ -150,7 +150,7 @@ class _CircularAnimState extends State<CircularAnim>
 }
 
 class Ring extends AnimatedWidget {
-  Ring({Key? key, required this.ringAnimation, this.widthFactor})
+  const Ring({Key? key, required this.ringAnimation, this.widthFactor})
       : super(key: key, listenable: ringAnimation);
   final Animation<double> ringAnimation;
   final int? widthFactor;
@@ -181,7 +181,7 @@ class Ring extends AnimatedWidget {
 }
 
 class Hole extends AnimatedWidget {
-  Hole({Key? key, required this.holeAnimation})
+  const Hole({Key? key, required this.holeAnimation})
       : super(key: key, listenable: holeAnimation);
 
   final Animation<double> holeAnimation;
@@ -192,7 +192,7 @@ class Hole extends AnimatedWidget {
     return ClipPath(
       clipper: InvertedCircleClipper(animation: holeAnimation),
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

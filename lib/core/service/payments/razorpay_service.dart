@@ -59,24 +59,24 @@ class RazorpayService extends ChangeNotifier {
     return true;
   }
 
-  void handlePaymentSuccess(PaymentSuccessResponse response) async {
+  void handlePaymentSuccess(PaymentSuccessResponse response) {
     locator<BackButtonActions>().isTransactionCancelled = false;
-    String paymentId = response.paymentId!;
-    String checkoutOrderId = response.orderId!;
-    String paySignature = response.signature!;
+    // String paymentId = response.paymentId!;
+    // String checkoutOrderId = response.orderId!;
+    // String paySignature = response.signature!;
     _txnService!.currentTransactionState = TransactionState.ongoing;
-    _txnService!.initiatePolling();
-    log.debug(
-        "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
-    _currentTxn?.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
-    if (_currentTxn!.rzp![UserTransaction.subFldRzpOrderId] !=
-        checkoutOrderId) {
-      _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
-          UserTransaction.RZP_TRAN_STATUS_COMPLETE;
-      if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
-      cleanListeners();
-      return;
-    }
+    unawaited(_txnService!.initiatePolling());
+    // log.debug(
+    //     "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
+    // _currentTxn?.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
+    // if (_currentTxn!.rzp![UserTransaction.subFldRzpOrderId] !=
+    //     checkoutOrderId) {
+    //   _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
+    //       UserTransaction.RZP_TRAN_STATUS_COMPLETE;
+    //   if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
+    cleanListeners();
+    return;
+    // }
   }
 
   void handlePaymentError(PaymentFailureResponse response) {

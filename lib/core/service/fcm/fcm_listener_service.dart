@@ -82,15 +82,15 @@ class FcmListener {
         }
       });
 
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        print('A new onMessageOpenedApp event was published!');
+      FirebaseMessaging.onMessageOpenedApp.listen((message) {
+        logger!.i('A new onMessageOpenedApp event was published!');
 
-        _handler.handleMessage(message.data, MsgSource.Terminated);
+        _handler.handleMessage(message.data, MsgSource.Background);
       });
 
-      _fcm!.setForegroundNotificationPresentationOptions(
-          alert: true, badge: true, sound: true);
-      _fcm!.requestPermission();
+      unawaited(_fcm!.setForegroundNotificationPresentationOptions(
+          alert: true, badge: true, sound: true));
+      unawaited(_fcm!.requestPermission());
 
       ///add subscriptions to relevant topics
       await _manageInitSubscriptions();

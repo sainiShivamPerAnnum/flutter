@@ -1,5 +1,6 @@
 //Project imports
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -9,11 +10,9 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -39,7 +38,8 @@ class AppState extends ChangeNotifier {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final RootController _rootController = locator<RootController>();
   int _rootIndex = 0;
-  static PageController homeTabPageController = PageController(initialPage: 0);
+  PageController homeTabPageController = PageController(initialPage: 0);
+
   // Future _txnFunction;
   Timer? _txnTimer;
   Future? _txnFunction;
@@ -75,6 +75,7 @@ class AppState extends ChangeNotifier {
   static double? amt;
   static bool isRepeated = false;
   PageAction _currentAction = PageAction();
+
   // BackButtonDispatcher backButtonDispatcher;
 
   get rootIndex => _rootIndex;
@@ -134,11 +135,7 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
-    //First Call check for journey
-    executeForFirstJourneyTabClick(index);
-    executeNavBarItemFirstClick(index);
-    _rootController.onChange(_rootController.navItems.values.toList()[index]);
-    print(_rootIndex);
+    debugPrint("$_rootIndex");
     notifyListeners();
   }
 
@@ -146,24 +143,24 @@ class AppState extends ChangeNotifier {
     final JourneyService _journeyService = locator<JourneyService>();
     if (JourneyService.isAvatarAnimationInProgress) return;
     _rootController.onChange(_rootController.navItems.values.toList()[index]);
-    AppState.delegate!.appState.setCurrentTabIndex = index;
+    setCurrentTabIndex = index;
     trackEvent(index);
     Haptic.vibrate();
     if (_rootController.currentNavBarItemModel ==
         RootController.journeyNavBarItem) {
       _journeyService.checkForMilestoneLevelChange();
     }
-    executeNavBarItemFirstClick(index);
+    executeForFirstJourneyTabClick(index);
   }
 
   bool showTourStrip = false;
 
-  setTourStripValue() {
+  void setTourStripValue() {
     showTourStrip = false;
     notifyListeners();
   }
 
-  void setShowStripValue() async {
+  Future<void> setShowStripValue() async {
     final sharePreference = await SharedPreferences.getInstance();
     final value = sharePreference.getInt('showTour');
     final appSession = value ?? 0;
@@ -176,9 +173,9 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  returnHome() {
+  void returnHome() {
     _rootIndex = 0;
-    print(_rootIndex);
+    log("$_rootIndex");
 
     notifyListeners();
   }
@@ -194,19 +191,15 @@ class AppState extends ChangeNotifier {
     _currentAction = PageAction();
   }
 
-  _saveLastTapIndex(int index) {
-    SharedPreferences.getInstance().then((instance) {
-      instance.setInt('lastTab', index);
-    });
-  }
-
-  dump() {
+  void dump() {
     isRootAvailableForIncomingTaskExecution = true;
     isFirstTimeJourneyOpened = false;
     isJourneyFirstTab = false;
     isFirstTime = false;
     _rootController.navItems.clear();
+    homeTabPageController.dispose();
   }
+
   // setLastTapIndex() {
   //   SharedPreferences.getInstance().then((instance) {
   //     rootIndex = instance.getInt('lastTab');
@@ -225,7 +218,7 @@ class AppState extends ChangeNotifier {
         executeForFirstPlayTabClick(index);
         break;
       case "Tambola":
-        executeForFirstTambolaClick(index);
+        // executeForFirstTambolaClick(index);
         break;
       case "Account":
       case "Win":
@@ -236,7 +229,7 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  executeForFirstJourneyTabClick(int index) {
+  Future<void> executeForFirstJourneyTabClick(int index) async {
     final JourneyService _journeyService = locator<JourneyService>();
     int journeyIndex = _rootController.navItems.values
         .toList()
@@ -248,12 +241,14 @@ class AppState extends ChangeNotifier {
     if (!isFirstTimeJourneyOpened) {
       if (index == journeyIndex) {
         isFirstTimeJourneyOpened = true;
-        _journeyService.buildJourney();
+        log("isFirstTimeJourneyOpened: $isFirstTimeJourneyOpened");
+        // _journeyService.buildJourney();
       }
     }
   }
 
   executeForFirstSaveTabClick(index) {}
+
   executeForFirstPlayTabClick(index) {
     SpotLightController.instance.userFlow = UserFlow.onPlayTab;
   }
@@ -262,34 +257,36 @@ class AppState extends ChangeNotifier {
     SpotLightController.instance.userFlow = UserFlow.onWinPage;
   }
 
-  executeForFirstTambolaClick(index) {
-    final TambolaService _tambolaService = locator<TambolaService>();
-    _tambolaService.completer.future.then(
-      (value) {
-        if ((_tambolaService.initialTicketCount ?? -1) == 0) {
-          if (_tambolaService.userWeeklyBoards!.length > 0) {
-            _tambolaService.initialTicketCount =
-                _tambolaService.userWeeklyBoards!.length;
-            WidgetsBinding.instance.addPostFrameCallback(
-              (timeStamp) {
-                AppState.screenStack.add(ScreenItem.dialog);
-                Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
-                    .push(
-                  PageRouteBuilder(
-                    opaque: false,
-                    pageBuilder: (BuildContext context, _, __) =>
-                        TambolaInstantView(
-                      ticketCount: _tambolaService.userWeeklyBoards!.length,
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-        }
-      },
-    );
-  }
+  //TODO: REVERT WHEN PACAKGE IS SETUP
+  // executeForFirstTambolaClick(index) {
+  //   final TambolaService _tambolaService = locator<TambolaService>();
+  //   _tambolaService.completer.future.then(
+  //     (value) {
+  //       if ((_tambolaService.initialTicketCount ?? -1) == 0) {
+  //         if (_tambolaService.userWeeklyBoards!.length > 0) {
+  //           _tambolaService.initialTicketCount =
+  //               _tambolaService.userWeeklyBoards!.length;
+  //           WidgetsBinding.instance.addPostFrameCallback(
+  //             (timeStamp) {
+  //               AppState.screenStack.add(ScreenItem.dialog);
+  //               Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
+  //                   .push(
+  //                 PageRouteBuilder(
+  //                   opaque: false,
+  //                   pageBuilder: (BuildContext context, _, __) =>
+  //                       TambolaInstantView(
+  //                     ticketCount: _tambolaService.userWeeklyBoards!.length,
+  //                   ),
+  //                 ),
+  //               );
+  //             },
+  //           );
+  //         }
+  //       }
+  //     },
+  //   );
+  // }
+  //TODO: REVERT WHEN PACAKGE IS SETUP
 
   void trackEvent(int index) {
     final ScratchCardService _gtService = locator<ScratchCardService>();
@@ -328,7 +325,7 @@ class AppState extends ChangeNotifier {
     } else if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
       _analyticsService.track(eventName: "Tambola tab tapped", properties: {
-        "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
+        // "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
         "index": index
       });
     }

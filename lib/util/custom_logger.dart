@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class CustomLogger {
@@ -6,8 +7,8 @@ class CustomLogger {
   ///Encryption Utils
 
   static bool isEnc =
-      //FlavorConfig.isProduction() ??
-      false;
+  //FlavorConfig.isProduction() ??
+  false;
 
   final LogFilter _filter;
   final LogPrinter _printer;
@@ -25,9 +26,9 @@ class CustomLogger {
 
     try {
       // print('Logger AES initiated: ' + _initializeAESEncryptor().toString());
-      print('Logger AES initiated: ');
+      debugPrint('Logger AES initiated: ');
     } catch (e) {
-      print('$e');
+      debugPrint('$e');
     }
   }
 
@@ -106,8 +107,8 @@ class CustomLogger {
         try {
           _output.output(outputEvent);
         } catch (e, s) {
-          print(e);
-          print(s);
+          debugPrint(e.toString());
+          debugPrint(s.toString());
         }
       }
     }

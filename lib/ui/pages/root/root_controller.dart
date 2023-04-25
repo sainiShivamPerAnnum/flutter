@@ -1,5 +1,5 @@
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_wrapper.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
@@ -28,15 +28,13 @@ class RootController {
 
   void onChange(NavBarItemModel model) {
     currentNavBarItemModel = model;
-    
-      
   }
 
   void getNavItems(String navItem) {
     switch (navItem) {
       case "JN":
         navItems.putIfAbsent(
-            JourneyView(), () => RootController.journeyNavBarItem);
+            const JourneyView(), () => RootController.journeyNavBarItem);
 
         break;
 
@@ -44,16 +42,16 @@ class RootController {
         navItems.putIfAbsent(const Save(), () => RootController.saveNavBarItem);
         break;
       case "TM":
-        navItems.putIfAbsent(
-            const TambolaWrapper(), () => RootController.tambolaNavBar);
+        navItems.putIfAbsent(const TambolaHomeView(standAloneScreen: false),
+            () => RootController.tambolaNavBar);
         break;
 
       case "WN":
       case "AC":
-        navItems.putIfAbsent(Win(), () => RootController.winNavBarItem);
+        navItems.putIfAbsent(const Win(), () => RootController.winNavBarItem);
         break;
       case "PL":
-        navItems.putIfAbsent(Play(), () => RootController.playNavBarItem);
+        navItems.putIfAbsent(const Play(), () => RootController.playNavBarItem);
         break;
 
       default:

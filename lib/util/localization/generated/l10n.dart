@@ -3609,7 +3609,7 @@ class S {
     );
   }
 
-  /// `Upload your PAN Card`
+  /// `Step 1: Upload your PAN Card`
   String get kycPanUpload {
     return Intl.message(
       'Step 1: Upload your PAN Card',

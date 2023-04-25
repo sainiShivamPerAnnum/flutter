@@ -10,7 +10,6 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
-import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -19,12 +18,13 @@ import 'package:felloapp/core/service/notifier_services/google_sign_in_service.d
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
+import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -57,9 +57,10 @@ class UserProfileVM extends BaseViewModel {
   UsernameResponse? response;
   Debouncer? _debouncer;
 
-  Log log = new Log('User Profile');
+  Log log = Log('User Profile');
   bool _inEditMode = false;
   bool _isgmailFieldEnabled = true;
+
   // bool _isNewUser = false;
   bool _isEmailEnabled = false;
   bool _isContinuedWithGoogle = false;
@@ -108,7 +109,7 @@ class UserProfileVM extends BaseViewModel {
   String username = "";
   double _errorPadding = 0;
 
-  final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   //controllers
   TextEditingController? nameController,
@@ -233,13 +234,13 @@ class UserProfileVM extends BaseViewModel {
   init() {
     // isNewUser = inu;
     // if (isNewUser) enableEdit();
-    nameController = new TextEditingController(text: myname);
-    dobController = new TextEditingController(text: myDob);
-    genderController = new TextEditingController(text: gender);
+    nameController = TextEditingController(text: myname);
+    dobController = TextEditingController(text: myDob);
+    genderController = TextEditingController(text: gender);
     setDate();
     setGender();
-    emailController = new TextEditingController(text: myEmail);
-    mobileController = new TextEditingController(text: myMobile);
+    emailController = TextEditingController(text: myEmail);
+    mobileController = TextEditingController(text: myMobile);
     if (_userService!.isEmailVerified) isgmailFieldEnabled = false;
     // if (isNewUser) usernameController = TextEditingController();
     checkIfUserIsKYCVerified();
@@ -267,16 +268,15 @@ class UserProfileVM extends BaseViewModel {
   setGender() {
     if (myGender == "M") {
       gender = _locale!.obGenderMale;
-      genderController = new TextEditingController(text: locale.obMale);
+      genderController = TextEditingController(text: locale.obMale);
       gen = 1;
     } else if (myGender == "F") {
       gender = _locale!.obGenderFemale;
-      genderController = new TextEditingController(text: locale.obFemale);
+      genderController = TextEditingController(text: locale.obFemale);
       gen = 0;
     } else if (myGender == "O") {
       gender = _locale!.obGenderOthers;
-      genderController =
-          new TextEditingController(text: locale.obPreferNotToSay);
+      genderController = TextEditingController(text: locale.obPreferNotToSay);
       gen = -1;
     }
   }
@@ -284,13 +284,13 @@ class UserProfileVM extends BaseViewModel {
   setDate() {
     if (myDob != null && myDob.isNotEmpty) {
       String dob = myDob.replaceAll('/', '-');
-      dateFieldController = new TextEditingController(text: dob.split("-")[2]);
-      monthFieldController = new TextEditingController(text: dob.split("-")[1]);
-      yearFieldController = new TextEditingController(text: dob.split("-")[0]);
+      dateFieldController = TextEditingController(text: dob.split("-")[2]);
+      monthFieldController = TextEditingController(text: dob.split("-")[1]);
+      yearFieldController = TextEditingController(text: dob.split("-")[0]);
     } else {
-      dateFieldController = new TextEditingController(text: "");
-      monthFieldController = new TextEditingController(text: "");
-      yearFieldController = new TextEditingController(text: "");
+      dateFieldController = TextEditingController(text: "");
+      monthFieldController = TextEditingController(text: "");
+      yearFieldController = TextEditingController(text: "");
     }
   }
 
@@ -303,7 +303,7 @@ class UserProfileVM extends BaseViewModel {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
+            colorScheme: const ColorScheme.dark(
               onPrimary: Colors.black, // selected text color
               onSurface: Colors.white70, // default text color
               primary: UiConstants.primaryColor, // circle color
@@ -344,7 +344,7 @@ class UserProfileVM extends BaseViewModel {
   enableEdit() {
     inEditMode = true;
     notifyListeners();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       nameFocusNode.requestFocus();
     });
   }
@@ -367,11 +367,13 @@ class UserProfileVM extends BaseViewModel {
       if (_checkForChanges() && checkForNullData()) {
         if (checkIfAdult()) {
           isUpdaingUserDetails = true;
-          if (isNameEnabled)
+          if (isNameEnabled) {
             _userService!.baseUser!.name = nameController!.text.trim();
-          if (isDateEnabled)
+          }
+          if (isDateEnabled) {
             _userService!.baseUser!.dob =
                 "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
+          }
           _userService!.baseUser!.gender = getGender();
           _userService!.baseUser!.isEmailVerified =
               _userService!.isEmailVerified;
@@ -383,7 +385,7 @@ class UserProfileVM extends BaseViewModel {
             dMap: {
               BaseUser.fldName: _userService!.baseUser!.name!
                   .trim()
-                  .replaceAll(new RegExp(r"\s+\b|\b\s"), " "),
+                  .replaceAll(RegExp(r"\s+\b|\b\s"), " "),
               BaseUser.fldDob: _userService!.baseUser!.dob,
               BaseUser.fldGender: _userService!.baseUser!.gender,
               BaseUser.fldIsEmailVerified:
@@ -429,15 +431,17 @@ class UserProfileVM extends BaseViewModel {
           );
         }
       }
-    } else
+    } else {
       BaseUtil.showNegativeAlert(locale.invalidDetails, locale.checkFeilds);
+    }
   }
 
   bool checkIfAdult() {
-    if (selectedDate == null && !isDateEnabled)
+    if (selectedDate == null && !isDateEnabled) {
       return true;
-    else
+    } else {
       return DateHelper.isAdult(selectedDate);
+    }
   }
 
   // Future<bool> usernameIsValid() async {
@@ -481,44 +485,48 @@ class UserProfileVM extends BaseViewModel {
   bool isDOBChanged() {
     String newDob =
         "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
-    if (newDob == myDob)
+    if (newDob == myDob) {
       return false;
-    else
+    } else {
       return true;
+    }
   }
 
   bool isGenderChanged() {
     if ((gen == 1 && myGender == "M") ||
         (gen == 0 && myGender == "F") ||
-        (gen == -1 && myGender == "O"))
+        (gen == -1 && myGender == "O")) {
       return false;
-    else
+    } else {
       return true;
+    }
   }
 
   getGender() {
-    if (gen == 1)
+    if (gen == 1) {
       return "M";
-    else if (gen == 0)
+    } else if (gen == 0) {
       return "F";
-    else if (gen == -1)
+    } else if (gen == -1) {
       return "O";
-    else
+    } else {
       return "M";
+    }
   }
 
-  setGenderField() {
-    if (gen == 1)
+  String setGenderField() {
+    if (gen == 1) {
       return "Male";
-    else if (gen == 0)
+    } else if (gen == 0) {
       return "Female";
-    else if (gen == -1)
+    } else if (gen == -1) {
       return "Others";
-    else
+    } else {
       return "Male";
+    }
   }
 
-  signout() async {
+  Future<void> signout() async {
     if (await BaseUtil.showNoInternetAlert()) return;
     BaseUtil.openDialog(
       isBarrierDismissible: false,
@@ -545,7 +553,7 @@ class UserProfileVM extends BaseViewModel {
                 _journeyService!.dump();
                 _marketingService.dump();
                 _txnHistoryService!.signOut();
-                _tambolaService!.signOut();
+                _tambolaService!.dispose();
                 _analyticsService!.signOut();
                 _bankAndKycService!.dump();
                 _powerPlayService.dump();
@@ -619,7 +627,7 @@ class UserProfileVM extends BaseViewModel {
           description: locale.galleryAccess,
           buttonText: locale.btnContinue,
           asset: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Image.asset(
               "images/gallery.png",
               height: SizeConfig.screenWidth! * 0.24,
@@ -710,8 +718,9 @@ class UserProfileVM extends BaseViewModel {
 
       return BaseUtil.showPositiveAlert(
           locale.updatedSuccessfully, locale.profileUpdated);
-    } else
+    } else {
       BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.tryLater);
+    }
   }
 
   //Model should never user Widgets in it. We should never pass context here...
@@ -754,9 +763,10 @@ class UserProfileVM extends BaseViewModel {
   }
 
   verifyEmail() {
-    if (!isEmailVerified)
+    if (!isEmailVerified) {
       AppState.delegate!.appState.currentAction =
           PageAction(state: PageState.addPage, page: VerifyEmailPageConfig);
+    }
   }
 
   _postProfilePictureUpdate(bool flag) {
@@ -793,7 +803,7 @@ class UserProfileVM extends BaseViewModel {
       },
     ).then((value) {
       _userService!.setBaseUser();
-      Log("Preferences updated");
+      const Log("Preferences updated");
     });
     isApplockLoading = false;
   }
@@ -816,10 +826,11 @@ class UserProfileVM extends BaseViewModel {
         },
       ).then(
         (value) {
-          if (val)
-            Log("Preferences updated");
-          else
-            Log("Preference update error");
+          if (val) {
+            const Log("Preferences updated");
+          } else {
+            const Log("Preference update error");
+          }
         },
       );
     }
@@ -845,7 +856,7 @@ class UserProfileVM extends BaseViewModel {
   continueWithEmail() {
     isEmailEnabled = true;
     AppState.backButtonDispatcher!.didPopRoute();
-    Future.delayed(Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       emailFocusNode.requestFocus();
     });
   }
@@ -864,9 +875,10 @@ class UserProfileVM extends BaseViewModel {
 
   Future updateUsername() async {
     if (isUpdaingUserDetails || isUsernameLoading) return;
-    if (usernameController!.text.isEmpty)
+    if (usernameController!.text.isEmpty) {
       return BaseUtil.showNegativeAlert(
           "No username entered", "Please add a good username to continue");
+    }
     AppState.blockNavigation();
     isUpdaingUserDetails = true;
     inEditMode = false;
@@ -894,7 +906,7 @@ class UserProfileVM extends BaseViewModel {
     print("Response " + response.toString());
 
     if (isValid == null || isUsernameUpdated) {
-      return SizedBox();
+      return const SizedBox();
     }
     if (isUsernameLoading) {
       return Row(
@@ -902,61 +914,62 @@ class UserProfileVM extends BaseViewModel {
           Container(
             height: SizeConfig.padding16,
             width: SizeConfig.padding16,
-            child: CircularProgressIndicator(
+            child: const CircularProgressIndicator(
               strokeWidth: 2,
             ),
           ),
         ],
       );
-    } else if (response == UsernameResponse.EMPTY)
+    } else if (response == UsernameResponse.EMPTY) {
       return Text(
         locale.userNameEmptyAlert,
-        style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+        style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
       );
-    else if (response == UsernameResponse.UNAVAILABLE)
+    } else if (response == UsernameResponse.UNAVAILABLE) {
       return Text(
         "@${usernameController!.text.trim()} " + locale.isNotAvailable,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.red,
           fontWeight: FontWeight.w500,
         ),
       );
-    else if (response == UsernameResponse.AVAILABLE) {
+    } else if (response == UsernameResponse.AVAILABLE) {
       return Text(
         "@${usernameController!.text.trim()} " + locale.isAvailable,
-        style: TextStyle(
+        style: const TextStyle(
           color: UiConstants.primaryColor,
           fontWeight: FontWeight.w500,
         ),
       );
     } else if (response == UsernameResponse.INVALID) {
-      if (usernameController!.text.trim().length < 4)
+      if (usernameController!.text.trim().length < 4) {
         return Text(
           locale.userNameVal1,
           maxLines: 2,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.w500,
           ),
         );
-      else if (usernameController!.text.trim().length > 20)
+      } else if (usernameController!.text.trim().length > 20) {
         return Text(
           locale.userNameVal2,
           maxLines: 2,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.w500,
           ),
         );
-      else
+      } else {
         return Text(
           "@${usernameController!.text.trim()}" + locale.isValid,
           maxLines: 2,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.w500,
           ),
         );
+      }
     }
 
     return SizedBox(
@@ -995,10 +1008,11 @@ class UserProfileVM extends BaseViewModel {
         if (apiResponse.isSuccess()) res = apiResponse.model ?? false;
         // dbProvider!.checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
         isValid = res;
-        if (res)
+        if (res) {
           response = UsernameResponse.AVAILABLE;
-        else
+        } else {
           response = UsernameResponse.UNAVAILABLE;
+        }
       } else {
         isValid = false;
         response = UsernameResponse.INVALID;

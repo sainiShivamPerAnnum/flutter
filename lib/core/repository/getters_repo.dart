@@ -308,7 +308,7 @@ class GetterRepository extends BaseRepo {
       final token = await getBearerToken();
 
       return await _cacheService.cachedApi(
-        '${CacheKeys.PAGE_CONFIGS}',
+        CacheKeys.PAGE_CONFIGS,
         TTL.ONE_DAY,
         () => APIService.instance.getData("dynamicUi.txt",
             cBaseUrl: _cdnBaseUrl, token: token, decryptData: true),

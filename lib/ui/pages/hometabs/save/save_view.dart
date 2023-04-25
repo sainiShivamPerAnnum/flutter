@@ -8,9 +8,11 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/new_user_save.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -54,30 +56,18 @@ class Save extends StatelessWidget {
 class SaveViewWrapper extends StatelessWidget {
   const SaveViewWrapper({Key? key, required this.model}) : super(key: key);
   final SaveViewModel model;
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: const [UserServiceProperties.mySegments],
       builder: (_, prop, ___) {
         if (prop!.userSegments.contains("NEW_USER")) {
-          return NewUserSaveView(
-            model: model,
-          );
+          return NewUserSaveView(model: model);
         }
-        return SizedBox(
-          height: SizeConfig.screenHeight,
-          child: Column(
-            children: [
-              SizedBox(height: SizeConfig.fToolBarHeight),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  cacheExtent: SizeConfig.screenHeight,
-                  children: model.getSaveViewItems(model),
-                ),
-              ),
-            ],
-          ),
+        return ListView(
+          padding: EdgeInsets.zero,
+          children: model.getSaveViewItems(model),
         );
       },
     );

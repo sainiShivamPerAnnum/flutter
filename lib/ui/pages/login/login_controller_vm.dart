@@ -86,10 +86,10 @@ class LoginControllerViewModel extends BaseViewModel {
 //Private Variables
   bool _isSignup = false;
   bool _loginUsingTrueCaller = false;
-  get loginUsingTrueCaller => this._loginUsingTrueCaller;
+  get loginUsingTrueCaller => _loginUsingTrueCaller;
 
   set loginUsingTrueCaller(value) {
-    this._loginUsingTrueCaller = value;
+    _loginUsingTrueCaller = value;
     notifyListeners();
   }
 
@@ -128,7 +128,7 @@ class LoginControllerViewModel extends BaseViewModel {
         otpEntered: _onOtpFilled,
         resendOtp: _onOtpResendRequested,
         changeNumber: _onChangeNumberRequest,
-        mobileNo: this.userMobile,
+        mobileNo: userMobile,
         loginModel: loginModelInstance,
       ),
       LoginNameInputView(key: _nameKey, loginModel: this),
@@ -146,22 +146,21 @@ class LoginControllerViewModel extends BaseViewModel {
               .validate()) {
             logger!.d(
                 'Mobile number validated: ${_mobileScreenKey.currentState!.model.getMobile()}');
-            this.userMobile = _mobileScreenKey.currentState!.model.getMobile();
+            userMobile = _mobileScreenKey.currentState!.model.getMobile();
 
-            LoginControllerView.mobileno = this.userMobile;
+            LoginControllerView.mobileno = userMobile;
             notifyListeners();
 
             ///disable regular numbers for QA
-            if (FlavorConfig.isQA() &&
-                !this.userMobile!.startsWith('999990000')) {
+            if (FlavorConfig.isQA() && !userMobile!.startsWith('999990000')) {
               BaseUtil.showNegativeAlert(
                   locale.mbNoNotAllowed, locale.dummyNoAlert);
               break;
             }
             _analyticsService!.track(
                 eventName: AnalyticsEvents.signupEnterMobile,
-                properties: {'mobile': this.userMobile});
-            this._verificationId = '+91' + this.userMobile!;
+                properties: {'mobile': userMobile});
+            _verificationId = '+91${userMobile!}';
             _verifyPhone();
             // FocusScope.of(_mobileScreenKey.currentContext).unfocus();
             setState(ViewState.Busy);
@@ -174,20 +173,19 @@ class LoginControllerViewModel extends BaseViewModel {
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             logger!.d("OTP is $otp");
             setState(ViewState.Busy);
-            final verifyOtp =
-                await this._userRepo!.verifyOtp(this._verificationId, otp);
+            final verifyOtp = await _userRepo!.verifyOtp(_verificationId, otp);
             if (verifyOtp.isSuccess()) {
               _analyticsService!.track(
                   eventName: AnalyticsEvents.mobileOtpDone,
-                  properties: {'mobile': this.userMobile});
+                  properties: {'mobile': userMobile});
 
               _otpScreenKey.currentState!.model!.onOtpReceived();
-              FirebaseAuth.instance
+              await FirebaseAuth.instance
                   .signInWithCustomToken(verifyOtp.model!)
                   .then((res) {
                 _onSignInSuccess(LoginSource.FIREBASE);
               }).catchError((e) {
-                print(e.toString());
+                debugPrint(e.toString());
                 setState(ViewState.Idle);
                 _otpScreenKey.currentState!.model!.otpFieldEnabled = true;
                 BaseUtil.showNegativeAlert(locale.authFailed, locale.tryLater);
@@ -258,8 +256,9 @@ class LoginControllerViewModel extends BaseViewModel {
                 response.model['flag'] ? flag = true : flag = false;
 
                 logger!.d("Is Scratch Card Rewarded: $gtId");
-                if (gtId != null && gtId.toString().isNotEmpty)
+                if (gtId != null && gtId.toString().isNotEmpty) {
                   ScratchCardService.scratchCardId = gtId;
+                }
               }
             } catch (e) {
               logger!.d(e);
@@ -302,7 +301,7 @@ class LoginControllerViewModel extends BaseViewModel {
     String? _osVersion;
     String? installReferrerData;
     const BASE_CHANNEL = 'methodChannel/deviceData';
-    final platform = MethodChannel(BASE_CHANNEL);
+    const platform = MethodChannel(BASE_CHANNEL);
     try {
       _appSetId = await AppSetId().getIdentifier();
       logger.d('AppSetId: Package found an appropriate ID value: $_appSetId');
@@ -328,8 +327,9 @@ class LoginControllerViewModel extends BaseViewModel {
     }
 
     try {
-      if (!_internalOpsService!.isDeviceInfoInitiated)
+      if (!_internalOpsService!.isDeviceInfoInitiated) {
         await _internalOpsService!.initDeviceInfo();
+      }
       _osVersion = _internalOpsService!.osVersion;
     } catch (e) {
       logger.e('DeviceData: Service failed to find a Device Data');
@@ -364,7 +364,7 @@ class LoginControllerViewModel extends BaseViewModel {
   void _onSignInSuccess(LoginSource source) async {
     logger!.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
-    logger!.d("User is set: " + userService.firebaseUser!.uid);
+    logger!.d("User is set: ${userService.firebaseUser!.uid}");
     _otpScreenKey.currentState?.model?.otpFocusNode.requestFocus();
     await CacheService.invalidateByKey(CacheKeys.USER);
     ApiResponse<BaseUser> user =
@@ -375,7 +375,8 @@ class LoginControllerViewModel extends BaseViewModel {
           locale.customerSupportText);
       setState(ViewState.Idle);
       _controller!.animateToPage(LoginMobileView.index,
-          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInToLinear);
     } else if (user.model == null ||
         (user.model != null && user.model!.hasIncompleteDetails())) {
       if (user.model == null) {
@@ -390,16 +391,17 @@ class LoginControllerViewModel extends BaseViewModel {
           "No existing user details found or found incomplete details for user. Moving to details page");
       AppState.isFirstTime = true;
 
-      if (source == LoginSource.TRUECALLER)
+      if (source == LoginSource.TRUECALLER) {
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerSignup);
+      }
       //Move to name input page
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
-      if (source == LoginSource.FIREBASE)
+      if (source == LoginSource.FIREBASE) {
         _controller!
             .animateToPage(
           LoginNameInputView.index,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInToLinear,
         )
             .then((_) {
@@ -409,7 +411,7 @@ class LoginControllerViewModel extends BaseViewModel {
                 "123456";
           }
         });
-      else if (source == LoginSource.TRUECALLER) {
+      } else if (source == LoginSource.TRUECALLER) {
         _controller!.jumpToPage(
           LoginNameInputView.index,
         );
@@ -417,10 +419,10 @@ class LoginControllerViewModel extends BaseViewModel {
       }
 
       loginUsingTrueCaller = false;
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         nameViewScrollController.animateTo(
             nameViewScrollController.position.maxScrollExtent,
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             curve: Curves.easeIn);
       });
       AppState.isOnboardingInProgress = true;
@@ -429,9 +431,10 @@ class LoginControllerViewModel extends BaseViewModel {
       ///Existing user
 
       await BaseAnalytics.analytics?.logLogin(loginMethod: 'phonenumber');
-      logger!.d("User details available: Name: " + user.model!.name!);
-      if (source == LoginSource.TRUECALLER)
+      logger!.d("User details available: Name: ${user.model!.name!}");
+      if (source == LoginSource.TRUECALLER) {
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerLogin);
+      }
       userService.baseUser = user.model;
       userService.logUserInstalledApps().then(
         (value) {
@@ -474,10 +477,10 @@ class LoginControllerViewModel extends BaseViewModel {
     }
 
     BaseAnalytics.logUserProfile(userService.baseUser!);
-    await _journeyRepo!.init();
-    await _journeyService!.init();
-    _userCoinService!.init();
-    _referralService.init();
+    // await _journeyRepo!.init();
+    // await _journeyService!.init();
+    // _userCoinService!.init();
+    // _referralService.init();
     fcmListener!.setupFcm();
     logger!.i("Calling analytics init for new onboarded user");
     _analyticsService!.login(
@@ -530,7 +533,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
   Future<void> _verifyPhone() async {
     final hash = await SmsAutoFill().getAppSignature;
-    final res = await this._userRepo!.sendOtp(this._verificationId, hash);
+    final res = await _userRepo!.sendOtp(_verificationId, hash);
 
     if (res.isSuccess()) {
       if (baseProvider!.isOtpResendCount == 0) {
@@ -539,13 +542,13 @@ class LoginControllerViewModel extends BaseViewModel {
         _controller!
             .animateToPage(
           LoginOtpView.index,
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInToLinear,
         )
             .then((_) {
           setState(ViewState.Idle);
         });
-        Future.delayed(Duration(seconds: 1), () {
+        Future.delayed(const Duration(seconds: 1), () {
           _otpScreenKey.currentState!.model!.otpFocusNode.requestFocus();
         });
       } else {
@@ -602,10 +605,11 @@ class LoginControllerViewModel extends BaseViewModel {
   Color getCTATextColor() {
     if (currentPage == 0) {
       if (_mobileScreenKey.currentState!.model.mobileController.text.length ==
-          10)
+          10) {
         return UiConstants.primaryColor;
-      else
+      } else {
         return UiConstants.gameCardColor;
+      }
     }
     return UiConstants.gameCardColor;
   }
@@ -632,7 +636,7 @@ class LoginControllerViewModel extends BaseViewModel {
       _verifyPhone();
       _analyticsService!.track(
           eventName: AnalyticsEvents.resendOtpTapped,
-          properties: {'mobile': this.userMobile});
+          properties: {'mobile': userMobile});
     } else {
       _otpScreenKey.currentState!.model!.onOtpResendConfirmed(false);
       BaseUtil.showNegativeAlert(locale.signInFailedText, locale.exceededOTPs);
@@ -640,10 +644,11 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   _onChangeNumberRequest() {
-    if (this.state == ViewState.Idle) {
+    if (state == ViewState.Idle) {
       AppState.isOnboardingInProgress = false;
       _controller!.animateToPage(LoginMobileView.index,
-          duration: Duration(milliseconds: 500), curve: Curves.easeInToLinear);
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInToLinear);
     }
   }
 

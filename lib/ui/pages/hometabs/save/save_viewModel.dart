@@ -15,6 +15,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -37,6 +38,7 @@ import 'package:lottie/lottie.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
+
   SaveViewModel({this.locale}) {
     locale = locator<S>();
     boxTitllesGold.addAll([
@@ -123,12 +125,19 @@ class SaveViewModel extends BaseViewModel {
   // bool get isKYCVerified => _isKYCVerified;
   // bool get isVPAVerified => _isVPAVerified;
   bool get isGoldSaleActive => _isGoldSaleActive;
+
   bool get isongoing => _isongoing;
+
   bool get isLockInReached => _isLockInReached;
+
   bool get isSellButtonVisible => _isSellButtonVisible;
+
   UserService? get userService => _userService;
+
   UserFundWallet? get userFundWallet => _userService!.userFundWallet;
+
   double get nonWithdrawableQnt => _nonWithdrawableQnt;
+
   double get withdrawableQnt => _withdrawableQnt;
 
   set ongoingEvents(List<EventModel>? value) {
@@ -156,16 +165,18 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init() {
+  Future<void> init() async {
     // _baseUtil.fetchUserAugmontDetail();
     baseProvider = BaseUtil();
-    getCampaignEvents();
+
+    await _userService!.getUserFundWalletData();
+    await _userCoinService!.getUserCoinBalance();
+    await locator<SubService>().init();
+
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      // fetchLockedGoldQnt();
       _sellService!.init();
       getCampaignEvents();
       getSaveViewBlogs();
-      // _sellService.updateSellButtonDetails();
     });
   }
 
@@ -194,7 +205,7 @@ class SaveViewModel extends BaseViewModel {
           saveViewItems.add(const PowerPlayCard());
           break;
         case 'NAS':
-          saveViewItems.add(AutosaveCard());
+          saveViewItems.add(const AutosaveCard());
           break;
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));
@@ -409,7 +420,7 @@ class SaveViewModel extends BaseViewModel {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: ViewAllBlogsViewConfig,
-      widget: ViewAllBlogsView(),
+      widget: const ViewAllBlogsView(),
     );
   }
 }

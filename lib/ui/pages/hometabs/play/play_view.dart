@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class Play extends StatelessWidget {
-  Play({Key? key}) : super(key: key);
+  const Play({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BaseView<PlayViewModel>(
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
-        return Container(
+        return SizedBox(
             height: SizeConfig.screenHeight,
             child: ShowCaseWidget(
               enableAutoScroll: true,
@@ -27,18 +28,11 @@ class Play extends StatelessWidget {
               },
               builder: Builder(builder: (context) {
                 SpotLightController.instance.playViewContext = context;
-                return Column(
-                  children: [
-                    SizedBox(height: SizeConfig.fToolBarHeight),
-                    Expanded(
-                      child: ListView(
-                        cacheExtent: 500,
-                        padding: EdgeInsets.zero,
-                        physics: const BouncingScrollPhysics(),
-                        children: model.getOrderedPlayViewItems(model),
-                      ),
-                    ),
-                  ],
+                return ListView(
+                  cacheExtent: 500,
+                  padding: EdgeInsets.zero,
+                  physics: const BouncingScrollPhysics(),
+                  children: model.getOrderedPlayViewItems(model),
                 );
               }),
             ));
