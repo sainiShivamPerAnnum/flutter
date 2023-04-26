@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -333,12 +332,11 @@ class PinInputTextField extends StatefulWidget {
             (decoration is BoxLooseDecoration &&
                 pinLength - 1 ==
                     (decoration.gapSpaces?.length ?? (pinLength - 1)))),
-        inputFormatters = inputFormatter == null
-            ? <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(pinLength)
-              ]
-            : inputFormatter
+        inputFormatters = inputFormatter ??
+            <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(pinLength)
+            ]
           ..add(LengthLimitingTextInputFormatter(pinLength)),
         super(key: key);
 
