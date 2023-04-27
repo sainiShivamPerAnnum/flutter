@@ -63,7 +63,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/enums/app_config_keys.dart';
 import '../../core/model/app_config_model.dart';
-import '../../ui/service_elements/last_week/temp.dart';
+import '../../ui/service_elements/last_week/last_week_view.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -303,7 +303,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.PowerPlayHome:
-          _addPageData(const LastWeekOverView2(), PowerPlayHomeConfig);
+          _addPageData(const LastWeekOverView(), PowerPlayHomeConfig);
           break;
 
         case Pages.PowerPlayHowItWorks:
