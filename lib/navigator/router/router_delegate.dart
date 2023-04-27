@@ -49,7 +49,6 @@ import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referra
 import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
-import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -64,6 +63,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/enums/app_config_keys.dart';
 import '../../core/model/app_config_model.dart';
+import '../../ui/service_elements/last_week/temp.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -303,7 +303,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.PowerPlayHome:
-          _addPageData(const LastWeekOverView(), PowerPlayHomeConfig);
+          _addPageData(const LastWeekOverView2(), PowerPlayHomeConfig);
           break;
 
         case Pages.PowerPlayHowItWorks:

@@ -1,4 +1,6 @@
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LastWeekBg extends StatelessWidget {
@@ -28,6 +30,56 @@ class LastWeekBg extends StatelessWidget {
               ),
             ),
             child: child,
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              color: const Color(0xff232326),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding12,
+                  ),
+                  Text(
+                    'Start saving to not miss out on your rewards next week',
+                    style: TextStyles.sourceSans.body3,
+                  ),
+                  Container(
+                    height: SizeConfig.navBarHeight * 0.8,
+                    margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    width: SizeConfig.screenWidth,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: const [0.1, 1],
+                          colors: [
+                            UiConstants.kBuyTicketSaveButton,
+                            UiConstants.kBuyTicketSaveButton.withOpacity(0.4),
+                          ],
+                        ),
+                        // color: UiConstants.kBuyTicketSaveButton,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      // color:  UiConstants.kBuyTicketSaveButton,
+                      onPressed: () {},
+                      child: Center(
+                        child: Text(
+                          'SAVE NOW',
+                          style:
+                              TextStyles.rajdhaniB.body1.colour(Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           Positioned(
               top: SizeConfig.padding64,

@@ -8,8 +8,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class LastWeekOverView extends StatelessWidget {
-  const LastWeekOverView({
+class LastWeekOverView2 extends StatelessWidget {
+  const LastWeekOverView2({
     Key? key,
     // required this.model,
   }) : super(key: key);
@@ -60,153 +60,110 @@ class LastWeekOverView extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: SizeConfig.padding32,
+                  height: SizeConfig.padding24,
                 ),
                 Expanded(
                   child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              width:
-                                  SizeConfig.padding90 + SizeConfig.padding10,
+                              width: SizeConfig.screenWidth! * 0.389,
                               padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding12,
-                                  horizontal: SizeConfig.padding12),
+                                  vertical: SizeConfig.padding14,
+                                  horizontal: SizeConfig.padding20),
                               decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: const Color(0xff919193)),
                                 color: Colors.black.withOpacity(0.28),
                                 borderRadius: BorderRadius.circular(
                                     SizeConfig.roundness8),
                               ),
                               child: Column(
                                 children: [
-                                  Text(
-                                    '10L+',
-                                    style: TextStyles.sourceSansSB.title5,
-                                  ),
                                   SizedBox(
                                     height: SizeConfig.padding8,
                                   ),
+                                  SvgPicture.asset(
+                                    'assets/svg/gold_icon.svg',
+                                    height: SizeConfig.padding54,
+                                    // width: SizeConfig.padding80,
+                                  ),
                                   Text(
-                                    'Investments\nfrom users',
+                                    'Total Investments',
                                     style: TextStyles.sourceSans.body3
-                                        .colour(Colors.white.withOpacity(0.5)),
+                                        .colour(const Color(0xffFFD979)),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding4,
+                                  ),
+                                  Text(
+                                    '₹10,23,450',
+                                    style: TextStyles.rajdhaniSB.title5
+                                        .colour(Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding16,
+                                  ),
+                                  Text(
+                                    'Total Returns',
+                                    style: TextStyles.sourceSans.body3
+                                        .colour(const Color(0xff62E3C4)),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding4,
+                                  ),
+                                  Text(
+                                    '₹1,02,350',
+                                    style: TextStyles.rajdhaniSB.title5
+                                        .colour(Colors.white),
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
                               ),
-                            ),
-                            Container(
-                              width:
-                                  SizeConfig.padding90 + SizeConfig.padding10,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding12,
-                                  horizontal: SizeConfig.padding12),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.28),
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness8),
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    '₹50K',
-                                    style: TextStyles.sourceSansSB.title5,
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding8,
-                                  ),
-                                  Text(
-                                    'rewards\ndistributed',
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(Colors.white.withOpacity(0.5)),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width:
-                                  SizeConfig.padding90 + SizeConfig.padding10,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding12,
-                                  horizontal: SizeConfig.padding12),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.28),
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness8),
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    '₹30K',
-                                    style: TextStyles.sourceSansSB.title5,
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding8,
-                                  ),
-                                  Text(
-                                    'returns\nearned',
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(Colors.white.withOpacity(0.5)),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding20,
-                        ),
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/svg/tambola_icon.svg',
-                              height: SizeConfig.padding32,
-                              width: SizeConfig.padding28,
                             ),
                             SizedBox(
-                              width: SizeConfig.padding12,
+                              width: SizeConfig.padding10,
                             ),
-                            Text(
-                              '20 Users won Tambola Corners & One Rows',
-                              style: TextStyles.sourceSans.body3
-                                  .colour(const Color(0xffACACAC)),
+                            Expanded(
+                              child: SizedBox(
+                                child: Column(
+                                  children: [
+                                    const AssetContainer(
+                                      icon: 'assets/svg/digitalgold.svg',
+                                      title: 'Digital Gold',
+                                      value: '₹10,23,450',
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding6,
+                                    ),
+                                    const AssetContainer(
+                                      icon: 'assets/svg/fello_flo.svg',
+                                      title: 'Fello Flo',
+                                      value: '₹10,23,450',
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding6,
+                                    ),
+                                    const AssetContainer(
+                                      icon: 'assets/svg/tambola_card_asset.svg',
+                                      title: 'Tambola prizes',
+                                      value: '₹10,000',
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
                         SizedBox(
-                          height: SizeConfig.padding10,
-                        ),
-                        Row(
-                          children: [
-                            SvgPicture.network(
-                              Assets.powerPlayMain,
-                              height: SizeConfig.padding32,
-                              width: SizeConfig.padding32,
-                            ),
-                            SizedBox(
-                              width: SizeConfig.padding14,
-                            ),
-                            Text(
-                              '20 Users won Tambola Corners & One Rows',
-                              style: TextStyles.sourceSans.body3
-                                  .colour(const Color(0xffACACAC)),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding32,
-                        ),
-                        Container(
-                          height: 1,
-                          color: Colors.white.withOpacity(0.5),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding32,
+                          height: SizeConfig.padding40,
                         ),
                         Center(
                           child: Text(
@@ -225,6 +182,8 @@ class LastWeekOverView extends StatelessWidget {
                                     vertical: SizeConfig.padding16,
                                     horizontal: SizeConfig.padding20),
                                 decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: const Color(0xff919193)),
                                   color: Colors.black.withOpacity(0.50),
                                   borderRadius: BorderRadius.circular(
                                       SizeConfig.roundness8),
@@ -270,6 +229,8 @@ class LastWeekOverView extends StatelessWidget {
                                         vertical: SizeConfig.padding14,
                                         horizontal: SizeConfig.padding14),
                                     decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color(0xff919193)),
                                       color: Colors.black.withOpacity(0.50),
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness8),
@@ -288,9 +249,7 @@ class LastWeekOverView extends StatelessWidget {
                                         ),
                                         Text(
                                           '₹340',
-                                          style: TextStyles.rajdhaniSB.body1
-                                              .colour(UiConstants
-                                                  .kTextFieldTextColor),
+                                          style: TextStyles.rajdhaniSB.body1,
                                         ),
                                       ],
                                     ),
@@ -303,6 +262,8 @@ class LastWeekOverView extends StatelessWidget {
                                         vertical: SizeConfig.padding14,
                                         horizontal: SizeConfig.padding14),
                                     decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color(0xff919193)),
                                       color: Colors.black.withOpacity(0.50),
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness8),
@@ -321,9 +282,7 @@ class LastWeekOverView extends StatelessWidget {
                                         ),
                                         Text(
                                           '11.2%',
-                                          style: TextStyles.rajdhaniSB.body1
-                                              .colour(UiConstants
-                                                  .kTextFieldTextColor),
+                                          style: TextStyles.rajdhaniSB.body1,
                                         ),
                                       ],
                                     ),
@@ -337,26 +296,21 @@ class LastWeekOverView extends StatelessWidget {
                           height: SizeConfig.padding16,
                         ),
                         const WeekReportRowView(
-                          title: 'Your Tambola tickets won',
+                          title: 'Congratulations!',
+                          subTitle: 'Your Tambola ticket won corners',
                           value: '₹2000',
                           icon: 'assets/svg/tambola_card_asset.svg',
+                          backgroundColor: Color(0xff11444F),
                         ),
                         SizedBox(
-                          height: SizeConfig.padding8,
+                          height: SizeConfig.padding12,
                         ),
                         const WeekReportRowView(
-                          title: 'Invested in Happy Hours',
+                          title: 'Happy Hour',
+                          subTitle: 'You got FREE Tambola Tickets',
                           value: '2/5',
                           icon: 'assets/svg/gift_icon.svg',
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding8,
-                        ),
-                        const WeekReportRowView(
-                          title: 'PowerPlay Predictions Made',
-                          value: '5',
-                          icon: Assets.powerPlayMain,
-                          isNetwork: true,
+                          backgroundColor: Color(0xff975B4D),
                         ),
                         SizedBox(
                           height: SizeConfig.padding20,
@@ -397,39 +351,6 @@ class LastWeekOverView extends StatelessWidget {
                 ),
               ],
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: SizeConfig.navBarHeight * 0.8,
-                margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                width: SizeConfig.screenWidth,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: const [0.1, 1],
-                      colors: [
-                        UiConstants.kBuyTicketSaveButton,
-                        UiConstants.kBuyTicketSaveButton.withOpacity(0.4),
-                      ],
-                    ),
-                    // color: UiConstants.kBuyTicketSaveButton,
-                    borderRadius: BorderRadius.circular(5)),
-                child: MaterialButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  // color:  UiConstants.kBuyTicketSaveButton,
-                  onPressed: () {},
-                  child: Center(
-                    child: Text(
-                      'START SAVING NOW',
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -438,45 +359,114 @@ class LastWeekOverView extends StatelessWidget {
 }
 
 class WeekReportRowView extends StatelessWidget {
-  const WeekReportRowView({Key? key,
-    required this.title,
-    required this.value,
-    required this.icon,
-    this.isNetwork = false})
+  const WeekReportRowView(
+      {Key? key,
+      required this.title,
+      required this.value,
+      required this.icon,
+      required this.subTitle,
+      required this.backgroundColor})
       : super(key: key);
 
   final String title;
+  final String subTitle;
   final String value;
   final String icon;
-  final bool isNetwork;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: SizeConfig.padding70,
-          child: isNetwork
-              ? SvgPicture.network(
+    return Container(
+      padding: EdgeInsets.symmetric(
+          vertical: SizeConfig.padding12, horizontal: SizeConfig.padding8),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+      ),
+      child: Row(
+        children: [
+          SvgPicture.asset(
             icon,
-            height: SizeConfig.padding32,
-            // width: SizeConfig.padding32,
-          )
-              : SvgPicture.asset(
-            icon,
-            height: SizeConfig.padding32,
+            width: SizeConfig.padding64,
+            fit: BoxFit.fitWidth,
           ),
-        ),
-        Text(
-          title,
-          style: TextStyles.sourceSans.body3
-              .colour(UiConstants.kTextFieldTextColor),
-        ),
-        const Spacer(),
-        Text(value.toString(), style: TextStyles.rajdhaniSB.body2),
-      ],
+          SizedBox(
+            width: SizeConfig.padding12,
+          ),
+          SizedBox(
+            width: SizeConfig.screenWidth! * 0.35,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyles.rajdhaniSB.body2,
+                ),
+                Text(subTitle, style: TextStyles.sourceSans.body3),
+              ],
+            ),
+          ),
+          const Spacer(),
+          Text(value, style: TextStyles.rajdhaniSB.title4),
+          SizedBox(
+            width: SizeConfig.padding8,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class AssetContainer extends StatelessWidget {
+  const AssetContainer(
+      {Key? key, required this.icon, required this.title, required this.value})
+      : super(key: key);
+
+  final String icon;
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+          vertical: SizeConfig.padding8, horizontal: SizeConfig.padding14),
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color(0xff919193)),
+        color: Colors.black.withOpacity(0.28),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                icon,
+                height: SizeConfig.padding28,
+              ),
+              // SizedBox(
+              //   height: SizeConfig.padding4,
+              // ),
+              Text(
+                title,
+                style: TextStyles.sourceSans.body3
+                    .colour(Colors.white.withOpacity(0.5)),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          Text(
+            value,
+            style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
+            textAlign: TextAlign.start,
+            maxLines: 2,
+          ),
+        ],
+      ),
     );
   }
 }
