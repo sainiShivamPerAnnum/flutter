@@ -1,29 +1,19 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
-import 'package:felloapp/feature/tambola/src/models/tambola_ticket_model.dart';
+import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
-import 'package:felloapp/feature/tambola/src/ui/weekly_results_views/weekly_result.dart';
-import 'package:felloapp/feature/tambola/src/utils/ticket_odds_calculator.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
@@ -44,7 +34,8 @@ class TambolaService extends ChangeNotifier {
   GameModel? tambolaGameData;
   PrizesModel? tambolaPrizes;
   List<Winners>? pastWeekWinners;
-  List<TambolaTicketModel>? tambolaTickets;
+  // List<TambolaTicketModel>? tambolaTickets;
+  TambolaBestTicketsModel? bestTickets;
   Map<String, int> ticketCodeWinIndex = {};
   int activeTambolaCardCount = 0;
   int _matchedTicketCount = 0;
@@ -99,7 +90,7 @@ class TambolaService extends ChangeNotifier {
     _weeklyPicks = null;
     _todaysPicks = null;
     matchedTicketCount = 0;
-    tambolaTickets = null;
+    // tambolaTickets = null;
     log("Tambola service Dispose called");
   }
 
@@ -119,8 +110,8 @@ class TambolaService extends ChangeNotifier {
   }
 
   Future<int> getTambolaTicketsCount() async {
-    await getTambolaTickets();
-    return tambolaTickets?.length ?? 0;
+    await getBestTambolaTickets();
+    return bestTickets?.data != null ? 1 : 0;
   }
 
   Future<void> getPrizes({bool refresh = false}) async {
@@ -141,10 +132,19 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getTambolaTickets() async {
-    final ticketsResponse = await _tambolaRepo.getTickets();
+  // Future<void> getTambolaTickets() async {
+  //   final ticketsResponse = await _tambolaRepo.getTickets();
+  //   if (ticketsResponse.isSuccess()) {
+  //     tambolaTickets = ticketsResponse.model;
+  //   } else {
+  //     //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE
+  //   }
+  // }
+
+  Future<void> getBestTambolaTickets() async {
+    final ticketsResponse = await _tambolaRepo.getBestTickets();
     if (ticketsResponse.isSuccess()) {
-      tambolaTickets = ticketsResponse.model;
+      bestTickets = ticketsResponse.model;
     } else {
       //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE
     }
@@ -211,88 +211,88 @@ class TambolaService extends ChangeNotifier {
     }
   }
 
-  Future<void> examineTicketsForWins() async {
-    if (tambolaTickets == null ||
-        tambolaTickets!.isEmpty ||
-        weeklyPicks == null ||
-        weeklyPicks!.toList().length != 7 * 3 ||
-        weeklyPicks!.toList().contains(-1) ||
-        DateTime.now().weekday != 7) {
-      _logger.i('Testing is not ready yet');
-      return;
-    }
+  // Future<void> examineTicketsForWins() async {
+  //   if (bestTickets == null ||
+  //       bestTickets?.data == null ||
+  //       weeklyPicks == null ||
+  //       weeklyPicks!.toList().length != 7 * 3 ||
+  //       weeklyPicks!.toList().contains(-1) ||
+  //       DateTime.now().weekday != 7) {
+  //     _logger.i('Testing is not ready yet');
+  //     return;
+  //   }
 
-    for (final boardObj in tambolaTickets!) {
-      if (getCornerOdds(
-              boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-          0) {
-        if (boardObj.getTicketNumber() != 'NA') {
-          ticketCodeWinIndex[boardObj.getTicketNumber()] =
-              Constants.CORNERS_COMPLETED;
-        }
-      }
-      if (getOneRowOdds(
-              boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-          0) {
-        if (boardObj.getTicketNumber() != 'NA') {
-          ticketCodeWinIndex[boardObj.getTicketNumber()] =
-              Constants.ONE_ROW_COMPLETED;
-        }
-      }
-      if (getTwoRowOdds(
-              boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-          0) {
-        if (boardObj.getTicketNumber() != 'NA') {
-          ticketCodeWinIndex[boardObj.getTicketNumber()] =
-              Constants.TWO_ROWS_COMPLETED;
-        }
-      }
-      if (getFullHouseOdds(
-              boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-          0) {
-        if (boardObj.getTicketNumber() != 'NA') {
-          ticketCodeWinIndex[boardObj.getTicketNumber()] =
-              Constants.FULL_HOUSE_COMPLETED;
-        }
-      }
-    }
-    showWinScreen = PreferenceHelper.getBool(
-        PreferenceHelper.SHOW_TAMBOLA_PROCESSING,
-        def: true);
+  //   for (final boardObj in tambolaTickets!) {
+  //     if (getCornerOdds(
+  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
+  //         0) {
+  //       if (boardObj.getTicketNumber() != 'NA') {
+  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
+  //             Constants.CORNERS_COMPLETED;
+  //       }
+  //     }
+  //     if (getOneRowOdds(
+  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
+  //         0) {
+  //       if (boardObj.getTicketNumber() != 'NA') {
+  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
+  //             Constants.ONE_ROW_COMPLETED;
+  //       }
+  //     }
+  //     if (getTwoRowOdds(
+  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
+  //         0) {
+  //       if (boardObj.getTicketNumber() != 'NA') {
+  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
+  //             Constants.TWO_ROWS_COMPLETED;
+  //       }
+  //     }
+  //     if (getFullHouseOdds(
+  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
+  //         0) {
+  //       if (boardObj.getTicketNumber() != 'NA') {
+  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
+  //             Constants.FULL_HOUSE_COMPLETED;
+  //       }
+  //     }
+  //   }
+  //   showWinScreen = PreferenceHelper.getBool(
+  //       PreferenceHelper.SHOW_TAMBOLA_PROCESSING,
+  //       def: true);
 
-    double totalInvestedPrinciple =
-        locator<UserService>().userFundWallet!.augGoldPrinciple;
-    isEligible = totalInvestedPrinciple >=
-        BaseUtil.toInt(BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT));
+  //   double totalInvestedPrinciple =
+  //       locator<UserService>().userFundWallet!.augGoldPrinciple;
+  //   isEligible = totalInvestedPrinciple >=
+  //       BaseUtil.toInt(BaseRemoteConfig.remoteConfig
+  //           .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT));
 
-    isEligible = true;
-    _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
+  //   isEligible = true;
+  //   _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
-    if (showWinScreen) {
-      AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: TWeeklyResultPageConfig,
-        widget: WeeklyResult(
-          winningsMap: ticketCodeWinIndex,
-          isEligible: isEligible,
-        ),
-      );
-    }
-    showWinScreen = false;
-    S locale = locator<S>();
-    if (ticketCodeWinIndex.isNotEmpty) {
-      BaseUtil.showPositiveAlert(
-        locale.tambolaTicketWinAlert1,
-        locale.tambolaTicketWinAlert2,
-      );
-    }
+  //   if (showWinScreen) {
+  //     AppState.delegate!.appState.currentAction = PageAction(
+  //       state: PageState.addWidget,
+  //       page: TWeeklyResultPageConfig,
+  //       widget: WeeklyResult(
+  //         winningsMap: ticketCodeWinIndex,
+  //         isEligible: isEligible,
+  //       ),
+  //     );
+  //   }
+  //   showWinScreen = false;
+  //   S locale = locator<S>();
+  //   if (ticketCodeWinIndex.isNotEmpty) {
+  //     BaseUtil.showPositiveAlert(
+  //       locale.tambolaTicketWinAlert1,
+  //       locale.tambolaTicketWinAlert2,
+  //     );
+  //   }
 
-    if (DateTime.now().weekday == DateTime.sunday &&
-        DateTime.now().hour >= 18) {
-      notifyListeners();
-    }
-    unawaited(PreferenceHelper.setBool(
-        PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false));
-  }
+  //   if (DateTime.now().weekday == DateTime.sunday &&
+  //       DateTime.now().hour >= 18) {
+  //     notifyListeners();
+  //   }
+  //   unawaited(PreferenceHelper.setBool(
+  //       PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false));
+  // }
 }

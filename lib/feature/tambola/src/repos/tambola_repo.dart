@@ -9,6 +9,7 @@ import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
+import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_ticket_model.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/date_helper.dart';
@@ -23,6 +24,37 @@ class TambolaRepo extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://qv53yko0b0.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://7icbm6j9e7.execute-api.ap-south-1.amazonaws.com/prod';
+
+  Future<ApiResponse<TambolaBestTicketsModel>> getBestTickets() async {
+    TambolaBestTicketsModel? bestTickets;
+    try {
+      final uid = userService.baseUser!.uid;
+      final token = await getBearerToken();
+
+      // await preProcessTambolaTickets();
+
+      final response = await APIService.instance.getData(
+        ApiPath.tambolaBestTickets(uid!),
+        token: token,
+        queryParams: lastTimeStamp != null
+            ? {
+                'lastTimestamp':
+                    lastTimeStamp?.toDate().toUtc().toIso8601String()
+              }
+            : {},
+        cBaseUrl: _baseUrl,
+      );
+      bestTickets = TambolaBestTicketsModel.fromJson(response);
+      // await postProcessTambolaTickets(response);
+      return ApiResponse<TambolaBestTicketsModel>(
+        model: bestTickets,
+        code: 200,
+      );
+    } catch (e) {
+      logger.e('get all tambola tickets $e');
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 
   Future<ApiResponse<List<TambolaTicketModel>>> getTickets() async {
     try {

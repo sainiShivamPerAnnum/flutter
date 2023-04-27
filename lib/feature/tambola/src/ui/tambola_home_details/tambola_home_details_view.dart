@@ -186,10 +186,9 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                             onPressed: () {
                               locator<AnalyticsService>().track(
                                   eventName: (locator<TambolaService>()
-                                                  .tambolaTickets
-                                                  ?.length ??
-                                              0) >=
-                                          1
+                                              .bestTickets
+                                              ?.data !=
+                                          null)
                                       ? AnalyticsEvents.tambolaSaveTapped
                                       : AnalyticsEvents
                                           .tambolaGetFirstTicketTapped,
@@ -200,11 +199,12 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                                             .getTimeLeftForTambolaDraw(),
                                     "Tambola Tickets Owned": AnalyticsProperties
                                         .getTambolaTicketCount(),
-                                    "Number of Tickets":
-                                        locator<TambolaService>()
-                                                .tambolaTickets
-                                                ?.length ??
-                                            0,
+                                    // TODO: UPDATE AFTER TAMBOLA API UPDATE
+                                    // "Number of Tickets":
+                                    //     locator<TambolaService>()
+                                    //             .tambolaTickets
+                                    //             ?.length ??
+                                    //         0,
                                     "Amount": 500,
                                   }));
                               // widget.model.updateTicketSavedAmount(1);

@@ -1,10 +1,6 @@
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
-import 'package:felloapp/feature/tambola/src/models/tambola_ticket_model.dart';
+import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
-import 'package:felloapp/feature/tambola/src/ui/tambola_all_tickets/tambola_all_tickets_view.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -28,22 +24,23 @@ class TicketSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Selector<TambolaService,
-        Tuple2<List<TambolaTicketModel>?, DailyPick?>>(
+        Tuple2<TambolaBestTicketsModel?, DailyPick?>>(
       selector: (_, tambolaService) => Tuple2(
-        tambolaService.tambolaTickets,
+        tambolaService.bestTickets,
         tambolaService.weeklyPicks,
       ),
       builder: (ctx, data, child) => Column(
         children: [
           TicketHeader(
-            activeTambolaCardCount: data.item1?.length ?? 0,
+            // TODO: UPDATE AFTER TAMBOLA API UPDATE
+            activeTambolaCardCount: data.item1?.data?.fullHouse?.length ?? 0,
             getTicketsTapped: getTicketsTapped,
           ),
           SizedBox(
             height: SizeConfig.padding6,
           ),
           TicketsView(
-            tickets: data.item1 ?? [],
+            bestTickets: data.item1,
             // showIndicatorForAll: true,
             weeklyPicks: data.item2 ?? DailyPick.noPicks(),
           ),
@@ -65,16 +62,18 @@ class ViewAllTicketsBar extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
       child: GestureDetector(
-        onTap: () {
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: AllTambolaTicketsPageConfig,
-            widget: AllTambolaTickets(
-              ticketList: locator<TambolaService>().tambolaTickets!,
-              weeklyPicks: picks,
-            ),
-          );
-        },
+        // TODO: UPDATE AFTER TAMBOLA API UPDATE
+
+        // onTap: () {
+        //   AppState.delegate!.appState.currentAction = PageAction(
+        //     state: PageState.addWidget,
+        //     page: AllTambolaTicketsPageConfig,
+        //     widget: AllTambolaTickets(
+        //       ticketList: locator<TambolaService>().tambolaTickets!,
+        //       weeklyPicks: picks,
+        //     ),
+        //   );
+        // },
         child: Container(
           margin:
               EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.06),
