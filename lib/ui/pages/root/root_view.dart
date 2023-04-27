@@ -45,7 +45,7 @@ class Root extends StatelessWidget {
                 const NewSquareBackground(),
                 Column(
                   children: [
-                   const RootAppBar(),
+                    const RootAppBar(),
                     Expanded(
                       child: RefreshIndicator(
                         triggerMode: RefreshIndicatorTriggerMode.onEdge,
@@ -142,7 +142,9 @@ class _RootPageViewState extends State<RootPageView>
 bool _showHappyHour() {
   if (locator<RootController>().currentNavBarItemModel ==
       RootController.tambolaNavBar) {
-    return (locator<TambolaService>().tambolaTickets?.length ?? 0) > 0;
+    //TODO: UPDATE
+    return (locator<TambolaService>().bestTickets?.data?.corners?.length ?? 0) >
+        0;
   }
   return true;
 }

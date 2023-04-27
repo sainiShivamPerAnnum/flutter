@@ -268,7 +268,7 @@ class GoldBuySuccessView extends StatelessWidget {
 
               final _tambolaService = locator<TambolaService>();
               // _tambolaService.weeklyTicksFetched = false;
-              _tambolaService.getTambolaTickets();
+              _tambolaService.getBestTambolaTickets();
 
               _augTxnService!.showGtIfAvailable();
             },

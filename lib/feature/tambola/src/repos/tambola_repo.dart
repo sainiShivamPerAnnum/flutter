@@ -36,12 +36,6 @@ class TambolaRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.tambolaBestTickets(uid!),
         token: token,
-        queryParams: lastTimeStamp != null
-            ? {
-                'lastTimestamp':
-                    lastTimeStamp?.toDate().toUtc().toIso8601String()
-              }
-            : {},
         cBaseUrl: _baseUrl,
       );
       bestTickets = TambolaBestTicketsModel.fromJson(response);
@@ -51,7 +45,7 @@ class TambolaRepo extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger.e('get all tambola tickets $e');
+      logger.e('Failed to get best tambola tickets: $e');
       return ApiResponse.withError(e.toString(), 400);
     }
   }
