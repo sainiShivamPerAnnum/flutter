@@ -1,6 +1,10 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
+import 'package:felloapp/feature/tambola/src/ui/tambola_all_tickets/tambola_all_tickets_view.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -32,8 +36,8 @@ class TicketSection extends StatelessWidget {
       builder: (ctx, data, child) => Column(
         children: [
           TicketHeader(
-            // TODO: UPDATE AFTER TAMBOLA API UPDATE
-            activeTambolaCardCount: data.item1?.data?.fullHouse?.length ?? 0,
+            activeTambolaCardCount:
+                data.item1?.data?.getTotalTicketsLength() ?? 0,
             getTicketsTapped: getTicketsTapped,
           ),
           SizedBox(
@@ -56,24 +60,22 @@ class ViewAllTicketsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DailyPick picks =
-        locator<TambolaService>().weeklyPicks ?? DailyPick.noPicks();
-
     return Padding(
       padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
       child: GestureDetector(
-        // TODO: UPDATE AFTER TAMBOLA API UPDATE
-
-        // onTap: () {
-        //   AppState.delegate!.appState.currentAction = PageAction(
-        //     state: PageState.addWidget,
-        //     page: AllTambolaTicketsPageConfig,
-        //     widget: AllTambolaTickets(
-        //       ticketList: locator<TambolaService>().tambolaTickets!,
-        //       weeklyPicks: picks,
-        //     ),
-        //   );
-        // },
+        onTap: () {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: AllTambolaTicketsPageConfig,
+            widget: AllTambolaTickets(
+              ticketList:
+                  locator<TambolaService>().bestTickets?.data?.allTickets() ??
+                      [],
+              weeklyPicks:
+                  locator<TambolaService>().weeklyPicks ?? DailyPick.noPicks(),
+            ),
+          );
+        },
         child: Container(
           margin:
               EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.06),

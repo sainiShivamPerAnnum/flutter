@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -176,7 +177,7 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
           Row(
             children: [
               Container(
-                width: SizeConfig.screenWidth! * 0.30,
+                // width: SizeConfig.screenWidth! * 0.30,
                 decoration: BoxDecoration(
                   // color: const Color(0xff000000).withOpacity(0.5),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness40),
@@ -186,9 +187,9 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    GestureDetector(
-                      onTap: reduceTicket,
-                      child: Icon(
+                    IconButton(
+                      onPressed: reduceTicket,
+                      icon: Icon(
                         Icons.remove,
                         color: Colors.white,
                         size: SizeConfig.padding16,
@@ -199,16 +200,13 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(
-                            width: 2,
-                          ),
-                          SvgPicture.asset(
-                            'assets/svg/ticket_icon.svg',
-                            height: 12,
-                          ),
+                          // SvgPicture.asset(
+                          //   'assets/svg/ticket_icon.svg',
+                          //   height: 12,
+                          // ),
+                          // SizedBox(width: SizeConfig.padding4),
                           SizedBox(
-                            width: SizeConfig.screenHeight! * 0.03,
-                            height: SizeConfig.padding35,
+                            width: SizeConfig.screenWidth! * 0.03,
                             child: Center(
                               child: TextField(
                                 style: TextStyles.sourceSans.body2
@@ -242,9 +240,9 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
                     ),
 
                     // Spacer(),
-                    GestureDetector(
-                      onTap: addTicket,
-                      child: Icon(
+                    IconButton(
+                      onPressed: addTicket,
+                      icon: Icon(
                         Icons.add,
                         size: SizeConfig.padding16,
                         color: Colors.white,
@@ -261,29 +259,32 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
                 style: TextStyles.sourceSansB.body2.colour(Colors.white),
               ),
               const Spacer(),
-              Container(
-                width: SizeConfig.screenWidth! * 0.25,
-                height: SizeConfig.screenHeight! * 0.05,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: UiConstants.primaryColor,
-                ),
-                child: MaterialButton(
-                  // padding: EdgeInsets.zero,
-                  onPressed: () {
-                    BaseUtil.openDepositOptionsModalSheet(
-                        amount: ticketCost,
-                        subtitle:
-                            'Save ₹500 in any of the asset & get 1 Free Tambola Ticket',
-                        timer: 0);
-                  },
-                  child: Center(
-                    child: Text(
-                      'SAVE',
-                      style: TextStyles.rajdhaniB.body1,
-                    ),
-                  ),
-                ),
+              AppPositiveBtn(
+                width: SizeConfig.screenWidth! * 0.22,
+
+                height: SizeConfig.screenWidth! * 0.14,
+                // decoration: const BoxDecoration(
+                //   borderRadius: BorderRadius.all(Radius.circular(10)),
+                //   color: UiConstants.primaryColor,
+                // ),
+                onPressed: () {
+                  BaseUtil.openDepositOptionsModalSheet(
+                      amount: ticketCost,
+                      subtitle:
+                          'Save ₹500 in any of the asset & get 1 Free Tambola Ticket',
+                      timer: 0);
+                },
+                btnText: "SAVE",
+                // child: MaterialButton(
+                //   // padding: EdgeInsets.zero,
+
+                //   child: Center(
+                //     child: Text(
+                //       'SAVE',
+                //       style: TextStyles.rajdhaniB.body1,
+                //     ),
+                //   ),
+                // ),
               ),
             ],
           ),

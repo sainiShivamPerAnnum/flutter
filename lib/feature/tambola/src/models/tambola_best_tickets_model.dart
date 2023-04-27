@@ -34,4 +34,20 @@ class Data {
       fullHouse = TambolaTicketModel.helper.fromMapArray(json['fullHouse']);
     }
   }
+
+  int getTotalTicketsLength() {
+    return (corners?.length ?? 0) +
+        (oneRow?.length ?? 0) +
+        (twoRows?.length ?? 0) +
+        (fullHouse?.length ?? 0);
+  }
+
+  List<TambolaTicketModel> allTickets() {
+    return [
+      ...corners ?? [],
+      ...oneRow ?? [],
+      ...twoRows ?? [],
+      ...fullHouse ?? [],
+    ];
+  }
 }

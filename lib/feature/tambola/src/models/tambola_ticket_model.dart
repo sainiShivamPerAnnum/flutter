@@ -32,7 +32,7 @@ class TambolaTicketModel {
 
   factory TambolaTicketModel.fromMap(Map<String, dynamic> map) {
     return TambolaTicketModel(
-      assignedTime: TimestampModel.fromMap(map['createdOn']),
+      assignedTime: TimestampModel.fromMap(map['assignedOn']),
       val: map['tval'] ?? '',
       id: map['tid'] ?? 0,
       weekCode: map['week_code'] ?? 0,
@@ -109,7 +109,7 @@ class TambolaTicketModel {
     return tambolaBoard;
   }
 
-  String getTicketNumber() => id;
+  String getTicketNumber() => id.split('-').last;
 
   // int get generatedDayCode {
   //   return DateTime.monday;

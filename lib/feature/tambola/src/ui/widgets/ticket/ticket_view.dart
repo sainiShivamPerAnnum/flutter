@@ -132,35 +132,44 @@ class _TicketsViewState extends State<TicketsView>
     // Widget buildObject = NoTicketWidget();
     final bestTicketsData = widget.bestTickets?.data;
     if (bestTicketsData == null) return NoTicketWidget();
-    List<TambolaTicketModel>? tickets;
+    List<TambolaTicketModel> tickets = [];
     switch (_tabController.index) {
       case 0:
-        if (bestTicketsData?.fullHouse != null) {
-          tickets = bestTicketsData!.fullHouse!;
+        if (bestTicketsData.oneRow != null) {
+          tickets.addAll(bestTicketsData.oneRow!);
+        }
+        if (bestTicketsData.twoRows != null) {
+          tickets.addAll(bestTicketsData.twoRows!);
+        }
+        if (bestTicketsData.corners != null) {
+          tickets.addAll(bestTicketsData.corners!);
+        }
+        if (bestTicketsData.fullHouse != null) {
+          tickets.addAll(bestTicketsData.fullHouse!);
         }
         break;
       case 1:
-        if (bestTicketsData?.fullHouse != null) {
-          tickets = bestTicketsData!.fullHouse!;
+        if (bestTicketsData.oneRow != null) {
+          tickets.addAll(bestTicketsData.oneRow!);
         }
         break;
       case 2:
-        if (bestTicketsData?.fullHouse != null) {
-          tickets = bestTicketsData!.fullHouse!;
+        if (bestTicketsData.twoRows != null) {
+          tickets.addAll(bestTicketsData.twoRows!);
         }
         break;
       case 3:
-        if (bestTicketsData?.fullHouse != null) {
-          tickets = bestTicketsData!.fullHouse!;
+        if (bestTicketsData.corners != null) {
+          tickets.addAll(bestTicketsData.corners!);
         }
         break;
       case 4:
-        if (bestTicketsData?.fullHouse != null) {
-          tickets = bestTicketsData!.fullHouse!;
+        if (bestTicketsData.fullHouse != null) {
+          tickets.addAll(bestTicketsData.fullHouse!);
         }
         break;
     }
-    if (tickets != null) {
+    if (tickets.isNotEmpty) {
       return PageViewWithIndicator(
           showIndicator: true,
           children: tickets
