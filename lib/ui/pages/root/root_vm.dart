@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -31,6 +32,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -70,6 +72,7 @@ class RootViewModel extends BaseViewModel {
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
+  bool fetchCampaign = true;
 
   // final WinnerService? winnerService = locator<WinnerService>();
   final ReferralRepo _refRepo = locator<ReferralRepo>();
@@ -120,7 +123,7 @@ class RootViewModel extends BaseViewModel {
 
   Future<void> initialize() async {
     WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) async {
+          (timeStamp) async {
         await _userService.userBootUpEE();
 
         if (AppState.isFirstTime) {
@@ -136,7 +139,30 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         _initAdhocNotifications();
-        if (!AppState.isFirstTime) showMarketingCampings();
+
+        if (DateTime.now().weekday == DateTime.monday &&
+            !PreferenceHelper.getBool(
+                PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED)) {
+          Future.delayed(const Duration(seconds: 3), () {
+            AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.addWidget,
+              page: LastWeekOverviewConfig,
+              widget: const LastWeekOverView(),
+            );
+          });
+          fetchCampaign = false;
+          unawaited(PreferenceHelper.setBool(
+              PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
+        }
+
+        if (!AppState.isFirstTime && fetchCampaign) {
+          showMarketingCampings();
+        }
+
+        if (DateTime.now().weekday != DateTime.monday) {
+          unawaited(PreferenceHelper.setBool(
+              PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, false));
+        }
       },
     );
   }
@@ -188,7 +214,7 @@ class RootViewModel extends BaseViewModel {
           topLeft: const Radius.circular(30.0),
           topRight: Radius.circular(SizeConfig.roundness12)),
       backgroundColor:
-          UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+      UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
       content: SecurityModalSheet(),
     );
     _fcmHandler.addIncomingMessageListener((valueMap) {
@@ -201,9 +227,9 @@ class RootViewModel extends BaseViewModel {
 
   Future<void> checkForBootUpAlerts() async {
     bool updateAvailable =
-        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
+    PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
     bool isMsgNoticeAvailable =
-        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
+    PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
     if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
     if (updateAvailable) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
@@ -214,7 +240,7 @@ class RootViewModel extends BaseViewModel {
         content: ConfirmationDialog(
           title: "App Update Available",
           description:
-              "A new version of the app is available. Update now to enjoy the hassle free experience.",
+          "A new version of the app is available. Update now to enjoy the hassle free experience.",
           buttonText: "Update Now",
           cancelBtnText: "Not now",
           confirmAction: () {
@@ -282,7 +308,7 @@ class RootViewModel extends BaseViewModel {
         _userService.baseUser!.isAugmontOnboarded! &&
         _userService.userFundWallet!.augGoldQuantity > 0 &&
         _userService.baseUser!.userPreferences
-                .getPreference(Preferences.APPLOCK) ==
+            .getPreference(Preferences.APPLOCK) ==
             0) {
       canExecuteStartupNotification = false;
       Future.delayed(const Duration(seconds: 2), () {
@@ -367,7 +393,7 @@ class RootViewModel extends BaseViewModel {
         //5. Clear all the caches
         if (_userService.userBootUp!.data!.cache!.keys != null) {
           for (String id
-              in _userService.userBootUp!.data!.cache!.keys as List<String>) {
+          in _userService.userBootUp!.data!.cache!.keys as List<String>) {
             CacheService.invalidateByKey(id);
           }
         }

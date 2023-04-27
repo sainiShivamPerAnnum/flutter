@@ -179,7 +179,7 @@ class MarketingEventHandlerService
           backgroundColor: Colors.transparent,
           hapticVibrate: true,
           isScrollControlled: true,
-          content: DailyAppCheckInEventModalSheet(),
+          content: const DailyAppCheckInEventModalSheet(),
         );
       }
     } else {
@@ -213,7 +213,7 @@ class MarketingEventHandlerService
     _isDailyAppBonusClaimed = true;
     isDailyAppBonusClaimInProgress = false;
     showModalsheet = false;
-    Future.delayed(Duration(milliseconds: 250), () {
+    Future.delayed(const Duration(milliseconds: 250), () {
       _gtService.showInstantScratchCardView(
         source: GTSOURCE.game,
         onJourney: true,

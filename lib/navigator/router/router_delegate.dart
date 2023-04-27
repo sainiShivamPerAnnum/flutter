@@ -174,7 +174,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       {int? index}) {
     AppState.screenStack
         .insert(index ?? AppState.screenStack.length, ScreenItem.page);
-    print("Inserted a page ${pageConfig.key} to Index $index");
+    debugPrint("Inserted a page ${pageConfig.key} to Index $index");
     log("Current Stack: ${AppState.screenStack}");
     _analytics!.trackScreen(screen: pageConfig.name);
     _pages.insert(
@@ -186,7 +186,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void _addPageData(Widget child, PageConfiguration pageConfig) {
     AppState.screenStack.add(ScreenItem.page);
-    print("Added a page ${pageConfig.key}");
+    debugPrint("Added a page ${pageConfig.key}");
     log("Current Stack: ${AppState.screenStack}");
     if (pageConfig.name != null && pageConfig.name!.isNotEmpty) {
       _analytics!.trackScreen(screen: pageConfig.name);
@@ -205,10 +205,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (shouldAddPage) {
       switch (pageConfig!.uiPage) {
         case Pages.Splash:
-          _addPageData(LauncherView(), SplashPageConfig);
+          _addPageData(const LauncherView(), SplashPageConfig);
           break;
         case Pages.Login:
-          _addPageData(LoginControllerView(), LoginPageConfig);
+          _addPageData(const LoginControllerView(), LoginPageConfig);
           break;
         case Pages.Root:
           _addPageData(const Root(), RootPageConfig);
