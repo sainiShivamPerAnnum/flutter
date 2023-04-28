@@ -201,7 +201,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                                   "Number of Tickets": locator<TambolaService>()
                                           .bestTickets
                                           ?.data
-                                          ?.getTotalTicketsLength() ??
+                                          ?.totalTicketCount ??
                                       0,
                                   "Amount": 500,
                                 }));

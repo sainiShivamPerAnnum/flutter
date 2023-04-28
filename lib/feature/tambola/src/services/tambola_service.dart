@@ -121,7 +121,7 @@ class TambolaService extends ChangeNotifier {
 
   Future<int> getTambolaTicketsCount() async {
     await getBestTambolaTickets();
-    return bestTickets?.data != null ? 1 : 0;
+    return bestTickets?.data?.totalTicketCount ?? 0;
   }
 
   Future<void> getPrizes({bool refresh = false}) async {

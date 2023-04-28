@@ -36,8 +36,7 @@ class TicketSection extends StatelessWidget {
       builder: (ctx, data, child) => Column(
         children: [
           TicketHeader(
-            activeTambolaCardCount:
-                data.item1?.data?.getTotalTicketsLength() ?? 0,
+            activeTambolaCardCount: data.item1?.data?.totalTicketCount ?? 0,
             getTicketsTapped: getTicketsTapped,
           ),
           SizedBox(

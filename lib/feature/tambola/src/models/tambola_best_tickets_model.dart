@@ -13,14 +13,21 @@ class TambolaBestTicketsModel {
 }
 
 class Data {
+  int? totalTicketCount;
   List<TambolaTicketModel>? corners;
   List<TambolaTicketModel>? oneRow;
   List<TambolaTicketModel>? twoRows;
   List<TambolaTicketModel>? fullHouse;
 
-  Data({this.corners, this.oneRow, this.twoRows, this.fullHouse});
+  Data(
+      {this.totalTicketCount = 0,
+      this.corners,
+      this.oneRow,
+      this.twoRows,
+      this.fullHouse});
 
   Data.fromJson(Map<String, dynamic> json) {
+    totalTicketCount = json['totalTicketCount'] ?? 0;
     if (json['corners'] != null) {
       corners = TambolaTicketModel.helper.fromMapArray(json['corners']);
     }
@@ -35,12 +42,12 @@ class Data {
     }
   }
 
-  int getTotalTicketsLength() {
-    return (corners?.length ?? 0) +
-        (oneRow?.length ?? 0) +
-        (twoRows?.length ?? 0) +
-        (fullHouse?.length ?? 0);
-  }
+  // int getTotalTicketsLength() {
+  //   return (corners?.length ?? 0) +
+  //       (oneRow?.length ?? 0) +
+  //       (twoRows?.length ?? 0) +
+  //       (fullHouse?.length ?? 0);
+  // }
 
   List<TambolaTicketModel> allTickets() {
     return [

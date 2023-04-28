@@ -142,10 +142,7 @@ class _RootPageViewState extends State<RootPageView>
 bool _showHappyHour() {
   if (locator<RootController>().currentNavBarItemModel ==
       RootController.tambolaNavBar) {
-    return (locator<TambolaService>()
-                .bestTickets
-                ?.data
-                ?.getTotalTicketsLength() ??
+    return (locator<TambolaService>().bestTickets?.data?.totalTicketCount ??
             0) >
         0;
   }

@@ -18,6 +18,10 @@ class TambolaHomeViewModel extends BaseViewModel {
     setState(ViewState.Idle);
   }
 
+  Future<void> refresh() async {
+    await init();
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
