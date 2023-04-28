@@ -372,4 +372,6 @@ class Assets {
       "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/KKR.svg";
   static const bangaloreIcon =
       "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/RCB.svg";
+  static const goldCoinIcon =
+      "https://d37gtxigg82zaw.cloudfront.net/weekly-recap/investments.svg";
 }

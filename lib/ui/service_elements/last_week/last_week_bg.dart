@@ -1,3 +1,6 @@
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -48,7 +51,12 @@ class LastWeekBg extends StatelessWidget {
                   ),
                   Container(
                     height: SizeConfig.navBarHeight * 0.8,
-                    margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    margin: EdgeInsets.fromLTRB(
+                      SizeConfig.pageHorizontalMargins,
+                      SizeConfig.pageHorizontalMargins - SizeConfig.padding12,
+                      SizeConfig.pageHorizontalMargins,
+                      SizeConfig.pageHorizontalMargins,
+                    ),
                     width: SizeConfig.screenWidth,
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -67,7 +75,10 @@ class LastWeekBg extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5)),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       // color:  UiConstants.kBuyTicketSaveButton,
-                      onPressed: () {},
+                      onPressed: () {
+                        locator<MarketingEventHandlerService>().getCampaigns();
+                        AppState.backButtonDispatcher!.didPopRoute();
+                      },
                       child: Center(
                         child: Text(
                           'SAVE NOW',

@@ -1,8 +1,11 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_bg.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -74,33 +77,41 @@ class LastWeekOverView extends StatelessWidget {
                         ),
                         Center(
                           child: Text(
-                            'Ajay’s Weekly Report',
+                            model.user == null
+                                ? "😥 You missed last week on "
+                                : ' 💰 ${locator<UserService>().name}’s Weekly Report',
                             style: TextStyles.rajdhaniSB.title5,
                           ),
                         ),
+                        if (model.user != null) ...[
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          UserInvestmentWidget(
+                            data: model,
+                          ),
+                        ],
                         SizedBox(
                           height: SizeConfig.padding16,
                         ),
-                        const UserInvestmentWidget(),
-                        SizedBox(
-                          height: SizeConfig.padding16,
-                        ),
-                        const WeekReportRowView(
-                          title: 'Congratulations!',
-                          subTitle: 'Your Tambola ticket won corners',
-                          value: '₹2000',
-                          icon: 'assets/svg/tambola_card_asset.svg',
-                          backgroundColor: Color(0xff11444F),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding12,
-                        ),
-                        const WeekReportRowView(
-                          title: 'Happy Hour',
-                          subTitle: 'You got FREE Tambola Tickets',
-                          value: '2/5',
-                          icon: 'assets/svg/gift_icon.svg',
-                          backgroundColor: Color(0xff975B4D),
+                        ListView.separated(
+                          itemCount: 3,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return WeekReportRowView(
+                                title: model.misc?[0].title ?? '',
+                                subTitle: model.misc?[0].subtitle ?? '',
+                                value: model.misc?[0].numeric ?? '',
+                                icon: model.misc?[0].iconUrl ?? '',
+                                backgroundColor:
+                                    model.misc![0].bgHex!.toColor()!);
+                          },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(
+                              height: SizeConfig.padding12,
+                            );
+                          },
                         ),
                         SizedBox(
                           height: SizeConfig.padding20,
@@ -151,7 +162,10 @@ class LastWeekOverView extends StatelessWidget {
 class UserInvestmentWidget extends StatelessWidget {
   const UserInvestmentWidget({
     super.key,
+    required this.data,
   });
+
+  final LastWeekData data;
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +230,7 @@ class UserInvestmentWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'You missed\nout on',
+                      'Returns\nGained',
                       style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kTextFieldTextColor),
                     ),
@@ -289,15 +303,15 @@ class TotalInvestmentWidget extends StatelessWidget {
               SizedBox(
                 height: SizeConfig.padding8,
               ),
-              SvgPicture.asset(
-                'assets/svg/gold_icon.svg',
+              SvgPicture.network(
+                Assets.goldCoinIcon,
                 height: SizeConfig.padding54,
                 // width: SizeConfig.padding80,
               ),
               Text(
                 'Total Investments',
                 style:
-                TextStyles.sourceSans.body3.colour(const Color(0xffFFD979)),
+                    TextStyles.sourceSans.body3.colour(const Color(0xffFFD979)),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -315,7 +329,7 @@ class TotalInvestmentWidget extends StatelessWidget {
               Text(
                 'Total Returns',
                 style:
-                TextStyles.sourceSans.body3.colour(const Color(0xff62E3C4)),
+                    TextStyles.sourceSans.body3.colour(const Color(0xff62E3C4)),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -368,12 +382,13 @@ class TotalInvestmentWidget extends StatelessWidget {
 }
 
 class WeekReportRowView extends StatelessWidget {
-  const WeekReportRowView({Key? key,
-    required this.title,
-    required this.value,
-    required this.icon,
-    required this.subTitle,
-    required this.backgroundColor})
+  const WeekReportRowView(
+      {Key? key,
+      required this.title,
+      required this.value,
+      required this.icon,
+      required this.subTitle,
+      required this.backgroundColor})
       : super(key: key);
 
   final String title;
@@ -386,23 +401,23 @@ class WeekReportRowView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding12, horizontal: SizeConfig.padding8),
+          vertical: SizeConfig.padding16, horizontal: SizeConfig.padding8),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(SizeConfig.roundness8),
       ),
       child: Row(
         children: [
-          SvgPicture.asset(
+          SvgPicture.network(
             icon,
-            width: SizeConfig.padding64,
+            width: SizeConfig.padding54,
             fit: BoxFit.fitWidth,
           ),
           SizedBox(
             width: SizeConfig.padding12,
           ),
-          SizedBox(
-            width: SizeConfig.screenWidth! * 0.35,
+          Expanded(
+            // width: SizeConfig.screenWidth! * 0.40,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -414,8 +429,8 @@ class WeekReportRowView extends StatelessWidget {
               ],
             ),
           ),
-          const Spacer(),
-          Text(value, style: TextStyles.rajdhaniSB.title4),
+          // const Spacer(),
+          Text(value, style: TextStyles.rajdhaniSB.body0),
           SizedBox(
             width: SizeConfig.padding8,
           )
@@ -426,7 +441,8 @@ class WeekReportRowView extends StatelessWidget {
 }
 
 class AssetContainer extends StatelessWidget {
-  const AssetContainer({Key? key, required this.icon, required this.title, required this.value})
+  const AssetContainer(
+      {Key? key, required this.icon, required this.title, required this.value})
       : super(key: key);
 
   final String icon;
@@ -455,13 +471,10 @@ class AssetContainer extends StatelessWidget {
                 icon,
                 height: SizeConfig.padding28,
               ),
-              // SizedBox(
-              //   height: SizeConfig.padding4,
-              // ),
               Text(
                 title,
                 style: TextStyles.sourceSans.body3
-                    .colour(Colors.white.withOpacity(0.5)),
+                    .colour(Colors.white.withOpacity(0.8)),
                 textAlign: TextAlign.center,
               ),
             ],

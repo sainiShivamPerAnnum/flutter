@@ -124,7 +124,7 @@ class RootViewModel extends BaseViewModel {
 
   Future<void> initialize() async {
     WidgetsBinding.instance.addPostFrameCallback(
-          (timeStamp) async {
+      (timeStamp) async {
         await _userService.userBootUpEE();
 
         if (AppState.isFirstTime) {
@@ -145,7 +145,6 @@ class RootViewModel extends BaseViewModel {
             PreferenceHelper.getBool(
                     PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED) ==
                 false) {
-          log('yes baby');
           await showLastWeekOverview();
         }
 
