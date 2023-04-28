@@ -1,182 +1,182 @@
 class LastWeekModel {
   LastWeekModel({
-    this.global,
-    this.user,
+    this.message,
+    this.data,
   });
 
-  final Global? global;
-  final User? user;
+  final String? message;
+  final LastWeekData? data;
 
   LastWeekModel copyWith({
-    Global? global,
-    User? user,
+    String? message,
+    LastWeekData? data,
   }) =>
       LastWeekModel(
-        global: global ?? this.global,
-        user: user ?? this.user,
+        message: message ?? this.message,
+        data: data ?? this.data,
       );
 
   factory LastWeekModel.fromJson(Map<String, dynamic> json) => LastWeekModel(
-        global: json["global"] == null ? null : Global.fromJson(json["global"]),
-        user: json["user"] == null ? null : User.fromJson(json["user"]),
+        message: json["message"],
+        data: json["data"] == null ? null : LastWeekData.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "global": global?.toJson(),
-        "user": user?.toJson(),
+        "message": message,
+        "data": data?.toJson(),
       };
-
-  @override
-  String toString() {
-    return 'LastWeekModel{global: $global, user: $user}';
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is LastWeekModel &&
-          runtimeType == other.runtimeType &&
-          global == other.global &&
-          user == other.user;
-
-  @override
-  int get hashCode => global.hashCode ^ user.hashCode;
 }
 
-class Global {
-  Global({
+class LastWeekData {
+  LastWeekData({
     this.main,
-    this.others,
+    this.user,
+    this.misc,
   });
 
-  final List<Main>? main;
-  final List<Other>? others;
+  final Main? main;
+  final dynamic user;
+  final List<Misc>? misc;
 
-  Global copyWith({
-    List<Main>? main,
-    List<Other>? others,
+  LastWeekData copyWith({
+    Main? main,
+    dynamic user,
+    List<Misc>? misc,
   }) =>
-      Global(
+      LastWeekData(
         main: main ?? this.main,
-        others: others ?? this.others,
+        user: user ?? this.user,
+        misc: misc ?? this.misc,
       );
 
-  factory Global.fromJson(Map<String, dynamic> json) => Global(
-        main: json["main"] == null
+  factory LastWeekData.fromJson(Map<String, dynamic> json) => LastWeekData(
+        main: json["main"] == null ? null : Main.fromJson(json["main"]),
+        user: json["user"],
+        misc: json["misc"] == null
             ? []
-            : List<Main>.from(json["main"]!.map((x) => Main.fromJson(x))),
-        others: json["others"] == null
-            ? []
-            : List<Other>.from(json["others"]!.map((x) => Other.fromJson(x))),
+            : List<Misc>.from(json["misc"]!.map((x) => Misc.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "main": main == null
+        "main": main?.toJson(),
+        "user": user,
+        "misc": misc == null
             ? []
-            : List<dynamic>.from(main!.map((x) => x.toJson())),
-        "others": others == null
-            ? []
-            : List<dynamic>.from(others!.map((x) => x.toJson())),
+            : List<dynamic>.from(misc!.map((x) => x.toJson())),
       };
 }
 
 class Main {
   Main({
-    this.numeric,
-    this.desc,
-    this.iconUrl,
+    this.investments,
+    this.returns,
+    this.tambolaPrizeAmt,
   });
 
-  final String? numeric;
-  final String? desc;
-  final String? iconUrl;
+  final Investments? investments;
+  final Investments? returns;
+  final int? tambolaPrizeAmt;
 
   Main copyWith({
-    String? numeric,
-    String? desc,
-    String? iconUrl,
+    Investments? investments,
+    Investments? returns,
+    int? tambolaPrizeAmt,
   }) =>
       Main(
-        numeric: numeric ?? this.numeric,
-        desc: desc ?? this.desc,
-        iconUrl: iconUrl ?? this.iconUrl,
+        investments: investments ?? this.investments,
+        returns: returns ?? this.returns,
+        tambolaPrizeAmt: tambolaPrizeAmt ?? this.tambolaPrizeAmt,
       );
 
   factory Main.fromJson(Map<String, dynamic> json) => Main(
-        numeric: json["numeric"],
-        desc: json["desc"],
-        iconUrl: json["iconUrl"],
+        investments: json["investments"] == null
+            ? null
+            : Investments.fromJson(json["investments"]),
+        returns: json["returns"] == null
+            ? null
+            : Investments.fromJson(json["returns"]),
+        tambolaPrizeAmt: json["tambolaPrizeAmt"],
       );
 
   Map<String, dynamic> toJson() => {
-        "numeric": numeric,
-        "desc": desc,
-        "iconUrl": iconUrl,
+        "investments": investments?.toJson(),
+        "returns": returns?.toJson(),
+        "tambolaPrizeAmt": tambolaPrizeAmt,
       };
 }
 
-class Other {
-  Other({
+class Investments {
+  Investments({
+    this.auggold99,
+    this.lendboxp2P,
+  });
+
+  final double? auggold99;
+  final double? lendboxp2P;
+
+  Investments copyWith({
+    double? auggold99,
+    double? lendboxp2P,
+  }) =>
+      Investments(
+        auggold99: auggold99 ?? this.auggold99,
+        lendboxp2P: lendboxp2P ?? this.lendboxp2P,
+      );
+
+  factory Investments.fromJson(Map<String, dynamic> json) => Investments(
+        auggold99: json["AUGGOLD99"]?.toDouble(),
+        lendboxp2P: json["LENDBOXP2P"]?.toDouble(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "AUGGOLD99": auggold99,
+        "LENDBOXP2P": lendboxp2P,
+      };
+}
+
+class Misc {
+  Misc({
     this.iconUrl,
-    this.desc,
+    this.title,
+    this.subtitle,
+    this.numeric,
+    this.bgHex,
   });
 
   final String? iconUrl;
-  final String? desc;
+  final String? title;
+  final String? subtitle;
+  final String? numeric;
+  final String? bgHex;
 
-  Other copyWith({
+  Misc copyWith({
     String? iconUrl,
-    String? desc,
+    String? title,
+    String? subtitle,
+    String? numeric,
+    String? bgHex,
   }) =>
-      Other(
+      Misc(
         iconUrl: iconUrl ?? this.iconUrl,
-        desc: desc ?? this.desc,
+        title: title ?? this.title,
+        subtitle: subtitle ?? this.subtitle,
+        numeric: numeric ?? this.numeric,
+        bgHex: bgHex ?? this.bgHex,
       );
 
-  factory Other.fromJson(Map<String, dynamic> json) => Other(
+  factory Misc.fromJson(Map<String, dynamic> json) => Misc(
         iconUrl: json["iconUrl"],
-        desc: json["desc"],
+        title: json["title"],
+        subtitle: json["subtitle"],
+        numeric: json["numeric"],
+        bgHex: json["bgHex"],
       );
 
   Map<String, dynamic> toJson() => {
         "iconUrl": iconUrl,
-        "desc": desc,
-      };
-}
-
-class User {
-  User({
-    this.main,
-    this.others,
-  });
-
-  final List<Main>? main;
-  final List<Main>? others;
-
-  User copyWith({
-    List<Main>? main,
-    List<Main>? others,
-  }) =>
-      User(
-        main: main ?? this.main,
-        others: others ?? this.others,
-      );
-
-  factory User.fromJson(Map<String, dynamic> json) => User(
-        main: json["main"] == null
-            ? []
-            : List<Main>.from(json["main"]!.map((x) => Main.fromJson(x))),
-        others: json["others"] == null
-            ? []
-            : List<Main>.from(json["others"]!.map((x) => Main.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "main": main == null
-            ? []
-            : List<dynamic>.from(main!.map((x) => x.toJson())),
-        "others": others == null
-            ? []
-            : List<dynamic>.from(others!.map((x) => x.toJson())),
+        "title": title,
+        "subtitle": subtitle,
+        "numeric": numeric,
+        "bgHex": bgHex,
       };
 }

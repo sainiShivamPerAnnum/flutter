@@ -61,8 +61,8 @@ class JourneyAppBar extends StatelessWidget {
                         child: Row(
                           children: [
                             Container(
-                              key: ValueKey(Constants.PROFILE_JAPPBAR),
-                              decoration: BoxDecoration(
+                              key: const ValueKey(Constants.PROFILE_JAPPBAR),
+                              decoration: const BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
                               ),
@@ -98,7 +98,8 @@ class JourneyAppBar extends StatelessWidget {
                             //     },
                             //     icon: Icon(Icons.navigation)),
                             FelloCoinBar(
-                              key: ValueKey(Constants.FELLO_COIN_BAR_JAPPBAR),
+                              key: const ValueKey(
+                                  Constants.FELLO_COIN_BAR_JAPPBAR),
                             ),
                             NotificationButton()
                           ],
@@ -114,7 +115,8 @@ class JourneyAppBar extends StatelessWidget {
                       child: Row(
                         children: [
                           JourneyAppBarAssetDetailsTile(
-                            key: ValueKey(Constants.TOTAL_SAVINGS_JAPPBAR),
+                            key:
+                                const ValueKey(Constants.TOTAL_SAVINGS_JAPPBAR),
                             actionUri: '/save',
                             title: locale.totalSavings,
                             value: NetWorthValue(
@@ -127,7 +129,8 @@ class JourneyAppBar extends StatelessWidget {
                             thickness: 0.5,
                           ),
                           JourneyAppBarAssetDetailsTile(
-                            key: ValueKey(Constants.TOTAL_WINNINGS_JAPPBAR),
+                            key: const ValueKey(
+                                Constants.TOTAL_WINNINGS_JAPPBAR),
                             actionUri: '/myWinnings',
                             title: locale.totalWinnings,
                             value: LifeTimeWin(

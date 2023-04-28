@@ -1,3 +1,5 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_bg.dart';
@@ -10,10 +12,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 class LastWeekOverView extends StatelessWidget {
   const LastWeekOverView({
     Key? key,
-    // required this.model,
+    required this.model,
   }) : super(key: key);
 
-  // final LastWeekModel model;
+  final LastWeekData model;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,7 @@ class LastWeekOverView extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        const TotalInvestmentWidget(),
+                        TotalInvestmentWidget(data: model),
                         SizedBox(
                           height: SizeConfig.padding40,
                         ),
@@ -264,7 +266,10 @@ class UserInvestmentWidget extends StatelessWidget {
 class TotalInvestmentWidget extends StatelessWidget {
   const TotalInvestmentWidget({
     super.key,
+    required this.data,
   });
+
+  final LastWeekData data;
 
   @override
   Widget build(BuildContext context) {
@@ -292,14 +297,15 @@ class TotalInvestmentWidget extends StatelessWidget {
               Text(
                 'Total Investments',
                 style:
-                    TextStyles.sourceSans.body3.colour(const Color(0xffFFD979)),
+                TextStyles.sourceSans.body3.colour(const Color(0xffFFD979)),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
                 height: SizeConfig.padding4,
               ),
               Text(
-                '₹10,23,450',
+                BaseUtil.formatIndianRupees(data.main!.investments!.auggold99! +
+                    data.main!.investments!.lendboxp2P!),
                 style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -309,14 +315,15 @@ class TotalInvestmentWidget extends StatelessWidget {
               Text(
                 'Total Returns',
                 style:
-                    TextStyles.sourceSans.body3.colour(const Color(0xff62E3C4)),
+                TextStyles.sourceSans.body3.colour(const Color(0xff62E3C4)),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
                 height: SizeConfig.padding4,
               ),
               Text(
-                '₹1,02,350',
+                BaseUtil.formatIndianRupees(data.main!.returns!.auggold99! +
+                    data.main!.returns!.lendboxp2P!),
                 style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -330,27 +337,27 @@ class TotalInvestmentWidget extends StatelessWidget {
           child: SizedBox(
             child: Column(
               children: [
-                const AssetContainer(
-                  icon: 'assets/svg/digitalgold.svg',
-                  title: 'Digital Gold',
-                  value: '₹10,23,450',
-                ),
+                AssetContainer(
+                    icon: 'assets/svg/digitalgold.svg',
+                    title: 'Digital Gold',
+                    value: BaseUtil.formatIndianRupees(
+                        data.main!.investments!.auggold99!)),
                 SizedBox(
                   height: SizeConfig.padding6,
                 ),
-                const AssetContainer(
-                  icon: 'assets/svg/fello_flo.svg',
-                  title: 'Fello Flo',
-                  value: '₹10,23,450',
-                ),
+                AssetContainer(
+                    icon: 'assets/svg/fello_flo.svg',
+                    title: 'Fello Flo',
+                    value: BaseUtil.formatIndianRupees(
+                        data.main!.investments!.lendboxp2P!)),
                 SizedBox(
                   height: SizeConfig.padding6,
                 ),
-                const AssetContainer(
-                  icon: 'assets/svg/tambola_card_asset.svg',
-                  title: 'Tambola prizes',
-                  value: '₹10,000',
-                )
+                AssetContainer(
+                    icon: 'assets/svg/tambola_card_asset.svg',
+                    title: 'Tambola prizes',
+                    value: BaseUtil.formatIndianRupees(
+                        data.main!.tambolaPrizeAmt!.toDouble()))
               ],
             ),
           ),
@@ -361,13 +368,12 @@ class TotalInvestmentWidget extends StatelessWidget {
 }
 
 class WeekReportRowView extends StatelessWidget {
-  const WeekReportRowView(
-      {Key? key,
-      required this.title,
-      required this.value,
-      required this.icon,
-      required this.subTitle,
-      required this.backgroundColor})
+  const WeekReportRowView({Key? key,
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.subTitle,
+    required this.backgroundColor})
       : super(key: key);
 
   final String title;
@@ -420,8 +426,7 @@ class WeekReportRowView extends StatelessWidget {
 }
 
 class AssetContainer extends StatelessWidget {
-  const AssetContainer(
-      {Key? key, required this.icon, required this.title, required this.value})
+  const AssetContainer({Key? key, required this.icon, required this.title, required this.value})
       : super(key: key);
 
   final String icon;

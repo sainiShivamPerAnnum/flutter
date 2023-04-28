@@ -32,6 +32,7 @@ import 'package:felloapp/ui/pages/onboarding/onboarding_main/onboarding_main_vie
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/power_play/how_it_works/how_it_works_view.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribution_sheet.dart';
+import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_home_view.dart';
 import 'package:felloapp/ui/pages/power_play/season_leaderboard/season_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/welcome_page/power_play_welcome_page.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
@@ -57,6 +58,7 @@ import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -303,7 +305,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.PowerPlayHome:
-          _addPageData(const LastWeekOverView(), PowerPlayHomeConfig);
+          _addPageData(const PowerPlayHome(), PowerPlayHomeConfig);
           break;
 
         case Pages.PowerPlayHowItWorks:
@@ -773,33 +775,34 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void screenCheck(String screenKey) {
     PageConfiguration? pageConfiguration;
+
+    var _rootController = locator<RootController>();
+
     switch (screenKey) {
       case 'journey':
         appState.setCurrentTabIndex = appState.setCurrentTabIndex =
-            locator<RootController>()
-                .navItems
-                .values
+            _rootController.navItems.values
                 .toList()
                 .indexOf(RootController.journeyNavBarItem);
         break;
       case 'save':
-        appState.setCurrentTabIndex = locator<RootController>()
-            .navItems
-            .values
+        _rootController.onChange(_rootController.navItems.values.toList()[
+            _rootController.navItems.values
+                .toList()
+                .indexOf(RootController.saveNavBarItem)]);
+
+        appState.setCurrentTabIndex = _rootController.navItems.values
             .toList()
             .indexOf(RootController.saveNavBarItem);
+
         break;
       case 'play':
-        appState.setCurrentTabIndex = locator<RootController>()
-            .navItems
-            .values
+        appState.setCurrentTabIndex = _rootController.navItems.values
             .toList()
             .indexOf(RootController.playNavBarItem);
         break;
       case 'win':
-        appState.setCurrentTabIndex = locator<RootController>()
-            .navItems
-            .values
+        appState.setCurrentTabIndex = _rootController.navItems.values
             .toList()
             .indexOf(RootController.winNavBarItem);
         break;
@@ -852,12 +855,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
-        if (locator<RootController>()
-            .navItems
+        if (_rootController.navItems
             .containsValue(RootController.tambolaNavBar)) {
-          appState.setCurrentTabIndex = locator<RootController>()
-              .navItems
-              .values
+          appState.setCurrentTabIndex = _rootController.navItems.values
               .toList()
               .indexOf(RootController.tambolaNavBar);
           break;

@@ -5,11 +5,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/game_model.dart';
-import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
-import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -291,22 +289,6 @@ class TambolaService extends ChangeNotifier {
     if (DateTime.now().weekday == DateTime.sunday &&
         DateTime.now().hour >= 18) {
       notifyListeners();
-    }
-    unawaited(PreferenceHelper.setBool(
-        PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false));
-  }
-
-  Future<LastWeekModel?> getLastWeekData() async {
-    final response = await locator<GetterRepository>().getLastWeekData();
-
-    try {
-      if (response.isSuccess() && response.model != null) {
-        return response.model!;
-      }
-      return null;
-    } catch (e) {
-      debugPrint(e.toString());
-      return null;
     }
   }
 }

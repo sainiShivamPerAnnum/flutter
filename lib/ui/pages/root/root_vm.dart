@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -140,26 +141,19 @@ class RootViewModel extends BaseViewModel {
 
         _initAdhocNotifications();
 
-        if (DateTime.now().weekday == DateTime.monday &&
-            !PreferenceHelper.getBool(
-                PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED)) {
-          Future.delayed(const Duration(seconds: 3), () {
-            AppState.delegate!.appState.currentAction = PageAction(
-              state: PageState.addWidget,
-              page: LastWeekOverviewConfig,
-              widget: const LastWeekOverView(),
-            );
-          });
-          fetchCampaign = false;
-          unawaited(PreferenceHelper.setBool(
-              PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
+        if (DateTime.now().weekday == DateTime.friday &&
+            PreferenceHelper.getBool(
+                    PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED) ==
+                false) {
+          log('yes baby');
+          await showLastWeekOverview();
         }
 
         if (!AppState.isFirstTime && fetchCampaign) {
           showMarketingCampings();
         }
 
-        if (DateTime.now().weekday != DateTime.monday) {
+        if (DateTime.now().weekday != DateTime.friday) {
           unawaited(PreferenceHelper.setBool(
               PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, false));
         }
@@ -214,7 +208,7 @@ class RootViewModel extends BaseViewModel {
           topLeft: const Radius.circular(30.0),
           topRight: Radius.circular(SizeConfig.roundness12)),
       backgroundColor:
-      UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+          UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
       content: SecurityModalSheet(),
     );
     _fcmHandler.addIncomingMessageListener((valueMap) {
@@ -227,9 +221,9 @@ class RootViewModel extends BaseViewModel {
 
   Future<void> checkForBootUpAlerts() async {
     bool updateAvailable =
-    PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
+        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
     bool isMsgNoticeAvailable =
-    PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
+        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
     if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
     if (updateAvailable) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
@@ -240,7 +234,7 @@ class RootViewModel extends BaseViewModel {
         content: ConfirmationDialog(
           title: "App Update Available",
           description:
-          "A new version of the app is available. Update now to enjoy the hassle free experience.",
+              "A new version of the app is available. Update now to enjoy the hassle free experience.",
           buttonText: "Update Now",
           cancelBtnText: "Not now",
           confirmAction: () {
@@ -308,7 +302,7 @@ class RootViewModel extends BaseViewModel {
         _userService.baseUser!.isAugmontOnboarded! &&
         _userService.userFundWallet!.augGoldQuantity > 0 &&
         _userService.baseUser!.userPreferences
-            .getPreference(Preferences.APPLOCK) ==
+                .getPreference(Preferences.APPLOCK) ==
             0) {
       canExecuteStartupNotification = false;
       Future.delayed(const Duration(seconds: 2), () {
@@ -393,7 +387,7 @@ class RootViewModel extends BaseViewModel {
         //5. Clear all the caches
         if (_userService.userBootUp!.data!.cache!.keys != null) {
           for (String id
-          in _userService.userBootUp!.data!.cache!.keys as List<String>) {
+              in _userService.userBootUp!.data!.cache!.keys as List<String>) {
             CacheService.invalidateByKey(id);
           }
         }
@@ -426,5 +420,31 @@ class RootViewModel extends BaseViewModel {
       }
     });
     return flag;
+  }
+
+  Future<void> showLastWeekOverview() async {
+    final response = await locator<CampaignRepo>().getLastWeekData();
+
+    log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
+
+    try {
+      if (response.isSuccess() &&
+          response.model != null &&
+          response.model?.data != null) {
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: LastWeekOverviewConfig,
+          widget: LastWeekOverView(
+            model: response.model!.data!,
+          ),
+        );
+
+        fetchCampaign = false;
+        unawaited(PreferenceHelper.setBool(
+            PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }
