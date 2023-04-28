@@ -11,6 +11,7 @@ class PreferenceHelper {
   static const REFERRAL_CODE = 'referral_code';
   static const REFERRAL_PROCESSED = 'referral_processed';
   static const CACHE_RATING_IS_RATED = "isUserRated";
+
   // static const CACHE_LAST_PLAYED_GAMES = "lastTwoGamesPlayed";
   static const CACHE_RATING_EXPIRY_TIMESTAMP = 'ratingExpireTimestamp';
   static const SHOW_TAMBOLA_PROCESSING = 'tambolaProcessingScreen';
@@ -29,6 +30,7 @@ class PreferenceHelper {
   static SharedPreferences? _prefs;
   static const POWERPLAY_IS_PLAYED = "powerplay_is_played";
   static const LAST_WEEK_OVERVIEW_SHOWED = 'last_week_overview_showed';
+  static const LAST_WEEK_NUMBER = 'lastWeekNumber';
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {

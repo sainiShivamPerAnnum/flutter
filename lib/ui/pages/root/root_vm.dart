@@ -141,20 +141,12 @@ class RootViewModel extends BaseViewModel {
 
         _initAdhocNotifications();
 
-        if (DateTime.now().weekday == DateTime.friday &&
-            PreferenceHelper.getBool(
-                    PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED) ==
-                false) {
+        if (await BaseUtil.isFirstTimeThisWeek()) {
           await showLastWeekOverview();
         }
 
         if (!AppState.isFirstTime && fetchCampaign) {
           showMarketingCampings();
-        }
-
-        if (DateTime.now().weekday != DateTime.friday) {
-          unawaited(PreferenceHelper.setBool(
-              PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, false));
         }
       },
     );
@@ -439,6 +431,7 @@ class RootViewModel extends BaseViewModel {
         );
 
         fetchCampaign = false;
+
         unawaited(PreferenceHelper.setBool(
             PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
       }

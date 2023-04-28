@@ -18,7 +18,7 @@ import 'package:lottie/lottie.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class Win extends StatelessWidget {
-  const Win({super.key});
+  const Win({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,28 +44,28 @@ class Win extends StatelessWidget {
               AccountInfoTiles(title: locale.abMyProfile, uri: "/profile"),
               AccountInfoTiles(title: locale.kycTitle, uri: "/kycVerify"),
 
-                        AccountInfoTiles(
-                            title: locale.bankAccDetails, uri: "/bankDetails"),
-                        //Scratch Cards count and navigation
-                        const ScratchCardsInfoStrip(),
-                        //Current Winnings Information
-                        Showcase(
-                          key: ShowCaseKeys.CurrentWinnings,
-                          description:
-                          'Your winnings from scratch cards and coupons show here. Redeem your winnings as Digital Gold when you reach ₹200',
-                          child: const CurrentWinningsInfo(),
-                        ),
-                        //Refer and Earn
-                        const ReferEarnCard(),
-                        // Referral Leaderboard
-                        const ReferralLeaderboard(),
-                        //Fello News
-                        FelloNewsComponent(model: model),
-                        // DEV PURPOSE ONLY
-                        const CacheClearWidget(),
-                        SizedBox(
-                          height: SizeConfig.padding10,
-                        ),
+              AccountInfoTiles(
+                  title: locale.bankAccDetails, uri: "/bankDetails"),
+              //Scratch Cards count and navigation
+              const ScratchCardsInfoStrip(),
+              //Current Winnings Information
+              Showcase(
+                key: ShowCaseKeys.CurrentWinnings,
+                description:
+                    'Your winnings from scratch cards and coupons show here. Redeem your winnings as Digital Gold when you reach ₹200',
+                child: const CurrentWinningsInfo(),
+              ),
+              //Refer and Earn
+              const ReferEarnCard(),
+              // Referral Leaderboard
+              const ReferralLeaderboard(),
+              //Fello News
+              FelloNewsComponent(model: model),
+              // DEV PURPOSE ONLY
+              const CacheClearWidget(),
+              SizedBox(
+                height: SizeConfig.padding10,
+              ),
 
               LottieBuilder.network(
                   "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
