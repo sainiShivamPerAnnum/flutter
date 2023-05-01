@@ -1,10 +1,13 @@
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
+import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_all_tickets/tambola_all_tickets_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/support/faq/faq_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -67,9 +70,6 @@ class ViewAllTicketsBar extends StatelessWidget {
             state: PageState.addWidget,
             page: AllTambolaTicketsPageConfig,
             widget: AllTambolaTickets(
-              ticketList:
-                  locator<TambolaService>().bestTickets?.data?.allTickets() ??
-                      [],
               weeklyPicks:
                   locator<TambolaService>().weeklyPicks ?? DailyPick.noPicks(),
             ),
@@ -141,40 +141,40 @@ class TicketHeader extends StatelessWidget {
                       style: TextStyles.rajdhaniSB.body1),
                 ],
               ),
-              // if (TambolaRepo.expiringTicketCount != 0)
-              // if (TambolaRepo.expiringTicketCount > 1)
-              //   SizedBox(
-              //     height: SizeConfig.padding4,
-              //   ),
-              // if (TambolaRepo.expiringTicketCount > 1)
-              Row(
-                children: [
-                  // Text(
-                  //   "${TambolaRepo.expiringTicketCount} ticket${TambolaRepo.expiringTicketCount > 1 ? 's' : ''} expiring this Sunday. ",
-                  //   style: TextStyles.sourceSansSB.body4
-                  //       .colour(UiConstants.kBlogTitleColor),
-                  // ),
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     AppState.delegate!.appState.currentAction = PageAction(
-                  //       state: PageState.addWidget,
-                  //       page: FaqPageConfig,
-                  //       widget: const FAQPage(
-                  //         type: FaqsType.play,
-                  //       ),
-                  //     );
-                  //   },
-                  //   child: Text(
-                  //     "Know More",
-                  //     style: TextStyles.sourceSansSB.body4
-                  //         .colour(UiConstants.kBlogTitleColor)
-                  //         .copyWith(
-                  //             decorationStyle: TextDecorationStyle.solid,
-                  //             decoration: TextDecoration.underline),
-                  //   ),
-                  // ),
-                ],
-              ),
+              if (TambolaRepo.expiringTicketCount != 0)
+                if (TambolaRepo.expiringTicketCount > 1)
+                  SizedBox(
+                    height: SizeConfig.padding4,
+                  ),
+              if (TambolaRepo.expiringTicketCount > 1)
+                Row(
+                  children: [
+                    Text(
+                      "${TambolaRepo.expiringTicketCount} ticket${TambolaRepo.expiringTicketCount > 1 ? 's' : ''} expiring this Sunday. ",
+                      style: TextStyles.sourceSansSB.body4
+                          .colour(UiConstants.kBlogTitleColor),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          state: PageState.addWidget,
+                          page: FaqPageConfig,
+                          widget: const FAQPage(
+                            type: FaqsType.play,
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Know More",
+                        style: TextStyles.sourceSansSB.body4
+                            .colour(UiConstants.kBlogTitleColor)
+                            .copyWith(
+                                decorationStyle: TextDecorationStyle.solid,
+                                decoration: TextDecoration.underline),
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
           GestureDetector(

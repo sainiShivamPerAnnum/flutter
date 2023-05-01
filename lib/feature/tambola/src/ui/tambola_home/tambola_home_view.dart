@@ -107,8 +107,8 @@ class _TambolaHomeViewState extends State<TambolaHomeView> {
                 onRefresh: () async => model.init(),
                 child: model.activeTambolaCardCount > 0
                     ? const TambolaHomeTicketsView()
-                    : const TambolaHomeDetailsView(
-                        isStandAloneScreen: true,
+                    : TambolaHomeDetailsView(
+                        isStandAloneScreen: widget.standAloneScreen,
                       ),
               ),
             ),

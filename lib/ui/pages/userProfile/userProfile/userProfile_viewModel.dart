@@ -528,7 +528,7 @@ class UserProfileVM extends BaseViewModel {
 
   Future<void> signout() async {
     if (await BaseUtil.showNoInternetAlert()) return;
-    BaseUtil.openDialog(
+    unawaited(BaseUtil.openDialog(
       isBarrierDismissible: false,
       addToScreenStack: true,
       content: ConfirmationDialog(
@@ -546,14 +546,13 @@ class UserProfileVM extends BaseViewModel {
             _userService!.signOut(() async {
               _analyticsService!.track(eventName: AnalyticsEvents.signOut);
               _analyticsService!.signOut();
-              await _userRepo!.removeUserFCM(_userService!.baseUser!.uid);
+              await _userRepo.removeUserFCM(_userService!.baseUser!.uid);
             }).then((flag) async {
               if (flag) {
                 await _baseUtil!.signOut();
                 _journeyService!.dump();
                 _marketingService.dump();
                 _txnHistoryService!.signOut();
-                _tambolaService!.dispose();
                 _analyticsService!.signOut();
                 _bankAndKycService!.dump();
                 _powerPlayService.dump();
@@ -562,8 +561,10 @@ class UserProfileVM extends BaseViewModel {
                 locator<JourneyRepository>().dump();
                 _appstate.dump();
                 locator<SubService>().dump();
-                AppState.backButtonDispatcher!.didPopRoute();
                 locator<PowerPlayService>().dump();
+                _tambolaService!.dump();
+                AppState.backButtonDispatcher!.didPopRoute();
+
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(
@@ -582,7 +583,7 @@ class UserProfileVM extends BaseViewModel {
           cancelAction: () {
             AppState.backButtonDispatcher!.didPopRoute();
           }),
-    );
+    ));
   }
 
   bool isValidDate() {

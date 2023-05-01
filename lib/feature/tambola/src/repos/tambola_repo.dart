@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
-import 'package:felloapp/core/model/cache_model/cache_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -12,9 +10,7 @@ import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_ticket_model.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/date_helper.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:intl/intl.dart';
 
 class TambolaRepo extends BaseRepo {
   final _cacheService = CacheService();
@@ -40,6 +36,8 @@ class TambolaRepo extends BaseRepo {
       );
       bestTickets = TambolaBestTicketsModel.fromJson(response);
       // await postProcessTambolaTickets(response);
+      expiringTicketCount = response["data"]["expiringTicketsCount"] ?? 0;
+
       return ApiResponse<TambolaBestTicketsModel>(
         model: bestTickets,
         code: 200,
@@ -50,105 +48,103 @@ class TambolaRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<TambolaTicketModel>>> getTickets() async {
-    try {
-      final uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
+  Future<ApiResponse<List<TambolaTicketModel>>> getTickets(int offset) async {
+    // try {
+    final uid = userService.baseUser!.uid;
+    final token = await getBearerToken();
 
-      await preProcessTambolaTickets();
+    // await preProcessTambolaTickets();
 
-      final response = await APIService.instance.getData(
-        ApiPath.tambolaTickets(uid),
-        token: token,
-        queryParams: lastTimeStamp != null
-            ? {
-                'lastTimestamp':
-                    lastTimeStamp?.toDate().toUtc().toIso8601String()
-              }
-            : {},
-        cBaseUrl: _baseUrl,
-      );
-      await postProcessTambolaTickets(response);
-      return ApiResponse<List<TambolaTicketModel>>(
-        model: activeTambolaTickets,
-        code: 200,
-      );
-    } catch (e) {
-      logger.e('get all tambola tickets $e');
-      return ApiResponse.withError(e.toString(), 400);
-    }
-  }
-
-  Future<void> preProcessTambolaTickets() async {
-    CacheModel? cache = await _cacheService.getData(CacheKeys.TAMBOLA_TICKETS);
-    if (cache != null) {
-      dynamic cachedData = json.decode(cache.data!);
-      final List<TambolaTicketModel> cachedTickets =
-          TambolaTicketModel.helper.fromMapArray(cachedData["tickets"]);
-      expiringTicketCount = cachedData["expiringTicketsCount"] ?? 0;
-      arrangeTambolaTickets(cachedTickets, []);
-    }
-  }
-
-  Future<void> postProcessTambolaTickets(response) async {
-    final List<TambolaTicketModel> tickets =
-        TambolaTicketModel.helper.fromMapArray(response["data"]["tickets"]);
-    final List<TambolaTicketModel> deletedTickets = TambolaTicketModel.helper
-        .fromMapArray(response["data"]["deletedTickets"]);
+    final response = await APIService.instance.getData(
+      ApiPath.tambolaTickets(uid),
+      token: token,
+      queryParams: {'limit': '10', 'offset': offset.toString()},
+      cBaseUrl: _baseUrl,
+    );
+    List<TambolaTicketModel>? tickets =
+        TambolaTicketModel.helper.fromMapArray(response['data']['tickets']);
     expiringTicketCount = response["data"]["expiringTicketsCount"] ?? 0;
-    if (tickets.isEmpty && deletedTickets.isEmpty) return;
-    arrangeTambolaTickets(tickets, deletedTickets);
-    List<Map<String, dynamic>> ticketData = [];
-    if (activeTambolaTickets.isNotEmpty) {
-      activeTambolaTickets.forEach((ticket) {
-        ticketData.add(ticket.toMap());
-      });
-    }
-    await CacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
-    if (ticketData.isNotEmpty) {
-      unawaited(_cacheService.writeMap(
-          CacheKeys.TAMBOLA_TICKETS, DateHelper.timeToWeekendInMinutes(), {
-        "tickets": ticketData,
-        "expiringTicketsCount": expiringTicketCount
-      }));
-    }
+    // await postProcessTambolaTickets(response);
+    return ApiResponse<List<TambolaTicketModel>>(
+      model: tickets ?? [],
+      code: 200,
+    );
+    // } catch (e) {
+    //   logger.e('get all tambola tickets $e');
+    //   return ApiResponse.withError(e.toString(), 400);
+    // }
   }
 
-  void arrangeTambolaTickets(List<TambolaTicketModel> tickets,
-      List<TambolaTicketModel> deletedTickets) {
-    if (activeTambolaTickets.isEmpty) {
-      activeTambolaTickets = tickets;
-    } else {
-      if (deletedTickets.isNotEmpty) {
-        deletedTickets.forEach((dt) {
-          //   if (activeTambolaTickets.contains(dt))
-          //     activeTambolaTickets.remove(dt);
-          if (activeTambolaTickets.firstWhere((ticket) => ticket.id == dt.id,
-                  orElse: () => TambolaTicketModel.none()) !=
-              TambolaTicketModel.none()) {
-            activeTambolaTickets.removeWhere((ticket) => ticket.id == dt.id);
-          }
-        });
-      }
-      if (tickets.isNotEmpty) {
-        tickets.forEach((t) {
-          if (activeTambolaTickets.firstWhere((ticket) => ticket.id == t.id,
-                  orElse: () => TambolaTicketModel.none()) ==
-              TambolaTicketModel.none()) activeTambolaTickets.add(t);
-        });
-      }
-    }
+  // Future<void> preProcessTambolaTickets() async {
+  //   CacheModel? cache = await _cacheService.getData(CacheKeys.TAMBOLA_TICKETS);
+  //   if (cache != null) {
+  //     dynamic cachedData = json.decode(cache.data!);
+  //     final List<TambolaTicketModel> cachedTickets =
+  //         TambolaTicketModel.helper.fromMapArray(cachedData["tickets"]);
+  //     expiringTicketCount = cachedData["expiringTicketsCount"] ?? 0;
+  //     arrangeTambolaTickets(cachedTickets, []);
+  //   }
+  // }
 
-    activeTambolaTickets.forEach((tt) {
-      if (lastTimeStamp == null) {
-        lastTimeStamp = tt.assignedTime;
-      } else if (tt.assignedTime.toDate().isAfter(lastTimeStamp!.toDate())) {
-        lastTimeStamp = tt.assignedTime;
-      }
-    });
-    logger.d(
-        "Latest TimeStamp: ${lastTimeStamp != null ? DateFormat('d MMMM, yyyy - hh:mm a').format(lastTimeStamp!.toDate()) + ' ' + lastTimeStamp!.toDate().toUtc().toString() + ' ' + lastTimeStamp!.toDate().toUtc().toIso8601String() : 'null'}");
-  }
+  // Future<void> postProcessTambolaTickets(response) async {
+  //   final List<TambolaTicketModel> tickets =
+  //       TambolaTicketModel.helper.fromMapArray(response["data"]["tickets"]);
+  //   final List<TambolaTicketModel> deletedTickets = TambolaTicketModel.helper
+  //       .fromMapArray(response["data"]["deletedTickets"]);
+  //   expiringTicketCount = response["data"]["expiringTicketsCount"] ?? 0;
+  //   if (tickets.isEmpty && deletedTickets.isEmpty) return;
+  //   arrangeTambolaTickets(tickets, deletedTickets);
+  //   List<Map<String, dynamic>> ticketData = [];
+  //   if (activeTambolaTickets.isNotEmpty) {
+  //     activeTambolaTickets.forEach((ticket) {
+  //       ticketData.add(ticket.toMap());
+  //     });
+  //   }
+  //   await CacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
+  //   if (ticketData.isNotEmpty) {
+  //     unawaited(_cacheService.writeMap(
+  //         CacheKeys.TAMBOLA_TICKETS, DateHelper.timeToWeekendInMinutes(), {
+  //       "tickets": ticketData,
+  //       "expiringTicketsCount": expiringTicketCount
+  //     }));
+  //   }
+  // }
+
+  // void arrangeTambolaTickets(List<TambolaTicketModel> tickets,
+  //     List<TambolaTicketModel> deletedTickets) {
+  //   if (activeTambolaTickets.isEmpty) {
+  //     activeTambolaTickets = tickets;
+  //   } else {
+  //     if (deletedTickets.isNotEmpty) {
+  //       deletedTickets.forEach((dt) {
+  //         //   if (activeTambolaTickets.contains(dt))
+  //         //     activeTambolaTickets.remove(dt);
+  //         if (activeTambolaTickets.firstWhere((ticket) => ticket.id == dt.id,
+  //                 orElse: () => TambolaTicketModel.none()) !=
+  //             TambolaTicketModel.none()) {
+  //           activeTambolaTickets.removeWhere((ticket) => ticket.id == dt.id);
+  //         }
+  //       });
+  //     }
+  //     if (tickets.isNotEmpty) {
+  //       tickets.forEach((t) {
+  //         if (activeTambolaTickets.firstWhere((ticket) => ticket.id == t.id,
+  //                 orElse: () => TambolaTicketModel.none()) ==
+  //             TambolaTicketModel.none()) activeTambolaTickets.add(t);
+  //       });
+  //     }
+  //   }
+
+  //   activeTambolaTickets.forEach((tt) {
+  //     if (lastTimeStamp == null) {
+  //       lastTimeStamp = tt.assignedTime;
+  //     } else if (tt.assignedTime.toDate().isAfter(lastTimeStamp!.toDate())) {
+  //       lastTimeStamp = tt.assignedTime;
+  //     }
+  //   });
+  //   logger.d(
+  //       "Latest TimeStamp: ${lastTimeStamp != null ? DateFormat('d MMMM, yyyy - hh:mm a').format(lastTimeStamp!.toDate()) + ' ' + lastTimeStamp!.toDate().toUtc().toString() + ' ' + lastTimeStamp!.toDate().toUtc().toIso8601String() : 'null'}");
+  // }
 
   Future<ApiResponse<dynamic>> getWeeklyPicks() async {
     try {

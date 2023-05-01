@@ -29,6 +29,7 @@ class TicketsView extends StatefulWidget {
 class _TicketsViewState extends State<TicketsView>
     with TickerProviderStateMixin {
   late final TabController _tabController;
+  late final PageController controller;
   // late final List<TambolaTicketModel?> _bestBoards;
   final List<String> tabList = const [
     "All",
@@ -40,18 +41,21 @@ class _TicketsViewState extends State<TicketsView>
   @override
   void initState() {
     super.initState();
+    controller = PageController(initialPage: 0);
     _tabController = TabController(vsync: this, length: 5);
     _tabController.addListener(_handleTabSelection);
     // _bestBoards = widget.tickets;
   }
 
   void _handleTabSelection() {
+    controller.jumpToPage(0);
     setState(() {});
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -60,7 +64,7 @@ class _TicketsViewState extends State<TicketsView>
     return SizedBox(
       width: SizeConfig.screenWidth,
       child: DefaultTabController(
-        length: 5,
+        length: tabList.length,
         child: Column(
           children: [
             Row(
@@ -171,7 +175,8 @@ class _TicketsViewState extends State<TicketsView>
     }
     if (tickets.isNotEmpty) {
       return PageViewWithIndicator(
-          showIndicator: true,
+          showIndicator: tickets.length > 1,
+          controller: controller,
           children: tickets
               .map(
                 (e) => TambolaTicket(

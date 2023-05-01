@@ -4,11 +4,15 @@ import 'package:page_view_indicators/page_view_indicators.dart';
 
 class PageViewWithIndicator extends StatefulWidget {
   const PageViewWithIndicator(
-      {Key? key, required this.children, required this.showIndicator})
+      {Key? key,
+      required this.children,
+      required this.controller,
+      required this.showIndicator})
       : super(key: key);
 
   final List<Widget>? children;
   final bool showIndicator;
+  final PageController controller;
 
   @override
   State<PageViewWithIndicator> createState() => _PageViewWithIndicatorState();
@@ -16,14 +20,19 @@ class PageViewWithIndicator extends StatefulWidget {
 
 class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
   final _currentPageNotifier = ValueNotifier<int>(0);
-  PageController? controller;
   int ticketsCount = 0;
 
   @override
   void initState() {
-    controller = PageController(initialPage: 0);
+    print("Init called for page controller");
     ticketsCount = widget.children!.length > 5 ? 5 : widget.children!.length;
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    print("Init called for page controller");
+    super.didChangeDependencies();
   }
 
   Padding _buildCircleIndicator() {
@@ -49,7 +58,7 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
           width: SizeConfig.screenWidth,
           child: PageView(
             physics: const BouncingScrollPhysics(),
-            controller: controller,
+            controller: widget.controller,
             scrollDirection: Axis.horizontal,
             children: List.generate(
                 widget.children!.sublist(0, ticketsCount).length,
