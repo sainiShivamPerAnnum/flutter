@@ -6,6 +6,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -463,7 +464,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
   }
 }
 
-class ReactivePositiveAppButton extends StatefulWidget {
+class ReactivePositiveAppButton extends HookWidget {
   const ReactivePositiveAppButton({
     Key? key,
     required this.btnText,
@@ -473,27 +474,15 @@ class ReactivePositiveAppButton extends StatefulWidget {
   final String btnText;
   final Function onPressed;
   final double? width;
-  @override
-  State<ReactivePositiveAppButton> createState() =>
-      _ReactivePositiveAppButtonState();
-}
-
-class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
-  bool _isLoading = false;
-  get isLoading => this._isLoading;
-  set isLoading(value) {
-    if (mounted)
-      setState(() {
-        this._isLoading = value;
-      });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = useState(false);
+
     return Consumer<ConnectivityService>(
         builder: (ctx, model, child) => Container(
               height: SizeConfig.screenWidth! * 0.1556,
-              width: widget.width ??
+              width: width ??
                   SizeConfig.screenWidth! -
                       SizeConfig.pageHorizontalMargins * 2,
               decoration: BoxDecoration(
@@ -512,7 +501,7 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
                           const Color(0xff12BC9D),
                           const Color(0xff249680),
                         ],
-                  stops: [0.01, 0.3, 1],
+                  stops: const [0.01, 0.3, 1],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -520,15 +509,15 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
               child: MaterialButton(
                 // padding: EdgeInsets.zero,
                 onPressed:
-                    model.connectivityStatus == ConnectivityStatus.Offline
-                        ? BaseUtil.showNoInternetAlert
-                        : () async {
-                            if (isLoading) return;
-                            isLoading = true;
-                            await widget.onPressed();
-                            isLoading = false;
+                model.connectivityStatus == ConnectivityStatus.Offline
+                    ? BaseUtil.showNoInternetAlert
+                    : () async {
+                            if (isLoading.value) return;
+                            isLoading.value = true;
+                            await onPressed();
+                            isLoading.value = false;
                           },
-                child: isLoading
+                child: isLoading.value
                     ? SpinKitThreeBounce(
                         size: SizeConfig.title5,
                         color: Colors.white,
@@ -536,7 +525,7 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
                     : FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          widget.btnText.toUpperCase(),
+                          btnText.toUpperCase(),
                           style: TextStyles.rajdhaniB.title5,
                         ),
                       ),

@@ -155,6 +155,7 @@ class Ring extends AnimatedWidget {
   final Animation<double> ringAnimation;
   final int? widthFactor;
   final width = 10;
+
   @override
   Widget build(BuildContext context) {
     final maxWidth = width * widthFactor!;
@@ -186,7 +187,8 @@ class Hole extends AnimatedWidget {
 
   final Animation<double> holeAnimation;
 
-  Animation get value => (listenable as Animation);
+  Animation get value => listenable as Animation;
+
   @override
   Widget build(BuildContext context) {
     return ClipPath(

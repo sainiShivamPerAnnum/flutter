@@ -32,6 +32,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
@@ -54,39 +55,29 @@ Future mainInit() async {
       BackgroundFcmHandler.myBackgroundMessageHandler);
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final appState = AppState();
-  final parser = FelloParser();
-  FelloRouterDelegate? delegate;
-  FelloBackButtonDispatcher? backButtonDispatcher;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  _MyAppState() {
-    delegate = FelloRouterDelegate(appState);
-    delegate!.setNewRoutePath(SplashPageConfig);
-    backButtonDispatcher = FelloBackButtonDispatcher(delegate);
-    AppState.backButtonDispatcher = backButtonDispatcher;
-    AppState.delegate = delegate;
-  }
+class MyApp extends HookWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final appState = useMemoized(() => AppState());
+    final parser = useMemoized(() => FelloParser());
+    final delegate = useMemoized(() => FelloRouterDelegate(appState));
+    final backButtonDispatcher =
+        useMemoized(() => FelloBackButtonDispatcher(delegate));
+
+    useEffect(() {
+      AppState.backButtonDispatcher = backButtonDispatcher;
+      AppState.delegate = delegate;
+      delegate.setNewRoutePath(SplashPageConfig);
+    }, []);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.dark,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarColor: Colors.transparent),
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
+      ),
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
@@ -136,7 +127,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               );
             },
-            routerDelegate: delegate!,
+            routerDelegate: delegate,
             routeInformationParser: parser,
             // showPerformanceOverlay: true,
             localizationsDelegates: const [
@@ -153,11 +144,106 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+// class MyApp extends StatefulWidget {
+//   const MyApp({super.key});
+//
+//   @override
+//   _MyAppState createState() => _MyAppState();
+// }
+//
+// class _MyAppState extends State<MyApp> {
+//   final appState = AppState();
+//   final parser = FelloParser();
+//   FelloRouterDelegate? delegate;
+//   FelloBackButtonDispatcher? backButtonDispatcher;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
+//
+//   _MyAppState() {
+//     delegate = FelloRouterDelegate(appState);
+//     delegate!.setNewRoutePath(SplashPageConfig);
+//     backButtonDispatcher = FelloBackButtonDispatcher(delegate);
+//     AppState.backButtonDispatcher = backButtonDispatcher;
+//     AppState.delegate = delegate;
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return AnnotatedRegion<SystemUiOverlayStyle>(
+//       value: const SystemUiOverlayStyle(
+//           statusBarBrightness: Brightness.dark,
+//           statusBarIconBrightness: Brightness.dark,
+//           statusBarColor: Colors.transparent),
+//       child: MultiProvider(
+//         providers: [
+//           ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
+//           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
+//           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
+//           ChangeNotifierProvider(create: (_) => appState),
+//           ChangeNotifierProvider(create: (_) => locator<JourneyService>()),
+//           ChangeNotifierProvider(create: (_) => locator<LeaderboardService>()),
+//           ChangeNotifierProvider(create: (_) => locator<TxnHistoryService>()),
+//           ChangeNotifierProvider(create: (_) => locator<UserCoinService>()),
+//           ChangeNotifierProvider(create: (_) => locator<WinnerService>()),
+//           ChangeNotifierProvider(create: (_) => locator<UserService>()),
+//           ChangeNotifierProvider(create: (_) => locator<ReferralService>()),
+//           ChangeNotifierProvider(create: (_) => locator<SubService>()),
+//           ChangeNotifierProvider(create: (_) => locator<BankAndPanService>()),
+//           ChangeNotifierProvider(
+//               create: (_) => locator<AugmontTransactionService>()),
+//           ChangeNotifierProvider(
+//               create: (_) => locator<LendboxTransactionService>()),
+//           ChangeNotifierProvider(create: (_) => locator<PowerPlayService>()),
+//         ],
+//         child: PropertyChangeProvider<UserService, UserServiceProperties>(
+//           value: locator<UserService>(),
+//           child: MaterialApp.router(
+//             title: Constants.APP_NAME,
+//             theme: FelloTheme.darkMode(),
+//             useInheritedMediaQuery: true,
+//             debugShowCheckedModeBanner: false,
+//             backButtonDispatcher: backButtonDispatcher,
+//             builder: (context, child) {
+//               return ShowCaseWidget(
+//                 onSkipButtonClicked: () {
+//                   SpotLightController.instance.isSkipButtonClicked = true;
+//                   SpotLightController.instance.startShowCase = false;
+//                 },
+//                 onFinish: () {
+//                   SpotLightController.instance.isTourStarted = false;
+//                   SpotLightController.instance.startShowCase = false;
+//                   SpotLightController.instance.completer.complete();
+//                 },
+//                 builder: Builder(
+//                   builder: (_) {
+//                     SpotLightController.instance.currentContext = _;
+//                     return child ?? Container();
+//                   },
+//                 ),
+//               );
+//             },
+//             routerDelegate: delegate!,
+//             routeInformationParser: parser,
+//             // showPerformanceOverlay: true,
+//             localizationsDelegates: const [
+//               S.delegate,
+//               GlobalMaterialLocalizations.delegate,
+//               GlobalWidgetsLocalizations.delegate,
+//               GlobalCupertinoLocalizations.delegate
+//             ],
+//             supportedLocales: S.delegate.supportedLocales,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-
-
-//TODO:
-//Save screen
-//Download Invoice for fello
-//QR code module
-//Remove 
+// TODO:
+// Save screen
+// Download Invoice for fello
+// QR code module
+// Remove
