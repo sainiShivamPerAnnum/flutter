@@ -5,13 +5,23 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LastWeekBg extends StatelessWidget {
-  const LastWeekBg({Key? key, required this.child, this.callCampaign = true})
-      : super(key: key);
+  const LastWeekBg({
+    Key? key,
+    required this.child,
+    this.callCampaign = true,
+    this.iconUrl,
+    this.title,
+    this.isTopSaver,
+  }) : super(key: key);
 
   final Widget child;
   final bool callCampaign;
+  final String? iconUrl;
+  final String? title;
+  final bool? isTopSaver;
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +57,28 @@ class LastWeekBg extends StatelessWidget {
                   SizedBox(
                     height: SizeConfig.padding12,
                   ),
-                  Text(
-                    'Start saving to not miss out on your rewards next week',
-                    style: TextStyles.sourceSans.body3,
-                  ),
+                  if (isTopSaver ?? false)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.network(
+                          iconUrl ?? "",
+                          height: SizeConfig.padding32,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding12,
+                        ),
+                        Text(
+                          title ?? "",
+                          style: TextStyles.sourceSans.body4,
+                        ),
+                      ],
+                    ),
+                  if (isTopSaver == false && (title?.isNotEmpty ?? false))
+                    Text(
+                      title ?? "",
+                      style: TextStyles.sourceSans.body4,
+                    ),
                   Container(
                     height: SizeConfig.navBarHeight * 0.8,
                     margin: EdgeInsets.fromLTRB(

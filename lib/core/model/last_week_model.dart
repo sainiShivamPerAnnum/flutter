@@ -32,39 +32,37 @@ class LastWeekData {
     this.main,
     this.user,
     this.misc,
+    this.cta,
+    this.isTopSaver,
   });
 
   final Main? main;
   final UserLastWeekData? user;
   final List<Misc>? misc;
-
-  LastWeekData copyWith({
-    Main? main,
-    dynamic user,
-    List<Misc>? misc,
-  }) =>
-      LastWeekData(
-        main: main ?? this.main,
-        user: user ?? this.user,
-        misc: misc ?? this.misc,
-      );
+  final Cta? cta;
+  final bool? isTopSaver;
 
   factory LastWeekData.fromJson(Map<String, dynamic> json) => LastWeekData(
-    main: json["main"] == null ? null : Main.fromJson(json["main"]),
+        main: json["global"] == null ? null : Main.fromJson(json["global"]),
         user: json["user"] == null
             ? null
             : UserLastWeekData.fromJson(json["user"]),
         misc: json["misc"] == null
             ? []
             : List<Misc>.from(json["misc"]!.map((x) => Misc.fromJson(x))),
+        isTopSaver: json["isTopSaver"],
+        cta: json["cta"] == null ? null : Cta.fromJson(json["cta"]),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "main": main?.toJson(),
         "user": user,
         "misc": misc == null
             ? []
             : List<dynamic>.from(misc!.map((x) => x.toJson())),
+        "isTopSaver": isTopSaver,
+        "cta": cta?.toJson(),
       };
 }
 
@@ -216,5 +214,34 @@ class UserLastWeekData {
         "gainsPerc": gainsPerc,
         "invested": invested,
         "returns": returns,
+      };
+}
+
+class Cta {
+  Cta({
+    this.text,
+    this.iconUrl,
+  });
+
+  final String? text;
+  final String? iconUrl;
+
+  Cta copyWith({
+    String? text,
+    String? iconUrl,
+  }) =>
+      Cta(
+        text: text ?? this.text,
+        iconUrl: iconUrl ?? this.iconUrl,
+      );
+
+  factory Cta.fromJson(Map<String, dynamic> json) => Cta(
+        text: json["text"],
+        iconUrl: json["iconUrl"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "text": text,
+        "iconUrl": iconUrl,
       };
 }

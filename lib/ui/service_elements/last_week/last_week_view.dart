@@ -26,6 +26,9 @@ class LastWeekOverView extends StatelessWidget {
   Widget build(BuildContext context) {
     return LastWeekBg(
       callCampaign: callCampaign,
+      iconUrl: model.cta?.iconUrl,
+      title: model.cta?.text,
+      isTopSaver: model.isTopSaver,
       child: SafeArea(
         child: Stack(
           children: [
@@ -266,7 +269,7 @@ class UserInvestmentWidget extends StatelessWidget {
                           .colour(UiConstants.kTextFieldTextColor),
                     ),
                     Text(
-                      '${data.gainsPerc! * 1000}%',
+                      '${(data.gainsPerc! * 100).toStringAsFixed(2)}%',
                       style: TextStyles.rajdhaniSB.body1,
                     ),
                   ],
