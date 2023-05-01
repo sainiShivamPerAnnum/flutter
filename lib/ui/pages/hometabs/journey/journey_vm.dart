@@ -126,10 +126,9 @@ class JourneyPageViewModel extends BaseViewModel {
     log("Journey VM init Called");
 
     setState(ViewState.Busy);
-    await Future.wait([
-      locator<JourneyRepository>().init(),
-      _journeyService!.init(),
-    ]);
+
+    await locator<JourneyRepository>().init();
+    await _journeyService!.init();
 
     setState(ViewState.Idle);
 

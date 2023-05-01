@@ -43,15 +43,17 @@ class JourneyRepository extends BaseRepo {
 
   //Initiating instance for local directory of Android || iOS
   Future<void> init() async {
-    if (_filePathDirectory?.isEmpty ?? false) {
+    if (_filePathDirectory?.isEmpty ?? true) {
       if (Platform.isAndroid) {
         final directory = await getApplicationDocumentsDirectory();
-        if (!await directory.exists()) await directory.create(recursive: true);
+        if (directory.existsSync()) await directory.create(recursive: true);
         _filePathDirectory = '${directory.path}/journey_assets/';
+        logger.d("Android Directory Created with path : $_filePathDirectory");
       } else if (Platform.isIOS) {
         final directory = await getTemporaryDirectory();
-        if (!await directory.exists()) await directory.create(recursive: true);
+        if (directory.existsSync()) await directory.create(recursive: true);
         _filePathDirectory = '${directory.path}/journey_assets/';
+        logger.d("IOS Directory Created with path : $_filePathDirectory");
       }
     }
   }
