@@ -6,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -778,31 +779,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
     switch (screenKey) {
       case 'journey':
-        appState.setCurrentTabIndex = appState.setCurrentTabIndex =
-            _rootController.navItems.values
-                .toList()
-                .indexOf(RootController.journeyNavBarItem);
+        onTapItem(RootController.journeyNavBarItem);
+
         break;
       case 'save':
-        _rootController.onChange(_rootController.navItems.values.toList()[
-            _rootController.navItems.values
-                .toList()
-                .indexOf(RootController.saveNavBarItem)]);
-
-        appState.setCurrentTabIndex = _rootController.navItems.values
-            .toList()
-            .indexOf(RootController.saveNavBarItem);
+        onTapItem(RootController.saveNavBarItem);
 
         break;
       case 'play':
-        appState.setCurrentTabIndex = _rootController.navItems.values
-            .toList()
-            .indexOf(RootController.playNavBarItem);
+        onTapItem(RootController.playNavBarItem);
         break;
       case 'win':
-        appState.setCurrentTabIndex = _rootController.navItems.values
-            .toList()
-            .indexOf(RootController.winNavBarItem);
+        onTapItem(RootController.winNavBarItem);
         break;
 
       case 'profile':
@@ -855,9 +843,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'tambolaHome':
         if (_rootController.navItems
             .containsValue(RootController.tambolaNavBar)) {
-          appState.setCurrentTabIndex = _rootController.navItems.values
-              .toList()
-              .indexOf(RootController.tambolaNavBar);
+          onTapItem(RootController.tambolaNavBar);
           break;
         }
         pageConfiguration = THomePageConfig;
@@ -943,6 +929,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       addPage(pageConfiguration);
       notifyListeners();
     }
+  }
+
+  void onTapItem(NavBarItemModel item) {
+    log('onTapItem ${item.title}');
+    var _rootController = locator<RootController>();
+
+    _rootController.onChange(_rootController.navItems.values
+        .toList()[_rootController.navItems.values.toList().indexOf(item)]);
+
+    appState.setCurrentTabIndex =
+        _rootController.navItems.values.toList().indexOf(item);
   }
 
   openTopSaverScreen(String eventType) {
