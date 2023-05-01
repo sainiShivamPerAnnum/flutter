@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 // import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -22,28 +24,31 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/material.dart';
 // import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class WinViewModel extends BaseViewModel {
-  final UserService? _userService = locator<UserService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
-  final ReferralRepo? _refRepo = locator<ReferralRepo>();
-  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final ReferralRepo _refRepo = locator<ReferralRepo>();
+  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
+
   // final WinnerService? _winnerService = locator<WinnerService>();
-  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  final LeaderboardService _lbService = locator<LeaderboardService>();
   final UserRepository? userRepo = locator<UserRepository>();
-  final TxnHistoryService? _transactionHistoryService =
+  final TxnHistoryService _transactionHistoryService =
       locator<TxnHistoryService>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
-  final CampaignRepo? _campaignRepo = locator<CampaignRepo>();
-  final ScratchCardRepository? _gtRepo = locator<ScratchCardRepository>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final PrizingRepo _prizingRepo = locator<PrizingRepo>();
+  final CampaignRepo _campaignRepo = locator<CampaignRepo>();
+  final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
   final UserRepository _userRepo = locator<UserRepository>();
   int _unscratchedGTCount = 0;
   S locale = locator<S>();
@@ -51,6 +56,7 @@ class WinViewModel extends BaseViewModel {
   Timer? _timer;
   List<FelloFactsModel>? fellofacts = [];
   bool _isFelloFactsLoading = false;
+
   get isFelloFactsLoading => this._isFelloFactsLoading;
 
   set isFelloFactsLoading(value) {
@@ -337,5 +343,29 @@ class WinViewModel extends BaseViewModel {
     }
     _logger!.d("Fello Facts Length: ${fellofacts!.length}");
     isFelloFactsLoading = false;
+  }
+
+  Future<void> showLastWeekSummary() async {
+    setState(ViewState.Busy);
+    final response = await locator<CampaignRepo>().getLastWeekData();
+
+    log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
+
+    setState(ViewState.Idle);
+
+    try {
+      if (response.isSuccess() &&
+          response.model != null &&
+          response.model?.data != null) {
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: LastWeekOverviewConfig,
+          widget: LastWeekOverView(
+              model: response.model!.data!, callCampaign: false),
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

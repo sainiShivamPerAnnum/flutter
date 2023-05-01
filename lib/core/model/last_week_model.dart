@@ -35,7 +35,7 @@ class LastWeekData {
   });
 
   final Main? main;
-  final dynamic user;
+  final UserLastWeekData? user;
   final List<Misc>? misc;
 
   LastWeekData copyWith({
@@ -50,8 +50,10 @@ class LastWeekData {
       );
 
   factory LastWeekData.fromJson(Map<String, dynamic> json) => LastWeekData(
-        main: json["main"] == null ? null : Main.fromJson(json["main"]),
-        user: json["user"],
+    main: json["main"] == null ? null : Main.fromJson(json["main"]),
+        user: json["user"] == null
+            ? null
+            : UserLastWeekData.fromJson(json["user"]),
         misc: json["misc"] == null
             ? []
             : List<Misc>.from(json["misc"]!.map((x) => Misc.fromJson(x))),
@@ -178,5 +180,41 @@ class Misc {
         "subtitle": subtitle,
         "numeric": numeric,
         "bgHex": bgHex,
+      };
+}
+
+class UserLastWeekData {
+  UserLastWeekData({
+    this.gainsPerc,
+    this.invested,
+    this.returns,
+  });
+
+  final double? gainsPerc;
+  final int? invested;
+  final double? returns;
+
+  UserLastWeekData copyWith({
+    double? gainsPerc,
+    int? invested,
+    double? returns,
+  }) =>
+      UserLastWeekData(
+        gainsPerc: gainsPerc ?? this.gainsPerc,
+        invested: invested ?? this.invested,
+        returns: returns ?? this.returns,
+      );
+
+  factory UserLastWeekData.fromJson(Map<String, dynamic> json) =>
+      UserLastWeekData(
+        gainsPerc: json["gainsPerc"]?.toDouble(),
+        invested: json["invested"],
+        returns: json["returns"]?.toDouble(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "gainsPerc": gainsPerc,
+        "invested": invested,
+        "returns": returns,
       };
 }

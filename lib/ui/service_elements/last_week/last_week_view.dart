@@ -16,13 +16,16 @@ class LastWeekOverView extends StatelessWidget {
   const LastWeekOverView({
     Key? key,
     required this.model,
+    this.callCampaign = true,
   }) : super(key: key);
 
   final LastWeekData model;
+  final bool callCampaign;
 
   @override
   Widget build(BuildContext context) {
     return LastWeekBg(
+      callCampaign: callCampaign,
       child: SafeArea(
         child: Stack(
           children: [
@@ -88,24 +91,24 @@ class LastWeekOverView extends StatelessWidget {
                             height: SizeConfig.padding16,
                           ),
                           UserInvestmentWidget(
-                            data: model,
+                            data: model.user!,
                           ),
                         ],
                         SizedBox(
                           height: SizeConfig.padding16,
                         ),
                         ListView.separated(
-                          itemCount: 3,
+                          itemCount: model.misc?.length ?? 0,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return WeekReportRowView(
-                                title: model.misc?[0].title ?? '',
-                                subTitle: model.misc?[0].subtitle ?? '',
-                                value: model.misc?[0].numeric ?? '',
-                                icon: model.misc?[0].iconUrl ?? '',
+                                title: model.misc?[index].title ?? '',
+                                subTitle: model.misc?[index].subtitle ?? '',
+                                value: model.misc?[index].numeric ?? '',
+                                icon: model.misc?[index].iconUrl ?? '',
                                 backgroundColor:
-                                    model.misc![0].bgHex!.toColor()!);
+                                    model.misc![index].bgHex!.toColor()!);
                           },
                           separatorBuilder: (context, index) {
                             return SizedBox(
@@ -116,33 +119,33 @@ class LastWeekOverView extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.padding20,
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding12,
-                              horizontal: SizeConfig.padding16),
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svg/trophy_banner.svg',
-                                height: SizeConfig.padding38,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding20,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  'Congratulations!\nYou were in the top 10 Percentile Investors on Fello',
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextFieldTextColor),
-                                  maxLines: 2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Container(
+                        //   padding: EdgeInsets.symmetric(
+                        //       vertical: SizeConfig.padding12,
+                        //       horizontal: SizeConfig.padding16),
+                        //   decoration: BoxDecoration(
+                        //       color: Colors.black.withOpacity(0.5),
+                        //       borderRadius: BorderRadius.circular(10)),
+                        //   child: Row(
+                        //     children: [
+                        //       SvgPicture.asset(
+                        //         'assets/svg/trophy_banner.svg',
+                        //         height: SizeConfig.padding38,
+                        //       ),
+                        //       SizedBox(
+                        //         width: SizeConfig.padding20,
+                        //       ),
+                        //       Flexible(
+                        //         child: Text(
+                        //           'Congratulations!\nYou were in the top 10 Percentile Investors on Fello',
+                        //           style: TextStyles.sourceSans.body3
+                        //               .colour(UiConstants.kTextFieldTextColor),
+                        //           maxLines: 2,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         SizedBox(
                           height: SizeConfig.navBarHeight * 2,
                         ),
@@ -165,7 +168,7 @@ class UserInvestmentWidget extends StatelessWidget {
     required this.data,
   });
 
-  final LastWeekData data;
+  final UserLastWeekData data;
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +206,7 @@ class UserInvestmentWidget extends StatelessWidget {
                       .colour(const Color(0xffFFD979)),
                 ),
                 Text(
-                  '₹0',
+                  '₹${data.invested}',
                   style: TextStyles.sourceSansSB.title5,
                 ),
               ],
@@ -235,7 +238,7 @@ class UserInvestmentWidget extends StatelessWidget {
                           .colour(UiConstants.kTextFieldTextColor),
                     ),
                     Text(
-                      '₹340',
+                      '₹${BaseUtil.digitPrecision(data.returns!)}',
                       style: TextStyles.rajdhaniSB.body1,
                     ),
                   ],
@@ -263,7 +266,7 @@ class UserInvestmentWidget extends StatelessWidget {
                           .colour(UiConstants.kTextFieldTextColor),
                     ),
                     Text(
-                      '11.2%',
+                      '${data.gainsPerc! * 1000}%',
                       style: TextStyles.rajdhaniSB.body1,
                     ),
                   ],

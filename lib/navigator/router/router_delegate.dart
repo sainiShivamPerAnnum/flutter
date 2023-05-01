@@ -58,14 +58,12 @@ import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/enums/app_config_keys.dart';
 import '../../core/model/app_config_model.dart';
-import '../../ui/service_elements/last_week/last_week_view.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -939,6 +937,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'powerPlayPrizes':
         openPowerPlayModalSheet();
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);

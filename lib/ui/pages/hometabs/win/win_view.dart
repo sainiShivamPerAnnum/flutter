@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
@@ -6,7 +7,9 @@ import 'package:felloapp/ui/pages/hometabs/win/win_components/refer_and_earn_car
 import 'package:felloapp/ui/pages/hometabs/win/win_components/scratch_card_info_strip.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/dev_rel.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -28,6 +31,12 @@ class Win extends StatelessWidget {
       onModelDispose: (model) => model.clear(),
       builder: (ctx, model, child) {
         return Builder(builder: (context) {
+          if (model.state == ViewState.Busy) {
+            return SizedBox(
+              width: SizeConfig.screenWidth,
+              child: const FullScreenLoader(),
+            );
+          }
           return ListView(
             padding: EdgeInsets.zero,
             children: [
@@ -46,6 +55,11 @@ class Win extends StatelessWidget {
 
               AccountInfoTiles(
                   title: locale.bankAccDetails, uri: "/bankDetails"),
+              AccountInfoTiles(
+                title: 'Your Last Week on Fello',
+                uri: "",
+                onTap: () => model.showLastWeekSummary(),
+              ),
               //Scratch Cards count and navigation
               const ScratchCardsInfoStrip(),
               //Current Winnings Information

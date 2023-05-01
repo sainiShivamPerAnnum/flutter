@@ -7,9 +7,11 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LastWeekBg extends StatelessWidget {
-  const LastWeekBg({Key? key, required this.child}) : super(key: key);
+  const LastWeekBg({Key? key, required this.child, this.callCampaign = true})
+      : super(key: key);
 
   final Widget child;
+  final bool callCampaign;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +78,10 @@ class LastWeekBg extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       // color:  UiConstants.kBuyTicketSaveButton,
                       onPressed: () {
-                        locator<MarketingEventHandlerService>().getCampaigns();
+                        if (callCampaign) {
+                          locator<MarketingEventHandlerService>()
+                              .getCampaigns();
+                        }
                         AppState.backButtonDispatcher!.didPopRoute();
                       },
                       child: Center(
