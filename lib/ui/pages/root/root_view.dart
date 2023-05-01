@@ -45,7 +45,7 @@ class Root extends StatelessWidget {
                 const NewSquareBackground(),
                 Column(
                   children: [
-                   const RootAppBar(),
+                    const RootAppBar(),
                     Expanded(
                       child: RefreshIndicator(
                         triggerMode: RefreshIndicatorTriggerMode.onEdge,
@@ -142,7 +142,9 @@ class _RootPageViewState extends State<RootPageView>
 bool _showHappyHour() {
   if (locator<RootController>().currentNavBarItemModel ==
       RootController.tambolaNavBar) {
-    return (locator<TambolaService>().tambolaTickets?.length ?? 0) > 0;
+    return (locator<TambolaService>().bestTickets?.data?.totalTicketCount ??
+            0) >
+        0;
   }
   return true;
 }
@@ -175,32 +177,45 @@ class RootAppBar extends StatelessWidget {
         builder: (_, userservice, ___) {
           return Consumer<AppState>(
             builder: (ctx, appState, child) {
-              return (locator<RootController>().currentNavBarItemModel !=
-                      RootController.journeyNavBarItem)
-                  ? Container(
-                      width: SizeConfig.screenWidth,
-                      height: kToolbarHeight + SizeConfig.viewInsets.top,
-                      alignment: Alignment.bottomCenter,
-                      color:
-                          (locator<RootController>().currentNavBarItemModel ==
+              return Selector<TambolaService, int>(
+                selector: (_, tambolaService) =>
+                    tambolaService.tambolaTicketCount,
+                builder: (_, ticketCount, child) {
+                  print("Tambola Ticket count: $ticketCount");
+                  return (locator<RootController>().currentNavBarItemModel !=
+                          RootController.journeyNavBarItem)
+                      ? Container(
+                          width: SizeConfig.screenWidth,
+                          height: kToolbarHeight + SizeConfig.viewInsets.top,
+                          alignment: Alignment.bottomCenter,
+                          color: (locator<RootController>()
+                                      .currentNavBarItemModel ==
                                   RootController.saveNavBarItem)
                               ? (userservice!.userSegments.contains("NEW_USER"))
                                   ? UiConstants.kBackgroundColor
                                   : UiConstants.kSecondaryBackgroundColor
                               : UiConstants.kBackgroundColor,
-                      child: FAppBar(
-                        type: getFaqType(),
-                        backgroundColor: (locator<RootController>()
-                                    .currentNavBarItemModel ==
-                                RootController.saveNavBarItem)
-                            ? (userservice!.userSegments.contains("NEW_USER"))
-                                ? UiConstants.kBackgroundColor
-                                : UiConstants.kSecondaryBackgroundColor
-                            : UiConstants.kBackgroundColor,
-                        showAvatar: true,
-                      ),
-                    )
-                  : const SizedBox();
+                          child: FAppBar(
+                            type: getFaqType(),
+                            backgroundColor: ((locator<RootController>()
+                                            .currentNavBarItemModel ==
+                                        RootController.tambolaNavBar) &&
+                                    ticketCount == 0)
+                                ? Color(0XFF141414)
+                                : (locator<RootController>()
+                                            .currentNavBarItemModel ==
+                                        RootController.saveNavBarItem)
+                                    ? (userservice!.userSegments
+                                            .contains("NEW_USER"))
+                                        ? UiConstants.kBackgroundColor
+                                        : UiConstants.kSecondaryBackgroundColor
+                                    : UiConstants.kBackgroundColor,
+                            showAvatar: true,
+                          ),
+                        )
+                      : const SizedBox();
+                },
+              );
             },
           );
         });

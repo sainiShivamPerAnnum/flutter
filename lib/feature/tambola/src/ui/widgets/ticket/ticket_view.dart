@@ -1,4 +1,5 @@
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
+import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_ticket_model.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/page_view_with_indicator.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/no_ticket_widget.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 class TicketsView extends StatefulWidget {
   const TicketsView({
     Key? key,
-    required this.tickets,
+    this.bestTickets,
     required this.weeklyPicks,
     // required this.tabList,
     // required this.model,
@@ -18,7 +19,7 @@ class TicketsView extends StatefulWidget {
 
   // final TambolaHomeViewModel? model;
   // final bool showIndicatorForAll;
-  final List<TambolaTicketModel> tickets;
+  final TambolaBestTicketsModel? bestTickets;
   final DailyPick weeklyPicks;
 
   @override
@@ -28,7 +29,8 @@ class TicketsView extends StatefulWidget {
 class _TicketsViewState extends State<TicketsView>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-  late final List<TambolaTicketModel?> _bestBoards;
+  late final PageController controller;
+  // late final List<TambolaTicketModel?> _bestBoards;
   final List<String> tabList = const [
     "All",
     "One Row",
@@ -39,18 +41,21 @@ class _TicketsViewState extends State<TicketsView>
   @override
   void initState() {
     super.initState();
+    controller = PageController(initialPage: 0);
     _tabController = TabController(vsync: this, length: 5);
     _tabController.addListener(_handleTabSelection);
-    _bestBoards = widget.tickets;
+    // _bestBoards = widget.tickets;
   }
 
   void _handleTabSelection() {
+    controller.jumpToPage(0);
     setState(() {});
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -59,7 +64,7 @@ class _TicketsViewState extends State<TicketsView>
     return SizedBox(
       width: SizeConfig.screenWidth,
       child: DefaultTabController(
-        length: 5,
+        length: tabList.length,
         child: Column(
           children: [
             Row(
@@ -128,35 +133,60 @@ class _TicketsViewState extends State<TicketsView>
   }
 
   Widget _buildTabContent() {
+    // Widget buildObject = NoTicketWidget();
+    final bestTicketsData = widget.bestTickets?.data;
+    if (bestTicketsData == null) return NoTicketWidget();
+    List<TambolaTicketModel> tickets = [];
     switch (_tabController.index) {
       case 0:
-        return PageViewWithIndicator(
-          showIndicator: true,
-          children: widget.tickets
+        if (bestTicketsData.oneRow != null) {
+          tickets.addAll(bestTicketsData.oneRow!);
+        }
+        if (bestTicketsData.twoRows != null) {
+          tickets.addAll(bestTicketsData.twoRows!);
+        }
+        if (bestTicketsData.corners != null) {
+          tickets.addAll(bestTicketsData.corners!);
+        }
+        if (bestTicketsData.fullHouse != null) {
+          tickets.addAll(bestTicketsData.fullHouse!);
+        }
+        break;
+      case 1:
+        if (bestTicketsData.oneRow != null) {
+          tickets.addAll(bestTicketsData.oneRow!);
+        }
+        break;
+      case 2:
+        if (bestTicketsData.twoRows != null) {
+          tickets.addAll(bestTicketsData.twoRows!);
+        }
+        break;
+      case 3:
+        if (bestTicketsData.corners != null) {
+          tickets.addAll(bestTicketsData.corners!);
+        }
+        break;
+      case 4:
+        if (bestTicketsData.fullHouse != null) {
+          tickets.addAll(bestTicketsData.fullHouse!);
+        }
+        break;
+    }
+    if (tickets.isNotEmpty) {
+      return PageViewWithIndicator(
+          showIndicator: tickets.length > 1,
+          controller: controller,
+          children: tickets
               .map(
                 (e) => TambolaTicket(
                   board: e,
                   calledDigits: widget.weeklyPicks.toList(),
                 ),
               )
-              .toList(),
-        );
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-        final tabIndex = _tabController.index - 1;
-        final board = _bestBoards.length > tabIndex
-            ? _bestBoards[tabIndex]
-            : _bestBoards[0];
-        return board != null
-            ? TambolaTicket(
-                board: board,
-                calledDigits: widget.weeklyPicks.toList(),
-              )
-            : const NoTicketWidget();
-      default:
-        return const NoTicketWidget();
+              .toList());
+    } else {
+      return const NoTicketWidget();
     }
   }
 }

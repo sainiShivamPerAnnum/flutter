@@ -12,6 +12,7 @@ import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
+import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_ticket_model.dart';
 import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
 import 'package:felloapp/feature/tambola/src/ui/weekly_results_views/weekly_result.dart';
@@ -44,9 +45,10 @@ class TambolaService extends ChangeNotifier {
   GameModel? tambolaGameData;
   PrizesModel? tambolaPrizes;
   List<Winners>? pastWeekWinners;
-  List<TambolaTicketModel>? tambolaTickets;
+  List<TambolaTicketModel> allTickets = [];
+  TambolaBestTicketsModel? bestTickets;
   Map<String, int> ticketCodeWinIndex = {};
-  int activeTambolaCardCount = 0;
+  int tambolaTicketCount = 0;
   int _matchedTicketCount = 0;
   bool _isScreenLoading = true;
   bool _isLoading = false;
@@ -94,11 +96,17 @@ class TambolaService extends ChangeNotifier {
   void init() {}
 
   void dump() {
+    tambolaTicketCount = 0;
+    _matchedTicketCount = 0;
+    ticketCodeWinIndex = {};
+    _isScreenLoading = true;
+    _isLoading = false;
+    isEligible = false;
+    showWinScreen = false;
     _weeklyPicks = null;
     _todaysPicks = null;
-    matchedTicketCount = 0;
-    tambolaTickets = null;
-    log("Tambola service Dispose called");
+    bestTickets = null;
+    allTickets = [];
   }
 
   //CORE METHODS -- END
@@ -117,8 +125,9 @@ class TambolaService extends ChangeNotifier {
   }
 
   Future<int> getTambolaTicketsCount() async {
-    await getTambolaTickets();
-    return tambolaTickets?.length ?? 0;
+    await getBestTambolaTickets();
+    tambolaTicketCount = bestTickets?.data?.totalTicketCount ?? 0;
+    return tambolaTicketCount;
   }
 
   Future<void> getPrizes({bool refresh = false}) async {
@@ -140,9 +149,25 @@ class TambolaService extends ChangeNotifier {
   }
 
   Future<void> getTambolaTickets() async {
-    final ticketsResponse = await _tambolaRepo.getTickets();
+    final ticketsResponse = await _tambolaRepo
+        .getTickets(allTickets.isEmpty ? 0 : allTickets.length + 1);
     if (ticketsResponse.isSuccess()) {
-      tambolaTickets = ticketsResponse.model;
+      if (ticketsResponse.model!.isEmpty) return;
+      if (allTickets.isEmpty) {
+        allTickets = ticketsResponse.model!;
+      } else {
+        allTickets.addAll(ticketsResponse.model!);
+      }
+      notifyListeners();
+    } else {
+      //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE
+    }
+  }
+
+  Future<void> getBestTambolaTickets() async {
+    final ticketsResponse = await _tambolaRepo.getBestTickets();
+    if (ticketsResponse.isSuccess()) {
+      bestTickets = ticketsResponse.model;
     } else {
       //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE
     }
@@ -210,8 +235,8 @@ class TambolaService extends ChangeNotifier {
   }
 
   Future<void> examineTicketsForWins() async {
-    if (tambolaTickets == null ||
-        tambolaTickets!.isEmpty ||
+    if (bestTickets == null ||
+        bestTickets?.data == null ||
         weeklyPicks == null ||
         weeklyPicks!.toList().length != 7 * 3 ||
         weeklyPicks!.toList().contains(-1) ||
@@ -219,7 +244,7 @@ class TambolaService extends ChangeNotifier {
       _logger.i('Testing is not ready yet');
       return;
     }
-
+    final tambolaTickets = bestTickets?.data?.allTickets();
     for (final boardObj in tambolaTickets!) {
       if (getCornerOdds(
               boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==

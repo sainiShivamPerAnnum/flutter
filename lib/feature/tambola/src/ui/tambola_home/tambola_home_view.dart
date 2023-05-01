@@ -32,92 +32,86 @@ class _TambolaHomeViewState extends State<TambolaHomeView> {
               width: SizeConfig.screenWidth,
               child: const FullScreenLoader(),
             )
-          : widget.standAloneScreen
-              ? Scaffold(
-                  backgroundColor: UiConstants.kBackgroundColor,
-                  appBar: FAppBar(
-                    showAvatar: false,
-                    showCoinBar: false,
-                    showHelpButton: false,
-                    action: Row(
-                      children: [
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            side:
-                                const BorderSide(color: Colors.white, width: 1),
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(25))),
+          : Scaffold(
+              backgroundColor: UiConstants.kBackgroundColor,
+              appBar: widget.standAloneScreen
+                  ? FAppBar(
+                      showAvatar: false,
+                      showCoinBar: false,
+                      showHelpButton: false,
+                      action: Row(
+                        children: [
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              side: const BorderSide(
+                                  color: Colors.white, width: 1),
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(25))),
+                            ),
+                            onPressed: () {
+                              AppState.delegate!.appState.currentAction =
+                                  PageAction(
+                                state: PageState.addWidget,
+                                page: TambolaNewUser,
+                                widget: const TambolaHomeDetailsView(
+                                  showPrizeSection: true,
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10.0, right: 10.0),
+                              child: Text(
+                                "Prizes",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.body2,
+                                ),
+                              ),
+                            ),
                           ),
-                          onPressed: () {
-                            AppState.delegate!.appState.currentAction =
-                                PageAction(
+                          SizedBox(
+                            width: SizeConfig.padding12,
+                          ),
+                          InkWell(
+                            onTap: () => AppState
+                                .delegate!.appState.currentAction = PageAction(
                               state: PageState.addWidget,
                               page: TambolaNewUser,
-                              widget: const TambolaHomeDetailsView(
-                                showPrizeSection: true,
-                              ),
-                            );
-                          },
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 10.0, right: 10.0),
-                            child: Text(
-                              "Prizes",
-                              style: TextStyle(
+                              widget: const TambolaHomeDetailsView(),
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                      UiConstants.kArrowButtonBackgroundColor,
+                                  border: Border.all(color: Colors.white)),
+                              padding: const EdgeInsets.all(6),
+                              child: Icon(
+                                Icons.question_mark,
                                 color: Colors.white,
-                                fontSize: SizeConfig.body2,
+                                size: SizeConfig.padding20,
                               ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding12,
-                        ),
-                        InkWell(
-                          onTap: () => AppState
-                              .delegate!.appState.currentAction = PageAction(
-                            state: PageState.addWidget,
-                            page: TambolaNewUser,
-                            widget: const TambolaHomeDetailsView(),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: UiConstants.kArrowButtonBackgroundColor,
-                                border: Border.all(color: Colors.white)),
-                            padding: const EdgeInsets.all(6),
-                            child: Icon(
-                              Icons.question_mark,
-                              color: Colors.white,
-                              size: SizeConfig.padding20,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    title: "Tambola",
-                    backgroundColor: UiConstants.kBackgroundColor,
-                  ),
-                  body: RefreshIndicator(
-                    color: UiConstants.primaryColor,
-                    backgroundColor: Colors.black,
-                    onRefresh: () async => model.refreshTambolaTickets(),
-                    child: model.activeTambolaCardCount > 0
-                        ? const TambolaHomeTicketsView()
-                        : const TambolaHomeDetailsView(
-                            isStandAloneScreen: true,
-                          ),
-                  ),
-                )
-              : RefreshIndicator(
-                  color: UiConstants.primaryColor,
-                  backgroundColor: Colors.black,
-                  onRefresh: () async => model.refreshTambolaTickets(),
-                  child: model.activeTambolaCardCount > 0
-                      ? const TambolaHomeTicketsView()
-                      : const TambolaHomeDetailsView(),
-                ),
+                          )
+                        ],
+                      ),
+                      title: "Tambola",
+                      backgroundColor: UiConstants.kBackgroundColor,
+                    )
+                  : null,
+              body: RefreshIndicator(
+                color: UiConstants.primaryColor,
+                backgroundColor: Colors.black,
+                onRefresh: () async => model.init(),
+                child: model.activeTambolaCardCount > 0
+                    ? const TambolaHomeTicketsView()
+                    : TambolaHomeDetailsView(
+                        isStandAloneScreen: widget.standAloneScreen,
+                      ),
+              ),
+            ),
     );
   }
 }
