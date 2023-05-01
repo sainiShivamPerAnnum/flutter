@@ -185,7 +185,8 @@ class _LockedState extends StatelessWidget {
           BaseUtil.openDepositOptionsModalSheet(
               amount: gameTier.amountToCompleteLevel.round(),
               title: "Save in any asset to unlock ${gameTier.title}",
-              subtitle: 'Earn 1 token with every Rupee saved');
+              subtitle: 'Earn 1 token with every Rupee saved',
+              timer: 0);
         }
       },
       child: Container(

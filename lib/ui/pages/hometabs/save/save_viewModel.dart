@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -57,7 +59,7 @@ class SaveViewModel extends BaseViewModel {
 
   final BankAndPanService? _sellService = locator<BankAndPanService>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
-      locator<TransactionHistoryRepository>();
+  locator<TransactionHistoryRepository>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
@@ -74,7 +76,7 @@ class SaveViewModel extends BaseViewModel {
   double _nonWithdrawableQnt = 0.0;
   double _withdrawableQnt = 0.0;
   late final PageController offersController =
-      PageController(viewportFraction: 0.9, initialPage: 1);
+  PageController(viewportFraction: 0.9, initialPage: 1);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
@@ -173,7 +175,7 @@ class SaveViewModel extends BaseViewModel {
     await _userCoinService!.getUserCoinBalance();
     await locator<SubService>().init();
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _sellService!.init();
       getCampaignEvents();
       getSaveViewBlogs();
@@ -271,10 +273,8 @@ class SaveViewModel extends BaseViewModel {
     await _userService!.getUserFundWalletData();
   }
 
-  double getQuantity(
-    UserFundWallet? fund,
-    var investmentType,
-  ) {
+  double getQuantity(UserFundWallet? fund,
+      var investmentType,) {
     final quantity = investmentType == InvestmentType.AUGGOLD99
         ? fund?.augGoldQuantity
         : fund?.wLbBalance;
@@ -328,22 +328,20 @@ class SaveViewModel extends BaseViewModel {
         ));
   }
 
-  void navigateToSaveAssetView(
-    InvestmentType investmentType,
-  ) {
+  void navigateToSaveAssetView(InvestmentType investmentType,) {
     Haptic.vibrate();
 
     if (investmentType == InvestmentType.AUGGOLD99) {
       _analyticsService!.track(
           eventName: AnalyticsEvents.assetBannerTapped,
           properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
             'Asset': 'Gold',
             "Failed transaction count": AnalyticsProperties.getFailedTxnCount(),
             "Successs transaction count":
-                AnalyticsProperties.getSucessTxnCount(),
+            AnalyticsProperties.getSucessTxnCount(),
             "Pending transaction count":
-                AnalyticsProperties.getPendingTxnCount(),
+            AnalyticsProperties.getPendingTxnCount(),
           }));
 
       AppState.delegate!.appState.currentAction = PageAction(
@@ -357,13 +355,13 @@ class SaveViewModel extends BaseViewModel {
       _analyticsService!.track(
           eventName: AnalyticsEvents.assetBannerTapped,
           properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
             'Asset': 'Flo',
             "Failed transaction count": AnalyticsProperties.getFailedTxnCount(),
             "Successs transaction count":
-                AnalyticsProperties.getSucessTxnCount(),
+            AnalyticsProperties.getSucessTxnCount(),
             "Pending transaction count":
-                AnalyticsProperties.getPendingTxnCount(),
+            AnalyticsProperties.getPendingTxnCount(),
           }));
 
       AppState.delegate!.appState.currentAction = PageAction(

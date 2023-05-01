@@ -68,15 +68,16 @@ class ReferEarnCard extends StatelessWidget {
                                 style: TextStyles.sourceSansB.body3
                                     .colour(UiConstants.kTextColor)),
                             WidgetSpan(
-                                child: Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding4),
-                              height: 17,
-                              width: 17,
-                              child: SvgPicture.asset(
-                                Assets.token,
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding4),
+                                height: 17,
+                                width: 17,
+                                child: SvgPicture.asset(
+                                  Assets.token,
+                                ),
                               ),
-                            )),
+                            ),
                             TextSpan(
                                 text:
                                     '${AppConfig.getValue(AppConfigKey.referralFlcBonus)}',

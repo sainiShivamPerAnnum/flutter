@@ -43,7 +43,7 @@ class JourneyRepository extends BaseRepo {
 
   //Initiating instance for local directory of Android || iOS
   Future<void> init() async {
-    if (_filePathDirectory == null) {
+    if (_filePathDirectory?.isEmpty ?? false) {
       if (Platform.isAndroid) {
         final directory = await getApplicationDocumentsDirectory();
         if (!await directory.exists()) await directory.create(recursive: true);
@@ -58,6 +58,7 @@ class JourneyRepository extends BaseRepo {
 
   void dump() {
     journeyPages.clear();
+    if (_filePathDirectory == null) return;
     if (Directory(_filePathDirectory!).existsSync()) {
       Directory(_filePathDirectory!).deleteSync(recursive: true);
     }

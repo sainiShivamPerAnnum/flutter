@@ -93,9 +93,7 @@ class TambolaService extends ChangeNotifier {
 
   void init() {}
 
-  @override
-  void dispose() {
-    super.dispose();
+  void dump() {
     _weeklyPicks = null;
     _todaysPicks = null;
     matchedTicketCount = 0;
@@ -292,7 +290,5 @@ class TambolaService extends ChangeNotifier {
         DateTime.now().hour >= 18) {
       notifyListeners();
     }
-    unawaited(PreferenceHelper.setBool(
-        PreferenceHelper.SHOW_TAMBOLA_PROCESSING, false));
   }
 }

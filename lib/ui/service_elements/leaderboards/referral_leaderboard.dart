@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -64,8 +65,9 @@ class ReferralLeaderboard extends StatelessWidget {
                           .colour(UiConstants.kSecondaryLeaderBoardTextColor),
                     ),
                     Text(
-                      model!.getDateRange(monthly: true),
-                      style: TextStyles.sourceSans.body4
+                      'of ${BaseUtil.getMonthName(monthNum: DateTime.now().month)}',
+                      // model!.getDateRange(monthly: true),
+                      style: TextStyles.sourceSans.body3
                           .colour(UiConstants.kTextFieldTextColor),
                     )
                   ],

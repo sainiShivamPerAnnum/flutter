@@ -251,9 +251,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     avatarCachedMlIndex = 1;
     resetJourneyData();
     PreferenceHelper.remove(AVATAR_CURRENT_MILESTONE_LEVEL);
-    levels!.clear();
+    levels?.clear();
     vsync = null;
-    pages!.clear();
+    pages?.clear();
     log("Journey Service dumped");
   }
 
@@ -698,7 +698,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
 
   resetJourneyData() {
     pageCount = 0;
-    currentFullViewHeight = pageHeight! * pageCount;
+    currentFullViewHeight = (pageHeight ?? 1) * pageCount;
     startPage = 1;
     lastPage = 2;
     currentMilestoneList.clear();

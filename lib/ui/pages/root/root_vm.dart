@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -7,6 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -31,6 +33,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -70,6 +73,7 @@ class RootViewModel extends BaseViewModel {
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
+  bool fetchCampaign = true;
 
   // final WinnerService? winnerService = locator<WinnerService>();
   final ReferralRepo _refRepo = locator<ReferralRepo>();
@@ -136,7 +140,14 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         _initAdhocNotifications();
-        if (!AppState.isFirstTime) showMarketingCampings();
+
+        if (await BaseUtil.isFirstTimeThisWeek()) {
+          await showLastWeekOverview();
+        }
+
+        if (!AppState.isFirstTime && fetchCampaign) {
+          showMarketingCampings();
+        }
       },
     );
   }
@@ -400,5 +411,32 @@ class RootViewModel extends BaseViewModel {
       }
     });
     return flag;
+  }
+
+  Future<void> showLastWeekOverview() async {
+    final response = await locator<CampaignRepo>().getLastWeekData();
+
+    log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
+
+    try {
+      if (response.isSuccess() &&
+          response.model != null &&
+          response.model?.data != null) {
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: LastWeekOverviewConfig,
+          widget: LastWeekOverView(
+            model: response.model!.data!,
+          ),
+        );
+
+        fetchCampaign = false;
+
+        unawaited(PreferenceHelper.setBool(
+            PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

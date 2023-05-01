@@ -8,6 +8,7 @@ import 'package:felloapp/util/locator.dart';
 class TambolaHomeViewModel extends BaseViewModel {
   TambolaService? tambolaService;
   int activeTambolaCardCount = 0;
+
   Future<void> init() async {
     tambolaService = locator<TambolaService>();
     state = ViewState.Busy;
@@ -15,12 +16,12 @@ class TambolaHomeViewModel extends BaseViewModel {
     if (res) {
       activeTambolaCardCount = await tambolaService!.getTambolaTicketsCount();
     }
+    // getLastWeekData();
     setState(ViewState.Idle);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     activeTambolaCardCount = 0;
     tambolaService = null;
     super.dispose();

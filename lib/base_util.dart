@@ -50,12 +50,15 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class BaseUtil extends ChangeNotifier {
@@ -564,7 +567,7 @@ class BaseUtil extends ChangeNotifier {
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts
-      /// to sign in again without closing the apcp,
+      /// to sign in again without closing the app,
       /// the old variables are still in effect
       /// resetting them like below for now
       _myUser = null;
@@ -733,6 +736,32 @@ class BaseUtil extends ChangeNotifier {
     double y = x * pow(10, offset);
     int z = round ? y.round() : y.truncate();
     return z / pow(10, offset);
+  }
+
+  static String formatIndianRupees(double value) {
+    final formatter = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 0,
+    );
+    return formatter.format(value);
+  }
+
+  static Future<bool> isFirstTimeThisWeek() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Get the current week number
+    final currentWeekNumber =
+        (DateTime.now().difference(DateTime.utc(0, 1, 1)).inDays ~/ 7) + 1;
+
+    // Get the last week number when the app was opened
+    final lastWeekNumber = prefs.getInt(PreferenceHelper.LAST_WEEK_NUMBER) ?? 0;
+
+    // Update the last week number in preferences
+    await prefs.setInt(PreferenceHelper.LAST_WEEK_NUMBER, currentWeekNumber);
+
+    // Check if the current week is the same as the last week when the app was opened
+    return currentWeekNumber != lastWeekNumber;
   }
 
   int getTicketCountForTransaction(double investment) =>

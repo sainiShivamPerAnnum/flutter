@@ -48,20 +48,21 @@ class CampaignCardSection extends StatelessWidget {
         top: SizeConfig.padding8,
         // right: SizeConfig.padding16,
       ),
-      child: Container(
+      child: SizedBox(
         height: SizeConfig.screenWidth! * 0.5,
         width: SizeConfig.screenWidth,
         child: saveVm.isChallengesLoading
-            ? SizedBox()
+            ? const SizedBox()
             : PageView.builder(
                 controller: saveVm.offersController,
                 itemCount: saveVm.ongoingEvents!.length,
-                itemBuilder: ((context, index) {
+                itemBuilder: (context, index) {
                   final event = saveVm.ongoingEvents![index];
                   return GestureDetector(
                     onTap: () {
-                      if (_userService.baseUser!.username!.isEmpty)
-                        return BaseUtil.showUsernameInputModalSheet();
+                      if (_userService.baseUser!.username!.isEmpty) {
+                        BaseUtil.showUsernameInputModalSheet();
+                      }
                       saveVm.trackChallangeTapped(event.type, index);
                       AppState.delegate!.parseRoute(Uri.parse(event.type));
                     },
@@ -88,7 +89,7 @@ class CampaignCardSection extends StatelessWidget {
                       ),
                     ),
                   );
-                }),
+                },
               ),
       ),
     );
@@ -123,10 +124,12 @@ class IOSCampaignCard extends StatelessWidget {
                 : Assets.weeklySaver;
 
     return AnimatedContainer(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       curve: Curves.easeInCubic,
-      child: this.isLoading
+      child: isLoading
           ? Shimmer.fromColors(
+              baseColor: UiConstants.kUserRankBackgroundColor,
+              highlightColor: UiConstants.kBackgroundColor,
               child: Container(
                 width: SizeConfig.screenWidth,
                 decoration: BoxDecoration(
@@ -137,14 +140,12 @@ class IOSCampaignCard extends StatelessWidget {
                   padding: EdgeInsets.all(SizeConfig.padding16),
                   child: Container(
                     height: SizeConfig.screenWidth! * 0.18,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: UiConstants.kSecondaryBackgroundColor,
                     ),
-                  ),
-                ),
-              ),
-              baseColor: UiConstants.kUserRankBackgroundColor,
-              highlightColor: UiConstants.kBackgroundColor,
+            ),
+          ),
+        ),
             )
           : Container(
               decoration: BoxDecoration(
@@ -153,7 +154,7 @@ class IOSCampaignCard extends StatelessWidget {
               ),
               margin: EdgeInsets.only(bottom: SizeConfig.padding16),
               padding: EdgeInsets.only(
-                  left: this.leftPadding,
+                  left: leftPadding,
                   right: SizeConfig.padding24,
                   top: SizeConfig.viewInsets.top + kToolbarHeight / 2),
               child: Row(
@@ -177,7 +178,7 @@ class IOSCampaignCard extends StatelessWidget {
                             )
                             .setHeight(1),
                       ),
-                      this.subText,
+                      subText,
                       SizedBox(height: SizeConfig.padding32)
                     ],
                   ),
@@ -221,8 +222,10 @@ class CampaignCard extends StatelessWidget {
                 ? Assets.dailySaver
                 : Assets.weeklySaver;
 
-    return this.isLoading
+    return isLoading
         ? Shimmer.fromColors(
+            baseColor: UiConstants.kUserRankBackgroundColor,
+            highlightColor: UiConstants.kBackgroundColor,
             child: Container(
               width: SizeConfig.screenWidth,
               decoration: BoxDecoration(
@@ -233,14 +236,12 @@ class CampaignCard extends StatelessWidget {
                 padding: EdgeInsets.all(SizeConfig.padding16),
                 child: Container(
                   height: SizeConfig.screenWidth! * 0.18,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: UiConstants.kSecondaryBackgroundColor,
                   ),
-                ),
-              ),
-            ),
-            baseColor: UiConstants.kUserRankBackgroundColor,
-            highlightColor: UiConstants.kBackgroundColor,
+          ),
+        ),
+      ),
           )
         : event.bgImage.isNotEmpty
             ? Container(
@@ -259,9 +260,9 @@ class CampaignCard extends StatelessWidget {
                   color: UiConstants.kSecondaryBackgroundColor,
                 ),
                 padding: EdgeInsets.only(
-                  left: this.leftPadding,
+                  left: leftPadding,
                   right: SizeConfig.padding24,
-                  top: this.topPadding,
+                  top: topPadding,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -284,7 +285,7 @@ class CampaignCard extends StatelessWidget {
                               )
                               .setHeight(1),
                         ),
-                        this.subText
+                        subText
                       ],
                     ),
                     Expanded(

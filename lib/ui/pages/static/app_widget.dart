@@ -13,7 +13,8 @@ import 'package:provider/provider.dart';
 class AppTextFieldLabel extends StatelessWidget {
   final String text;
   final double? leftPadding;
-  AppTextFieldLabel(this.text, {this.leftPadding});
+  const AppTextFieldLabel(this.text, {Key? key, this.leftPadding})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -364,7 +365,7 @@ class AppPositiveBtn extends StatelessWidget {
             borderRadius: BorderRadius.circular(
               SizeConfig.buttonBorderRadius,
             ),
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
                 Color(0xff12BC9D),
                 Color(0xff249680),
@@ -427,7 +428,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                 SizeConfig.buttonBorderRadius,
               ),
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [
                   Color(0xff12BC9D),
                   Color(0xff249680),
@@ -507,9 +508,9 @@ class _ReactivePositiveAppButtonState extends State<ReactivePositiveAppButton> {
                           Colors.black,
                         ]
                       : [
-                          Color.fromARGB(255, 168, 230, 219),
-                          Color(0xff12BC9D),
-                          Color(0xff249680),
+                          const Color.fromARGB(255, 168, 230, 219),
+                          const Color(0xff12BC9D),
+                          const Color(0xff249680),
                         ],
                   stops: [0.01, 0.3, 1],
                   begin: Alignment.topCenter,
@@ -569,7 +570,7 @@ class AppNegativeBtn extends StatelessWidget {
         style: ButtonStyle(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           side: MaterialStateProperty.all<BorderSide>(
-            BorderSide(
+            const BorderSide(
               color: UiConstants.kTextColor,
               width: 1,
             ),
@@ -587,12 +588,14 @@ class AppDateField extends StatelessWidget {
   final double? fieldWidth;
   final FormFieldValidator<String> validate;
 
-  AppDateField(
-      {this.controller,
+  const AppDateField(
+      {Key? key,
+      this.controller,
       this.labelText,
       this.maxlength,
       this.fieldWidth,
-      required this.validate});
+      required this.validate})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -619,13 +622,13 @@ class AppDateField extends StatelessWidget {
         style: TextStyles.sourceSans.body2,
         decoration: InputDecoration(
           counterText: "",
-          border: UnderlineInputBorder(
+          border: const UnderlineInputBorder(
             borderSide: BorderSide.none,
           ),
-          enabledBorder: UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide.none,
           ),
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide.none,
           ),
           hintText: labelText,
@@ -685,7 +688,7 @@ class AppSwitch extends StatelessWidget {
         ),
         child: AnimatedAlign(
           alignment: value ? Alignment.centerRight : Alignment.centerLeft,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           child: isLoading
               ? Padding(
                   padding: EdgeInsets.symmetric(
@@ -720,7 +723,7 @@ class AppSwitch extends StatelessWidget {
 class CustomKeyboardSubmitButton extends StatelessWidget {
   final Function? onSubmit;
 
-  CustomKeyboardSubmitButton({this.onSubmit});
+  const CustomKeyboardSubmitButton({Key? key, this.onSubmit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -748,7 +751,7 @@ class CustomKeyboardSubmitButton extends StatelessWidget {
                 ),
               ),
             )
-          : SizedBox(),
+          : const SizedBox(),
     );
   }
 }
