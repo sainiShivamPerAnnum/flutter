@@ -17,10 +17,12 @@ class LastWeekOverView extends StatelessWidget {
     Key? key,
     required this.model,
     this.callCampaign = true,
+    this.fromRoot = false,
   }) : super(key: key);
 
   final LastWeekData model;
   final bool callCampaign;
+  final bool fromRoot;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +37,11 @@ class LastWeekOverView extends StatelessWidget {
             Column(
               children: [
                 SizedBox(
-                  height: SizeConfig.fToolBarHeight / 2,
+                  height: fromRoot
+                      ? SizeConfig.fToolBarHeight
+                      : SizeConfig.fToolBarHeight / 2,
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       GestureDetector(
@@ -122,33 +127,6 @@ class LastWeekOverView extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.padding20,
                         ),
-                        // Container(
-                        //   padding: EdgeInsets.symmetric(
-                        //       vertical: SizeConfig.padding12,
-                        //       horizontal: SizeConfig.padding16),
-                        //   decoration: BoxDecoration(
-                        //       color: Colors.black.withOpacity(0.5),
-                        //       borderRadius: BorderRadius.circular(10)),
-                        //   child: Row(
-                        //     children: [
-                        //       SvgPicture.asset(
-                        //         'assets/svg/trophy_banner.svg',
-                        //         height: SizeConfig.padding38,
-                        //       ),
-                        //       SizedBox(
-                        //         width: SizeConfig.padding20,
-                        //       ),
-                        //       Flexible(
-                        //         child: Text(
-                        //           'Congratulations!\nYou were in the top 10 Percentile Investors on Fello',
-                        //           style: TextStyles.sourceSans.body3
-                        //               .colour(UiConstants.kTextFieldTextColor),
-                        //           maxLines: 2,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                         SizedBox(
                           height: SizeConfig.navBarHeight * 2,
                         ),

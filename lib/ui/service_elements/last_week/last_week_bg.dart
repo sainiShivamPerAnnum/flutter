@@ -80,7 +80,7 @@ class LastWeekBg extends StatelessWidget {
                       style: TextStyles.sourceSans.body4,
                     ),
                   Container(
-                    height: SizeConfig.navBarHeight * 0.8,
+                    height: SizeConfig.navBarHeight * 0.9,
                     margin: EdgeInsets.fromLTRB(
                       SizeConfig.pageHorizontalMargins,
                       SizeConfig.pageHorizontalMargins - SizeConfig.padding12,

@@ -141,7 +141,9 @@ class RootViewModel extends BaseViewModel {
 
         _initAdhocNotifications();
 
-        if (await BaseUtil.isFirstTimeThisWeek()) {
+        log("AppState.isFirstTime ${AppState.isFirstTime}");
+        if (await BaseUtil.isFirstTimeThisWeek() &&
+            AppState.isFirstTime == false) {
           await showLastWeekOverview();
         }
 
@@ -422,18 +424,29 @@ class RootViewModel extends BaseViewModel {
       if (response.isSuccess() &&
           response.model != null &&
           response.model?.data != null) {
-        AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: LastWeekOverviewConfig,
-          widget: LastWeekOverView(
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          backgroundColor: UiConstants.gameCardColor,
+          content: LastWeekOverView(
             model: response.model!.data!,
+            fromRoot: true,
           ),
+          hapticVibrate: true,
+          isScrollControlled: true,
+          isBarrierDismissible: true,
         );
+        // AppState.delegate!.appState.currentAction = PageAction(
+        //   state: PageState.addWidget,
+        //   page: LastWeekOverviewConfig,
+        //   widget: LastWeekOverView(
+        //     model: response.model!.data!,
+        //   ),
+        // );
 
         fetchCampaign = false;
 
-        unawaited(PreferenceHelper.setBool(
-            PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
+        // unawaited(PreferenceHelper.setBool(
+        //     PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
       }
     } catch (e) {
       debugPrint(e.toString());
