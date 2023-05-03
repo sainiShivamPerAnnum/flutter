@@ -110,7 +110,9 @@ class LastWeekBg extends StatelessWidget {
                           locator<MarketingEventHandlerService>()
                               .getCampaigns();
                         }
+
                         AppState.backButtonDispatcher!.didPopRoute();
+                        AppState.delegate!.parseRoute(Uri.parse('/save'));
                       },
                       child: Center(
                         child: Text(
