@@ -560,7 +560,7 @@ class BaseUtil extends ChangeNotifier {
     try {
       // await _lModel!.deleteLocalAppData();
       logger.d('Cleared local cache');
-      _appState!.setCurrentTabIndex = 0;
+      _appState.setCurrentTabIndex = 0;
 
       //remove  token from remote
       //await _dbModel.updateClientToken(myUser, '');
@@ -602,7 +602,7 @@ class BaseUtil extends ChangeNotifier {
       isOtpResendCount = 0;
       isUpiInfoMissing = true;
 
-      AppState.delegate!.appState.setCurrentTabIndex = 0;
+      // AppState.delegate!.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
       referrerUserId = null;
       _setRuntimeDefaults();

@@ -18,9 +18,7 @@ import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-//Flutter imports
 import 'package:flutter/material.dart';
-//Pub imports
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PageAction {
@@ -197,7 +195,11 @@ class AppState extends ChangeNotifier {
     isJourneyFirstTab = false;
     isFirstTime = false;
     _rootController.navItems.clear();
-    homeTabPageController.dispose();
+
+    if (homeTabPageController.hasClients) {
+      homeTabPageController.dispose();
+      return;
+    }
   }
 
   // setLastTapIndex() {
