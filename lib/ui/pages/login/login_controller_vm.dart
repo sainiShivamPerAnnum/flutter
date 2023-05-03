@@ -277,7 +277,7 @@ class LoginControllerViewModel extends BaseViewModel {
               );
               logger!.d("User object saved successfully");
               // userService.showOnboardingTutorial = true;
-              _onSignUpComplete();
+              await _onSignUpComplete();
             } else {
               BaseUtil.showNegativeAlert(
                 locale.updateFailed,
@@ -294,7 +294,7 @@ class LoginControllerViewModel extends BaseViewModel {
     }
   }
 
-  void sendInstallInformation() async {
+  Future<void> sendInstallInformation() async {
     String? _appSetId;
     String? _androidId;
     String? _advertisingId;
@@ -398,7 +398,7 @@ class LoginControllerViewModel extends BaseViewModel {
       BaseUtil.isNewUser = true;
       BaseUtil.isFirstFetchDone = false;
       if (source == LoginSource.FIREBASE) {
-        _controller!
+        unawaited(_controller!
             .animateToPage(
           LoginNameInputView.index,
           duration: const Duration(milliseconds: 500),
@@ -410,7 +410,7 @@ class LoginControllerViewModel extends BaseViewModel {
             _otpScreenKey.currentState?.model?.pinEditingController.text =
                 "123456";
           }
-        });
+        }));
       } else if (source == LoginSource.TRUECALLER) {
         _controller!.jumpToPage(
           LoginNameInputView.index,
@@ -436,7 +436,7 @@ class LoginControllerViewModel extends BaseViewModel {
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerLogin);
       }
       userService.baseUser = user.model;
-      userService.logUserInstalledApps().then(
+      unawaited(userService.logUserInstalledApps().then(
         (value) {
           logger!.i(value);
           _analyticsService!.track(
@@ -452,7 +452,7 @@ class LoginControllerViewModel extends BaseViewModel {
             },
           );
         },
-      );
+      ));
       _onSignUpComplete();
     }
   }
@@ -462,36 +462,35 @@ class LoginControllerViewModel extends BaseViewModel {
     baseProvider!.init();
     AnalyticsProperties().init();
     if (_isSignup) {
-      _userRepo!.updateUserAppFlyer(
-          userService!.baseUser!, await userService.firebaseUser!.getIdToken());
+      unawaited(_userRepo!.updateUserAppFlyer(userService!.baseUser!,
+          await userService.firebaseUser!.getIdToken()));
       await _analyticsService!.login(
           isOnBoarded: userService.isUserOnboarded,
           baseUser: userService.baseUser);
 
-      BaseAnalytics.analytics!.logSignUp(signUpMethod: 'phoneNumber');
-      // _analyticsService!.trackSignup(userService.baseUser!.uid); //NO LONGER NEEDED
+      unawaited(
+        BaseAnalytics.analytics!.logSignUp(signUpMethod: 'phoneNumber'),
+      );
 
       logger.d(
           'invoke an API to send device related and install referrer related information to the server');
-      sendInstallInformation();
+      unawaited(sendInstallInformation());
     }
 
     BaseAnalytics.logUserProfile(userService.baseUser!);
-    // await _journeyRepo!.init();
-    // await _journeyService!.init();
-    // _userCoinService!.init();
-    // _referralService.init();
-    fcmListener!.setupFcm();
+    unawaited(fcmListener!.setupFcm());
     logger!.i("Calling analytics init for new onboarded user");
-    _analyticsService!.login(
+    unawaited(_analyticsService!.login(
       isOnBoarded: userService.isUserOnboarded,
       baseUser: userService.baseUser,
-    );
+    ));
 
     AppState.isOnboardingInProgress = false;
     appStateProvider.rootIndex = 0;
 
-    _internalOpsService!.initDeviceInfo().then((Map<String, dynamic> response) {
+    unawaited(_internalOpsService!
+        .initDeviceInfo()
+        .then((Map<String, dynamic> response) {
       logger!.d("Device Details: $response");
       if (response != {}) {
         final String? deviceId = response["deviceId"];
@@ -511,7 +510,7 @@ class LoginControllerViewModel extends BaseViewModel {
             isPhysicalDevice: isPhysicalDevice,
             integrity: integrity);
       }
-    });
+    }));
     setState(ViewState.Idle);
 
     ///check if the account is blocked
@@ -658,6 +657,9 @@ class LoginControllerViewModel extends BaseViewModel {
 
   void initTruecaller() async {
     TruecallerSdk.initializeSDK(
+        buttonShapeOptions: TruecallerSdkScope.BUTTON_SHAPE_RECTANGLE,
+        buttonColor: UiConstants.primaryColor.value,
+        buttonTextColor: Colors.white.value,
         sdkOptions: TruecallerSdkScope.SDK_OPTION_WITHOUT_OTP);
     TruecallerSdk.isUsable.then((isUsable) {
       isUsable ? TruecallerSdk.getProfile : print("***Not usable***");

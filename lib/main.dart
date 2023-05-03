@@ -107,6 +107,7 @@ class MyApp extends HookWidget {
             theme: FelloTheme.darkMode(),
             useInheritedMediaQuery: true,
             debugShowCheckedModeBanner: false,
+            // showPerformanceOverlay: true,
             backButtonDispatcher: backButtonDispatcher,
             builder: (context, child) {
               return ShowCaseWidget(

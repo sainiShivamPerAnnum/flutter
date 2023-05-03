@@ -26,7 +26,7 @@ class LoginControllerView extends StatefulWidget {
   final int? initPage;
   static String? mobileno;
 
- const LoginControllerView({Key? key, this.initPage}) : super(key: key);
+  const LoginControllerView({Key? key, this.initPage}) : super(key: key);
 
   @override
   State<LoginControllerView> createState() =>
@@ -250,17 +250,18 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               Text(
                                 locale.obLoggingInWith,
                                 style: TextStyles.body3.bold
-                                    .colour(const Color(0xff1180FF)),
+                                    .colour(UiConstants.primaryColor),
                               ),
                               Image.asset(
                                 Assets.truecaller,
+                                color: UiConstants.primaryColor,
                                 height: SizeConfig.body1,
                               ),
                               SizedBox(
                                 width: SizeConfig.padding4,
                               ),
                               SpinKitThreeBounce(
-                                color: const Color(0xff1180FF),
+                                color: UiConstants.primaryColor,
                                 size: SizeConfig.body1,
                               )
                             ],

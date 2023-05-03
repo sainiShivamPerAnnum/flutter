@@ -55,15 +55,19 @@ class AppState extends ChangeNotifier {
   static bool isWebGamePInProgress = false;
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
-  static bool isDrawerOpened = false;
+  // static bool isDrawerOpened = false;
   static bool isUserSignedIn = false;
-  static bool isSaveOpened = false;
-  static bool isWinOpened = false;
+  // static bool isSaveOpened = false;
+  // static bool isWinOpened = false;
   static bool isRootAvailableForIncomingTaskExecution = true;
   static bool isInstantGtViewInView = false;
   static int ticketCount = 0;
   static bool isFirstTimeJourneyOpened = false;
-  static bool isJourneyFirstTab = false;
+  static bool isFirstTimePlayOpened = false;
+  static bool isFirstTimeSaveOpened = false;
+  static bool isFirstTimeAccountsOpened = false;
+  static bool isFirstTimeTambolaOpened = false;
+  // static bool isJourneyFirstTab = false;
   static bool isAutosaveFlow = false;
 
   static List<ScreenItem> screenStack = [];
@@ -150,7 +154,7 @@ class AppState extends ChangeNotifier {
         RootController.journeyNavBarItem) {
       _journeyService.checkForMilestoneLevelChange();
     }
-    executeForFirstJourneyTabClick(index);
+    executeNavBarItemFirstClick(index);
   }
 
   bool showTourStrip = false;
@@ -194,10 +198,10 @@ class AppState extends ChangeNotifier {
   void dump() {
     isRootAvailableForIncomingTaskExecution = true;
     isFirstTimeJourneyOpened = false;
-    isJourneyFirstTab = false;
+    // isJourneyFirstTab = false;
     isFirstTime = false;
     _rootController.navItems.clear();
-    homeTabPageController.dispose();
+    // homeTabPageController.jumpToPage(0);
   }
 
   // setLastTapIndex() {
@@ -230,21 +234,21 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> executeForFirstJourneyTabClick(int index) async {
-    final JourneyService _journeyService = locator<JourneyService>();
-    int journeyIndex = _rootController.navItems.values
-        .toList()
-        .indexWhere((item) => item.title == "Journey");
-    if (journeyIndex == 0) {
-      isFirstTimeJourneyOpened = true;
-      isJourneyFirstTab = true;
-    }
-    if (!isFirstTimeJourneyOpened) {
-      if (index == journeyIndex) {
-        isFirstTimeJourneyOpened = true;
-        log("isFirstTimeJourneyOpened: $isFirstTimeJourneyOpened");
-        // _journeyService.buildJourney();
-      }
-    }
+    // final JourneyService _journeyService = locator<JourneyService>();
+    // int journeyIndex = _rootController.navItems.values
+    //     .toList()
+    //     .indexWhere((item) => item.title == "Journey");
+    // if (journeyIndex == 0) {
+    //   isFirstTimeJourneyOpened = true;
+    //   // isJourneyFirstTab = true;
+    // }
+    // if (!isFirstTimeJourneyOpened) {
+    //   if (index == journeyIndex) {
+    //     isFirstTimeJourneyOpened = true;
+    //     log("isFirstTimeJourneyOpened: $isFirstTimeJourneyOpened");
+    //     // _journeyService.buildJourney();
+    //   }
+    // }
   }
 
   executeForFirstSaveTabClick(index) {}
