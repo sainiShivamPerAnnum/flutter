@@ -86,6 +86,7 @@ class LoginControllerViewModel extends BaseViewModel {
 //Private Variables
   bool _isSignup = false;
   bool _loginUsingTrueCaller = false;
+
   get loginUsingTrueCaller => _loginUsingTrueCaller;
 
   set loginUsingTrueCaller(value) {
@@ -103,8 +104,11 @@ class LoginControllerViewModel extends BaseViewModel {
 
 //Getters and Setters
   get controller => _controller;
+
   get pageNotifier => _pageNotifier;
+
   get pages => _pages;
+
   int? get currentPage => _currentPage;
 
   set currentPage(int? page) {

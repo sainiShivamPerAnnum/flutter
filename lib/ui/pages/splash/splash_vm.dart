@@ -42,6 +42,7 @@ class LauncherViewModel extends BaseViewModel {
   final FcmListener _fcmListener = locator<FcmListener>();
   final UserService userService = locator<UserService>();
   final CustomLogger _logger = locator<CustomLogger>();
+
   // final TambolaService _tambolaService = locator<TambolaService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final UserRepository _userRepo = locator<UserRepository>();
@@ -49,6 +50,7 @@ class LauncherViewModel extends BaseViewModel {
   final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+
   // final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final ReferralService _referralService = locator<ReferralService>();
   final UserService _userService = locator<UserService>();
@@ -56,6 +58,7 @@ class LauncherViewModel extends BaseViewModel {
   final GetterRepository _getterRepo = locator<GetterRepository>();
   final AnalyticsProperties _analyticsProperties =
       locator<AnalyticsProperties>();
+
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
 
@@ -153,17 +156,17 @@ class LauncherViewModel extends BaseViewModel {
     userService.authenticateDevice();
   }
 
-  // Future<void> _togglePerformanceCollection() async {
-  //   // No-op for web.
-  //   await _performance
-  //       .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
+// Future<void> _togglePerformanceCollection() async {
+//   // No-op for web.
+//   await _performance
+//       .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
 
-  //   // Always true for web.
-  //   final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
+//   // Always true for web.
+//   final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
 
-  //   _isPerformanceCollectionEnabled = isEnabled;
-  //   _performanceCollectionMessage = _isPerformanceCollectionEnabled
-  //       ? 'Performance collection is enabled.'
-  //       : 'Performance collection is disabled.';
-  // }
+//   _isPerformanceCollectionEnabled = isEnabled;
+//   _performanceCollectionMessage = _isPerformanceCollectionEnabled
+//       ? 'Performance collection is enabled.'
+//       : 'Performance collection is disabled.';
+// }
 }
