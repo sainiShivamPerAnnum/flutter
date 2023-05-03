@@ -46,14 +46,20 @@ class AutosaveProcessViewModel extends BaseViewModel {
   List<SubComboModel> weeklyCombos = defaultSipComboList;
   List<SubComboModel> monthlyCombos = defaultSipComboList;
 
-  MaxMin dailyMaxMinInfo =
-      MaxMin(min: MinAsset(AUGGOLD99: 50, LENDBOXP2P: 100), max: 500);
+  MaxMin dailyMaxMinInfo = MaxMin(
+    min: MaxMinAsset(AUGGOLD99: 50, LENDBOXP2P: 100),
+    max: MaxMinAsset(AUGGOLD99: 5000, LENDBOXP2P: 10000),
+  );
 
-  MaxMin weeklyMaxMinInfo =
-      MaxMin(min: MinAsset(AUGGOLD99: 50, LENDBOXP2P: 100), max: 500);
+  MaxMin weeklyMaxMinInfo = MaxMin(
+    min: MaxMinAsset(AUGGOLD99: 50, LENDBOXP2P: 100),
+    max: MaxMinAsset(AUGGOLD99: 5000, LENDBOXP2P: 10000),
+  );
 
-  MaxMin monthlyMaxMinInfo =
-      MaxMin(min: MinAsset(AUGGOLD99: 50, LENDBOXP2P: 100), max: 500);
+  MaxMin monthlyMaxMinInfo = MaxMin(
+    min: MaxMinAsset(AUGGOLD99: 50, LENDBOXP2P: 100),
+    max: MaxMinAsset(AUGGOLD99: 5000, LENDBOXP2P: 10000),
+  );
 
   late List<ApplicationMeta> appsList;
   ApplicationMeta? _selectedUpiApp;
@@ -503,7 +509,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.daily:
             minMaxCapString = amt < dailyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > dailyMaxMinInfo.max
+                : amt > dailyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
@@ -511,14 +517,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.weekly:
             minMaxCapString = amt < weeklyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > weeklyMaxMinInfo.max
+                : amt > weeklyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
           case FREQUENCY.monthly:
             minMaxCapString = amt < monthlyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > monthlyMaxMinInfo.max
+                : amt > monthlyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
@@ -531,7 +537,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.daily:
             minMaxCapString = amt < dailyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > dailyMaxMinInfo.max
+                : amt > dailyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
@@ -539,14 +545,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.weekly:
             minMaxCapString = amt < weeklyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > weeklyMaxMinInfo.max
+                : amt > weeklyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
           case FREQUENCY.monthly:
             minMaxCapString = amt < monthlyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > monthlyMaxMinInfo.max
+                : amt > monthlyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
@@ -559,7 +565,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.daily:
             minMaxCapString = amt < dailyMaxMinInfo.min.AUGGOLD99
                 ? "Enter valid amount"
-                : amt > dailyMaxMinInfo.max
+                : amt > dailyMaxMinInfo.max.AUGGOLD99
                     ? "Amount too high"
                     : null;
             return;
@@ -567,14 +573,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.weekly:
             minMaxCapString = amt < weeklyMaxMinInfo.min.AUGGOLD99
                 ? "Enter valid amount"
-                : amt > weeklyMaxMinInfo.max
+                : amt > weeklyMaxMinInfo.max.AUGGOLD99
                     ? "Amount too high"
                     : null;
             return;
           case FREQUENCY.monthly:
             minMaxCapString = amt < monthlyMaxMinInfo.min.AUGGOLD99
                 ? "Enter valid amount"
-                : amt > monthlyMaxMinInfo.max
+                : amt > monthlyMaxMinInfo.max.AUGGOLD99
                     ? "Amount too high"
                     : null;
             return;

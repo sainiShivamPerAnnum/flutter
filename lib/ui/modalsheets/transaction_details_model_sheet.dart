@@ -556,7 +556,7 @@ class TransactionSummary extends StatelessWidget {
 
       leadColor = UiConstants.primaryColor;
     } else if (summary[index].value == "NA") {
-      mainWidget = SizedBox();
+      mainWidget = const SizedBox();
       leadColor = Colors.transparent;
       showThread = false;
     } else if (summary[index].value == "TBD") {
@@ -568,7 +568,7 @@ class TransactionSummary extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(width: 1, color: UiConstants.tertiarySolid),
         ),
-        child: CircularProgressIndicator(
+        child: const CircularProgressIndicator(
             color: UiConstants.tertiarySolid, strokeWidth: 1),
       );
       leadColor = UiConstants.tertiarySolid;

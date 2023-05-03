@@ -29,18 +29,18 @@ class _AutosaveComboInputFieldsModalSheetState
     switch (freq) {
       case FREQUENCY.daily:
         return [
-          "(₹${widget.model.dailyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.dailyMaxMinInfo.max})",
-          "(₹${widget.model.dailyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.dailyMaxMinInfo.max})",
+          "(₹${widget.model.dailyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.dailyMaxMinInfo.max.LENDBOXP2P})",
+          "(₹${widget.model.dailyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.dailyMaxMinInfo.max.AUGGOLD99})",
         ];
       case FREQUENCY.weekly:
         return [
-          "(₹${widget.model.weeklyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.weeklyMaxMinInfo.max})",
-          "(₹${widget.model.weeklyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.weeklyMaxMinInfo.max})",
+          "(₹${widget.model.weeklyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.weeklyMaxMinInfo.max.LENDBOXP2P})",
+          "(₹${widget.model.weeklyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.weeklyMaxMinInfo.max.AUGGOLD99})",
         ];
       case FREQUENCY.monthly:
         return [
-          "(₹${widget.model.monthlyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.monthlyMaxMinInfo.max})",
-          "(₹${widget.model.monthlyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.monthlyMaxMinInfo.max})",
+          "(₹${widget.model.monthlyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.monthlyMaxMinInfo.max.LENDBOXP2P})",
+          "(₹${widget.model.monthlyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.monthlyMaxMinInfo.max.AUGGOLD99})",
         ];
     }
   }
@@ -65,20 +65,20 @@ class _AutosaveComboInputFieldsModalSheetState
       case FREQUENCY.daily:
         return amt < widget.model.dailyMaxMinInfo.min.LENDBOXP2P
             ? "Enter valid amount"
-            : amt > widget.model.dailyMaxMinInfo.max
+            : amt > widget.model.dailyMaxMinInfo.max.LENDBOXP2P
                 ? "Amount too high"
                 : null;
 
       case FREQUENCY.weekly:
         return amt < widget.model.weeklyMaxMinInfo.min.LENDBOXP2P
             ? "Enter valid amount"
-            : amt > widget.model.weeklyMaxMinInfo.max
+            : amt > widget.model.weeklyMaxMinInfo.max.LENDBOXP2P
                 ? "Amount too high"
                 : null;
       case FREQUENCY.monthly:
         return amt < widget.model.monthlyMaxMinInfo.min.LENDBOXP2P
             ? "Enter valid amount"
-            : amt > widget.model.monthlyMaxMinInfo.max
+            : amt > widget.model.monthlyMaxMinInfo.max.LENDBOXP2P
                 ? "Amount too high"
                 : null;
     }
@@ -91,20 +91,20 @@ class _AutosaveComboInputFieldsModalSheetState
       case FREQUENCY.daily:
         return amt < widget.model.dailyMaxMinInfo.min.AUGGOLD99
             ? "Enter valid amount"
-            : amt > widget.model.dailyMaxMinInfo.max
+            : amt > widget.model.dailyMaxMinInfo.max.AUGGOLD99
                 ? "Amount too high"
                 : null;
 
       case FREQUENCY.weekly:
         return amt < widget.model.weeklyMaxMinInfo.min.AUGGOLD99
             ? "Enter valid amount"
-            : amt > widget.model.weeklyMaxMinInfo.max
+            : amt > widget.model.weeklyMaxMinInfo.max.AUGGOLD99
                 ? "Amount too high"
                 : null;
       case FREQUENCY.monthly:
         return amt < widget.model.monthlyMaxMinInfo.min.AUGGOLD99
             ? "Enter valid amount"
-            : amt > widget.model.monthlyMaxMinInfo.max
+            : amt > widget.model.monthlyMaxMinInfo.max.AUGGOLD99
                 ? "Amount too high"
                 : null;
     }
@@ -299,7 +299,7 @@ class AutosaveAmountInputTile extends StatelessWidget {
             isEnabled: true,
             keyboardType: TextInputType.number,
             prefixText: "₹ ",
-            maxLength: 4,
+            maxLength: 5,
             prefixTextStyle: TextStyles.rajdhaniB.body1,
             onChanged: onValueChanged,
             autoFocus: autoFocus,

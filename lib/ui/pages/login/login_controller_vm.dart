@@ -436,23 +436,7 @@ class LoginControllerViewModel extends BaseViewModel {
         _analyticsService!.track(eventName: AnalyticsEvents.truecallerLogin);
       }
       userService.baseUser = user.model;
-      unawaited(userService.logUserInstalledApps().then(
-        (value) {
-          logger!.i(value);
-          _analyticsService!.track(
-            eventName: AnalyticsEvents.installedApps,
-            appFlyer: false,
-            apxor: false,
-            webEngage: false,
-            properties: {
-              "apps": Map<String, dynamic>.from(value)
-                  .keys
-                  .map((e) => e.toString())
-                  .toList()
-            },
-          );
-        },
-      ));
+
       _onSignUpComplete();
     }
   }
@@ -475,6 +459,23 @@ class LoginControllerViewModel extends BaseViewModel {
       logger.d(
           'invoke an API to send device related and install referrer related information to the server');
       unawaited(sendInstallInformation());
+      unawaited(userService.logUserInstalledApps().then(
+        (value) {
+          logger.i(value);
+          _analyticsService!.track(
+            eventName: AnalyticsEvents.installedApps,
+            appFlyer: false,
+            apxor: false,
+            webEngage: false,
+            properties: {
+              "apps": Map<String, dynamic>.from(value)
+                  .keys
+                  .map((e) => e.toString())
+                  .toList()
+            },
+          );
+        },
+      ));
     }
 
     BaseAnalytics.logUserProfile(userService.baseUser!);
@@ -657,7 +658,6 @@ class LoginControllerViewModel extends BaseViewModel {
 
   void initTruecaller() async {
     TruecallerSdk.initializeSDK(
-        buttonShapeOptions: TruecallerSdkScope.BUTTON_SHAPE_RECTANGLE,
         buttonColor: UiConstants.primaryColor.value,
         buttonTextColor: Colors.white.value,
         sdkOptions: TruecallerSdkScope.SDK_OPTION_WITHOUT_OTP);

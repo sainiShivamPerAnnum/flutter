@@ -43,16 +43,16 @@ class SubComboModel {
 }
 
 class MaxMin {
-  final MinAsset min;
-  final int max;
+  final MaxMinAsset min;
+  final MaxMinAsset max;
   MaxMin({
     required this.min,
     required this.max,
   });
 
   MaxMin copyWith({
-    MinAsset? min,
-    int? max,
+    MaxMinAsset? min,
+    MaxMinAsset? max,
   }) {
     return MaxMin(
       min: min ?? this.min,
@@ -69,8 +69,8 @@ class MaxMin {
 
   factory MaxMin.fromMap(Map<String, dynamic> map) {
     return MaxMin(
-      min: MinAsset.fromMap(map['min'] as Map<String, dynamic>),
-      max: map['max'] as int,
+      min: MaxMinAsset.fromMap(map['min'] as Map<String, dynamic>),
+      max: MaxMinAsset.fromMap(map['max'] as Map<String, dynamic>),
     );
   }
 
@@ -93,10 +93,10 @@ class MaxMin {
   int get hashCode => min.hashCode ^ max.hashCode;
 }
 
-class MinAsset {
+class MaxMinAsset {
   final int AUGGOLD99;
   final int LENDBOXP2P;
-  MinAsset({
+  MaxMinAsset({
     required this.AUGGOLD99,
     required this.LENDBOXP2P,
   });
@@ -108,8 +108,8 @@ class MinAsset {
     };
   }
 
-  factory MinAsset.fromMap(Map<String, dynamic> map) {
-    return MinAsset(
+  factory MaxMinAsset.fromMap(Map<String, dynamic> map) {
+    return MaxMinAsset(
       AUGGOLD99: map['AUGGOLD99'],
       LENDBOXP2P: map['LENDBOXP2P'],
     );
@@ -117,15 +117,15 @@ class MinAsset {
 
   String toJson() => json.encode(toMap());
 
-  factory MinAsset.fromJson(String source) =>
-      MinAsset.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory MaxMinAsset.fromJson(String source) =>
+      MaxMinAsset.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>
       'MinAsset(AUGGOLD99: $AUGGOLD99, LENDBOXP2P: $LENDBOXP2P)';
 
   @override
-  bool operator ==(covariant MinAsset other) {
+  bool operator ==(covariant MaxMinAsset other) {
     if (identical(this, other)) return true;
 
     return other.AUGGOLD99 == AUGGOLD99 && other.LENDBOXP2P == LENDBOXP2P;
