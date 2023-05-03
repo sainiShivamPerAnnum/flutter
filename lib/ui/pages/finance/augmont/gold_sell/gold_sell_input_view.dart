@@ -105,7 +105,8 @@ class GoldSellInputView extends StatelessWidget {
                           child: InkWell(
                             onTap: () {
                               model.sellFieldNode.unfocus();
-                              Future.delayed(Duration(milliseconds: 100), () {
+                              Future.delayed(const Duration(milliseconds: 100),
+                                  () {
                                 model.sellFieldNode.requestFocus();
                               });
                             },
@@ -229,14 +230,14 @@ class GoldSellInputView extends StatelessWidget {
                             .colour(Colors.red[400]),
                       ),
                     ),
-                  Spacer(),
+                  const Spacer(),
                   augTxnService.isGoldSellInProgress
                       ? Center(
                           child: Container(
                             height: SizeConfig.screenWidth! * 0.1556,
                             alignment: Alignment.center,
                             width: SizeConfig.screenWidth! * 0.7,
-                            child: LinearProgressIndicator(
+                            child: const LinearProgressIndicator(
                               color: UiConstants.primaryColor,
                               backgroundColor: UiConstants.kDarkBackgroundColor,
                             ),

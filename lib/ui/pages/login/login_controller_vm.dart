@@ -173,9 +173,9 @@ class LoginControllerViewModel extends BaseViewModel {
         }
       case LoginOtpView.index:
         {
-          String otp = _otpScreenKey.currentState!.model!.otp;
+          String? otp = _otpScreenKey.currentState?.model?.otp;
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
-            logger!.d("OTP is $otp");
+            logger.d("OTP is $otp");
             setState(ViewState.Busy);
             final verifyOtp = await _userRepo!.verifyOtp(_verificationId, otp);
             if (verifyOtp.isSuccess()) {
@@ -206,7 +206,7 @@ class LoginControllerViewModel extends BaseViewModel {
               setState(ViewState.Idle);
             }
           } else {
-            _otpScreenKey.currentState!.model!.otpFieldEnabled = true;
+            _otpScreenKey.currentState?.model?.otpFieldEnabled = true;
 
             BaseUtil.showNegativeAlert(locale.obEnterOTP, locale.obOneTimePass);
           }

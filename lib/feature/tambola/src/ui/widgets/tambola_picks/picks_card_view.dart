@@ -18,6 +18,7 @@ class _PicksCardViewState extends State<PicksCardView> {
   bool isShowingAllPicks = false;
   double titleOpacity = 1.0;
   double _tabPosWidthFactor = 0;
+
   double get tabPosWidthFactor => _tabPosWidthFactor;
 
   int get tabNo => _tabNo;
@@ -51,14 +52,12 @@ class _PicksCardViewState extends State<PicksCardView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     controller = PageController();
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     controller?.dispose();
     super.dispose();
   }

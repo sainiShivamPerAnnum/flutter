@@ -3,8 +3,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:another_flushbar/flushbar.dart';
-//Pub Imports
+import 'package:another_flushbar/flushbar.dart'; //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -388,14 +387,14 @@ class BaseUtil extends ChangeNotifier {
 
   void openSellModalSheet({required InvestmentType investmentType}) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final bool? isAugSellLocked = _userService?.userBootUp?.data!.banMap
-          ?.investments?.withdrawal?.augmont?.isBanned;
+      final bool? isAugSellLocked = _userService
+          .userBootUp?.data!.banMap?.investments?.withdrawal?.augmont?.isBanned;
       final String? augSellBanNotice = _userService
-          ?.userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
-      final bool? islBoxSellBanned = _userService?.userBootUp?.data?.banMap
-          ?.investments?.withdrawal?.lendBox?.isBanned;
+          .userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
+      final bool? islBoxSellBanned = _userService
+          .userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.isBanned;
       final String? lBoxSellBanNotice = _userService
-          ?.userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.reason;
+          .userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.reason;
       if (investmentType == InvestmentType.AUGGOLD99 &&
           isAugSellLocked != null &&
           isAugSellLocked) {
@@ -421,7 +420,7 @@ class BaseUtil extends ChangeNotifier {
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
-            ? GoldSellView()
+            ? const GoldSellView()
             : LendboxWithdrawalView(),
       );
     });

@@ -96,6 +96,8 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
     return ValueListenableBuilder(
         valueListenable: showWarningScreen,
         builder: (context, snapshot, child) {
+          Future.wait([locator<GameRepo>().getGameTiers()]);
+
           return snapshot
               ? WithDrawWarningScreen(
                   onClose: () {
@@ -106,77 +108,77 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
                   type: widget.investmentType,
                   withdrawableQuantity: widget.grams,
                   totalAmount: widget.amount,
-                  onWithDrawAnyWay: () => widget.onSuccess(),
-                )
+            onWithDrawAnyWay: () => widget.onSuccess(),
+          )
               : Scaffold(
-                  backgroundColor: UiConstants.kBackgroundColor,
-                  appBar: AppBar(
-                      backgroundColor: UiConstants.kBackgroundColor,
-                      elevation: 0),
-                  body: SafeArea(
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          top: 0,
-                          left: SizeConfig.pageHorizontalMargins,
-                          right: SizeConfig.pageHorizontalMargins,
-                          bottom: SizeConfig.pageHorizontalMargins / 2),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                              height: SizeConfig.pageHorizontalMargins / 2),
-                          Text(
-                            locale.wantToSell,
-                            style: TextStyles.rajdhaniB.title3,
-                            textAlign: TextAlign.center,
-                          ),
-                          // Text(
-                          //   "Stay invested a little longer,\nreap higher rewards",
-                          //   textAlign: TextAlign.center,
-                          //   style:
-                          //       TextStyles.sourceSansSB.body2.colour(UiConstants.kTextColor3),
-                          // ),
-                          Expanded(
-                            child: Lottie.network(Assets.jarLottie,
-                                fit: BoxFit.contain),
-                          ),
-                          Transform.translate(
-                              offset:
-                                  Offset(0, -SizeConfig.pageHorizontalMargins),
-                              child: getFomoWidget(context)),
-                          const BankDetailsCard(),
-                          Text(
-                            locale.creditedToYourLinkedBankAccount(
-                                BaseUtil.digitPrecision(widget.amount, 2)),
-                            textAlign: TextAlign.center,
-                            style: TextStyles.body2.colour(
-                              UiConstants.kTextColor3,
-                            ),
-                          ),
-                          SizedBox(height: SizeConfig.padding32),
-                          AppPositiveBtn(
-                              btnText: locale.btnContinue,
-                              onPressed: () {
-                                final model = WithDrawGameViewModel.fromGames(
-                                    locator<GameRepo>().gameTier,
-                                    widget.amount);
-                                if (model.gamesWillBeLocked.isNotEmpty) {
-                                  showWarningScreen.value = true;
-                                } else {
-                                  widget.onSuccess.call();
-                                }
-                              }),
-                          SizedBox(height: SizeConfig.padding16),
-                          AppNegativeBtn(
-                              width: SizeConfig.screenWidth,
-                              btnText: locale.btnCancel.toUpperCase(),
-                              onPressed: () =>
-                                  AppState.backButtonDispatcher!.didPopRoute())
-                        ],
+            backgroundColor: UiConstants.kBackgroundColor,
+            appBar: AppBar(
+                backgroundColor: UiConstants.kBackgroundColor,
+                elevation: 0),
+            body: SafeArea(
+              child: Container(
+                margin: EdgeInsets.only(
+                    top: 0,
+                    left: SizeConfig.pageHorizontalMargins,
+                    right: SizeConfig.pageHorizontalMargins,
+                    bottom: SizeConfig.pageHorizontalMargins / 2),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        height: SizeConfig.pageHorizontalMargins / 2),
+                    Text(
+                      locale.wantToSell,
+                      style: TextStyles.rajdhaniB.title3,
+                      textAlign: TextAlign.center,
+                    ),
+                    // Text(
+                    //   "Stay invested a little longer,\nreap higher rewards",
+                    //   textAlign: TextAlign.center,
+                    //   style:
+                    //       TextStyles.sourceSansSB.body2.colour(UiConstants.kTextColor3),
+                    // ),
+                    Expanded(
+                      child: Lottie.network(Assets.jarLottie,
+                          fit: BoxFit.contain),
+                    ),
+                    Transform.translate(
+                        offset:
+                        Offset(0, -SizeConfig.pageHorizontalMargins),
+                        child: getFomoWidget(context)),
+                    const BankDetailsCard(),
+                    Text(
+                      locale.creditedToYourLinkedBankAccount(
+                          BaseUtil.digitPrecision(widget.amount, 2)),
+                      textAlign: TextAlign.center,
+                      style: TextStyles.body2.colour(
+                        UiConstants.kTextColor3,
                       ),
                     ),
-                  ),
-                );
+                    SizedBox(height: SizeConfig.padding32),
+                    AppPositiveBtn(
+                        btnText: locale.btnContinue,
+                        onPressed: () {
+                          final model = WithDrawGameViewModel.fromGames(
+                              locator<GameRepo>().gameTier,
+                              widget.amount);
+                          if (model.gamesWillBeLocked.isNotEmpty) {
+                            showWarningScreen.value = true;
+                          } else {
+                            widget.onSuccess.call();
+                          }
+                        }),
+                    SizedBox(height: SizeConfig.padding16),
+                    AppNegativeBtn(
+                        width: SizeConfig.screenWidth,
+                        btnText: locale.btnCancel.toUpperCase(),
+                        onPressed: () =>
+                            AppState.backButtonDispatcher!.didPopRoute())
+                  ],
+                ),
+              ),
+            ),
+          );
         });
   }
 }
