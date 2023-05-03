@@ -76,15 +76,15 @@ class AnchoredOverlay extends StatelessWidget {
             Rect anchorBounds;
             anchorBounds = (topLeft.dx.isNaN ||
                     topLeft.dy.isNaN ||
-                bottomRight.dx.isNaN ||
-                bottomRight.dy.isNaN)
+                    bottomRight.dx.isNaN ||
+                    bottomRight.dy.isNaN)
                 ? const Rect.fromLTRB(0.0, 0.0, 0.0, 0.0)
                 : Rect.fromLTRB(
-              topLeft.dx,
-              topLeft.dy,
-              bottomRight.dx,
-              bottomRight.dy,
-            );
+                    topLeft.dx,
+                    topLeft.dy,
+                    bottomRight.dx,
+                    bottomRight.dy,
+                  );
             final anchorCenter = box.size.center(topLeft);
             return overlayBuilder!(overlayContext, anchorBounds, anchorCenter);
           },
