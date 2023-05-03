@@ -96,7 +96,7 @@ class GoldSellViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  double? goldSellGrams = 0;
+  double goldSellGrams = 0;
   double _goldAmountFromGrams = 0.0;
 
   double? nonWithdrawableQnt = 0.0;
@@ -174,6 +174,14 @@ class GoldSellViewModel extends BaseViewModel {
     if (val == null || val.isEmpty) {
       val = '0';
     }
+    print(val);
+    print(val.split('').where((element) => element == '.').toList().length);
+    if (val.split('').where((element) => element == '.').toList().length > 1 &&
+        val.characters.last == '.') {
+      val = val.substring(0, val.length - 1);
+      goldAmountController!.text = val;
+      refresh();
+    }
     if (val.isNotEmpty) {
       if (val.contains('.')) {
         if (val.split('.').last.length > 4) {
@@ -188,10 +196,10 @@ class GoldSellViewModel extends BaseViewModel {
           sellFieldNode.unfocus();
         }
       }
-      goldSellGrams = double.tryParse(val);
+      goldSellGrams = double.tryParse(val) ?? 0;
       if (goldSellPrice != 0.0) {
         _goldAmountFromGrams =
-            BaseUtil.digitPrecision(goldSellGrams! * goldSellPrice!, 4, false);
+            BaseUtil.digitPrecision(goldSellGrams * goldSellPrice!, 4, false);
         if (_goldAmountFromGrams < 10) showMinCap = true;
         if (_goldAmountFromGrams > 50000) showMaxCap = true;
       } else

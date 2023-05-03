@@ -71,11 +71,10 @@ class LauncherViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void init() {
+  Future<void> init() async {
     isFetchingData = true;
     _logoWatch = Stopwatch()..start();
     // _togglePerformanceCollection();
-
     initLogic();
     _timer3 = Timer(const Duration(seconds: 6), () {
       isSlowConnection = true;

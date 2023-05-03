@@ -32,7 +32,6 @@ class _TicketsViewState extends State<TicketsView>
   late final PageController controller;
   // late final List<TambolaTicketModel?> _bestBoards;
   final List<String> tabList = const [
-    "All",
     "One Row",
     "Two Rows",
     "Corners",
@@ -142,32 +141,18 @@ class _TicketsViewState extends State<TicketsView>
         if (bestTicketsData.oneRow != null) {
           tickets.addAll(bestTicketsData.oneRow!);
         }
-        if (bestTicketsData.twoRows != null) {
-          tickets.addAll(bestTicketsData.twoRows!);
-        }
-        if (bestTicketsData.corners != null) {
-          tickets.addAll(bestTicketsData.corners!);
-        }
-        if (bestTicketsData.fullHouse != null) {
-          tickets.addAll(bestTicketsData.fullHouse!);
-        }
         break;
       case 1:
-        if (bestTicketsData.oneRow != null) {
-          tickets.addAll(bestTicketsData.oneRow!);
+        if (bestTicketsData.twoRows != null) {
+          tickets.addAll(bestTicketsData.twoRows!);
         }
         break;
       case 2:
-        if (bestTicketsData.twoRows != null) {
-          tickets.addAll(bestTicketsData.twoRows!);
-        }
-        break;
-      case 3:
         if (bestTicketsData.corners != null) {
           tickets.addAll(bestTicketsData.corners!);
         }
         break;
-      case 4:
+      case 3:
         if (bestTicketsData.fullHouse != null) {
           tickets.addAll(bestTicketsData.fullHouse!);
         }

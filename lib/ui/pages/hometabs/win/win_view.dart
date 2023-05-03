@@ -7,7 +7,6 @@ import 'package:felloapp/ui/pages/hometabs/win/win_components/refer_and_earn_car
 import 'package:felloapp/ui/pages/hometabs/win/win_components/scratch_card_info_strip.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/dev_rel.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';

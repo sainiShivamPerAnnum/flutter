@@ -53,15 +53,15 @@ class SpotLightController {
     _stream.distinct().listen(_listener);
   }
 
-  void _listener(List<UserFlow> flow) async {
-    BaseUtil.openDialog(
+  Future<void> _listener(List<UserFlow> flow) async {
+    unawaited(BaseUtil.openDialog(
       isBarrierDismissible: false,
       content: Container(),
       barrierColor: Colors.transparent,
       addToScreenStack: true,
-    );
-    await Future.delayed(Duration(seconds: 1));
-    AppState.backButtonDispatcher!.didPopRoute();
+    ));
+    await Future.delayed(const Duration(seconds: 1));
+    unawaited(AppState.backButtonDispatcher!.didPopRoute());
 
     isSkipButtonClicked = false;
     switch (flow.last) {

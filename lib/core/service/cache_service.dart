@@ -65,7 +65,7 @@ class CacheService {
     if (cachedData != null && ttl != 0) {
       try {
         _logger!.d('cache: data read successfully');
-        log("APP CONFIG: ${cachedData.data!}");
+        log("CACHED API: ${cachedData.data!}");
         return parseData(json.decode(cachedData.data!));
       } catch (e) {
         _logger!.e(
