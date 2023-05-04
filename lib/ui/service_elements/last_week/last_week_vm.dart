@@ -23,7 +23,7 @@ class LastWeekViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     final response = await locator<CampaignRepo>().getLastWeekData();
 
-    log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
+    log('last_week => ${response.model?.data?.toJson()}', name: 'last_week_vm');
 
     try {
       if (response.isSuccess() &&

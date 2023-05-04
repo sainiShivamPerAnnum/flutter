@@ -424,10 +424,6 @@ class RootViewModel extends BaseViewModel {
   Future<void> showLastWeekOverview() async {
     log('showLastWeekOverview called', name: 'HomeVM');
 
-    log('$isWelcomeAnimationInProgress', name: 'HomeVM');
-    log('${AppState.isFirstTime}', name: 'HomeVM');
-    // log('${await BaseUtil.isFirstTimeThisWeek()}', name: 'HomeVM');
-
     if (isWelcomeAnimationInProgress &&
         AppState.isFirstTime == false &&
         await BaseUtil.isFirstTimeThisWeek()) {
