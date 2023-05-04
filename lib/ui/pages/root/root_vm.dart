@@ -138,6 +138,7 @@ class RootViewModel extends BaseViewModel {
         if (isWelcomeAnimationInProgress &&
             await BaseUtil.isFirstTimeThisWeek() &&
             AppState.isFirstTime == false) {
+          fetchCampaign = false;
           Future.delayed(const Duration(seconds: 1), showLastWeekOverview);
         }
 
@@ -428,48 +429,12 @@ class RootViewModel extends BaseViewModel {
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
       backgroundColor: UiConstants.gameCardColor,
-      content: LastWeekOverView(
+      content: const LastWeekOverView(
         fromRoot: true,
       ),
       hapticVibrate: true,
       isScrollControlled: true,
-      isBarrierDismissible: true,
+      isBarrierDismissible: false,
     );
-
-    // final response = await locator<CampaignRepo>().getLastWeekData();
-    //
-    // log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
-    //
-    // try {
-    //   if (response.isSuccess() &&
-    //       response.model != null &&
-    //       response.model?.data != null) {
-    //     BaseUtil.openModalBottomSheet(
-    //       addToScreenStack: true,
-    //       backgroundColor: UiConstants.gameCardColor,
-    //       content: LastWeekOverView(
-    //         // model: response.model!.data!,
-    //         fromRoot: true,
-    //       ),
-    //       hapticVibrate: true,
-    //       isScrollControlled: true,
-    //       isBarrierDismissible: true,
-    //     );
-    //     // AppState.delegate!.appState.currentAction = PageAction(
-    //     //   state: PageState.addWidget,
-    //     //   page: LastWeekOverviewConfig,
-    //     //   widget: LastWeekOverView(
-    //     //     model: response.model!.data!,
-    //     //   ),
-    //     // );
-    //
-    //     fetchCampaign = false;
-    //
-    //     // unawaited(PreferenceHelper.setBool(
-    //     //     PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
-    //   }
-    // } catch (e) {
-    //   debugPrint(e.toString());
-    // }
   }
 }

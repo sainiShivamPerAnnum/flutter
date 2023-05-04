@@ -344,28 +344,12 @@ class WinViewModel extends BaseViewModel {
   }
 
   Future<void> showLastWeekSummary() async {
-    // setState(ViewState.Busy);
-    // final response = await locator<CampaignRepo>().getLastWeekData();
-    //
-    // log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
-    //
-    // setState(ViewState.Idle);
-    //
-    // try {
-    //   if (response.isSuccess() &&
-    //       response.model != null &&
-    //       response.model?.data != null) {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: LastWeekOverviewConfig,
-      widget: LastWeekOverView(
-        // model: response.model!.data!,
+      widget: const LastWeekOverView(
         callCampaign: false,
       ),
     );
-    // }
-    // } catch (e) {
-    //   debugPrint(e.toString());
-    // }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -32,9 +33,12 @@ class LastWeekOverView extends StatelessWidget {
       model.init();
     }, builder: (context, model, child) {
       if (model.state == ViewState.Busy) {
-        return SizedBox(
-          width: SizeConfig.screenWidth,
-          child: const FullScreenLoader(),
+        return Scaffold(
+          backgroundColor: UiConstants.gameCardColor,
+          body: SizedBox(
+            width: SizeConfig.screenWidth,
+            child: const FullScreenLoader(),
+          ),
         );
       }
       return LastWeekBg(
@@ -58,11 +62,19 @@ class LastWeekOverView extends StatelessWidget {
                         GestureDetector(
                           onTap: () {
                             AppState.backButtonDispatcher!.didPopRoute();
+                            if (callCampaign) {
+                              locator<MarketingEventHandlerService>()
+                                  .getCampaigns();
+                            }
                           },
-                          child: const Icon(
-                            Icons.close,
-                            size: 25,
-                            color: Colors.white,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                top: fromRoot ? SizeConfig.padding26 : 0),
+                            child: const Icon(
+                              Icons.close,
+                              size: 25,
+                              color: Colors.white,
+                            ),
                           ),
                         )
                       ],

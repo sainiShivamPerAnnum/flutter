@@ -19,20 +19,6 @@ class LastWeekViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // Future<void> init() async {
-  //   BaseUtil.openModalBottomSheet(
-  //     addToScreenStack: true,
-  //     backgroundColor: UiConstants.gameCardColor,
-  //     content: LastWeekOverView(
-  //       // model: response.model!.data!,
-  //       fromRoot: true,
-  //     ),
-  //     hapticVibrate: true,
-  //     isScrollControlled: true,
-  //     isBarrierDismissible: true,
-  //   );
-  // }
-
   Future<void> init() async {
     setState(ViewState.Busy);
     final response = await locator<CampaignRepo>().getLastWeekData();
@@ -45,7 +31,6 @@ class LastWeekViewModel extends BaseViewModel {
           response.model?.data != null) {
         data = response.model!.data!;
 
-        fetchCampaign = false;
         notifyListeners();
       }
       setState(ViewState.Idle);

@@ -51,6 +51,7 @@ class PlayViewModel extends BaseViewModel {
   // final WinnerService _winnerService = locator<WinnerService>();
   final UserStatsRepo _userStatsRepo = locator<UserStatsRepo>();
   bool _showSecurityMessageAtTop = true;
+
   // final TambolaWidgetController _tambolaController = TambolaWidgetController();
   String? _message;
   String? _sessionId;
@@ -73,6 +74,7 @@ class PlayViewModel extends BaseViewModel {
     "assets/svg/piggy_bank.svg",
   ];
   List<String> boxTitles = [];
+
   ////////////////////////////////////////////
 
   List<GameModel>? get gamesListData => _gamesListData;
