@@ -1,9 +1,13 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_bg.dart';
+import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -15,131 +19,141 @@ import 'package:flutter_svg/flutter_svg.dart';
 class LastWeekOverView extends StatelessWidget {
   const LastWeekOverView({
     Key? key,
-    required this.model,
     this.callCampaign = true,
     this.fromRoot = false,
   }) : super(key: key);
 
-  final LastWeekData model;
   final bool callCampaign;
   final bool fromRoot;
 
   @override
   Widget build(BuildContext context) {
-    return LastWeekBg(
-      callCampaign: callCampaign,
-      iconUrl: model.cta?.iconUrl,
-      title: model.cta?.text,
-      isTopSaver: model.isTopSaver,
-      child: SafeArea(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: fromRoot
-                      ? SizeConfig.fToolBarHeight
-                      : SizeConfig.fToolBarHeight / 2,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          AppState.backButtonDispatcher!.didPopRoute();
-                        },
-                        child: const Icon(
-                          Icons.close,
-                          size: 25,
-                          color: Colors.white,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/svg/paper_plane.svg',
-                      height: SizeConfig.padding32,
-                      width: SizeConfig.padding32,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding16,
-                    ),
-                    Text(
-                      'Last Week on Fello',
-                      style: TextStyles.rajdhaniSB.title3,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
+    return BaseView<LastWeekViewModel>(onModelReady: (model) {
+      model.init();
+    }, builder: (context, model, child) {
+      if (model.state == ViewState.Busy) {
+        return SizedBox(
+          width: SizeConfig.screenWidth,
+          child: const FullScreenLoader(),
+        );
+      }
+      return LastWeekBg(
+        callCampaign: callCampaign,
+        iconUrl: model.data?.cta?.iconUrl,
+        title: model.data?.cta?.text,
+        isTopSaver: model.data?.isTopSaver,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  SizedBox(
+                    height: fromRoot
+                        ? SizeConfig.fToolBarHeight
+                        : SizeConfig.fToolBarHeight / 2,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        TotalInvestmentWidget(data: model),
-                        SizedBox(
-                          height: SizeConfig.padding40,
-                        ),
-                        Center(
-                          child: Text(
-                            model.user == null
-                                ? "😥 You missed last week on "
-                                : ' 💰 ${locator<UserService>().name}’s Weekly Report',
-                            style: TextStyles.rajdhaniSB.title5,
-                          ),
-                        ),
-                        if (model.user != null) ...[
-                          SizedBox(
-                            height: SizeConfig.padding16,
-                          ),
-                          UserInvestmentWidget(
-                            data: model.user!,
-                          ),
-                        ],
-                        SizedBox(
-                          height: SizeConfig.padding16,
-                        ),
-                        ListView.separated(
-                          itemCount: model.misc?.length ?? 0,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return WeekReportRowView(
-                                title: model.misc?[index].title ?? '',
-                                subTitle: model.misc?[index].subtitle ?? '',
-                                value: model.misc?[index].numeric ?? '',
-                                icon: model.misc?[index].iconUrl ?? '',
-                                backgroundColor:
-                                    model.misc![index].bgHex!.toColor()!);
+                        GestureDetector(
+                          onTap: () {
+                            AppState.backButtonDispatcher!.didPopRoute();
                           },
-                          separatorBuilder: (context, index) {
-                            return SizedBox(
-                              height: SizeConfig.padding12,
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding20,
-                        ),
-                        SizedBox(
-                          height: SizeConfig.navBarHeight * 2,
-                        ),
+                          child: const Icon(
+                            Icons.close,
+                            size: 25,
+                            color: Colors.white,
+                          ),
+                        )
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/svg/paper_plane.svg',
+                        height: SizeConfig.padding32,
+                        width: SizeConfig.padding32,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding16,
+                      ),
+                      Text(
+                        'Last Week on Fello',
+                        style: TextStyles.rajdhaniSB.title3,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          TotalInvestmentWidget(data: model.data!),
+                          SizedBox(
+                            height: SizeConfig.padding40,
+                          ),
+                          Center(
+                            child: Text(
+                              model.data?.user == null
+                                  ? "😥 You missed last week on "
+                                  : ' 💰 ${locator<UserService>().name}’s Weekly Report',
+                              style: TextStyles.rajdhaniSB.title5,
+                            ),
+                          ),
+                          if (model.data?.user != null) ...[
+                            SizedBox(
+                              height: SizeConfig.padding16,
+                            ),
+                            UserInvestmentWidget(
+                              data: model.data!.user!,
+                            ),
+                          ],
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          ListView.separated(
+                            itemCount: model.data?.misc?.length ?? 0,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return WeekReportRowView(
+                                  title: model.data?.misc?[index].title ?? '',
+                                  subTitle:
+                                      model.data?.misc?[index].subtitle ?? '',
+                                  value: model.data?.misc?[index].numeric ?? '',
+                                  icon: model.data?.misc?[index].iconUrl ?? '',
+                                  backgroundColor: model
+                                      .data!.misc![index].bgHex!
+                                      .toColor()!);
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                height: SizeConfig.padding12,
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding20,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.navBarHeight * 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

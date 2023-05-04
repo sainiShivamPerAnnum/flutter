@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 // import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
@@ -28,8 +26,6 @@ import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/material.dart';
-// import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class WinViewModel extends BaseViewModel {
   final UserService _userService = locator<UserService>();
@@ -71,8 +67,10 @@ class WinViewModel extends BaseViewModel {
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
   bool _isShareLoading = false;
+
   bool get isShareLoading => _isShareLoading;
   String _refUrl = "";
+
   get refUrl => _refUrl;
 
   double get getUnclaimedPrizeBalance =>
@@ -346,26 +344,28 @@ class WinViewModel extends BaseViewModel {
   }
 
   Future<void> showLastWeekSummary() async {
-    setState(ViewState.Busy);
-    final response = await locator<CampaignRepo>().getLastWeekData();
-
-    log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
-
-    setState(ViewState.Idle);
-
-    try {
-      if (response.isSuccess() &&
-          response.model != null &&
-          response.model?.data != null) {
-        AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: LastWeekOverviewConfig,
-          widget: LastWeekOverView(
-              model: response.model!.data!, callCampaign: false),
-        );
-      }
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    // setState(ViewState.Busy);
+    // final response = await locator<CampaignRepo>().getLastWeekData();
+    //
+    // log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
+    //
+    // setState(ViewState.Idle);
+    //
+    // try {
+    //   if (response.isSuccess() &&
+    //       response.model != null &&
+    //       response.model?.data != null) {
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      page: LastWeekOverviewConfig,
+      widget: LastWeekOverView(
+        // model: response.model!.data!,
+        callCampaign: false,
+      ),
+    );
+    // }
+    // } catch (e) {
+    //   debugPrint(e.toString());
+    // }
   }
 }

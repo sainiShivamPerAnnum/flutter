@@ -8,7 +8,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
-import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -74,6 +73,15 @@ class RootViewModel extends BaseViewModel {
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
   bool fetchCampaign = true;
+  bool _isWelcomeAnimationInProgress = true;
+
+  bool get isWelcomeAnimationInProgress => _isWelcomeAnimationInProgress;
+
+  set isWelcomeAnimationInProgress(bool value) {
+    log("isWelcomeAnimationInProgress: $value");
+    _isWelcomeAnimationInProgress = value;
+    notifyListeners();
+  }
 
   // final WinnerService? winnerService = locator<WinnerService>();
   final ReferralRepo _refRepo = locator<ReferralRepo>();
@@ -127,12 +135,19 @@ class RootViewModel extends BaseViewModel {
       (timeStamp) async {
         await _userService.userBootUpEE();
 
+        if (isWelcomeAnimationInProgress &&
+            await BaseUtil.isFirstTimeThisWeek() &&
+            AppState.isFirstTime == false) {
+          Future.delayed(const Duration(seconds: 1), showLastWeekOverview);
+        }
+
         if (AppState.isFirstTime) {
           Future.delayed(const Duration(seconds: 1),
               SpotLightController.instance.showTourDialog);
         }
 
         handleStartUpNotificationData();
+
         await Future.wait([
           _userService.checkForNewNotifications(),
           _userService.getProfilePicture(),
@@ -140,12 +155,6 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         _initAdhocNotifications();
-
-        log("AppState.isFirstTime ${AppState.isFirstTime}");
-        if (await BaseUtil.isFirstTimeThisWeek() &&
-            AppState.isFirstTime == false) {
-          await showLastWeekOverview();
-        }
 
         if (!AppState.isFirstTime && fetchCampaign) {
           showMarketingCampings();
@@ -416,40 +425,51 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<void> showLastWeekOverview() async {
-    final response = await locator<CampaignRepo>().getLastWeekData();
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      backgroundColor: UiConstants.gameCardColor,
+      content: LastWeekOverView(
+        fromRoot: true,
+      ),
+      hapticVibrate: true,
+      isScrollControlled: true,
+      isBarrierDismissible: true,
+    );
 
-    log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
-
-    try {
-      if (response.isSuccess() &&
-          response.model != null &&
-          response.model?.data != null) {
-        BaseUtil.openModalBottomSheet(
-          addToScreenStack: true,
-          backgroundColor: UiConstants.gameCardColor,
-          content: LastWeekOverView(
-            model: response.model!.data!,
-            fromRoot: true,
-          ),
-          hapticVibrate: true,
-          isScrollControlled: true,
-          isBarrierDismissible: true,
-        );
-        // AppState.delegate!.appState.currentAction = PageAction(
-        //   state: PageState.addWidget,
-        //   page: LastWeekOverviewConfig,
-        //   widget: LastWeekOverView(
-        //     model: response.model!.data!,
-        //   ),
-        // );
-
-        fetchCampaign = false;
-
-        // unawaited(PreferenceHelper.setBool(
-        //     PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
-      }
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    // final response = await locator<CampaignRepo>().getLastWeekData();
+    //
+    // log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
+    //
+    // try {
+    //   if (response.isSuccess() &&
+    //       response.model != null &&
+    //       response.model?.data != null) {
+    //     BaseUtil.openModalBottomSheet(
+    //       addToScreenStack: true,
+    //       backgroundColor: UiConstants.gameCardColor,
+    //       content: LastWeekOverView(
+    //         // model: response.model!.data!,
+    //         fromRoot: true,
+    //       ),
+    //       hapticVibrate: true,
+    //       isScrollControlled: true,
+    //       isBarrierDismissible: true,
+    //     );
+    //     // AppState.delegate!.appState.currentAction = PageAction(
+    //     //   state: PageState.addWidget,
+    //     //   page: LastWeekOverviewConfig,
+    //     //   widget: LastWeekOverView(
+    //     //     model: response.model!.data!,
+    //     //   ),
+    //     // );
+    //
+    //     fetchCampaign = false;
+    //
+    //     // unawaited(PreferenceHelper.setBool(
+    //     //     PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
+    //   }
+    // } catch (e) {
+    //   debugPrint(e.toString());
+    // }
   }
 }
