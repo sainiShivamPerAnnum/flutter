@@ -46,7 +46,7 @@ class TambolaService extends ChangeNotifier {
   PrizesModel? tambolaPrizes;
   List<Winners>? pastWeekWinners;
   List<TambolaTicketModel> allTickets = [];
-  TambolaBestTicketsModel? bestTickets;
+  TambolaBestTicketsModel? _bestTickets;
   Map<String, int> ticketCodeWinIndex = {};
   int tambolaTicketCount = 0;
   int _matchedTicketCount = 0;
@@ -88,6 +88,13 @@ class TambolaService extends ChangeNotifier {
 
   set matchedTicketCount(int value) {
     _matchedTicketCount = value;
+    notifyListeners();
+  }
+
+  TambolaBestTicketsModel? get bestTickets => _bestTickets;
+
+  set bestTickets(TambolaBestTicketsModel? value) {
+    _bestTickets = value;
     notifyListeners();
   }
 

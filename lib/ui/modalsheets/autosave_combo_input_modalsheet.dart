@@ -215,7 +215,7 @@ class _AutosaveComboInputFieldsModalSheetState
           AppPositiveBtn(
             btnText: "SUBMIT",
             onPressed: () {
-              if (totalSipAmount > 5000)
+              if (totalSipAmount > widget.model.dailyMaxMinInfo.max.LENDBOXP2P)
                 return BaseUtil.showNegativeAlert("Entered amount is too high",
                     "Please reduce the investing amount and try again");
               if (formKey.currentState!.validate()) {

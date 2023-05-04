@@ -58,7 +58,9 @@ class _AmountInputViewState extends State<AmountInputView> {
   void initState() {
     super.initState();
     if (widget.chipAmounts.isNotEmpty) {
-      _selectedIndex = widget.chipAmounts.firstWhere((e) => e.best).order;
+      _selectedIndex = widget.chipAmounts.indexWhere(
+        (e) => e.value.toString() == (widget.amountController?.text ?? ''),
+      );
     } else {
       widget.amountController!.text = '1';
     }
