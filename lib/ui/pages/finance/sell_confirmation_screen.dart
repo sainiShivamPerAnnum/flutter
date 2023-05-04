@@ -96,7 +96,7 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
     return ValueListenableBuilder(
         valueListenable: showWarningScreen,
         builder: (context, snapshot, child) {
-          Future.wait([locator<GameRepo>().getGameTiers()]);
+          // Future.wait([locator<GameRepo>().getGameTiers()]);
 
           return snapshot
               ? WithDrawWarningScreen(

@@ -14,6 +14,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/analytics_repo.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -484,6 +485,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
     BaseAnalytics.logUserProfile(userService.baseUser!);
     unawaited(fcmListener!.setupFcm());
+    locator<GameRepo>().getGameTiers();
     logger!.i("Calling analytics init for new onboarded user");
     unawaited(_analyticsService!.login(
       isOnBoarded: userService.isUserOnboarded,

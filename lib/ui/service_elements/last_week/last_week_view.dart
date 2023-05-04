@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_bg.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -61,6 +62,7 @@ class LastWeekOverView extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
+                            Haptic.vibrate();
                             AppState.backButtonDispatcher!.didPopRoute();
                             if (callCampaign) {
                               locator<MarketingEventHandlerService>()
