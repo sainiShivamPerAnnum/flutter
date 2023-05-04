@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -135,12 +136,7 @@ class RootViewModel extends BaseViewModel {
       (timeStamp) async {
         await _userService.userBootUpEE();
 
-        if (isWelcomeAnimationInProgress &&
-            await BaseUtil.isFirstTimeThisWeek() &&
-            AppState.isFirstTime == false) {
-          fetchCampaign = false;
-          Future.delayed(const Duration(seconds: 1), showLastWeekOverview);
-        }
+        await showLastWeekOverview();
 
         if (AppState.isFirstTime) {
           Future.delayed(const Duration(seconds: 1),
@@ -426,15 +422,52 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<void> showLastWeekOverview() async {
-    BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      backgroundColor: UiConstants.gameCardColor,
-      content: const LastWeekOverView(
-        fromRoot: true,
-      ),
-      hapticVibrate: true,
-      isScrollControlled: true,
-      isBarrierDismissible: false,
-    );
+    log('showLastWeekOverview called', name: 'HomeVM');
+
+    log('$isWelcomeAnimationInProgress', name: 'HomeVM');
+    log('${AppState.isFirstTime}', name: 'HomeVM');
+    // log('${await BaseUtil.isFirstTimeThisWeek()}', name: 'HomeVM');
+
+    if (isWelcomeAnimationInProgress &&
+        AppState.isFirstTime == false &&
+        await BaseUtil.isFirstTimeThisWeek()) {
+      log('showLastWeekOverview condition ok', name: 'HomeVM');
+
+      final response = await locator<CampaignRepo>().getLastWeekData();
+
+      log('last_week => ${response.model?.toJson()}', name: 'HomeVM');
+
+      try {
+        if (response.isSuccess() &&
+            response.model != null &&
+            response.model?.data != null) {
+          if (AppState.screenStack.length == 1 &&
+              (AppState.screenStack.last != ScreenItem.dialog ||
+                  AppState.screenStack.last != ScreenItem.modalsheet)) {
+            unawaited(BaseUtil.openModalBottomSheet(
+              addToScreenStack: true,
+              backgroundColor: UiConstants.gameCardColor,
+              content: LastWeekUi(
+                model: response.model!.data!,
+                fromRoot: true,
+                callCampaign: true,
+              ),
+              hapticVibrate: true,
+              isScrollControlled: true,
+              isBarrierDismissible: false,
+            ));
+
+            fetchCampaign = false;
+          } else {
+            await PreferenceHelper.setInt(PreferenceHelper.LAST_WEEK_NUMBER, 0);
+          }
+        } else {
+          await PreferenceHelper.setInt(PreferenceHelper.LAST_WEEK_NUMBER, 0);
+        }
+      } catch (e) {
+        await PreferenceHelper.setInt(PreferenceHelper.LAST_WEEK_NUMBER, 0);
+        debugPrint(e.toString());
+      }
+    }
   }
 }

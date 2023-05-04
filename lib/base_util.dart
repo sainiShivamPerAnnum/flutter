@@ -57,7 +57,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class BaseUtil extends ChangeNotifier {
@@ -747,17 +746,17 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static Future<bool> isFirstTimeThisWeek() async {
-    final prefs = await SharedPreferences.getInstance();
-
     // Get the current week number
     final currentWeekNumber =
         (DateTime.now().difference(DateTime.utc(0, 1, 1)).inDays ~/ 7) + 1;
 
     // Get the last week number when the app was opened
-    final lastWeekNumber = prefs.getInt(PreferenceHelper.LAST_WEEK_NUMBER) ?? 0;
+    final lastWeekNumber =
+        PreferenceHelper.getInt(PreferenceHelper.LAST_WEEK_NUMBER) ?? 0;
 
     // Update the last week number in preferences
-    await prefs.setInt(PreferenceHelper.LAST_WEEK_NUMBER, currentWeekNumber);
+    await PreferenceHelper.setInt(
+        PreferenceHelper.LAST_WEEK_NUMBER, currentWeekNumber);
 
     // Check if the current week is the same as the last week when the app was opened
     return currentWeekNumber != lastWeekNumber;

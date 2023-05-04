@@ -30,7 +30,6 @@ class LastWeekViewModel extends BaseViewModel {
           response.model != null &&
           response.model?.data != null) {
         data = response.model!.data!;
-
         notifyListeners();
       }
       setState(ViewState.Idle);
