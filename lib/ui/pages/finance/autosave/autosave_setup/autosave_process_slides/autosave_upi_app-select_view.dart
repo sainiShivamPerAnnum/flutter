@@ -158,7 +158,7 @@ class UpiAppSelectView extends StatelessWidget {
                             SizedBox(width: SizeConfig.padding12),
                             Expanded(
                               child: Text(
-                                "You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹${model.totalInvestingAmount}/${model.selectedFrequency.rename()}.",
+                                "You will receive a mandate for ₹${model.dailyMaxMinInfo.max.LENDBOXP2P} on the selected UPI App. But don’t worry, We will not deduct anymore than ₹${model.totalInvestingAmount}/${model.selectedFrequency.rename()}.",
                                 style: TextStyles.body3
                                     .colour(UiConstants.kTextColor2),
                               ),
