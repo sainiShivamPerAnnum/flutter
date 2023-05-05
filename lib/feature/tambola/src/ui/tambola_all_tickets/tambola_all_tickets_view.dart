@@ -43,6 +43,7 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
   void initState() {
     ticketController = ScrollController();
     tambolaService = locator<TambolaService>();
+    tambolaService!.allTickets.clear();
     if (tambolaService!.allTickets.isEmpty) {
       _isLoadingTickets = true;
       tambolaService!

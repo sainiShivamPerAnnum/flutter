@@ -48,7 +48,8 @@ class TambolaRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<TambolaTicketModel>>> getTickets(int offset) async {
+  Future<ApiResponse<List<TambolaTicketModel>>> getTickets(
+      int offset, int limit) async {
     // try {
     final uid = userService.baseUser!.uid;
     final token = await getBearerToken();
@@ -58,7 +59,7 @@ class TambolaRepo extends BaseRepo {
     final response = await APIService.instance.getData(
       ApiPath.tambolaTickets(uid),
       token: token,
-      queryParams: {'limit': '10', 'offset': offset.toString()},
+      queryParams: {'limit': limit.toString(), 'offset': offset.toString()},
       cBaseUrl: _baseUrl,
     );
     List<TambolaTicketModel>? tickets =
