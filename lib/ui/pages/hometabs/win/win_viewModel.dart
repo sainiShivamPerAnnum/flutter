@@ -15,6 +15,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
@@ -53,10 +54,10 @@ class WinViewModel extends BaseViewModel {
   List<FelloFactsModel>? fellofacts = [];
   bool _isFelloFactsLoading = false;
 
-  get isFelloFactsLoading => this._isFelloFactsLoading;
+  get isFelloFactsLoading => _isFelloFactsLoading;
 
   set isFelloFactsLoading(value) {
-    this._isFelloFactsLoading = value;
+    _isFelloFactsLoading = value;
     notifyListeners();
   }
 
@@ -79,6 +80,7 @@ class WinViewModel extends BaseViewModel {
   Future<void> init() async {
     getFelloFacts();
     _lbService!.fetchReferralLeaderBoard();
+    locator<ScratchCardService>().updateUnscratchedGTCount();
     locator<ReferralService>().fetchReferralCode();
   }
 
@@ -163,7 +165,7 @@ class WinViewModel extends BaseViewModel {
     AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: MyWinningsPageConfig,
-        widget: MyWinningsView());
+        widget: const MyWinningsView());
   }
 
   void navigateToRefer() {

@@ -251,7 +251,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.MyWinnings:
-          _addPageData(MyWinningsView(), MyWinningsPageConfig);
+          _addPageData(const MyWinningsView(), MyWinningsPageConfig);
           break;
         case Pages.BlockedUser:
           _addPageData(BlockedUserView(), BlockedUserPageConfig);

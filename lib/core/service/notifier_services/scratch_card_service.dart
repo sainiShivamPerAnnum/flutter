@@ -43,21 +43,22 @@ class ScratchCardService
   bool isLastPageForScratchCards = false;
   bool _isFetchingScratchCards = false;
   String? scratchCardsListLastTicketId;
-  bool get isFetchingScratchCards => this._isFetchingScratchCards;
+  bool get isFetchingScratchCards => _isFetchingScratchCards;
   set isFetchingScratchCards(bool val) {
-    this._isFetchingScratchCards = val;
+    _isFetchingScratchCards = val;
     notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
   List<ScratchCard> _allScratchCards = [];
-  List<ScratchCard> get allScratchCards => this._allScratchCards;
+
+  List<ScratchCard> get allScratchCards => _allScratchCards;
   set allScratchCards(List<ScratchCard> value) {
-    this._allScratchCards = value;
+    _allScratchCards = value;
     // notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
   void addScratchCards(List<ScratchCard>? value) {
-    if (value != null) this._allScratchCards.addAll(value);
+    if (value != null) _allScratchCards.addAll(value);
     // notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
@@ -65,10 +66,12 @@ class ScratchCardService
 
   // static bool hasScratchCard = false;
   int _unscratchedTicketsCount = 0;
-  int get unscratchedTicketsCount => this._unscratchedTicketsCount;
+
+  int get unscratchedTicketsCount => _unscratchedTicketsCount;
 
   set unscratchedTicketsCount(int value) {
-    this._unscratchedTicketsCount = value;
+    _unscratchedTicketsCount = value;
+    notifyListeners();
     // notifyListeners(ScratchCardServiceProperties.UnscratchedCount);
   }
 
@@ -90,20 +93,20 @@ class ScratchCardService
   List<ScratchCard>? _unscratchedScratchCards;
 
   List<ScratchCard> get unscratchedScratchCards =>
-      this._unscratchedScratchCards ?? [];
+      _unscratchedScratchCards ?? [];
 
   set unscratchedScratchCards(List<ScratchCard> value) {
-    this._unscratchedScratchCards = value;
+    _unscratchedScratchCards = value;
     notifyListeners();
     log("Unscratched ScratchCard list updated");
   }
 
   List<ScratchCard>? _activeScratchCards;
 
-  List<ScratchCard> get activeScratchCards => this._activeScratchCards ?? [];
+  List<ScratchCard> get activeScratchCards => _activeScratchCards ?? [];
 
   set activeScratchCards(List<ScratchCard>? value) {
-    this._activeScratchCards = value;
+    _activeScratchCards = value;
     notifyListeners();
     log("ScratchCard list updated");
   }

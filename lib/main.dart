@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -99,6 +100,7 @@ class MyApp extends HookWidget {
           ChangeNotifierProvider(
               create: (_) => locator<LendboxTransactionService>()),
           ChangeNotifierProvider(create: (_) => locator<PowerPlayService>()),
+          ChangeNotifierProvider(create: (_) => locator<ScratchCardService>()),
         ],
         child: PropertyChangeProvider<UserService, UserServiceProperties>(
           value: locator<UserService>(),
