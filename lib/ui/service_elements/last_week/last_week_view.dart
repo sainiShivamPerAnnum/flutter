@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
@@ -171,7 +170,7 @@ class LastWeekUi extends StatelessWidget {
                           child: Text(
                             model.user == null
                                 ? "😥 You missed last week on "
-                                : ' 💰 ${locator<UserService>().name}’s Weekly Report',
+                                : ' 💰 Your Weekly Report',
                             style: TextStyles.rajdhaniSB.title5,
                           ),
                         ),

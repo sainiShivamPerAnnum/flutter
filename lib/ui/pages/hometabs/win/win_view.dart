@@ -55,7 +55,7 @@ class Win extends StatelessWidget {
               AccountInfoTiles(
                   title: locale.bankAccDetails, uri: "/bankDetails"),
               AccountInfoTiles(
-                title: 'Your Last Week on Fello',
+                title: 'Last Week on Fello',
                 uri: "",
                 onTap: () => model.showLastWeekSummary(),
               ),
