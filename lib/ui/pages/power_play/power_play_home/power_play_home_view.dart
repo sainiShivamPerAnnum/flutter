@@ -24,14 +24,9 @@ import 'package:provider/provider.dart';
 
 import '../../../../util/locator.dart';
 
-class PowerPlayHome extends StatefulWidget {
+class PowerPlayHome extends StatelessWidget {
   const PowerPlayHome({Key? key}) : super(key: key);
 
-  @override
-  State<PowerPlayHome> createState() => _PowerPlayHomeState();
-}
-
-class _PowerPlayHomeState extends State<PowerPlayHome> {
   @override
   Widget build(BuildContext context) {
     return BaseView<PowerPlayHomeViewModel>(

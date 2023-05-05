@@ -1,3 +1,5 @@
+import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +33,7 @@ class _CircularAnimState extends State<CircularAnim>
   set isAnimationInProgress(value) {
     setState(() {
       _isAnimationInProgress = value;
+      locator<RootViewModel>().isWelcomeAnimationInProgress = value;
     });
   }
 
@@ -70,7 +73,7 @@ class _CircularAnimState extends State<CircularAnim>
   void animate() {
     Future.delayed(
       const Duration(milliseconds: 200),
-      () {
+          () {
         _controller.reset();
         scaleFactor = 1;
         _controller.forward();

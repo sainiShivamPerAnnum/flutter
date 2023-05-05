@@ -103,6 +103,7 @@ import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referra
 import 'package:felloapp/ui/pages/userProfile/settings/settings_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
+import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
@@ -233,6 +234,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(LeaderBoardViewModel.new);
   locator.registerFactory(CompletedMatchDetailsVM.new);
   locator.registerFactory(SeasonLeaderboardViewModel.new);
+  locator.registerFactory(LastWeekViewModel.new);
 
   //WIDGETS
   locator.registerFactory(MiniTransactionCardViewModel.new);

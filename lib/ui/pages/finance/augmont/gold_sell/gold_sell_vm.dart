@@ -48,6 +48,7 @@ class GoldSellViewModel extends BaseViewModel {
   bool _isQntFetching = false;
   double _fieldWidth = 2;
   int? _deductedTokensCount = 0;
+
   int? get deductedTokensCount => this._deductedTokensCount;
 
   set deductedTokensCount(int? value) {
@@ -64,6 +65,7 @@ class GoldSellViewModel extends BaseViewModel {
 
   bool _showMaxCap = false;
   bool _showMinCap = false;
+
   bool get showMaxCap => this._showMaxCap;
 
   set showMaxCap(bool value) {

@@ -14,6 +14,7 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/analytics_repo.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -86,6 +87,7 @@ class LoginControllerViewModel extends BaseViewModel {
 //Private Variables
   bool _isSignup = false;
   bool _loginUsingTrueCaller = false;
+
   get loginUsingTrueCaller => _loginUsingTrueCaller;
 
   set loginUsingTrueCaller(value) {
@@ -103,8 +105,11 @@ class LoginControllerViewModel extends BaseViewModel {
 
 //Getters and Setters
   get controller => _controller;
+
   get pageNotifier => _pageNotifier;
+
   get pages => _pages;
+
   int? get currentPage => _currentPage;
 
   set currentPage(int? page) {
@@ -169,9 +174,9 @@ class LoginControllerViewModel extends BaseViewModel {
         }
       case LoginOtpView.index:
         {
-          String otp = _otpScreenKey.currentState!.model!.otp;
+          String? otp = _otpScreenKey.currentState?.model?.otp;
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
-            logger!.d("OTP is $otp");
+            logger.d("OTP is $otp");
             setState(ViewState.Busy);
             final verifyOtp = await _userRepo!.verifyOtp(_verificationId, otp);
             if (verifyOtp.isSuccess()) {
@@ -202,7 +207,7 @@ class LoginControllerViewModel extends BaseViewModel {
               setState(ViewState.Idle);
             }
           } else {
-            _otpScreenKey.currentState!.model!.otpFieldEnabled = true;
+            _otpScreenKey.currentState?.model?.otpFieldEnabled = true;
 
             BaseUtil.showNegativeAlert(locale.obEnterOTP, locale.obOneTimePass);
           }
@@ -480,6 +485,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
     BaseAnalytics.logUserProfile(userService.baseUser!);
     unawaited(fcmListener!.setupFcm());
+    locator<GameRepo>().getGameTiers();
     logger!.i("Calling analytics init for new onboarded user");
     unawaited(_analyticsService!.login(
       isOnBoarded: userService.isUserOnboarded,

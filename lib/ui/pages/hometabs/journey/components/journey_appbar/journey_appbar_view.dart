@@ -25,16 +25,16 @@ class JourneyAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BaseUtil? _baseUtil = locator<BaseUtil>();
+    final BaseUtil _baseUtil = locator<BaseUtil>();
     final S locale = locator<S>();
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-      properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
+      properties: const [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
       builder: (context, m, properties) {
         return Positioned(
           top: 0,
           left: SizeConfig.padding10,
           child: SafeArea(
-              child: Container(
+              child: SizedBox(
             width: SizeConfig.screenWidth! - SizeConfig.padding20,
             height: SizeConfig.screenWidth! * 0.30,
             child: Stack(
@@ -53,7 +53,7 @@ class JourneyAppBar extends StatelessWidget {
                 ),
                 Container(
                   child: Column(children: [
-                    Container(
+                    SizedBox(
                       height: SizeConfig.screenWidth! * 0.14,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -74,7 +74,7 @@ class JourneyAppBar extends StatelessWidget {
                             Expanded(
                               child: PropertyChangeConsumer<UserService,
                                   UserServiceProperties>(
-                                properties: [
+                                properties: const [
                                   UserServiceProperties.myJourneyStats
                                 ],
                                 builder: (context, model, properties) {
@@ -110,7 +110,7 @@ class JourneyAppBar extends StatelessWidget {
                         color: Colors.white.withOpacity(0.5),
                         thickness: 0.5,
                         height: 0.5),
-                    Container(
+                    SizedBox(
                       height: SizeConfig.screenWidth! * 0.14,
                       child: Row(
                         children: [
@@ -157,12 +157,13 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
   final String? title;
   final Widget? value;
   final String? actionUri;
-  JourneyAppBarAssetDetailsTile({
-    @required this.key,
-    @required this.title,
-    @required this.value,
-    @required this.actionUri,
-  });
+
+  const JourneyAppBarAssetDetailsTile({
+    required this.key,
+    required this.title,
+    required this.value,
+    required this.actionUri,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

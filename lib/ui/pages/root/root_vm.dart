@@ -74,6 +74,15 @@ class RootViewModel extends BaseViewModel {
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
   bool fetchCampaign = true;
+  bool _isWelcomeAnimationInProgress = true;
+
+  bool get isWelcomeAnimationInProgress => _isWelcomeAnimationInProgress;
+
+  set isWelcomeAnimationInProgress(bool value) {
+    log("isWelcomeAnimationInProgress: $value");
+    _isWelcomeAnimationInProgress = value;
+    notifyListeners();
+  }
 
   // final WinnerService? winnerService = locator<WinnerService>();
   final ReferralRepo _refRepo = locator<ReferralRepo>();
@@ -127,12 +136,15 @@ class RootViewModel extends BaseViewModel {
       (timeStamp) async {
         await _userService.userBootUpEE();
 
+        await showLastWeekOverview();
+
         if (AppState.isFirstTime) {
           Future.delayed(const Duration(seconds: 1),
               SpotLightController.instance.showTourDialog);
         }
 
         handleStartUpNotificationData();
+
         await Future.wait([
           _userService.checkForNewNotifications(),
           _userService.getProfilePicture(),
@@ -140,10 +152,6 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         _initAdhocNotifications();
-
-        if (await BaseUtil.isFirstTimeThisWeek()) {
-          await showLastWeekOverview();
-        }
 
         if (!AppState.isFirstTime && fetchCampaign) {
           showMarketingCampings();
@@ -414,29 +422,48 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<void> showLastWeekOverview() async {
-    final response = await locator<CampaignRepo>().getLastWeekData();
+    log('showLastWeekOverview called', name: 'HomeVM');
 
-    log('last week data => ${response.model?.data?.toJson()}', name: 'HomeVM');
+    if (isWelcomeAnimationInProgress &&
+        AppState.isFirstTime == false &&
+        await BaseUtil.isFirstTimeThisWeek()) {
+      log('showLastWeekOverview condition ok', name: 'HomeVM');
 
-    try {
-      if (response.isSuccess() &&
-          response.model != null &&
-          response.model?.data != null) {
-        AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: LastWeekOverviewConfig,
-          widget: LastWeekOverView(
-            model: response.model!.data!,
-          ),
-        );
+      final response = await locator<CampaignRepo>().getLastWeekData();
 
-        fetchCampaign = false;
+      log('last_week => ${response.model?.toJson()}', name: 'HomeVM');
 
-        unawaited(PreferenceHelper.setBool(
-            PreferenceHelper.LAST_WEEK_OVERVIEW_SHOWED, true));
+      try {
+        if (response.isSuccess() &&
+            response.model != null &&
+            response.model?.data != null) {
+          if (AppState.screenStack.length == 1 &&
+              (AppState.screenStack.last != ScreenItem.dialog ||
+                  AppState.screenStack.last != ScreenItem.modalsheet)) {
+            unawaited(BaseUtil.openModalBottomSheet(
+              addToScreenStack: true,
+              backgroundColor: UiConstants.gameCardColor,
+              content: LastWeekUi(
+                model: response.model!.data!,
+                fromRoot: true,
+                callCampaign: true,
+              ),
+              hapticVibrate: true,
+              isScrollControlled: true,
+              isBarrierDismissible: false,
+            ));
+
+            fetchCampaign = false;
+          } else {
+            await PreferenceHelper.setInt(PreferenceHelper.LAST_WEEK_NUMBER, 0);
+          }
+        } else {
+          await PreferenceHelper.setInt(PreferenceHelper.LAST_WEEK_NUMBER, 0);
+        }
+      } catch (e) {
+        await PreferenceHelper.setInt(PreferenceHelper.LAST_WEEK_NUMBER, 0);
+        debugPrint(e.toString());
       }
-    } catch (e) {
-      debugPrint(e.toString());
     }
   }
 }

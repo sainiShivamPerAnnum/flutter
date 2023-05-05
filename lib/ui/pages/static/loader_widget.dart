@@ -11,7 +11,7 @@ class FullScreenLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: SizeConfig.screenWidth,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

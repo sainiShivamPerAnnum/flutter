@@ -44,7 +44,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
-//Pub Imports
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -138,7 +137,7 @@ class UserProfileVM extends BaseViewModel {
 
   String get myGender => _userService.gender ?? "";
 
-  String get myMobile => _userService.baseUser!.mobile ?? "";
+  String get myMobile => _userService.baseUser?.mobile ?? "";
 
   bool get isEmailVerified => _userService.isEmailVerified;
 
@@ -160,18 +159,25 @@ class UserProfileVM extends BaseViewModel {
       _userService.baseUser!.userPreferences
           .getPreference(Preferences.APPLOCK) ==
       1;
+
   bool get tambolaNotification =>
       _userService.baseUser!.userPreferences
           .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
       1;
+
   int? get gen => _gen;
 
   String get dateInputError => _dateInputError;
+
   bool get isUpdaingUserDetails => this._isUpdaingUserDetails;
+
   // get isNewUser => this._isNewUser;
   get isgmailFieldEnabled => this._isgmailFieldEnabled;
+
   get errorPadding => this._errorPadding;
+
   get isNameEnabled => this._isNameEnabled;
+
   get isDateEnabled => this._isDateEnabled;
 
   // Setters
@@ -572,7 +578,6 @@ class UserProfileVM extends BaseViewModel {
                 locator<JourneyRepository>().dump();
                 _appstate.dump();
                 locator<SubService>().dump();
-                locator<PowerPlayService>().dump();
                 _tambolaService!.dump();
                 AppState.backButtonDispatcher!.didPopRoute();
 

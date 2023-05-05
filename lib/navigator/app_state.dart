@@ -18,9 +18,7 @@ import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-//Flutter imports
 import 'package:flutter/material.dart';
-//Pub imports
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PageAction {
@@ -55,8 +53,10 @@ class AppState extends ChangeNotifier {
   static bool isWebGamePInProgress = false;
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
+
   // static bool isDrawerOpened = false;
   static bool isUserSignedIn = false;
+
   // static bool isSaveOpened = false;
   // static bool isWinOpened = false;
   static bool isRootAvailableForIncomingTaskExecution = true;
@@ -67,6 +67,7 @@ class AppState extends ChangeNotifier {
   static bool isFirstTimeSaveOpened = false;
   static bool isFirstTimeAccountsOpened = false;
   static bool isFirstTimeTambolaOpened = false;
+
   // static bool isJourneyFirstTab = false;
   static bool isAutosaveFlow = false;
 
@@ -201,7 +202,11 @@ class AppState extends ChangeNotifier {
     // isJourneyFirstTab = false;
     isFirstTime = false;
     _rootController.navItems.clear();
-    // homeTabPageController.jumpToPage(0);
+
+    if (homeTabPageController.hasClients) {
+      homeTabPageController.dispose();
+      return;
+    }
   }
 
   // setLastTapIndex() {

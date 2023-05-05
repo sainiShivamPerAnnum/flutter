@@ -29,7 +29,6 @@ class PreferenceHelper {
   static const CACHE_LAST_APP_OPEN = "lastAppOpen";
   static SharedPreferences? _prefs;
   static const POWERPLAY_IS_PLAYED = "powerplay_is_played";
-  static const LAST_WEEK_OVERVIEW_SHOWED = 'last_week_overview_showed';
   static const LAST_WEEK_NUMBER = 'lastWeekNumber';
 
   static Future<SharedPreferences?> initiate() async {

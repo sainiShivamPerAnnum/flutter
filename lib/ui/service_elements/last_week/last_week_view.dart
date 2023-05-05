@@ -1,10 +1,16 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_bg.dart';
+import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -15,12 +21,80 @@ import 'package:flutter_svg/flutter_svg.dart';
 class LastWeekOverView extends StatelessWidget {
   const LastWeekOverView({
     Key? key,
-    required this.model,
     this.callCampaign = true,
+    this.fromRoot = false,
   }) : super(key: key);
+
+  final bool callCampaign;
+  final bool fromRoot;
+
+  @override
+  Widget build(BuildContext context) {
+    return BaseView<LastWeekViewModel>(
+      onModelReady: (model) {
+        model.init();
+      },
+      builder: (context, model, child) {
+        if (model.state == ViewState.Busy) {
+          return LastWeekBg(
+            showButton: false,
+            child: SizedBox(
+              width: SizeConfig.screenWidth,
+              child: const FullScreenLoader(),
+            ),
+          );
+        }
+        if (model.data == null && model.state == ViewState.Idle) {
+          return LastWeekBg(
+            showButton: false,
+            showBackButtuon: true,
+            child: SizedBox(
+              width: SizeConfig.screenWidth,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svg/paper_plane.svg',
+                      height: SizeConfig.padding90,
+                      width: SizeConfig.padding90,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                    Text(
+                      "Last week’s results will be available soon.\nCome back later!",
+                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+        return LastWeekUi(
+          callCampaign: callCampaign,
+          fromRoot: fromRoot,
+          model: model.data!,
+        );
+      },
+    );
+  }
+}
+
+class LastWeekUi extends StatelessWidget {
+  const LastWeekUi({
+    super.key,
+    required this.callCampaign,
+    required this.fromRoot,
+    required this.model,
+  });
 
   final LastWeekData model;
   final bool callCampaign;
+  final bool fromRoot;
 
   @override
   Widget build(BuildContext context) {
@@ -35,18 +109,30 @@ class LastWeekOverView extends StatelessWidget {
             Column(
               children: [
                 SizedBox(
-                  height: SizeConfig.fToolBarHeight / 2,
+                  height: fromRoot
+                      ? SizeConfig.fToolBarHeight
+                      : SizeConfig.fToolBarHeight / 2,
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       GestureDetector(
                         onTap: () {
+                          Haptic.vibrate();
                           AppState.backButtonDispatcher!.didPopRoute();
+                          if (callCampaign) {
+                            locator<MarketingEventHandlerService>()
+                                .getCampaigns();
+                          }
                         },
-                        child: const Icon(
-                          Icons.close,
-                          size: 25,
-                          color: Colors.white,
+                        child: Container(
+                          margin: EdgeInsets.only(
+                              top: fromRoot ? SizeConfig.padding26 : 0),
+                          child: const Icon(
+                            Icons.close,
+                            size: 25,
+                            color: Colors.white,
+                          ),
                         ),
                       )
                     ],
@@ -77,7 +163,7 @@ class LastWeekOverView extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        TotalInvestmentWidget(data: model),
+                        TotalInvestmentWidget(data: model!),
                         SizedBox(
                           height: SizeConfig.padding40,
                         ),
@@ -122,33 +208,6 @@ class LastWeekOverView extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.padding20,
                         ),
-                        // Container(
-                        //   padding: EdgeInsets.symmetric(
-                        //       vertical: SizeConfig.padding12,
-                        //       horizontal: SizeConfig.padding16),
-                        //   decoration: BoxDecoration(
-                        //       color: Colors.black.withOpacity(0.5),
-                        //       borderRadius: BorderRadius.circular(10)),
-                        //   child: Row(
-                        //     children: [
-                        //       SvgPicture.asset(
-                        //         'assets/svg/trophy_banner.svg',
-                        //         height: SizeConfig.padding38,
-                        //       ),
-                        //       SizedBox(
-                        //         width: SizeConfig.padding20,
-                        //       ),
-                        //       Flexible(
-                        //         child: Text(
-                        //           'Congratulations!\nYou were in the top 10 Percentile Investors on Fello',
-                        //           style: TextStyles.sourceSans.body3
-                        //               .colour(UiConstants.kTextFieldTextColor),
-                        //           maxLines: 2,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                         SizedBox(
                           height: SizeConfig.navBarHeight * 2,
                         ),

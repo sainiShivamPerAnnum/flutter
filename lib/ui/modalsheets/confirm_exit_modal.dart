@@ -34,7 +34,7 @@ class ConfirmExitModal extends StatelessWidget {
             "Don’t miss a chance to invest &\ngrow your savings by 10%",
             textAlign: TextAlign.center,
             style: TextStyles.sourceSans.body2.colour(
-              Color(0xffD9D9D9),
+              const Color(0xffD9D9D9),
             ),
           ),
           LottieBuilder.network(
@@ -44,19 +44,19 @@ class ConfirmExitModal extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding16,
           ),
-          Spacer(),
+          const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SvgPicture.asset(Assets.multiAvatars),
-              SizedBox(
+              const SizedBox(
                 width: 4,
               ),
               Text(
                 "5.5 Lakh+ users trust Fello",
                 style: TextStyles.sourceSansB.colour(
-                  Color(0xffd9d9d9).withOpacity(0.9),
+                  const Color(0xffd9d9d9).withOpacity(0.9),
                 ),
               )
             ],

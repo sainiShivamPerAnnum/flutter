@@ -112,7 +112,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     if (AppState.screenStack.last == ScreenItem.loader) {
       return Future.value(true);
     }
-    print("Page Controller: ${locator<SubService>().pageController}");
+    debugPrint("Page Controller: ${locator<SubService>().pageController}");
 
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog ||

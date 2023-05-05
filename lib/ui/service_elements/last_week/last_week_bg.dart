@@ -1,5 +1,6 @@
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -15,6 +16,8 @@ class LastWeekBg extends StatelessWidget {
     this.iconUrl,
     this.title,
     this.isTopSaver,
+    this.showButton = true,
+    this.showBackButtuon = false,
   }) : super(key: key);
 
   final Widget child;
@@ -22,6 +25,8 @@ class LastWeekBg extends StatelessWidget {
   final String? iconUrl;
   final String? title;
   final bool? isTopSaver;
+  final bool showButton;
+  final showBackButtuon;
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +51,48 @@ class LastWeekBg extends StatelessWidget {
             ),
             child: child,
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: SizeConfig.screenWidth,
-              color: const Color(0xff232326),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+          if (showBackButtuon)
+            SizedBox(
+              height: SizeConfig.fToolBarHeight,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: SizeConfig.padding12,
-                  ),
-                  if (isTopSaver ?? false)
+                  IconButton(
+                    onPressed: () {
+                      Haptic.vibrate();
+                      AppState.backButtonDispatcher!.didPopRoute();
+                      if (callCampaign) {
+                        locator<MarketingEventHandlerService>().getCampaigns();
+                      }
+                    },
+                    icon: Container(
+                      margin: EdgeInsets.only(
+                          top: SizeConfig.padding26,
+                          left: SizeConfig.padding20),
+                      child: const Icon(
+                        Icons.arrow_back_ios,
+                        size: 25,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          if (showButton)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: SizeConfig.screenWidth,
+                color: const Color(0xff232326),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.padding12,
+                    ),
+                    if (isTopSaver ?? false)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -80,7 +115,7 @@ class LastWeekBg extends StatelessWidget {
                       style: TextStyles.sourceSans.body4,
                     ),
                   Container(
-                    height: SizeConfig.navBarHeight * 0.8,
+                    height: SizeConfig.navBarHeight * 0.9,
                     margin: EdgeInsets.fromLTRB(
                       SizeConfig.pageHorizontalMargins,
                       SizeConfig.pageHorizontalMargins - SizeConfig.padding12,
@@ -110,7 +145,9 @@ class LastWeekBg extends StatelessWidget {
                           locator<MarketingEventHandlerService>()
                               .getCampaigns();
                         }
+
                         AppState.backButtonDispatcher!.didPopRoute();
+                        AppState.delegate!.parseRoute(Uri.parse('/save'));
                       },
                       child: Center(
                         child: Text(

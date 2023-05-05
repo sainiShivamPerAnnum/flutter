@@ -129,6 +129,7 @@ class NoInternetView extends StatefulWidget {
 
 class _NoInternetViewState extends State<NoInternetView> {
   bool viewContent = false;
+
   @override
   void initState() {
     super.initState();

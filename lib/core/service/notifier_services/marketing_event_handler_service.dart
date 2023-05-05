@@ -31,32 +31,32 @@ class MarketingEventHandlerService
   bool _isDailyAppBonusClaimInProgress = false;
   bool _isDailyAppBonusClaimed = false;
   bool _showModalsheet = true;
-  bool get showModalsheet => this._showModalsheet;
+  bool get showModalsheet => _showModalsheet;
 
   set showModalsheet(bool value) {
-    this._showModalsheet = value;
+    _showModalsheet = value;
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
-  get isDailyAppBonusClaimed => this._isDailyAppBonusClaimed;
+  get isDailyAppBonusClaimed => _isDailyAppBonusClaimed;
 
   set isDailyAppBonusClaimed(value) {
-    this._isDailyAppBonusClaimed = value;
+    _isDailyAppBonusClaimed = value;
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
-  get isDailyAppBonusClaimInProgress => this._isDailyAppBonusClaimInProgress;
+  get isDailyAppBonusClaimInProgress => _isDailyAppBonusClaimInProgress;
 
   set isDailyAppBonusClaimInProgress(value) {
-    this._isDailyAppBonusClaimInProgress = value;
+    _isDailyAppBonusClaimInProgress = value;
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
   DailyAppCheckInEventModel? get dailyAppCheckInEventData =>
-      this._dailyAppCheckInEventData;
+      _dailyAppCheckInEventData;
 
   set dailyAppCheckInEventData(DailyAppCheckInEventModel? value) {
-    this._dailyAppCheckInEventData = value;
+    _dailyAppCheckInEventData = value;
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
