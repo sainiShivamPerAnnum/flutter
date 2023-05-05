@@ -34,14 +34,15 @@ class ScratchCardGridItemCard extends StatelessWidget {
   final ScratchCard ticket;
   final TextStyle titleStyle, subtitleStyle, titleStyle2;
   final double width;
-  ScratchCardGridItemCard({
+  const ScratchCardGridItemCard({
     required this.ticket,
-    required this.titleStyle,
-    required this.subtitleStyle,
     required this.titleStyle2,
+    required this.subtitleStyle,
+    required this.titleStyle,
     required this.width,
-  });
-  S locale = locator<S>();
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Hero(

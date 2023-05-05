@@ -69,6 +69,7 @@ class ScratchCardsView extends StatelessWidget {
                           );
                         },
                         child: ScratchCardGridItemCard(
+                          key: Key(model.allScratchCards[i].gtId!),
                           ticket: model.allScratchCards[i],
                           titleStyle: TextStyles.body2,
                           titleStyle2: TextStyles.body3,
