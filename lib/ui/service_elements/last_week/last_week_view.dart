@@ -36,24 +36,41 @@ class LastWeekOverView extends StatelessWidget {
       },
       builder: (context, model, child) {
         if (model.state == ViewState.Busy) {
-          return Scaffold(
-            backgroundColor: UiConstants.gameCardColor,
-            body: SizedBox(
+          return LastWeekBg(
+            showButton: false,
+            child: SizedBox(
               width: SizeConfig.screenWidth,
               child: const FullScreenLoader(),
             ),
           );
         }
         if (model.data == null && model.state == ViewState.Idle) {
-          return Scaffold(
-            backgroundColor: UiConstants.gameCardColor,
-            body: SizedBox(
+          return LastWeekBg(
+            showButton: false,
+            showBackButtuon: true,
+            child: SizedBox(
               width: SizeConfig.screenWidth,
               child: Center(
-                  child: Text(
-                "Please Try Again Later",
-                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-              )),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svg/paper_plane.svg',
+                      height: SizeConfig.padding90,
+                      width: SizeConfig.padding90,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                    Text(
+                      "Last week’s results will be available soon.\nCome back later!",
+                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         }
