@@ -51,6 +51,7 @@ class _PageViewWithIndicatorState extends State<PageViewWithIndicator> {
 
   @override
   Widget build(BuildContext context) {
+    ticketsCount = widget.children!.length > 5 ? 5 : widget.children!.length;
     return Column(
       children: [
         SizedBox(

@@ -156,16 +156,12 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getTambolaTickets() async {
-    final ticketsResponse = await _tambolaRepo
-        .getTickets(allTickets.isEmpty ? 0 : allTickets.length + 1);
+  Future<void> getTambolaTickets({int limit = 10}) async {
+    final ticketsResponse = await _tambolaRepo.getTickets(
+        allTickets.isEmpty ? 0 : allTickets.length + 1, limit);
     if (ticketsResponse.isSuccess()) {
       if (ticketsResponse.model!.isEmpty) return;
-      if (allTickets.isEmpty) {
-        allTickets = ticketsResponse.model!;
-      } else {
-        allTickets.addAll(ticketsResponse.model!);
-      }
+      allTickets = ticketsResponse.model!;
       notifyListeners();
     } else {
       //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE

@@ -47,7 +47,6 @@ class TicketSection extends StatelessWidget {
           ),
           TicketsView(
             bestTickets: data.item1,
-            // showIndicatorForAll: true,
             weeklyPicks: data.item2 ?? DailyPick.noPicks(),
           ),
           const ViewAllTicketsBar()

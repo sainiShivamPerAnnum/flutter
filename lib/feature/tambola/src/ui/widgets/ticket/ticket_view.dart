@@ -12,13 +12,8 @@ class TicketsView extends StatefulWidget {
     Key? key,
     this.bestTickets,
     required this.weeklyPicks,
-    // required this.tabList,
-    // required this.model,
-    // required this.showIndicatorForAll,
   }) : super(key: key);
 
-  // final TambolaHomeViewModel? model;
-  // final bool showIndicatorForAll;
   final TambolaBestTicketsModel? bestTickets;
   final DailyPick weeklyPicks;
 
@@ -160,16 +155,17 @@ class _TicketsViewState extends State<TicketsView>
     }
     if (tickets.isNotEmpty) {
       return PageViewWithIndicator(
-          showIndicator: tickets.length > 1,
-          controller: controller,
-          children: tickets
-              .map(
-                (e) => TambolaTicket(
-                  board: e,
-                  calledDigits: widget.weeklyPicks.toList(),
-                ),
-              )
-              .toList());
+        showIndicator: tickets.length > 1,
+        controller: controller,
+        children: tickets
+            .map(
+              (e) => TambolaTicket(
+                board: e,
+                calledDigits: widget.weeklyPicks.toList(),
+              ),
+            )
+            .toList(),
+      );
     } else {
       return const NoTicketWidget();
     }
