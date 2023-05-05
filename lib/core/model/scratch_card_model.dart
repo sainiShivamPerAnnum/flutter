@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -49,6 +50,11 @@ class ScratchCard {
     rewardArr =
         json['rewardArr'] != null ? Reward.objArray(json['rewardArr']) : [];
     version = json['version'];
+  }
+
+  @override
+  String toString() {
+    return 'ScratchCard(gtId: $gtId, canTransfer: $canTransfer, eventType: $eventType, gtType: $gtType, isRewarding: $isRewarding, isLevelChange: $isLevelChange, note: $note, prizeSubtype: $prizeSubtype, redeemedTimestamp: $redeemedTimestamp, rewardArr: $rewardArr, timestamp: $timestamp, userId: $userId, version: $version)';
   }
 }
 

@@ -72,7 +72,7 @@ class MyWinningsView extends StatelessWidget {
                       },
                       child: ListView(
                         shrinkWrap: true,
-                        children: [
+                        children: const [
                           PrizeClaimCard(),
                           ScratchCardsView(),
                         ],

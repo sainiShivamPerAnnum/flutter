@@ -16,7 +16,8 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class ScratchCardsView extends StatelessWidget {
   final bool openFirst;
 
-  ScratchCardsView({
+  const ScratchCardsView({
+    super.key,
     this.openFirst = false,
   });
 
@@ -24,13 +25,13 @@ class ScratchCardsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<ScratchCardService,
         ScratchCardServiceProperties>(
-      properties: [ScratchCardServiceProperties.AllScratchCards],
+      properties: const [ScratchCardServiceProperties.AllScratchCards],
       builder: (context, model, properties) {
         return model!.isFetchingScratchCards && model.allScratchCards.isEmpty
-            ? Center(child: FullScreenLoader())
+            ? const Center(child: FullScreenLoader())
             : model.allScratchCards.isEmpty
                 ? ListView(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     children: [
                       NoRecordDisplayWidget(

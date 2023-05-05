@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
@@ -293,12 +294,13 @@ class TambolaService extends ChangeNotifier {
     double totalInvestedPrinciple =
         locator<UserService>().userFundWallet!.augGoldPrinciple;
     isEligible = totalInvestedPrinciple >=
-        BaseUtil.toInt(BaseRemoteConfig.remoteConfig
-            .getString(BaseRemoteConfig.UNLOCK_REFERRAL_AMT));
+        BaseUtil.toInt(
+          AppConfig.getValue(AppConfigKey.unlock_referral_amt),
+        );
 
     isEligible = true;
     _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
-
+    await getPrizes();
     if (showWinScreen) {
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
@@ -310,8 +312,10 @@ class TambolaService extends ChangeNotifier {
       );
     }
     showWinScreen = false;
+    unawaited(PreferenceHelper.setBool(
+        PreferenceHelper.SHOW_TAMBOLA_PROCESSING, showWinScreen));
     S locale = locator<S>();
-    if (ticketCodeWinIndex.isNotEmpty) {
+    if (ticketCodeWinIndex.isNotEmpty && showWinScreen) {
       BaseUtil.showPositiveAlert(
         locale.tambolaTicketWinAlert1,
         locale.tambolaTicketWinAlert2,

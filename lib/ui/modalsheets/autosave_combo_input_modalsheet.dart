@@ -204,20 +204,23 @@ class _AutosaveComboInputFieldsModalSheetState
             color: Colors.grey.withOpacity(0.4),
             height: SizeConfig.padding32,
           ),
-          if (widget.model.totalInvestingAmount > 5000)
+          if (totalSipAmount > widget.model.monthlyMaxMinInfo.max.LENDBOXP2P)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Total Investing amount should not be more than ₹5000",
+                "Total Investing amount should not be more than ${widget.model.monthlyMaxMinInfo.max.LENDBOXP2P}",
                 style: TextStyles.rajdhani.body3.italic.colour(Colors.red),
               ),
             ),
           AppPositiveBtn(
             btnText: "SUBMIT",
             onPressed: () {
-              if (totalSipAmount > widget.model.dailyMaxMinInfo.max.LENDBOXP2P)
-                return BaseUtil.showNegativeAlert("Entered amount is too high",
+              if (totalSipAmount >
+                  widget.model.monthlyMaxMinInfo.max.LENDBOXP2P) {
+                BaseUtil.showNegativeAlert("Entered amount is too high",
                     "Please reduce the investing amount and try again");
+                return;
+              }
               if (formKey.currentState!.validate()) {
                 createCombo();
                 widget.model.isComboSelected = false;
