@@ -1,6 +1,8 @@
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +24,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
   PageController? _pageController;
   bool showBack = false;
 
-  // final PrizeService _prizeService = locator<PrizeService>();
+  final TambolaService _tambolaService = locator<TambolaService>();
 
   PrizesModel? tPrizes;
 
@@ -31,7 +33,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
     debugPrint(widget.isEligible.toString());
     debugPrint(widget.winningsMap.toString());
     _pageController = PageController();
-    // tPrizes = _prizeService!.gamePrizeMap[Constants.GAME_TYPE_TAMBOLA];
+    tPrizes = _tambolaService.tambolaPrizes;
     super.initState();
   }
 

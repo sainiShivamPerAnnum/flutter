@@ -41,7 +41,7 @@ class _TicketsViewState extends State<TicketsView>
   void initState() {
     super.initState();
     controller = PageController(initialPage: 0);
-    _tabController = TabController(vsync: this, length: 5);
+    _tabController = TabController(vsync: this, length: 4);
     _tabController.addListener(_handleTabSelection);
     // _bestBoards = widget.tickets;
   }

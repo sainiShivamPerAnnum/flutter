@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
@@ -162,21 +163,22 @@ class ScratchCardService
     return false;
   }
 
-Future<void>  showInstantScratchCardView(
+  Future<void> showInstantScratchCardView(
       {required GTSOURCE source,
       String? title,
       double? amount = 0,
       bool onJourney = false,
-      bool showAutoSavePrompt = false})async {
+      bool showAutoSavePrompt = false}) async {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
     if (currentGT != null) {
       log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${ScratchCardService.currentGT!.prizeSubtype} ");
       if (previousPrizeSubtype == ScratchCardService.currentGT!.prizeSubtype &&
           !onJourney) return;
-     await  Future.delayed(Duration(milliseconds: 200), () async{
+      await Future.delayed(Duration(milliseconds: 200), () async {
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
-       await  Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+        await Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
+            .push(
           PageRouteBuilder(
             opaque: false,
             pageBuilder: (BuildContext context, _, __) => GTInstantView(
@@ -428,11 +430,11 @@ Future<void>  showInstantScratchCardView(
       scratchCardsListLastTicketId = allScratchCards.last.gtId;
       isFetchingScratchCards = false;
     } catch (e) {
-      locator<InternalOpsService>().logFailure(
+      unawaited(locator<InternalOpsService>().logFailure(
         _userService!.baseUser!.uid,
         FailType.ScratchCardListFailed,
         {'message': "Scratch Card data fetch failed"},
-      );
+      ));
       allScratchCards = [];
       isFetchingScratchCards = false;
     }
@@ -464,7 +466,7 @@ Future<void>  showInstantScratchCardView(
     // arrangedScratchCardList = ids.toList();
   }
 
-  refreshTickets({required String prizeSubtype}) {
+  void refreshTickets({required String prizeSubtype}) {
     allScratchCards
         .firstWhere((ticket) => ticket.prizeSubtype == prizeSubtype)
         .redeemedTimestamp = TimestampModel.currentTimeStamp();

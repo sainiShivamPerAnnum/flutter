@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -28,6 +30,7 @@ class GTDetailedView extends StatelessWidget {
     return BaseView<GTDetailedViewModel>(
       onModelReady: (model) {
         model.init(ticket);
+        log(ticket.toString());
       },
       builder: (ctx, model, child) {
         return Scaffold(
