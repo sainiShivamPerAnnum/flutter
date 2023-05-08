@@ -449,6 +449,7 @@ class LoginControllerViewModel extends BaseViewModel {
   Future _onSignUpComplete() async {
     await userService.init();
     baseProvider!.init();
+    _referralService.init();
     AnalyticsProperties().init();
     if (_isSignup) {
       unawaited(_userRepo!.updateUserAppFlyer(userService!.baseUser!,
@@ -485,8 +486,8 @@ class LoginControllerViewModel extends BaseViewModel {
 
     BaseAnalytics.logUserProfile(userService.baseUser!);
     unawaited(fcmListener!.setupFcm());
-    locator<GameRepo>().getGameTiers();
-    logger!.i("Calling analytics init for new onboarded user");
+    unawaited(locator<GameRepo>().getGameTiers());
+    logger.i("Calling analytics init for new onboarded user");
     unawaited(_analyticsService!.login(
       isOnBoarded: userService.isUserOnboarded,
       baseUser: userService.baseUser,
