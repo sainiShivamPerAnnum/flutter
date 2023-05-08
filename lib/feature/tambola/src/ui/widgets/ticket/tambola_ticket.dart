@@ -63,11 +63,10 @@ class TambolaTicket extends StatelessWidget {
   }
 
   bool shouldScratched() {
-    if (board.assignedTime.toDate().weekday == DateTime.sunday) {
-      if (DateTime.now().weekday == DateTime.sunday) {
-        return false;
-      } else if ((DateTime.now().weekday == DateTime.monday) &&
-          DateTime.now().hour < 18) {
+    if (board.assignedTime.toDate().weekday == DateTime.sunday &&
+        board.assignedTime.toDate().hour > 18) {
+      if (DateTime.now().weekday == DateTime.sunday &&
+          board.assignedTime.toDate().day == DateTime.now().day) {
         return false;
       }
     }
