@@ -17,18 +17,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AnalyticsService extends BaseAnalyticsService {
   static const appFlierKey = 'fyD5pxiiDw5DrwynP52oT9';
 
-  final MixpanelAnalytics? _mixpanel = locator<MixpanelAnalytics>();
-  final WebEngageAnalytics? _webengage = locator<WebEngageAnalytics>();
-  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
-  final SingularAnalytics? _singular = locator<SingularAnalytics>();
+  final MixpanelAnalytics _mixpanel = locator<MixpanelAnalytics>();
+  final WebEngageAnalytics _webengage = locator<WebEngageAnalytics>();
+  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
+  final SingularAnalytics _singular = locator<SingularAnalytics>();
 
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
-    await _mixpanel!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _webengage!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _appFlyer!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
-    _singular!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    await _mixpanel.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    _appFlyer.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    _singular.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
 
     // for daily session event
     DateTime now = DateTime.now();
@@ -42,10 +42,10 @@ class AnalyticsService extends BaseAnalyticsService {
   }
 
   void signOut() {
-    _mixpanel!.signOut();
-    _webengage!.signOut();
-    _appFlyer!.signOut();
-    _singular!.signOut();
+    _mixpanel.signOut();
+    _webengage.signOut();
+    _appFlyer.signOut();
+    _singular.signOut();
   }
 
   void track({
@@ -67,14 +67,18 @@ class AnalyticsService extends BaseAnalyticsService {
     } catch (e) {}
     try {
       _logger!.d(eventName);
-      if (mixpanel)
+      if (mixpanel) {
         _mixpanel!.track(eventName: eventName, properties: properties);
-      if (webEngage)
+      }
+      if (webEngage) {
         _webengage!.track(eventName: eventName, properties: properties);
-      if (appFlyer)
+      }
+      if (appFlyer) {
         _appFlyer!.track(eventName: eventName, properties: properties);
-      if (singular)
+      }
+      if (singular) {
         _singular!.track(eventName: eventName, properties: properties);
+      }
     } catch (e) {
       String error = e as String ?? "Unable to track event: $eventName";
       _logger!.e(error);

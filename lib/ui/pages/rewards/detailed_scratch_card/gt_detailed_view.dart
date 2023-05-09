@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -28,6 +30,7 @@ class GTDetailedView extends StatelessWidget {
     return BaseView<GTDetailedViewModel>(
       onModelReady: (model) {
         model.init(ticket);
+        log(ticket.toString());
       },
       builder: (ctx, model, child) {
         return Scaffold(
@@ -105,11 +108,12 @@ class GTDetailedView extends StatelessWidget {
                   child: setTicketHeader(model)),
               Spacer(flex: 2),
               AnimatedContainer(
-                  decoration: BoxDecoration(),
-                  duration: Duration(seconds: 1),
-                  curve: Curves.easeIn,
-                  width: SizeConfig.screenWidth,
-                  child: setModalContent(model, context))
+                decoration: BoxDecoration(),
+                duration: Duration(seconds: 1),
+                curve: Curves.easeIn,
+                width: SizeConfig.screenWidth,
+                child: setModalContent(model, context),
+              )
             ],
           ),
         );
@@ -131,12 +135,10 @@ class GTDetailedView extends StatelessWidget {
               style: TextStyles.rajdhaniB.title2.colour(Colors.white)),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-            child: Text(
-              "${ticket.note}",
-              style:
-                  TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
-              textAlign: TextAlign.center,
-            ),
+            child: (ticket.note ?? locale.wonGT).beautify(
+                style:
+                    TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
+                alignment: TextAlign.center),
           ),
         ],
       );

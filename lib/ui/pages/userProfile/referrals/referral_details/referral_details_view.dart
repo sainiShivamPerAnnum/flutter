@@ -7,7 +7,7 @@ import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
-import 'package:felloapp/ui/elements/helpers/height_adaptive_pageview.dart';
+import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -190,7 +190,11 @@ class ReferralDetailsView extends StatelessWidget {
                                     ),
                                     child: GestureDetector(
                                       onTap: () {
-                                        locator<ReferralService>().shareLink();
+                                        if (model.isShareAlreadyClicked ==
+                                            false) {
+                                          locator<ReferralService>()
+                                              .shareLink();
+                                        }
                                       },
                                       child: Icon(
                                         Icons.share,
@@ -240,7 +244,7 @@ class ReferralDetailsView extends StatelessWidget {
                             horizontal: SizeConfig.padding16),
                         child: Row(
                           children: [
-                            ProfileImageSE(
+                            const ProfileImageSE(
                               reactive: false,
                             ),
                             SizedBox(
@@ -421,7 +425,9 @@ class ReferralDetailsView extends StatelessWidget {
                       width: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       onPressed: () {
-                        locator<ReferralService>().shareLink();
+                        if (model.isShareAlreadyClicked == false) {
+                          locator<ReferralService>().shareLink();
+                        }
                       },
                     ),
                   ),
@@ -897,6 +903,7 @@ class InfoTile extends StatelessWidget {
       this.leadingAsset,
       this.title,
       this.leadSize});
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -937,6 +944,7 @@ class InfoTile extends StatelessWidget {
 
 class ReferAndEarnAsset extends StatelessWidget {
   ReferAndEarnAsset({Key? key}) : super(key: key);
+
   getHeadingCustomTextStyle(Color color) {
     return TextStyles.rajdhaniEB.title0
         .colour(color)

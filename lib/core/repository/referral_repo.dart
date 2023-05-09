@@ -27,7 +27,7 @@ class ReferralRepo extends BaseRepo {
 
       final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.getReferralCode(this.userService!.baseUser!.uid),
+        ApiPath.getReferralCode(userService!.baseUser!.uid),
         token: bearer,
         cBaseUrl: _baseUrl,
       );
@@ -39,7 +39,7 @@ class ReferralRepo extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger!.e('getReferralCode $e ${this.userService!.baseUser!.uid}');
+      logger!.e('getReferralCode $e ${userService!.baseUser!.uid}');
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -104,7 +104,7 @@ class ReferralRepo extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
 
-      this.logger!.d(response);
+      logger!.d(response);
       return ApiResponse(model: true, code: 200);
     } catch (e) {
       logger!.e(e);

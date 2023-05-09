@@ -109,9 +109,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
     if (AppState.isInstantGtViewInView) return Future.value(true);
 
-    if (AppState.screenStack.last == ScreenItem.loader)
+    if (AppState.screenStack.last == ScreenItem.loader) {
       return Future.value(true);
-    print("Page Controller: ${locator<SubService>().pageController}");
+    }
+    debugPrint("Page Controller: ${locator<SubService>().pageController}");
 
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog ||
@@ -149,7 +150,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
               ),
               isScrollControlled: true,
               hapticVibrate: true,
-              content: AutosaveConfirmExitModalSheet());
+              content: const AutosaveConfirmExitModalSheet());
           return Future.value(true);
         }
       }
@@ -162,7 +163,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       return Future.value(true);
     }
     //If the cricket game is in progress
-    else if (AppState.isWebGameLInProgress)
+    else if (AppState.isWebGameLInProgress) {
       return _confirmExit(
         "Exit Game",
         "Are you sure you want to leave?",
@@ -175,7 +176,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         },
         true,
       );
-    else if (AppState.isWebGamePInProgress)
+    } else if (AppState.isWebGamePInProgress) {
       return _confirmExit(
         "Exit Game",
         "Are you sure you want to leave?",
@@ -183,12 +184,12 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.isWebGamePInProgress = false;
           didPopRoute();
           didPopRoute();
-          _webGameViewModel!
-              .handleGameSessionEnd(duration: Duration(milliseconds: 500));
+          _webGameViewModel!.handleGameSessionEnd(
+              duration: const Duration(milliseconds: 500));
         },
         false,
       );
-    else if (AppState.isUpdateScreen) {
+    } else if (AppState.isUpdateScreen) {
       AppState.isUpdateScreen = false;
       return _routerDelegate!.popRoute();
     }

@@ -3,8 +3,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:another_flushbar/flushbar.dart';
-//Pub Imports
+import 'package:another_flushbar/flushbar.dart'; //Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -50,11 +49,13 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -385,14 +386,14 @@ class BaseUtil extends ChangeNotifier {
 
   void openSellModalSheet({required InvestmentType investmentType}) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final bool? isAugSellLocked = _userService?.userBootUp?.data!.banMap
-          ?.investments?.withdrawal?.augmont?.isBanned;
+      final bool? isAugSellLocked = _userService
+          .userBootUp?.data!.banMap?.investments?.withdrawal?.augmont?.isBanned;
       final String? augSellBanNotice = _userService
-          ?.userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
-      final bool? islBoxSellBanned = _userService?.userBootUp?.data?.banMap
-          ?.investments?.withdrawal?.lendBox?.isBanned;
+          .userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
+      final bool? islBoxSellBanned = _userService
+          .userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.isBanned;
       final String? lBoxSellBanNotice = _userService
-          ?.userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.reason;
+          .userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.reason;
       if (investmentType == InvestmentType.AUGGOLD99 &&
           isAugSellLocked != null &&
           isAugSellLocked) {
@@ -418,7 +419,7 @@ class BaseUtil extends ChangeNotifier {
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
-            ? GoldSellView()
+            ? const GoldSellView()
             : LendboxWithdrawalView(),
       );
     });
@@ -557,14 +558,14 @@ class BaseUtil extends ChangeNotifier {
     try {
       // await _lModel!.deleteLocalAppData();
       logger.d('Cleared local cache');
-      _appState!.setCurrentTabIndex = 0;
+      _appState.setCurrentTabIndex = 0;
 
       //remove  token from remote
       //await _dbModel.updateClientToken(myUser, '');
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts
-      /// to sign in again without closing the apcp,
+      /// to sign in again without closing the app,
       /// the old variables are still in effect
       /// resetting them like below for now
       _myUser = null;
@@ -599,7 +600,7 @@ class BaseUtil extends ChangeNotifier {
       isOtpResendCount = 0;
       isUpiInfoMissing = true;
 
-      AppState.delegate!.appState.setCurrentTabIndex = 0;
+      // AppState.delegate!.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
       referrerUserId = null;
       _setRuntimeDefaults();
@@ -733,6 +734,32 @@ class BaseUtil extends ChangeNotifier {
     double y = x * pow(10, offset);
     int z = round ? y.round() : y.truncate();
     return z / pow(10, offset);
+  }
+
+  static String formatIndianRupees(double value) {
+    final formatter = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 0,
+    );
+    return formatter.format(value);
+  }
+
+  static Future<bool> isFirstTimeThisWeek() async {
+    // Get the current week number
+    final currentWeekNumber =
+        (DateTime.now().difference(DateTime.utc(0, 1, 1)).inDays ~/ 7) + 1;
+
+    // Get the last week number when the app was opened
+    final lastWeekNumber =
+        PreferenceHelper.getInt(PreferenceHelper.LAST_WEEK_NUMBER) ?? 0;
+
+    // Update the last week number in preferences
+    await PreferenceHelper.setInt(
+        PreferenceHelper.LAST_WEEK_NUMBER, currentWeekNumber);
+
+    // Check if the current week is the same as the last week when the app was opened
+    return currentWeekNumber != lastWeekNumber;
   }
 
   int getTicketCountForTransaction(double investment) =>

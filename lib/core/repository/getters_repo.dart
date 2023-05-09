@@ -216,7 +216,10 @@ class GetterRepository extends BaseRepo {
 
       final minMaxInfo = MaxMin.fromMap({
         "min": subComboResponse["data"]["min"],
-        "max": subComboResponse["data"]["max"]
+        "max": MaxMinAsset.fromMap({
+          'AUGGOLD99': subComboResponse["data"]["max"],
+          'LENDBOXP2P': subComboResponse["data"]["max"]
+        }).toMap()
       });
 
       return ApiResponse(
@@ -308,7 +311,7 @@ class GetterRepository extends BaseRepo {
       final token = await getBearerToken();
 
       return await _cacheService.cachedApi(
-        '${CacheKeys.PAGE_CONFIGS}',
+        CacheKeys.PAGE_CONFIGS,
         TTL.ONE_DAY,
         () => APIService.instance.getData("dynamicUi.txt",
             cBaseUrl: _cdnBaseUrl, token: token, decryptData: true),

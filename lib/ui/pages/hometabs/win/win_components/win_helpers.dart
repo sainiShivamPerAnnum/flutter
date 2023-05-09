@@ -22,19 +22,10 @@ class Salutation extends StatelessWidget {
         top: SizeConfig.padding10,
       ),
       child: PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: [UserServiceProperties.myName],
+        properties: const [UserServiceProperties.myName],
         builder: (context, model, child) {
           return Text(
-            "Hi " +
-                ((model!.baseUser!.kycName!.isNotEmpty
-                        ? model.baseUser!.kycName!
-                        : model.baseUser!.name!.isNotEmpty
-                            ? model.baseUser!.name!
-                            : "User")
-                    .trim()
-                    .split(' ')
-                    .first
-                    .capitalize()),
+            "Hi ${(model!.baseUser!.kycName!.isNotEmpty ? model.baseUser!.kycName! : model.baseUser!.name!.isNotEmpty ? model.baseUser!.name! : "User").trim().split(' ').first.capitalize()}",
             style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
           );
         },
@@ -59,10 +50,11 @@ class AccountInfoTiles extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (onTap == null)
+        if (onTap == null) {
           AppState.delegate!.parseRoute(Uri.parse(uri));
-        else
+        } else {
           onTap!.call();
+        }
       },
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -88,7 +80,7 @@ class RewardsAvatar extends StatelessWidget {
   final Color? color;
   final String? asset;
 
-  RewardsAvatar({this.asset, this.color});
+  const RewardsAvatar({Key? key, this.asset, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

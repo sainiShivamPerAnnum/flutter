@@ -16,7 +16,7 @@ import 'package:lottie/lottie.dart';
 
 class GoldBuyLoadingView extends StatelessWidget {
   final GoldBuyViewModel model;
-  GoldBuyLoadingView({required this.model});
+  GoldBuyLoadingView({super.key, required this.model});
 
   final AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
@@ -39,7 +39,7 @@ class GoldBuyLoadingView extends StatelessWidget {
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
         Expanded(
-          child: Lottie.asset(Assets.goldDepostLoadingLottie,
+          child: Lottie.network(Assets.goldDepostLoadingLottie,
               height: SizeConfig.screenHeight! * 0.7),
         ),
         Column(

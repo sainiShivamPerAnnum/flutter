@@ -11,16 +11,19 @@ class FullScreenLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Lottie.asset(
-          Assets.fullScreenLoaderLottie,
-          height: size ?? SizeConfig.screenWidth! / 2,
-        ),
-        if (bottomPadding) SizedBox(height: SizeConfig.screenHeight! * 0.1)
-      ],
+    return SizedBox(
+      width: SizeConfig.screenWidth,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Lottie.network(
+            Assets.fullScreenLoaderLottie,
+            height: size ?? SizeConfig.screenWidth! / 2,
+          ),
+          if (bottomPadding) SizedBox(height: SizeConfig.screenHeight! * 0.1)
+        ],
+      ),
     );
   }
 }

@@ -14,14 +14,11 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/elements/tambola_card/tambola_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/gow_card.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/more_games_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/play_info_section.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_components/safety_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/play/widgets/games_widget/games_widget.dart';
-import 'package:felloapp/ui/pages/hometabs/play/widgets/tambola/tambola_controller.dart';
-import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -44,15 +41,18 @@ class PlayViewModel extends BaseViewModel {
       "Maintain savings to play all games"
     ]);
   }
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final UserService? _userService = locator<UserService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final UserService _userService = locator<UserService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final GameRepo? gamesRepo = locator<GameRepo>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+
   // final WinnerService _winnerService = locator<WinnerService>();
   final UserStatsRepo _userStatsRepo = locator<UserStatsRepo>();
   bool _showSecurityMessageAtTop = true;
-  final TambolaWidgetController _tambolaController = TambolaWidgetController();
+
+  // final TambolaWidgetController _tambolaController = TambolaWidgetController();
   String? _message;
   String? _sessionId;
   bool _isOfferListLoading = true;
@@ -74,11 +74,12 @@ class PlayViewModel extends BaseViewModel {
     "assets/svg/piggy_bank.svg",
   ];
   List<String> boxTitles = [];
+
   ////////////////////////////////////////////
 
   List<GameModel>? get gamesListData => _gamesListData;
 
-  get isGamesListDataLoading => this._isGamesListDataLoading;
+  get isGamesListDataLoading => _isGamesListDataLoading;
 
   set gamesListData(List<GameModel>? games) {
     _gamesListData = games;
@@ -88,10 +89,11 @@ class PlayViewModel extends BaseViewModel {
       gow = gamesListData?.firstWhere((game) => game.isGOW!,
           orElse: () => gamesListData![0]);
       _gamesListData!.forEach((game) {
-        if (game.isTrending!)
+        if (game.isTrending!) {
           trendingGamesListData.add(game);
-        else
+        } else {
           moreGamesListData.add(game);
+        }
       });
     }
 
@@ -99,14 +101,14 @@ class PlayViewModel extends BaseViewModel {
   }
 
   set isGamesListDataLoading(value) {
-    this._isGamesListDataLoading = value;
+    _isGamesListDataLoading = value;
     notifyListeners();
   }
 
-  get showSecurityMessageAtTop => this._showSecurityMessageAtTop;
+  get showSecurityMessageAtTop => _showSecurityMessageAtTop;
 
   set showSecurityMessageAtTop(value) {
-    this._showSecurityMessageAtTop = value;
+    _showSecurityMessageAtTop = value;
     notifyListeners();
   }
 
@@ -123,7 +125,7 @@ class PlayViewModel extends BaseViewModel {
     }
   }
 
-  init() async {
+  Future<void> init() async {
     isGamesListDataLoading = true;
 
     final response = await gamesRepo!.getGames();
@@ -134,7 +136,7 @@ class PlayViewModel extends BaseViewModel {
             "", "Something went wrong please try again"));
 
     showSecurityMessageAtTop =
-        _userService!.userJourneyStats!.mlIndex! > 6 ? false : true;
+        (_userService?.userJourneyStats?.mlIndex ?? 0) > 6 ? false : true;
 
     if (res.isSuccess()) {
       gameTier = res.model;
@@ -145,9 +147,7 @@ class PlayViewModel extends BaseViewModel {
     } else {
       BaseUtil.showNegativeAlert("", response.errorMessage);
     }
-    _userStatsRepo.addListener(() {
-      setGameStatus();
-    });
+    _userStatsRepo.addListener(setGameStatus);
   }
 
   GameTiers? gameTier;
@@ -157,15 +157,15 @@ class PlayViewModel extends BaseViewModel {
 
     DynamicUiUtils.playViewOrder.forEach((key) {
       switch (key) {
-        case 'TM':
-          if (!locator<RootController>()
-              .navItems
-              .containsValue(RootController.tambolaNavBar)) {
-            playViewChildren.add(TambolaCard(
-              tambolaController: _tambolaController,
-            ));
-          }
-          break;
+        // case 'TM':
+        //   if (!locator<RootController>()
+        //       .navItems
+        //       .containsValue(RootController.tambolaNavBar)) {
+        //     playViewChildren.add(TambolaCard(
+        //       tambolaController: _tambolaController,
+        //     ));
+        //   }
+        //   break;
         case 'AG':
           playViewChildren.add(GamesWidget(model: model));
           break;
@@ -181,7 +181,7 @@ class PlayViewModel extends BaseViewModel {
           playViewChildren.add(GOWCard(model: model));
           break;
         case 'ST':
-          playViewChildren.add(SafetyWidget());
+          playViewChildren.add(const SafetyWidget());
           break;
         case 'MG':
           playViewChildren.add(MoreGamesSection(model: model));

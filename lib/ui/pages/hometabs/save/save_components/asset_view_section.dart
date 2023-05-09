@@ -10,8 +10,8 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_video_player.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -242,12 +242,13 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: SizeConfig.padding20),
-                                child: TambolaVideoPlayer(
-                                    aspectRatio: 1.4,
-                                    showShimmer: true,
-                                    link: _isGold
-                                        ? "https://d37gtxigg82zaw.cloudfront.net/digital-gold-workflow.mp4"
-                                        : "https://d37gtxigg82zaw.cloudfront.net/flo-workflow.mp4"),
+                                child: AppVideoPlayer(
+                                  _isGold
+                                      ? "https://d37gtxigg82zaw.cloudfront.net/digital-gold-workflow.mp4"
+                                      : "https://d37gtxigg82zaw.cloudfront.net/flo-workflow.mp4",
+                                  aspectRatio: 1.4,
+                                  showShimmer: true,
+                                ),
                               ),
                               if (isNewUser) ...[
                                 SizedBox(

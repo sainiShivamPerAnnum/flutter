@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
@@ -43,21 +44,22 @@ class ScratchCardService
   bool isLastPageForScratchCards = false;
   bool _isFetchingScratchCards = false;
   String? scratchCardsListLastTicketId;
-  bool get isFetchingScratchCards => this._isFetchingScratchCards;
+  bool get isFetchingScratchCards => _isFetchingScratchCards;
   set isFetchingScratchCards(bool val) {
-    this._isFetchingScratchCards = val;
+    _isFetchingScratchCards = val;
     notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
   List<ScratchCard> _allScratchCards = [];
-  List<ScratchCard> get allScratchCards => this._allScratchCards;
+
+  List<ScratchCard> get allScratchCards => _allScratchCards;
   set allScratchCards(List<ScratchCard> value) {
-    this._allScratchCards = value;
+    _allScratchCards = value;
     // notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
   void addScratchCards(List<ScratchCard>? value) {
-    if (value != null) this._allScratchCards.addAll(value);
+    if (value != null) _allScratchCards.addAll(value);
     // notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
@@ -65,10 +67,12 @@ class ScratchCardService
 
   // static bool hasScratchCard = false;
   int _unscratchedTicketsCount = 0;
-  int get unscratchedTicketsCount => this._unscratchedTicketsCount;
+
+  int get unscratchedTicketsCount => _unscratchedTicketsCount;
 
   set unscratchedTicketsCount(int value) {
-    this._unscratchedTicketsCount = value;
+    _unscratchedTicketsCount = value;
+    notifyListeners();
     // notifyListeners(ScratchCardServiceProperties.UnscratchedCount);
   }
 
@@ -90,20 +94,20 @@ class ScratchCardService
   List<ScratchCard>? _unscratchedScratchCards;
 
   List<ScratchCard> get unscratchedScratchCards =>
-      this._unscratchedScratchCards ?? [];
+      _unscratchedScratchCards ?? [];
 
   set unscratchedScratchCards(List<ScratchCard> value) {
-    this._unscratchedScratchCards = value;
+    _unscratchedScratchCards = value;
     notifyListeners();
     log("Unscratched ScratchCard list updated");
   }
 
   List<ScratchCard>? _activeScratchCards;
 
-  List<ScratchCard> get activeScratchCards => this._activeScratchCards ?? [];
+  List<ScratchCard> get activeScratchCards => _activeScratchCards ?? [];
 
   set activeScratchCards(List<ScratchCard>? value) {
-    this._activeScratchCards = value;
+    _activeScratchCards = value;
     notifyListeners();
     log("ScratchCard list updated");
   }
@@ -162,21 +166,22 @@ class ScratchCardService
     return false;
   }
 
-Future<void>  showInstantScratchCardView(
+  Future<void> showInstantScratchCardView(
       {required GTSOURCE source,
       String? title,
       double? amount = 0,
       bool onJourney = false,
-      bool showAutoSavePrompt = false})async {
+      bool showAutoSavePrompt = false}) async {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
     if (currentGT != null) {
       log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${ScratchCardService.currentGT!.prizeSubtype} ");
       if (previousPrizeSubtype == ScratchCardService.currentGT!.prizeSubtype &&
           !onJourney) return;
-     await  Future.delayed(Duration(milliseconds: 200), () async{
+      await Future.delayed(Duration(milliseconds: 200), () async {
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
-       await  Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+        await Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
+            .push(
           PageRouteBuilder(
             opaque: false,
             pageBuilder: (BuildContext context, _, __) => GTInstantView(
@@ -212,10 +217,11 @@ Future<void>  showInstantScratchCardView(
 
   Future<void> updateUnscratchedGTCount() async {
     final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
-    if (res.isSuccess())
+    if (res.isSuccess()) {
       unscratchedTicketsCount = res.model!.length;
-    else
+    } else {
       unscratchedTicketsCount = 0;
+    }
   }
 
   //HELPERS
@@ -238,9 +244,10 @@ Future<void>  showInstantScratchCardView(
           if (url == null) url = link['payload']['userInviteURL'];
         }
 
-        if (url != null)
+        if (url != null) {
           caputure(
               'Hey, I won ${ticket.rewardArr!.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
+        }
       } catch (e) {
         _logger!.e(e.toString());
         BaseUtil.showNegativeAlert(
@@ -252,9 +259,9 @@ Future<void>  showInstantScratchCardView(
   caputure(String shareMessage) {
     Future.delayed(Duration(seconds: 1), () {
       captureCard().then((image) {
-        if (image != null)
+        if (image != null) {
           shareCard(image, shareMessage);
-        else {
+        } else {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {
@@ -426,11 +433,11 @@ Future<void>  showInstantScratchCardView(
       scratchCardsListLastTicketId = allScratchCards.last.gtId;
       isFetchingScratchCards = false;
     } catch (e) {
-      locator<InternalOpsService>().logFailure(
+      unawaited(locator<InternalOpsService>().logFailure(
         _userService!.baseUser!.uid,
         FailType.ScratchCardListFailed,
         {'message': "Scratch Card data fetch failed"},
-      );
+      ));
       allScratchCards = [];
       isFetchingScratchCards = false;
     }
@@ -462,7 +469,7 @@ Future<void>  showInstantScratchCardView(
     // arrangedScratchCardList = ids.toList();
   }
 
-  refreshTickets({required String prizeSubtype}) {
+  void refreshTickets({required String prizeSubtype}) {
     allScratchCards
         .firstWhere((ticket) => ticket.prizeSubtype == prizeSubtype)
         .redeemedTimestamp = TimestampModel.currentTimeStamp();

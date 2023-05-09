@@ -18,7 +18,8 @@ class MyWinningsView extends StatelessWidget {
   final openFirst;
   // final WinViewModel winModel;
 
-  MyWinningsView({this.openFirst = false});
+  const MyWinningsView({this.openFirst = false, Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeProvider<ScratchCardService,
@@ -71,7 +72,7 @@ class MyWinningsView extends StatelessWidget {
                       },
                       child: ListView(
                         shrinkWrap: true,
-                        children: [
+                        children: const [
                           PrizeClaimCard(),
                           ScratchCardsView(),
                         ],

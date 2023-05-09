@@ -1,8 +1,8 @@
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
@@ -65,7 +65,7 @@ class LendboxSuccessView extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.center,
-                    child: Lottie.asset(
+                    child: Lottie.network(
                       Assets.floDepositSuccessLottie,
                       fit: BoxFit.cover,
                     ),
@@ -78,7 +78,7 @@ class LendboxSuccessView extends StatelessWidget {
                           left: SizeConfig.padding12,
                           bottom: SizeConfig.padding24,
                         ),
-                        child: Lottie.asset(
+                        child: Lottie.network(
                           Assets.floatingTokenIslandLottie,
                           width: SizeConfig.screenWidth! * 0.3,
                           fit: BoxFit.cover,
@@ -93,7 +93,7 @@ class LendboxSuccessView extends StatelessWidget {
                           right: SizeConfig.padding12,
                           top: SizeConfig.padding24,
                         ),
-                        child: Lottie.asset(
+                        child: Lottie.network(
                           Assets.floatingScratchCardIslandLottie,
                           width: SizeConfig.screenWidth! * 0.3,
                           fit: BoxFit.cover,
@@ -104,7 +104,7 @@ class LendboxSuccessView extends StatelessWidget {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
-                        child: Lottie.asset(
+                        child: Lottie.network(
                           Assets.floatingTambolaTicketIslandLottie,
                           width: SizeConfig.screenWidth! * 0.3,
                           fit: BoxFit.cover,
@@ -263,8 +263,8 @@ class LendboxSuccessView extends StatelessWidget {
                     .indexWhere((element) => element == 'SV');
 
                 final _tambolaService = locator<TambolaService>();
-                _tambolaService.weeklyTicksFetched = false;
-                _tambolaService.fetchTambolaBoard();
+                // _tambolaService.weeklyTicksFetched = false;
+                _tambolaService.getBestTambolaTickets();
 
                 this.showGtIfAvailable();
               },

@@ -9,18 +9,19 @@ class FelloTheme {
   static ThemeData darkMode() {
     return ThemeData(
       textSelectionTheme:
-          TextSelectionThemeData(cursorColor: UiConstants.primaryColor),
-      primaryColor: Color(0xff34C3A7),
+          const TextSelectionThemeData(cursorColor: UiConstants.primaryColor),
+      primaryColor: const Color(0xff34C3A7),
       primarySwatch: UiConstants.kPrimaryColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      colorScheme: ColorScheme.light(primary: UiConstants.primaryColor),
+      colorScheme: const ColorScheme.light(primary: UiConstants.primaryColor),
       textTheme: GoogleFonts.sourceSansProTextTheme(),
       chipTheme: ChipThemeData(
         backgroundColor: UiConstants.primaryLight.withOpacity(0.4),
       ),
-      listTileTheme: ListTileThemeData().copyWith(iconColor: Colors.white),
+      listTileTheme:
+          const ListTileThemeData().copyWith(iconColor: Colors.white),
       unselectedWidgetColor: Colors.white,
-      expansionTileTheme: ExpansionTileThemeData()
+      expansionTileTheme: const ExpansionTileThemeData()
           .copyWith(iconColor: Colors.white, collapsedIconColor: Colors.white),
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
@@ -33,7 +34,7 @@ class FelloTheme {
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: UiConstants.primaryColor,
             width: 2,
           ),

@@ -2,15 +2,13 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -20,7 +18,6 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -37,25 +34,20 @@ class LauncherViewModel extends BaseViewModel {
 
   AnimationController? loopOutlottieAnimationController;
   int loopLottieDuration = 2500;
+
   // LOCATORS
   final BaseUtil _baseUtil = locator<BaseUtil>();
   final FcmListener _fcmListener = locator<FcmListener>();
   final UserService userService = locator<UserService>();
   final CustomLogger _logger = locator<CustomLogger>();
-  // final TambolaService _tambolaService = locator<TambolaService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final UserRepository _userRepo = locator<UserRepository>();
-  final JourneyService _journeyService = locator<JourneyService>();
-  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
-  final UserCoinService _userCoinService = locator<UserCoinService>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
-  // final LocalDBModel _localDBModel = locator<LocalDBModel>();
   final ReferralService _referralService = locator<ReferralService>();
-  final UserService _userService = locator<UserService>();
-  FirebasePerformance _performance = FirebasePerformance.instance;
   final GetterRepository _getterRepo = locator<GetterRepository>();
   final AnalyticsProperties _analyticsProperties =
       locator<AnalyticsProperties>();
+
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
 
@@ -71,18 +63,17 @@ class LauncherViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init() {
+  Future<void> init() async {
     isFetchingData = true;
     _logoWatch = Stopwatch()..start();
     // _togglePerformanceCollection();
-
     initLogic();
-    _timer3 = new Timer(const Duration(seconds: 6), () {
+    _timer3 = Timer(const Duration(seconds: 6), () {
       isSlowConnection = true;
     });
   }
 
-  exit() {
+  void exit() {
     _timer3.cancel();
     _logoWatch.stop();
   }
@@ -98,9 +89,9 @@ class LauncherViewModel extends BaseViewModel {
 
       //Initialize only if user is onboarded
       if (userService.isUserOnboarded) {
-        await _journeyRepo.init();
+        // await _journeyRepo.init();
         await Future.wait([
-          _journeyService.init(),
+          // _journeyService.init(),
           CacheService.checkIfInvalidationRequired(),
           _analyticsService.login(
               isOnBoarded: true, baseUser: userService.baseUser),
@@ -109,7 +100,8 @@ class LauncherViewModel extends BaseViewModel {
                     _userRepo.updateUserAppFlyer(userService.baseUser!, token),
               ),
         ]);
-        _userCoinService.init();
+        // _userCoinService.init();
+        locator<GameRepo>().getGameTiers();
         _referralService.init();
         _baseUtil.init();
         _fcmListener.setupFcm();
@@ -129,8 +121,8 @@ class LauncherViewModel extends BaseViewModel {
     delayedSecond = loopLottieDuration - delayedSecond;
     await Future.delayed(Duration(milliseconds: delayedSecond));
     isFetchingData = false;
-    loopOutlottieAnimationController!.forward();
-    await Future.delayed(new Duration(milliseconds: 900));
+    unawaited(loopOutlottieAnimationController!.forward());
+    await Future.delayed(const Duration(milliseconds: 900));
 
     if (!userService.isUserOnboarded) {
       _logger.d("New user. Moving to Onboarding..");
@@ -154,17 +146,17 @@ class LauncherViewModel extends BaseViewModel {
     userService.authenticateDevice();
   }
 
-  // Future<void> _togglePerformanceCollection() async {
-  //   // No-op for web.
-  //   await _performance
-  //       .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
+// Future<void> _togglePerformanceCollection() async {
+//   // No-op for web.
+//   await _performance
+//       .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
 
-  //   // Always true for web.
-  //   final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
+//   // Always true for web.
+//   final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
 
-  //   _isPerformanceCollectionEnabled = isEnabled;
-  //   _performanceCollectionMessage = _isPerformanceCollectionEnabled
-  //       ? 'Performance collection is enabled.'
-  //       : 'Performance collection is disabled.';
-  // }
+//   _isPerformanceCollectionEnabled = isEnabled;
+//   _performanceCollectionMessage = _isPerformanceCollectionEnabled
+//       ? 'Performance collection is enabled.'
+//       : 'Performance collection is disabled.';
+// }
 }

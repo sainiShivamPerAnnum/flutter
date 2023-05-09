@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -15,6 +17,7 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -37,6 +40,7 @@ import 'package:lottie/lottie.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
+
   SaveViewModel({this.locale}) {
     locale = locator<S>();
     boxTitllesGold.addAll([
@@ -55,7 +59,7 @@ class SaveViewModel extends BaseViewModel {
 
   final BankAndPanService? _sellService = locator<BankAndPanService>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
-      locator<TransactionHistoryRepository>();
+  locator<TransactionHistoryRepository>();
   final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
@@ -72,7 +76,7 @@ class SaveViewModel extends BaseViewModel {
   double _nonWithdrawableQnt = 0.0;
   double _withdrawableQnt = 0.0;
   late final PageController offersController =
-      PageController(viewportFraction: 0.9, initialPage: 1);
+  PageController(viewportFraction: 0.9, initialPage: 1);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
@@ -123,12 +127,19 @@ class SaveViewModel extends BaseViewModel {
   // bool get isKYCVerified => _isKYCVerified;
   // bool get isVPAVerified => _isVPAVerified;
   bool get isGoldSaleActive => _isGoldSaleActive;
+
   bool get isongoing => _isongoing;
+
   bool get isLockInReached => _isLockInReached;
+
   bool get isSellButtonVisible => _isSellButtonVisible;
+
   UserService? get userService => _userService;
+
   UserFundWallet? get userFundWallet => _userService!.userFundWallet;
+
   double get nonWithdrawableQnt => _nonWithdrawableQnt;
+
   double get withdrawableQnt => _withdrawableQnt;
 
   set ongoingEvents(List<EventModel>? value) {
@@ -156,16 +167,18 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init() {
+  Future<void> init() async {
     // _baseUtil.fetchUserAugmontDetail();
     baseProvider = BaseUtil();
-    getCampaignEvents();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      // fetchLockedGoldQnt();
+
+    await _userService!.getUserFundWalletData();
+    await _userCoinService!.getUserCoinBalance();
+    await locator<SubService>().init();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _sellService!.init();
       getCampaignEvents();
       getSaveViewBlogs();
-      // _sellService.updateSellButtonDetails();
     });
   }
 
@@ -194,7 +207,7 @@ class SaveViewModel extends BaseViewModel {
           saveViewItems.add(const PowerPlayCard());
           break;
         case 'NAS':
-          saveViewItems.add(AutosaveCard());
+          saveViewItems.add(const AutosaveCard());
           break;
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));
@@ -260,10 +273,8 @@ class SaveViewModel extends BaseViewModel {
     await _userService!.getUserFundWalletData();
   }
 
-  double getQuantity(
-    UserFundWallet? fund,
-    var investmentType,
-  ) {
+  double getQuantity(UserFundWallet? fund,
+      var investmentType,) {
     final quantity = investmentType == InvestmentType.AUGGOLD99
         ? fund?.augGoldQuantity
         : fund?.wLbBalance;
@@ -317,22 +328,20 @@ class SaveViewModel extends BaseViewModel {
         ));
   }
 
-  void navigateToSaveAssetView(
-    InvestmentType investmentType,
-  ) {
+  void navigateToSaveAssetView(InvestmentType investmentType,) {
     Haptic.vibrate();
 
     if (investmentType == InvestmentType.AUGGOLD99) {
       _analyticsService!.track(
           eventName: AnalyticsEvents.assetBannerTapped,
           properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
             'Asset': 'Gold',
             "Failed transaction count": AnalyticsProperties.getFailedTxnCount(),
             "Successs transaction count":
-                AnalyticsProperties.getSucessTxnCount(),
+            AnalyticsProperties.getSucessTxnCount(),
             "Pending transaction count":
-                AnalyticsProperties.getPendingTxnCount(),
+            AnalyticsProperties.getPendingTxnCount(),
           }));
 
       AppState.delegate!.appState.currentAction = PageAction(
@@ -346,13 +355,13 @@ class SaveViewModel extends BaseViewModel {
       _analyticsService!.track(
           eventName: AnalyticsEvents.assetBannerTapped,
           properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
             'Asset': 'Flo',
             "Failed transaction count": AnalyticsProperties.getFailedTxnCount(),
             "Successs transaction count":
-                AnalyticsProperties.getSucessTxnCount(),
+            AnalyticsProperties.getSucessTxnCount(),
             "Pending transaction count":
-                AnalyticsProperties.getPendingTxnCount(),
+            AnalyticsProperties.getPendingTxnCount(),
           }));
 
       AppState.delegate!.appState.currentAction = PageAction(
@@ -409,7 +418,7 @@ class SaveViewModel extends BaseViewModel {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: ViewAllBlogsViewConfig,
-      widget: ViewAllBlogsView(),
+      widget: const ViewAllBlogsView(),
     );
   }
 }

@@ -3609,7 +3609,7 @@ class S {
     );
   }
 
-  /// `Upload your PAN Card`
+  /// `Step 1: Upload your PAN Card`
   String get kycPanUpload {
     return Intl.message(
       'Step 1: Upload your PAN Card',
@@ -6336,7 +6336,7 @@ class S {
   /// `Fin-gyan`
   String get blogsTitle {
     return Intl.message(
-      'Fin-gyan',
+      'Fin-gyan by Fello',
       name: 'blogsTitle',
       desc: '',
       args: [],

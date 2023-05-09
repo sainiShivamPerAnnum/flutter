@@ -68,8 +68,11 @@ class ReferralService extends ChangeNotifier {
   int? _minWithdrawPrizeAmt;
 
   String? get minWithdrawPrize => _minWithdrawPrize;
+
   String? get refUnlock => _refUnlock;
+
   int? get refUnlockAmt => _refUnlockAmt;
+
   int? get minWithdrawPrizeAmt => _minWithdrawPrizeAmt;
   bool _isShareAlreadyClicked = false;
 
@@ -78,12 +81,15 @@ class ReferralService extends ChangeNotifier {
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
   bool _isShareLoading = false;
+
   bool get isShareLoading => _isShareLoading;
   String _refUrl = "";
+
   get refUrl => _refUrl;
-  init() {
+
+  void init() {
     fetchBasicConstantValues();
-    fetchReferralCode();
+    // fetchReferralCode();
   }
 
   Future<void> fetchReferralCode() async {
@@ -100,12 +106,12 @@ class ReferralService extends ChangeNotifier {
   }
 
   Future<void> shareLink({String? customMessage}) async {
-    _isShareAlreadyClicked = true;
-    notifyListeners();
+    // _isShareAlreadyClicked = true;
+    // notifyListeners();
     Haptic.vibrate();
     // _getterrepo.getScratchCards(); //TR
 
-    if (shareLinkInProgress) return;
+    if (shareLinkInProgress || _isShareAlreadyClicked == true) return;
     if (await BaseUtil.showNoInternetAlert()) return;
 
     unawaited(BaseAnalytics.analytics!.logShare(
@@ -131,6 +137,9 @@ class ReferralService extends ChangeNotifier {
     if (url == null) {
       BaseUtil.showNegativeAlert(locale.generatingLinkFailed, locale.tryLater);
     } else {
+      _isShareAlreadyClicked = true;
+      notifyListeners();
+
       if (customMessage != null) {
         await Share.share(customMessage + url);
       } else {
@@ -138,7 +147,7 @@ class ReferralService extends ChangeNotifier {
       }
     }
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       _isShareAlreadyClicked = false;
       notifyListeners();
     });
@@ -175,7 +184,7 @@ class ReferralService extends ChangeNotifier {
       final link = await _appFlyer.inviteLink();
       if (link['status'] == 'success') {
         url = link['payload']['userInviteUrl'];
-        if (url == null) url = link['payload']['userInviteURL'];
+        url ??= link['payload']['userInviteURL'];
       }
       _logger.d('appflyer invite link as $url');
     } catch (e) {
@@ -191,12 +200,13 @@ class ReferralService extends ChangeNotifier {
       final link = await _appFlyer!.inviteLink();
       if (link['status'] == 'success') {
         url = link['payload']['userInviteUrl'];
-        if (url == null) url = link['payload']['userInviteURL'];
+        url ??= link['payload']['userInviteURL'];
       }
 
-      if (url != null)
+      if (url != null) {
         caputure(
             'Hey, I won ₹${prizeAmount.toInt()} on Fello! \nLet\'s save and play together: $url');
+      }
     } catch (e) {
       _logger!.e(e.toString());
       BaseUtil.showNegativeAlert(locale.errorOccured, locale.tryLater);
@@ -247,8 +257,9 @@ class ReferralService extends ChangeNotifier {
               '${FlavorConfig.instance!.values.dynamicLinkPrefix}/app/referral/${BaseUtil.manualReferralCode}'));
       Uri? deepLink = dynamicLinkData?.link;
       _logger.d(deepLink.toString());
-      if (deepLink != null)
+      if (deepLink != null) {
         return _processDynamicLink(_userService.baseUser!.uid, deepLink);
+      }
     } catch (e) {
       _logger.e(e.toString());
     }
@@ -265,10 +276,12 @@ class ReferralService extends ChangeNotifier {
           return _refRepo.createReferral(userId, referee).then((res) {
             return res.model!;
           });
-        } else
+        } else {
           return false;
-      } else
+        }
+      } else {
         return false;
+      }
     } catch (e) {
       _logger.e(e);
       return false;
@@ -276,13 +289,12 @@ class ReferralService extends ChangeNotifier {
   }
 
   Future<dynamic> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink
-      ..listen(((event) {
-        final Uri? deepLink = event.link;
-        if (deepLink == null) return null;
-        _logger.d('Received deep link. Process the referral');
-        return _processDynamicLink(_userService.baseUser!.uid, deepLink);
-      }));
+    FirebaseDynamicLinks.instance.onLink.listen((event) {
+      final Uri? deepLink = event.link;
+      if (deepLink == null) return null;
+      _logger.d('Received deep link. Process the referral');
+      return _processDynamicLink(_userService.baseUser!.uid, deepLink);
+    });
 
     final PendingDynamicLinkData? data =
         await FirebaseDynamicLinks.instance.getInitialLink();
@@ -435,10 +447,11 @@ class ReferralService extends ChangeNotifier {
   Future<String> getGramsWon(double amount) async {
     AugmontService? augmontService = locator<AugmontService>();
     AugmontRates? goldRates = await augmontService.getRates();
-    if (goldRates != null && goldRates.goldSellPrice != 0.0)
+    if (goldRates != null && goldRates.goldSellPrice != 0.0) {
       return '${BaseUtil.digitPrecision(amount / goldRates.goldSellPrice!, 4, false)}gm';
-    else
+    } else {
       return '0.0gm';
+    }
   }
 
   showSuccessPrizeWithdrawalDialog(PrizeClaimChoice choice, String subtitle,
@@ -482,7 +495,7 @@ class ReferralService extends ChangeNotifier {
   }
 
   Widget getSubtitleWidget(String subtitle) {
-    if (subtitle == "gold" || subtitle == "amazon")
+    if (subtitle == "gold" || subtitle == "amazon") {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -498,6 +511,7 @@ class ReferralService extends ChangeNotifier {
           ],
         ),
       );
+    }
     return Text(
       subtitle,
       textAlign: TextAlign.center,
@@ -511,12 +525,12 @@ class ReferralService extends ChangeNotifier {
   ///
 
   caputure(String shareMessage) {
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       captureCard().then((image) {
         AppState.backButtonDispatcher!.didPopRoute();
-        if (image != null)
+        if (image != null) {
           shareCard(image, shareMessage);
-        else {
+        } else {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {

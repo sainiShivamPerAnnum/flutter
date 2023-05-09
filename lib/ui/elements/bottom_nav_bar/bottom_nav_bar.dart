@@ -11,7 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class BottomNavBar extends StatelessWidget {
-  const BottomNavBar();
+  const BottomNavBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     RootController _rootController = locator<RootController>();
@@ -22,11 +23,11 @@ class BottomNavBar extends StatelessWidget {
         child: Container(
           width: SizeConfig.screenWidth,
           height: SizeConfig.navBarHeight,
-          decoration: BoxDecoration(
+              decoration: const BoxDecoration(
             color: Colors.black,
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -82,12 +83,15 @@ class NavBarIcon extends StatelessWidget {
   final NavBarItemModel item;
   final TextStyle style;
   final VoidCallback callBack;
-  NavBarIcon(
-      {required this.animate,
-      required this.item,
-      required this.style,
-      required this.callBack,
-      this.key});
+
+  const NavBarIcon({
+    required this.animate,
+    required this.item,
+    required this.style,
+    required this.callBack,
+    this.key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Showcase(
@@ -111,7 +115,7 @@ class NavBarIcon extends StatelessWidget {
                 offset: Offset(0, -SizeConfig.navBarHeight * 0.05),
                 child: Column(
                   children: [
-                    Container(
+                    SizedBox(
                         height: SizeConfig.navBarHeight * 0.6,
                         width: SizeConfig.navBarHeight * 0.6,
                         child: Lottie.asset(item.lottie,

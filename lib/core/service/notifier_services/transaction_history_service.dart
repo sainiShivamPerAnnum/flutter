@@ -75,15 +75,17 @@ class TxnHistoryService extends ChangeNotifier {
     }
     _logger!.d("Current Transaction List length: ${_txnList!.length}");
     // set proper lastDocument snapshot for further fetches
-    if (response.model!.transactions!.isNotEmpty)
+    if (response.model!.transactions!.isNotEmpty) {
       setLastTxnDocType(
         status: status,
         type: type,
         lastDocId: response.model!.transactions!.last.docKey,
       );
+    }
     // check and set which category has no more items to fetch
-    if (response.model!.isLastPage!)
+    if (response.model!.isLastPage!) {
       setHasMoreTxnsValue(type: type, status: status);
+    }
   }
 
   String? getLastTxnDocType({String? status, String? type}) {
@@ -92,8 +94,9 @@ class TxnHistoryService extends ChangeNotifier {
     if (type != null) {
       if (type == UserTransaction.TRAN_TYPE_DEPOSIT) return lastDepositTxnDocId;
       if (type == UserTransaction.TRAN_TYPE_PRIZE) return lastPrizeTxnDocId;
-      if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
+      if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
         return lastWithdrawalTxnDocId;
+      }
     }
     return lastTxnDocId;
   }
@@ -105,15 +108,18 @@ class TxnHistoryService extends ChangeNotifier {
       lastDepositTxnDocId = lastDocId;
       lastWithdrawalTxnDocId = lastDocId;
       lastPrizeTxnDocId = lastDocId;
-    } else if (status != null)
+    } else if (status != null) {
       lastRefundedTxnDocId = lastDocId;
-    else if (type != null) {
-      if (type == UserTransaction.TRAN_TYPE_DEPOSIT)
+    } else if (type != null) {
+      if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
         lastDepositTxnDocId = lastDocId;
-      if (type == UserTransaction.TRAN_TYPE_PRIZE)
+      }
+      if (type == UserTransaction.TRAN_TYPE_PRIZE) {
         lastPrizeTxnDocId = lastDocId;
-      if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
+      }
+      if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
         lastWithdrawalTxnDocId = lastDocId;
+      }
     }
   }
 
@@ -129,12 +135,13 @@ class TxnHistoryService extends ChangeNotifier {
     } else if (status != null) {
       hasMoreRefundedTxns = false;
     } else if (type != null) {
-      if (type == UserTransaction.TRAN_TYPE_DEPOSIT)
+      if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
         hasMoreDepositTxns = false;
-      else if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
+      } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
         hasMoreWithdrawalTxns = false;
-      else if (type == UserTransaction.TRAN_TYPE_PRIZE)
+      } else if (type == UserTransaction.TRAN_TYPE_PRIZE) {
         hasMorePrizeTxns = false;
+      }
     }
   }
 
@@ -163,7 +170,7 @@ class TxnHistoryService extends ChangeNotifier {
   }
 
   // Clear transactions
-  signOut() {
+  void signOut() {
     lastTxnDocId = null;
     hasMoreTxns = true;
     hasMorePrizeTxns = true;
@@ -176,10 +183,11 @@ class TxnHistoryService extends ChangeNotifier {
   //UI HELPERS
 
   String getFormattedTxnAmount(double amount) {
-    if (amount > 0)
+    if (amount > 0) {
       return "₹${amount == amount.toInt() ? amount.toInt() : amount.toStringAsFixed(2)}";
-    else
+    } else {
       return "- ₹${amount == amount.toInt() ? amount.abs().toInt() : amount.abs().toStringAsFixed(2)}";
+    }
   }
 
   String getFormattedTime(Timestamp tTime) {
@@ -240,8 +248,9 @@ class TxnHistoryService extends ChangeNotifier {
       return locale.refBonus;
     } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
       return locale.rewardsRedemeed;
-    } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK)
+    } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK) {
       return locale.scratchCard;
+    }
     return locale.felloRewards;
   }
 

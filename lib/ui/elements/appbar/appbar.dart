@@ -47,6 +47,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -55,7 +56,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(width: SizeConfig.padding8),
-          showAvatar ? ProfileImageSE() : const SizedBox(),
+          showAvatar ? const ProfileImageSE() : const SizedBox(),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

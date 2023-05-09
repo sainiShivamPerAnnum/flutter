@@ -42,12 +42,12 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
   double compoundedValue() {
     double val = widget.amount *
         (math.pow(
-            (1 +
+            1 +
                 (widget.investmentType == InvestmentType.AUGGOLD99
                     ? 0.065
-                    : 0.1)),
-            (2030 - DateTime.now().year)));
-    print("Compounded value: $val");
+                    : 0.1),
+            2030 - DateTime.now().year));
+    debugPrint("Compounded value: $val");
     return val;
   }
 
@@ -56,13 +56,13 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
     double cv = compoundedValue();
     double diff = (compoundedValue() - widget.amount).abs();
     if (cv < 100 ||
-        (widget.investmentType == InvestmentType.LENDBOXP2P && diff < 100))
+        (widget.investmentType == InvestmentType.LENDBOXP2P && diff < 100)) {
       return Text(
         locale.holdSavingsMoreThanYear,
         textAlign: TextAlign.center,
         style: TextStyles.body2.colour(UiConstants.kTextColor),
       );
-    else
+    } else {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -71,7 +71,7 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
             children: [
               TextSpan(
                 text: widget.investmentType == InvestmentType.AUGGOLD99
-                    ? " ${widget.grams}" + locale.gms + " "
+                    ? " ${widget.grams}${locale.gms} "
                     : " ₹ ${BaseUtil.getIntOrDouble(widget.amount)} ",
                 style:
                     TextStyles.sourceSansB.body2.colour(UiConstants.kTextColor),
@@ -85,16 +85,19 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
               TextSpan(text: locale.by2030)
             ]),
       );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    print("Gold in grams: ${widget.grams}");
-    print("Gold in amount: ${widget.amount}");
+    debugPrint("Gold in grams: ${widget.grams}");
+    debugPrint("Gold in amount: ${widget.amount}");
     return ValueListenableBuilder(
         valueListenable: showWarningScreen,
         builder: (context, snapshot, child) {
+          // Future.wait([locator<GameRepo>().getGameTiers()]);
+
           return snapshot
               ? WithDrawWarningScreen(
                   onClose: () {
@@ -136,14 +139,14 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
                           //       TextStyles.sourceSansSB.body2.colour(UiConstants.kTextColor3),
                           // ),
                           Expanded(
-                            child: Lottie.asset(Assets.jarLottie,
+                            child: Lottie.network(Assets.jarLottie,
                                 fit: BoxFit.contain),
                           ),
                           Transform.translate(
                               offset:
                                   Offset(0, -SizeConfig.pageHorizontalMargins),
                               child: getFomoWidget(context)),
-                          BankDetailsCard(),
+                          const BankDetailsCard(),
                           Text(
                             locale.creditedToYourLinkedBankAccount(
                                 BaseUtil.digitPrecision(widget.amount, 2)),
@@ -159,10 +162,11 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
                                 final model = WithDrawGameViewModel.fromGames(
                                     locator<GameRepo>().gameTier,
                                     widget.amount);
-                                if (model.gamesWillBeLocked.isNotEmpty)
+                                if (model.gamesWillBeLocked.isNotEmpty) {
                                   showWarningScreen.value = true;
-                                else
+                                } else {
                                   widget.onSuccess.call();
+                                }
                               }),
                           SizedBox(height: SizeConfig.padding16),
                           AppNegativeBtn(

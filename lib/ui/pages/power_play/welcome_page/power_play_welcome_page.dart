@@ -4,7 +4,7 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/widgets/tambola_video_player.dart';
+import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -48,7 +48,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         width: SizeConfig.screenWidth! * 0.7,
                       ),
                     ),
-                     SizedBox(
+                    SizedBox(
                       height: SizeConfig.padding16,
                     ),
                     // Center(
@@ -66,7 +66,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5),
                         // color: Colors.black,
                       ),
-                      child: TambolaVideoPlayer(link: videoUrl),
+                      child: AppVideoPlayer(videoUrl),
                     ),
                     SizedBox(
                       height: SizeConfig.padding16,

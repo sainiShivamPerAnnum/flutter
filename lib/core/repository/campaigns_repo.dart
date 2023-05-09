@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -20,6 +21,7 @@ class CampaignRepo extends BaseRepo {
   final _cdnBaseUrl = FlavorConfig.isDevelopment()
       ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
       : 'https://d11q4cti75qmcp.cloudfront.net/';
+
   Future<ApiResponse<dynamic>> getOngoingEvents() async {
     List<EventModel> events = [];
     try {
@@ -27,7 +29,7 @@ class CampaignRepo extends BaseRepo {
       final _token = await getBearerToken();
       final _queryParams = {"uid": _uid};
 
-      return (await _cacheService.cachedApi(
+      return await _cacheService.cachedApi(
         CacheKeys.CAMPAIGNS,
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
@@ -47,7 +49,7 @@ class CampaignRepo extends BaseRepo {
           print(responseData["campaigns"]);
           return ApiResponse<List<EventModel>>(model: events, code: 200);
         },
-      ));
+      );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
@@ -93,6 +95,31 @@ class CampaignRepo extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<LastWeekModel>> getLastWeekData() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.lastWeekRecap,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      final responseData = response["data"];
+
+      if (responseData == null) {
+        return ApiResponse.withError("Unable to fetch data", 400);
+      }
+
+      return ApiResponse<LastWeekModel>(
+        model: LastWeekModel.fromJson(response),
+        code: 200,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch data", 400);
     }
   }
 }

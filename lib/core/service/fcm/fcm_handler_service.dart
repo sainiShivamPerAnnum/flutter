@@ -24,26 +24,29 @@ import 'package:intl/intl.dart';
 enum MsgSource { Foreground, Background, Terminated }
 
 class FcmHandler extends ChangeNotifier {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserService? _userservice = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserService _userservice = locator<UserService>();
 
   // final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
-  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads =
+  final FcmHandlerDataPayloads _fcmHandlerDataPayloads =
       locator<FcmHandlerDataPayloads>();
-  final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
-  final AutosaveProcessViewModel? _autosaveProcessViewModel =
+  final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
+  final AutosaveProcessViewModel _autosaveProcessViewModel =
       locator<AutosaveProcessViewModel>();
+
   // final PaytmService? _paytmService = locator<PaytmService>();
-  final AugmontTransactionService? _augTxnService =
+  final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
 
-  final JourneyService? _journeyService = locator<JourneyService>();
-  final GoldSellViewModel? _augOps = locator<GoldSellViewModel>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final GoldSellViewModel _augOps = locator<GoldSellViewModel>();
   ValueChanged<Map>? notifListener;
+
   // Timestamp latestFcmtimeStamp;
   String? latestFcmCommand;
 
   Map? lastFcmData;
+
   Future<bool> handleMessage(Map? data, MsgSource source) async {
     _logger!.d(
       "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data",
@@ -75,8 +78,9 @@ class FcmHandler extends ChangeNotifier {
       } catch (e) {
         log(e.toString());
       }
-    } else
+    } else {
       url = data['deep_uri'] ?? data['route'];
+    }
 
     // if (data["test_txn"] == "paytm") {
     // _augTxnService.isOngoingTxn = false;
@@ -101,9 +105,10 @@ class FcmHandler extends ChangeNotifier {
     if (data['command'] != null) {
       showSnackbar = false;
 
-      if (command!.toLowerCase().contains('end'))
+      if (command!.toLowerCase().contains('end')) {
         return _webGameViewModel!
             .handleGameRoundEnd(data as Map<String, dynamic>);
+      }
       switch (command) {
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
           log("User journey stats update fcm response");
@@ -128,7 +133,7 @@ class FcmHandler extends ChangeNotifier {
           await _fcmHandlerDataPayloads!.userPrizeWinPrompt();
           break;
         case FcmCommands.COMMAND_APPXOR_DIALOG:
-          print("fcm handler: appxor");
+          debugPrint("fcm handler: appxor");
           if (AppState.isOnboardingInProgress ||
               AppState.isWebGamePInProgress ||
               AppState.isWebGameLInProgress ||
@@ -158,7 +163,7 @@ class FcmHandler extends ChangeNotifier {
 
     // If app is in foreground and needs to show a snackbar
     if (source == MsgSource.Foreground && showSnackbar == true) {
-      handleNotification(title, body);
+      await handleNotification(title, body);
     }
     _userservice!.checkForNewNotifications();
     return true;
@@ -167,12 +172,12 @@ class FcmHandler extends ChangeNotifier {
   Future<bool> handleNotification(String? title, String? body) async {
     if (title != null && title.isNotEmpty && body != null && body.isNotEmpty) {
       Map<String, String> _map = {'title': title, 'body': body};
-      if (this.notifListener != null) this.notifListener!(_map);
+      if (notifListener != null) notifListener!(_map);
     }
     return true;
   }
 
   addIncomingMessageListener(ValueChanged<Map>? listener) {
-    this.notifListener = listener;
+    notifListener = listener;
   }
 }

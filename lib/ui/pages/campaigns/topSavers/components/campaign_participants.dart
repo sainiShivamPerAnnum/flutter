@@ -1,5 +1,5 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/ui/elements/helpers/height_adaptive_pageview.dart';
+import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';

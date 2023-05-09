@@ -76,7 +76,7 @@ class TrendingGamesSection extends StatelessWidget {
           margin: EdgeInsets.symmetric(
               vertical: SizeConfig.pageHorizontalMargins / 2),
           child: GridView.builder(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             itemCount: model.isGamesListDataLoading
                 ? 3
                 : model.trendingGamesListData.length,
@@ -84,13 +84,13 @@ class TrendingGamesSection extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
             itemBuilder: (ctx, index) {
               return model.isGamesListDataLoading
-                  ? TrendingGamesShimmer()
+                  ? const TrendingGamesShimmer()
                   : TrendingGames(
                       game: model.trendingGamesListData[index],
                       model: model,
                       key: ValueKey(model.trendingGamesListData[index].code));
             },
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 childAspectRatio: .63,
                 crossAxisSpacing: 12,
@@ -141,10 +141,11 @@ class TrendingGames extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService _analyticsService = locator<AnalyticsService>();
     return GestureDetector(
       onTap: () {
-        _analyticsService!.track(
+        Haptic.vibrate();
+        _analyticsService.track(
             eventName: AnalyticsEvents.gameTapped,
             properties:
                 AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -157,12 +158,11 @@ class TrendingGames extends StatelessWidget {
                   AnalyticsProperties.getTambolaTicketCount(),
               "location": "Trending games"
             }));
-        Haptic.vibrate();
 
         BaseUtil.openGameModalSheet(game!.gameCode!);
       },
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Color(0xff39393C),
             borderRadius: BorderRadius.all(Radius.circular(16))),
         child: Column(
@@ -192,7 +192,7 @@ class TrendingGames extends StatelessWidget {
                       style: TextStyles.sourceSansB.body4.colour(Colors.white))
                 ])),
             // SizedBox(height: SizeConfig.padding10),
-            Spacer(),
+            const Spacer(),
             Container(
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.padding10, vertical: 4),
@@ -213,7 +213,7 @@ class TrendingGames extends StatelessWidget {
                     height: SizeConfig.padding12,
                     width: SizeConfig.padding12,
                   ),
-                  Text(" " + game!.playCost.toString(),
+                  Text(" ${game!.playCost}",
                       style: TextStyles.sourceSans.body3),
                 ],
               ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -73,13 +74,16 @@ class GTDetailedViewModel extends BaseViewModel {
 
   Future<bool> redeemTicket(ScratchCard ticket) async {
     try {
-      await _gtRepo!.redeemReward(ticket.gtId);
-      _gtService.updateUnscratchedGTCount();
-      _userService!.getUserFundWalletData();
-      _userCoinService!.getUserCoinBalance();
-      _journeyService.updateRewardStatus(ticket.prizeSubtype!);
-      _gtService.refreshTickets(prizeSubtype: ticket.prizeSubtype!);
-      return true;
+      final res = await _gtRepo!.redeemReward(ticket.gtId);
+      if (res.isSuccess()) {
+        unawaited(_gtService.updateUnscratchedGTCount());
+        unawaited(_userService!.getUserFundWalletData());
+        unawaited(_userCoinService!.getUserCoinBalance());
+        _journeyService.updateRewardStatus(ticket.prizeSubtype!);
+        _gtService.refreshTickets(prizeSubtype: ticket.prizeSubtype!);
+        return true;
+      }
+      return false;
     } catch (e) {
       _logger!.e(e);
       return false;

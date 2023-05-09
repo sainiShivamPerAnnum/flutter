@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_view
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_utils.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -246,11 +247,16 @@ class _GTInstantViewState extends State<GTInstantView>
                               margin: EdgeInsets.symmetric(
                                   horizontal:
                                       SizeConfig.pageHorizontalMargins * 2),
-                              child: Text(
-                                  model.scratchCard!.note ?? locale.wonGT,
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(Colors.grey),
-                                  textAlign: TextAlign.center),
+                              child: model.isCardScratched
+                                  ? (model.scratchCard!.note ?? locale.wonGT)
+                                      .beautify(
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(Colors.grey),
+                                          alignment: TextAlign.center)
+                                  : Text("You won a new scratch card",
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Colors.grey),
+                                      textAlign: TextAlign.center),
                             ),
                             SizedBox(height: SizeConfig.padding24),
                           ],
