@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
-import 'package:felloapp/crashlytics_widget.dart';
+import 'package:felloapp/util/crashlytics_widget.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
