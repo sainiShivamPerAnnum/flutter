@@ -1,5 +1,4 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -14,8 +13,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../core/model/app_config_model.dart';
 
 class WantMoreTicketsModalSheet extends StatelessWidget {
   WantMoreTicketsModalSheet({this.isInsufficientBalance = false});
@@ -138,23 +135,24 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                       page: ReferralDetailsPageConfig);
                 },
               ),
-              SizedBox(height: SizeConfig.padding16),
-              if (AppConfig.getValue(AppConfigKey.autosaveActive) as bool)
-                FelloTile(
-                  leadingAsset: Assets.repeat,
-                  title: locale.saveAutoSaveTitle,
-                  subtitle: locale.saveAutoSaveSubTitle,
-                  trailingIcon: Icons.arrow_forward_ios_rounded,
-                  onTap: () {
-                    _analyticsService!
-                        .track(eventName: AnalyticsEvents.earnMoreRefer);
-                    AppState.isWebGameLInProgress = false;
-                    AppState.isWebGamePInProgress = false;
-                    while (AppState.screenStack.length > 1)
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.delegate!.parseRoute(Uri.parse("augDetails"));
-                  },
-                ),
+              // SizedBox(height: SizeConfig.padding16),
+              // if (AppConfig.getValue(AppConfigKey.showNewAutosave) as bool &&
+              //     locator<SubService>().subscriptionData == null)
+              //   FelloTile(
+              //     leadingAsset: Assets.repeat,
+              //     title: locale.saveAutoSaveTitle,
+              //     subtitle: locale.saveAutoSaveSubTitle,
+              //     trailingIcon: Icons.arrow_forward_ios_rounded,
+              //     onTap: () {
+              //       _analyticsService!
+              //           .track(eventName: AnalyticsEvents.earnMoreRefer);
+              //       AppState.isWebGameLInProgress = false;
+              //       AppState.isWebGamePInProgress = false;
+              //       while (AppState.screenStack.length > 1)
+              //         AppState.backButtonDispatcher!.didPopRoute();
+              //       AppState.delegate!.appState.setCurrentTabIndex = 0;
+              //     },
+              //   ),
               SizedBox(height: SizeConfig.padding24),
             ]),
           ),

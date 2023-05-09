@@ -11,8 +11,7 @@ class TambolaModel {
   final String? val;
   final int? weekCode;
   final TimestampModel? assignedTime;
-  static final helper =
-      HelperModel<TambolaModel>((map) => TambolaModel.fromMap(map));
+  static final helper = HelperModel<TambolaModel>(TambolaModel.fromMap);
   final TambolaBoard? board;
 
   TambolaModel({
@@ -36,7 +35,7 @@ class TambolaModel {
       val: val ?? this.val,
       weekCode: weekCode ?? this.weekCode,
       assignedTime: assignedTime ?? this.assignedTime,
-      board: board ?? this.board,
+      board: board ?? board,
     );
   }
 

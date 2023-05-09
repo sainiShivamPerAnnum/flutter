@@ -46,7 +46,7 @@ class GamesWidget extends StatelessWidget {
                   mainAxisSpacing: 12),
             ),
           );
-        
+
         if (model.gameTier == null) return SizedBox();
         final _viewModel = GameViewModel.fromGameTier(model.gameTier!)
           ..processData();
@@ -179,7 +179,7 @@ class _LockedState extends StatelessWidget {
             'savings required to unlock':
                 gameTier.amountToCompleteLevel.round(),
           });
-          BaseUtil().openDepositOptionsModalSheet(
+          BaseUtil.openDepositOptionsModalSheet(
               amount: gameTier.amountToCompleteLevel.round(),
               title: "Save in any asset to unlock ${gameTier.title}",
               subtitle: 'Earn 1 token with every Rupee saved');

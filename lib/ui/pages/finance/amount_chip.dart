@@ -68,7 +68,7 @@ class AmountChip extends StatelessWidget {
                   color: UiConstants.primaryColor,
                 ),
                 child: Text(
-                 locale.best,
+                  locale.best,
                   style: TextStyles.rajdhaniSB.body5,
                 ),
               ),

@@ -20,8 +20,8 @@ fello.plantuml
 pubspec.lock
 ios/build/*
 ios/Podfile.lock
-ios/Runner.xcodeproj/*
-ios/Runner.xcworkspace/*
+# ios/Runner.xcodeproj/*
+# ios/Runner.xcworkspace/*
 ios/.symlinks/plugins
 build/
 

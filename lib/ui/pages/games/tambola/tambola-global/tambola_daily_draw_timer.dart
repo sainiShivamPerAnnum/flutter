@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,12 +14,17 @@ class DailyPicksTimer extends StatefulWidget {
   final Widget replacementWidget;
   final Color? bgColor;
   final MainAxisAlignment? alignment;
+  final TimestampModel? startTime;
+  final Color? timerBgColor;
 
-  DailyPicksTimer({
-    required this.replacementWidget,
-    this.bgColor,
-    this.alignment,
-  });
+  const DailyPicksTimer(
+      {super.key,
+      required this.replacementWidget,
+      this.bgColor,
+      this.alignment,
+      this.startTime,
+      this.timerBgColor});
+
   @override
   _DailyPicksTimerState createState() => _DailyPicksTimerState();
 }
@@ -30,32 +35,39 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   bool showClock = true;
   bool countDown = true;
   BaseUtil? baseProvider;
-  TambolaService? _tambolaService = locator<TambolaService>();
+  final TambolaService _tambolaService = locator<TambolaService>();
 
   @override
   void initState() {
     if (getDifferance().isNegative) {
       duration = getDifferance().abs();
-      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-        timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
       });
-    } else
+    } else {
       showClock = false;
+    }
     super.initState();
   }
 
   Duration getDifferance() {
     DateTime currentTime = DateTime.now();
-    DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 18, 0, 10);
+    DateTime drawTime;
+    if (widget.startTime != null) {
+      drawTime = widget.startTime!.toDate();
+    } else {
+      drawTime = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, 18, 0, 10);
+    }
+
     Duration timeDiff = currentTime.difference(drawTime);
 
     return timeDiff;
   }
 
-  void addTime() async {
+  Future<void> addTime() async {
     if (!getDifferance().isNegative) {
-      await _tambolaService?.fetchWeeklyPicks(forcedRefresh: true);
+      await _tambolaService.fetchWeeklyPicks(forcedRefresh: true);
       setState(() {
         showClock = false;
         timer?.cancel();
@@ -90,9 +102,9 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
           mainAxisAlignment: widget.alignment ?? MainAxisAlignment.center,
           children: [
             buildTimeCard(time: hours),
-            TimerDots(),
+            const TimerDots(),
             buildTimeCard(time: minutes),
-            TimerDots(),
+            const TimerDots(),
             buildTimeCard(time: seconds),
           ]);
     }
@@ -100,11 +112,11 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   }
 
   Widget buildTimeCard({required String time}) => Container(
-        height: SizeConfig.screenWidth! * 0.16,
+    height: SizeConfig.screenWidth! * 0.16,
         width: SizeConfig.screenWidth! * 0.16,
         // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
         decoration: BoxDecoration(
-          color: UiConstants.kBackgroundColor,
+          color: widget.timerBgColor ?? UiConstants.kBackgroundColor,
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,

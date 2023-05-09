@@ -119,7 +119,7 @@ class AllParticipantsView extends StatelessWidget {
                                           model!.currentParticipants![index]
                                               .username!,
                                           style: TextStyles.sourceSans.body3
-                                              .setOpecity(0.8),
+                                              .setOpacity(0.8),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
@@ -171,7 +171,7 @@ class AllParticipantsView extends StatelessWidget {
                                         child: Text(
                                           model!.pastWinners![index].username!,
                                           style: TextStyles.sourceSans.body3
-                                              .setOpecity(0.8),
+                                              .setOpacity(0.8),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),

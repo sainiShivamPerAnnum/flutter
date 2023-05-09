@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
@@ -25,6 +26,8 @@ import 'package:provider/provider.dart';
 GlobalKey felloAppBarKey = new GlobalKey();
 
 class Root extends StatelessWidget {
+  const Root({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BaseView<RootViewModel>(
@@ -102,7 +105,21 @@ bool _showHappyHour() {
 }
 
 class RootAppBar extends StatelessWidget {
-  const RootAppBar({super.key});
+  RootAppBar({super.key});
+  FaqsType getFaqType() {
+    final NavBarItemModel navItem =
+        locator<RootController>().currentNavBarItemModel;
+    if (navItem == RootController.playNavBarItem)
+      return FaqsType.play;
+    else if (navItem == RootController.saveNavBarItem)
+      return FaqsType.savings;
+    else if (navItem == RootController.winNavBarItem)
+      return FaqsType.winnings;
+    else if (navItem == RootController.tambolaNavBar)
+      return FaqsType.play;
+    else
+      return FaqsType.gettingStarted;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +145,7 @@ class RootAppBar extends StatelessWidget {
                                 : UiConstants.kSecondaryBackgroundColor
                             : UiConstants.kBackgroundColor,
                         child: FAppBar(
-                          type: FaqsType.play,
+                          type: getFaqType(),
                           backgroundColor: (locator<RootController>()
                                       .currentNavBarItemModel ==
                                   RootController.saveNavBarItem)

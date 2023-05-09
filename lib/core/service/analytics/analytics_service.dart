@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:app_install_date/app_install_date_imp.dart';
-import 'package:apxor_flutter/apxor_flutter.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
+import 'package:felloapp/core/service/analytics/singular_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/constants.dart';
@@ -22,6 +20,7 @@ class AnalyticsService extends BaseAnalyticsService {
   final MixpanelAnalytics? _mixpanel = locator<MixpanelAnalytics>();
   final WebEngageAnalytics? _webengage = locator<WebEngageAnalytics>();
   final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
+  final SingularAnalytics? _singular = locator<SingularAnalytics>();
 
   final CustomLogger? _logger = locator<CustomLogger>();
 
@@ -29,6 +28,7 @@ class AnalyticsService extends BaseAnalyticsService {
     await _mixpanel!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _webengage!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _appFlyer!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
+    _singular!.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
 
     // for daily session event
     DateTime now = DateTime.now();
@@ -45,6 +45,7 @@ class AnalyticsService extends BaseAnalyticsService {
     _mixpanel!.signOut();
     _webengage!.signOut();
     _appFlyer!.signOut();
+    _singular!.signOut();
   }
 
   void track({
@@ -53,7 +54,8 @@ class AnalyticsService extends BaseAnalyticsService {
     bool mixpanel = true,
     bool webEngage = true,
     bool appFlyer = true,
-    bool apxor = true,
+    bool singular = true,
+    bool apxor = false,
   }) {
     try {
       if (FirebaseAuth.instance.currentUser != null) {
@@ -71,9 +73,8 @@ class AnalyticsService extends BaseAnalyticsService {
         _webengage!.track(eventName: eventName, properties: properties);
       if (appFlyer)
         _appFlyer!.track(eventName: eventName, properties: properties);
-      if (Platform.isAndroid && apxor) {
-        ApxorFlutter.logAppEvent(eventName!, attributes: properties);
-      }
+      if (singular)
+        _singular!.track(eventName: eventName, properties: properties);
     } catch (e) {
       String error = e as String ?? "Unable to track event: $eventName";
       _logger!.e(error);
@@ -83,10 +84,6 @@ class AnalyticsService extends BaseAnalyticsService {
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     _mixpanel!.track(eventName: screen, properties: properties);
     _webengage!.track(eventName: screen, properties: properties);
-
-    if (Platform.isAndroid) {
-      ApxorFlutter.trackScreen(screen!);
-    }
   }
 
   void trackSignup(String? userId) async {
@@ -138,5 +135,10 @@ class AnalyticsService extends BaseAnalyticsService {
     } catch (e) {
       _logger!.e(e.toString());
     }
+  }
+
+  void trackUninstall(String token) {
+    //only singular does this
+    _singular!.connectFcm(token);
   }
 }

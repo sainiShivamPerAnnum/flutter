@@ -1,175 +1,112 @@
 import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class WeeklyPicks extends StatelessWidget {
   final DailyPick? weeklyDraws;
-  // BaseUtil baseProvider;
+  final PicksCardViewModel model;
 
   const WeeklyPicks({
     this.weeklyDraws,
     Key? key,
+    required this.model,
   }) : super(key: key);
 
-  String getDayName(int weekday) {
-    switch (weekday) {
-      case 1:
-        return 'MON';
-      case 2:
-        return 'TUE';
-      case 3:
-        return 'WED';
-      case 4:
-        return 'THU';
-      case 5:
-        return 'FRI';
-      case 6:
-        return 'SAT';
-      case 7:
-        return 'SUN';
-      default:
-        return 'N/A';
-    }
-  }
+  static const List<String> _dayNames = [
+    'MON',
+    'TUE',
+    'WED',
+    'THU',
+    'FRI',
+    'SAT',
+    'SUN'
+  ];
+  static const List<int> _emptyBalls = [-1, -1, -1];
 
   Widget _getDrawBallRow(DailyPick? draws, int day) {
-    List<Widget> balls = [];
-    DateTime today = DateTime.now();
-    int colCount = today.weekday;
-    if (draws != null &&
-        draws.getWeekdayDraws(day - 1) != null &&
-        !draws.getWeekdayDraws(day - 1)!.contains(-1)) {
-      draws.getWeekdayDraws(day - 1)!.forEach((element) {
-        balls.add(
-            _getDrawBall(element.toString(), colCount == day ? true : false));
-      });
-    } else {
-      for (int i = 0; i < 3; i++) {
-        balls.add(_getDrawBall('-', colCount == day ? true : false));
-      }
-    }
+    final weekdayDraws = draws?.getWeekdayDraws(day - 1) ?? _emptyBalls;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: balls,
+      children: weekdayDraws.map((ball) => _getDrawBall(ball, day)).toList(),
     );
   }
 
-  Widget _getDrawBall(String digit, bool isToday) {
+  Widget _getDrawBall(int ball, int todayWeekday) {
+    final isNumberPresent = model.isNumberPresent(ball.toString());
+    final borderColor = isNumberPresent ? const Color(0xffFFD979) : null;
+
     return Container(
       margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding4, vertical: SizeConfig.padding6),
+        horizontal: SizeConfig.padding4,
+        vertical: SizeConfig.padding6,
+      ),
       width: SizeConfig.screenWidth! * 0.07,
       height: SizeConfig.screenWidth! * 0.07,
-      decoration: new BoxDecoration(
-        color: isToday
-            ? UiConstants.kSnackBarPositiveContentColor
-            : Colors.white.withOpacity(0.3),
+      decoration: BoxDecoration(
+        color: todayWeekday == DateTime.now().weekday
+            ? UiConstants.darkPrimaryColor
+            : Colors.white.withOpacity(0.1),
+        border: borderColor != null ? Border.all(color: borderColor) : null,
         shape: BoxShape.circle,
       ),
       child: Center(
-          child: Text(
-        digit,
-        style: TextStyle(
+        child: Text(
+          ball == -1 ? '-' : ball.toString(),
+          style: TextStyle(
             fontSize: SizeConfig.mediumTextSize! * 1,
             fontWeight: FontWeight.w500,
-            color: Colors.white),
-        textAlign: TextAlign.center,
-      )),
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    print("TEsting mon: ${weeklyDraws!.mon}");
-    print("TEsting tue: ${weeklyDraws!.tue}");
-    print("TEsting wed: ${weeklyDraws!.wed}");
-    print("TEsting thu: ${weeklyDraws!.thu}");
-    print("TEsting fri: ${weeklyDraws!.fri}");
-    print("TEsting sat: ${weeklyDraws!.sat}");
-    print("TEsting sun: ${weeklyDraws!.sun}");
-    // print("TEsting wekkcode: ${weeklyDraws.weekCode}");
-    // if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
-    //   return Container(
-    //     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-    //     height: SizeConfig.screenWidth * 0.5,
-    //     decoration: BoxDecoration(
-    //       color: UiConstants.kArowButtonBackgroundColor,
-    //       border: Border.all(
-    //         color: Colors.white.withOpacity(0.5),
-    //         width: 0.5,
-    //       ),
-    //       borderRadius: BorderRadius.all(
-    //         Radius.circular(SizeConfig.roundness16),
-    //       ),
-    //     ),
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         SvgPicture.asset(
-    //           Assets.noTickets,
-    //           width: SizeConfig.screenWidth * 0.2,
-    //         ),
-    //         Padding(
-    //           padding: EdgeInsets.all(10),
-    //           child: Text(
-    //             'This week\'s numbers have not been drawn yet.',
-    //             textAlign: TextAlign.center,
-    //             style: TextStyles.sourceSans.body3.colour(
-    //               Colors.white.withOpacity(0.5),
-    //             ),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
-    DateTime today = DateTime.now();
-    List<Widget> colElems = [];
-    int colCount = today.weekday;
-    for (int i = 0; i < 7; i++) {
-      colElems.add(Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(getDayName(i + 1).toUpperCase(),
-                style: TextStyles.sourceSans.body3.colour(i + 1 == colCount
-                    ? UiConstants.kSnackBarPositiveContentColor
-                    : Colors.white)),
-            SizedBox(
-              width: SizeConfig.padding12,
-            ),
-            _getDrawBallRow(weeklyDraws, i + 1),
-          ],
-        ),
-      ));
-    }
+    final columns = List<Widget>.generate(
+      7,
+      (i) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            _dayNames[i],
+            style: TextStyles.sourceSans.body3.colour(Colors.white),
+          ),
+          SizedBox(width: SizeConfig.padding12),
+          _getDrawBallRow(weeklyDraws, i + 1),
+        ],
+      ),
+    );
 
-    //Divind the list in two parts
-    List<Widget> side1 = colElems.sublist(0, 4);
-    List<Widget> side2 = colElems.sublist(4);
+    // Divide the list in two parts
+    final side1 = columns.sublist(0, 4);
+    final side2 = columns.sublist(4);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: ListView(
+          child: ListView.builder(
             padding: EdgeInsets.zero,
-            physics: NeverScrollableScrollPhysics(),
-            children: side1,
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
+            itemCount: side1.length,
+            itemBuilder: (context, index) => side1[index],
           ),
         ),
         Expanded(
-          child: ListView(
+          child: ListView.builder(
             padding: EdgeInsets.zero,
-            physics: NeverScrollableScrollPhysics(),
-            children: side2,
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
+            itemCount: side2.length,
+            itemBuilder: (context, index) => side2[index],
           ),
         ),
       ],

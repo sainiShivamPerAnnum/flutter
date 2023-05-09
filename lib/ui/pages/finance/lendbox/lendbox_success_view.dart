@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
@@ -46,6 +47,8 @@ class LendboxSuccessView extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
+                      AppState.isRepeated = true;
+                      AppState.unblockNavigation();
                       AppState.backButtonDispatcher!.didPopRoute();
                       this.showGtIfAvailable();
                     },
@@ -125,13 +128,13 @@ class LendboxSuccessView extends StatelessWidget {
                     _txnService?.transactionReponseModel?.data?.txnDisplayMsg ??
                         "",
                     textAlign: TextAlign.center,
-                    style: TextStyles.sourceSans.body2.setOpecity(0.7)),
+                    style: TextStyles.sourceSans.body2.setOpacity(0.7)),
               )
             else
               Text(
                 locale.txnInvestmentSuccess,
                 textAlign: TextAlign.center,
-                style: TextStyles.sourceSans.body2.setOpecity(0.7),
+                style: TextStyles.sourceSans.body2.setOpacity(0.7),
               ),
             SizedBox(
               height: SizeConfig.padding20,
@@ -252,6 +255,8 @@ class LendboxSuccessView extends StatelessWidget {
             TextButton(
               onPressed: () {
                 AppState.isRepeated = true;
+                AppState.unblockNavigation();
+
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.delegate!.appState.setCurrentTabIndex = DynamicUiUtils
                     .navBar
@@ -264,7 +269,9 @@ class LendboxSuccessView extends StatelessWidget {
                 this.showGtIfAvailable();
               },
               child: Text(
-                locale.obDone,
+                PowerPlayService.powerPlayDepositFlow
+                    ? "Make another prediction"
+                    : locale.obDone,
                 style: TextStyles.rajdhaniSB.body0
                     .colour(UiConstants.primaryColor),
               ),

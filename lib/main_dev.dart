@@ -1,8 +1,12 @@
 // import 'package:device_preview/device_preview.dart';
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -28,15 +32,16 @@ void main() async {
   );
 
   await mainInit();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then(
     (_) {
-      runApp(
-        // DevicePreview(
-        //   enabled: !kReleaseMode,
-        // builder: (context) =>
-        MyApp(), // Wrap your app
-        // ),
-      );
+      runZonedGuarded(
+          () => runApp(
+                const MyApp(),
+              ), (error, stackTrace) {
+        FirebaseCrashlytics.instance.recordError(error, stackTrace);
+        log(error.toString(), stackTrace: stackTrace);
+      });
     },
   );
 }

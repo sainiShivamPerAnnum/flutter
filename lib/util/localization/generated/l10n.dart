@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -3167,10 +3168,10 @@ class S {
   // skipped getter for the '-----------------------------' key
 
   /// `Submit`
-  String get btnSumbit {
+  String get btnSubmit {
     return Intl.message(
       'Submit',
-      name: 'btnSumbit',
+      name: 'btnSubmit',
       desc: '',
       args: [],
     );
@@ -3611,7 +3612,7 @@ class S {
   /// `Upload your PAN Card`
   String get kycPanUpload {
     return Intl.message(
-      'Upload your PAN Card',
+      'Step 1: Upload your PAN Card',
       name: 'kycPanUpload',
       desc: '',
       args: [],
@@ -4492,10 +4493,10 @@ class S {
     );
   }
 
-  /// `Supported by 60+ banks for AutoPay`
+  /// `Supported by 60+ banks for Autosave`
   String get autoPayBanksSupported {
     return Intl.message(
-      'Supported by 60+ banks for AutoPay',
+      'Supported by 60+ banks for Autosave',
       name: 'autoPayBanksSupported',
       desc: '',
       args: [],
@@ -5294,10 +5295,10 @@ class S {
     );
   }
 
-  /// `Approve payment\nrequest on your UPI app`
+  /// `Approve payment\nrequest on your UPI app.(Ignore if already done)`
   String get txnApprovePaymentReq {
     return Intl.message(
-      'Approve payment\nrequest on your UPI app',
+      'Approve payment\nrequest on your UPI app.(Ignore if already done)',
       name: 'txnApprovePaymentReq',
       desc: '',
       args: [],

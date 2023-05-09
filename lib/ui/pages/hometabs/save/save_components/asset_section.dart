@@ -5,7 +5,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -41,8 +40,8 @@ class SaveNetWorthSection extends StatelessWidget {
               child: SaveCustomCard(
                 title: locale.felloFloMainTitle,
                 subtitle: locale.currentValue,
-                chipText: ["P2P Asset", "Safe & Secure", "10% Returns"],
-                key: Key(Constants.ASSET_TYPE_LENDBOX),
+                chipText: const ["P2P Asset", "Safe & Secure", "10% Returns"],
+                key: const Key(Constants.ASSET_TYPE_LENDBOX),
                 cardBgColor: UiConstants.kSaveStableFelloCardBg,
                 cardAssetName: Assets.felloFlo,
                 investmentType: InvestmentType.LENDBOXP2P,
@@ -55,7 +54,7 @@ class SaveNetWorthSection extends StatelessWidget {
                   Haptic.vibrate();
 
                   locator<AnalyticsService>()
-                      .track(eventName: "Save on Asset Banner", properties: {
+                      .track(eventName: "Save on Flo Banner", properties: {
                     "asset name": "LENDBOX",
                     "balance in gold":
                         locator<UserService>().userFundWallet?.augGoldBalance ??
@@ -63,6 +62,7 @@ class SaveNetWorthSection extends StatelessWidget {
                     "balance in flo":
                         locator<UserService>().userFundWallet?.wLbBalance ?? 0,
                   });
+
                   return BaseUtil().openRechargeModalSheet(
                     investmentType: InvestmentType.LENDBOXP2P,
                   );
@@ -80,12 +80,12 @@ class SaveNetWorthSection extends StatelessWidget {
               child: SaveCustomCard(
                 title: locale.digitalGoldMailTitle,
                 subtitle: locale.youOwn,
-                chipText: [
+                chipText: const [
                   "Safe & Secure",
                   "24K Gold",
                   "99.9% Pure",
                 ],
-                key: Key(Constants.ASSET_TYPE_AUGMONT),
+                key: const Key(Constants.ASSET_TYPE_AUGMONT),
                 cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
                 cardAssetName: Assets.digitalGoldBar,
                 investmentType: InvestmentType.AUGGOLD99,
@@ -97,15 +97,15 @@ class SaveNetWorthSection extends StatelessWidget {
                 onTap: () {
                   Haptic.vibrate();
                   locator<AnalyticsService>()
-                      .track(eventName: "Save on Asset Banner", properties: {
-                    "asset name": "LENDBOX",
-                    "isNewUser": false,
+                      .track(eventName: "Save on Gold Banner", properties: {
+                    "asset name": "AUGGOLD99",
                     "balance in gold":
                         locator<UserService>().userFundWallet?.augGoldBalance ??
                             0,
                     "balance in flo":
                         locator<UserService>().userFundWallet?.wLbBalance ?? 0,
                   });
+
                   return BaseUtil().openRechargeModalSheet(
                     investmentType: InvestmentType.AUGGOLD99,
                   );
@@ -140,7 +140,7 @@ class SaveNetWorthSection extends StatelessWidget {
           //   height: SizeConfig.padding12,
           // ),
           PropertyChangeConsumer<UserService, UserServiceProperties>(
-            properties: [UserServiceProperties.myUserFund],
+            properties: const [UserServiceProperties.myUserFund],
             builder: (context, model, property) => Container(
               height: SizeConfig.screenWidth! * 0.22,
               child: model?.userFundWallet?.netWorth != null &&
@@ -158,7 +158,7 @@ class SaveNetWorthSection extends StatelessWidget {
                             locale.totalSavings,
                             style: TextStyles.rajdhani.body2
                                 .colour(UiConstants.kTextColor),
-                            key: ValueKey(Constants.TOTAL_SAVINGS),
+                            key: const ValueKey(Constants.TOTAL_SAVINGS),
                           ),
                           NetWorthValue(
                             style: TextStyles.sourceSans.title0.bold,
@@ -180,7 +180,10 @@ class SaveNetWorthSection extends StatelessWidget {
             ),
           ),
           getAssetsOrder(),
-          SaveAssetsFooter(),
+          const SizedBox(
+            height: 15,
+          ),
+          // const SaveAssetsFooter(),
         ],
       ),
     );

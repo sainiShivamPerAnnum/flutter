@@ -12,6 +12,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -20,8 +21,9 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -49,7 +51,8 @@ class RootViewModel extends BaseViewModel {
 
   final BaseUtil? _baseUtil = locator<BaseUtil>();
 
-  final FcmHandler? _fcmListener = locator<FcmHandler>();
+  final FcmListener _fcmListener = locator<FcmListener>();
+  final FcmHandler _fcmHandler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger? _logger = locator<CustomLogger>();
@@ -59,16 +62,18 @@ class RootViewModel extends BaseViewModel {
   final TambolaService? _tambolaService = locator<TambolaService>();
   final ScratchCardService? _gtService = locator<ScratchCardService>();
   final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
+  final PowerPlayService _powerPlayService = locator<PowerPlayService>();
   final AppState appState = locator<AppState>();
+  final SubService _subscriptionService = locator<SubService>();
   final S locale;
   int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
+
   // final WinnerService? winnerService = locator<WinnerService>();
   final ReferralRepo _refRepo = locator<ReferralRepo>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final PaytmService _paytmService = locator<PaytmService>();
   final ReferralService _referralService = locator<ReferralService>();
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
@@ -79,10 +84,11 @@ class RootViewModel extends BaseViewModel {
     await _userCoinService.getUserCoinBalance();
     await _userService.getUserFundWalletData();
     _txnHistoryService.signOut();
-    _paytmService.getActiveSubscriptionDetails();
+    // _paytmService.getActiveSubscriptionDetails();
     await _journeyService.checkForMilestoneLevelChange();
     await _gtService?.updateUnscratchedGTCount();
     await _journeyService.getUnscratchedGT();
+    await _subscriptionService.getSubscription();
   }
 
   onInit() {
@@ -95,6 +101,7 @@ class RootViewModel extends BaseViewModel {
         _rootController.navItems.values.first;
 
     _tambolaService!.init();
+    _subscriptionService.init();
     initialize();
   }
 
@@ -104,6 +111,7 @@ class RootViewModel extends BaseViewModel {
         await _userService.userBootUpEE();
         await verifyUserBootupDetails();
         await checkForBootUpAlerts();
+        await _fcmListener.refreshTopics();
         await _userService.getUserFundWalletData();
         if (AppState.isFirstTime)
           Future.delayed(Duration(seconds: 1), () {
@@ -133,12 +141,12 @@ class RootViewModel extends BaseViewModel {
   onDispose() {
     AppState.isUserSignedIn = false;
     appState.setRootLoadValue = false;
-    _fcmListener!.addIncomingMessageListener(null);
+    _fcmHandler.addIncomingMessageListener(null);
   }
 
   _initAdhocNotifications() {
     if (_fcmListener != null && _baseUtil != null) {
-      _fcmListener!.addIncomingMessageListener((valueMap) {
+      _fcmHandler.addIncomingMessageListener((valueMap) {
         if (valueMap['title'] != null && valueMap['body'] != null) {
           if (AppState.screenStack.last == ScreenItem.dialog ||
               AppState.screenStack.last == ScreenItem.modalsheet) return;
@@ -173,7 +181,7 @@ class RootViewModel extends BaseViewModel {
           UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
       content: SecurityModalSheet(),
     );
-    _fcmListener?.addIncomingMessageListener((valueMap) {
+    _fcmHandler.addIncomingMessageListener((valueMap) {
       if (valueMap['title'] != null && valueMap['body'] != null) {
         BaseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
             seconds: 5);
@@ -245,7 +253,7 @@ class RootViewModel extends BaseViewModel {
     if (AppState.isRootAvailableForIncomingTaskExecution == true &&
         AppState.startupNotifMessage != null) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
-      _fcmListener?.handleMessage(
+      _fcmHandler.handleMessage(
         AppState.startupNotifMessage,
         MsgSource.Terminated,
       );
@@ -318,8 +326,9 @@ class RootViewModel extends BaseViewModel {
               await BaseUtil().signOut();
               _tambolaService?.signOut();
               _analyticsService.signOut();
-              _paytmService.signout();
               _bankAndKycService?.dump();
+              _subscriptionService.dispose();
+              _powerPlayService.dump();
               AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll, page: SplashPageConfig);
               BaseUtil.showPositiveAlert(

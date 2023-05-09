@@ -2,10 +2,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:lottie/lottie.dart';
 
 class PrizeProcessing extends StatelessWidget {
   const PrizeProcessing({Key? key}) : super(key: key);
@@ -17,14 +14,14 @@ class PrizeProcessing extends StatelessWidget {
       child: Container(
         padding:
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Spacer(
+            const Spacer(
               flex: 1,
             ),
-            FullScreenLoader(),
+            const FullScreenLoader(),
             SizedBox(
               height: SizeConfig.padding24,
             ),
@@ -40,7 +37,7 @@ class PrizeProcessing extends StatelessWidget {
                 style: TextStyles.body3.colour(Colors.white),
               ),
             ),
-            Spacer(
+            const Spacer(
               flex: 2,
             )
           ],

@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -14,7 +13,7 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
-import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -26,14 +25,13 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -47,7 +45,8 @@ class AugmontTransactionService extends BaseTransactionService {
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
+
+  // final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   S locale = locator<S>();
@@ -57,6 +56,7 @@ class AugmontTransactionService extends BaseTransactionService {
   bool _isGoldSellInProgress = false;
 
   late GoldPurchaseDetails currentGoldPurchaseDetails;
+
   get isGoldBuyInProgress => this._isGoldBuyInProgress;
 
   set isGoldBuyInProgress(value) {
@@ -98,53 +98,53 @@ class AugmontTransactionService extends BaseTransactionService {
 
   //6 -- UPI
   Future<void> processUpiTransaction() async {
-    isGoldBuyInProgress = true;
-    // currentTransactionState = TransactionState.ongoing;
-    AppState.blockNavigation();
-    CreatePaytmTransactionModel? createdPaytmTransactionData =
-        await this.createPaytmTransaction(
-      PaymentMode.UPI,
-      currentGoldPurchaseDetails.goldBuyAmount,
-      currentGoldPurchaseDetails.goldRates,
-      currentGoldPurchaseDetails.couponCode,
-      currentGoldPurchaseDetails.skipMl,
-    );
-    if (createdPaytmTransactionData != null) {
-      currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
+    // isGoldBuyInProgress = true;
+    // // currentTransactionState = TransactionState.ongoing;
+    // AppState.blockNavigation();
+    // CreatePaytmTransactionModel? createdPaytmTransactionData =
+    //     await this.createPaytmTransaction(
+    //   PaymentMode.UPI,
+    //   currentGoldPurchaseDetails.goldBuyAmount,
+    //   currentGoldPurchaseDetails.goldRates,
+    //   currentGoldPurchaseDetails.couponCode,
+    //   currentGoldPurchaseDetails.skipMl,
+    // );
+    // if (createdPaytmTransactionData != null) {
+    //   currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
-      final deepUri = await _paytmService!.generateUpiTransactionDeepUri(
-          selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
-      if (deepUri != null && deepUri.isNotEmpty) {
-        final res = await _paytmService!.initiateUpiTransaction(
-          amount: currentGoldPurchaseDetails.goldBuyAmount,
-          orderId: createdPaytmTransactionData.data!.orderId,
-          upiApplication: upiApplication,
-          url: deepUri,
-          investmentType: InvestmentType.AUGGOLD99,
-        );
-        if (res && Platform.isAndroid) {
-          currentTransactionState = TransactionState.ongoing;
-          initiatePolling();
-        }
+    //   final deepUri = await _paytmService!.generateUpiTransactionDeepUri(
+    //       selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
+    //   if (deepUri != null && deepUri.isNotEmpty) {
+    //     final res = await _paytmService!.initiateUpiTransaction(
+    //       amount: currentGoldPurchaseDetails.goldBuyAmount,
+    //       orderId: createdPaytmTransactionData.data!.orderId,
+    //       upiApplication: upiApplication,
+    //       url: deepUri,
+    //       investmentType: InvestmentType.AUGGOLD99,
+    //     );
+    //     if (res && Platform.isAndroid) {
+    //       currentTransactionState = TransactionState.ongoing;
+    //       initiatePolling();
+    //     }
 
-        // resetBuyOptions();
-        isGoldBuyInProgress = false;
-        AppState.unblockNavigation();
-      } else {
-        isGoldBuyInProgress = false;
-        AppState.unblockNavigation();
+    //     // resetBuyOptions();
+    //     isGoldBuyInProgress = false;
+    //     AppState.unblockNavigation();
+    //   } else {
+    //     isGoldBuyInProgress = false;
+    //     AppState.unblockNavigation();
 
-        BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
-      }
-    } else {
-      isGoldBuyInProgress = false;
-      currentTransactionState = TransactionState.idle;
+    //     BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
+    //   }
+    // } else {
+    //   isGoldBuyInProgress = false;
+    //   currentTransactionState = TransactionState.idle;
 
-      AppState.unblockNavigation();
+    //   AppState.unblockNavigation();
 
-      return BaseUtil.showNegativeAlert(
-          locale.failedToCreateTxn, locale.tryLater);
-    }
+    //   return BaseUtil.showNegativeAlert(
+    //       locale.failedToCreateTxn, locale.tryLater);
+    // }
   }
 
   // RAZORPAY
@@ -185,69 +185,60 @@ class AugmontTransactionService extends BaseTransactionService {
 
   // PAYTM METHODS
   Future<void> processPaytmTransaction() async {
-    AppState.blockNavigation();
-    isGoldBuyInProgress = true;
-    CreatePaytmTransactionModel? createdPaytmTransactionData =
-        await this.createPaytmTransaction(
-      PaymentMode.PAYTM,
-      currentGoldPurchaseDetails.goldBuyAmount,
-      currentGoldPurchaseDetails.goldRates,
-      currentGoldPurchaseDetails.couponCode,
-      currentGoldPurchaseDetails.skipMl,
-    );
-    if (createdPaytmTransactionData != null) {
-      currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
+    // AppState.blockNavigation();
+    // isGoldBuyInProgress = true;
+    // CreatePaytmTransactionModel? createdPaytmTransactionData =
+    //     await this.createPaytmTransaction(
+    //   PaymentMode.PAYTM,
+    //   currentGoldPurchaseDetails.goldBuyAmount,
+    //   currentGoldPurchaseDetails.goldRates,
+    //   currentGoldPurchaseDetails.couponCode,
+    //   currentGoldPurchaseDetails.skipMl,
+    // );
+    // if (createdPaytmTransactionData != null) {
+    //   currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
 
-      bool _status = await _paytmService!.initiatePaytmPGTransaction(
-        paytmSubscriptionModel: createdPaytmTransactionData,
-        restrictAppInvoke: FlavorConfig.isDevelopment(),
-        investmentType: InvestmentType.AUGGOLD99,
-      );
+    //   bool _status = await _paytmService!.initiatePaytmPGTransaction(
+    //     paytmSubscriptionModel: createdPaytmTransactionData,
+    //     restrictAppInvoke: FlavorConfig.isDevelopment(),
+    //     investmentType: InvestmentType.AUGGOLD99,
+    //   );
 
-      if (_status) {
-        currentTransactionState = TransactionState.ongoing;
-        AppState.blockNavigation();
-        _logger!
-            .d("Txn Timer Function reinitialised and set with 30 secs delay");
-        initiatePolling();
-      } else {
-        if (currentTransactionState == TransactionState.ongoing) {
-          currentTransactionState = TransactionState.idle;
-        }
-        AppState.unblockNavigation();
-        BaseUtil.showNegativeAlert(
-          locale.txnFailed,
-          locale.txnFailedSubtitle,
-        );
-      }
-      AppState.unblockNavigation();
-      isGoldBuyInProgress = false;
-      // resetBuyOptions();
-    } else {
-      isGoldBuyInProgress = false;
-      AppState.unblockNavigation();
-      return BaseUtil.showNegativeAlert(
-          locale.failedToCreateTxn, locale.tryLater);
-    }
+    //   if (_status) {
+    //     currentTransactionState = TransactionState.ongoing;
+    //     AppState.blockNavigation();
+    //     _logger!
+    //         .d("Txn Timer Function reinitialised and set with 30 secs delay");
+    //     initiatePolling();
+    //   } else {
+    //     if (currentTransactionState == TransactionState.ongoing) {
+    //       currentTransactionState = TransactionState.idle;
+    //     }
+    //     AppState.unblockNavigation();
+    //     BaseUtil.showNegativeAlert(
+    //       locale.txnFailed,
+    //       locale.txnFailedSubtitle,
+    //     );
+    //   }
+    //   AppState.unblockNavigation();
+    //   isGoldBuyInProgress = false;
+    //   // resetBuyOptions();
+    // } else {
+    //   isGoldBuyInProgress = false;
+    //   AppState.unblockNavigation();
+    //   return BaseUtil.showNegativeAlert(
+    //       locale.failedToCreateTxn, locale.tryLater);
+    // }
   }
 
-  transactionResponseUpdate({List<String>? gtIds}) async {
+  Future<void> transactionResponseUpdate({List<String>? gtIds}) async {
     _logger!.d("Polling response processing");
     try {
       //add this to augmontBuyVM
-      _userCoinService!.getUserCoinBalance();
-      _userService!.getUserFundWalletData();
+      unawaited(_userCoinService!.getUserCoinBalance());
+      unawaited(_userService!.getUserFundWalletData());
       if (currentTransactionState == TransactionState.ongoing) {
-        // ScratchCardService.scratchCardId = gtId;
         ScratchCardService.scratchCardsList = gtIds;
-        //TESTING MULTIPLE SCRATCH CARD VIEW
-        // ScratchCardService.scratchCardsList!.addAll([
-        //   "Acd92NN53WWpJZbxZ4UW",
-        //   "Bv8CzzI40pfwLpbuPM6Z",
-        //   "M83UzvsZGzMJlEcVezsj",
-        //   "WrffUHSSJ95hqxO5iv73"
-        // ]);
-        // await _gtService.fetchAndVerifyScratchCardByID();
         await _userService!.getUserJourneyStats();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
@@ -256,8 +247,8 @@ class AugmontTransactionService extends BaseTransactionService {
       _txnHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
     } catch (e) {
       _logger!.e(e);
-      _internalOpsService!.logFailure(_userService!.baseUser!.uid,
-          FailType.DepositPayloadError, e as Map<String, dynamic>);
+      unawaited(_internalOpsService!.logFailure(_userService!.baseUser!.uid,
+          FailType.DepositPayloadError, e as Map<String, dynamic>));
     }
   }
 
@@ -269,18 +260,25 @@ class AugmontTransactionService extends BaseTransactionService {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
             await _newUserCheck();
+            PowerPlayService.powerPlayDepositFlow = false;
+            MatchData? liveMatchData =
+                locator<PowerPlayService>().liveMatchData;
+            if (liveMatchData != null) {
+              unawaited(locator<PowerPlayService>()
+                  .getUserTransactionHistory(matchData: liveMatchData));
+            }
             transactionResponseModel = res.model;
             _tambolaService!.weeklyTicksFetched = false;
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
             if (res.model!.data != null &&
                 res.model!.data!.goldInTxnBought != null &&
-                res.model!.data!.goldInTxnBought! > 0)
+                res.model!.data!.goldInTxnBought! > 0) {
               currentTxnGms = res.model!.data!.goldInTxnBought;
+            }
             timer!.cancel();
-            return transactionResponseUpdate(
-                // gtId: transactionResponseModel?.data?.gtId ?? "",
-                gtIds: transactionResponseModel?.data?.gtIds ?? []);
+            unawaited(transactionResponseUpdate(
+                gtIds: transactionResponseModel?.data?.gtIds ?? []));
           }
           break;
         case Constants.TXN_STATUS_RESPONSE_PENDING:

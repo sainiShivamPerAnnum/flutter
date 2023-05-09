@@ -57,7 +57,7 @@ class GoldSellSuccessView extends StatelessWidget {
           SizedBox(height: SizeConfig.padding12),
           Text(
             locale.txnWithDrawalSuccess,
-            style: TextStyles.sourceSans.body2.setOpecity(0.7),
+            style: TextStyles.sourceSans.body2.setOpacity(0.7),
           ),
           Container(
             margin: EdgeInsets.only(

@@ -1,14 +1,12 @@
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/subscription_models/active_subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/repository/subcription_repo.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,8 +17,8 @@ enum TranFilterType { Type, Subtype }
 class TransactionsHistoryViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final UserService? _userService = locator<UserService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
-  final SubscriptionRepo? _subcriptionRepo = locator<SubscriptionRepo>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
+  final SubService _subscriptionService = locator<SubService>();
 
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
 
@@ -49,24 +47,27 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   int _tabIndex = 0;
   int get filter => _filter;
   String? get filterValue => _filterValue;
-  ActiveSubscriptionModel? _activeSubscription;
-  List<AutosaveTransactionModel>? _filteredSIPList = [];
+  SubscriptionModel? _activeSubscription;
+  List<SubscriptionTransactionModel>? _filteredSIPList = [];
   bool _hasMoreSIPTxns = false;
 
   // Map<String, int> get tranTypeFilterItems => _tranTypeFilterItems;
 
-  ActiveSubscriptionModel? get activeSubscription => _activeSubscription;
+  SubscriptionModel? get activeSubscription => _activeSubscription;
   List<String?> get tranTypeFilterItems => _tranTypeFilterItems;
   List<UserTransaction>? get filteredList => _filteredList;
-  List<AutosaveTransactionModel>? get filteredSIPList => _filteredSIPList;
+  List<SubscriptionTransactionModel>? get filteredSIPList => _filteredSIPList;
 
   ScrollController? get tranListController => _scrollController;
   PageController? get pageController => _pageController;
   int get tabIndex => _tabIndex;
   bool get getHasMoreTxns => this._hasMoreSIPTxns;
   bool get isMoreTxnsBeingFetched => _isMoreTxnsBeingFetched;
-  InvestmentType? _investmentType;
+  InvestmentType _investmentType = InvestmentType.AUGGOLD99;
 
+  InvestmentType get investmentType => _investmentType;
+
+  set investmentType(InvestmentType value) => _investmentType = value;
   //setters
   set filter(int val) {
     _filter = val;
@@ -93,12 +94,12 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set filteredSIPList(List<AutosaveTransactionModel>? value) {
+  set filteredSIPList(List<SubscriptionTransactionModel>? value) {
     _filteredSIPList = value;
     notifyListeners();
   }
 
-  appendToSipList(List<AutosaveTransactionModel> value) {
+  appendToSipList(List<SubscriptionTransactionModel> value) {
     _filteredSIPList!.addAll(value);
     notifyListeners();
   }
@@ -114,10 +115,10 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   }
 
   init(InvestmentType? investmentType, bool showAutosave) {
-    this._investmentType = investmentType;
+    this._investmentType = investmentType ?? InvestmentType.AUGGOLD99;
     _scrollController = ScrollController();
-    if (investmentType == InvestmentType.AUGGOLD99)
-      _sipScrollController = ScrollController();
+    // if (investmentType == InvestmentType.AUGGOLD99)
+    _sipScrollController = ScrollController();
     _pageController = PageController(initialPage: 0);
     if (showAutosave) {
       tabIndex = 1;
@@ -126,10 +127,11 @@ class TransactionsHistoryViewModel extends BaseViewModel {
             duration: Duration(milliseconds: 200), curve: Curves.linear);
       });
     }
-    if (_txnHistoryService!.txnList == null ||
-        _txnHistoryService!.txnList!.length <= 5) {
-      getTransactions();
-    }
+
+    // if (_txnHistoryService!.txnList == null ||
+    //     _txnHistoryService!.txnList!.length <= 5) {
+    getTransactions();
+    // }
 
     if (_txnHistoryService!.txnList != null) {
       filteredList = _txnHistoryService!.txnList;
@@ -137,16 +139,20 @@ class TransactionsHistoryViewModel extends BaseViewModel {
       filteredList = [];
     }
 
-    if (investmentType == InvestmentType.AUGGOLD99)
+    if (_subscriptionService.subscriptionData != null) {
+//  if (investmentType == InvestmentType.AUGGOLD99)
       _sipScrollController!.addListener(() async {
         if (_sipScrollController!.offset >=
                 _sipScrollController!.position.maxScrollExtent &&
             !_sipScrollController!.position.outOfRange) {
-          if (_txnHistoryService!.hasMoreTxns && state == ViewState.Idle) {
-            getMoreSipTransactions();
+          if (!_subscriptionService.hasNoMoreAugSubsTxns &&
+              state == ViewState.Idle) {
+            getMoreSipTransactions(investmentType!);
           }
         }
       });
+      getLatestSIPTransactions(investmentType!);
+    }
 
     _scrollController!.addListener(() async {
       if (_scrollController!.offset >=
@@ -157,15 +163,12 @@ class TransactionsHistoryViewModel extends BaseViewModel {
         }
       }
     });
-
-    getLatestSIPTransactions();
   }
 
   Future getTransactions() async {
     setState(ViewState.Busy);
-    await _txnHistoryService!.fetchTransactions(
-      subtype: _investmentType!,
-    );
+
+    await _txnHistoryService!.updateTransactions(_investmentType);
     _filteredList = _txnHistoryService!.txnList;
     setState(ViewState.Idle);
   }
@@ -177,31 +180,31 @@ class TransactionsHistoryViewModel extends BaseViewModel {
       case 1:
         if (_txnHistoryService!.hasMoreTxns)
           await _txnHistoryService!.fetchTransactions(
-            subtype: _investmentType!,
+            subtype: _investmentType,
           );
         break;
       case 2:
         if (_txnHistoryService!.hasMoreDepositTxns)
           await _txnHistoryService!.fetchTransactions(
-              subtype: _investmentType!,
+              subtype: _investmentType,
               type: UserTransaction.TRAN_TYPE_DEPOSIT);
         break;
       case 3:
         if (_txnHistoryService!.hasMoreWithdrawalTxns)
           await _txnHistoryService!.fetchTransactions(
-              subtype: _investmentType!,
+              subtype: _investmentType,
               type: UserTransaction.TRAN_TYPE_WITHDRAW);
         break;
       case 4:
         if (_txnHistoryService!.hasMorePrizeTxns)
           await _txnHistoryService!.fetchTransactions(
-              subtype: _investmentType!, type: UserTransaction.TRAN_TYPE_PRIZE);
+              subtype: _investmentType, type: UserTransaction.TRAN_TYPE_PRIZE);
 
         break;
       case 5:
         if (_txnHistoryService!.hasMoreRefundedTxns)
           await _txnHistoryService!.fetchTransactions(
-              subtype: _investmentType!,
+              subtype: _investmentType,
               status: UserTransaction.TRAN_STATUS_REFUNDED);
         break;
       default:
@@ -249,56 +252,40 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     if (update && filteredList!.length < 30) getMoreTransactions();
   }
 
-  getLatestSIPTransactions() async {
+  getLatestSIPTransactions(InvestmentType asset) async {
     setState(ViewState.Busy);
-    activeSubscription = _paytmService!.activeSubscription;
+    activeSubscription = _subscriptionService.subscriptionData;
     if (activeSubscription == null) {
       setState(ViewState.Idle);
       return;
     }
-    final ApiResponse<List<AutosaveTransactionModel>> result =
-        await _subcriptionRepo!.getAutosaveTransactions(
-      uid: _userService!.baseUser!.uid,
-      lastDocument: null,
-      limit: 30,
-    );
-    if (result.code == 200) {
-      if (result.model != null && result.model!.isNotEmpty) {
-        filteredSIPList = result.model;
-        if (filteredSIPList!.isNotEmpty && filteredSIPList!.length == 30) {
-          _hasMoreSIPTxns = true;
-          lastSipTxnDocId = filteredSIPList!.last.id;
-        } else {
-          _hasMoreSIPTxns = false;
-          lastSipTxnDocId = null;
-        }
-      }
-    }
+    await _subscriptionService.getSubscriptionTransactionHistory(
+        asset: asset.name);
+    if (asset == InvestmentType.AUGGOLD99)
+      filteredSIPList = _subscriptionService.augSubTxnList;
+    else
+      filteredSIPList = _subscriptionService.lbSubTxnList;
+
     setState(ViewState.Idle);
   }
 
-  getMoreSipTransactions() async {
-    if (_hasMoreSIPTxns) {
-      isMoreTxnsBeingFetched = true;
-      final ApiResponse<List<AutosaveTransactionModel>> result =
-          await _subcriptionRepo!.getAutosaveTransactions(
-        uid: _userService!.baseUser!.uid,
-        lastDocument: lastSipTxnDocId,
-        limit: 30,
-      );
-      isMoreTxnsBeingFetched = false;
-      if (result.isSuccess()) {
-        final moreSIPTxns = result.model;
-        if (moreSIPTxns != null && moreSIPTxns.isNotEmpty) {
-          appendToSipList(result.model!);
-          if (moreSIPTxns.length == 30) {
-            _hasMoreSIPTxns = true;
-            lastSipTxnDocId = moreSIPTxns.last.id;
-          } else {
-            _hasMoreSIPTxns = false;
-            lastSipTxnDocId = null;
-          }
-        }
+  getMoreSipTransactions(InvestmentType asset) async {
+    if (asset == InvestmentType.AUGGOLD99) {
+      if (!_subscriptionService.hasNoMoreAugSubsTxns) {
+        isMoreTxnsBeingFetched = true;
+        await _subscriptionService.getSubscriptionTransactionHistory(
+            paginate: true, asset: asset.name);
+        isMoreTxnsBeingFetched = false;
+        _filteredSIPList = _subscriptionService.augSubTxnList;
+      }
+    } else {
+      if (!_subscriptionService.hasNoMoreLbSubsTxns) {
+        isMoreTxnsBeingFetched = true;
+        await _subscriptionService.getSubscriptionTransactionHistory(
+            paginate: true, asset: asset.name);
+        isMoreTxnsBeingFetched = false;
+
+        _filteredSIPList = _subscriptionService.lbSubTxnList;
       }
     }
   }

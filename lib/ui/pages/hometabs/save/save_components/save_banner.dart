@@ -15,12 +15,15 @@ class HappyHourBanner extends StatefulWidget {
   HappyHourBanner({Key? key, required this.model}) : super(key: key);
   final HappyHourCampign model;
   @override
-  State<HappyHourBanner> createState() =>
-      _HappyHourBannerState(endTime: DateTime.parse(model.data!.endTime!));
+  State<HappyHourBanner> createState() => _HappyHourBannerState(
+      endTime: DateTime.parse(model.data!.endTime!),
+      startTime: DateTime.parse(model.data!.startTime!));
 }
 
 class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
-  _HappyHourBannerState({required DateTime endTime}) : super(endTime: endTime);
+  _HappyHourBannerState(
+      {required DateTime endTime, required DateTime startTime})
+      : super(endTime: endTime, startTime: startTime);
 
   @override
   void closeTimer() {

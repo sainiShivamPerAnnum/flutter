@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
-  TimerUtil({Key? key, required this.endTime}) : super() {
+  TimerUtil({Key? key, required this.endTime, required this.startTime})
+      : super() {
     _timeRemaining = _timeRemainingFor();
   }
   final DateTime endTime;
+  final DateTime startTime;
 
   late Duration _timeRemaining;
 
@@ -35,10 +37,10 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
 
   Duration _timeRemainingFor() {
     DateTime currentTime = DateTime.now();
+    Duration startTimeDiff = startTime.difference(currentTime);
+    Duration endTimeDiff = endTime.difference(currentTime);
 
-    Duration timeDiff = endTime.difference(currentTime);
-
-    return timeDiff;
+    return !startTimeDiff.isNegative ? startTimeDiff : endTimeDiff;
   }
 
   String _convertToTwoDigit(int n) => n.toString().padLeft(2, '0');

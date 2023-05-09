@@ -7,7 +7,7 @@ import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 
@@ -15,7 +15,8 @@ class AnalyticsProperties {
   //Required depedencies
   static final UserService? _userService = locator<UserService>();
   static final UserCoinService? _userCoinService = locator<UserCoinService>();
-  static final PaytmService? _paytmService = locator<PaytmService>();
+  // static final PaytmService? _paytmService = locator<PaytmService>();
+  static final SubService _subService = locator<SubService>();
   static final JourneyService? _journeyService = locator<JourneyService>();
   static final TxnHistoryService? _txnHistoryService =
       locator<TxnHistoryService>();
@@ -23,7 +24,7 @@ class AnalyticsProperties {
   final ReferralRepo? _referralRepo = locator<ReferralRepo>();
 
   init() {
-    _paytmService!.init();
+    // _paytmService!.init();
 
     // if (!_baseUtil!.referralsFetched!) {
     //   _referralRepo!.getReferralHistory().then((refHisModel) {
@@ -132,10 +133,10 @@ class AnalyticsProperties {
   }
 
   static bool isAutoSIPActive() {
-    if (_paytmService!.activeSubscription == null) {
+    if (_subService.subscriptionData == null) {
       return false;
     } else {
-      return _paytmService!.activeSubscription!.status ==
+      return _subService.subscriptionData!.status ==
               Constants.SUBSCRIPTION_ACTIVE
           ? true
           : false;
@@ -143,10 +144,11 @@ class AnalyticsProperties {
   }
 
   static double getAutoSIPAmount() {
-    if (_paytmService!.activeSubscription == null)
+    if (_subService.subscriptionData == null)
       return 0.0;
     else
-      return _paytmService!.activeSubscription!.autoAmount ?? 0;
+      return (double.tryParse(_subService.subscriptionData!.amount ?? '0') ??
+          0.0);
   }
 
   static String getJouneryCapsuleText() {

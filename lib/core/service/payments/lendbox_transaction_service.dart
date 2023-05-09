@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
@@ -9,6 +8,7 @@ import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -19,14 +19,13 @@ import 'package:felloapp/core/service/notifier_services/transaction_history_serv
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -39,7 +38,8 @@ class LendboxTransactionService extends BaseTransactionService {
   final _gtService = ScratchCardService();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
-  final PaytmService? _paytmService = locator<PaytmService>();
+
+  // final PaytmService? _paytmService = locator<PaytmService>();
   final RazorpayService? _razorpayService = locator<RazorpayService>();
   final TambolaService? _tambolaService = locator<TambolaService>();
   S locale = locator<S>();
@@ -79,43 +79,44 @@ class LendboxTransactionService extends BaseTransactionService {
     return null;
   }
 
+  @override
   Future<void> processPaytmTransaction() async {
-    AppState.blockNavigation();
-    final createdPaytmTransactionData = await this.createPaytmTransaction();
+    // AppState.blockNavigation();
+    // final createdPaytmTransactionData = await this.createPaytmTransaction();
 
-    if (createdPaytmTransactionData != null) {
-      bool _status = await _paytmService!.initiatePaytmPGTransaction(
-        paytmSubscriptionModel: createdPaytmTransactionData,
-        restrictAppInvoke: FlavorConfig.isDevelopment(),
-        investmentType: InvestmentType.LENDBOXP2P,
-      );
+    // if (createdPaytmTransactionData != null) {
+    //   bool _status = await _paytmService!.initiatePaytmPGTransaction(
+    //     paytmSubscriptionModel: createdPaytmTransactionData,
+    //     restrictAppInvoke: FlavorConfig.isDevelopment(),
+    //     investmentType: InvestmentType.LENDBOXP2P,
+    //   );
 
-      currentTransactionState = TransactionState.ongoing;
+    //   currentTransactionState = TransactionState.ongoing;
 
-      if (_status) {
-        AppState.blockNavigation();
-        _logger!
-            .d("Txn Timer Function reinitialised and set with 30 secs delay");
-        initiatePolling();
-      } else {
-        if (currentTransactionState == TransactionState.ongoing) {
-          currentTransactionState = TransactionState.idle;
-        }
-        AppState.unblockNavigation();
-        BaseUtil.showNegativeAlert(
-          locale.txnFailed,
-          locale.txnFailedSubtitle,
-        );
-      }
-      AppState.unblockNavigation();
-      // resetBuyOptions();
-    } else {
-      return BaseUtil.showNegativeAlert(
-        locale.failedToCreateTxn,
-        locale.tryLater,
-      );
-    }
-    AppState.unblockNavigation();
+    //   if (_status) {
+    //     AppState.blockNavigation();
+    //     _logger!
+    //         .d("Txn Timer Function reinitialised and set with 30 secs delay");
+    //     initiatePolling();
+    //   } else {
+    //     if (currentTransactionState == TransactionState.ongoing) {
+    //       currentTransactionState = TransactionState.idle;
+    //     }
+    //     AppState.unblockNavigation();
+    //     BaseUtil.showNegativeAlert(
+    //       locale.txnFailed,
+    //       locale.txnFailedSubtitle,
+    //     );
+    //   }
+    //   AppState.unblockNavigation();
+    //   // resetBuyOptions();
+    // } else {
+    //   return BaseUtil.showNegativeAlert(
+    //     locale.failedToCreateTxn,
+    //     locale.tryLater,
+    //   );
+    // }
+    // AppState.unblockNavigation();
   }
 
   Future<CreatePaytmTransactionModel?> createPaytmTransaction() async {
@@ -161,6 +162,13 @@ class LendboxTransactionService extends BaseTransactionService {
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
+            PowerPlayService.powerPlayDepositFlow = false;
+            MatchData? liveMatchData =
+                locator<PowerPlayService>().liveMatchData;
+            if (liveMatchData != null) {
+              unawaited(locator<PowerPlayService>()
+                  .getUserTransactionHistory(matchData: liveMatchData));
+            }
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
             await _newUserCheck();
@@ -239,36 +247,36 @@ class LendboxTransactionService extends BaseTransactionService {
 
   @override
   Future<void> processUpiTransaction() async {
-    AppState.blockNavigation();
-    CreatePaytmTransactionModel? createdPaytmTransactionData =
-        await this.createPaytmTransaction();
+    // AppState.blockNavigation();
+    // CreatePaytmTransactionModel? createdPaytmTransactionData =
+    //     await this.createPaytmTransaction();
 
-    if (createdPaytmTransactionData != null) {
-      final deepUri = await _paytmService!.generateUpiTransactionDeepUri(
-          selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
+    // if (createdPaytmTransactionData != null) {
+    //   final deepUri = await _paytmService!.generateUpiTransactionDeepUri(
+    //       selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
 
-      if (deepUri != null && deepUri.isNotEmpty) {
-        final res = await _paytmService!.initiateUpiTransaction(
-          amount: this.currentTxnAmount,
-          orderId: createdPaytmTransactionData.data!.orderId,
-          upiApplication: upiApplication,
-          url: deepUri,
-          investmentType: InvestmentType.AUGGOLD99,
-        );
+    //   if (deepUri != null && deepUri.isNotEmpty) {
+    //     final res = await _paytmService!.initiateUpiTransaction(
+    //       amount: this.currentTxnAmount,
+    //       orderId: createdPaytmTransactionData.data!.orderId,
+    //       upiApplication: upiApplication,
+    //       url: deepUri,
+    //       investmentType: InvestmentType.AUGGOLD99,
+    //     );
 
-        if (res && Platform.isAndroid) initiatePolling();
-        AppState.unblockNavigation();
-      } else {
-        AppState.unblockNavigation();
+    //     if (res && Platform.isAndroid) initiatePolling();
+    //     AppState.unblockNavigation();
+    //   } else {
+    //     AppState.unblockNavigation();
 
-        BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
-      }
-    } else {
-      AppState.unblockNavigation();
-      return BaseUtil.showNegativeAlert(
-        locale.failedToCreateTxn,
-        locale.tryLater,
-      );
-    }
+    //     BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
+    //   }
+    // } else {
+    //   AppState.unblockNavigation();
+    //   return BaseUtil.showNegativeAlert(
+    //     locale.failedToCreateTxn,
+    //     locale.tryLater,
+    //   );
+    // }
   }
 }

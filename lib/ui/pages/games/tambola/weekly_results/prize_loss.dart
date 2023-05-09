@@ -1,4 +1,4 @@
-import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -18,7 +18,7 @@ class Loser extends StatelessWidget {
       child: Container(
         padding:
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
             SvgPicture.asset(
@@ -28,9 +28,12 @@ class Loser extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding54,
             ),
-            Text(
-              locale.tBetterLuckText,
-              style: TextStyles.rajdhaniB.title3.colour(Colors.white),
+            Flexible(
+              child: Text(
+                'Your last week Tambola tickets did not win',
+                style: TextStyles.rajdhaniB.title3.colour(Colors.white).copyWith(),
+                textAlign: TextAlign.center,
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -41,18 +44,19 @@ class Loser extends StatelessWidget {
                   style: TextStyles.sourceSans.body3
                       .colour(UiConstants.kFAQsAnswerColor)),
             ),
-            Spacer(),
+            const Spacer(flex: 3,),
             Container(
               margin: EdgeInsets.symmetric(
                   vertical: SizeConfig.pageHorizontalMargins),
               width: SizeConfig.navBarWidth,
               child: AppPositiveBtn(
-                  btnText: locale.btnSaveMore.toUpperCase(),
+                  btnText: 'GET MORE TAMBOLA TICKETS',
                   onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.delegate!.appState.setCurrentTabIndex = 0;
+                    BaseUtil.openDepositOptionsModalSheet();
+                    // AppState.backButtonDispatcher!.didPopRoute();
+                    // AppState.backButtonDispatcher!.didPopRoute();
+                    // AppState.backButtonDispatcher!.didPopRoute();
+                    // AppState.delegate!.appState.setCurrentTabIndex = 0;
                   }),
             ),
           ],

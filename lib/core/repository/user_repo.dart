@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:app_set_id/app_set_id.dart';
 
 import 'base_repo.dart';
 
@@ -68,7 +70,7 @@ class UserRepository extends BaseRepo {
           BaseUser.fldAvatarId: baseUser.avatarId,
           BaseUser.fldUserPrefs: {"tn": 1, "al": 0},
           BaseUser.fldAppFlyerId: await _appsFlyerService!.appFlyerId,
-          'referralCode': BaseUtil.manualReferralCode ?? ''
+          BaseUser.fldReferralCode: BaseUtil.manualReferralCode ?? '',
         }
       };
 
@@ -251,15 +253,15 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<void> setNewDeviceId({
-    required String? uid,
-    required String? deviceId,
-    required String? platform,
-    required String? model,
-    required String? brand,
-    required String? version,
-    required bool? isPhysicalDevice,
-  }) async {
+  Future<void> setNewDeviceId(
+      {required String? uid,
+      required String? deviceId,
+      required String? platform,
+      required String? model,
+      required String? brand,
+      required String? version,
+      required bool? isPhysicalDevice,
+      String? integrity}) async {
     try {
       final token = await getBearerToken();
       Map<String, dynamic> _body = {
@@ -269,7 +271,8 @@ class UserRepository extends BaseRepo {
         "model": model ?? "",
         "brand": brand ?? "",
         "version": version ?? "",
-        "isPhysicalDevice": isPhysicalDevice ?? true
+        "isPhysicalDevice": isPhysicalDevice ?? true,
+        "integrity": integrity ?? "",
       };
       logger!.d("Device info: $_body");
       await APIService.instance.postData(
@@ -474,6 +477,7 @@ class UserRepository extends BaseRepo {
         final String? brand = response["brand"];
         final bool? isPhysicalDevice = response["isPhysicalDevice"];
         final String? version = response["version"];
+        final String? integrity = response["integrity"];
         logger!.d("Device Details: $response");
         final res = await APIService.instance.putData(
             ApiPath.logOut(userService!.baseUser!.uid),
@@ -486,7 +490,8 @@ class UserRepository extends BaseRepo {
               "model": model ?? "",
               "brand": brand ?? "",
               "version": version ?? "",
-              "isPhysicalDevice": isPhysicalDevice ?? true
+              "isPhysicalDevice": isPhysicalDevice ?? true,
+              "integrity": integrity ?? "",
             });
         logger!.d("LogOut response: ${res.toString()}");
       }
@@ -565,6 +570,21 @@ class UserRepository extends BaseRepo {
     } catch (e) {
       logger!.d(e);
       return ApiResponse.withError("send OTP failed", 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> isUsernameAvailable(String username) async {
+    try {
+      final query = {
+        'username': username,
+      };
+      final token = await getBearerToken();
+      final res = await APIService.instance.getData(ApiPath.isUsernameAvailable,
+          queryParams: query, cBaseUrl: _baseUrl, token: token);
+      return ApiResponse(code: 200, model: res['data']['isAvailable']);
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

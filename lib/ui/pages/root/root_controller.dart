@@ -1,10 +1,9 @@
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_new_user_page.dart';
+import 'package:felloapp/ui/pages/games/tambola/tambola_home/view/tambola_wrapper.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +41,11 @@ class RootController {
         break;
 
       case "SV":
-        navItems.putIfAbsent(Save(), () => RootController.saveNavBarItem);
+        navItems.putIfAbsent(const Save(), () => RootController.saveNavBarItem);
         break;
       case "TM":
         navItems.putIfAbsent(
-            TambolaWrapper(), () => RootController.tambolaNavBar);
+            const TambolaWrapper(), () => RootController.tambolaNavBar);
         break;
 
       case "WN":

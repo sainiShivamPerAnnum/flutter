@@ -25,14 +25,14 @@ class _WeeklyResultState extends State<WeeklyResult> {
   PageController? _pageController;
   bool showBack = false;
 
-  final PrizeService? _prizeService = locator<PrizeService>();
+  final PrizeService _prizeService = locator<PrizeService>();
 
   PrizesModel? tPrizes;
 
   @override
   void initState() {
-    print(widget.isEligible);
-    print(widget.winningsmap);
+    debugPrint(widget.isEligible.toString());
+    debugPrint(widget.winningsmap.toString());
     _pageController = PageController();
     tPrizes = _prizeService!.gamePrizeMap[Constants.GAME_TYPE_TAMBOLA];
     super.initState();
@@ -40,17 +40,18 @@ class _WeeklyResultState extends State<WeeklyResult> {
 
   @override
   void didChangeDependencies() {
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         setState(() {
           showBack = true;
         });
         // if (!widget.isEligible && widget.winningsmap.isNotEmpty)
         //   _pageController.jumpToPage(3);
-        if (widget.winningsmap!.isNotEmpty)
+        if (widget.winningsmap!.isNotEmpty) {
           _pageController!.jumpToPage(2);
-        else
+        } else {
           _pageController!.jumpToPage(1);
+        }
       }
     });
     super.didChangeDependencies();
@@ -80,7 +81,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
           ),
           Expanded(
             child: PageView(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               controller: _pageController,
               children: [
                 const PrizeProcessing(),

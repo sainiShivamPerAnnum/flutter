@@ -2,11 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
-import 'package:felloapp/core/enums/paytm_service_enums.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
-import 'package:felloapp/core/service/payments/paytm_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/new_user_save.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -20,35 +18,34 @@ import 'package:showcaseview/showcaseview.dart';
 const HtmlEscape htmlEscape = HtmlEscape();
 
 class Save extends StatelessWidget {
+  const Save({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeProvider<PaytmService, PaytmServiceProperties>(
-      value: locator<PaytmService>(),
-      child: PropertyChangeProvider<BankAndPanService,
-          BankAndPanServiceProperties>(
-        value: locator<BankAndPanService>(),
-        child: BaseView<SaveViewModel>(
-          onModelReady: (model) => model.init(),
-          builder: (ctx, model, child) {
-            log("ROOT: Save view baseview build called");
-            return ShowCaseWidget(
-              enableAutoScroll: true,
-              onFinish: () {
-                SpotLightController.instance.completer.complete();
-                SpotLightController.instance.isTourStarted = false;
-                SpotLightController.instance.startShowCase = false;
-              },
-              onSkipButtonClicked: () {
-                SpotLightController.instance.isSkipButtonClicked = true;
-                SpotLightController.instance.startShowCase = false;
-              },
-              builder: Builder(builder: (context) {
-                SpotLightController.instance.saveViewContext = context;
-                return SaveViewWrapper(model: model);
-              }),
-            );
-          },
-        ),
+    return PropertyChangeProvider<BankAndPanService,
+        BankAndPanServiceProperties>(
+      value: locator<BankAndPanService>(),
+      child: BaseView<SaveViewModel>(
+        onModelReady: (model) => model.init(),
+        builder: (ctx, model, child) {
+          log("ROOT: Save view baseview build called");
+          return ShowCaseWidget(
+            enableAutoScroll: true,
+            onFinish: () {
+              SpotLightController.instance.completer.complete();
+              SpotLightController.instance.isTourStarted = false;
+              SpotLightController.instance.startShowCase = false;
+            },
+            onSkipButtonClicked: () {
+              SpotLightController.instance.isSkipButtonClicked = true;
+              SpotLightController.instance.startShowCase = false;
+            },
+            builder: Builder(builder: (context) {
+              SpotLightController.instance.saveViewContext = context;
+              return SaveViewWrapper(model: model);
+            }),
+          );
+        },
       ),
     );
   }
@@ -60,14 +57,14 @@ class SaveViewWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [UserServiceProperties.mySegments],
+      properties: const [UserServiceProperties.mySegments],
       builder: (_, prop, ___) {
         if (prop!.userSegments.contains("NEW_USER")) {
           return NewUserSaveView(
             model: model,
           );
         }
-        return Container(
+        return SizedBox(
           height: SizeConfig.screenHeight,
           child: Column(
             children: [

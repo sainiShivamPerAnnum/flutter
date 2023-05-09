@@ -1,6 +1,9 @@
 import 'dart:developer' as dev;
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:advertising_id/advertising_id.dart';
+import 'package:app_set_id/app_set_id.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -20,6 +23,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -101,23 +105,19 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               ),
               Align(
                 alignment: Alignment.topRight,
-                child: Container(
-                    margin: EdgeInsets.only(
-                        top: SizeConfig.pageHorizontalMargins / 2,
-                        right: SizeConfig.pageHorizontalMargins),
-                    child: FaqPill(type: FaqsType.onboarding)),
+                child: SafeArea(
+                  child: Container(
+                      margin: EdgeInsets.only(
+                          top: SizeConfig.pageHorizontalMargins / 2,
+                          right: SizeConfig.pageHorizontalMargins),
+                      child: FaqPill(type: FaqsType.onboarding)),
+                ),
               ),
               if (keyboardIsOpen)
                 Positioned(
                   bottom: MediaQuery.of(context).viewInsets.bottom,
                   child: GestureDetector(
-                    onTap: () {
-                      if (BaseUtil.showNoInternetAlert()) return;
-                      if (model.state == ViewState.Idle)
-                        model.processScreenInput(
-                          model.currentPage,
-                        );
-                    },
+                    onTap: () => model.processScreenInput(model.currentPage),
                     child: Container(
                       width: SizeConfig.screenWidth,
                       height: SizeConfig.padding54,
@@ -201,6 +201,10 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                             ],
                           ),
                         ),
+                        // TnC(
+                        //   locale: locale,
+                        //   model: model,
+                        // ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
                               SizeConfig.padding16, SizeConfig.padding10, 0),

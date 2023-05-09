@@ -1,6 +1,9 @@
 class ApiPath {
   ApiPath();
 
+  //Analytics
+  get kSetInstallInfo => "/set-install-info";
+
   //Augmont Ops
   get kGetGoldRates => "/gold/rates";
   static String get happyHour => "/happy-hours/active";
@@ -39,6 +42,8 @@ class ApiPath {
   static String scratchCards(uid) => '/user/$uid/golden_tickets';
   static String isEmailRegistered(uid) => '/user/$uid/email/registered';
   static String get dynamicUi => '/ui/dynamic';
+  static String get isUsernameAvailable => "/username/availability";
+  static String getSubCombosChips(String freq) => "/subs/$freq/config";
 
   //GT Rewards
   static const kRedeemGtReward = "/gt/redeem";
@@ -137,4 +142,22 @@ class ApiPath {
 
   //marketing events
   static String kDailyAppBonusEvent(String uid) => "/user/$uid/daily-bonus";
+
+  //phonepe subscriptions
+  static String subscription(String uid) => "/$uid/sub";
+  static const pauseSubscription = "/sub/pause";
+  static const resumeSubscription = "/sub/resume";
+  static String txnsSubscription(String uid) => "/$uid/sub/txns";
+
+  static String powerPlayMatches(String status, int limit, int offset) =>
+      '/powerplay/matches/$status?limit=$limit&offset=$offset';
+
+  static String matchStats(String matchId) => '/powerplay/match/$matchId/stats';
+
+  static String powerPlayWinnersLeaderboard(String matchId) =>
+      "/powerplay/match/$matchId/leaderboard";
+
+  static String get seasonLeaderboard => "/powerplay/global/leaderboard";
+
+  static const String powerPlayReward = "/powerplay/rewards";
 }

@@ -76,8 +76,7 @@ class APIService implements API {
         if (headers != null) ...headers
       });
       log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-      logger!.d("response from $finalPath");
-      logger!.d("Full url: $finalPath");
+      logger!.d("response from $token");
       logger!.d("Get Response: ${response.statusCode}");
       logger!.d("Get Response: ${response.body}");
       if (decryptData) {
@@ -171,20 +170,20 @@ class APIService implements API {
 
       if (cBaseUrl != null) _url = cBaseUrl + url;
       logger!.d("response from $_url");
-
+      final headers = {
+        'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
+        'platform': Platform.isAndroid ? 'android' : 'iOS',
+        'version':
+            _versionString.isEmpty ? await _getAppVersion() : _versionString,
+        'uid': userService?.baseUser?.uid as String,
+      };
+      logger!.d("Body : $body");
+      logger!.d("Headers : $headers");
       final response = await http.put(
-        Uri.parse(
-          _url,
-        ),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
-          'platform': Platform.isAndroid ? 'android' : 'iOS',
-          'version':
-              _versionString.isEmpty ? await _getAppVersion() : _versionString,
-          'uid': userService?.baseUser?.uid as String,
-        },
-        body: body == null ? null : jsonEncode(body),
+        Uri.parse(_url),
+        headers: headers,
+        body: jsonEncode(body ?? {}),
       );
       responseJson = returnResponse(response);
     } on SocketException {
@@ -232,16 +231,20 @@ class APIService implements API {
   Future<dynamic> patchData(
     String url, {
     Map<String, dynamic>? body,
+    String? cBaseUrl,
     String? token,
   }) async {
     // final HttpMetric metric =
     //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
     // await metric.start();
+    String _url = _baseUrl + url;
 
+    if (cBaseUrl != null) _url = cBaseUrl + url;
+    logger!.d("response from $_url");
     var responseJson;
     try {
       final response = await http.patch(
-        Uri.parse(_baseUrl + url),
+        Uri.parse(_url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader:
@@ -309,9 +312,12 @@ class APIService implements API {
       case 200:
         return responseJson;
       case 400:
+      case 404:
         logger!.d(response.body);
         throw BadRequestException(responseJson['message']);
+
       case 401:
+
       case 403:
         throw UnauthorizedException(response.body.toString());
       case 500:

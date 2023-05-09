@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class FcmCommands {
   static const COMMAND_USER_PRIZE_WIN = 'userPrizeWin';
   static const COMMAND_SHOW_DIALOG = 'showDialog';
@@ -14,4 +16,6 @@ class FcmCommands {
   static const GAME_END_MESSAGE_KEY = "gameEndMessage";
   static const COMMAND_JOURNEY_UPDATE = "userJourneyStats";
   static const COMMAND_WITHDRAWAL_RESPONSE = "withdrawalResponse";
+  static const COMMAND_APPXOR_DIALOG = "appxor/dialog";
+  static const COMMAND_IPL_WIN_RESPONSE = "iplPowerPlayWinResponse";
 }

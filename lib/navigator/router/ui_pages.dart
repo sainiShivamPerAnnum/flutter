@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, constant_identifier_names
 
 import 'package:felloapp/navigator/app_state.dart';
 
@@ -22,7 +22,6 @@ const String VerifyEmailPath = '/verifyEmail';
 const String SupportPath = '/support';
 const String UpdateRequiredPath = '/updateRequired';
 const String WalkThroughPath = '/walkThrough';
-const String AutosaveWalkThroughPath = '/autosaveWalkThrough';
 const String YourFundsPath = '/yourFunds';
 const String NotificationsPath = '/notifications';
 const String THome = '/tHome';
@@ -51,9 +50,10 @@ const String AllParticipantsViewPath = '/allParticipantsView';
 const String PoolViewPath = "/poolView";
 const String WebHomeViewPath = "/webHomeView";
 const String WebGameViewPath = "/webGameView";
-const String AutosaveDetailsViewPath = '/autosaveDetailsView';
+const String AutosaveOnboardingViewPath = '/autosaveOnboardingView';
 const String AutosaveProcessViewPath = '/autosaveProcessView';
-const String UserAutosaveDetailsViewPath = '/userAutosaveDetailsView';
+const String AutosaveUpdateViewPath = '/autosaveUpdateView';
+const String AutosaveDetailsViewPath = '/autosaveDetailsView';
 const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
 const String NewGameHomeViewPath = '/newGameHome';
 const String NewWebHomeViewPath = '/newWebHomeView';
@@ -80,6 +80,14 @@ const String TNewUserViewPath = '/tnewUserViewPath';
 const String TransactionDetailsPath = '/transactionDetailsPage';
 const String AssetViewPath = '/assetViewSection';
 
+//POWER PLAY PATHS
+const String PowerPlayPath = '/powerPlayPath';
+const String PowerPlayLeaderBoardPath = '/powerPlayLeaderBoardPath';
+const String PowerPlayHowItWorksPath = '/powerPlayHowItWorksPath';
+const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
+const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
+const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
+
 enum Pages {
   Splash,
   Login,
@@ -101,7 +109,6 @@ enum Pages {
   VerifyEmail,
   Support,
   WalkThrough,
-  AutosaveWalkthrough,
   YourFunds,
   THome,
   TNewUser,
@@ -133,10 +140,11 @@ enum Pages {
   PoolView,
   WebHomeView,
   WebGameView,
-  AutosaveDetailsView,
+  AutosaveOnboardingView,
   AutosaveProcessView,
-  UserAutosaveDetailsView,
+  AutosaveDetailsView,
   AutosaveTransactionsView,
+  AutosaveUpdateView,
   NewWebHomeView,
   TopPlayerLeaderboard,
   JourneyView,
@@ -155,7 +163,15 @@ enum Pages {
   InfoStoriesView,
   WebView,
   SettingsView,
-  TransactionDetailsPage
+  TransactionDetailsPage,
+
+  //POWER PLAY
+  PowerPlayHome,
+  PowerPlayLeaderBoard,
+  PowerPlayHowItWorks,
+  FppCompletedMatchDetails,
+  PowerPlayFTUX,
+  PowerPlaySeasonLeaderboard,
 }
 
 class PageConfiguration {
@@ -351,13 +367,6 @@ PageConfiguration WalkThroughConfig = PageConfiguration(
   name: 'Walk Thorugh Screen',
 );
 
-PageConfiguration AutosaveWalkThroughConfig = PageConfiguration(
-  key: 'AutosaveWalkThrough',
-  path: AutosaveWalkThroughPath,
-  uiPage: Pages.AutosaveWalkthrough,
-  name: 'Autosave Walk Thorugh Screen',
-);
-
 PageConfiguration YourFundsConfig = PageConfiguration(
   key: 'YourFunds',
   path: YourFundsPath,
@@ -543,11 +552,11 @@ PageConfiguration PoolViewPageConfig = PageConfiguration(
   name: 'Pool View Screen',
 );
 
-PageConfiguration AutosaveDetailsViewPageConfig = PageConfiguration(
-  key: 'AutosaveDetailsView',
-  path: AutosaveDetailsViewPath,
-  uiPage: Pages.AutosaveDetailsView,
-  name: 'Autosave Details Screen',
+PageConfiguration AutosaveOnboardingViewPageConfig = PageConfiguration(
+  key: 'AutosaveOnboardingView',
+  path: AutosaveOnboardingViewPath,
+  uiPage: Pages.AutosaveOnboardingView,
+  name: 'Autosave Onboarding Screen',
 );
 
 PageConfiguration AutosaveProcessViewPageConfig = PageConfiguration(
@@ -556,10 +565,16 @@ PageConfiguration AutosaveProcessViewPageConfig = PageConfiguration(
   uiPage: Pages.AutosaveProcessView,
 );
 
-PageConfiguration UserAutosaveDetailsViewPageConfig = PageConfiguration(
-  key: 'UserAutosaveDetailsView',
-  path: UserAutosaveDetailsViewPath,
-  uiPage: Pages.UserAutosaveDetailsView,
+PageConfiguration AutosaveUpdateViewPageConfig = PageConfiguration(
+  key: 'AutosaveUpdateView',
+  path: AutosaveProcessViewPath,
+  uiPage: Pages.AutosaveUpdateView,
+);
+
+PageConfiguration AutosaveDetailsViewPageConfig = PageConfiguration(
+  key: 'AutosaveDetailsView',
+  path: AutosaveDetailsViewPath,
+  uiPage: Pages.AutosaveDetailsView,
 );
 
 PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
@@ -678,3 +693,40 @@ PageConfiguration SettingsViewPageConfig = PageConfiguration(
     path: SettingsScreenPath,
     uiPage: Pages.SettingsView,
     name: "Settings Screen");
+
+//POWER PLAY
+PageConfiguration PowerPlayHomeConfig = PageConfiguration(
+    key: 'PowerPlayPath',
+    path: PowerPlayPath,
+    uiPage: Pages.PowerPlayHome,
+    name: "PowerPlay Home Screen");
+
+PageConfiguration PowerPlayLeaderBoardConfig = PageConfiguration(
+    key: 'PowerPlayLeaderBoardPath',
+    path: PowerPlayLeaderBoardPath,
+    uiPage: Pages.PowerPlayLeaderBoard,
+    name: "PowerPlay LeaderBoard Screen");
+
+PageConfiguration PowerPlayHowItWorksConfig = PageConfiguration(
+    key: 'PowerPlayHowItWorksPath',
+    path: PowerPlayHowItWorksPath,
+    uiPage: Pages.PowerPlayHowItWorks,
+    name: "PowerPlay HowItWorks Screen");
+
+PageConfiguration FppCompletedMatchDetailsConfig = PageConfiguration(
+    key: 'FppCompletedMatchDetailsPath',
+    path: FppCompletedMatchDetailsPath,
+    uiPage: Pages.FppCompletedMatchDetails,
+    name: "PowerPlay Completed Match Details Screen");
+
+PageConfiguration PowerPlayFTUXPageConfig = PageConfiguration(
+    key: 'powerPlayFTUXPath',
+    path: PowerPlayFTUXPath,
+    uiPage: Pages.PowerPlayFTUX,
+    name: "PowerPlay Welcome Screen");
+
+PageConfiguration PowerPlaySeasonLeaderboardDetailsConfig = PageConfiguration(
+    key: 'PowerPlaySeasonLeaderboardDetailsPath',
+    path: PowerPlaySeasonLeaderboardPath,
+    uiPage: Pages.PowerPlaySeasonLeaderboard,
+    name: "PowerPlay Season Leaderboard Screen");

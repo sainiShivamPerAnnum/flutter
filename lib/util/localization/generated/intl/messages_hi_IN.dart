@@ -244,7 +244,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "btnStart": MessageLookupByLibrary.simpleMessage("शुरू"),
         "btnStartPlaying":
             MessageLookupByLibrary.simpleMessage("खेलना शुरू करें"),
-        "btnSumbit": MessageLookupByLibrary.simpleMessage("प्रस्तुत"),
+        "btnSubmit": MessageLookupByLibrary.simpleMessage("प्रस्तुत"),
         "btnUpdate": MessageLookupByLibrary.simpleMessage("अपडेट करना"),
         "btnVerified": MessageLookupByLibrary.simpleMessage("सत्यापित"),
         "btnWin": MessageLookupByLibrary.simpleMessage("जीतना"),

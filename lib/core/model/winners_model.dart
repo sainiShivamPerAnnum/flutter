@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -12,7 +11,7 @@ class WinnersModel {
   TimestampModel? timestamp;
   String? gametype;
   static final helper = HelperModel<WinnersModel>(
-    (map) => WinnersModel.fromMap(map),
+    WinnersModel.fromMap,
   );
 
   WinnersModel({
@@ -50,6 +49,7 @@ class WinnersModel {
     timestamp = TimestampModel.currentTimeStamp();
     gametype = '';
   }
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id ?? '',
@@ -96,16 +96,21 @@ class Winners {
   final String? gameType;
   final double? score;
   final String? displayScore;
+  final MatchMap? matchMap;
+  final int? ticketOwned;
 
-  Winners(
-      {this.amount,
-      this.isMockUser,
-      this.username,
-      this.flc,
-      this.userid,
-      this.score,
-      this.gameType,
-      this.displayScore});
+  Winners({
+    this.amount,
+    this.isMockUser,
+    this.username,
+    this.flc,
+    this.userid,
+    this.score,
+    this.gameType,
+    this.matchMap,
+    this.displayScore,
+    this.ticketOwned,
+  });
 
   Winners copyWith(
       {int? amount,
@@ -115,7 +120,9 @@ class Winners {
       String? userid,
       double? score,
       String? gameType,
-      String? displayScore}) {
+      MatchMap? matchMap,
+      String? displayScore,
+      int? ticketOwned}) {
     return Winners(
         amount: amount ?? this.amount,
         isMockUser: isMockUser ?? this.isMockUser,
@@ -124,7 +131,9 @@ class Winners {
         userid: userid ?? this.userid,
         score: score ?? this.score,
         gameType: gameType ?? this.gameType,
-        displayScore: displayScore ?? this.displayScore);
+        matchMap: matchMap ?? this.matchMap,
+        displayScore: displayScore ?? this.displayScore,
+        ticketOwned: ticketOwned ?? this.ticketOwned);
   }
 
   Map<String, dynamic> toMap() {
@@ -136,7 +145,9 @@ class Winners {
       'userid': userid,
       'score': score,
       'gameType': gameType,
-      'displayScore': displayScore
+      "matchMap": matchMap?.toMap(),
+      'displayScore': displayScore,
+      'ticketOwned': ticketOwned,
     };
   }
 
@@ -149,7 +160,9 @@ class Winners {
         userid: map['userid'] ?? '',
         score: (map['score'] ?? 0).toDouble(),
         gameType: gameType ?? '',
-        displayScore: map['displayScore'] ?? '');
+        matchMap: MatchMap.fromMap(map["matchMap"] ?? {}),
+        displayScore: map['displayScore'] ?? '',
+        ticketOwned: map['totalTickets'] ?? 0);
   }
 
   String toJson() => json.encode(toMap());
@@ -159,31 +172,98 @@ class Winners {
 
   @override
   String toString() {
-    return 'Winners(amount: $amount, isMockUser: $isMockUser, username: $username, flc: $flc, userid: $userid, score: $score)';
+    return 'Winners{amount: $amount, isMockUser: $isMockUser, username: $username, flc: $flc, userid: $userid, gameType: $gameType, score: $score, displayScore: $displayScore, matchMap: $matchMap, ticketOwned: $ticketOwned}';
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Winners &&
-        other.amount == amount &&
-        other.isMockUser == isMockUser &&
-        other.username == username &&
-        other.flc == flc &&
-        other.userid == userid &&
-        other.score == score &&
-        other.gameType == gameType;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Winners &&
+          runtimeType == other.runtimeType &&
+          amount == other.amount &&
+          isMockUser == other.isMockUser &&
+          username == other.username &&
+          flc == other.flc &&
+          userid == other.userid &&
+          gameType == other.gameType &&
+          score == other.score &&
+          displayScore == other.displayScore &&
+          matchMap == other.matchMap &&
+          ticketOwned == other.ticketOwned;
 
   @override
-  int get hashCode {
-    return amount.hashCode ^
-        isMockUser.hashCode ^
-        username.hashCode ^
-        flc.hashCode ^
-        userid.hashCode ^
-        score.hashCode ^
-        gameType.hashCode;
+  int get hashCode =>
+      amount.hashCode ^
+      isMockUser.hashCode ^
+      username.hashCode ^
+      flc.hashCode ^
+      userid.hashCode ^
+      gameType.hashCode ^
+      score.hashCode ^
+      displayScore.hashCode ^
+      matchMap.hashCode ^
+      ticketOwned.hashCode;
+}
+
+class MatchMap {
+  MatchMap({
+    this.oneRow,
+    this.twoRows,
+    this.fullHouse,
+    this.corners,
+  });
+
+  final int? oneRow;
+  final int? twoRows;
+  final int? fullHouse;
+  final int? corners;
+
+  MatchMap copyWith({
+    int? oneRow,
+    int? twoRows,
+    int? fullHouse,
+    int? corners,
+  }) =>
+      MatchMap(
+        oneRow: oneRow ?? this.oneRow,
+        twoRows: twoRows ?? this.twoRows,
+        fullHouse: fullHouse ?? this.fullHouse,
+        corners: corners ?? this.corners,
+      );
+
+  factory MatchMap.fromMap(Map<String, dynamic> json) => MatchMap(
+        oneRow: json["oneRow"] ?? 0,
+        twoRows: json["twoRows"] ?? 0,
+        fullHouse: json["fullHouse"] ?? 0,
+        corners: json["corners"] ?? 0,
+      );
+
+  Map<String, dynamic> toMap() => {
+        "oneRow": oneRow,
+        "twoRows": twoRows,
+        "fullHouse": fullHouse,
+        "corners": corners,
+      };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MatchMap &&
+          runtimeType == other.runtimeType &&
+          oneRow == other.oneRow &&
+          twoRows == other.twoRows &&
+          fullHouse == other.fullHouse &&
+          corners == other.corners;
+
+  @override
+  int get hashCode =>
+      oneRow.hashCode ^
+      twoRows.hashCode ^
+      fullHouse.hashCode ^
+      corners.hashCode;
+
+  @override
+  String toString() {
+    return 'MatchMap{oneRow: $oneRow, twoRows: $twoRows, fullHouse: $fullHouse, corners: $corners}';
   }
 }

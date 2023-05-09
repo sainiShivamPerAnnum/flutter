@@ -1,10 +1,7 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/username_response_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LoginNameInputViewModel extends BaseViewModel {
@@ -27,7 +24,7 @@ class LoginNameInputViewModel extends BaseViewModel {
   get referralCodeController => _referralCodeController;
   String getReferralCode() => _referralCodeController.text;
 
-  get formKey => _formKey;
+  GlobalKey<FormState> get formKey => _formKey;
   // FocusNode get focusNode => _focusNode;
 
   set hasReferralCode(bool val) {

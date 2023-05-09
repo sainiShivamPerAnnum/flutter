@@ -188,7 +188,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                           .didPopRoute();
                                       AppState.backButtonDispatcher!
                                           .didPopRoute();
-                                      return BaseUtil()
+                                      return BaseUtil
                                           .openDepositOptionsModalSheet(
                                         isSkipMl: true,
                                         amount:

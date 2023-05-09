@@ -269,6 +269,21 @@ class WebHomeViewModel extends BaseViewModel {
             _userService.userBootUp?.data?.banMap?.games?.knifeHit?.reason ??
                 '';
         break;
+      case Constants.GAME_TYPE_FRUITMAINA:
+        isUserBannedForThisGame = _userService
+                .userBootUp?.data?.banMap?.games?.fruitMania?.isBanned ??
+            false;
+        userBannedNotice =
+            _userService.userBootUp?.data?.banMap?.games?.fruitMania?.reason ??
+                '';
+        break;
+      case Constants.GAME_TYPE_TWODOTS:
+        isUserBannedForThisGame =
+            _userService.userBootUp?.data?.banMap?.games?.twoDots?.isBanned ??
+                false;
+        userBannedNotice =
+            _userService.userBootUp?.data?.banMap?.games?.twoDots?.reason ?? '';
+        break;
     }
     if (isUserBannedForThisGame != null && isUserBannedForThisGame) {
       BaseUtil.showNegativeAlert(

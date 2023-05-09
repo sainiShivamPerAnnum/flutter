@@ -23,12 +23,15 @@ class BannerWidget extends StatefulWidget {
   final HappyHourCampign? happyHourCampign;
   @override
   State<BannerWidget> createState() => _BannerWidgetState(
-      endTime: DateTime.tryParse(happyHourCampign?.data?.endTime ?? ''));
+      endTime: DateTime.tryParse(happyHourCampign?.data?.endTime ?? ''),
+      startTime: DateTime.tryParse(happyHourCampign?.data?.startTime ?? ''));
 }
 
 class _BannerWidgetState extends TimerUtil<BannerWidget> {
-  _BannerWidgetState({required DateTime? endTime})
-      : super(endTime: endTime ?? DateTime.now());
+  _BannerWidgetState({required DateTime? endTime, required DateTime? startTime})
+      : super(
+            endTime: endTime ?? DateTime.now(),
+            startTime: startTime ?? DateTime.now());
 
   late bool showHappyHour;
   @override

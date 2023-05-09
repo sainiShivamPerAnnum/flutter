@@ -1,17 +1,19 @@
 //Project Imports
 import 'dart:async';
 
-import 'package:another_flushbar/flushbar.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
@@ -26,11 +28,10 @@ import 'package:flutter/material.dart';
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate? _routerDelegate;
   final CustomLogger? logger = locator<CustomLogger>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  BaseUtil? _baseUtil = locator<BaseUtil>();
-  final UserService? _userService = locator<UserService>();
-  final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
-  final JourneyService? _journeyService = locator<JourneyService>();
+  final UserService _userService = locator<UserService>();
+  final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
@@ -63,10 +64,23 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   @override
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
-    // _journeyService!.checkForMilestoneLevelChange();
-    // if (_journeyService!.isJourneyOnboardingInView) {
-    //   _journeyService!.isJourneyOnboardingInView = false;
-    //   _journeyService!.isUserJourneyOnboarded = true;
+
+    // if (AppState.showAutosaveBt &&
+    //     AppState.screenStack.last != ScreenItem.dialog) {
+    //   AppState.showAutosaveBt = false;
+    //   _analyticsService.track(eventName: AnalyticsEvents.asHardBackTapped);
+    //   BaseUtil.openModalBottomSheet(
+    //       isBarrierDismissible: true,
+    //       addToScreenStack: true,
+    //       backgroundColor: UiConstants.kBackgroundColor,
+    //       borderRadius: BorderRadius.only(
+    //         topLeft: Radius.circular(SizeConfig.roundness32),
+    //         topRight: Radius.circular(SizeConfig.roundness32),
+    //       ),
+    //       isScrollControlled: true,
+    //       hapticVibrate: true,
+    //       content: AutosaveConfirmExitModalSheet());
+    //   return Future.value(true);
     // }
 
     if (SpotLightController.instance.startShowCase) {
@@ -94,8 +108,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       }
     }
     if (AppState.isInstantGtViewInView) return Future.value(true);
+
     if (AppState.screenStack.last == ScreenItem.loader)
       return Future.value(true);
+    print("Page Controller: ${locator<SubService>().pageController}");
 
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog ||
@@ -109,6 +125,34 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     if (SpotLightController.instance.isTourStarted) {
       SpotLightController.instance.dismissSpotLight();
       return Future.value(true);
+    }
+
+    if (AppState.showAutosaveBt) {
+      if (locator<SubService>().pageController?.hasClients ?? false) {
+        final PageController apgController =
+            locator<SubService>().pageController!;
+        if (apgController.page!.toInt() > 0) {
+          apgController.animateToPage(apgController.page!.toInt() - 1,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.decelerate);
+          return Future.value(true);
+        } else {
+          AppState.showAutosaveBt = false;
+          _analyticsService.track(eventName: AnalyticsEvents.asHardBackTapped);
+          BaseUtil.openModalBottomSheet(
+              isBarrierDismissible: true,
+              addToScreenStack: true,
+              backgroundColor: UiConstants.kBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness32),
+                topRight: Radius.circular(SizeConfig.roundness32),
+              ),
+              isScrollControlled: true,
+              hapticVibrate: true,
+              content: AutosaveConfirmExitModalSheet());
+          return Future.value(true);
+        }
+      }
     }
 
     // If onboarding is in progress
@@ -169,30 +213,5 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
 
     return _routerDelegate!.popRoute();
-  }
-
-  showNegativeAlert(String title, String message, {int? seconds}) {
-    Flushbar(
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      icon: Icon(
-        Icons.assignment_late,
-        size: 28.0,
-        color: UiConstants.tertiarySolid,
-      ),
-      margin: EdgeInsets.all(10),
-      borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-      title: title,
-      message: message,
-      duration: Duration(seconds: seconds ?? 3),
-      backgroundColor: Colors.black,
-      boxShadows: [
-        BoxShadow(
-          color: UiConstants.negativeAlertColor,
-          offset: Offset(0.0, 2.0),
-          blurRadius: 3.0,
-        )
-      ],
-    )..show(AppState.delegate!.navigatorKey.currentContext!);
   }
 }

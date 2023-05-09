@@ -221,6 +221,8 @@ class BaseRemoteConfig {
   static const Map<String, String> _RZP_DEV_MID = {'rzp_dev_mid': 'rdm'};
 
   static const Map<String, bool> _AUTOSAVE_ACTIVE = {'autosaveActive': false};
+  static const Map<String, bool> _SHOW_NEW_AUTOSAVE = {'showNewAutosave': true};
+
   static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
@@ -287,7 +289,8 @@ class BaseRemoteConfig {
     ..._RZP_PROD_MID,
     ..._RZP_DEV_MID,
     ..._AUTOSAVE_ACTIVE,
-    "changeAppIcon": false
+    "changeAppIcon": false,
+    ..._SHOW_NEW_AUTOSAVE,
   };
 
   static Future<bool> init() async {

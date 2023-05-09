@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -149,6 +150,7 @@ class LendboxBuyViewModel extends BaseViewModel {
         eventName: AnalyticsEvents.saveCheckout,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          "iplPrediction": PowerPlayService.powerPlayDepositFlow,
           "Asset": "Flo",
           "Amount Entered": amountController?.text,
           "Best flag": assetOptionsModel?.data.userOptions

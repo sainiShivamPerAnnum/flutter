@@ -26,14 +26,16 @@ class HappyHourModel extends StatefulWidget {
     this.isComingFromSave = false,
   }) : super(key: key);
   @override
-  State<HappyHourModel> createState() =>
-      _HappyHourModalState(DateTime.parse(model.data!.endTime!));
+  State<HappyHourModel> createState() => _HappyHourModalState(
+      DateTime.parse(model.data!.endTime!),
+      DateTime.parse(model.data!.startTime!));
 }
 
 enum ButtonType { save, notify }
 
 class _HappyHourModalState extends TimerUtil<HappyHourModel> {
-  _HappyHourModalState(final DateTime endTime) : super(endTime: endTime);
+  _HappyHourModalState(final DateTime endTime, final DateTime startTime)
+      : super(endTime: endTime, startTime: startTime);
   late bool isHappyHourEnded;
   late HappyHourType _happyHourType;
   @override
@@ -206,7 +208,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                         ? SolidButton(
                             onPress: () {
                               AppState.backButtonDispatcher!.didPopRoute();
-                              locator<BaseUtil>().openDepositOptionsModalSheet(
+                              BaseUtil.openDepositOptionsModalSheet(
                                   title:
                                       "You are investing during Happy Hours!");
                               locator<MixpanelAnalytics>().track(
