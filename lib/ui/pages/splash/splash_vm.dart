@@ -105,7 +105,6 @@ class LauncherViewModel extends BaseViewModel {
         _referralService.init();
         _baseUtil.init();
         _fcmListener.setupFcm();
-        _analyticsProperties.init();
       }
     } catch (e) {
       _logger.e("Splash Screen init : $e");

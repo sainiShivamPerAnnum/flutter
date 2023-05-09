@@ -161,7 +161,12 @@ class TambolaService extends ChangeNotifier {
         allTickets.isEmpty ? 0 : allTickets.length + 1, limit);
     if (ticketsResponse.isSuccess()) {
       if (ticketsResponse.model!.isEmpty) return;
-      allTickets = ticketsResponse.model!;
+      if (allTickets.isEmpty) {
+        allTickets = ticketsResponse.model!;
+      } else {
+        allTickets.addAll(ticketsResponse.model!);
+      }
+
       notifyListeners();
     } else {
       //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE

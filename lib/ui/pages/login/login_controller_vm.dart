@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:advertising_id/advertising_id.dart';
+import 'package:android_play_install_referrer/android_play_install_referrer.dart';
 import 'package:app_set_id/app_set_id.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -38,6 +39,7 @@ import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -55,23 +57,23 @@ class LoginControllerViewModel extends BaseViewModel {
   //Locators
   final FcmListener? fcmListener = locator<FcmListener>();
   final AugmontService? augmontProvider = locator<AugmontService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final UserService userService = locator<UserService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger logger = locator<CustomLogger>();
   final ApiPath? apiPaths = locator<ApiPath>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
   final DBModel? dbProvider = locator<DBModel>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  final AnalyticsRepository? _analyticsRepo = locator<AnalyticsRepository>();
-  final JourneyService? _journeyService = locator<JourneyService>();
-  final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final AnalyticsRepository _analyticsRepo = locator<AnalyticsRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final ReferralService _referralService = locator<ReferralService>();
 
   S locale = locator<S>();
 
   // static LocalDBModel? lclDbProvider = locator<LocalDBModel>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
   //Controllers
   PageController? _controller;
@@ -300,71 +302,90 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   Future<void> sendInstallInformation() async {
-    String? _appSetId;
-    String? _androidId;
-    String? _advertisingId;
-    String? _osVersion;
+    String? appSetId;
+    String? androidId;
+    String? advertisingId;
+    String? osVersion;
     String? installReferrerData;
     const BASE_CHANNEL = 'methodChannel/deviceData';
     const platform = MethodChannel(BASE_CHANNEL);
     try {
-      _appSetId = await AppSetId().getIdentifier();
-      logger.d('AppSetId: Package found an appropriate ID value: $_appSetId');
+      appSetId = await AppSetId().getIdentifier();
+      logger.d('AppSetId: Package found an appropriate ID value: $appSetId');
     } catch (e) {
       logger.e('AppSetId: Package failed to set an appropriate ID value');
+      unawaited(_internalOpsService.logFailure(
+          userService.baseUser!.uid,
+          FailType.InstallInformationFetchFailed,
+          {"information": "app_set_id"}));
     }
-
     if (Platform.isAndroid) {
       try {
-        _androidId = await platform.invokeMethod('getAndroidId');
-        logger.d('AndroidId: Service found an Android Id: $_androidId');
+        androidId = await platform.invokeMethod('getAndroidId');
+        logger.d('AndroidId: Service found an Android Id: $androidId');
       } catch (e) {
         logger.e('AndroidId: Service failed to find a Android Id');
+        unawaited(_internalOpsService.logFailure(
+            userService.baseUser!.uid,
+            FailType.InstallInformationFetchFailed,
+            {"information": "android_id"}));
       }
     }
-
     try {
-      _advertisingId = await AdvertisingId.id(true);
+      advertisingId = await AdvertisingId.id(true);
       logger
-          .d('AdvertisingId: Service found an Advertising Id: $_advertisingId');
+          .d('AdvertisingId: Service found an Advertising Id: $advertisingId');
     } catch (e) {
       logger.e('AdvertisingId: Service failed to find a Advertising Id');
+      unawaited(_internalOpsService.logFailure(
+          userService.baseUser!.uid,
+          FailType.InstallInformationFetchFailed,
+          {"information": "advertising_id"}));
     }
-
     try {
-      if (!_internalOpsService!.isDeviceInfoInitiated) {
-        await _internalOpsService!.initDeviceInfo();
+      if (!_internalOpsService.isDeviceInfoInitiated) {
+        await _internalOpsService.initDeviceInfo();
       }
-      _osVersion = _internalOpsService!.osVersion;
+      osVersion = _internalOpsService.osVersion;
     } catch (e) {
       logger.e('DeviceData: Service failed to find a Device Data');
+      unawaited(_internalOpsService.logFailure(
+          userService.baseUser!.uid,
+          FailType.InstallInformationFetchFailed,
+          {"information": "device_data"}));
     }
-
     try {
-      const _channel = MethodChannel('my_plugin');
-      installReferrerData = await _channel.invokeMethod('getInstallReferrer');
-
+      ReferrerDetails referrerDetails =
+      await AndroidPlayInstallReferrer.installReferrer;
       //cleanup data
       RegExp nullPattern = RegExp(r'null');
-      installReferrerData = installReferrerData!.replaceAll(nullPattern, '');
+      installReferrerData =
+          referrerDetails.toString().replaceAll(nullPattern, '');
     } catch (e) {
       logger
           .e('InstallReferrer: Service failed to find a Install Referrer Data');
+      unawaited(
+        _internalOpsService.logFailure(
+          userService.baseUser!.uid,
+          FailType.InstallInformationFetchFailed,
+          {"information": "install_referrer_id"},
+        ),
+      );
     }
-
     logger.d(
-        'Received the following information: {InstallReferrerData: $installReferrerData,' +
-            'AppSetId: $_appSetId, AndroidId: $_androidId, AdvertisingId: $_advertisingId, OSVersion: $_osVersion}');
-
-    final ApiResponse response = await _analyticsRepo!.setInstallInfo(
-        userService.baseUser!,
-        installReferrerData,
-        _appSetId,
-        _androidId,
-        _osVersion,
-        _advertisingId);
+        'Received the following information: {InstallReferrerData: $installReferrerData,'
+            'AppSetId: $appSetId, AndroidId: $androidId, AdvertisingId: $advertisingId, OSVersion: $osVersion}');
+    final ApiResponse response = await _analyticsRepo.setInstallInfo(
+      userService.baseUser!,
+      installReferrerData,
+      appSetId,
+      androidId,
+      osVersion,
+      advertisingId,
+    );
     logger.d('Data sent to API with the following response: ${response.model}');
   }
+
 
   void _onSignInSuccess(LoginSource source) async {
     logger!.d("User authenticated. Now check if details previously available.");
@@ -450,7 +471,7 @@ class LoginControllerViewModel extends BaseViewModel {
     await userService.init();
     baseProvider!.init();
     _referralService.init();
-    AnalyticsProperties().init();
+
     if (_isSignup) {
       unawaited(_userRepo!.updateUserAppFlyer(userService!.baseUser!,
           await userService.firebaseUser!.getIdToken()));
