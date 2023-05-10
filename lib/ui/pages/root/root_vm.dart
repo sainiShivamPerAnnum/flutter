@@ -79,7 +79,6 @@ class RootViewModel extends BaseViewModel {
   bool get isWelcomeAnimationInProgress => _isWelcomeAnimationInProgress;
 
   set isWelcomeAnimationInProgress(bool value) {
-    log("isWelcomeAnimationInProgress: $value");
     _isWelcomeAnimationInProgress = value;
     notifyListeners();
   }

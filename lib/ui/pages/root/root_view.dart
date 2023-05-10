@@ -39,81 +39,88 @@ class Root extends StatelessWidget {
       builder: (ctx, model, child) {
         RootController rootController = locator<RootController>();
 
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: UiConstants.kBackgroundColor,
-          body: Stack(
-            children: [
-              const NewSquareBackground(),
-              Column(
+        return Stack(
+          children: [
+            Scaffold(
+              resizeToAvoidBottomInset: false,
+              backgroundColor: UiConstants.kBackgroundColor,
+              body: Stack(
                 children: [
-                  const RootAppBar(),
-                  Expanded(
-                    child: RefreshIndicator(
-                      triggerMode: RefreshIndicatorTriggerMode.onEdge,
-                      color: UiConstants.primaryColor,
-                      backgroundColor: Colors.black,
-                      onRefresh: model.refresh,
-                      child: Consumer<AppState>(
-                        builder: (ctx, m, child) {
-                          return LazyLoadIndexedStack(
-                            index: m.getCurrentTabIndex,
-                            children: model.navBarItems.keys.toList(),
-                          );
-                        },
+                  const NewSquareBackground(),
+                  Column(
+                    children: [
+                      const RootAppBar(),
+                      Expanded(
+                        child: RefreshIndicator(
+                          triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                          color: UiConstants.primaryColor,
+                          backgroundColor: Colors.black,
+                          onRefresh: model.refresh,
+                          child: Consumer<AppState>(
+                            builder: (ctx, m, child) {
+                              return LazyLoadIndexedStack(
+                                index: m.getCurrentTabIndex,
+                                children: model.navBarItems.keys.toList(),
+                              );
+                            },
+                          ),
+                        ),
                       ),
+                    ],
+                  ),
+
+                  PropertyChangeProvider<MarketingEventHandlerService,
+                      MarketingEventsHandlerProperties>(
+                    value: locator<MarketingEventHandlerService>(),
+                    child: PropertyChangeConsumer<MarketingEventHandlerService,
+                        MarketingEventsHandlerProperties>(
+                      properties: const [
+                        MarketingEventsHandlerProperties.HappyHour
+                      ],
+                      builder: (context, state, _) {
+                        return !state!.showHappyHourBanner
+                            ? Container()
+                            : Consumer<AppState>(
+                                builder: (ctx, m, child) => AnimatedPositioned(
+                                  bottom: !(locator<RootController>()
+                                                  .currentNavBarItemModel ==
+                                              RootController
+                                                  .journeyNavBarItem ||
+                                          !_showHappyHour())
+                                      ? SizeConfig.navBarHeight
+                                      : -50,
+                                  duration: const Duration(milliseconds: 400),
+                                  child: HappyHourBanner(
+                                      model: locator<HappyHourCampign>()),
+                                ),
+                              );
+                      },
                     ),
                   ),
+
+                  // const BaseAnimation(),
+
+                  const DEVBanner(),
+                  const QABanner(),
                 ],
               ),
-
-              PropertyChangeProvider<MarketingEventHandlerService,
-                  MarketingEventsHandlerProperties>(
-                value: locator<MarketingEventHandlerService>(),
-                child: PropertyChangeConsumer<MarketingEventHandlerService,
-                    MarketingEventsHandlerProperties>(
-                  properties: const [
-                    MarketingEventsHandlerProperties.HappyHour
-                  ],
-                  builder: (context, state, _) {
-                    return !state!.showHappyHourBanner
-                        ? Container()
-                        : Consumer<AppState>(
-                            builder: (ctx, m, child) => AnimatedPositioned(
-                              bottom: !(locator<RootController>()
-                                              .currentNavBarItemModel ==
-                                          RootController.journeyNavBarItem ||
-                                      !_showHappyHour())
-                                  ? SizeConfig.navBarHeight
-                                  : -50,
-                              duration: const Duration(milliseconds: 400),
-                              child: HappyHourBanner(
-                                  model: locator<HappyHourCampign>()),
-                            ),
-                          );
-                  },
-                ),
-              ),
-
-              // const BaseAnimation(),
-              const CircularAnim(),
-              const DEVBanner(),
-              const QABanner(),
-            ],
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.miniCenterDocked,
-          floatingActionButton: rootController.navItems.values.length % 2 != 0
-              ? FloatingActionButton(
-                  onPressed: () {},
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                )
-              : const SizedBox(),
-          bottomNavigationBar: const BottomNavBar(),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.miniCenterDocked,
+              floatingActionButton:
+                  rootController.navItems.values.length % 2 != 0
+                      ? FloatingActionButton(
+                          onPressed: () {},
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const SizedBox(),
+              bottomNavigationBar: const BottomNavBar(),
+            ),
+            const CircularAnim()
+          ],
         );
       },
     );

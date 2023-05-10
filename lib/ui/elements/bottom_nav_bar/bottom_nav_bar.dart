@@ -104,34 +104,35 @@ class NavBarIcon extends StatelessWidget {
               ? 'What are you waiting for?\nStart your savings journey now!'
               : 'You can find your scratch cards here. Tap on Account Section',
       child: Container(
-          key: key,
-          alignment: Alignment.center,
-          // color: Colors.black,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Transform.translate(
-                offset: Offset(0, -SizeConfig.navBarHeight * 0.05),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.navBarHeight * 0.6,
-                      width: SizeConfig.navBarHeight * 0.6,
-                      child: Lottie.asset(
-                        item.lottie,
-                        fit: BoxFit.contain,
-                        animate: animate,
-                        repeat: false,
-                      ),
+        key: key,
+        alignment: Alignment.center,
+        // color: Colors.black,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Transform.translate(
+              offset: Offset(0, -SizeConfig.navBarHeight * 0.05),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: SizeConfig.navBarHeight * 0.6,
+                    width: SizeConfig.navBarHeight * 0.6,
+                    child: Lottie.asset(
+                      item.lottie,
+                      fit: BoxFit.contain,
+                      animate: animate,
+                      repeat: false,
                     ),
-                    Text(item.title, style: style),
-                    SizedBox(height: SizeConfig.navBarHeight * 0.1)
-                  ],
-                ),
+                  ),
+                  Text(item.title, style: style),
+                  SizedBox(height: SizeConfig.navBarHeight * 0.1)
+                ],
               ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
