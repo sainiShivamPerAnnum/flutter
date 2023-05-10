@@ -75,12 +75,12 @@ class GTDetailedViewModel extends BaseViewModel {
   Future<bool> redeemTicket(ScratchCard ticket) async {
     try {
       final res = await _gtRepo!.redeemReward(ticket.gtId);
+      _gtService.refreshTickets(gtId: ticket.gtId!);
       if (res.isSuccess()) {
         unawaited(_gtService.updateUnscratchedGTCount());
         unawaited(_userService!.getUserFundWalletData());
         unawaited(_userCoinService!.getUserCoinBalance());
         _journeyService.updateRewardStatus(ticket.prizeSubtype!);
-        _gtService.refreshTickets(prizeSubtype: ticket.prizeSubtype!);
         return true;
       }
       return false;

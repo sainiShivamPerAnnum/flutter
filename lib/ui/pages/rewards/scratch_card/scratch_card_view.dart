@@ -1,4 +1,3 @@
-import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -11,7 +10,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 class ScratchCardsView extends StatelessWidget {
   final bool openFirst;
@@ -23,11 +22,13 @@ class ScratchCardsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PropertyChangeConsumer<ScratchCardService,
-        ScratchCardServiceProperties>(
-      properties: const [ScratchCardServiceProperties.AllScratchCards],
+    return Consumer<ScratchCardService>(
       builder: (context, model, properties) {
-        return model!.isFetchingScratchCards && model.allScratchCards.isEmpty
+        model.allScratchCards.forEach((element) {
+          print(
+              "PrizeSubtype: ${element.prizeSubtype} & RT: ${element.redeemedTimestamp.toString()}");
+        });
+        return model.isFetchingScratchCards && model.allScratchCards.isEmpty
             ? const Center(child: FullScreenLoader())
             : model.allScratchCards.isEmpty
                 ? ListView(
@@ -41,7 +42,7 @@ class ScratchCardsView extends StatelessWidget {
                     ],
                   )
                 : GridView.builder(
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     itemCount: model.allScratchCards.length,
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -69,7 +70,6 @@ class ScratchCardsView extends StatelessWidget {
                           );
                         },
                         child: ScratchCardGridItemCard(
-                          key: Key(model.allScratchCards[i].gtId!),
                           ticket: model.allScratchCards[i],
                           titleStyle: TextStyles.body2,
                           titleStyle2: TextStyles.body3,

@@ -65,8 +65,7 @@ class GTDetailedView extends StatelessWidget {
                     )
                   : (model.viewScratcher
                       ? Hero(
-                          //Unscrached card
-                          key: Key(ticket.timestamp.toString()),
+                          key: Key(ticket.gtId.toString()),
                           tag: ticket.timestamp.toString(),
                           createRectTween: (begin, end) {
                             return CustomRectTween(begin: begin, end: end);
