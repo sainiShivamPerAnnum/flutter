@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -35,6 +36,7 @@ import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -44,6 +46,7 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -185,13 +188,28 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  // uploadMilestone(){
-
-  // }
-
-  // downloadJourneyPage() {
-  //   _journeyRepo!.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
-  // }
+  Widget centerTab(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        BaseUtil().openRechargeModalSheet(
+          investmentType: InvestmentType.AUGGOLD99,
+        );
+      },
+      backgroundColor: Theme.of(context).primaryColor,
+      child: true
+          ? Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: SvgPicture.network(
+                Assets.powerPlayMain,
+                fit: BoxFit.contain,
+              ),
+            )
+          : const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+    );
+  }
 
   Future<void> openJourneyView() async {
     AppState.delegate!.appState.currentAction =

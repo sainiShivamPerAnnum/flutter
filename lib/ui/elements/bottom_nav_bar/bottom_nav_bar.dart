@@ -100,7 +100,7 @@ class NavBarIcon extends StatelessWidget {
       key: item.key,
       description: item.title == 'Play'
           ? 'Tap on the Play section'
-          : item.title == 'Home'
+          : item.title == 'Save'
               ? 'What are you waiting for?\nStart your savings journey now!'
               : 'You can find your scratch cards here. Tap on Account Section',
       child: Container(

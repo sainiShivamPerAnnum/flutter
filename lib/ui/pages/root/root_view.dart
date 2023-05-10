@@ -108,18 +108,11 @@ class Root extends StatelessWidget {
                   FloatingActionButtonLocation.miniCenterDocked,
               floatingActionButton:
                   rootController.navItems.values.length % 2 != 0
-                      ? FloatingActionButton(
-                          onPressed: () {},
-                          backgroundColor: Theme.of(context).primaryColor,
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          ),
-                        )
+                      ? model.centerTab(ctx)
                       : const SizedBox(),
               bottomNavigationBar: const BottomNavBar(),
             ),
-            const CircularAnim()
+            const CircularAnim(),
           ],
         );
       },

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
@@ -20,13 +22,14 @@ class RootController {
   static final winNavBarItem =
       NavBarItemModel("Account", Assets.navWinLottie, ShowCaseKeys.AccountKey);
   static final saveNavBarItem =
-      NavBarItemModel("Home", Assets.navSaveLottie, ShowCaseKeys.SaveKey);
+      NavBarItemModel("Save", Assets.navSaveLottie, ShowCaseKeys.SaveKey);
 
   late NavBarItemModel currentNavBarItemModel;
 
   Map<Widget, NavBarItemModel> navItems = {};
 
   void onChange(NavBarItemModel model) {
+    log("onChange ${model.title}");
     currentNavBarItemModel = model;
   }
 
@@ -43,7 +46,7 @@ class RootController {
         break;
       case "TM":
         navItems.putIfAbsent(const TambolaHomeView(standAloneScreen: false),
-            () => RootController.tambolaNavBar);
+                () => RootController.tambolaNavBar);
         break;
 
       case "WN":
