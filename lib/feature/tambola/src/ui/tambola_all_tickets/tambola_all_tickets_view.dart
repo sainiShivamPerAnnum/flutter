@@ -43,6 +43,7 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
   void initState() {
     ticketController = ScrollController();
     tambolaService = locator<TambolaService>();
+    tambolaService!.noMoreTickets = false;
     tambolaService!.allTickets.clear();
     if (tambolaService!.allTickets.isEmpty) {
       _isLoadingTickets = true;
@@ -54,7 +55,7 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
     ticketController!.addListener(() async {
       if (ticketController!.offset >=
           ticketController!.position.maxScrollExtent) {
-        if (isLoadingTickets) return;
+        if (isLoadingTickets || tambolaService!.noMoreTickets) return;
         isLoadingTickets = true;
         await tambolaService!.getTambolaTickets();
         isLoadingTickets = false;
