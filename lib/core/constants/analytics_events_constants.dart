@@ -174,6 +174,8 @@ class AnalyticsEvents {
   static const scratchCardSectionOpen = 'Scratch Card section open';
   static const signupEnterMobile = "Entered Mobile number";
   static const mobileOtpDone = "Entered OTP";
+  static const lastWeekCrossButton = "Last Week Cross Tapped";
+  static const lastWeekSaveNow = "Last Week Save Now Tapped";
 
   //Marketing Events
 

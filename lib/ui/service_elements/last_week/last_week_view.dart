@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -102,6 +104,7 @@ class LastWeekUi extends StatelessWidget {
       iconUrl: model.cta?.iconUrl,
       title: model.cta?.text,
       isTopSaver: model.isTopSaver,
+      model: model,
       child: SafeArea(
         child: Stack(
           children: [
@@ -123,6 +126,15 @@ class LastWeekUi extends StatelessWidget {
                             locator<MarketingEventHandlerService>()
                                 .getCampaigns();
                           }
+
+                          locator<AnalyticsService>().track(
+                              eventName: AnalyticsEvents.lastWeekSaveNow,
+                              properties: {
+                                "Last week deposited": model.user?.invested,
+                                "last week returns": model.user?.returns,
+                                "last week return Percentage":
+                                    model.user?.gainsPerc,
+                              });
                         },
                         child: Container(
                           margin: EdgeInsets.only(

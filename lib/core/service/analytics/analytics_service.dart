@@ -90,7 +90,7 @@ class AnalyticsService extends BaseAnalyticsService {
     _webengage!.track(eventName: screen, properties: properties);
   }
 
-  void trackSignup(String? userId) async {
+  Future<void> trackSignup(String? userId) async {
     try {
       final campaignId =
           PreferenceHelper.getString(PreferenceHelper.CAMPAIGN_ID);

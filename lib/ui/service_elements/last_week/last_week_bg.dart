@@ -1,3 +1,6 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/last_week_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -18,6 +21,7 @@ class LastWeekBg extends StatelessWidget {
     this.isTopSaver,
     this.showButton = true,
     this.showBackButtuon = false,
+    this.model,
   }) : super(key: key);
 
   final Widget child;
@@ -26,7 +30,8 @@ class LastWeekBg extends StatelessWidget {
   final String? title;
   final bool? isTopSaver;
   final bool showButton;
-  final showBackButtuon;
+  final bool showBackButtuon;
+  final LastWeekData? model;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +70,14 @@ class LastWeekBg extends StatelessWidget {
                       if (callCampaign) {
                         locator<MarketingEventHandlerService>().getCampaigns();
                       }
+                      locator<AnalyticsService>().track(
+                          eventName: AnalyticsEvents.lastWeekSaveNow,
+                          properties: {
+                            "Last week deposited": model?.user?.invested,
+                            "last week returns": model?.user?.returns,
+                            "last week return Percentage":
+                                model?.user?.gainsPerc,
+                          });
                     },
                     icon: Container(
                       margin: EdgeInsets.only(
@@ -93,75 +106,75 @@ class LastWeekBg extends StatelessWidget {
                       height: SizeConfig.padding12,
                     ),
                     if (isTopSaver ?? false)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.network(
-                          iconUrl ?? "",
-                          height: SizeConfig.padding32,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding12,
-                        ),
-                        Text(
-                          title ?? "",
-                          style: TextStyles.sourceSans.body4,
-                        ),
-                      ],
-                    ),
-                  if (isTopSaver == false && (title?.isNotEmpty ?? false))
-                    Text(
-                      title ?? "",
-                      style: TextStyles.sourceSans.body4,
-                    ),
-                  Container(
-                    height: SizeConfig.navBarHeight * 0.9,
-                    margin: EdgeInsets.fromLTRB(
-                      SizeConfig.pageHorizontalMargins,
-                      SizeConfig.pageHorizontalMargins - SizeConfig.padding12,
-                      SizeConfig.pageHorizontalMargins,
-                      SizeConfig.pageHorizontalMargins,
-                    ),
-                    width: SizeConfig.screenWidth,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          stops: const [0.1, 1],
-                          colors: [
-                            UiConstants.kBuyTicketSaveButton,
-                            UiConstants.kBuyTicketSaveButton.withOpacity(0.4),
-                          ],
-                        ),
-                        // color: UiConstants.kBuyTicketSaveButton,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.network(
+                            iconUrl ?? "",
+                            height: SizeConfig.padding32,
+                          ),
+                          SizedBox(
+                            width: SizeConfig.padding12,
+                          ),
+                          Text(
+                            title ?? "",
+                            style: TextStyles.sourceSans.body4,
+                          ),
+                        ],
+                      ),
+                    if (isTopSaver == false && (title?.isNotEmpty ?? false))
+                      Text(
+                        title ?? "",
+                        style: TextStyles.sourceSans.body4,
+                      ),
+                    Container(
+                      height: SizeConfig.navBarHeight * 0.9,
+                      margin: EdgeInsets.fromLTRB(
+                        SizeConfig.pageHorizontalMargins,
+                        SizeConfig.pageHorizontalMargins - SizeConfig.padding12,
+                        SizeConfig.pageHorizontalMargins,
+                        SizeConfig.pageHorizontalMargins,
+                      ),
+                      width: SizeConfig.screenWidth,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: const [0.1, 1],
+                            colors: [
+                              UiConstants.kBuyTicketSaveButton,
+                              UiConstants.kBuyTicketSaveButton.withOpacity(0.4),
+                            ],
+                          ),
+                          // color: UiConstants.kBuyTicketSaveButton,
                           borderRadius: BorderRadius.circular(5)),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      // color:  UiConstants.kBuyTicketSaveButton,
-                      onPressed: () {
-                        if (callCampaign) {
-                          locator<MarketingEventHandlerService>()
-                              .getCampaigns();
-                        }
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        // color:  UiConstants.kBuyTicketSaveButton,
+                        onPressed: () {
+                          if (callCampaign) {
+                            locator<MarketingEventHandlerService>()
+                                .getCampaigns();
+                          }
 
-                        AppState.backButtonDispatcher!.didPopRoute();
-                        AppState.delegate!.parseRoute(Uri.parse('/save'));
-                      },
-                      child: Center(
-                        child: Text(
-                          'SAVE NOW',
-                          style:
-                              TextStyles.rajdhaniB.body1.colour(Colors.white),
+                          AppState.backButtonDispatcher!.didPopRoute();
+                          AppState.delegate!.parseRoute(Uri.parse('/save'));
+                        },
+                        child: Center(
+                          child: Text(
+                            'SAVE NOW',
+                            style:
+                                TextStyles.rajdhaniB.body1.colour(Colors.white),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
           Positioned(
               top: SizeConfig.padding64,
               left: SizeConfig.padding80 + SizeConfig.padding34,
