@@ -20,7 +20,7 @@ class RootController {
   static final winNavBarItem =
       NavBarItemModel("Account", Assets.navWinLottie, ShowCaseKeys.AccountKey);
   static final saveNavBarItem =
-      NavBarItemModel("Save", Assets.navSaveLottie, ShowCaseKeys.SaveKey);
+      NavBarItemModel("Home", Assets.navSaveLottie, ShowCaseKeys.SaveKey);
 
   late NavBarItemModel currentNavBarItemModel;
 

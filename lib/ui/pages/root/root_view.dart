@@ -32,75 +32,91 @@ class Root extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<RootViewModel>(
-        onModelReady: (model) {
-          model.onInit();
-        },
-        onModelDispose: (model) => model.onDispose(),
-        builder: (ctx, model, child) {
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: UiConstants.kBackgroundColor,
-            body: Stack(
-              children: [
-                const NewSquareBackground(),
-                Column(
-                  children: [
-                    const RootAppBar(),
-                    Expanded(
-                      child: RefreshIndicator(
-                        triggerMode: RefreshIndicatorTriggerMode.onEdge,
-                        color: UiConstants.primaryColor,
-                        backgroundColor: Colors.black,
-                        onRefresh: model.refresh,
-                        child: Consumer<AppState>(
-                          builder: (ctx, m, child) {
-                            return LazyLoadIndexedStack(
-                              index: m.getCurrentTabIndex,
-                              children: model.navBarItems.keys.toList(),
-                            );
-                          },
-                        ),
+      onModelReady: (model) {
+        model.onInit();
+      },
+      onModelDispose: (model) => model.onDispose(),
+      builder: (ctx, model, child) {
+        RootController rootController = locator<RootController>();
+
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: UiConstants.kBackgroundColor,
+          body: Stack(
+            children: [
+              const NewSquareBackground(),
+              Column(
+                children: [
+                  const RootAppBar(),
+                  Expanded(
+                    child: RefreshIndicator(
+                      triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                      color: UiConstants.primaryColor,
+                      backgroundColor: Colors.black,
+                      onRefresh: model.refresh,
+                      child: Consumer<AppState>(
+                        builder: (ctx, m, child) {
+                          return LazyLoadIndexedStack(
+                            index: m.getCurrentTabIndex,
+                            children: model.navBarItems.keys.toList(),
+                          );
+                        },
                       ),
                     ),
-                  ],
-                ),
-
-                PropertyChangeProvider<MarketingEventHandlerService,
-                    MarketingEventsHandlerProperties>(
-                  value: locator<MarketingEventHandlerService>(),
-                  child: PropertyChangeConsumer<MarketingEventHandlerService,
-                      MarketingEventsHandlerProperties>(
-                    properties: const [
-                      MarketingEventsHandlerProperties.HappyHour
-                    ],
-                    builder: (context, state, _) {
-                      return !state!.showHappyHourBanner
-                          ? Container()
-                          : Consumer<AppState>(
-                              builder: (ctx, m, child) => AnimatedPositioned(
-                                bottom: !(locator<RootController>()
-                                                .currentNavBarItemModel ==
-                                            RootController.journeyNavBarItem ||
-                                        !_showHappyHour())
-                                    ? SizeConfig.navBarHeight
-                                    : -50,
-                                duration: const Duration(milliseconds: 400),
-                                child: HappyHourBanner(
-                                    model: locator<HappyHourCampign>()),
-                              ),
-                            );
-                    },
                   ),
+                ],
+              ),
+
+              PropertyChangeProvider<MarketingEventHandlerService,
+                  MarketingEventsHandlerProperties>(
+                value: locator<MarketingEventHandlerService>(),
+                child: PropertyChangeConsumer<MarketingEventHandlerService,
+                    MarketingEventsHandlerProperties>(
+                  properties: const [
+                    MarketingEventsHandlerProperties.HappyHour
+                  ],
+                  builder: (context, state, _) {
+                    return !state!.showHappyHourBanner
+                        ? Container()
+                        : Consumer<AppState>(
+                            builder: (ctx, m, child) => AnimatedPositioned(
+                              bottom: !(locator<RootController>()
+                                              .currentNavBarItemModel ==
+                                          RootController.journeyNavBarItem ||
+                                      !_showHappyHour())
+                                  ? SizeConfig.navBarHeight
+                                  : -50,
+                              duration: const Duration(milliseconds: 400),
+                              child: HappyHourBanner(
+                                  model: locator<HappyHourCampign>()),
+                            ),
+                          );
+                  },
                 ),
-                const BottomNavBar(),
-                // const BaseAnimation(),
-                const CircularAnim(),
-                const DEVBanner(),
-                const QABanner(),
-              ],
-            ),
-          );
-        });
+              ),
+
+              // const BaseAnimation(),
+              const CircularAnim(),
+              const DEVBanner(),
+              const QABanner(),
+            ],
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniCenterDocked,
+          floatingActionButton: rootController.navItems.values.length % 2 != 0
+              ? FloatingActionButton(
+                  onPressed: () {},
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                )
+              : const SizedBox(),
+          bottomNavigationBar: const BottomNavBar(),
+        );
+      },
+    );
   }
 }
 
@@ -121,18 +137,14 @@ class _RootPageViewState extends State<RootPageView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // return PageView(
-    //   physics: const NeverScrollableScrollPhysics(),
-    //   controller: AppState.homeTabPageController,
-    //   children: widget.model.navBarItems.keys.toList(),
-    // );
-
-    return Consumer<AppState>(builder: (context, m, child) {
-      return LazyLoadIndexedStack(
-        index: m.getCurrentTabIndex,
-        children: widget.model.navBarItems.keys.toList(),
-      );
-    });
+    return Consumer<AppState>(
+      builder: (context, m, child) {
+        return LazyLoadIndexedStack(
+          index: m.getCurrentTabIndex,
+          children: widget.model.navBarItems.keys.toList(),
+        );
+      },
+    );
   }
 
   @override
@@ -161,8 +173,6 @@ class RootAppBar extends StatelessWidget {
       return FaqsType.savings;
     } else if (navItem == RootController.winNavBarItem) {
       return FaqsType.winnings;
-    } else if (navItem == RootController.tambolaNavBar) {
-      return FaqsType.play;
     } else if (navItem == RootController.tambolaNavBar) {
       return FaqsType.tambola;
     } else {
@@ -201,7 +211,7 @@ class RootAppBar extends StatelessWidget {
                                             .currentNavBarItemModel ==
                                         RootController.tambolaNavBar) &&
                                     ticketCount == 0)
-                                ? Color(0XFF141414)
+                                ? const Color(0XFF141414)
                                 : (locator<RootController>()
                                             .currentNavBarItemModel ==
                                         RootController.saveNavBarItem)
