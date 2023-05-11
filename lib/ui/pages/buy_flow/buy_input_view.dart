@@ -7,6 +7,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/ui/pages/buy_flow/expanded_section.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/banner_widget.dart';
@@ -65,105 +66,130 @@ class _BuyInputViewState extends State<BuyInputView> {
         double.tryParse(widget.model.goldAmountController!.text) ?? 0;
     return Stack(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            // SizedBox(height: SizeConfig.padding16),
-            RechargeModalSheetAppBar(
-              txnService: widget.augTxnService,
-              trackCloseTapped: () {
-                _analyticsService!.track(
-                    eventName: AnalyticsEvents.savePageClosed,
-                    properties: {
-                      "Amount entered": widget.model.goldAmountController!.text,
-                      "Grams of gold": widget.model.goldAmountInGrams,
-                      "Asset": 'Gold',
-                      "Coupon Applied": widget.model.appliedCoupon != null
-                          ? widget.model.appliedCoupon!.code
-                          : "Not Applied",
-                    });
-                if (locator<BackButtonActions>().isTransactionCancelled) {
-                  if (!AppState.isRepeated) {
-                    locator<BackButtonActions>()
-                        .showWantToCloseTransactionBottomSheet(
-                            double.parse(
-                                    widget.model.goldAmountController!.text)
-                                .round(),
-                            InvestmentType.AUGGOLD99, () {
-                      widget.model.initiateBuy();
+        SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: SizedBox(
+            height: SizeConfig.screenHeight,
+            width: SizeConfig.screenWidth,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // SizedBox(height: SizeConfig.padding16),
+                RechargeModalSheetAppBar(
+                  txnService: widget.augTxnService,
+                  trackCloseTapped: () {
+                    _analyticsService!.track(
+                        eventName: AnalyticsEvents.savePageClosed,
+                        properties: {
+                          "Amount entered":
+                              widget.model.goldAmountController!.text,
+                          "Grams of gold": widget.model.goldAmountInGrams,
+                          "Asset": 'Gold',
+                          "Coupon Applied": widget.model.appliedCoupon != null
+                              ? widget.model.appliedCoupon!.code
+                              : "Not Applied",
+                        });
+                    if (locator<BackButtonActions>().isTransactionCancelled) {
+                      if (!AppState.isRepeated) {
+                        locator<BackButtonActions>()
+                            .showWantToCloseTransactionBottomSheet(
+                                double.parse(
+                                        widget.model.goldAmountController!.text)
+                                    .round(),
+                                InvestmentType.AUGGOLD99, () {
+                          widget.model.initiateBuy();
+                          AppState.backButtonDispatcher!.didPopRoute();
+                        });
+                        AppState.isRepeated = true;
+                      } else {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                      }
+                      return;
+                    } else {
                       AppState.backButtonDispatcher!.didPopRoute();
-                    });
-                    AppState.isRepeated = true;
-                  } else {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  }
-                  return;
-                } else {
-                  AppState.backButtonDispatcher!.didPopRoute();
-                }
-              },
-            ),
-            SizedBox(height: SizeConfig.padding24),
-            if (widget.model.assetOptionsModel != null)
-              BannerWidget(
-                model: widget.model.assetOptionsModel!.data.banner,
-                happyHourCampign:
-                    locator.isRegistered<HappyHourCampign>() ? locator() : null,
-              ),
-            if (widget.model.animationController != null)
-              EnterAmountView(
-                model: widget.model,
-                txnService: widget.augTxnService,
-              ),
-            SizedBox(
-              height: SizeConfig.padding32,
-            ),
-            if (widget.model.showCoupons)
-              Showcase(
-                key: ShowCaseKeys.couponKey,
-                description: 'You can apply a coupon to get extra gold!',
-                child: CouponWidget(
-                  widget.model.couponList,
-                  widget.model,
-                  onTap: (coupon) {
-                    widget.model.applyCoupon(coupon.code, false);
+                    }
                   },
                 ),
-              ),
-            const Spacer(),
-            widget.augTxnService.isGoldBuyInProgress
-                ? Container(
-                    height: SizeConfig.screenWidth! * 0.1556,
-                    alignment: Alignment.center,
-                    width: SizeConfig.screenWidth! * 0.7,
-                    child: const LinearProgressIndicator(
-                      color: UiConstants.primaryColor,
-                      backgroundColor: UiConstants.kDarkBackgroundColor,
-                    ),
-                  )
-                : Showcase(
-                    key: ShowCaseKeys.saveNowGold,
-                    description:
-                        'Once done, tap on SAVE to make your first transaction',
-                    child: AppPositiveBtn(
-                      btnText: widget.model.status == 2
-                          ? locale.btnSave
-                          : locale.unavailable.toUpperCase(),
-                      onPressed: () async {
-                        if (!widget.augTxnService.isGoldBuyInProgress) {
-                          FocusScope.of(context).unfocus();
-                          widget.model.initiateBuy();
-                        }
+                SizedBox(height: SizeConfig.padding24),
+                if (widget.model.assetOptionsModel != null)
+                  BannerWidget(
+                    model: widget.model.assetOptionsModel!.data.banner,
+                    happyHourCampign: locator.isRegistered<HappyHourCampign>()
+                        ? locator()
+                        : null,
+                  ),
+                if (widget.model.animationController != null)
+                  EnterAmountView(
+                    model: widget.model,
+                    txnService: widget.augTxnService,
+                  ),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+                // Draw a line with color 627F8E with opacity 20%  and height 1
+                Container(
+                  height: 1,
+                  margin: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  color: UiConstants.kModalSheetSecondaryBackgroundColor
+                      .withOpacity(0.2),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+
+                const AssetDropDown(),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+                if (widget.model.showCoupons)
+                  Showcase(
+                    key: ShowCaseKeys.couponKey,
+                    description: 'You can apply a coupon to get extra gold!',
+                    child: CouponWidget(
+                      widget.model.couponList,
+                      widget.model,
+                      onTap: (coupon) {
+                        widget.model.applyCoupon(coupon.code, false);
                       },
-                      width: SizeConfig.screenWidth! * 0.813,
                     ),
                   ),
-            SizedBox(
-              height: SizeConfig.padding32,
+                const Spacer(),
+                widget.augTxnService.isGoldBuyInProgress
+                    ? Container(
+                        height: SizeConfig.screenWidth! * 0.1556,
+                        alignment: Alignment.center,
+                        width: SizeConfig.screenWidth! * 0.7,
+                        child: const LinearProgressIndicator(
+                          color: UiConstants.primaryColor,
+                          backgroundColor: UiConstants.kDarkBackgroundColor,
+                        ),
+                      )
+                    : Showcase(
+                        key: ShowCaseKeys.saveNowGold,
+                        description:
+                            'Once done, tap on SAVE to make your first transaction',
+                        child: AppPositiveBtn(
+                          btnText: widget.model.status == 2
+                              ? locale.btnSave
+                              : locale.unavailable.toUpperCase(),
+                          onPressed: () async {
+                            if (!widget.augTxnService.isGoldBuyInProgress) {
+                              FocusScope.of(context).unfocus();
+                              widget.model.initiateBuy();
+                            }
+                          },
+                          width: SizeConfig.screenWidth! * 0.813,
+                        ),
+                      ),
+                SizedBox(
+                  height: SizeConfig.padding32,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
         CustomKeyboardSubmitButton(
             onSubmit: () => widget.model.buyFieldNode.unfocus()),
@@ -434,6 +460,113 @@ class EnterAmountView extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+enum Assets { gold, flow }
+
+class AssetDropDown extends StatefulWidget {
+  const AssetDropDown({Key? key}) : super(key: key);
+
+  @override
+  State<AssetDropDown> createState() => _AssetDropDownState();
+}
+
+class _AssetDropDownState extends State<AssetDropDown> {
+  bool isStrechedDropDown = false;
+  int? groupValue;
+  String title = 'Select your Investment option';
+  bool titleChanged = false;
+
+  String getTitle(Assets asset) {
+    switch (asset) {
+      case Assets.gold:
+        return 'Gold';
+      case Assets.flow:
+        return 'Flow';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding16, vertical: SizeConfig.padding24),
+        decoration: BoxDecoration(
+          color: Color(0xff627F8E).withOpacity(0.2),
+          // border: Border.all(color: const Color(0xffbbbbbb)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                //Investing in
+                Text(
+                  'Investing in',
+                  style: TextStyles.rajdhaniSB.body2,
+                ),
+                const Spacer(),
+
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding6, vertical: 0),
+                    child: Text(
+                      title,
+                      style: titleChanged
+                          ? TextStyles.sourceSansSB.body2
+                          : TextStyles.sourceSans.body4,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isStrechedDropDown = !isStrechedDropDown;
+                      });
+                    },
+                    child: Icon(
+                      isStrechedDropDown
+                          ? Icons.expand_less
+                          : Icons.expand_more,
+                      color: Colors.white,
+                    ))
+              ],
+            ),
+            ExpandedSection(
+              expand: isStrechedDropDown,
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(0),
+                  // controller: scrollController2,
+                  shrinkWrap: true,
+                  itemCount: Assets.values.length,
+                  itemBuilder: (context, index) {
+                    return RadioListTile(
+                        title: Text(
+                          getTitle(Assets.values[index]),
+                          style: TextStyles.sourceSansSB.body2,
+                        ),
+                        value: index,
+                        groupValue: groupValue,
+                        onChanged: (val) {
+                          setState(() {
+                            groupValue = val;
+                            titleChanged = true;
+                            title = getTitle(Assets.values[index]);
+                            // isStrechedDropDown = false;
+                          });
+                        });
+                  }),
+            )
+          ],
+        ),
       ),
     );
   }

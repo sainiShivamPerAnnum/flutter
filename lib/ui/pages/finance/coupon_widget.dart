@@ -20,7 +20,7 @@ class CouponWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return coupon == null
-        ? SizedBox()
+        ? const SizedBox()
         : SizedBox(
             height: SizeConfig.screenHeight! * 0.21,
             child: Column(
@@ -40,14 +40,14 @@ class CouponWidget extends StatelessWidget {
                         SizedBox(
                             width: SizeConfig.padding16,
                             height: SizeConfig.padding16,
-                            child: CircularProgressIndicator(
+                            child: const CircularProgressIndicator(
                               color: UiConstants.primaryColor,
                               strokeWidth: 2,
                             )),
                     ],
                   ),
                 ),
-                SizedBox(
+          const SizedBox(
                   height: 18,
                 ),
                 coupon != null
@@ -76,8 +76,8 @@ class CouponWidget extends StatelessWidget {
                           itemCount: coupon!.length,
                         ),
                       )
-                    : SizedBox(),
-                SizedBox(
+                    : const SizedBox(),
+                const SizedBox(
                   height: 12,
                 ),
                 Padding(
@@ -129,11 +129,11 @@ class _CouponView extends StatelessWidget {
       },
       child: Container(
         width: SizeConfig.screenWidth! * .7,
-        padding: EdgeInsets.only(left: 16, right: 18, bottom: 18, top: 8),
+        padding: const EdgeInsets.only(left: 16, right: 18, bottom: 18, top: 8),
         decoration: BoxDecoration(
           border: goldBuyViewModel.appliedCoupon != null
               ? goldBuyViewModel.appliedCoupon?.code == model.code
-                  ? Border.all(color: Color(0xFF08D2AD))
+                  ? Border.all(color: const Color(0xFF08D2AD))
                   : null
               : null,
           color:
@@ -149,14 +149,14 @@ class _CouponView extends StatelessWidget {
                 SvgPicture.asset(
                   Assets.ticketTilted,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 8,
                 ),
                 Text(
                   model.code!,
                   style: TextStyles.sourceSansSB.body1.colour(Colors.white),
                 ),
-                Spacer(),
+                const Spacer(),
                 GestureDetector(
                   onTap: () {
                     if (goldBuyViewModel.appliedCoupon == null ||
@@ -177,9 +177,9 @@ class _CouponView extends StatelessWidget {
                           : Text(
                               locale.txnApply.toUpperCase(),
                               style: TextStyles.sourceSansSB.body3
-                                  .colour(Color(0xff1ADAB7)),
+                                  .colour(const Color(0xff1ADAB7)),
                             )
-                      : Icon(
+                      : const Icon(
                           Icons.close,
                           size: 20,
                           color: Color(0xff1ADAB7),
@@ -187,7 +187,7 @@ class _CouponView extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 6,
             ),
             SizedBox(
