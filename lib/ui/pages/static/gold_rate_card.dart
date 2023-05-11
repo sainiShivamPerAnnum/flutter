@@ -1,4 +1,3 @@
-import 'package:felloapp/ui/pages/static/blinker.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -104,7 +103,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                 Row(
                   children: [
                     Text(
-                 locale.currentPrice,
+                      locale.currentPrice,
                       style: TextStyles.body1.colour(UiConstants.primaryColor),
                     ),
                     Spacer(),
@@ -147,13 +146,13 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
 }
 
 class NewCurrentGoldPriceWidget extends StatefulWidget {
-  NewCurrentGoldPriceWidget({
+  const NewCurrentGoldPriceWidget({
     this.fetchGoldRates,
     this.goldprice,
     this.isFetching,
     this.mini = false,
     Key? key,
-  });
+  }) : super(key: key);
   final Function? fetchGoldRates;
   final double? goldprice;
   final bool? isFetching;
@@ -205,26 +204,10 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
   @override
   Widget build(BuildContext context) {
     return widget.mini
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              widget.isFetching!
-                  ? SpinKitThreeBounce(
-                      size: SizeConfig.body2,
-                      color: UiConstants.primaryColor,
-                    )
-                  : Text(
-                      "₹ ${widget.goldprice!.toStringAsFixed(2)}/gm",
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kPrimaryColor),
-                    ),
-              Text(
-                " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
-                style: TextStyles.sourceSans.body4
-                    .colour(UiConstants.kTextFieldTextColor),
-              ),
-            ],
+        ? Text(
+            " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
+            style: TextStyles.sourceSans.body4
+                .colour(UiConstants.kTextFieldTextColor),
           )
         : Container();
   }

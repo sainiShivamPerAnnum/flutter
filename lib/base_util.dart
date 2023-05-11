@@ -34,7 +34,7 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
 import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
+import 'package:felloapp/ui/pages/buy_flow/buy_modal_sheet.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
@@ -358,7 +358,7 @@ class BaseUtil extends ChangeNotifier {
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
-            ? GoldBuyView(
+            ? BuyModalSheet(
                 onChanged: (p0) => amount = p0,
                 amount: amt,
                 skipMl: isSkipMl ?? false,

@@ -39,15 +39,16 @@ class GoldBuyViewModel extends BaseViewModel {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_OPEN = 2;
 
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final DBModel? _dbModel = locator<DBModel>();
-  final AugmontService? _augmontModel = locator<AugmontService>();
-  final UserService? _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final DBModel _dbModel = locator<DBModel>();
+  final AugmontService _augmontModel = locator<AugmontService>();
+  final UserService _userService = locator<UserService>();
   final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
 
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final CouponRepository? _couponRepo = locator<CouponRepository>();
+  final CouponRepository _couponRepo = locator<CouponRepository>();
+
   // final PaytmService? _paytmService = locator<PaytmService>();
   S locale = locator<S>();
   AssetOptionsModel? assetOptionsModel;
@@ -69,10 +70,11 @@ class GoldBuyViewModel extends BaseViewModel {
   bool _skipMl = false;
   double _fieldWidth = 0.0;
   AnimationController? animationController;
-  get fieldWidth => this._fieldWidth;
+
+  get fieldWidth => _fieldWidth;
 
   set fieldWidth(value) {
-    this._fieldWidth = value;
+    _fieldWidth = value;
     notifyListeners();
   }
 
@@ -90,9 +92,10 @@ class GoldBuyViewModel extends BaseViewModel {
 
   double? _goldBuyAmount = 0;
   double _goldAmountInGrams = 0.0;
-  double? get goldBuyAmount => this._goldBuyAmount;
+
+  double? get goldBuyAmount => _goldBuyAmount;
   set goldBuyAmount(double? value) {
-    this._goldBuyAmount = value;
+    _goldBuyAmount = value;
     notifyListeners();
   }
 
@@ -102,10 +105,10 @@ class GoldBuyViewModel extends BaseViewModel {
     if (res.code == 200) assetOptionsModel = res.model;
   }
 
-  get goldAmountInGrams => this._goldAmountInGrams;
+  get goldAmountInGrams => _goldAmountInGrams;
 
   set goldAmountInGrams(value) {
-    this._goldAmountInGrams = value;
+    _goldAmountInGrams = value;
     notifyListeners();
   }
 
@@ -129,49 +132,50 @@ class GoldBuyViewModel extends BaseViewModel {
 
   double? get goldBuyPrice => goldRates != null ? goldRates!.goldBuyPrice : 0.0;
 
-  get isGoldBuyInProgress => this._isGoldBuyInProgress;
+  get isGoldBuyInProgress => _isGoldBuyInProgress;
+
   get augmontObjectSecondFetchDone => _augmontSecondFetchDone;
 
   set isGoldBuyInProgress(value) {
-    this._isGoldBuyInProgress = value;
+    _isGoldBuyInProgress = value;
     notifyListeners();
   }
 
-  get status => this._status;
+  get status => _status;
   set status(value) {
-    this._status = value;
+    _status = value;
     notifyListeners();
   }
 
-  get showMaxCapText => this._showMaxCapText;
+  get showMaxCapText => _showMaxCapText;
 
   set showMaxCapText(value) {
-    this._showMaxCapText = value;
+    _showMaxCapText = value;
     notifyListeners();
   }
 
-  get showMinCapText => this._showMinCapText;
+  get showMinCapText => _showMinCapText;
 
   set showMinCapText(value) {
-    this._showMinCapText = value;
+    _showMinCapText = value;
     notifyListeners();
   }
 
-  get isGoldRateFetching => this._isGoldRateFetching;
+  get isGoldRateFetching => _isGoldRateFetching;
 
   set isGoldRateFetching(value) {
-    this._isGoldRateFetching = value;
+    _isGoldRateFetching = value;
     notifyListeners();
   }
 
-  EligibleCouponResponseModel? get appliedCoupon => this._appliedCoupon;
+  EligibleCouponResponseModel? get appliedCoupon => _appliedCoupon;
 
   set appliedCoupon(EligibleCouponResponseModel? value) {
-    this._appliedCoupon = value;
+    _appliedCoupon = value;
     notifyListeners();
   }
 
-  CouponModel? get focusCoupon => this._focusCoupon;
+  CouponModel? get focusCoupon => _focusCoupon;
 
   set focusCoupon(CouponModel? coupon) {
     _focusCoupon = coupon;
@@ -185,16 +189,16 @@ class GoldBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  bool get skipMl => this._skipMl;
+  bool get skipMl => _skipMl;
 
   set skipMl(bool value) {
-    this._skipMl = value;
+    _skipMl = value;
   }
 
-  get addSpecialCoupon => this._addSpecialCoupon;
+  get addSpecialCoupon => _addSpecialCoupon;
 
   set addSpecialCoupon(value) {
-    this._addSpecialCoupon = value;
+    _addSpecialCoupon = value;
     notifyListeners();
   }
 
@@ -217,15 +221,16 @@ class GoldBuyViewModel extends BaseViewModel {
         text: amount?.toString() ??
             assetOptionsModel!.data.userOptions[1].value.toString());
     fieldWidth =
-        (SizeConfig.padding40 * goldAmountController!.text.length.toDouble());
-    if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value)
+        SizeConfig.padding40 * goldAmountController!.text.length.toDouble();
+    if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value) {
       lastTappedChipIndex = -1;
+    }
     fetchGoldRates();
     // await fetchNotices();
     status = checkAugmontStatus();
     // _paytmService!.getActiveSubscriptionDetails();
     getAvailableCoupons();
-    userAugmontState = await (CacheManager.readCache(key: "UserAugmontState"));
+    userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
     // await _userService.fetchUserAugmontDetail();
     // delayedAugmontCall();
     // checkIfDepositIsLocked();
@@ -243,8 +248,9 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   void listnear() {
-    if (animationController?.status == AnimationStatus.completed)
+    if (animationController?.status == AnimationStatus.completed) {
       animationController?.reset();
+    }
   }
 
   //INIT CHECKS
@@ -464,17 +470,18 @@ class GoldBuyViewModel extends BaseViewModel {
       double postTaxAmount = BaseUtil.digitPrecision(
           enteredAmount - getTaxOnAmount(enteredAmount, netTax));
 
-      if (goldBuyPrice != null && goldBuyPrice != 0.0)
+      if (goldBuyPrice != null && goldBuyPrice != 0.0) {
         goldAmountInGrams =
             BaseUtil.digitPrecision(postTaxAmount / goldBuyPrice!, 4, false);
-      else
+      } else {
         goldAmountInGrams = 0.0;
+      }
     }
-    fieldWidth = (SizeConfig.padding40 *
+    fieldWidth = SizeConfig.padding40 *
         ((goldAmountController!.text != null &&
                 goldAmountController!.text.isNotEmpty)
             ? goldAmountController!.text.length.toDouble()
-            : 0.5));
+            : 0.5);
     refresh();
   }
 
@@ -486,11 +493,12 @@ class GoldBuyViewModel extends BaseViewModel {
     isGoldRateFetching = true;
     goldRates = await _augmontModel!.getRates();
     updateGoldAmount();
-    if (goldRates == null)
+    if (goldRates == null) {
       BaseUtil.showNegativeAlert(
         locale.portalUnavailable,
         locale.currentRatesNotLoadedText1,
       );
+    }
     isGoldRateFetching = false;
   }
 
@@ -554,10 +562,11 @@ class GoldBuyViewModel extends BaseViewModel {
       _isAllowed = true;
     }
 
-    if (!_isAllowed)
+    if (!_isAllowed) {
       return STATUS_UNAVAILABLE;
-    else
+    } else {
       return STATUS_OPEN;
+    }
   }
 
   void showOfferModal(GoldBuyViewModel? model) {
@@ -579,10 +588,11 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   getAmount(double amount) {
-    if (amount > amount.toInt())
+    if (amount > amount.toInt()) {
       return amount;
-    else
+    } else {
       return amount.toInt();
+    }
   }
 
 //----------------------------------------------- COUPON LOGIC -------------------------------

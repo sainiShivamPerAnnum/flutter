@@ -49,9 +49,9 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
   String getString() {
     String text = "";
     if (inHours != "00") {
-      text = text + inHours + ":";
+      text = "$text$inHours:";
     }
-    return text + inMinutes + ":" + inSeconds;
+    return "$text$inMinutes:$inSeconds";
   }
 
   @override
@@ -78,7 +78,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
       child: Container(
         decoration: BoxDecoration(
           color: showHappyHour
-              ? Colors.black.withOpacity(0.5)
+              ? const Color(0xff1A1A1A).withOpacity(0.5)
               : UiConstants.kModalSheetSecondaryBackgroundColor
                   .withOpacity(0.1),
           borderRadius: BorderRadius.circular(5),
@@ -86,37 +86,37 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
         margin:
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding8,
-          horizontal: SizeConfig.padding12,
+          vertical: SizeConfig.padding6,
+          horizontal: SizeConfig.padding16,
         ),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                height: SizeConfig.padding32,
-                width: SizeConfig.padding32,
+              SizedBox(
+                height: SizeConfig.padding28,
+                width: SizeConfig.padding28,
                 child: showHappyHour
                     ? SvgPicture.asset(Assets.sandTimer)
-                    : SvgPicture.network(
-                        widget.model.image,
+                    : SvgPicture.asset(
+                        Assets.howToPlayAsset1Tambola,
                         fit: BoxFit.contain,
                       ),
               ),
-              SizedBox(width: SizeConfig.padding4),
+              SizedBox(width: SizeConfig.padding10),
               Flexible(
                 child: showHappyHour
                     ? RichText(
                         text: TextSpan(
                             style: TextStyles.rajdhaniSB.body3
-                                .colour(Color(0XFFB5CDCB)),
+                                .colour(const Color(0XFFB5CDCB)),
                             text: locale.happyHoursEndsIn,
                             children: [
                               TextSpan(
                                   text: getString(),
                                   style: TextStyles.rajdhaniB
-                                      .colour(Color(0xff51EADD)))
+                                      .colour(const Color(0xff51EADD)))
                             ]),
                       )
                     : Text(
@@ -126,7 +126,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
                             .colour(UiConstants.kTextColor3),
                       ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 8,
               ),
               if (showHappyHour)
@@ -134,7 +134,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
                   onTap: () => locator<BaseUtil>().showHappyHourDialog(
                       locator<HappyHourCampign>(),
                       isComingFromSave: true),
-                  child: Icon(
+                  child: const Icon(
                     Icons.info_outline,
                     size: 20,
                     color: Color(0xffB5CDCB),
