@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -39,6 +41,18 @@ class CacheClearWidget extends StatelessWidget {
                   backgroundColor: Colors.redAccent,
                   label: Text(
                     "clear Shared Prefs",
+                    style: TextStyles.body3.colour(Colors.white),
+                  ),
+                ),
+                ActionChip(
+                  onPressed: () {
+                    locator<UserService>().userSegments.remove('NEW_USER');
+                    BaseUtil.showPositiveAlert(
+                        "Preferences cleared successfully", "get back to work");
+                  },
+                  backgroundColor: Colors.teal,
+                  label: Text(
+                    "clear new user segment",
                     style: TextStyles.body3.colour(Colors.white),
                   ),
                 ),

@@ -47,7 +47,7 @@ class ScratchCardService
   bool get isFetchingScratchCards => _isFetchingScratchCards;
   set isFetchingScratchCards(bool val) {
     _isFetchingScratchCards = val;
-    notifyListeners(ScratchCardServiceProperties.AllScratchCards);
+    notifyListeners();
   }
 
   List<ScratchCard> _allScratchCards = [];
@@ -55,12 +55,10 @@ class ScratchCardService
   List<ScratchCard> get allScratchCards => _allScratchCards;
   set allScratchCards(List<ScratchCard> value) {
     _allScratchCards = value;
-    // notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
   void addScratchCards(List<ScratchCard>? value) {
     if (value != null) _allScratchCards.addAll(value);
-    // notifyListeners(ScratchCardServiceProperties.AllScratchCards);
   }
 
   //ALL GOLDEN TICKETS VIEW FIELDS -- START
@@ -445,23 +443,23 @@ class ScratchCardService
 
   List<ScratchCard> arrangeScratchCards() {
     List<ScratchCard> arrangedScratchCardList = [];
-    List<ScratchCard> temptickets = allScratchCards;
-    temptickets
+    List<ScratchCard> tempTickets = allScratchCards;
+    tempTickets
         .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
-    temptickets.forEach((e) {
+    for (final e in tempTickets) {
       if (e.redeemedTimestamp == null ||
           e.redeemedTimestamp == TimestampModel(nanoseconds: 0, seconds: 0)) {
         arrangedScratchCardList.add(e);
       }
-    });
-    temptickets.forEach((e) {
+    }
+    for (final e in tempTickets) {
       if ((e.redeemedTimestamp != null &&
               e.redeemedTimestamp !=
                   TimestampModel(nanoseconds: 0, seconds: 0)) &&
           e.isRewarding!) {
         arrangedScratchCardList.add(e);
       }
-    });
+    }
     return arrangedScratchCardList;
     // CODE FOR TICKET DISTINCTION - USE IF REQUIRED
     // final ids = Set();
@@ -469,11 +467,11 @@ class ScratchCardService
     // arrangedScratchCardList = ids.toList();
   }
 
-  void refreshTickets({required String prizeSubtype}) {
+  void refreshTickets({required String gtId}) {
     allScratchCards
-        .firstWhere((ticket) => ticket.prizeSubtype == prizeSubtype)
+        .firstWhere((ticket) => ticket.gtId == gtId)
         .redeemedTimestamp = TimestampModel.currentTimeStamp();
     allScratchCards = arrangeScratchCards();
-    notifyListeners(ScratchCardServiceProperties.AllScratchCards);
+    notifyListeners();
   }
 }

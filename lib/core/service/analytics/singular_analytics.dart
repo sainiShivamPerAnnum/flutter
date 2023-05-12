@@ -1,10 +1,8 @@
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/custom_logger.dart';
-import 'package:logger/logger.dart';
-import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:singular_flutter_sdk/singular.dart';
 import 'package:singular_flutter_sdk/singular_config.dart';
 
@@ -21,8 +19,9 @@ class SingularAnalytics extends BaseAnalyticsService {
     try {
       if (FlavorConfig.isProduction() &&
           token.isNotEmpty &&
-          _singularConfig != null)
+          _singularConfig != null) {
         Singular.registerDeviceTokenForUninstall(token);
+      }
     } catch (e) {
       _logger!.e('Singular implementation failed to capture fcm token');
     }
@@ -30,7 +29,7 @@ class SingularAnalytics extends BaseAnalyticsService {
 
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     if (FlavorConfig.isProduction()) {
-      _singularConfig = new SingularConfig(PROD_KEY, PROD_SECRET);
+      _singularConfig = SingularConfig(PROD_KEY, PROD_SECRET);
       _singularConfig!.customUserId = baseUser!.uid;
       Singular.start(_singularConfig!);
 
