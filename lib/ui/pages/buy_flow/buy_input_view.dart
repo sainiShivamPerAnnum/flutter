@@ -157,39 +157,81 @@ class _BuyInputViewState extends State<BuyInputView> {
                     ),
                   ),
                 const Spacer(),
-                widget.augTxnService.isGoldBuyInProgress
-                    ? Container(
-                        height: SizeConfig.screenWidth! * 0.1556,
-                        alignment: Alignment.center,
-                        width: SizeConfig.screenWidth! * 0.7,
-                        child: const LinearProgressIndicator(
-                          color: UiConstants.primaryColor,
-                          backgroundColor: UiConstants.kDarkBackgroundColor,
+
+                SizedBox(
+                  height: SizeConfig.navBarHeight,
+                ),
+              ],
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: widget.augTxnService.isGoldBuyInProgress
+              ? Container(
+                  height: SizeConfig.screenWidth! * 0.1556,
+                  alignment: Alignment.center,
+                  width: SizeConfig.screenWidth! * 0.7,
+                  child: const LinearProgressIndicator(
+                    color: UiConstants.primaryColor,
+                    backgroundColor: UiConstants.kDarkBackgroundColor,
+                  ),
+                )
+              : Showcase(
+                  key: ShowCaseKeys.saveNowGold,
+                  description:
+                      'Once done, tap on SAVE to make your first transaction',
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding32,
+                      vertical: SizeConfig.padding16,
+                    ),
+                    color: UiConstants.kArrowButtonBackgroundColor,
+                    child: Row(
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "₹${widget.model.goldAmountController?.text ?? '0'}",
+                              style: TextStyles.sourceSansSB.title5
+                                  .copyWith(color: Colors.white),
+                            ),
+                            //
+                            Text('in Digital Gold',
+                                style: TextStyles.rajdhaniSB.body3
+                                    .colour(UiConstants.kTextFieldTextColor)),
+                            SizedBox(
+                              height: SizeConfig.padding4,
+                            ),
+                            Text(
+                              'View Breakdown',
+                              style: TextStyles.sourceSans.body3.copyWith(
+                                  color: UiConstants.kTextFieldTextColor,
+                                  decorationStyle: TextDecorationStyle.solid,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ],
                         ),
-                      )
-                    : Showcase(
-                        key: ShowCaseKeys.saveNowGold,
-                        description:
-                            'Once done, tap on SAVE to make your first transaction',
-                        child: AppPositiveBtn(
-                          btnText: widget.model.status == 2
-                              ? locale.btnSave
-                              : locale.unavailable.toUpperCase(),
-                          onPressed: () async {
+                        const Spacer(),
+                        AppPositiveBtn(
+                          width: SizeConfig.screenWidth! * 0.22,
+                          height: SizeConfig.screenWidth! * 0.12,
+                          onPressed: () {
                             if (!widget.augTxnService.isGoldBuyInProgress) {
                               FocusScope.of(context).unfocus();
                               widget.model.initiateBuy();
                             }
                           },
-                          width: SizeConfig.screenWidth! * 0.813,
+                          btnText: widget.model.status == 2
+                              ? locale.btnSave
+                              : locale.unavailable.toUpperCase(),
                         ),
-                      ),
-                SizedBox(
-                  height: SizeConfig.padding32,
+                      ],
+                    ),
+                  ),
                 ),
-              ],
-            ),
-          ),
         ),
         CustomKeyboardSubmitButton(
             onSubmit: () => widget.model.buyFieldNode.unfocus()),
@@ -498,7 +540,7 @@ class _AssetDropDownState extends State<AssetDropDown> {
         padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding16, vertical: SizeConfig.padding24),
         decoration: BoxDecoration(
-          color: Color(0xff627F8E).withOpacity(0.2),
+          color: const Color(0xff627F8E).withOpacity(0.2),
           // border: Border.all(color: const Color(0xffbbbbbb)),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
