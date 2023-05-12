@@ -51,6 +51,8 @@ class TambolaService extends ChangeNotifier {
   Map<String, int> ticketCodeWinIndex = {};
   int tambolaTicketCount = 0;
   int _matchedTicketCount = 0;
+  int expiringTicketsCount = 0;
+
   bool _isScreenLoading = true;
   bool _isLoading = false;
   bool isEligible = false;
@@ -171,6 +173,7 @@ class TambolaService extends ChangeNotifier {
       } else {
         allTickets.addAll(ticketsResponse.model!);
       }
+      expiringTicketsCount = TambolaRepo.expiringTicketCount;
 
       notifyListeners();
     } else {
