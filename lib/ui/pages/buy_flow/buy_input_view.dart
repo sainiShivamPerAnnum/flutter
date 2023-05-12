@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/finance/coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
+import 'package:felloapp/util/assets.dart' as A;
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
@@ -24,6 +25,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class BuyInputView extends StatefulWidget {
@@ -215,18 +217,45 @@ class _BuyInputViewState extends State<BuyInputView> {
                           ],
                         ),
                         const Spacer(),
-                        AppPositiveBtn(
-                          width: SizeConfig.screenWidth! * 0.22,
-                          height: SizeConfig.screenWidth! * 0.12,
-                          onPressed: () {
-                            if (!widget.augTxnService.isGoldBuyInProgress) {
-                              FocusScope.of(context).unfocus();
-                              widget.model.initiateBuy();
-                            }
-                          },
-                          btnText: widget.model.status == 2
-                              ? locale.btnSave
-                              : locale.unavailable.toUpperCase(),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            if (widget.model.appliedCoupon != null) ...[
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SvgPicture.asset(
+                                    A.Assets.ticketTilted,
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    '${widget.model.appliedCoupon?.code} coupon applied',
+                                    style: TextStyles.sourceSans.body3
+                                        .colour(UiConstants.kTealTextColor),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding4,
+                              )
+                            ],
+                            AppPositiveBtn(
+                              width: SizeConfig.screenWidth! * 0.22,
+                              height: SizeConfig.screenWidth! * 0.12,
+                              onPressed: () {
+                                if (!widget.augTxnService.isGoldBuyInProgress) {
+                                  FocusScope.of(context).unfocus();
+                                  widget.model.initiateBuy();
+                                }
+                              },
+                              btnText: widget.model.status == 2
+                                  ? locale.btnSave
+                                  : locale.unavailable.toUpperCase(),
+                            ),
+                          ],
                         ),
                       ],
                     ),

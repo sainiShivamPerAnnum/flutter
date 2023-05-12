@@ -66,6 +66,7 @@ class GoldBuyViewModel extends BaseViewModel {
   bool _isGoldBuyInProgress = false;
   bool _addSpecialCoupon = false;
   bool isSpecialCoupon = true;
+  bool showCouponAppliedText = false;
 
   bool _skipMl = false;
   double _fieldWidth = 0.0;
@@ -616,7 +617,7 @@ class GoldBuyViewModel extends BaseViewModel {
     int? minTransaction = -1;
     int counter = 0;
     isSpecialCoupon = true;
-    for (CouponModel c in couponList!) {
+    for (final CouponModel c in couponList!) {
       if (c.code == couponCode) {
         order = counter;
         isSpecialCoupon = false;
@@ -681,7 +682,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
   void checkForSpecialCoupon(EligibleCouponResponseModel model) {
     if (couponList!.firstWhere((coupon) => coupon.code == model.code,
-            orElse: () => CouponModel.none()) ==
+            orElse: CouponModel.none) ==
         CouponModel.none()) {
       showCoupons = false;
       couponList!.insert(
