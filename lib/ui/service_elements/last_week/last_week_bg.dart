@@ -71,7 +71,7 @@ class LastWeekBg extends StatelessWidget {
                         locator<MarketingEventHandlerService>().getCampaigns();
                       }
                       locator<AnalyticsService>().track(
-                          eventName: AnalyticsEvents.lastWeekSaveNow,
+                          eventName: AnalyticsEvents.lastWeekCrossButton,
                           properties: {
                             "Last week deposited": model?.user?.invested,
                             "last week returns": model?.user?.returns,
@@ -158,6 +158,15 @@ class LastWeekBg extends StatelessWidget {
                             locator<MarketingEventHandlerService>()
                                 .getCampaigns();
                           }
+
+                          locator<AnalyticsService>().track(
+                              eventName: AnalyticsEvents.lastWeekSaveNow,
+                              properties: {
+                                "Last week deposited": model?.user?.invested,
+                                "last week returns": model?.user?.returns,
+                                "last week return Percentage":
+                                    model?.user?.gainsPerc,
+                              });
 
                           AppState.backButtonDispatcher!.didPopRoute();
                           AppState.delegate!.parseRoute(Uri.parse('/save'));

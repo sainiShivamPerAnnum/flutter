@@ -128,7 +128,7 @@ class LastWeekUi extends StatelessWidget {
                           }
 
                           locator<AnalyticsService>().track(
-                              eventName: AnalyticsEvents.lastWeekSaveNow,
+                              eventName: AnalyticsEvents.lastWeekCrossButton,
                               properties: {
                                 "Last week deposited": model.user?.invested,
                                 "last week returns": model.user?.returns,
