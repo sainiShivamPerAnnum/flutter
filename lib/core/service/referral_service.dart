@@ -196,19 +196,20 @@ class ReferralService extends ChangeNotifier {
   sharePrizeDetails(double prizeAmount) async {
     startShareLoading();
     try {
-      String? url;
-      final link = await _appFlyer!.inviteLink();
-      if (link['status'] == 'success') {
-        url = link['payload']['userInviteUrl'];
-        url ??= link['payload']['userInviteURL'];
-      }
+      String? url = await createDynamicLink(true);
+
+      // final link = await _appFlyer!.inviteLink();
+      // if (link['status'] == 'success') {
+      //   url = link['payload']['userInviteUrl'];
+      //   url ??= link['payload']['userInviteURL'];
+      // }
 
       if (url != null) {
         caputure(
             'Hey, I won ₹${prizeAmount.toInt()} on Fello! \nLet\'s save and play together: $url');
       }
     } catch (e) {
-      _logger!.e(e.toString());
+      _logger.e(e.toString());
       BaseUtil.showNegativeAlert(locale.errorOccured, locale.tryLater);
     }
     stopShareLoading();

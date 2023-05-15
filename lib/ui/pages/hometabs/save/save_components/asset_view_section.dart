@@ -84,7 +84,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: [
+        properties: const [
           UserServiceProperties.myUserWallet,
           UserServiceProperties.myAugmontDetails,
           UserServiceProperties.myUserFund,
@@ -128,7 +128,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 height: SizeConfig.padding20,
                               ),
                               Showcase(
-                                targetShapeBorder: CircleBorder(),
+                                targetShapeBorder: const CircleBorder(),
                                 key: ShowCaseKeys.assetPicture,
                                 description:
                                     'You can learn more about the asset on this page',

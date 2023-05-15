@@ -157,7 +157,7 @@ class TxnHistoryService extends ChangeNotifier {
     }
   }
 
-  updateTransactions(InvestmentType investmentType) async {
+  Future<void> updateTransactions(InvestmentType investmentType) async {
     lastTxnDocId = null;
     hasMoreTxns = true;
     hasMorePrizeTxns = true;

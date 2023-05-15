@@ -332,7 +332,11 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                 widget.txn.type ==
                                         UserTransaction.TRAN_TYPE_WITHDRAW
                                     ? "Rewards Deducted:"
-                                    : "Rewards Credited:",
+                                    : (widget.txn.augmnt != null &&
+                                            widget.txn.augmnt!["aBlockId"] ==
+                                                null)
+                                        ? "You redeemed ₹${widget.txn.amount} from your total winnings."
+                                        : "Rewards Credited:",
                                 style: TextStyles.sourceSans.body3
                                     .colour(Color(0XFF9AB5C4)),
                               ),
@@ -354,57 +358,63 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                             ),
                             Row(
                               children: [
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff212B31),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 8),
-                                    margin: EdgeInsets.only(right: 8),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            if (widget.txn.type ==
-                                                UserTransaction
-                                                    .TRAN_TYPE_WITHDRAW)
-                                              Text(
-                                                "-  ",
-                                                style:
-                                                    TextStyles.rajdhaniSB.body1,
+                                widget.txn.augmnt != null &&
+                                        widget.txn.augmnt!["aBlockId"] == null
+                                    ? const SizedBox()
+                                    : Expanded(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Color(0xff212B31),
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 8),
+                                          margin: EdgeInsets.only(right: 8),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  if (widget.txn.type ==
+                                                      UserTransaction
+                                                          .TRAN_TYPE_WITHDRAW)
+                                                    Text(
+                                                      "-  ",
+                                                      style: TextStyles
+                                                          .rajdhaniSB.body1,
+                                                    ),
+                                                  SvgPicture.asset(
+                                                    Assets.token,
+                                                    height:
+                                                        SizeConfig.padding16,
+                                                  ),
+                                                  SizedBox(
+                                                    width: SizeConfig.padding4,
+                                                  ),
+                                                  Text(
+                                                    widget.txn.amount
+                                                        .toString()
+                                                        .split(".")
+                                                        .first
+                                                        .replaceAll("-", ""),
+                                                    style: TextStyles
+                                                        .rajdhaniSB.body2,
+                                                  ),
+                                                ],
                                               ),
-                                            SvgPicture.asset(
-                                              Assets.token,
-                                              height: SizeConfig.padding16,
-                                            ),
-                                            SizedBox(
-                                              width: SizeConfig.padding4,
-                                            ),
-                                            Text(
-                                              widget.txn.amount
-                                                  .toString()
-                                                  .split(".")
-                                                  .first
-                                                  .replaceAll("-", ""),
-                                              style:
-                                                  TextStyles.rajdhaniSB.body2,
-                                            ),
-                                          ],
+                                              SizedBox(
+                                                width: SizeConfig.padding4,
+                                              ),
+                                              Text(
+                                                "Game Tokens",
+                                                style:
+                                                    TextStyles.rajdhaniSB.body4,
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        SizedBox(
-                                          width: SizeConfig.padding4,
-                                        ),
-                                        Text(
-                                          "Game Tokens",
-                                          style: TextStyles.rajdhaniSB.body4,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                      ),
                                 if ((widget.txn.misMap
                                             ?.containsKey("tickets") ??
                                         false) &&
