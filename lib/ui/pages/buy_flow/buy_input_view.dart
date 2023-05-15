@@ -17,6 +17,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart' as A;
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
@@ -57,13 +58,13 @@ class _BuyInputViewState extends State<BuyInputView> {
 
       switch (widget.investmentType) {
         case InvestmentType.LENDBOXP2P:
-          asset = Asset.flow;
+          widget.model.selectedAsset = asset = Asset.flow;
           break;
         case InvestmentType.AUGGOLD99:
-          asset = Asset.gold;
+          widget.model.selectedAsset = asset = Asset.gold;
           break;
         default:
-          asset = null;
+          widget.model.selectedAsset = asset = null;
           break;
       }
     });
@@ -208,95 +209,10 @@ class _BuyInputViewState extends State<BuyInputView> {
                     backgroundColor: UiConstants.kDarkBackgroundColor,
                   ),
                 )
-              : Showcase(
-                  key: ShowCaseKeys.saveNowGold,
-                  description:
-                      'Once done, tap on SAVE to make your first transaction',
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding32,
-                      vertical: SizeConfig.padding16,
-                    ),
-                    color: UiConstants.kArrowButtonBackgroundColor,
-                    child: Row(
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "₹${widget.model.goldAmountController?.text ?? '0'}",
-                              style: TextStyles.sourceSansSB.title5
-                                  .copyWith(color: Colors.white),
-                            ),
-                            //
-                            Text('in Digital Gold',
-                                style: TextStyles.rajdhaniSB.body3
-                                    .colour(UiConstants.kTextFieldTextColor)),
-                            SizedBox(
-                              height: SizeConfig.padding4,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                BaseUtil.openModalBottomSheet(
-                                  isBarrierDismissible: true,
-                                  content: const ViewBreakdown(),
-                                );
-                              },
-                              child: Text(
-                                'View Breakdown',
-                                style: TextStyles.sourceSans.body3.copyWith(
-                                    color: UiConstants.kTextFieldTextColor,
-                                    decorationStyle: TextDecorationStyle.solid,
-                                    decoration: TextDecoration.underline),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            if (widget.model.appliedCoupon != null) ...[
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SvgPicture.asset(
-                                    A.Assets.ticketTilted,
-                                  ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(
-                                    '${widget.model.appliedCoupon?.code} coupon applied',
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(UiConstants.kTealTextColor),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding4,
-                              )
-                            ],
-                            AppPositiveBtn(
-                              width: SizeConfig.screenWidth! * 0.22,
-                              height: SizeConfig.screenWidth! * 0.12,
-                              onPressed: () {
-                                if (!widget.augTxnService.isGoldBuyInProgress) {
-                                  FocusScope.of(context).unfocus();
-                                  widget.model.initiateBuy();
-                                }
-                              },
-                              btnText: widget.model.status == 2
-                                  ? locale.btnSave
-                                  : locale.unavailable.toUpperCase(),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+              : BuyNavBar(
+                  locale: locale,
+                  augTxnService: widget.augTxnService,
+                  model: widget.model,
                 ),
         ),
         CustomKeyboardSubmitButton(
@@ -306,15 +222,291 @@ class _BuyInputViewState extends State<BuyInputView> {
   }
 }
 
+class BuyNavBar extends StatelessWidget {
+  const BuyNavBar({
+    super.key,
+    required this.locale,
+    required this.augTxnService,
+    required this.model,
+  });
+
+  final AugmontTransactionService augTxnService;
+  final BuyViewModel model;
+  final S locale;
+
+  @override
+  Widget build(BuildContext context) {
+    return model.selectedAsset == null
+        ? const SizedBox()
+        : Showcase(
+            key: ShowCaseKeys.saveNowGold,
+            description:
+                'Once done, tap on SAVE to make your first transaction',
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding32,
+                vertical: SizeConfig.padding16,
+              ),
+              color: UiConstants.kArrowButtonBackgroundColor,
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "₹${model.goldAmountController?.text ?? '0'}",
+                        style: TextStyles.sourceSansSB.title5
+                            .copyWith(color: Colors.white),
+                      ),
+                      //
+                      Text('in Digital Gold',
+                          style: TextStyles.rajdhaniSB.body3
+                              .colour(UiConstants.kTextFieldTextColor)),
+                      SizedBox(
+                        height: SizeConfig.padding4,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          BaseUtil.openModalBottomSheet(
+                            isBarrierDismissible: true,
+                            backgroundColor: const Color(0xff1A1A1A),
+                            content: ViewBreakdown(model: model),
+                          );
+                        },
+                        child: Text(
+                          'View Breakdown',
+                          style: TextStyles.sourceSans.body3.copyWith(
+                              color: UiConstants.kTextFieldTextColor,
+                              decorationStyle: TextDecorationStyle.solid,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (model.appliedCoupon != null) ...[
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                              A.Assets.ticketTilted,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              '${model.appliedCoupon?.code} coupon applied',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTealTextColor),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        )
+                      ],
+                      AppPositiveBtn(
+                        width: SizeConfig.screenWidth! * 0.22,
+                        height: SizeConfig.screenWidth! * 0.12,
+                        onPressed: () {
+                          if (!augTxnService.isGoldBuyInProgress) {
+                            FocusScope.of(context).unfocus();
+                            model.initiateBuy();
+                          }
+                        },
+                        btnText: model.status == 2
+                            ? locale.btnSave
+                            : locale.unavailable.toUpperCase(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+  }
+}
+
 class ViewBreakdown extends StatelessWidget {
-  const ViewBreakdown({Key? key}) : super(key: key);
+  const ViewBreakdown({Key? key, required this.model}) : super(key: key);
+
+  final BuyViewModel model;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [],
+      child: Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: SizeConfig.padding28,
+            ),
+            Row(
+              children: [
+                const Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding28,
+            ),
+            Row(
+              children: [
+                Text(
+                    model.selectedAsset == Asset.gold
+                        ? "Digital Gold Amount"
+                        : "Fello Flo Amount",
+                    style: TextStyles.sourceSansSB.body1),
+                const Spacer(),
+                Text(
+                  "₹${model.goldAmountController?.text ?? '0'}",
+                  style: TextStyles.sourceSansSB.body1,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding16,
+            ),
+            if (model.selectedAsset == Asset.gold) ...[
+              Row(
+                children: [
+                  Text(
+                    "Grams of Gold",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                  const Spacer(),
+                  Text(
+                    "${model.goldAmountInGrams}gms",
+                    style: TextStyles.sourceSansSB.body2,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
+              Row(
+                children: [
+                  Text(
+                    "GST (${model.goldRates?.igstPercent})%",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                  const Spacer(),
+                  Text(
+                    "₹${(model.goldRates?.igstPercent)! / 100 * double.parse(model.goldAmountController?.text ?? '0')}",
+                    style: TextStyles.sourceSansSB.body2,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+            ],
+            Container(
+              height: 1,
+              color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  height: SizeConfig.padding28,
+                  width: SizeConfig.padding28,
+                  child: SvgPicture.asset(
+                    Assets.howToPlayAsset1Tambola,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding4,
+                ),
+                Text(
+                  "Total Tambola Tickets",
+                  style: TextStyles.sourceSansSB.body1,
+                ),
+                const Spacer(),
+                Text(
+                  "${model.totalTickets}",
+                  style: TextStyles.sourceSansSB.body1,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            Row(
+              children: [
+                Text(
+                  "Happy Hour Tambola Tickets",
+                  style: TextStyles.sourceSans.body2,
+                ),
+                const Spacer(),
+                Text(
+                  "${model.happyHourTickets}",
+                  style: TextStyles.sourceSans.body2,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            Row(
+              children: [
+                Text(
+                  "Lifetime Tambola Tickets",
+                  style: TextStyles.sourceSans.body2,
+                ),
+                const Spacer(),
+                Text(
+                  "${model.numberOfTambolaTickets}",
+                  style: TextStyles.sourceSans.body2,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            Container(
+              height: 1,
+              color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            AppPositiveBtn(
+              width: SizeConfig.screenWidth!,
+              onPressed: () {
+                // if (!augTxnService.isGoldBuyInProgress) {
+                //   FocusScope.of(context).unfocus();
+                //   model.initiateBuy();
+                // }
+              },
+              btnText: model.status == 2 ? 'Save' : 'Unavailable'.toUpperCase(),
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -109,6 +109,11 @@ class BuyViewModel extends BaseViewModel {
 
   double? get goldBuyAmount => _goldBuyAmount;
 
+  int? numberOfTambolaTickets;
+
+  int? totalTickets;
+  int? happyHourTickets;
+
   set goldBuyAmount(double? value) {
     _goldBuyAmount = value;
     notifyListeners();
@@ -224,7 +229,6 @@ class BuyViewModel extends BaseViewModel {
 
   set showInfoIcon(bool value) {
     _showInfoIcon = value;
-    notifyListeners();
   }
 
   bool readOnly = true;
@@ -234,11 +238,6 @@ class BuyViewModel extends BaseViewModel {
     // resetBuyOptions();
 
     setState(ViewState.Busy);
-
-    if (investmentType != null) {
-      selectedAsset =
-          investmentType == InvestmentType.AUGGOLD99 ? Asset.gold : Asset.flow;
-    }
 
     animationController = AnimationController(
         vsync: vsync, duration: const Duration(milliseconds: 500));
@@ -458,28 +457,31 @@ class BuyViewModel extends BaseViewModel {
 
   String showHappyHourSubtitle() {
     final int tambolaCost = AppConfig.getValue(AppConfigKey.tambola_cost);
-    final HappyHourCampign happyHourModel = locator<HappyHourCampign>();
+    final HappyHourCampign? happyHourModel =
+        locator.isRegistered<HappyHourCampign>()
+            ? locator<HappyHourCampign>()
+            : null;
 
     final int parsedGoldAmount =
         int.tryParse(goldAmountController?.text ?? '0') ?? 0;
     final num minAmount =
-        num.tryParse(happyHourModel.data!.minAmount.toString())!;
+        num.tryParse(happyHourModel!.data!.minAmount.toString())!;
 
     if (parsedGoldAmount < tambolaCost) {
       showInfoIcon = false;
       return "";
     }
 
-    int numberOfTickets = parsedGoldAmount ~/ tambolaCost;
-    int totalTickets = numberOfTickets;
+    numberOfTambolaTickets = parsedGoldAmount ~/ tambolaCost;
+    totalTickets = numberOfTambolaTickets;
 
-    final int rewardValue = (happyHourModel.data != null &&
+    happyHourTickets = (happyHourModel.data != null &&
             happyHourModel.data?.rewards?[0].type == 'tt')
-        ? happyHourModel.data!.rewards![0].value!
+        ? happyHourModel.data!.rewards![0].value
         : 0;
 
-    if (parsedGoldAmount >= minAmount) {
-      totalTickets += rewardValue;
+    if (parsedGoldAmount >= minAmount && happyHourTickets != null) {
+      totalTickets = numberOfTambolaTickets! + happyHourTickets!;
       showInfoIcon = true;
     } else {
       showInfoIcon = false;
