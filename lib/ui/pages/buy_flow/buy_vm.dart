@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -214,6 +215,15 @@ class BuyViewModel extends BaseViewModel {
 
   set addSpecialCoupon(value) {
     _addSpecialCoupon = value;
+    notifyListeners();
+  }
+
+  bool _showInfoIcon = false;
+
+  bool get showInfoIcon => _showInfoIcon;
+
+  set showInfoIcon(bool value) {
+    _showInfoIcon = value;
     notifyListeners();
   }
 
@@ -444,6 +454,38 @@ class BuyViewModel extends BaseViewModel {
           .value
     });
     notifyListeners();
+  }
+
+  String showHappyHourSubtitle() {
+    final int tambolaCost = AppConfig.getValue(AppConfigKey.tambola_cost);
+    final HappyHourCampign happyHourModel = locator<HappyHourCampign>();
+
+    final int parsedGoldAmount =
+        int.tryParse(goldAmountController?.text ?? '0') ?? 0;
+    final num minAmount =
+        num.tryParse(happyHourModel.data!.minAmount.toString())!;
+
+    if (parsedGoldAmount < tambolaCost) {
+      showInfoIcon = false;
+      return "";
+    }
+
+    int numberOfTickets = parsedGoldAmount ~/ tambolaCost;
+    int totalTickets = numberOfTickets;
+
+    final int rewardValue = (happyHourModel.data != null &&
+            happyHourModel.data?.rewards?[0].type == 'tt')
+        ? happyHourModel.data!.rewards![0].value!
+        : 0;
+
+    if (parsedGoldAmount >= minAmount) {
+      totalTickets += rewardValue;
+      showInfoIcon = true;
+    } else {
+      showInfoIcon = false;
+    }
+
+    return "+$totalTickets Tambola Tickets";
   }
 
   // UI ESSENTIALS
