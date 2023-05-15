@@ -423,7 +423,6 @@ class RootViewModel extends BaseViewModel {
     log('showLastWeekOverview called', name: 'HomeVM');
 
     if (isWelcomeAnimationInProgress &&
-        AppState.isFirstTime == false &&
         await BaseUtil.isFirstTimeThisWeek()) {
       log('showLastWeekOverview condition ok', name: 'HomeVM');
 
