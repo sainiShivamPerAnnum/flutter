@@ -2,7 +2,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/buy_flow/buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -16,10 +16,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CouponModalSheet extends StatelessWidget {
   CouponModalSheet({Key? key, required this.model}) : super(key: key);
-  final GoldBuyViewModel? model;
+  final BuyViewModel? model;
   final TextEditingController couponCodeController =
       new TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);

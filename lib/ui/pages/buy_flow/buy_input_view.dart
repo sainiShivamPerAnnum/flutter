@@ -1,5 +1,6 @@
 import "dart:math" as math;
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
@@ -7,9 +8,9 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/ui/pages/buy_flow/buy_vm.dart';
 import 'package:felloapp/ui/pages/buy_flow/expanded_section.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -29,14 +30,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class BuyInputView extends StatefulWidget {
-  // final int? amount;
+  final int? amount;
   final bool? skipMl;
   final AugmontTransactionService augTxnService;
-  final GoldBuyViewModel model;
+  final BuyViewModel model;
 
   const BuyInputView({
     Key? key,
-    // this.amount,
+    this.amount,
     this.skipMl,
     required this.model,
     required this.augTxnService,
@@ -119,7 +120,7 @@ class _BuyInputViewState extends State<BuyInputView> {
                   BannerWidget(
                     model: widget.model.assetOptionsModel!.data.banner,
                     happyHourCampign: locator.isRegistered<HappyHourCampign>()
-                        ? locator()
+                        ? locator<HappyHourCampign>()
                         : null,
                   ),
                 if (widget.model.animationController != null)
@@ -130,7 +131,6 @@ class _BuyInputViewState extends State<BuyInputView> {
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
-                // Draw a line with color 627F8E with opacity 20%  and height 1
                 Container(
                   height: 1,
                   margin: EdgeInsets.symmetric(
@@ -207,12 +207,20 @@ class _BuyInputViewState extends State<BuyInputView> {
                             SizedBox(
                               height: SizeConfig.padding4,
                             ),
-                            Text(
-                              'View Breakdown',
-                              style: TextStyles.sourceSans.body3.copyWith(
-                                  color: UiConstants.kTextFieldTextColor,
-                                  decorationStyle: TextDecorationStyle.solid,
-                                  decoration: TextDecoration.underline),
+                            GestureDetector(
+                              onTap: () {
+                                BaseUtil.openModalBottomSheet(
+                                  isBarrierDismissible: true,
+                                  content: const ViewBreakdown(),
+                                );
+                              },
+                              child: Text(
+                                'View Breakdown',
+                                style: TextStyles.sourceSans.body3.copyWith(
+                                    color: UiConstants.kTextFieldTextColor,
+                                    decorationStyle: TextDecorationStyle.solid,
+                                    decoration: TextDecoration.underline),
+                              ),
                             ),
                           ],
                         ),
@@ -269,6 +277,20 @@ class _BuyInputViewState extends State<BuyInputView> {
   }
 }
 
+class ViewBreakdown extends StatelessWidget {
+  const ViewBreakdown({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [],
+      ),
+    );
+  }
+}
+
 class RechargeModalSheetAppBar extends StatelessWidget {
   final AugmontTransactionService txnService;
   final Function? trackCloseTapped;
@@ -303,7 +325,7 @@ class EnterAmountView extends StatelessWidget {
   const EnterAmountView(
       {Key? key, required this.model, required this.txnService})
       : super(key: key);
-  final GoldBuyViewModel model;
+  final BuyViewModel model;
   final AugmontTransactionService txnService;
 
   @override
@@ -323,22 +345,6 @@ class EnterAmountView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     TextButton(
-                //       child: Text("One Time",
-                //           style: TextStyles.sourceSansSB.body2),
-                //       onPressed: () {},
-                //     ),
-                //     TextButton(
-                //       child: Text("Auto SIP",
-                //           style: TextStyles.sourceSans.body2
-                //               .colour(UiConstants.kTextColor3)),
-                //       onPressed: () {},
-                //     ),
-                //   ],
-                // ),
                 if (model.buyNotice != null && model.buyNotice!.isNotEmpty)
                   Container(
                     margin: EdgeInsets.only(bottom: SizeConfig.padding16),

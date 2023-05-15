@@ -15,12 +15,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/service/analytics/mixpanel_analytics.dart';
 
 class BannerWidget extends StatefulWidget {
-  BannerWidget({Key? key, required this.model, required this.happyHourCampign})
-      : showHappyHour = happyHourCampign?.data?.showHappyHour ?? false,
+  BannerWidget({
+    Key? key,
+    required this.model,
+    required this.happyHourCampign,
+  })  : showHappyHour = happyHourCampign?.data?.showHappyHour ?? false,
         super(key: key);
   final I.Banner model;
   final bool showHappyHour;
   final HappyHourCampign? happyHourCampign;
+
   @override
   State<BannerWidget> createState() => _BannerWidgetState(
       endTime: DateTime.tryParse(happyHourCampign?.data?.endTime ?? ''),
@@ -34,6 +38,7 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
             startTime: startTime ?? DateTime.now());
 
   late bool showHappyHour;
+
   @override
   void initState() {
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
@@ -90,57 +95,58 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
           horizontal: SizeConfig.padding16,
         ),
         child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: SizeConfig.padding28,
-                width: SizeConfig.padding28,
-                child: showHappyHour
-                    ? SvgPicture.asset(Assets.sandTimer)
-                    : SvgPicture.asset(
-                        Assets.howToPlayAsset1Tambola,
-                        fit: BoxFit.contain,
-                      ),
-              ),
-              SizedBox(width: SizeConfig.padding10),
-              Flexible(
-                child: showHappyHour
-                    ? RichText(
-                        text: TextSpan(
-                            style: TextStyles.rajdhaniSB.body3
-                                .colour(const Color(0XFFB5CDCB)),
-                            text: locale.happyHoursEndsIn,
-                            children: [
-                              TextSpan(
-                                  text: getString(),
-                                  style: TextStyles.rajdhaniB
-                                      .colour(const Color(0xff51EADD)))
-                            ]),
-                      )
-                    : Text(
-                        widget.model.title,
-                        maxLines: 2,
-                        style: TextStyles.sourceSans.body4
-                            .colour(UiConstants.kTextColor3),
-                      ),
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              if (showHappyHour)
-                GestureDetector(
-                  onTap: () => locator<BaseUtil>().showHappyHourDialog(
-                      locator<HappyHourCampign>(),
-                      isComingFromSave: true),
-                  child: const Icon(
-                    Icons.info_outline,
-                    size: 20,
-                    color: Color(0xffB5CDCB),
-                  ),
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: SizeConfig.padding28,
+              width: SizeConfig.padding28,
+              child: showHappyHour
+                  ? SvgPicture.asset(Assets.sandTimer)
+                  : SvgPicture.asset(
+                      Assets.howToPlayAsset1Tambola,
+                      fit: BoxFit.contain,
+                    ),
+            ),
+            SizedBox(width: SizeConfig.padding10),
+            Flexible(
+              child: showHappyHour
+                  ? RichText(
+                      text: TextSpan(
+                          style: TextStyles.rajdhaniSB.body3
+                              .colour(const Color(0XFFB5CDCB)),
+                          text: locale.happyHoursEndsIn,
+                          children: [
+                            TextSpan(
+                                text: getString(),
+                                style: TextStyles.rajdhaniB
+                                    .colour(const Color(0xff51EADD)))
+                          ]),
+                    )
+                  : Text(
+                      widget.model.title,
+                      maxLines: 2,
+                      style: TextStyles.sourceSans.body4
+                          .colour(UiConstants.kTextColor3),
+                    ),
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            if (showHappyHour)
+              GestureDetector(
+                onTap: () => locator<BaseUtil>().showHappyHourDialog(
+                    locator<HappyHourCampign>(),
+                    isComingFromSave: true),
+                child: const Icon(
+                  Icons.info_outline,
+                  size: 20,
+                  color: Color(0xffB5CDCB),
                 ),
-            ]),
+              ),
+          ],
+        ),
       ),
     );
   }

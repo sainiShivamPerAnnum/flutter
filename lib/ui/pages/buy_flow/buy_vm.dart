@@ -22,18 +22,20 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
+import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 //TODO : add location for save checkout [ journey, save, asset details, challenges,promos]
-class GoldBuyViewModel extends BaseViewModel {
+class BuyViewModel extends BaseViewModel {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_OPEN = 2;
 
@@ -93,6 +95,7 @@ class GoldBuyViewModel extends BaseViewModel {
   double _goldAmountInGrams = 0.0;
 
   double? get goldBuyAmount => _goldBuyAmount;
+
   set goldBuyAmount(double? value) {
     _goldBuyAmount = value;
     notifyListeners();
@@ -141,6 +144,7 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   get status => _status;
+
   set status(value) {
     _status = value;
     notifyListeners();
@@ -423,6 +427,7 @@ class GoldBuyViewModel extends BaseViewModel {
     });
     notifyListeners();
   }
+
   // UI ESSENTIALS
 
   // Widget amountChip(int index) {
@@ -568,22 +573,22 @@ class GoldBuyViewModel extends BaseViewModel {
     }
   }
 
-  void showOfferModal(GoldBuyViewModel? model) {
-    // BaseUtil.openModalBottomSheet(
-    //   content: CouponModalSheet(model: model),
-    //   addToScreenStack: true,
-    //   backgroundColor: UiConstants.kSecondaryBackgroundColor,
-    //   borderRadius: BorderRadius.only(
-    //     topLeft: Radius.circular(SizeConfig.roundness12),
-    //     topRight: Radius.circular(SizeConfig.roundness12),
-    //   ),
-    //   boxContraints: BoxConstraints(
-    //     maxHeight: SizeConfig.screenHeight! * 0.75,
-    //     minHeight: SizeConfig.screenHeight! * 0.75,
-    //   ),
-    //   isBarrierDismissible: false,
-    //   isScrollControlled: true,
-    // );
+  void showOfferModal(BuyViewModel? model) {
+    BaseUtil.openModalBottomSheet(
+      content: CouponModalSheet(model: model),
+      addToScreenStack: true,
+      backgroundColor: UiConstants.kSecondaryBackgroundColor,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness12),
+        topRight: Radius.circular(SizeConfig.roundness12),
+      ),
+      boxContraints: BoxConstraints(
+        maxHeight: SizeConfig.screenHeight! * 0.75,
+        minHeight: SizeConfig.screenHeight! * 0.75,
+      ),
+      isBarrierDismissible: false,
+      isScrollControlled: true,
+    );
   }
 
   getAmount(double amount) {
@@ -722,7 +727,5 @@ class PendingDialog extends StatelessWidget {
   }
 }
 
-
-
-//Remove 
+//Remove
 //Leaderboard and Prices

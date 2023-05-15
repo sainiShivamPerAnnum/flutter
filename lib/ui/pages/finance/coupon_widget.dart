@@ -1,5 +1,5 @@
 import 'package:felloapp/core/model/coupon_card_model.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/buy_flow/buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -14,7 +14,7 @@ class CouponWidget extends StatelessWidget {
       : super(key: key);
   final List<CouponModel>? coupon;
   final Function(CouponModel coupon) onTap;
-  final GoldBuyViewModel model;
+  final BuyViewModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class _CouponView extends StatelessWidget {
       : super(key: key);
   final CouponModel model;
   final Function(CouponModel coupon) onTap;
-  final GoldBuyViewModel goldBuyViewModel;
+  final BuyViewModel goldBuyViewModel;
 
   @override
   Widget build(BuildContext context) {

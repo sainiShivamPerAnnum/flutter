@@ -6,7 +6,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/buy_flow/buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_loading_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
@@ -100,7 +100,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
                     secondaryAnimation: secondaryAnimation,
                   );
                 },
-                child: BaseView<GoldBuyViewModel>(
+                child: BaseView<BuyViewModel>(
                   onModelReady: (model) =>
                       model.init(widget.amount, widget.skipMl, this),
                   builder: (ctx, model, child) {
@@ -119,8 +119,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
     );
   }
 
-  Widget _getView(
-      AugmontTransactionService txnService, GoldBuyViewModel model) {
+  Widget _getView(AugmontTransactionService txnService, BuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idle) {
       return GoldBuyInputView(
         // amount: widget.amount,

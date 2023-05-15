@@ -4,7 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/buy_flow/buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -15,7 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class GoldBuyLoadingView extends StatelessWidget {
-  final GoldBuyViewModel model;
+  final BuyViewModel model;
+
   GoldBuyLoadingView({super.key, required this.model});
 
   final AugmontTransactionService? _augTxnService =
