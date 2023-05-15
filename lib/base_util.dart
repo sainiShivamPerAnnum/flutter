@@ -59,6 +59,8 @@ import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import 'core/model/timestamp_model.dart';
+
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
   final DBModel _dbModel = locator<DBModel>();
@@ -746,19 +748,33 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static Future<bool> isFirstTimeThisWeek() async {
-    // Get the current week number
+    /// Get the current week number
     final currentWeekNumber =
         (DateTime.now().difference(DateTime.utc(0, 1, 1)).inDays ~/ 7) + 1;
 
-    // Get the last week number when the app was opened
+    final TimestampModel? userCreatedOn =
+        locator<UserService>().baseUser?.createdOn;
+
+    /// if user signup date is same as current week number then return false
+    if (userCreatedOn != null) {
+      final userCreatedOnDate = DateTime.fromMillisecondsSinceEpoch(
+          userCreatedOn.millisecondsSinceEpoch);
+      final userCreatedOnWeekNumber =
+          (userCreatedOnDate.difference(DateTime.utc(0, 1, 1)).inDays ~/ 7) + 1;
+      if (userCreatedOnWeekNumber == currentWeekNumber) {
+        return false;
+      }
+    }
+
+    /// Get the last week number when the app was opened
     final lastWeekNumber =
         PreferenceHelper.getInt(PreferenceHelper.LAST_WEEK_NUMBER) ?? 0;
 
-    // Update the last week number in preferences
+    /// Update the last week number in preferences
     await PreferenceHelper.setInt(
         PreferenceHelper.LAST_WEEK_NUMBER, currentWeekNumber);
 
-    // Check if the current week is the same as the last week when the app was opened
+    /// Check if the current week is the same as the last week when the app was opened
     return currentWeekNumber != lastWeekNumber;
   }
 
