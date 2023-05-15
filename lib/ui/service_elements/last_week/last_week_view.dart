@@ -181,7 +181,7 @@ class LastWeekUi extends StatelessWidget {
                         Center(
                           child: Text(
                             model.user == null
-                                ? "😥 You missed last week on "
+                                ? "😥 You missed out on"
                                 : ' 💰 Your Weekly Report',
                             style: TextStyles.rajdhaniSB.title5,
                           ),
