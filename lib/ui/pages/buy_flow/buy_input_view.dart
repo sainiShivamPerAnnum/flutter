@@ -339,174 +339,194 @@ class ViewBreakdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: SizeConfig.padding28,
-            ),
-            Row(
-              children: [
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                  ),
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: SizeConfig.padding28,
+          ),
+          Row(
+            children: [
+              const Spacer(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.white,
                 ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding28,
-            ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding28,
+          ),
+          Row(
+            children: [
+              Text(
+                  model.selectedAsset == Asset.gold
+                      ? "Digital Gold Amount"
+                      : "Fello Flo Amount",
+                  style: TextStyles.sourceSansSB.body1),
+              const Spacer(),
+              Text(
+                "₹${model.goldAmountController?.text ?? '0'}",
+                style: TextStyles.sourceSansSB.body1,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          if (model.selectedAsset == Asset.gold) ...[
             Row(
               children: [
                 Text(
-                    model.selectedAsset == Asset.gold
-                        ? "Digital Gold Amount"
-                        : "Fello Flo Amount",
-                    style: TextStyles.sourceSansSB.body1),
+                  "Grams of Gold",
+                  style: TextStyles.sourceSans.body2,
+                ),
                 const Spacer(),
                 Text(
-                  "₹${model.goldAmountController?.text ?? '0'}",
-                  style: TextStyles.sourceSansSB.body1,
+                  "${model.goldAmountInGrams}gms",
+                  style: TextStyles.sourceSansSB.body2,
                 ),
               ],
             ),
             SizedBox(
               height: SizeConfig.padding16,
             ),
-            if (model.selectedAsset == Asset.gold) ...[
-              Row(
-                children: [
-                  Text(
-                    "Grams of Gold",
-                    style: TextStyles.sourceSans.body2,
-                  ),
-                  const Spacer(),
-                  Text(
-                    "${model.goldAmountInGrams}gms",
-                    style: TextStyles.sourceSansSB.body2,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding16,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "GST (${model.goldRates?.igstPercent})%",
-                    style: TextStyles.sourceSans.body2,
-                  ),
-                  const Spacer(),
-                  Text(
-                    "₹${(model.goldRates?.igstPercent)! / 100 * double.parse(model.goldAmountController?.text ?? '0')}",
-                    style: TextStyles.sourceSansSB.body2,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding24,
-              ),
-            ],
-            Container(
-              height: 1,
-              color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  height: SizeConfig.padding28,
-                  width: SizeConfig.padding28,
-                  child: SvgPicture.asset(
-                    Assets.howToPlayAsset1Tambola,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                SizedBox(
-                  width: SizeConfig.padding4,
-                ),
-                Text(
-                  "Total Tambola Tickets",
-                  style: TextStyles.sourceSansSB.body1,
-                ),
-                const Spacer(),
-                Text(
-                  "${model.totalTickets}",
-                  style: TextStyles.sourceSansSB.body1,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
             Row(
               children: [
                 Text(
-                  "Happy Hour Tambola Tickets",
+                  "GST (${model.goldRates?.igstPercent})%",
                   style: TextStyles.sourceSans.body2,
                 ),
                 const Spacer(),
                 Text(
-                  "${model.happyHourTickets}",
-                  style: TextStyles.sourceSans.body2,
+                  "₹${(model.goldRates?.igstPercent)! / 100 * double.parse(model.goldAmountController?.text ?? '0')}",
+                  style: TextStyles.sourceSansSB.body2,
                 ),
               ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Row(
-              children: [
-                Text(
-                  "Lifetime Tambola Tickets",
-                  style: TextStyles.sourceSans.body2,
-                ),
-                const Spacer(),
-                Text(
-                  "${model.numberOfTambolaTickets}",
-                  style: TextStyles.sourceSans.body2,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Container(
-              height: 1,
-              color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            AppPositiveBtn(
-              width: SizeConfig.screenWidth!,
-              onPressed: () {
-                // if (!augTxnService.isGoldBuyInProgress) {
-                //   FocusScope.of(context).unfocus();
-                //   model.initiateBuy();
-                // }
-              },
-              btnText: model.status == 2 ? 'Save' : 'Unavailable'.toUpperCase(),
             ),
             SizedBox(
               height: SizeConfig.padding24,
             ),
           ],
-        ),
+          Container(
+            height: 1,
+            color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+          ),
+          SizedBox(
+            height: SizeConfig.padding24,
+          ),
+          Row(
+            children: [
+              SizedBox(
+                height: SizeConfig.padding28,
+                width: SizeConfig.padding28,
+                child: SvgPicture.asset(
+                  Assets.howToPlayAsset1Tambola,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              SizedBox(
+                width: SizeConfig.padding4,
+              ),
+              Text(
+                "Total Tambola Tickets",
+                style: TextStyles.sourceSansSB.body1,
+              ),
+              const Spacer(),
+              Text(
+                "${model.totalTickets}",
+                style: TextStyles.sourceSansSB.body1,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding24,
+          ),
+          Row(
+            children: [
+              Text(
+                "Happy Hour Tambola Tickets",
+                style: TextStyles.sourceSans.body2,
+              ),
+              const Spacer(),
+              Text(
+                "${model.happyHourTickets}",
+                style: TextStyles.sourceSans.body2,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding24,
+          ),
+          Row(
+            children: [
+              Text(
+                "Lifetime Tambola Tickets",
+                style: TextStyles.sourceSans.body2,
+              ),
+              const Spacer(),
+              Text(
+                "${model.numberOfTambolaTickets}",
+                style: TextStyles.sourceSans.body2,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding24,
+          ),
+          Container(
+            height: 1,
+            color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+          if (model.appliedCoupon != null) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  A.Assets.ticketTilted,
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  '${model.appliedCoupon?.code} coupon applied',
+                  style: TextStyles.sourceSans.body3
+                      .colour(UiConstants.kTealTextColor),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding12,
+            )
+          ],
+          AppPositiveBtn(
+            width: SizeConfig.screenWidth!,
+            onPressed: () {
+              // if (!augTxnService.isGoldBuyInProgress) {
+              //   FocusScope.of(context).unfocus();
+              //   model.initiateBuy();
+              // }
+            },
+            btnText: model.status == 2 ? 'Save' : 'Unavailable'.toUpperCase(),
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+        ],
       ),
     );
   }
