@@ -88,104 +88,116 @@ class _BuyInputViewState extends State<BuyInputView> {
         double.tryParse(widget.model.goldAmountController!.text) ?? 0;
     return Stack(
       children: [
-        SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: SizedBox(
-            height: SizeConfig.screenHeight,
-            width: SizeConfig.screenWidth,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // SizedBox(height: SizeConfig.padding16),
-                RechargeModalSheetAppBar(
-                  txnService: widget.augTxnService,
-                  trackCloseTapped: () {
-                    _analyticsService!.track(
-                        eventName: AnalyticsEvents.savePageClosed,
-                        properties: {
-                          "Amount entered":
-                          widget.model.goldAmountController!.text,
-                          "Grams of gold": widget.model.goldAmountInGrams,
-                          "Asset": 'Gold',
-                          "Coupon Applied": widget.model.appliedCoupon != null
-                              ? widget.model.appliedCoupon!.code
-                              : "Not Applied",
-                        });
-                    if (locator<BackButtonActions>().isTransactionCancelled) {
-                      if (!AppState.isRepeated) {
-                        locator<BackButtonActions>()
-                            .showWantToCloseTransactionBottomSheet(
-                            double.parse(
-                                widget.model.goldAmountController!.text)
-                                .round(),
-                            InvestmentType.AUGGOLD99, () {
-                          widget.model.initiateBuy();
-                          AppState.backButtonDispatcher!.didPopRoute();
-                        });
-                        AppState.isRepeated = true;
-                      } else {
+        SizedBox(
+          height: SizeConfig.screenHeight,
+          width: SizeConfig.screenWidth,
+          child: Column(
+            children: [
+              RechargeModalSheetAppBar(
+                txnService: widget.augTxnService,
+                trackCloseTapped: () {
+                  _analyticsService!.track(
+                      eventName: AnalyticsEvents.savePageClosed,
+                      properties: {
+                        "Amount entered":
+                            widget.model.goldAmountController!.text,
+                        "Grams of gold": widget.model.goldAmountInGrams,
+                        "Asset": 'Gold',
+                        "Coupon Applied": widget.model.appliedCoupon != null
+                            ? widget.model.appliedCoupon!.code
+                            : "Not Applied",
+                      });
+                  if (locator<BackButtonActions>().isTransactionCancelled) {
+                    if (!AppState.isRepeated) {
+                      locator<BackButtonActions>()
+                          .showWantToCloseTransactionBottomSheet(
+                              double.parse(
+                                      widget.model.goldAmountController!.text)
+                                  .round(),
+                              InvestmentType.AUGGOLD99, () {
+                        widget.model.initiateBuy();
                         AppState.backButtonDispatcher!.didPopRoute();
-                      }
-                      return;
+                      });
+                      AppState.isRepeated = true;
                     } else {
                       AppState.backButtonDispatcher!.didPopRoute();
                     }
-                  },
-                ),
-                SizedBox(height: SizeConfig.padding24),
-                if (widget.model.assetOptionsModel != null)
-                  BannerWidget(
-                    model: widget.model.assetOptionsModel!.data.banner,
-                    happyHourCampign: locator.isRegistered<HappyHourCampign>()
-                        ? locator<HappyHourCampign>()
-                        : null,
-                  ),
-                if (widget.model.animationController != null)
-                  EnterAmountView(
-                    model: widget.model,
-                    txnService: widget.augTxnService,
-                  ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                Container(
-                  height: 1,
-                  margin: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins),
-                  color: UiConstants.kModalSheetSecondaryBackgroundColor
-                      .withOpacity(0.2),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
+                    return;
+                  } else {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  }
+                },
+              ),
+              SizedBox(height: SizeConfig.padding24),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: SizedBox(
+                    // height: SizeConfig.screenHeight,
+                    // width: SizeConfig.screenWidth,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // SizedBox(height: SizeConfig.padding16),
 
-                AssetDropDown(
-                  asset: asset,
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                if (widget.model.showCoupons)
-                  Showcase(
-                    key: ShowCaseKeys.couponKey,
-                    description: 'You can apply a coupon to get extra gold!',
-                    child: CouponWidget(
-                      widget.model.couponList,
-                      widget.model,
-                      onTap: (coupon) {
-                        widget.model.applyCoupon(coupon.code, false);
-                      },
+                        if (widget.model.assetOptionsModel != null)
+                          BannerWidget(
+                            model: widget.model.assetOptionsModel!.data.banner,
+                            happyHourCampign:
+                                locator.isRegistered<HappyHourCampign>()
+                                    ? locator<HappyHourCampign>()
+                                    : null,
+                          ),
+                        if (widget.model.animationController != null)
+                          EnterAmountView(
+                            model: widget.model,
+                            txnService: widget.augTxnService,
+                          ),
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+                        Container(
+                          height: 1,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          color: UiConstants.kModalSheetSecondaryBackgroundColor
+                              .withOpacity(0.2),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+
+                        AssetDropDown(
+                          asset: asset,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+                        if (widget.model.showCoupons)
+                          Showcase(
+                            key: ShowCaseKeys.couponKey,
+                            description:
+                                'You can apply a coupon to get extra gold!',
+                            child: CouponWidget(
+                              widget.model.couponList,
+                              widget.model,
+                              onTap: (coupon) {
+                                widget.model.applyCoupon(coupon.code, false);
+                              },
+                            ),
+                          ),
+
+                        SizedBox(
+                          height: SizeConfig.navBarHeight * 2,
+                        ),
+                      ],
                     ),
                   ),
-                const Spacer(),
-
-                SizedBox(
-                  height: SizeConfig.navBarHeight,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         Align(
