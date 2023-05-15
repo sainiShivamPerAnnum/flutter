@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/home/cards_home.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/new_user_save.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/locator.dart';
@@ -54,19 +56,17 @@ class SaveViewWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Cards();
-
-    // PropertyChangeConsumer<UserService, UserServiceProperties>(
-    //   properties: const [UserServiceProperties.mySegments],
-    //   builder: (_, prop, ___) {
-    //     if (prop!.userSegments.contains("NEW_USER")) {
-    //       return NewUserSaveView(model: model);
-    //     }
-    //     return ListView(
-    //       padding: EdgeInsets.zero,
-    //       children: model.getSaveViewItems(model),
-    //     );
-    //   },
-    // );
+    return PropertyChangeConsumer<UserService, UserServiceProperties>(
+      properties: const [UserServiceProperties.mySegments],
+      builder: (_, prop, ___) {
+        if (prop!.userSegments.contains("NEW_USER")) {
+          return NewUserSaveView(model: model);
+        }
+        return ListView(
+          padding: EdgeInsets.zero,
+          children: model.getSaveViewItems(model),
+        );
+      },
+    );
   }
 }
