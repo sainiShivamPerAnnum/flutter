@@ -1,6 +1,6 @@
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/ui/pages/buy_flow/buy_vm.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -162,7 +162,7 @@ class _CouponView extends StatelessWidget {
             Row(
               children: [
                 SvgPicture.asset(
-                  Assets.ticketTilted,
+                  a.Assets.ticketTilted,
                 ),
                 const SizedBox(
                   width: 8,

@@ -362,6 +362,7 @@ class BaseUtil extends ChangeNotifier {
                 onChanged: (p0) => amount = p0,
                 amount: amt,
                 skipMl: isSkipMl ?? false,
+                investmentType: investmentType,
               )
             : LendboxBuyView(
                 amount: amt,

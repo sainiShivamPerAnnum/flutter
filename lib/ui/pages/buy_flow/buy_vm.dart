@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
@@ -35,6 +36,9 @@ import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 //TODO : add location for save checkout [ journey, save, asset details, challenges,promos]
+
+enum Asset { gold, flow }
+
 class BuyViewModel extends BaseViewModel {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_OPEN = 2;
@@ -67,10 +71,18 @@ class BuyViewModel extends BaseViewModel {
   bool _addSpecialCoupon = false;
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
+  Asset? _selectedAsset;
 
   bool _skipMl = false;
   double _fieldWidth = 0.0;
   AnimationController? animationController;
+
+  Asset? get selectedAsset => _selectedAsset;
+
+  set selectedAsset(Asset? value) {
+    _selectedAsset = value;
+    notifyListeners();
+  }
 
   get fieldWidth => _fieldWidth;
 
@@ -207,13 +219,19 @@ class BuyViewModel extends BaseViewModel {
 
   bool readOnly = true;
 
-  init(int? amount, bool isSkipMilestone, TickerProvider vsync) async {
+  Future<void> init(int? amount, bool isSkipMilestone, TickerProvider vsync,
+      {InvestmentType? investmentType}) async {
     // resetBuyOptions();
 
     setState(ViewState.Busy);
 
+    if (investmentType != null) {
+      selectedAsset =
+          investmentType == InvestmentType.AUGGOLD99 ? Asset.gold : Asset.flow;
+    }
+
     animationController = AnimationController(
-        vsync: vsync, duration: Duration(milliseconds: 500));
+        vsync: vsync, duration: const Duration(milliseconds: 500));
     await getAssetOptionsModel();
     animationController?.addListener(listnear);
     skipMl = isSkipMilestone;

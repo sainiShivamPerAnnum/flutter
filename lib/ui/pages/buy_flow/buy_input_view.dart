@@ -34,6 +34,7 @@ class BuyInputView extends StatefulWidget {
   final bool? skipMl;
   final AugmontTransactionService augTxnService;
   final BuyViewModel model;
+  final InvestmentType? investmentType;
 
   const BuyInputView({
     Key? key,
@@ -41,6 +42,7 @@ class BuyInputView extends StatefulWidget {
     this.skipMl,
     required this.model,
     required this.augTxnService,
+    this.investmentType,
   }) : super(key: key);
 
   @override
@@ -52,19 +54,36 @@ class _BuyInputViewState extends State<BuyInputView> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       SpotLightController.instance.userFlow = UserFlow.onAssetBuyPage;
+
+      switch (widget.investmentType) {
+        case InvestmentType.LENDBOXP2P:
+          asset = Asset.flow;
+          break;
+        case InvestmentType.AUGGOLD99:
+          asset = Asset.gold;
+          break;
+        default:
+          asset = null;
+          break;
+      }
     });
+
     super.initState();
   }
 
+  Asset? asset;
+
   @override
   Widget build(BuildContext context) {
+    debugPrint('widget.investmentType => ${widget.investmentType}');
+
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     S locale = locator<S>();
     AppState.onTap = () {
       widget.model.initiateBuy();
       AppState.backButtonDispatcher!.didPopRoute();
     };
-    AppState.type = InvestmentType.AUGGOLD99;
+    AppState.type = widget.investmentType;
     AppState.amt =
         double.tryParse(widget.model.goldAmountController!.text) ?? 0;
     return Stack(
@@ -87,7 +106,7 @@ class _BuyInputViewState extends State<BuyInputView> {
                         eventName: AnalyticsEvents.savePageClosed,
                         properties: {
                           "Amount entered":
-                              widget.model.goldAmountController!.text,
+                          widget.model.goldAmountController!.text,
                           "Grams of gold": widget.model.goldAmountInGrams,
                           "Asset": 'Gold',
                           "Coupon Applied": widget.model.appliedCoupon != null
@@ -98,10 +117,10 @@ class _BuyInputViewState extends State<BuyInputView> {
                       if (!AppState.isRepeated) {
                         locator<BackButtonActions>()
                             .showWantToCloseTransactionBottomSheet(
-                                double.parse(
-                                        widget.model.goldAmountController!.text)
-                                    .round(),
-                                InvestmentType.AUGGOLD99, () {
+                            double.parse(
+                                widget.model.goldAmountController!.text)
+                                .round(),
+                            InvestmentType.AUGGOLD99, () {
                           widget.model.initiateBuy();
                           AppState.backButtonDispatcher!.didPopRoute();
                         });
@@ -142,7 +161,9 @@ class _BuyInputViewState extends State<BuyInputView> {
                   height: SizeConfig.padding24,
                 ),
 
-                const AssetDropDown(),
+                AssetDropDown(
+                  asset: asset,
+                ),
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
@@ -171,104 +192,104 @@ class _BuyInputViewState extends State<BuyInputView> {
           alignment: Alignment.bottomCenter,
           child: widget.augTxnService.isGoldBuyInProgress
               ? Container(
-                  height: SizeConfig.screenWidth! * 0.1556,
-                  alignment: Alignment.center,
-                  width: SizeConfig.screenWidth! * 0.7,
-                  child: const LinearProgressIndicator(
-                    color: UiConstants.primaryColor,
-                    backgroundColor: UiConstants.kDarkBackgroundColor,
-                  ),
-                )
+            height: SizeConfig.screenWidth! * 0.1556,
+            alignment: Alignment.center,
+            width: SizeConfig.screenWidth! * 0.7,
+            child: const LinearProgressIndicator(
+              color: UiConstants.primaryColor,
+              backgroundColor: UiConstants.kDarkBackgroundColor,
+            ),
+          )
               : Showcase(
-                  key: ShowCaseKeys.saveNowGold,
-                  description:
-                      'Once done, tap on SAVE to make your first transaction',
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding32,
-                      vertical: SizeConfig.padding16,
-                    ),
-                    color: UiConstants.kArrowButtonBackgroundColor,
-                    child: Row(
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "₹${widget.model.goldAmountController?.text ?? '0'}",
-                              style: TextStyles.sourceSansSB.title5
-                                  .copyWith(color: Colors.white),
-                            ),
-                            //
-                            Text('in Digital Gold',
-                                style: TextStyles.rajdhaniSB.body3
-                                    .colour(UiConstants.kTextFieldTextColor)),
-                            SizedBox(
-                              height: SizeConfig.padding4,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                BaseUtil.openModalBottomSheet(
-                                  isBarrierDismissible: true,
-                                  content: const ViewBreakdown(),
-                                );
-                              },
-                              child: Text(
-                                'View Breakdown',
-                                style: TextStyles.sourceSans.body3.copyWith(
-                                    color: UiConstants.kTextFieldTextColor,
-                                    decorationStyle: TextDecorationStyle.solid,
-                                    decoration: TextDecoration.underline),
-                              ),
-                            ),
-                          ],
+            key: ShowCaseKeys.saveNowGold,
+            description:
+            'Once done, tap on SAVE to make your first transaction',
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding32,
+                vertical: SizeConfig.padding16,
+              ),
+              color: UiConstants.kArrowButtonBackgroundColor,
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "₹${widget.model.goldAmountController?.text ?? '0'}",
+                        style: TextStyles.sourceSansSB.title5
+                            .copyWith(color: Colors.white),
+                      ),
+                      //
+                      Text('in Digital Gold',
+                          style: TextStyles.rajdhaniSB.body3
+                              .colour(UiConstants.kTextFieldTextColor)),
+                      SizedBox(
+                        height: SizeConfig.padding4,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          BaseUtil.openModalBottomSheet(
+                            isBarrierDismissible: true,
+                            content: const ViewBreakdown(),
+                          );
+                        },
+                        child: Text(
+                          'View Breakdown',
+                          style: TextStyles.sourceSans.body3.copyWith(
+                              color: UiConstants.kTextFieldTextColor,
+                              decorationStyle: TextDecorationStyle.solid,
+                              decoration: TextDecoration.underline),
                         ),
-                        const Spacer(),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            if (widget.model.appliedCoupon != null) ...[
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SvgPicture.asset(
-                                    A.Assets.ticketTilted,
-                                  ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(
-                                    '${widget.model.appliedCoupon?.code} coupon applied',
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(UiConstants.kTealTextColor),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding4,
-                              )
-                            ],
-                            AppPositiveBtn(
-                              width: SizeConfig.screenWidth! * 0.22,
-                              height: SizeConfig.screenWidth! * 0.12,
-                              onPressed: () {
-                                if (!widget.augTxnService.isGoldBuyInProgress) {
-                                  FocusScope.of(context).unfocus();
-                                  widget.model.initiateBuy();
-                                }
-                              },
-                              btnText: widget.model.status == 2
-                                  ? locale.btnSave
-                                  : locale.unavailable.toUpperCase(),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ),
+                  const Spacer(),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (widget.model.appliedCoupon != null) ...[
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                              A.Assets.ticketTilted,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              '${widget.model.appliedCoupon?.code} coupon applied',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTealTextColor),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        )
+                      ],
+                      AppPositiveBtn(
+                        width: SizeConfig.screenWidth! * 0.22,
+                        height: SizeConfig.screenWidth! * 0.12,
+                        onPressed: () {
+                          if (!widget.augTxnService.isGoldBuyInProgress) {
+                            FocusScope.of(context).unfocus();
+                            widget.model.initiateBuy();
+                          }
+                        },
+                        btnText: widget.model.status == 2
+                            ? locale.btnSave
+                            : locale.unavailable.toUpperCase(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         CustomKeyboardSubmitButton(
             onSubmit: () => widget.model.buyFieldNode.unfocus()),
@@ -542,10 +563,10 @@ class EnterAmountView extends StatelessWidget {
   }
 }
 
-enum Assets { gold, flow }
-
 class AssetDropDown extends StatefulWidget {
-  const AssetDropDown({Key? key}) : super(key: key);
+  const AssetDropDown({Key? key, this.asset}) : super(key: key);
+
+  final Asset? asset;
 
   @override
   State<AssetDropDown> createState() => _AssetDropDownState();
@@ -557,12 +578,21 @@ class _AssetDropDownState extends State<AssetDropDown> {
   String title = 'Select your Investment option';
   bool titleChanged = false;
 
-  String getTitle(Assets asset) {
+  String getAssets(Asset asset) {
     switch (asset) {
-      case Assets.gold:
+      case Asset.gold:
         return 'Gold';
-      case Assets.flow:
+      case Asset.flow:
         return 'Flow';
+    }
+  }
+
+  String getTitle() {
+    if (widget.asset == null) {
+      return 'Select your Investment option';
+    } else {
+      titleChanged = true;
+      return getAssets(widget.asset!);
     }
   }
 
@@ -596,7 +626,7 @@ class _AssetDropDownState extends State<AssetDropDown> {
                     padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.padding6, vertical: 0),
                     child: Text(
-                      title,
+                      getTitle(),
                       style: titleChanged
                           ? TextStyles.sourceSansSB.body2
                           : TextStyles.sourceSans.body4,
@@ -623,11 +653,11 @@ class _AssetDropDownState extends State<AssetDropDown> {
                   padding: const EdgeInsets.all(0),
                   // controller: scrollController2,
                   shrinkWrap: true,
-                  itemCount: Assets.values.length,
+                  itemCount: Asset.values.length,
                   itemBuilder: (context, index) {
                     return RadioListTile(
                         title: Text(
-                          getTitle(Assets.values[index]),
+                          getAssets(Asset.values[index]),
                           style: TextStyles.sourceSansSB.body2,
                         ),
                         value: index,
@@ -636,8 +666,8 @@ class _AssetDropDownState extends State<AssetDropDown> {
                           setState(() {
                             groupValue = val;
                             titleChanged = true;
-                            title = getTitle(Assets.values[index]);
-                            // isStrechedDropDown = false;
+                            title = getAssets(Asset.values[index]);
+                            isStrechedDropDown = false;
                           });
                         });
                   }),

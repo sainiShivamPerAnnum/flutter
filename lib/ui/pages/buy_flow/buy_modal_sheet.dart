@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:animations/animations.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
@@ -24,9 +25,14 @@ class BuyModalSheet extends StatefulWidget {
   final int? amount;
   final bool skipMl;
   final OnAmountChanged onChanged;
+  final InvestmentType? investmentType;
 
   const BuyModalSheet(
-      {Key? key, this.amount, this.skipMl = false, required this.onChanged})
+      {Key? key,
+      this.amount,
+      this.skipMl = false,
+      required this.onChanged,
+      this.investmentType})
       : super(key: key);
 
   @override
@@ -104,8 +110,12 @@ class _GoldBuyViewState extends State<BuyModalSheet>
                   );
                 },
                 child: BaseView<BuyViewModel>(
-                  onModelReady: (model) =>
-                      model.init(widget.amount, widget.skipMl, this),
+                  onModelReady: (model) => model.init(
+                    widget.amount,
+                    widget.skipMl,
+                    this,
+                    investmentType: widget.investmentType,
+                  ),
                   builder: (ctx, model, child) {
                     if (model.state == ViewState.Busy) {
                       return const Center(child: FullScreenLoader());
@@ -130,6 +140,7 @@ class _GoldBuyViewState extends State<BuyModalSheet>
         skipMl: widget.skipMl,
         model: model,
         augTxnService: txnService,
+        investmentType: widget.investmentType,
       );
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return GoldBuyLoadingView(model: model);

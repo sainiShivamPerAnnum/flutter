@@ -7,12 +7,13 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/ui/pages/buy_flow/buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
@@ -22,8 +23,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
-
-import '../../../buy_flow/buy_vm.dart';
 
 class GoldBuyInputView extends StatefulWidget {
   // final int? amount;
@@ -200,7 +199,7 @@ class RechargeModalSheetAppBar extends StatelessWidget {
           alignment: Alignment.center,
           transform: Matrix4.rotationY(math.pi),
           child: Image.asset(
-            Assets.digitalGoldBar,
+            a.Assets.digitalGoldBar,
             width: SizeConfig.screenWidth! * 0.12,
             height: SizeConfig.screenWidth! * 0.12,
           ),

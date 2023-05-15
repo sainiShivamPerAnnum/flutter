@@ -5,7 +5,7 @@ import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/buy_flow/buy_vm.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -40,7 +40,7 @@ class GoldBuyLoadingView extends StatelessWidget {
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
         Expanded(
-          child: Lottie.network(Assets.goldDepostLoadingLottie,
+          child: Lottie.network(a.Assets.goldDepostLoadingLottie,
               height: SizeConfig.screenHeight! * 0.7),
         ),
         Column(
