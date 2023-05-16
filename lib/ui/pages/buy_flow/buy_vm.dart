@@ -19,6 +19,7 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
@@ -231,6 +232,8 @@ class BuyViewModel extends BaseViewModel {
     _showInfoIcon = value;
   }
 
+  late bool showHappyHour;
+
   bool readOnly = true;
 
   Future<void> init(int? amount, bool isSkipMilestone, TickerProvider vsync,
@@ -238,6 +241,8 @@ class BuyViewModel extends BaseViewModel {
     // resetBuyOptions();
 
     setState(ViewState.Busy);
+
+    showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
 
     animationController = AnimationController(
         vsync: vsync, duration: const Duration(milliseconds: 500));
@@ -465,7 +470,7 @@ class BuyViewModel extends BaseViewModel {
     final int parsedGoldAmount =
         int.tryParse(goldAmountController?.text ?? '0') ?? 0;
     final num minAmount =
-        num.tryParse(happyHourModel!.data!.minAmount.toString())!;
+        num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
 
     if (parsedGoldAmount < tambolaCost) {
       showInfoIcon = false;
@@ -475,10 +480,12 @@ class BuyViewModel extends BaseViewModel {
     numberOfTambolaTickets = parsedGoldAmount ~/ tambolaCost;
     totalTickets = numberOfTambolaTickets;
 
-    happyHourTickets = (happyHourModel.data != null &&
-            happyHourModel.data?.rewards?[0].type == 'tt')
-        ? happyHourModel.data!.rewards![0].value
-        : 0;
+    showHappyHour
+        ? happyHourTickets = (happyHourModel?.data != null &&
+                happyHourModel?.data?.rewards?[0].type == 'tt')
+            ? happyHourModel?.data!.rewards![0].value
+            : null
+        : happyHourTickets = null;
 
     if (parsedGoldAmount >= minAmount && happyHourTickets != null) {
       totalTickets = numberOfTambolaTickets! + happyHourTickets!;

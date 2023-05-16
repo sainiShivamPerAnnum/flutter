@@ -452,38 +452,40 @@ class ViewBreakdown extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding24,
           ),
-          Row(
-            children: [
-              Text(
-                "Happy Hour Tambola Tickets",
-                style: TextStyles.sourceSans.body2,
-              ),
-              const Spacer(),
-              Text(
-                "${model.happyHourTickets}",
-                style: TextStyles.sourceSans.body2,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
-          Row(
-            children: [
-              Text(
-                "Lifetime Tambola Tickets",
-                style: TextStyles.sourceSans.body2,
-              ),
-              const Spacer(),
-              Text(
-                "${model.numberOfTambolaTickets}",
-                style: TextStyles.sourceSans.body2,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
+          if (model.showHappyHour) ...[
+            Row(
+              children: [
+                Text(
+                  "Happy Hour Tambola Tickets",
+                  style: TextStyles.sourceSans.body2,
+                ),
+                const Spacer(),
+                Text(
+                  "${model.happyHourTickets}",
+                  style: TextStyles.sourceSans.body2,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            Row(
+              children: [
+                Text(
+                  "Lifetime Tambola Tickets",
+                  style: TextStyles.sourceSans.body2,
+                ),
+                const Spacer(),
+                Text(
+                  "${model.numberOfTambolaTickets}",
+                  style: TextStyles.sourceSans.body2,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+          ],
           Container(
             height: 1,
             color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
