@@ -20,9 +20,9 @@ import 'package:flutter/material.dart';
 import '../../../../../core/repository/getters_repo.dart';
 
 class LendboxBuyViewModel extends BaseViewModel {
-  final LendboxTransactionService? _txnService =
+  final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   S locale = locator<S>();
 
   double? incomingAmount;
@@ -34,7 +34,8 @@ class LendboxBuyViewModel extends BaseViewModel {
   String? buyNotice;
 
   bool _isBuyInProgress = false;
-  bool get isBuyInProgress => this._isBuyInProgress;
+
+  bool get isBuyInProgress => _isBuyInProgress;
 
   TextEditingController? amountController;
   TextEditingController? vpaController;
@@ -42,10 +43,11 @@ class LendboxBuyViewModel extends BaseViewModel {
   final double minAmount = 100;
   final double maxAmount = 50000;
   AssetOptionsModel? assetOptionsModel;
-  bool get skipMl => this._skipMl;
+
+  bool get skipMl => _skipMl;
 
   set skipMl(bool value) {
-    this._skipMl = value;
+    _skipMl = value;
   }
 
   init(
@@ -123,7 +125,7 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   //2 Basic Checks
   Future<int> initChecks() async {
-    final buyAmount = int.tryParse(this.amountController!.text) ?? 0;
+    final buyAmount = int.tryParse(amountController!.text) ?? 0;
 
     if (buyAmount == 0) {
       BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
@@ -132,16 +134,16 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     if (buyAmount < minAmount) {
       BaseUtil.showNegativeAlert(
-        locale.minAmountIs + '${this.minAmount}',
-        locale.enterAmountGreaterThan + '${this.minAmount}',
+        '${locale.minAmountIs}$minAmount',
+        '${locale.enterAmountGreaterThan}$minAmount',
       );
       return 0;
     }
 
     if (buyAmount > maxAmount) {
       BaseUtil.showNegativeAlert(
-        locale.maxAmountIs + '${this.maxAmount}',
-        locale.enterAmountLowerThan + '${this.maxAmount}',
+        '${locale.maxAmountIs}$maxAmount',
+        '${locale.enterAmountLowerThan}$maxAmount',
       );
       return 0;
     }
@@ -180,9 +182,10 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   int getAmount(int amount) {
-    if (amount > amount.toInt())
+    if (amount > amount.toInt()) {
       return amount;
-    else
+    } else {
       return amount.toInt();
+    }
   }
 }

@@ -32,7 +32,7 @@ class CouponModalSheet extends StatelessWidget {
     }
     _analyticsService
         .track(eventName: AnalyticsEvents.applyCouponTapped, properties: {
-      'Amount entered': model!.goldAmountController!.text,
+      'Amount entered': model!.amountController!.text,
       'Gold weight': model!.goldAmountInGrams,
       "per gram rate": model!.isGoldBuyInProgress
           ? "Not fetched"

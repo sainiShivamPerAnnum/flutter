@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/feed_card_model.dart';
@@ -28,6 +29,8 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
@@ -36,7 +39,6 @@ import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/buy_flow/buy_modal_sheet.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
@@ -350,26 +352,32 @@ class BaseUtil extends ChangeNotifier {
       }
       double amount = 0;
 
+      locator<AugmontTransactionService>().currentTransactionState =
+          TransactionState.idle;
+      locator<LendboxTransactionService>().currentTransactionState =
+          TransactionState.idle;
+
       BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        enableDrag: false,
-        hapticVibrate: true,
-        isBarrierDismissible: false,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        content: investmentType == InvestmentType.AUGGOLD99
-            ? BuyModalSheet(
-                onChanged: (p0) => amount = p0,
-                amount: amt,
-                skipMl: isSkipMl ?? false,
-                investmentType: investmentType,
-              )
-            : LendboxBuyView(
-                amount: amt,
-                skipMl: isSkipMl ?? false,
-                onChanged: (p0) => amount = p0,
-              ),
-      ).then((value) {
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: false,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content:
+              // investmentType == InvestmentType.AUGGOLD99
+              BuyModalSheet(
+            onChanged: (p0) => amount = p0,
+            amount: amt,
+            skipMl: isSkipMl ?? false,
+            investmentType: investmentType,
+          )
+          // : LendboxBuyView(
+          //     amount: amt,
+          //     skipMl: isSkipMl ?? false,
+          //     onChanged: (p0) => amount = p0,
+          //   ),
+          ).then((value) {
         AppState.isRepeated = false;
         AppState.onTap = null;
         locator<BackButtonActions>().isTransactionCancelled = false;

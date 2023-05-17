@@ -31,17 +31,17 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 
 class LendboxTransactionService extends BaseTransactionService {
-  final UserService? _userService = locator<UserService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
+  final UserService _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final PaytmRepository _paytmRepo = locator<PaytmRepository>();
   final _gtService = ScratchCardService();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   // final PaytmService? _paytmService = locator<PaytmService>();
-  final RazorpayService? _razorpayService = locator<RazorpayService>();
-  final TambolaService? _tambolaService = locator<TambolaService>();
+  final RazorpayService _razorpayService = locator<RazorpayService>();
+  final TambolaService _tambolaService = locator<TambolaService>();
   S locale = locator<S>();
   TransactionResponseModel? _model;
   bool skipMl = false;

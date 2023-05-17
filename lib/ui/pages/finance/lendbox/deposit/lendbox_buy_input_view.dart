@@ -52,8 +52,9 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-    if (widget.model.state == ViewState.Busy)
-      return Center(child: FullScreenLoader());
+    if (widget.model.state == ViewState.Busy) {
+      return const Center(child: FullScreenLoader());
+    }
     AppState.onTap = () {
       widget.model.initiateBuy();
       AppState.backButtonDispatcher!.didPopRoute();
@@ -121,7 +122,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                 readOnly: widget.model.readOnly,
                 onTap: () => widget.model.showKeyBoard(),
               ),
-              Spacer(),
+              const Spacer(),
               SizedBox(
                 height: SizeConfig.padding32,
               ),
@@ -135,7 +136,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                               height: SizeConfig.screenWidth! * 0.1556,
                               alignment: Alignment.center,
                               width: SizeConfig.screenWidth! * 0.7,
-                              child: LinearProgressIndicator(
+                    child: const LinearProgressIndicator(
                                 color: UiConstants.primaryColor,
                                 backgroundColor:
                                     UiConstants.kDarkBackgroundColor,

@@ -70,7 +70,7 @@ class _AmountInputViewState extends State<AmountInputView> {
   void updateFieldWidth() {
     int n = widget.amountController!.text.length;
     if (n == 0) n++;
-    _fieldWidth = (SizeConfig.padding40 * n.toDouble());
+    _fieldWidth = SizeConfig.padding40 * n.toDouble();
     widget.amountController!.selection = TextSelection.fromPosition(
         TextPosition(offset: widget.amountController!.text.length));
   }
@@ -141,18 +141,16 @@ class _AmountInputViewState extends State<AmountInputView> {
                           return null;
                         },
                         maxLength: widget.maxAmount.toString().length,
-                        keyboardType: TextInputType.numberWithOptions(
+                        keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
                         onChanged: (String val) {
-                          setState(() {
-                            this.updateFieldWidth();
-                          });
+                          setState(updateFieldWidth);
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           focusedBorder: InputBorder.none,
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
@@ -214,7 +212,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                       _selectedIndex = i;
                       widget.amountController!.text =
                           widget.chipAmounts[i].value.toString();
-                      this.updateFieldWidth();
+                      updateFieldWidth();
                     });
                   }))
               .toList(),

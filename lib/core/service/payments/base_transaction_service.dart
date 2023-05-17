@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -21,6 +22,7 @@ abstract class BaseTransactionService extends ChangeNotifier {
   TransactionState get currentTransactionState => _currentTransactionState;
   set currentTransactionState(TransactionState state) {
     _currentTransactionState = state;
+    log("currentTransactionState: $state");
     notifyListeners();
   }
 
@@ -37,9 +39,9 @@ abstract class BaseTransactionService extends ChangeNotifier {
   Map<String, dynamic>? currentTransactionAnalyticsDetails;
 
   Future<void> initiatePolling() async {
-    this.pollingPeriodicTimer = Timer.periodic(
-      Duration(seconds: 5),
-      this.processPolling,
+    pollingPeriodicTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      processPolling,
     );
   }
 
@@ -101,14 +103,15 @@ abstract class BaseTransactionService extends ChangeNotifier {
   }
 
   getAmount(double amount) {
-    if (amount > amount.toInt())
+    if (amount > amount.toInt()) {
       return amount;
-    else
+    } else {
       return amount.toInt();
+    }
   }
 
   void showGtIfAvailable() {
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       _gtService!.showMultipleScratchCardsView();
       // _gtService!.showInstantScratchCardView(
       //   amount: this.currentTxnAmount,

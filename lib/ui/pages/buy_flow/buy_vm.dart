@@ -1,9 +1,11 @@
-import 'dart:async';
+import 'dart:core';
+import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
@@ -22,7 +24,10 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
@@ -39,7 +44,7 @@ import 'package:upi_pay/upi_pay.dart';
 
 //TODO : add location for save checkout [ journey, save, asset details, challenges,promos]
 
-enum Asset { gold, flow }
+enum Asset { gold, flo }
 
 class BuyViewModel extends BaseViewModel {
   static const int STATUS_UNAVAILABLE = 0;
@@ -49,8 +54,10 @@ class BuyViewModel extends BaseViewModel {
   final DBModel _dbModel = locator<DBModel>();
   final AugmontService _augmontModel = locator<AugmontService>();
   final UserService _userService = locator<UserService>();
-  final AugmontTransactionService _augTxnService =
+  final AugmontTransactionService augTxnService =
       locator<AugmontTransactionService>();
+  final LendboxTransactionService _lendBoxTxnService =
+      locator<LendboxTransactionService>();
 
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final CouponRepository _couponRepo = locator<CouponRepository>();
@@ -74,6 +81,9 @@ class BuyViewModel extends BaseViewModel {
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
   Asset? _selectedAsset;
+  bool _isBuyInProgress = false;
+
+  bool get isBuyInProgress => _isBuyInProgress;
 
   bool _skipMl = false;
   double _fieldWidth = 0.0;
@@ -110,6 +120,18 @@ class BuyViewModel extends BaseViewModel {
 
   double? get goldBuyAmount => _goldBuyAmount;
 
+  double _floBuyAmount = 0;
+
+  double get floBuyAmount => _floBuyAmount;
+
+  final double minAmount = 100;
+  final double maxAmount = 50000;
+
+  set floBuyAmount(double value) {
+    _floBuyAmount = value;
+    notifyListeners();
+  }
+
   int? numberOfTambolaTickets;
 
   int? totalTickets;
@@ -120,12 +142,6 @@ class BuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getAssetOptionsModel() async {
-    final res =
-        await locator<GetterRepository>().getAssetOptions('weekly', 'gold');
-    if (res.code == 200) assetOptionsModel = res.model;
-  }
-
   get goldAmountInGrams => _goldAmountInGrams;
 
   set goldAmountInGrams(value) {
@@ -133,7 +149,7 @@ class BuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  TextEditingController? goldAmountController;
+  TextEditingController? amountController;
   TextEditingController? vpaController;
   List<CouponModel>? _couponList;
 
@@ -153,7 +169,7 @@ class BuyViewModel extends BaseViewModel {
 
   double? get goldBuyPrice => goldRates != null ? goldRates!.goldBuyPrice : 0.0;
 
-  get isGoldBuyInProgress => _isGoldBuyInProgress;
+  get isGoldBuyInProgress => augTxnService.isGoldBuyInProgress;
 
   get augmontObjectSecondFetchDone => _augmontSecondFetchDone;
 
@@ -246,31 +262,45 @@ class BuyViewModel extends BaseViewModel {
 
     animationController = AnimationController(
         vsync: vsync, duration: const Duration(milliseconds: 500));
-    await getAssetOptionsModel();
+    await getAssetOptionsModel(investmentType);
     animationController?.addListener(listnear);
     skipMl = isSkipMilestone;
     incomingAmount = amount?.toDouble() ?? 0;
-    goldBuyAmount = amount?.toDouble() ??
-        assetOptionsModel!.data.userOptions[1].value.toDouble();
-    goldAmountController = TextEditingController(
+
+    amountController = TextEditingController(
         text: amount?.toString() ??
             assetOptionsModel!.data.userOptions[1].value.toString());
     fieldWidth =
-        SizeConfig.padding40 * goldAmountController!.text.length.toDouble();
-    if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value) {
-      lastTappedChipIndex = -1;
+        SizeConfig.padding40 * amountController!.text.length.toDouble();
+
+    if (investmentType == InvestmentType.AUGGOLD99) {
+      goldBuyAmount = amount?.toDouble() ??
+          assetOptionsModel!.data.userOptions[1].value.toDouble();
+      if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value) {
+        lastTappedChipIndex = -1;
+      }
+      fetchGoldRates();
+      status = checkAugmontStatus();
     }
-    fetchGoldRates();
-    // await fetchNotices();
-    status = checkAugmontStatus();
-    // _paytmService!.getActiveSubscriptionDetails();
     getAvailableCoupons();
-    userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
-    // await _userService.fetchUserAugmontDetail();
-    // delayedAugmontCall();
-    // checkIfDepositIsLocked();
+
+    if (investmentType == InvestmentType.AUGGOLD99)
+      userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
 
     setState(ViewState.Idle);
+  }
+
+  Future<void> getAssetOptionsModel(InvestmentType? investmentType) async {
+    var _asset;
+    if (investmentType == null) {
+      _asset = 'gold';
+    } else {
+      _asset = investmentType == InvestmentType.AUGGOLD99 ? 'gold' : 'flo';
+    }
+
+    final res =
+        await locator<GetterRepository>().getAssetOptions('weekly', _asset);
+    if (res.code == 200) assetOptionsModel = res.model;
   }
 
   bool hideKeyboard = false;
@@ -310,8 +340,14 @@ class BuyViewModel extends BaseViewModel {
   // }
 
   resetBuyOptions() {
-    goldBuyAmount = assetOptionsModel?.data.userOptions[1].value.toDouble();
-    goldAmountController!.text =
+    if (selectedAsset == Asset.gold) {
+      goldBuyAmount = assetOptionsModel?.data.userOptions[1].value.toDouble();
+    } else {
+      floBuyAmount =
+          assetOptionsModel?.data.userOptions[1].value.toDouble() ?? 0;
+    }
+
+    amountController!.text =
         assetOptionsModel?.data.userOptions[1].value.toInt().toString() ?? '';
     appliedCoupon = null;
     lastTappedChipIndex = 1;
@@ -321,13 +357,15 @@ class BuyViewModel extends BaseViewModel {
   //BUY FLOW
   //1
   initiateBuy() async {
-    if (_augTxnService.isGoldSellInProgress || couponApplyInProgress) return;
-    _augTxnService!.isGoldBuyInProgress = true;
+    _isBuyInProgress = true;
+    if (augTxnService.isGoldSellInProgress || couponApplyInProgress) return;
+    augTxnService.isGoldBuyInProgress = true;
     if (!await initChecks()) {
-      _augTxnService!.isGoldBuyInProgress = false;
+      augTxnService.isGoldBuyInProgress = false;
       return;
     }
-    await _augTxnService!.initiateAugmontTransaction(
+    _isBuyInProgress = true;
+    await augTxnService!.initiateAugmontTransaction(
       details: GoldPurchaseDetails(
         goldBuyAmount: goldBuyAmount,
         goldRates: goldRates,
@@ -336,10 +374,32 @@ class BuyViewModel extends BaseViewModel {
         goldInGrams: goldAmountInGrams,
       ),
     );
+    _isBuyInProgress = false;
+    notifyListeners();
+  }
+
+  initiateFloBuy() async {
+    _isBuyInProgress = true;
+    notifyListeners();
+    final amount = await initFloChecks();
+    if (amount == 0) {
+      _isBuyInProgress = false;
+      notifyListeners();
+      return;
+    }
+
+    log(amount.toString());
+    _isBuyInProgress = true;
+    notifyListeners();
+    trackFloCheckOut(amount.toDouble());
+    await _lendBoxTxnService.initiateTransaction(amount.toDouble(), skipMl);
+    _isBuyInProgress = false;
+    notifyListeners();
   }
 
   //2 Basic Checks
   Future<bool> initChecks() async {
+    _isBuyInProgress = false;
     if (status == STATUS_UNAVAILABLE) {
       trackCheckOOutEvent("Status was unavilable");
       return false;
@@ -387,8 +447,49 @@ class BuyViewModel extends BaseViewModel {
     return true;
   }
 
+  Future<int> initFloChecks() async {
+    final buyAmount = int.tryParse(amountController!.text) ?? 0;
+
+    if (buyAmount == 0) {
+      BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
+      return 0;
+    }
+
+    if (buyAmount < minAmount) {
+      BaseUtil.showNegativeAlert(
+        '${locale.minAmountIs}$minAmount',
+        '${locale.enterAmountGreaterThan}$minAmount',
+      );
+      return 0;
+    }
+
+    if (buyAmount > maxAmount) {
+      BaseUtil.showNegativeAlert(
+        '${locale.maxAmountIs}$maxAmount',
+        '${locale.enterAmountLowerThan}$maxAmount',
+      );
+      return 0;
+    }
+
+    _analyticsService!.track(
+        eventName: AnalyticsEvents.saveCheckout,
+        properties:
+            AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          "iplPrediction": PowerPlayService.powerPlayDepositFlow,
+          "Asset": "Flo",
+          "Amount Entered": amountController?.text,
+          "Best flag": assetOptionsModel?.data.userOptions
+              .firstWhere(
+                  (element) =>
+                      element.value.toString() == amountController!.text,
+                  orElse: () => UserOption(order: 0, value: 0, best: false))
+              .value
+        }));
+    return buyAmount;
+  }
+
   trackCheckOOutEvent(String errorMessage) {
-    _augTxnService.currentTransactionAnalyticsDetails = {
+    augTxnService.currentTransactionAnalyticsDetails = {
       //   "Asset": "Flo",
       // "Amount Entered": lboxAmount!.text,
       // "Best flag": goldAmountController!.text ==
@@ -400,10 +501,10 @@ class BuyViewModel extends BaseViewModel {
       "Asset": "Gold",
       "Coupon Code":
           appliedCoupon != null ? appliedCoupon?.code : "Not Applied",
-      "Amount Entered": goldAmountController!.text,
+      "Amount Entered": amountController!.text,
       "Gold Weight": goldAmountInGrams,
       "Per gram rate": goldRates?.goldBuyPrice,
-      "Best flag": goldAmountController!.text ==
+      "Best flag": amountController!.text ==
               assetOptionsModel?.data.userOptions[2].value.toString()
           ? true
           : false,
@@ -416,13 +517,12 @@ class BuyViewModel extends BaseViewModel {
           "Asset": "Gold",
           "Coupon Code":
               appliedCoupon != null ? appliedCoupon!.code : "Not Applied",
-          "Amount Entered": goldAmountController!.text,
+          "Amount Entered": amountController!.text,
           "Gold Weight": goldAmountInGrams,
           "Per gram rate": goldRates?.goldBuyPrice,
           "Best flag": assetOptionsModel?.data.userOptions
               .firstWhere(
-                (element) =>
-                    element.value.toString() == goldAmountController!.text,
+                (element) => element.value.toString() == amountController!.text,
                 orElse: () => UserOption(order: 0, value: 0, best: false),
               )
               .best,
@@ -433,7 +533,7 @@ class BuyViewModel extends BaseViewModel {
   onChipClick(int index) {
     if (couponApplyInProgress ||
         isGoldBuyInProgress ||
-        _augTxnService.isGoldBuyInProgress) return;
+        augTxnService.isGoldBuyInProgress) return;
     showMaxCapText = false;
     showMinCapText = false;
     addSpecialCoupon = false;
@@ -442,10 +542,10 @@ class BuyViewModel extends BaseViewModel {
     // buyFieldNode.unfocus();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     goldBuyAmount = assetOptionsModel?.data.userOptions[index].value.toDouble();
-    goldAmountController!.text = goldBuyAmount!.toInt().toString();
+    amountController!.text = goldBuyAmount!.toInt().toString();
     updateGoldAmount();
-    goldAmountController!.selection = TextSelection.fromPosition(
-        TextPosition(offset: goldAmountController!.text.length));
+    amountController!.selection = TextSelection.fromPosition(
+        TextPosition(offset: amountController!.text.length));
     //checkIfCouponIsStillApplicable();
     appliedCoupon = null;
     _analyticsService
@@ -468,7 +568,7 @@ class BuyViewModel extends BaseViewModel {
             : null;
 
     final int parsedGoldAmount =
-        int.tryParse(goldAmountController?.text ?? '0') ?? 0;
+        int.tryParse(amountController?.text ?? '0') ?? 0;
     final num minAmount =
         num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
 
@@ -533,13 +633,13 @@ class BuyViewModel extends BaseViewModel {
   // }
 
   updateGoldAmount() {
-    if (goldAmountController!.text.isEmpty ||
-        double.tryParse(goldAmountController!.text) == null) {
+    if (amountController!.text.isEmpty ||
+        double.tryParse(amountController!.text) == null) {
       goldAmountInGrams = 0.0;
     } else {
       double? netTax =
           (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
-      double enteredAmount = double.tryParse(goldAmountController!.text)!;
+      double enteredAmount = double.tryParse(amountController!.text)!;
       double postTaxAmount = BaseUtil.digitPrecision(
           enteredAmount - getTaxOnAmount(enteredAmount, netTax));
 
@@ -551,9 +651,8 @@ class BuyViewModel extends BaseViewModel {
       }
     }
     fieldWidth = SizeConfig.padding40 *
-        ((goldAmountController!.text != null &&
-                goldAmountController!.text.isNotEmpty)
-            ? goldAmountController!.text.length.toDouble()
+        ((amountController!.text != null && amountController!.text.isNotEmpty)
+            ? amountController!.text.length.toDouble()
             : 0.5);
     refresh();
   }
@@ -580,31 +679,52 @@ class BuyViewModel extends BaseViewModel {
     if (showMaxCapText) showMaxCapText = false;
     if (showMinCapText) showMinCapText = false;
     addSpecialCoupon = false;
-    if (val != null && val.isNotEmpty) {
-      if (double.tryParse(val.trim())! > 50000.0) {
-        goldBuyAmount = 50000;
-        goldAmountController!.text = goldBuyAmount!.toInt().toString();
-        updateGoldAmount();
-        showMaxCapText = true;
-        goldAmountController!.selection = TextSelection.fromPosition(
-            TextPosition(offset: goldAmountController!.text.length));
-      } else {
-        goldBuyAmount = double.tryParse(val);
-        if ((goldBuyAmount ?? 0.0) < 10.0) showMinCapText = true;
-        for (int i = 0; i < assetOptionsModel!.data.userOptions.length; i++) {
-          if (goldBuyAmount == assetOptionsModel!.data.userOptions[i].value) {
-            lastTappedChipIndex = i;
-            break;
+
+    if (selectedAsset == Asset.gold) {
+      if (val != null && val.isNotEmpty) {
+        if (double.tryParse(val.trim())! > 50000.0) {
+          goldBuyAmount = 50000;
+          amountController!.text = goldBuyAmount!.toInt().toString();
+          updateGoldAmount();
+          showMaxCapText = true;
+          amountController!.selection = TextSelection.fromPosition(
+              TextPosition(offset: amountController!.text.length));
+        } else {
+          goldBuyAmount = double.tryParse(val);
+          if ((goldBuyAmount ?? 0.0) < 10.0) showMinCapText = true;
+          for (int i = 0; i < assetOptionsModel!.data.userOptions.length; i++) {
+            if (goldBuyAmount == assetOptionsModel!.data.userOptions[i].value) {
+              lastTappedChipIndex = i;
+              break;
+            }
           }
+
+          updateGoldAmount();
         }
+      } else {
+        goldBuyAmount = 0;
 
         updateGoldAmount();
       }
-    } else {
-      goldBuyAmount = 0;
-
-      updateGoldAmount();
     }
+
+    if (selectedAsset == Asset.flo) {
+      if (val != null && val.isNotEmpty) {
+        if (double.tryParse(val.trim())! > 50000.0) {
+          floBuyAmount = 50000;
+          amountController!.text = floBuyAmount.toInt().toString();
+          showMaxCapText = true;
+          amountController!.selection = TextSelection.fromPosition(
+              TextPosition(offset: amountController!.text.length));
+        } else {
+          floBuyAmount = double.tryParse(val) ?? 0;
+          if (floBuyAmount < 10.0) showMinCapText = true;
+        }
+      } else {
+        floBuyAmount = 0;
+      }
+    }
+
     appliedCoupon = null;
   }
 
@@ -612,6 +732,8 @@ class BuyViewModel extends BaseViewModel {
     //check who is allowed to deposit
     String _perm =
         AppConfig.getValue(AppConfigKey.augmont_deposit_permission).toString();
+
+    log("Augmont permission: $_perm");
 
     int _isGeneralUserAllowed = 1;
     bool _isAllowed = false;
@@ -624,6 +746,8 @@ class BuyViewModel extends BaseViewModel {
     }
     if (_isGeneralUserAllowed == 0) {
       //General permission is denied. Check if specific user permission granted
+      log("Checking specific user permission => ${_userService!.baseUser!.isAugmontEnabled}");
+
       if (_userService!.baseUser!.isAugmontEnabled != null &&
           _userService!.baseUser!.isAugmontEnabled!) {
         //this specific user is allowed to use Augmont
@@ -634,6 +758,8 @@ class BuyViewModel extends BaseViewModel {
     } else {
       _isAllowed = true;
     }
+
+    log("Augmont status: $_isAllowed");
 
     if (!_isAllowed) {
       return STATUS_UNAVAILABLE;
@@ -668,6 +794,22 @@ class BuyViewModel extends BaseViewModel {
     }
   }
 
+  void navigateToKycScreen() {
+    _analyticsService!
+        .track(eventName: AnalyticsEvents.completeKYCTapped, properties: {
+      "location": "Fello Felo Invest",
+      "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
+          AnalyticsProperties.getFelloFloAmount(),
+      "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+      "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+      "Amount invested in Flo": AnalyticsProperties.getFelloFloAmount(),
+    });
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: KycDetailsPageConfig,
+    );
+  }
+
 //----------------------------------------------- COUPON LOGIC -------------------------------
 
   getAvailableCoupons() async {
@@ -683,7 +825,7 @@ class BuyViewModel extends BaseViewModel {
   Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
     if (couponApplyInProgress ||
         isGoldBuyInProgress ||
-        _augTxnService.isGoldBuyInProgress) return;
+        augTxnService.isGoldBuyInProgress) return;
 
     int order = -1;
     int? minTransaction = -1;
@@ -717,7 +859,7 @@ class BuyViewModel extends BaseViewModel {
         if (response.model!.minAmountRequired != null &&
             response.model!.minAmountRequired.toString().isNotEmpty &&
             response.model!.minAmountRequired != 0) {
-          goldAmountController!.text =
+          amountController!.text =
               response.model!.minAmountRequired!.toInt().toString();
           goldBuyAmount = response.model!.minAmountRequired;
           updateGoldAmount();
@@ -772,6 +914,23 @@ class BuyViewModel extends BaseViewModel {
       addSpecialCoupon = true;
       showCoupons = true;
     }
+  }
+
+  void trackFloCheckOut(double? amount) {
+    _lendBoxTxnService.currentTransactionAnalyticsDetails = {
+      "Asset": "Flo",
+      "Amount Entered": amount ?? 0,
+      "Error message": "",
+    };
+    _analyticsService!.track(
+      eventName: AnalyticsEvents.saveCheckout,
+      properties: AnalyticsProperties.getDefaultPropertiesMap(
+        extraValuesMap: {
+          "Asset": "Flo",
+          "Amount Entered": amount ?? 0,
+        },
+      ),
+    );
   }
 }
 

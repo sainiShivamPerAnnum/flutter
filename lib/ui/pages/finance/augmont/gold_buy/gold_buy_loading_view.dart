@@ -29,7 +29,7 @@ class GoldBuyLoadingView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: SizeConfig.padding32),
+        SizedBox(height: SizeConfig.fToolBarHeight / 2),
         Text(locale.digitalGoldText, style: TextStyles.rajdhaniSB.body2),
         SizedBox(
           height: SizeConfig.padding12,

@@ -60,8 +60,7 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
       AppState.backButtonDispatcher!.didPopRoute();
     };
     AppState.type = InvestmentType.AUGGOLD99;
-    AppState.amt =
-        double.tryParse(widget.model.goldAmountController!.text) ?? 0;
+    AppState.amt = double.tryParse(widget.model.amountController!.text) ?? 0;
     return Stack(
       children: [
         Column(
@@ -76,7 +75,7 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
                 _analyticsService!.track(
                     eventName: AnalyticsEvents.savePageClosed,
                     properties: {
-                      "Amount entered": widget.model.goldAmountController!.text,
+                      "Amount entered": widget.model.amountController!.text,
                       "Grams of gold": widget.model.goldAmountInGrams,
                       "Asset": 'Gold',
                       "Coupon Applied": widget.model.appliedCoupon != null
@@ -87,8 +86,7 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
                   if (!AppState.isRepeated) {
                     locator<BackButtonActions>()
                         .showWantToCloseTransactionBottomSheet(
-                            double.parse(
-                                    widget.model.goldAmountController!.text)
+                            double.parse(widget.model.amountController!.text)
                                 .round(),
                             InvestmentType.AUGGOLD99, () {
                       widget.model.initiateBuy();
@@ -295,7 +293,7 @@ class EnterAmountView extends StatelessWidget {
                               Text(
                                 "₹",
                                 style: TextStyles.rajdhaniB.title0.colour(
-                                    model.goldAmountController!.text == "0"
+                                    model.amountController!.text == "0"
                                         ? UiConstants.kTextColor2
                                         : UiConstants.kTextColor),
                               ),
@@ -308,7 +306,7 @@ class EnterAmountView extends StatelessWidget {
                                   autofocus: true,
                                   readOnly: model.readOnly,
                                   showCursor: true,
-                                  controller: model.goldAmountController,
+                                  controller: model.amountController,
                                   focusNode: model.buyFieldNode,
                                   enabled: !txnService.isGoldBuyInProgress &&
                                       !model.couponApplyInProgress,
@@ -337,7 +335,7 @@ class EnterAmountView extends StatelessWidget {
                                   ),
                                   textAlign: TextAlign.center,
                                   style: TextStyles.rajdhaniB.title68.colour(
-                                    model.goldAmountController!.text == "0"
+                                    model.amountController!.text == "0"
                                         ? UiConstants.kTextColor2
                                         : UiConstants.kTextColor,
                                   ),

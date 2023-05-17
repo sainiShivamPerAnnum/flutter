@@ -22,7 +22,7 @@ class CouponWidget extends StatelessWidget {
     return coupon == null
         ? const SizedBox()
         : SizedBox(
-            height: SizeConfig.screenHeight! * 0.21,
+            height: SizeConfig.screenHeight! * 0.17,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

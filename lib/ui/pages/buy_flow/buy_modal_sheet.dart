@@ -3,13 +3,17 @@ import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/buy_flow/buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_loading_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/lendbox_loading_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/lendbox_success_view.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -43,6 +47,9 @@ class _GoldBuyViewState extends State<BuyModalSheet>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final AugmontTransactionService _txnService =
       locator<AugmontTransactionService>();
+
+  final LendboxTransactionService _lendboxTxnService =
+      locator<LendboxTransactionService>();
   AppLifecycleState? appLifecycleState;
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
 
@@ -70,20 +77,29 @@ class _GoldBuyViewState extends State<BuyModalSheet>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
     if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!_txnService.isIOSTxnInProgress) return;
-      _txnService.isIOSTxnInProgress = false;
-      _txnService.initiatePolling();
+      if (widget.investmentType == InvestmentType.AUGGOLD99) {
+        if (!_txnService.isIOSTxnInProgress) return;
+        _txnService.isIOSTxnInProgress = false;
+        _txnService.initiatePolling();
+      }
+
+      if (widget.investmentType == InvestmentType.LENDBOXP2P) {
+        if (!_lendboxTxnService.isIOSTxnInProgress) return;
+        _lendboxTxnService.isIOSTxnInProgress = false;
+        _lendboxTxnService.initiatePolling();
+      }
     }
     super.didChangeAppLifecycleState(state);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AugmontTransactionService>(
-      builder: (transactionContext, txnService, transactionProperty) {
+    return Consumer2<AugmontTransactionService, LendboxTransactionService>(
+      builder: (transactionContext, augmontTxnService, lendBoxTxnService,
+          transactionProperty) {
         return AnimatedContainer(
           width: double.infinity,
-          height: _getHeight(txnService),
+          height: SizeConfig.screenHeight,
           decoration: BoxDecoration(
             color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
             borderRadius: BorderRadius.only(
@@ -94,7 +110,7 @@ class _GoldBuyViewState extends State<BuyModalSheet>
           duration: const Duration(milliseconds: 500),
           child: Stack(
             children: [
-              _getBackground(txnService!),
+              _getBackground(augmontTxnService, lendBoxTxnService),
               PageTransitionSwitcher(
                 duration: const Duration(milliseconds: 500),
                 transitionBuilder: (
@@ -120,9 +136,14 @@ class _GoldBuyViewState extends State<BuyModalSheet>
                     if (model.state == ViewState.Busy) {
                       return const Center(child: FullScreenLoader());
                     }
-                    _secureScreenshots(txnService);
+                    _secureScreenshots(augmontTxnService, lendBoxTxnService);
 
-                    return _getView(txnService, model);
+                    return _getView(
+                      model,
+                      widget.investmentType,
+                      augmontTxnService,
+                      lendBoxTxnService,
+                    );
                   },
                 ),
               ),
@@ -133,22 +154,62 @@ class _GoldBuyViewState extends State<BuyModalSheet>
     );
   }
 
-  Widget _getView(AugmontTransactionService txnService, BuyViewModel model) {
-    if (txnService.currentTransactionState == TransactionState.idle) {
-      return BuyInputView(
-        amount: widget.amount,
-        skipMl: widget.skipMl,
-        model: model,
-        augTxnService: txnService,
-        investmentType: widget.investmentType,
-      );
-    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
-      return GoldBuyLoadingView(model: model);
-    } else if (txnService.currentTransactionState == TransactionState.success) {
-      return GoldBuySuccessView();
-    }
+  Widget _getView(
+      BuyViewModel model,
+      InvestmentType? investmentType,
+      AugmontTransactionService augmontTransactionService,
+      LendboxTransactionService lendboxTransactionService) {
+    switch (investmentType) {
+      case InvestmentType.LENDBOXP2P:
+        const type = TransactionType.DEPOSIT;
 
-    return GoldBuyLoadingView(model: model);
+        if (lendboxTransactionService.currentTransactionState ==
+            TransactionState.idle) {
+          return BuyInputView(
+            amount: widget.amount,
+            skipMl: widget.skipMl,
+            model: model,
+            // augTxnService: txnService,
+            investmentType: widget.investmentType,
+          );
+          // return LendboxBuyInputView(
+          //   amount: widget.amount,
+          //   skipMl: widget.skipMl,
+          //   model: model,
+          // );
+        } else if (lendboxTransactionService.currentTransactionState ==
+            TransactionState.ongoing) {
+          return LendboxLoadingView(transactionType: type);
+        } else if (lendboxTransactionService.currentTransactionState ==
+            TransactionState.success) {
+          return LendboxSuccessView(
+            transactionType: type,
+          );
+        }
+
+        return LendboxLoadingView(transactionType: type);
+
+      case InvestmentType.AUGGOLD99:
+      default:
+        if (augmontTransactionService.currentTransactionState ==
+            TransactionState.idle) {
+          return BuyInputView(
+            amount: widget.amount,
+            skipMl: widget.skipMl,
+            model: model,
+            // augTxnService: txnService,
+            investmentType: widget.investmentType,
+          );
+        } else if (augmontTransactionService.currentTransactionState ==
+            TransactionState.ongoing) {
+          return GoldBuyLoadingView(model: model);
+        } else if (augmontTransactionService.currentTransactionState ==
+            TransactionState.success) {
+          return GoldBuySuccessView();
+        }
+
+        return GoldBuyLoadingView(model: model);
+    }
   }
 
   double? _getHeight(txnService) {
@@ -162,16 +223,23 @@ class _GoldBuyViewState extends State<BuyModalSheet>
     return 0;
   }
 
-  _secureScreenshots(AugmontTransactionService txnService) async {
+  _secureScreenshots(AugmontTransactionService augmontTransactionService,
+      LendboxTransactionService lendboxTransactionService) async {
     if (Platform.isAndroid) {
-      if (txnService.currentTransactionState == TransactionState.ongoing) {
+      if (augmontTransactionService.currentTransactionState ==
+              TransactionState.ongoing ||
+          lendboxTransactionService.currentTransactionState ==
+              TransactionState.ongoing) {
         await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
       } else {
         await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
       }
     }
     if (Platform.isIOS) {
-      if (txnService.currentTransactionState == TransactionState.ongoing) {
+      if (augmontTransactionService.currentTransactionState ==
+              TransactionState.ongoing ||
+          lendboxTransactionService.currentTransactionState ==
+              TransactionState.ongoing) {
         iosScreenShotChannel.invokeMethod('secureiOS');
       } else {
         iosScreenShotChannel.invokeMethod("unSecureiOS");
@@ -179,8 +247,12 @@ class _GoldBuyViewState extends State<BuyModalSheet>
     }
   }
 
-  _getBackground(AugmontTransactionService txnService) {
-    if (txnService.currentTransactionState == TransactionState.idle) {
+  _getBackground(AugmontTransactionService augmontTransactionService,
+      LendboxTransactionService lendboxTransactionService) {
+    if (augmontTransactionService.currentTransactionState ==
+            TransactionState.idle ||
+        lendboxTransactionService.currentTransactionState ==
+            TransactionState.idle) {
       return Container(
         decoration: BoxDecoration(
           color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
@@ -192,7 +264,10 @@ class _GoldBuyViewState extends State<BuyModalSheet>
         width: double.infinity,
         height: double.infinity,
       );
-    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
+    } else if (augmontTransactionService.currentTransactionState ==
+            TransactionState.ongoing ||
+        lendboxTransactionService.currentTransactionState ==
+            TransactionState.ongoing) {
       return Container(
         decoration: BoxDecoration(
           color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
@@ -204,7 +279,10 @@ class _GoldBuyViewState extends State<BuyModalSheet>
         width: double.infinity,
         height: double.infinity,
       );
-    } else if (txnService.currentTransactionState == TransactionState.success) {
+    } else if (augmontTransactionService.currentTransactionState ==
+            TransactionState.success ||
+        lendboxTransactionService.currentTransactionState ==
+            TransactionState.success) {
       return Container(
         color: UiConstants.kBackgroundColor2,
       );
