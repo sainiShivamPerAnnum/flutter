@@ -88,7 +88,7 @@ class APIService implements API {
       // logger!.d("Get Response: ${response.body}");
 
       logger?.i(
-          "API:: GET REQUEST \n=> PATH: $url  \n=> StatusCode: ${response.statusCode} \n"
+          "API:: GET REQUEST \n=> PATH: $url  \n=> StatusCode: ${response.statusCode} \n queryParam: $queryParams \n"
           "=> Response Body: ${response.body}");
 
       if (decryptData) {

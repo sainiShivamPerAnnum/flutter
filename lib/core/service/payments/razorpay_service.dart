@@ -211,7 +211,8 @@ class RazorpayService extends ChangeNotifier {
   }
 
   void cleanListeners() {
-    if (_razorpay != null) _razorpay!.clear();
+    if (_razorpay != null) _razorpay?.clear();
+
     if (_txnUpdateListener != null) _txnUpdateListener = null;
   }
 

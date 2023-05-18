@@ -31,6 +31,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
+import 'package:felloapp/ui/pages/buy_flow/buy_modal_sheet.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -93,7 +94,7 @@ class BuyViewModel extends BaseViewModel {
 
   set selectedAsset(Asset? value) {
     _selectedAsset = value;
-    notifyListeners();
+    // notifyListeners();
   }
 
   get fieldWidth => _fieldWidth;
@@ -136,6 +137,7 @@ class BuyViewModel extends BaseViewModel {
 
   int? totalTickets;
   int? happyHourTickets;
+  double? initialAmount;
 
   set goldBuyAmount(double? value) {
     _goldBuyAmount = value;
@@ -258,6 +260,7 @@ class BuyViewModel extends BaseViewModel {
 
     setState(ViewState.Busy);
 
+    initialAmount = amount?.toDouble() ?? 0;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
 
     animationController = AnimationController(
@@ -273,7 +276,7 @@ class BuyViewModel extends BaseViewModel {
     fieldWidth =
         SizeConfig.padding40 * amountController!.text.length.toDouble();
 
-    if (investmentType == InvestmentType.AUGGOLD99) {
+    if (investmentAsset == InvestmentType.AUGGOLD99) {
       goldBuyAmount = amount?.toDouble() ??
           assetOptionsModel!.data.userOptions[1].value.toDouble();
       if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value) {
@@ -284,8 +287,9 @@ class BuyViewModel extends BaseViewModel {
     }
     getAvailableCoupons();
 
-    if (investmentType == InvestmentType.AUGGOLD99)
+    if (investmentType == InvestmentType.AUGGOLD99) {
       userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
+    }
 
     setState(ViewState.Idle);
   }
@@ -339,7 +343,7 @@ class BuyViewModel extends BaseViewModel {
   //   buyNotice = await _dbModel!.showAugmontBuyNotice();
   // }
 
-  resetBuyOptions() {
+  resetBuyOptions() async {
     if (selectedAsset == Asset.gold) {
       goldBuyAmount = assetOptionsModel?.data.userOptions[1].value.toDouble();
     } else {
@@ -352,6 +356,16 @@ class BuyViewModel extends BaseViewModel {
     appliedCoupon = null;
     lastTappedChipIndex = 1;
     notifyListeners();
+
+    await getAssetOptionsModel(investmentAsset);
+
+    if (investmentAsset == InvestmentType.AUGGOLD99) {
+      if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value) {
+        lastTappedChipIndex = -1;
+      }
+      fetchGoldRates();
+      status = checkAugmontStatus();
+    }
   }
 
   //BUY FLOW

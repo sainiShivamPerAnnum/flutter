@@ -25,6 +25,8 @@ import 'package:provider/provider.dart';
 
 import 'buy_vm.dart';
 
+InvestmentType? investmentAsset;
+
 class BuyModalSheet extends StatefulWidget {
   final int? amount;
   final bool skipMl;
@@ -50,12 +52,14 @@ class _GoldBuyViewState extends State<BuyModalSheet>
 
   final LendboxTransactionService _lendboxTxnService =
       locator<LendboxTransactionService>();
+
   AppLifecycleState? appLifecycleState;
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
 
   @override
   void initState() {
     super.initState();
+    investmentAsset = widget.investmentType;
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       _txnService.currentTxnGms = 0.0;
       _txnService.currentTxnAmount = 0.0;
@@ -63,6 +67,7 @@ class _GoldBuyViewState extends State<BuyModalSheet>
       _txnService.currentTxnScratchCardCount = 0;
       _txnService.currentTxnTambolaTicketsCount = 0;
       _txnService.currentTransactionState = TransactionState.idle;
+      _lendboxTxnService.currentTransactionState = TransactionState.idle;
     });
     WidgetsBinding.instance!.addObserver(this);
   }
@@ -159,7 +164,7 @@ class _GoldBuyViewState extends State<BuyModalSheet>
       InvestmentType? investmentType,
       AugmontTransactionService augmontTransactionService,
       LendboxTransactionService lendboxTransactionService) {
-    switch (investmentType) {
+    switch (investmentAsset) {
       case InvestmentType.LENDBOXP2P:
         const type = TransactionType.DEPOSIT;
 
@@ -197,7 +202,6 @@ class _GoldBuyViewState extends State<BuyModalSheet>
             amount: widget.amount,
             skipMl: widget.skipMl,
             model: model,
-            // augTxnService: txnService,
             investmentType: widget.investmentType,
           );
         } else if (augmontTransactionService.currentTransactionState ==
