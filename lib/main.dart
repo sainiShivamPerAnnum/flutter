@@ -130,6 +130,7 @@ class MyApp extends HookWidget {
                 ),
               );
             },
+
             routerDelegate: delegate,
             routeInformationParser: parser,
             // showPerformanceOverlay: true,

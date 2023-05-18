@@ -36,55 +36,62 @@ class Win extends StatelessWidget {
               child: const FullScreenLoader(),
             );
           }
-          return ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const Salutation(),
-              AccountInfoTiles(
-                title: 'App Walkthrough',
-                uri: "",
-                onTap: () {
-                  locator<AnalyticsService>()
-                      .track(eventName: 'App Walkthrough');
-                  SpotLightController.instance.startQuickTour();
-                },
-              ),
-              AccountInfoTiles(title: locale.abMyProfile, uri: "/profile"),
-              AccountInfoTiles(title: locale.kycTitle, uri: "/kycVerify"),
+          return Scaffold(
+            backgroundColor: Colors.black,
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              title: const Text("Accounts"),
+            ),
+            body: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                // const Salutation(),
+                AccountInfoTiles(
+                  title: 'App Walkthrough',
+                  uri: "",
+                  onTap: () {
+                    locator<AnalyticsService>()
+                        .track(eventName: 'App Walkthrough');
+                    SpotLightController.instance.startQuickTour();
+                  },
+                ),
+                AccountInfoTiles(title: locale.abMyProfile, uri: "/profile"),
+                AccountInfoTiles(title: locale.kycTitle, uri: "/kycVerify"),
 
-              AccountInfoTiles(
-                  title: locale.bankAccDetails, uri: "/bankDetails"),
-              AccountInfoTiles(
-                title: 'Last Week on Fello',
-                uri: "",
-                onTap: () => model.showLastWeekSummary(),
-              ),
-              //Scratch Cards count and navigation
-              const ScratchCardsInfoStrip(),
-              //Current Winnings Information
-              Showcase(
-                key: ShowCaseKeys.CurrentWinnings,
-                description:
-                    'Your winnings from scratch cards and coupons show here. Redeem your winnings as Digital Gold when you reach ₹200',
-                child: const CurrentWinningsInfo(),
-              ),
-              //Refer and Earn
-              const ReferEarnCard(),
-              // Referral Leaderboard
-              const ReferralLeaderboard(),
-              //Fello News
-              FelloNewsComponent(model: model),
-              // DEV PURPOSE ONLY
-              const CacheClearWidget(),
-              SizedBox(
-                height: SizeConfig.padding10,
-              ),
+                AccountInfoTiles(
+                    title: locale.bankAccDetails, uri: "/bankDetails"),
+                AccountInfoTiles(
+                  title: 'Last Week on Fello',
+                  uri: "",
+                  onTap: () => model.showLastWeekSummary(),
+                ),
+                //Scratch Cards count and navigation
+                const ScratchCardsInfoStrip(),
+                //Current Winnings Information
+                Showcase(
+                  key: ShowCaseKeys.CurrentWinnings,
+                  description:
+                      'Your winnings from scratch cards and coupons show here. Redeem your winnings as Digital Gold when you reach ₹200',
+                  child: const CurrentWinningsInfo(),
+                ),
+                //Refer and Earn
+                const ReferEarnCard(),
+                // Referral Leaderboard
+                const ReferralLeaderboard(),
+                //Fello News
+                FelloNewsComponent(model: model),
+                // DEV PURPOSE ONLY
+                const CacheClearWidget(),
+                SizedBox(
+                  height: SizeConfig.padding10,
+                ),
 
-              LottieBuilder.network(
-                  "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+                LottieBuilder.network(
+                    "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
 
-              SizedBox(height: SizeConfig.navBarHeight),
-            ],
+                SizedBox(height: SizeConfig.navBarHeight),
+              ],
+            ),
           );
         });
       },

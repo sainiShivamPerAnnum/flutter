@@ -3,7 +3,10 @@ import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -11,18 +14,22 @@ import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
+import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/lazy_load_indexed_stack.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 GlobalKey felloAppBarKey = GlobalKey();
 
@@ -196,7 +203,15 @@ class RootAppBar extends StatelessWidget {
                                   : UiConstants.kSecondaryBackgroundColor
                               : UiConstants.kBackgroundColor,
                           child: FAppBar(
-                            type: getFaqType(),
+                            showAvatar: true,
+                            leadingPadding: false,
+                            titleWidget: Expanded(
+                              child: Salutation(
+                                leftMargin: SizeConfig.padding8,
+                                textStyle: TextStyles.rajdhaniSB.body0
+                                    .colour(Colors.white),
+                              ),
+                            ),
                             backgroundColor: ((locator<RootController>()
                                             .currentNavBarItemModel ==
                                         RootController.tambolaNavBar) &&
@@ -210,7 +225,54 @@ class RootAppBar extends StatelessWidget {
                                         ? UiConstants.kBackgroundColor
                                         : UiConstants.kSecondaryBackgroundColor
                                     : UiConstants.kBackgroundColor,
-                            showAvatar: true,
+                            showCoinBar: false,
+                            action: Row(
+                              children: [
+                                Selector2<UserService, ScratchCardService,
+                                    Tuple2<UserFundWallet?, int>>(
+                                  builder: (context, value, child) =>
+                                      FelloInfoBar(
+                                    svgAsset: Assets.scratchCard,
+                                    size: SizeConfig.padding16,
+                                    child:
+                                        "₹${value.item1?.unclaimedBalance.toInt() ?? 0}",
+                                    onPressed: () {
+                                      Haptic.vibrate();
+                                      AppState.delegate!
+                                          .parseRoute(Uri.parse("myWinnings"));
+                                    },
+                                    mark: value.item2 > 0,
+                                  ),
+                                  selector: (p0, userService,
+                                          scratchCardService) =>
+                                      Tuple2(
+                                          userService.userFundWallet,
+                                          scratchCardService
+                                              .unscratchedTicketsCount),
+                                ),
+                                Selector2<UserService, ScratchCardService,
+                                    Tuple2<UserJourneyStatsModel?, int>>(
+                                  builder: (context, value, child) =>
+                                      FelloInfoBar(
+                                    svgAsset: Assets.journeyIcon,
+                                    size: SizeConfig.padding20,
+                                    child: "Level ${value.item1?.level ?? 0}",
+                                    onPressed: () {
+                                      Haptic.vibrate();
+                                      AppState.delegate!
+                                          .parseRoute(Uri.parse("journey"));
+                                    },
+                                    mark: value.item2 > 0,
+                                  ),
+                                  selector: (p0, userService,
+                                          scratchCardService) =>
+                                      Tuple2(
+                                          userService.userJourneyStats,
+                                          scratchCardService
+                                              .unscratchedTicketsCount),
+                                )
+                              ],
+                            ),
                           ),
                         )
                       : const SizedBox();

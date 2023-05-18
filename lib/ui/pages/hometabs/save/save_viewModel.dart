@@ -18,6 +18,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -201,9 +202,8 @@ class SaveViewModel extends BaseViewModel {
     List<Widget> saveViewItems = [];
     saveViewItems.addAll([
       const Cards(),
-      SizedBox(
-        height: SizeConfig.pageHorizontalMargins,
-      )
+      SizedBox(height: SizeConfig.pageHorizontalMargins),
+      const TambolaMiniInfoCard()
     ]
         // SaveNetWorthSection(saveViewModel: smodel)
         );

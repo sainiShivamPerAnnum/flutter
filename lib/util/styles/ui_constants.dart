@@ -16,6 +16,8 @@ class UiConstants {
   static const Color darkPrimaryColor = Color(0XFF02484D);
   static const Color primarySemiLight = Color(0xff4B9A8E);
   static const Color darkPrimaryColor2 = Color(0XFF1B262C);
+  static const Color darkPrimaryColor3 = Color(0xff0C5055);
+  static const Color darkPrimaryColor4 = Color(0xff173B3F);
   static const Color secondaryColor = Color.fromARGB(255, 241, 227, 243);
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color? chipColor = Colors.grey[200];
@@ -45,7 +47,11 @@ class UiConstants {
     },
   );
   static const Color kGoldContainerColor = Color(0xff39498C);
+  static const Color kGoldDarkColor = Color(0xff293566);
   static const Color kFloContainerColor = Color(0xff023C40);
+
+  static const Color kRewardColor = Color(0xff516977);
+  static const Color kRewardDarkColor = Color(0xff354650);
 
   /// New UI Colors
   static const Color kTextColor = Color(0xFFFFFFFF);

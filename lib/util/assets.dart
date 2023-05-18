@@ -305,6 +305,8 @@ class Assets {
     "assets/vectors/aus3.svg",
   ];
 
+  static String journeyIcon = "assets/vectors/icons/journeyIcon.svg";
+
   static String multiAvatars = "assets/vectors/multiAvatars.svg";
   static String multiRealAvatars = "assets/images/cus_photos.png";
   static final String infoWhyPan =
