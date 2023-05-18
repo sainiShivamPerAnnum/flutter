@@ -16,16 +16,20 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
   String? url;
   int? tab, dailogShowCount = 0;
 
-  userPrizeWinPrompt() async {
+  Future<void> userPrizeWinPrompt() async {
     AppState.delegate!.appState.setCurrentTabIndex = 3;
     notifyListeners();
-    Future.delayed(Duration(seconds: 4), () {
-      BaseUtil.openDialog(
+    Future.delayed(
+      const Duration(seconds: 4),
+      () {
+        BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissible: false,
           hapticVibrate: false,
-          content: FelloRatingDialog());
-    });
+          content: const FelloRatingDialog(),
+        );
+      },
+    );
   }
 
   showDialog(title, body) {
@@ -36,7 +40,7 @@ class FcmHandlerDataPayloads extends ChangeNotifier {
       content: FelloInfoDialog(
         title: title,
         subtitle: body,
-        action: Container(
+        action: SizedBox(
           width: SizeConfig.screenWidth,
           child: FelloButtonLg(
             child: Text(
