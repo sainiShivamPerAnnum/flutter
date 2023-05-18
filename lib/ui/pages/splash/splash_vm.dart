@@ -32,7 +32,8 @@ class LauncherViewModel extends BaseViewModel {
       'Unknown status of performance collection.';
   final navigator = AppState.delegate!.appState;
 
-  AnimationController? loopOutlottieAnimationController;
+  AnimationController? loopOutlottieAnimationController,
+      loopingLottieAnimationController;
   int loopLottieDuration = 2500;
 
   // LOCATORS
@@ -66,6 +67,13 @@ class LauncherViewModel extends BaseViewModel {
   Future<void> init() async {
     isFetchingData = true;
     _logoWatch = Stopwatch()..start();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(
+        loopingLottieAnimationController!.forward(from: 0.6).then(
+              (value) => loopOutlottieAnimationController!.forward(),
+            ),
+      );
+    });
     // _togglePerformanceCollection();
     initLogic();
     _timer3 = Timer(const Duration(seconds: 6), () {
@@ -116,9 +124,9 @@ class LauncherViewModel extends BaseViewModel {
     }
 
     _timer3.cancel();
-    int delayedSecond = _logoWatch.elapsed.inMilliseconds % loopLottieDuration;
-    delayedSecond = loopLottieDuration - delayedSecond;
-    await Future.delayed(Duration(milliseconds: delayedSecond));
+    // int delayedSecond = _logoWatch.elapsed.inMilliseconds % loopLottieDuration;
+    // int delayedSecond = loopLottieDuration - _logoWatch.elapsed.inMilliseconds;
+    // await Future.delayed(Duration(milliseconds: delayedSecond));
     isFetchingData = false;
     unawaited(loopOutlottieAnimationController!.forward());
     await Future.delayed(const Duration(milliseconds: 900));

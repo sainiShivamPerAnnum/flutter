@@ -33,9 +33,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
       vsync: this,
       duration: const Duration(seconds: 1),
     )..addListener(() {
-        setState(() {
-          print(gradientController?.value ?? 0);
-        });
+        setState(() {});
       });
 
     controller = ScrollController()
@@ -50,9 +48,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
               duration,
               () {
                 gradientController?.reset();
-                gradientController
-                    ?.forward()
-                    .then((value) => print("Animation ended"));
+                gradientController?.forward();
               },
             );
           }
@@ -75,6 +71,19 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
       curve: curve,
       height: SizeConfig.screenWidth! *
           (isVerticalView ? expandedViewHeightRatio : 0.8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(SizeConfig.titleSize / 2),
+          bottomRight: Radius.circular(SizeConfig.titleSize / 2),
+        ),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 15,
+              offset: Offset(0, 5),
+              spreadRadius: 8)
+        ],
+      ),
       child: Stack(
         children: [
           Align(
@@ -116,247 +125,262 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                 child: AnimatedContainer(
                   curve: curve,
                   duration: duration,
-                  width: SizeConfig.screenWidth! * (isHorizontalView ? 2.4 : 1),
+                  width: SizeConfig.screenWidth! * (1),
                   height: SizeConfig.screenWidth! *
                       (isVerticalView ? expandedViewHeightRatio : 0.78),
                   child: Stack(
                     children: [
-                      AnimatedContainer(
-                        curve: curve,
-                        duration: duration,
-                        decoration: BoxDecoration(
-                          color: UiConstants.kSecondaryBackgroundColor,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft:
-                                Radius.circular(SizeConfig.titleSize / 2),
-                            bottomRight:
-                                Radius.circular(SizeConfig.titleSize / 2),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: AnimatedContainer(
+                          curve: curve,
+                          duration: duration,
+                          width: SizeConfig.screenWidth! * (1),
+                          height: SizeConfig.screenWidth! *
+                              (isVerticalView ? expandedViewHeightRatio : 0.78),
+                          decoration: BoxDecoration(
+                            color: UiConstants.kBackgroundColor,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft:
+                                  Radius.circular(SizeConfig.titleSize / 2),
+                              bottomRight:
+                                  Radius.circular(SizeConfig.titleSize / 2),
+                            ),
                           ),
-                        ),
-                        child: SingleChildScrollView(
-                          controller: controller,
-                          physics: isHorizontalView
-                              ? const BouncingScrollPhysics()
-                              : const NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          child: AnimatedContainer(
-                            curve: curve,
-                            duration: duration,
-                            padding: isVerticalView
-                                ? EdgeInsets.symmetric(
-                                    vertical: SizeConfig.pageHorizontalMargins,
-                                    horizontal:
-                                        SizeConfig.pageHorizontalMargins)
-                                : EdgeInsets.only(
-                                    top: SizeConfig.titleSize / 2,
-                                    left: isHorizontalView
+                          child: SingleChildScrollView(
+                            controller: controller,
+                            physics: isHorizontalView
+                                ? const BouncingScrollPhysics()
+                                : const NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            child: AnimatedContainer(
+                              curve: curve,
+                              duration: duration,
+                              padding: isVerticalView
+                                  ? EdgeInsets.symmetric(
+                                      vertical:
+                                          SizeConfig.pageHorizontalMargins,
+                                      horizontal:
+                                          SizeConfig.pageHorizontalMargins)
+                                  : EdgeInsets.only(
+                                      top: SizeConfig.titleSize / 2,
+                                      left: isHorizontalView
+                                          ? 0
+                                          : SizeConfig.titleSize / 2,
+                                      right: SizeConfig.titleSize / 2,
+                                      bottom: SizeConfig.titleSize / 2),
+                              height: SizeConfig.screenWidth! *
+                                  (isVerticalView
+                                      ? expandedViewHeightRatio
+                                      : 0.78),
+                              width: SizeConfig.screenWidth! *
+                                  (isHorizontalView ? 2.4 : 1),
+                              child: Stack(
+                                children: [
+                                  AnimatedPositioned(
+                                    curve: curve,
+                                    duration: duration,
+                                    left: isVerticalView
                                         ? 0
-                                        : SizeConfig.titleSize / 2,
-                                    right: SizeConfig.titleSize / 2,
-                                    bottom: SizeConfig.titleSize / 2),
-                            height: SizeConfig.screenWidth! *
-                                (isVerticalView
-                                    ? expandedViewHeightRatio
-                                    : 0.78),
-                            width: SizeConfig.screenWidth! *
-                                (isHorizontalView ? 2.4 : 1),
-                            child: Stack(
-                              children: [
-                                AnimatedPositioned(
-                                  curve: curve,
-                                  duration: duration,
-                                  left: isVerticalView
-                                      ? 0
-                                      : isHorizontalView
-                                          ? SizeConfig.screenWidth! * 1.63
-                                          : SizeConfig.screenWidth! * 0.075 * 3,
-                                  top: SizeConfig.screenWidth! *
-                                      (isVerticalView
-                                          ? 1.24
-                                          : isHorizontalView
-                                              ? 0.05
-                                              : 0.088),
-                                  child: Card(
-                                    color: Colors.transparent,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.titleSize / 3),
-                                    ),
-                                    margin: EdgeInsets.zero,
-                                    child: AnimatedContainer(
-                                      curve: curve,
-                                      duration: duration,
-                                      decoration: BoxDecoration(
-                                        color: (!isVerticalView &&
-                                                !isHorizontalView)
-                                            ? UiConstants.kRewardColor
-                                            : UiConstants.kRewardDarkColor,
+                                        : isHorizontalView
+                                            ? SizeConfig.screenWidth! * 1.63
+                                            : SizeConfig.screenWidth! *
+                                                0.075 *
+                                                3,
+                                    top: SizeConfig.screenWidth! *
+                                        (isVerticalView
+                                            ? 1.24
+                                            : isHorizontalView
+                                                ? 0.05
+                                                : 0.088),
+                                    child: Card(
+                                      color: Colors.transparent,
+                                      shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(
                                             SizeConfig.titleSize / 3),
                                       ),
-                                      height: SizeConfig.screenWidth! * 0.45 -
-                                          (SizeConfig.screenWidth! *
-                                              0.64 *
-                                              0.03 *
-                                              (isVerticalView
-                                                  ? 4
-                                                  : isHorizontalView
-                                                      ? 0
-                                                      : 2)),
-                                      width: isVerticalView
-                                          ? (SizeConfig.screenWidth! -
-                                              SizeConfig.pageHorizontalMargins *
-                                                  2)
-                                          : SizeConfig.screenWidth! * 0.8 -
-                                              (SizeConfig.screenWidth! *
-                                                  0.8 *
-                                                  0.04 *
-                                                  4),
-                                      child: CardContent(
-                                        isHorizontalView: isHorizontalView,
-                                        isVerticalView: isVerticalView,
+                                      margin: EdgeInsets.zero,
+                                      child: AnimatedContainer(
                                         curve: curve,
                                         duration: duration,
-                                        asset: Assets.dailyAppBonusHero,
-                                        title: "Fello Rewards",
-                                        secondaryColor:
-                                            UiConstants.kRewardColor,
-                                        subtitle: "Redeem after reaching ₹200",
+                                        decoration: BoxDecoration(
+                                          color: (!isVerticalView &&
+                                                  !isHorizontalView)
+                                              ? UiConstants.kRewardColor
+                                              : UiConstants.kRewardDarkColor,
+                                          borderRadius: BorderRadius.circular(
+                                              SizeConfig.titleSize / 3),
+                                        ),
+                                        height: SizeConfig.screenWidth! * 0.45 -
+                                            (SizeConfig.screenWidth! *
+                                                0.64 *
+                                                0.03 *
+                                                (isVerticalView
+                                                    ? 4
+                                                    : isHorizontalView
+                                                        ? 0
+                                                        : 2)),
+                                        width: isVerticalView
+                                            ? (SizeConfig.screenWidth! -
+                                                SizeConfig
+                                                        .pageHorizontalMargins *
+                                                    2)
+                                            : SizeConfig.screenWidth! * 0.8 -
+                                                (SizeConfig.screenWidth! *
+                                                    0.8 *
+                                                    0.04 *
+                                                    4),
+                                        child: CardContent(
+                                          isHorizontalView: isHorizontalView,
+                                          isVerticalView: isVerticalView,
+                                          curve: curve,
+                                          duration: duration,
+                                          asset: Assets.dailyAppBonusHero,
+                                          title: "Fello Rewards",
+                                          secondaryColor:
+                                              UiConstants.kRewardColor,
+                                          subtitle:
+                                              "Redeem after reaching ₹200",
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                AnimatedPositioned(
-                                  curve: curve,
-                                  duration: duration,
-                                  left: isVerticalView
-                                      ? 0
-                                      : isHorizontalView
-                                          ? SizeConfig.screenWidth! * 0.88
-                                          : SizeConfig.screenWidth! * 0.078 * 2,
-                                  top: SizeConfig.screenWidth! *
-                                      (isVerticalView
-                                          ? 0.82
-                                          : isHorizontalView
-                                              ? 0.05
-                                              : 0.088),
-                                  child: Card(
-                                    color: Colors.transparent,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.titleSize / 3),
-                                    ),
-                                    margin: EdgeInsets.zero,
-                                    child: AnimatedContainer(
-                                      curve: curve,
-                                      duration: duration,
-                                      decoration: BoxDecoration(
-                                        color: (!isVerticalView &&
-                                                !isHorizontalView)
-                                            ? UiConstants.kGoldContainerColor
-                                            : UiConstants.kGoldDarkColor,
+                                  AnimatedPositioned(
+                                    curve: curve,
+                                    duration: duration,
+                                    left: isVerticalView
+                                        ? 0
+                                        : isHorizontalView
+                                            ? SizeConfig.screenWidth! * 0.88
+                                            : SizeConfig.screenWidth! *
+                                                0.078 *
+                                                2,
+                                    top: SizeConfig.screenWidth! *
+                                        (isVerticalView
+                                            ? 0.82
+                                            : isHorizontalView
+                                                ? 0.05
+                                                : 0.088),
+                                    child: Card(
+                                      color: Colors.transparent,
+                                      shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(
                                             SizeConfig.titleSize / 3),
                                       ),
-                                      height: SizeConfig.screenWidth! * 0.45 -
-                                          (SizeConfig.screenWidth! *
-                                              0.64 *
-                                              0.03 *
-                                              (isVerticalView
-                                                  ? 4
-                                                  : isHorizontalView
-                                                      ? 0
-                                                      : 2)),
-                                      width: isVerticalView
-                                          ? (SizeConfig.screenWidth! -
-                                              SizeConfig.pageHorizontalMargins *
-                                                  2)
-                                          : SizeConfig.screenWidth! * 0.8 -
-                                              (SizeConfig.screenWidth! *
-                                                  0.8 *
-                                                  0.04 *
-                                                  3),
-                                      child: CardContent(
-                                        isHorizontalView: isHorizontalView,
-                                        isVerticalView: isVerticalView,
+                                      margin: EdgeInsets.zero,
+                                      child: AnimatedContainer(
                                         curve: curve,
                                         duration: duration,
-                                        asset: Assets.goldAsset,
-                                        title: "Digital Gold",
-                                        secondaryColor:
-                                            UiConstants.kGoldContainerColor,
-                                        subtitle:
-                                            "Quick Returns • Withdraw anytime",
+                                        decoration: BoxDecoration(
+                                          color: (!isVerticalView &&
+                                                  !isHorizontalView)
+                                              ? UiConstants.kGoldContainerColor
+                                              : UiConstants.kGoldDarkColor,
+                                          borderRadius: BorderRadius.circular(
+                                              SizeConfig.titleSize / 3),
+                                        ),
+                                        height: SizeConfig.screenWidth! * 0.45 -
+                                            (SizeConfig.screenWidth! *
+                                                0.64 *
+                                                0.03 *
+                                                (isVerticalView
+                                                    ? 4
+                                                    : isHorizontalView
+                                                        ? 0
+                                                        : 2)),
+                                        width: isVerticalView
+                                            ? (SizeConfig.screenWidth! -
+                                                SizeConfig
+                                                        .pageHorizontalMargins *
+                                                    2)
+                                            : SizeConfig.screenWidth! * 0.8 -
+                                                (SizeConfig.screenWidth! *
+                                                    0.8 *
+                                                    0.04 *
+                                                    3),
+                                        child: CardContent(
+                                          isHorizontalView: isHorizontalView,
+                                          isVerticalView: isVerticalView,
+                                          curve: curve,
+                                          duration: duration,
+                                          asset: Assets.goldAsset,
+                                          title: "Digital Gold",
+                                          secondaryColor:
+                                              UiConstants.kGoldContainerColor,
+                                          subtitle:
+                                              "Quick Returns • Withdraw anytime",
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                AnimatedPositioned(
-                                  curve: curve,
-                                  duration: duration,
-                                  left: isVerticalView
-                                      ? 0
-                                      : isHorizontalView
-                                          ? SizeConfig.screenWidth! * 0.11
-                                          : SizeConfig.screenWidth! * 0.09,
-                                  top: SizeConfig.screenWidth! *
-                                      (isVerticalView
-                                          ? 0.4
-                                          : isHorizontalView
-                                              ? 0.05
-                                              : 0.088),
-                                  child: Card(
-                                    color: Colors.transparent,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.titleSize / 3),
-                                    ),
-                                    margin: EdgeInsets.zero,
-                                    child: AnimatedContainer(
-                                      curve: curve,
-                                      duration: duration,
-                                      decoration: BoxDecoration(
-                                        color: (!isVerticalView &&
-                                                !isHorizontalView)
-                                            ? UiConstants.darkPrimaryColor3
-                                            : UiConstants.darkPrimaryColor4,
+                                  AnimatedPositioned(
+                                    curve: curve,
+                                    duration: duration,
+                                    left: isVerticalView
+                                        ? 0
+                                        : isHorizontalView
+                                            ? SizeConfig.screenWidth! * 0.11
+                                            : SizeConfig.screenWidth! * 0.09,
+                                    top: SizeConfig.screenWidth! *
+                                        (isVerticalView
+                                            ? 0.4
+                                            : isHorizontalView
+                                                ? 0.05
+                                                : 0.088),
+                                    child: Card(
+                                      color: Colors.transparent,
+                                      shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(
                                             SizeConfig.titleSize / 3),
                                       ),
-                                      height: SizeConfig.screenWidth! * 0.45 -
-                                          (SizeConfig.screenWidth! *
-                                              0.64 *
-                                              0.03 *
-                                              (isVerticalView
-                                                  ? 4
-                                                  : isHorizontalView
-                                                      ? 0
-                                                      : 2)),
-                                      width: isVerticalView
-                                          ? (SizeConfig.screenWidth! -
-                                              SizeConfig.pageHorizontalMargins *
-                                                  2)
-                                          : SizeConfig.screenWidth! * 0.8 -
-                                              (SizeConfig.screenWidth! *
-                                                  0.8 *
-                                                  0.04 *
-                                                  2),
-                                      child: CardContent(
-                                        isHorizontalView: isHorizontalView,
-                                        isVerticalView: isVerticalView,
+                                      margin: EdgeInsets.zero,
+                                      child: AnimatedContainer(
                                         curve: curve,
                                         duration: duration,
-                                        asset: Assets.floAsset,
-                                        title: "Fello Flo",
-                                        secondaryColor:
-                                            UiConstants.darkPrimaryColor3,
-                                        subtitle:
-                                            "Quick Returns • Withdraw anytime",
+                                        decoration: BoxDecoration(
+                                          color: (!isVerticalView &&
+                                                  !isHorizontalView)
+                                              ? UiConstants.darkPrimaryColor3
+                                              : UiConstants.darkPrimaryColor4,
+                                          borderRadius: BorderRadius.circular(
+                                              SizeConfig.titleSize / 3),
+                                        ),
+                                        height: SizeConfig.screenWidth! * 0.45 -
+                                            (SizeConfig.screenWidth! *
+                                                0.64 *
+                                                0.03 *
+                                                (isVerticalView
+                                                    ? 4
+                                                    : isHorizontalView
+                                                        ? 0
+                                                        : 2)),
+                                        width: isVerticalView
+                                            ? (SizeConfig.screenWidth! -
+                                                SizeConfig
+                                                        .pageHorizontalMargins *
+                                                    2)
+                                            : SizeConfig.screenWidth! * 0.8 -
+                                                (SizeConfig.screenWidth! *
+                                                    0.8 *
+                                                    0.04 *
+                                                    2),
+                                        child: CardContent(
+                                          isHorizontalView: isHorizontalView,
+                                          isVerticalView: isVerticalView,
+                                          curve: curve,
+                                          duration: duration,
+                                          asset: Assets.floAsset,
+                                          title: "Fello Flo",
+                                          secondaryColor:
+                                              UiConstants.darkPrimaryColor3,
+                                          subtitle:
+                                              "Quick Returns • Withdraw anytime",
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -554,17 +578,6 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      // if (!isHorizontalView && !isVerticalView)
-                      //   Align(
-                      //     alignment: Alignment.centerRight,
-                      //     child: Padding(
-                      //       padding: EdgeInsets.only(
-                      //           bottom: SizeConfig.pageHorizontalMargins * 2,
-                      //           right: SizeConfig.pageHorizontalMargins),
-                      //       child: SvgPicture.asset("assets/vectors/swipeh.svg",
-                      //           width: SizeConfig.titleSize),
-                      //     ),
-                      //   ),
                     ],
                   ),
                 ),
@@ -574,22 +587,25 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
           if (!isVerticalView)
             Align(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                margin: EdgeInsets.only(
-                    bottom: SizeConfig.pageHorizontalMargins * 1.4),
-                child: MaterialButton(
-                  minWidth: SizeConfig.screenWidth! -
-                      SizeConfig.pageHorizontalMargins * 2,
-                  color: Colors.white,
-                  onPressed: () {
-                    gradientController?.reset();
-                    gradientController
-                        ?.forward()
-                        .then((value) => print("Animation ended"));
-                  },
-                  child: Text(
-                    "SAVE",
-                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+              child: AnimatedOpacity(
+                opacity: isVerticalView ? 0 : 1,
+                curve: curve,
+                duration: duration,
+                child: Container(
+                  margin: EdgeInsets.only(
+                      bottom: SizeConfig.pageHorizontalMargins * 1.4),
+                  child: MaterialButton(
+                    minWidth: SizeConfig.screenWidth! -
+                        SizeConfig.pageHorizontalMargins * 2,
+                    color: Colors.white,
+                    onPressed: () {
+                      gradientController?.reset();
+                      gradientController?.forward();
+                    },
+                    child: Text(
+                      "SAVE",
+                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                    ),
                   ),
                 ),
               ),
@@ -635,7 +651,6 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                   if (isVerticalView) {
                     setState(() {
                       isVerticalView = false;
-                      print('IsVerticalView true');
                     });
                     Future.delayed(duration, () {
                       gradientController?.reset();
@@ -644,7 +659,6 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                   } else {
                     setState(() {
                       isVerticalView = true;
-                      print('IsVerticalView true');
                     });
                   }
                 },
@@ -656,8 +670,15 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                       ? SizeConfig.screenWidth! * 0.2
                       : SizeConfig.avatarRadius * 2,
                   decoration: BoxDecoration(
-                    color: UiConstants.kSecondaryBackgroundColor,
+                    color: UiConstants.kBackgroundColor,
                     borderRadius: BorderRadius.circular(100),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 15,
+                          offset: const Offset(0, 15),
+                          spreadRadius: 4)
+                    ],
                   ),
                   child: Center(
                     child: AnimatedCrossFade(

@@ -61,7 +61,11 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (leadingPadding) SizedBox(width: SizeConfig.padding8),
-          showAvatar ? const ProfileImageSE() : const SizedBox(),
+          showAvatar
+              ? ProfileImageSE(
+                  radius: SizeConfig.avatarRadius * 0.9,
+                )
+              : const SizedBox(),
           titleWidget ??
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,

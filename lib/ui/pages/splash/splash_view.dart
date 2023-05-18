@@ -21,7 +21,7 @@ class LauncherView extends StatefulWidget {
 }
 
 class _LauncherViewState extends State<LauncherView>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -33,9 +33,9 @@ class _LauncherViewState extends State<LauncherView>
             ? BaseView<LauncherViewModel>(onModelReady: (model) {
                 model.loopOutlottieAnimationController =
                     AnimationController(vsync: this);
-                // if (connectivityStatus == ConnectivityStatus.Offline) {
-                //   return;
-                // }
+                model.loopingLottieAnimationController = AnimationController(
+                    vsync: this, duration: Duration(milliseconds: 2500));
+
                 model.init();
               }, onModelDispose: (model) {
                 model.loopOutlottieAnimationController!.dispose();
@@ -62,7 +62,7 @@ class _LauncherViewState extends State<LauncherView>
                             alignment: Alignment.center,
                             child: AnimatedOpacity(
                               opacity: model.isFetchingData ? 0 : 1,
-                              duration: Duration(milliseconds: 100),
+                              duration: const Duration(milliseconds: 100),
                               curve: Curves.linear,
                               child: Lottie.asset(
                                 Assets.felloSplashZoomOutLogo,
@@ -73,7 +73,7 @@ class _LauncherViewState extends State<LauncherView>
                                     model.loopOutlottieAnimationController,
                                 onLoaded: (composition) {
                                   model.loopOutlottieAnimationController!
-                                    ..duration = composition.duration;
+                                      .duration = composition.duration;
                                 },
                               ),
                             ),
@@ -85,7 +85,11 @@ class _LauncherViewState extends State<LauncherView>
                                   height: SizeConfig.screenHeight,
                                   alignment: Alignment.center,
                                   // width: SizeConfig.screenWidth,
+                                  controller:
+                                      model.loopingLottieAnimationController,
                                   onLoaded: (composition) {
+                                model.loopingLottieAnimationController!
+                                    .duration = composition.duration;
                                 model.loopLottieDuration =
                                     composition.duration.inMilliseconds;
                               }, fit: BoxFit.cover),

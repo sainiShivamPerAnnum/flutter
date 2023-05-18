@@ -24,9 +24,11 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/home/cards_home.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_welcome_card.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
@@ -37,7 +39,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
@@ -194,19 +195,17 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  openProfile() {
+  void openProfile() {
     _baseUtil!.openProfileDetailsScreen();
   }
 
-  getSaveViewItems(SaveViewModel smodel) {
+  List<Widget> getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
     saveViewItems.addAll([
       const Cards(),
       SizedBox(height: SizeConfig.pageHorizontalMargins),
       const TambolaMiniInfoCard()
-    ]
-        // SaveNetWorthSection(saveViewModel: smodel)
-        );
+    ]);
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
@@ -224,22 +223,43 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     });
-
-    saveViewItems.add(
-      Container(
-        margin: EdgeInsets.only(top: SizeConfig.padding40),
-        child: LottieBuilder.network(
-            "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
-      ),
-    );
-
     saveViewItems.add(SizedBox(
-      height: SizeConfig.navBarHeight,
+      height: SizeConfig.navBarHeight * 1.6,
     ));
     return saveViewItems;
   }
 
-  getCampaignEvents() async {
+  List<Widget> getNewUserSaveViewItems(SaveViewModel smodel) {
+    List<Widget> saveViewItems = [];
+    saveViewItems.addAll([
+      const SaveWelcomeCard(),
+      SaveAssetsGroupCard(saveViewModel: smodel),
+      const TambolaMiniInfoCard(),
+    ]);
+
+    DynamicUiUtils.saveViewOrder[1].forEach((key) {
+      switch (key) {
+        case "PP":
+          saveViewItems.add(const PowerPlayCard());
+          break;
+        case 'NAS':
+          saveViewItems.add(const AutosaveCard());
+          break;
+        case 'CH':
+          saveViewItems.add(Campaigns(model: smodel));
+          break;
+        case 'BL':
+          saveViewItems.add(Blogs(model: smodel));
+          break;
+      }
+    });
+    saveViewItems.add(SizedBox(
+      height: SizeConfig.navBarHeight * 1.6,
+    ));
+    return saveViewItems;
+  }
+
+  Future<void> getCampaignEvents() async {
     final response = await _campaignRepo.getOngoingEvents();
     if (response.isSuccess()) {
       ongoingEvents = response.model;
@@ -251,7 +271,7 @@ class SaveViewModel extends BaseViewModel {
     isChallengesLoading = false;
   }
 
-  getSaveViewBlogs() async {
+  Future<void> getSaveViewBlogs() async {
     final response = await _saveRepo!.getBlogs(5);
     if (response.isSuccess()) {
       blogPosts = response.model;
@@ -262,7 +282,7 @@ class SaveViewModel extends BaseViewModel {
     updateIsLoading(false);
   }
 
-  getAllBlogs() async {
+  Future<void> getAllBlogs() async {
     updateIsLoading(true);
     final response = await _saveRepo!.getBlogs(30);
     blogPosts = response.model;
@@ -274,7 +294,7 @@ class SaveViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  refreshTransactions(InvestmentType investmentType) async {
+  Future<void> refreshTransactions(InvestmentType investmentType) async {
     await _txnHistoryService!.updateTransactions(investmentType);
     await _userCoinService!.getUserCoinBalance();
     await _userService!.getUserFundWalletData();
@@ -325,7 +345,7 @@ class SaveViewModel extends BaseViewModel {
   }
 
   /// `Navigation`
-  navigateToBlogWebView(String? slug, String? title) {
+  void navigateToBlogWebView(String? slug, String? title) {
     _analyticsService!.track(eventName: AnalyticsEvents.blogWebView);
 
     AppState.delegate!.appState.currentAction = PageAction(
@@ -385,7 +405,7 @@ class SaveViewModel extends BaseViewModel {
     }
   }
 
-  trackChallangeTapped(String name, int order) {
+  void trackChallengeTapped(String name, int order) {
     _analyticsService!.track(
         eventName: AnalyticsEvents.challengeCtaTapped,
         properties: AnalyticsProperties.getDefaultPropertiesMap(
@@ -396,7 +416,7 @@ class SaveViewModel extends BaseViewModel {
             }));
   }
 
-  trackBannerClickEvent(int orderNumber) {
+  void trackBannerClickEvent(int orderNumber) {
     _analyticsService!
         .track(eventName: AnalyticsEvents.bannerClick, properties: {
       "Location": "Fin Gyaan",
@@ -404,26 +424,7 @@ class SaveViewModel extends BaseViewModel {
     });
   }
 
-  navigateToCompleteKYC() {
-    Haptic.vibrate();
-    _analyticsService!.track(eventName: AnalyticsEvents.openKYCSection);
-
-    AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addPage,
-      page: KycDetailsPageConfig,
-    );
-  }
-
-  navigateToVerifyVPA() {
-    Haptic.vibrate();
-
-    AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addPage,
-      page: EditAugBankDetailsPageConfig,
-    );
-  }
-
-  navigateToViewAllBlogs() {
+  void navigateToViewAllBlogs() {
     Haptic.vibrate();
     _analyticsService!.track(eventName: AnalyticsEvents.allblogsview);
     AppState.delegate!.appState.currentAction = PageAction(

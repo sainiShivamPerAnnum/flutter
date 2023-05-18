@@ -8,3 +8,5 @@ export 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 export 'package:felloapp/feature/tambola/src/ui/tambola_home/tambola_home_view.dart';
 export 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 export 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/tambola_home_tickets_view.dart';
+//widgets
+export 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';

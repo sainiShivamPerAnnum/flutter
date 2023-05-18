@@ -31,16 +31,20 @@ class TambolaMiniInfoCard extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          count > 0
-                              ? "Tambola Tickets"
-                              : "Get your first free tambola ticket",
-                          style:
-                              TextStyles.rajdhaniM.body0.colour(Colors.white),
-                          maxLines: 1,
-                          textAlign: TextAlign.start,
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              count > 0
+                                  ? "Tambola Tickets"
+                                  : "Get your first free tambola ticket",
+                              style: TextStyles.rajdhaniM.body0
+                                  .colour(Colors.white),
+                              maxLines: 1,
+                            ),
+                          ),
                         ),
                       ),
                     ],

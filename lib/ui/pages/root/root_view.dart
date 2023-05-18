@@ -195,13 +195,6 @@ class RootAppBar extends StatelessWidget {
                           width: SizeConfig.screenWidth,
                           height: kToolbarHeight + SizeConfig.viewInsets.top,
                           alignment: Alignment.bottomCenter,
-                          color: (locator<RootController>()
-                                      .currentNavBarItemModel ==
-                                  RootController.saveNavBarItem)
-                              ? (userservice!.userSegments.contains("NEW_USER"))
-                                  ? UiConstants.kBackgroundColor
-                                  : UiConstants.kSecondaryBackgroundColor
-                              : UiConstants.kBackgroundColor,
                           child: FAppBar(
                             showAvatar: true,
                             leadingPadding: false,
@@ -212,19 +205,7 @@ class RootAppBar extends StatelessWidget {
                                     .colour(Colors.white),
                               ),
                             ),
-                            backgroundColor: ((locator<RootController>()
-                                            .currentNavBarItemModel ==
-                                        RootController.tambolaNavBar) &&
-                                    ticketCount == 0)
-                                ? Color(0XFF141414)
-                                : (locator<RootController>()
-                                            .currentNavBarItemModel ==
-                                        RootController.saveNavBarItem)
-                                    ? (userservice!.userSegments
-                                            .contains("NEW_USER"))
-                                        ? UiConstants.kBackgroundColor
-                                        : UiConstants.kSecondaryBackgroundColor
-                                    : UiConstants.kBackgroundColor,
+                            backgroundColor: UiConstants.kBackgroundColor,
                             showCoinBar: false,
                             action: Row(
                               children: [

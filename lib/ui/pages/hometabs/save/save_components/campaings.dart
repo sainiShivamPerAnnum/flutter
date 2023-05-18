@@ -44,10 +44,11 @@ class CampaignCardSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        // left: SizeConfig.padding16,
-        top: SizeConfig.padding8,
-        // right: SizeConfig.padding16,
-      ),
+          // left: SizeConfig.padding
+          top: SizeConfig.padding8,
+          bottom: SizeConfig.padding40
+          // right: SizeConfig.padding16,
+          ),
       child: SizedBox(
         height: SizeConfig.screenWidth! * 0.5,
         width: SizeConfig.screenWidth,
@@ -63,7 +64,7 @@ class CampaignCardSection extends StatelessWidget {
                       if (_userService.baseUser!.username!.isEmpty) {
                         BaseUtil.showUsernameInputModalSheet();
                       }
-                      saveVm.trackChallangeTapped(event.type, index);
+                      saveVm.trackChallengeTapped(event.type, index);
                       AppState.delegate!.parseRoute(Uri.parse(event.type));
                     },
                     child: Padding(
@@ -143,9 +144,9 @@ class IOSCampaignCard extends StatelessWidget {
                     decoration: const BoxDecoration(
                       color: UiConstants.kSecondaryBackgroundColor,
                     ),
-            ),
-          ),
-        ),
+                  ),
+                ),
+              ),
             )
           : Container(
               decoration: BoxDecoration(
@@ -239,9 +240,9 @@ class CampaignCard extends StatelessWidget {
                   decoration: const BoxDecoration(
                     color: UiConstants.kSecondaryBackgroundColor,
                   ),
-          ),
-        ),
-      ),
+                ),
+              ),
+            ),
           )
         : event.bgImage.isNotEmpty
             ? Container(

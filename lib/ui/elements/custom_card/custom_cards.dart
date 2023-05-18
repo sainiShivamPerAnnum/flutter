@@ -36,149 +36,129 @@ class SaveCustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S();
-    return Padding(
-      padding: EdgeInsets.only(
-        right: SizeConfig.padding16,
-        top: SizeConfig.padding20,
-        bottom: SizeConfig.padding12,
-      ),
-      child: GestureDetector(
-        onTap: onCardTap,
-        child: Container(
-          height: SizeConfig.screenWidth! * 0.35,
-          width: SizeConfig.screenWidth,
-          child: Stack(
-            fit: StackFit.loose,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: SizeConfig.padding16),
-                child: CustomPaint(
-                  size: Size(
-                    SizeConfig.screenWidth!,
-                    SizeConfig.screenWidth! * 0.351,
-                  ),
-                  painter: CustomSaveCardPainter(cardBgColor),
-                ),
-              ),
-              Container(
-                height: SizeConfig.screenWidth! * 0.351,
-                width: SizeConfig.screenWidth,
-                child: Row(
+    return GestureDetector(
+      onTap: onCardTap,
+      child: Container(
+        height: SizeConfig.screenWidth! * 0.35,
+        width: SizeConfig.screenWidth,
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.pageHorizontalMargins,
+          vertical: SizeConfig.padding10,
+        ),
+        decoration: BoxDecoration(
+          color: cardBgColor,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Image.asset(
+              cardAssetName!,
+              height: SizeConfig.screenWidth! * 0.2,
+              width: SizeConfig.screenWidth! * 0.2,
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: SizeConfig.padding20,
+                    bottom: SizeConfig.padding16,
+                    right: SizeConfig.padding20),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Image.asset(
-                      cardAssetName!,
-                      height: SizeConfig.screenWidth! * 0.28,
-                      width: SizeConfig.screenWidth! * 0.28,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            top: SizeConfig.padding20,
-                            bottom: SizeConfig.padding16,
-                            right: SizeConfig.padding20),
-                        child: Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // AutosaveStatusText(asset: title!),
+                            Text(
+                              title!,
+                              style: TextStyles.rajdhaniSB.title5,
+                              key: ValueKey(title),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              margin:
+                                  EdgeInsets.only(right: SizeConfig.padding2),
+                              width: SizeConfig.screenWidth! * 0.26,
+                              height: SizeConfig.padding24,
+                              decoration: BoxDecoration(
+                                  color: (key ==
+                                          ValueKey(
+                                              Constants.ASSET_TYPE_AUGMONT))
+                                      ? Color(0xff5567B7)
+                                      : Color(0xff326D71),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness16)),
+                              child: AnimatedTextKit(
+                                repeatForever: true,
+                                animatedTexts: List.generate(
+                                  chipText.length,
+                                  (index) => RotateAnimatedText(
+                                    chipText[index].toUpperCase(),
+                                    duration: Duration(seconds: 2),
+                                    textStyle: TextStyles.sourceSansSB.body4
+                                        .colour(Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: Colors.white,
+                              size: SizeConfig.padding16,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    // AutosaveStatusText(asset: title!),
-                                    Text(
-                                      title!,
-                                      style: TextStyles.rajdhaniSB.title5,
-                                      key: ValueKey(title),
-                                    ),
-                                  ],
+                                Text(
+                                  subtitle ?? locale.balanceText,
+                                  style: TextStyles.sourceSansM.body4,
                                 ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          right: SizeConfig.padding2),
-                                      width: SizeConfig.screenWidth! * 0.26,
-                                      height: SizeConfig.padding24,
-                                      decoration: BoxDecoration(
-                                          color: (key ==
-                                                  ValueKey(Constants
-                                                      .ASSET_TYPE_AUGMONT))
-                                              ? Color(0xff5567B7)
-                                              : Color(0xff326D71),
-                                          borderRadius: BorderRadius.circular(
-                                              SizeConfig.roundness16)),
-                                      child: AnimatedTextKit(
-                                        repeatForever: true,
-                                        animatedTexts: List.generate(
-                                          chipText.length,
-                                          (index) => RotateAnimatedText(
-                                            chipText[index].toUpperCase(),
-                                            duration: Duration(seconds: 2),
-                                            textStyle: TextStyles
-                                                .sourceSansSB.body4
-                                                .colour(Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      color: Colors.white,
-                                      size: SizeConfig.padding16,
-                                    ),
-                                  ],
-                                ),
+                                SizedBox(width: SizeConfig.padding4),
+                                if (key ==
+                                    ValueKey(Constants.ASSET_TYPE_LENDBOX))
+                                  LboxGrowthArrow()
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          subtitle ?? locale.balanceText,
-                                          style: TextStyles.sourceSansM.body4,
-                                        ),
-                                        SizedBox(width: SizeConfig.padding4),
-                                        if (key ==
-                                            ValueKey(
-                                                Constants.ASSET_TYPE_LENDBOX))
-                                          LboxGrowthArrow()
-                                      ],
-                                    ),
-                                    UserFundQuantitySE(
-                                      style: TextStyles.sourceSansSB.title4,
-                                      investmentType: investmentType,
-                                    )
-                                  ],
-                                ),
-                                CustomSaveButton(
-                                  onTap: onTap,
-                                  title: locale.btnSave.toUpperCase(),
-                                  width: SizeConfig.screenWidth! * 0.2,
-                                  height: SizeConfig.screenWidth! * 0.11,
-                                )
-                              ],
+                            UserFundQuantitySE(
+                              style: TextStyles.sourceSansSB.title4,
+                              investmentType: investmentType,
                             )
                           ],
                         ),
-                      ),
-                    ),
+                        CustomSaveButton(
+                          onTap: onTap,
+                          title: locale.btnSave.toUpperCase(),
+                          width: SizeConfig.screenWidth! * 0.2,
+                          height: SizeConfig.screenWidth! * 0.11,
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
