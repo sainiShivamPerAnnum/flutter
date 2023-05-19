@@ -78,9 +78,12 @@ class _LauncherViewState extends State<LauncherView>
                               ),
                             ),
                           ),
-                          if (model.isFetchingData)
-                            Align(
-                              alignment: Alignment.center,
+                          Align(
+                            alignment: Alignment.center,
+                            child: AnimatedOpacity(
+                              opacity: model.isFetchingData ? 1 : 0,
+                              duration: const Duration(milliseconds: 100),
+                              curve: Curves.linear,
                               child: Lottie.asset(Assets.felloSplashLoopLogo,
                                   height: SizeConfig.screenHeight,
                                   alignment: Alignment.center,
@@ -94,6 +97,7 @@ class _LauncherViewState extends State<LauncherView>
                                     composition.duration.inMilliseconds;
                               }, fit: BoxFit.cover),
                             ),
+                          ),
                           Align(
                             alignment: Alignment.bottomCenter,
                             child: Padding(
