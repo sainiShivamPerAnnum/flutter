@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -17,6 +18,7 @@ class FelloInAppReview extends HookWidget {
     final selected = useState(-1);
 
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
       decoration: BoxDecoration(
         color: const Color(0xff39393C),
         borderRadius: BorderRadius.only(
@@ -83,6 +85,7 @@ class FelloInAppReview extends HookWidget {
               },
             ),
           ),
+          const ReasonWidget(),
           SizedBox(
             height: SizeConfig.padding54,
           ),
@@ -122,6 +125,55 @@ class Emoji extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ReasonWidget extends StatelessWidget {
+  const ReasonWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: SizeConfig.padding24,
+        ),
+        //Tell us what we can improve your experience
+        Text(
+          "Tell us what we can improve your experience",
+          textAlign: TextAlign.center,
+          style:
+              TextStyles.sourceSans.body2.colour(Colors.white.withOpacity(0.6)),
+        ),
+        SizedBox(
+          height: SizeConfig.padding16,
+        ),
+        //Text Field
+        Container(
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.padding90 + SizeConfig.padding12,
+          decoration: BoxDecoration(
+            color: const Color(0xff1A1A1A),
+            borderRadius: BorderRadius.circular(SizeConfig.padding8),
+          ),
+          child: TextField(
+            maxLines: 5,
+            decoration: InputDecoration(
+              hintText: 'Start typing here...',
+              hintStyle: TextStyles.sourceSans.body3
+                  .colour(Colors.white.withOpacity(0.2)),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.all(SizeConfig.padding16),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.padding24,
+        ),
+        AppPositiveBtn(btnText: 'SUBMIT', onPressed: () {}),
+      ],
     );
   }
 }
