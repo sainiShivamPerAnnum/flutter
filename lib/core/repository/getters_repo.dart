@@ -318,9 +318,9 @@ class GetterRepository extends BaseRepo {
         (response) {
           final responseData = response["dynamicUi"];
 
-          logger.d("Page Config: $responseData");
+          // logger.d("Page Config: $responseData");
           final pageConfig = DynamicUI.fromMap(responseData);
-          logger.d("Page Config: $responseData");
+          logger.d("Page Config: ${pageConfig.toString()}");
           return ApiResponse<DynamicUI>(model: pageConfig, code: 200);
         },
       );
