@@ -1,4 +1,8 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -17,6 +21,15 @@ class FelloInAppReview extends HookWidget {
       "😍",
     ]);
     final selected = useState(-1);
+    final submitted = useState(false);
+    final textController = useTextEditingController();
+
+    if (submitted.value) {
+      return FelloInAppReviewSuccess(
+        emoji: emojis.value[selected.value],
+        showButton: selected.value > 2,
+      );
+    }
 
     return Padding(
       padding:
@@ -90,13 +103,29 @@ class FelloInAppReview extends HookWidget {
               ),
             ),
             if (selected.value <= 2 && selected.value >= 0)
-              const ReasonWidget(),
+              ReasonWidget(textController: textController),
             if (selected.value >= 0)
               SizedBox(
                 height: SizeConfig.padding24,
               ),
             if (selected.value >= 0)
-              AppPositiveBtn(btnText: 'SUBMIT', onPressed: () {}),
+              AppPositiveBtn(
+                btnText: 'SUBMIT',
+                onPressed: () {
+                  submitted.value = true;
+
+                  // debugPrint("Rating given: ${selected.value + 1}");
+                  // debugPrint("Reason: ${textController.text}");
+
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.reviewPopupSuccess,
+                    properties: {
+                      "Rating given": selected.value + 1,
+                      "Reason": textController.text,
+                    },
+                  );
+                },
+              ),
             SizedBox(
               height: SizeConfig.padding24,
             ),
@@ -142,7 +171,10 @@ class Emoji extends StatelessWidget {
 }
 
 class ReasonWidget extends StatelessWidget {
-  const ReasonWidget({Key? key}) : super(key: key);
+  const ReasonWidget({Key? key, required this.textController})
+      : super(key: key);
+
+  final TextEditingController textController;
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +188,7 @@ class ReasonWidget extends StatelessWidget {
           "Tell us what we can improve your experience",
           textAlign: TextAlign.center,
           style:
-              TextStyles.sourceSans.body2.colour(Colors.white.withOpacity(0.6)),
+          TextStyles.sourceSans.body2.colour(Colors.white.withOpacity(0.6)),
         ),
         SizedBox(
           height: SizeConfig.padding16,
@@ -170,6 +202,7 @@ class ReasonWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(SizeConfig.padding8),
           ),
           child: TextFormField(
+            controller: textController,
             maxLines: 5,
             decoration: InputDecoration(
               hintText: 'Start typing here...',
@@ -193,10 +226,12 @@ class ReasonWidget extends StatelessWidget {
 }
 
 class FelloInAppReviewSuccess extends StatelessWidget {
-  const FelloInAppReviewSuccess({Key? key, required this.emoji})
+  const FelloInAppReviewSuccess(
+      {Key? key, required this.emoji, required this.showButton})
       : super(key: key);
 
   final String emoji;
+  final bool showButton;
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +278,7 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                       child: Text(
                         emoji,
                         style:
-                            TextStyles.sourceSansB.title4.colour(Colors.white),
+                        TextStyles.sourceSansB.title4.colour(Colors.white),
                       ),
                     ),
                   ),
@@ -259,7 +294,9 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                     height: SizeConfig.padding24,
                   ),
                   Text(
-                    "We’re so glad you’re enjoying Fello!\nPlease take a few seconds to rate us on the Store.",
+                    showButton
+                        ? "We’re so glad you’re enjoying Fello!\nPlease take a few seconds to rate us on the Store."
+                        : "We will try our best to live upto your expectation\nand make your experience better on fello",
                     textAlign: TextAlign.center,
                     style: TextStyles.sourceSans.body2.colour(
                       Colors.white.withOpacity(0.6),
@@ -268,10 +305,21 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
-                  AppPositiveBtn(btnText: 'SUBMIT', onPressed: () {}),
-                  SizedBox(
-                    height: SizeConfig.padding24,
-                  ),
+                  if (showButton)
+                    AppPositiveBtn(
+                      btnText: 'Rate us on play store'.toUpperCase(),
+                      onPressed: () {
+                        PreferenceHelper.setBool(
+                            PreferenceHelper.APP_RATING_SUBMITTED, true);
+                        locator<AnalyticsService>().track(
+                          eventName: AnalyticsEvents.rateOnPlayStoreTapped,
+                        );
+                      },
+                    ),
+                  if (showButton)
+                    SizedBox(
+                      height: SizeConfig.padding24,
+                    ),
                 ],
               ),
               Align(
