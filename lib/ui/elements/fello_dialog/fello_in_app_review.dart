@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -33,7 +37,7 @@ class FelloInAppReview extends HookWidget {
 
     return Padding(
       padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
         decoration: BoxDecoration(
@@ -188,7 +192,7 @@ class ReasonWidget extends StatelessWidget {
           "Tell us what we can improve your experience",
           textAlign: TextAlign.center,
           style:
-          TextStyles.sourceSans.body2.colour(Colors.white.withOpacity(0.6)),
+              TextStyles.sourceSans.body2.colour(Colors.white.withOpacity(0.6)),
         ),
         SizedBox(
           height: SizeConfig.padding16,
@@ -226,8 +230,7 @@ class ReasonWidget extends StatelessWidget {
 }
 
 class FelloInAppReviewSuccess extends StatelessWidget {
-  const FelloInAppReviewSuccess(
-      {Key? key, required this.emoji, required this.showButton})
+  const FelloInAppReviewSuccess({Key? key, required this.emoji, required this.showButton})
       : super(key: key);
 
   final String emoji;
@@ -278,7 +281,7 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                       child: Text(
                         emoji,
                         style:
-                        TextStyles.sourceSansB.title4.colour(Colors.white),
+                            TextStyles.sourceSansB.title4.colour(Colors.white),
                       ),
                     ),
                   ),
@@ -308,7 +311,39 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                   if (showButton)
                     AppPositiveBtn(
                       btnText: 'Rate us on play store'.toUpperCase(),
-                      onPressed: () {
+                      onPressed: () async {
+                        if (Platform.isAndroid) {
+                          BaseUtil.launchUrl(
+                              'https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                        } else {
+                          BaseUtil.launchUrl(
+                              'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+                        }
+
+                        // final InAppReview inAppReview = InAppReview.instance;
+
+                        // try {
+                        //   if (await inAppReview.isAvailable()) {
+                        //     await inAppReview.requestReview();
+                        //   } else {
+                        //     log(
+                        //         "In app review not available, opening native application store");
+                        //     await inAppReview.openStoreListing(
+                        //         appStoreId: '1558445254');
+                        //   }
+                        // } catch (e) {
+                        //   log(e.toString());
+                        //   if (Platform.isAndroid) {
+                        //     BaseUtil.launchUrl(
+                        //         'https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                        //   } else {
+                        //     BaseUtil.launchUrl(
+                        //         'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+                        //   }
+                        // }
+
+                        AppState.backButtonDispatcher?.didPopRoute();
+
                         PreferenceHelper.setBool(
                             PreferenceHelper.APP_RATING_SUBMITTED, true);
                         locator<AnalyticsService>().track(
