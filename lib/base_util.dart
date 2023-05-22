@@ -31,6 +31,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
 import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
@@ -539,6 +540,22 @@ class BaseUtil extends ChangeNotifier {
       context: AppState.delegate!.navigatorKey.currentContext!,
       builder: (ctx) => content!,
     );
+  }
+
+  static void showFelloRatingSheet() {
+    if (!PreferenceHelper.getBool(PreferenceHelper.APP_RATING_SUBMITTED)) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: true,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: const FelloInAppReview(),
+        );
+      });
+    }
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {

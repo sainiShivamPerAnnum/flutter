@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -40,73 +41,74 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
       selector: (_, _subService) => _subService.autosaveState,
       builder: (context, autosaveState, child) =>
           BaseView<AutosaveProcessViewModel>(
-        onModelReady: (model) => model.init(),
-        onModelDispose: (model) => model.dump(),
-        builder: (context, model, child) {
-          return Scaffold(
-            backgroundColor: UiConstants.kBackgroundColor,
-            appBar: AppBar(
-              backgroundColor: UiConstants.kBackgroundColor,
-              elevation: 0.0,
-              title: model.currentPage <= 3
-                  ? Text(
-                      "Step ${model.currentPage + 1} of 4",
-                      style: TextStyles.sourceSansL.body3,
-                    )
-                  : Container(),
-              centerTitle: true,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: UiConstants.kTextColor,
-                ),
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  (autosaveState == AutosaveState.INIT ||
+            onModelReady: (model) => model.init(),
+            onModelDispose: (model) => model.dump(),
+            builder: (context, model, child) {
+              return Scaffold(
+                backgroundColor: UiConstants.kBackgroundColor,
+                appBar: AppBar(
+                  backgroundColor: UiConstants.kBackgroundColor,
+                  elevation: 0.0,
+                  title: model.currentPage <= 3
+                      ? Text(
+                    "Step ${model.currentPage + 1} of 4",
+                    style: TextStyles.sourceSansL.body3,
+                  )
+                      : Container(),
+                  centerTitle: true,
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: UiConstants.kTextColor,
+                    ),
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      (autosaveState == AutosaveState.INIT ||
                           autosaveState == AutosaveState.ACTIVE ||
                           model.pageController!.page == 0)
-                      ? AppState.backButtonDispatcher!.didPopRoute()
-                      : model.pageController!.animateToPage(
+                          ? AppState.backButtonDispatcher!.didPopRoute()
+                          : model.pageController!.animateToPage(
                           model.pageController!.page!.toInt() - 1,
                           duration: Duration(milliseconds: 500),
                           curve: Curves.decelerate);
-                  model.trackAutosaveBackPress();
-                },
-              ),
-              actions: [
-                Row(
-                  children: [FaqPill(type: FaqsType.autosave)],
-                )
-              ],
-            ),
-            resizeToAvoidBottomInset: false,
-            body: model.state == ViewState.Busy
-                ? Center(
-                    child: FullScreenLoader(),
-                  )
-                : Stack(
-                    children: [
-                      const NewSquareBackground(),
-                      SafeArea(
-                        child: autosaveState == AutosaveState.INIT
-                            ? AutosavePendingView()
-                            : autosaveState == AutosaveState.IDLE
-                                ? AutosaveSetupView(model: model)
-                                : autosaveState == AutosaveState.ACTIVE
-                                    ? AutosaveSuccessView(model: model)
-                                    : SizedBox(),
-                      ),
-                    ],
+                      model.trackAutosaveBackPress();
+                    },
                   ),
-          );
-        },
-      ),
+                  actions: [
+                    Row(
+                      children: [FaqPill(type: FaqsType.autosave)],
+                    )
+                  ],
+                ),
+                resizeToAvoidBottomInset: false,
+                body: model.state == ViewState.Busy
+                    ? Center(
+                  child: FullScreenLoader(),
+                )
+                    : Stack(
+                  children: [
+                    const NewSquareBackground(),
+                    SafeArea(
+                      child: autosaveState == AutosaveState.INIT
+                          ? AutosavePendingView()
+                          : autosaveState == AutosaveState.IDLE
+                          ? AutosaveSetupView(model: model)
+                          : autosaveState == AutosaveState.ACTIVE
+                          ? AutosaveSuccessView(model: model)
+                          : SizedBox(),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
     );
   }
 }
 
 class AutosaveSetupView extends StatelessWidget {
   final AutosaveProcessViewModel model;
+
   const AutosaveSetupView({
     required this.model,
     super.key,
@@ -129,6 +131,7 @@ class AutosaveSetupView extends StatelessWidget {
 
 class AutosaveSuccessView extends StatelessWidget {
   final AutosaveProcessViewModel model;
+
   const AutosaveSuccessView({super.key, required this.model});
 
   @override
@@ -187,7 +190,7 @@ class AutosaveSuccessView extends StatelessWidget {
               children: [
                 Padding(
                   padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                  EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
                   child: AutosaveSummary(
                     model: model,
                     showTopDivider: false,
@@ -207,6 +210,7 @@ class AutosaveSuccessView extends StatelessWidget {
               onPressed: () {
                 locator<UserService>().getUserFundWalletData();
                 AppState.backButtonDispatcher!.didPopRoute();
+                BaseUtil.showFelloRatingSheet();
               },
             ),
           )
@@ -259,11 +263,11 @@ class AutosavePendingView extends StatelessWidget {
           ),
           Expanded(
               child: Center(
-            child: LottieBuilder.asset(
-              "assets/lotties/loader.json",
-              width: SizeConfig.screenWidth! * 0.5,
-            ),
-          )),
+                child: LottieBuilder.asset(
+                  "assets/lotties/loader.json",
+                  width: SizeConfig.screenWidth! * 0.5,
+                ),
+              )),
           Text(
             "We'll notify you once your autosave is confirmed",
             style: TextStyles.sourceSansL.body4.colour(Colors.amber),
