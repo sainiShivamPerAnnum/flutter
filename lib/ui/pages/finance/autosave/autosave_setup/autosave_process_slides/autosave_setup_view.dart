@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AutoPaySetupOrUpdateView extends StatelessWidget {
-  AutoPaySetupOrUpdateView({
+  const AutoPaySetupOrUpdateView({
     super.key,
     required this.model,
   });

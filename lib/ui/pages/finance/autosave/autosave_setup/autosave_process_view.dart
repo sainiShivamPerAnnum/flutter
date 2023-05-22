@@ -69,34 +69,34 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                           ? AppState.backButtonDispatcher!.didPopRoute()
                           : model.pageController!.animateToPage(
                           model.pageController!.page!.toInt() - 1,
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.decelerate);
                       model.trackAutosaveBackPress();
                     },
                   ),
                   actions: [
                     Row(
-                      children: [FaqPill(type: FaqsType.autosave)],
-                    )
+                      children: [const FaqPill(type: FaqsType.autosave)],
+                )
                   ],
                 ),
                 resizeToAvoidBottomInset: false,
                 body: model.state == ViewState.Busy
-                    ? Center(
-                  child: FullScreenLoader(),
-                )
-                    : Stack(
-                  children: [
-                    const NewSquareBackground(),
-                    SafeArea(
-                      child: autosaveState == AutosaveState.INIT
-                          ? AutosavePendingView()
-                          : autosaveState == AutosaveState.IDLE
-                          ? AutosaveSetupView(model: model)
-                          : autosaveState == AutosaveState.ACTIVE
-                          ? AutosaveSuccessView(model: model)
-                          : SizedBox(),
-                    ),
+                ? const Center(
+                    child: FullScreenLoader(),
+                  )
+                : Stack(
+                    children: [
+                      const NewSquareBackground(),
+                      SafeArea(
+                        child: autosaveState == AutosaveState.INIT
+                            ? const AutosavePendingView()
+                            : autosaveState == AutosaveState.IDLE
+                                ? AutosaveSetupView(model: model)
+                                : autosaveState == AutosaveState.ACTIVE
+                                    ? AutosaveSuccessView(model: model)
+                                    : const SizedBox(),
+                      ),
                   ],
                 ),
               );
@@ -118,7 +118,7 @@ class AutosaveSetupView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageView(
       controller: model.pageController,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       children: [
         AutosaveStepsView(model: model),
         AutosaveAssetChoiceView(model: model),
@@ -137,7 +137,7 @@ class AutosaveSuccessView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
-    return Container(
+    return SizedBox(
       height: SizeConfig.screenHeight,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,7 +177,7 @@ class AutosaveSuccessView extends StatelessWidget {
                 vertical: SizeConfig.pageHorizontalMargins),
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Color(0xFF57A6B0).withOpacity(0.22),
+              color: const Color(0xFF57A6B0).withOpacity(0.22),
               borderRadius: BorderRadius.circular(SizeConfig.roundness12),
               border: Border.all(
                 color: UiConstants.kTextColor.withOpacity(0.1),
@@ -190,7 +190,7 @@ class AutosaveSuccessView extends StatelessWidget {
               children: [
                 Padding(
                   padding:
-                  EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
                   child: AutosaveSummary(
                     model: model,
                     showTopDivider: false,
@@ -199,7 +199,7 @@ class AutosaveSuccessView extends StatelessWidget {
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Container(
             color: UiConstants.kBackgroundColor,
             padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
