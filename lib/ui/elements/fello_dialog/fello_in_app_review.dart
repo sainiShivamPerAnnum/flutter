@@ -37,7 +37,7 @@ class FelloInAppReview extends HookWidget {
 
     return Padding(
       padding:
-      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
         decoration: BoxDecoration(
@@ -66,7 +66,7 @@ class FelloInAppReview extends HookWidget {
               height: SizeConfig.padding24,
             ),
             Text(
-              "How’s your experience so far?",
+              "How was your experience?",
               textAlign: TextAlign.center,
               style: TextStyles.sourceSansSB.title5.colour(Colors.white),
             ),
@@ -74,7 +74,7 @@ class FelloInAppReview extends HookWidget {
               height: SizeConfig.padding24,
             ),
             Text(
-              "We’d love to know!",
+              "Your feedback would help make Fello better!",
               textAlign: TextAlign.center,
               style: TextStyles.sourceSans.body2.colour(
                 Colors.white.withOpacity(0.6),
@@ -101,7 +101,7 @@ class FelloInAppReview extends HookWidget {
                 },
                 separatorBuilder: (context, index) {
                   return SizedBox(
-                    width: SizeConfig.padding8,
+                    width: SizeConfig.padding1,
                   );
                 },
               ),
@@ -131,7 +131,7 @@ class FelloInAppReview extends HookWidget {
                 },
               ),
             SizedBox(
-              height: SizeConfig.padding24,
+              height: SizeConfig.padding54,
             ),
           ],
         ),
@@ -157,8 +157,8 @@ class Emoji extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: SizeConfig.padding54 - SizeConfig.padding4,
-        height: SizeConfig.padding54 - SizeConfig.padding4,
+        width: SizeConfig.padding64,
+        height: SizeConfig.padding70,
         decoration: BoxDecoration(
           color: selected ? const Color(0xff62E3C4) : const Color(0xff323232),
           shape: BoxShape.circle,
@@ -166,7 +166,7 @@ class Emoji extends StatelessWidget {
         child: Center(
           child: Text(
             emoji,
-            style: TextStyles.sourceSansB.title4.colour(Colors.white),
+            style: TextStyles.sourceSansB.title3.colour(Colors.white),
           ),
         ),
       ),
@@ -189,7 +189,7 @@ class ReasonWidget extends StatelessWidget {
           height: SizeConfig.padding24,
         ),
         Text(
-          "Tell us what we can improve your experience",
+          "Let us know what went wrong",
           textAlign: TextAlign.center,
           style:
               TextStyles.sourceSans.body2.colour(Colors.white.withOpacity(0.6)),
@@ -230,7 +230,8 @@ class ReasonWidget extends StatelessWidget {
 }
 
 class FelloInAppReviewSuccess extends StatelessWidget {
-  const FelloInAppReviewSuccess({Key? key, required this.emoji, required this.showButton})
+  const FelloInAppReviewSuccess(
+      {Key? key, required this.emoji, required this.showButton})
       : super(key: key);
 
   final String emoji;
@@ -279,7 +280,7 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        emoji,
+                        showButton ? "😍" : '🙂',
                         style:
                             TextStyles.sourceSansB.title4.colour(Colors.white),
                       ),
