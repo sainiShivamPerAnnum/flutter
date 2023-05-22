@@ -631,6 +631,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.PowerPlaySeasonLeaderboard:
         PowerPlaySeasonLeaderboardDetailsConfig.currentPageAction = action;
         break;
+      case Pages.YoutubePlayerView:
+        YoutubePlayerViewConfig.currentPageAction = action;
+        break;
       default:
         break;
     }

@@ -462,6 +462,9 @@ class SubService extends ChangeNotifier {
                 statusType: UpiApplicationDiscoveryAppStatusType.all);
         print("Apps: found ${allUpiApps.length.toString()}");
 
+        appMetaList.add(ApplicationMeta.android(
+            UpiApplication.phonePePreprod, Uint8List(10), 0, 0));
+
         allUpiApps.forEach((element) {
           if (element.upiApplication.appName == "Paytm" &&
               AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
@@ -484,6 +487,13 @@ class SubService extends ChangeNotifier {
             appMetaList.add(element);
           }
         });
+
+        if (FlavorConfig.isDevelopment() && allUpiApps.length == 0) {
+          allUpiApps.forEach((element) {
+            print("Apps: found ${element.upiApplication.appName}");
+          });
+        }
+
         return appMetaList;
       } catch (e) {
         print("Apps: No Apps found");

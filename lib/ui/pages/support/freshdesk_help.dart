@@ -10,7 +10,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class FreshDeskHelp extends StatefulWidget {
@@ -19,15 +18,52 @@ class FreshDeskHelp extends StatefulWidget {
 }
 
 class _FreshDeskHelpState extends State<FreshDeskHelp> {
-  late WebViewController _webViewController;
+  WebViewController? _webViewController;
   int counter = 0;
   int exitCounter = 0;
   bool isLoading = true;
   final UserService? _userService = locator<UserService>();
 
-  _loadHtmlFromAssets() async {
-    await _webViewController.loadUrl(
-        'https://fello-assets.s3.ap-south-1.amazonaws.com/freshdesk/freshdesk.html');
+  @override
+  void initState() {
+    super.initState();
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..addJavaScriptChannel('Print', onMessageReceived: (message) {
+        log(message.message);
+        exitCounter++;
+        if (message.message == 'Close the window' && exitCounter == 1) {
+          log("Close the freshdesk window");
+          AppState.backButtonDispatcher!.didPopRoute();
+        }
+      })
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (_) async {
+            //Open Widget on startup
+            await _webViewController!.runJavaScript('openWidget()');
+            //prefill form with name email mobile and userid
+            await _webViewController!.runJavaScript(
+                'prefillForm("${_userService!.baseUser!.name}","${_userService!.baseUser!.email}","${_userService!.baseUser!.mobile}","${_userService!.baseUser!.uid}" )');
+            //hide fields which are disabled and uneditable
+            await _webViewController!.runJavaScript('hideFields()');
+            exitLoading();
+            //observe for window existence
+            Future.delayed(Duration(seconds: 3), () async {
+              _webViewController!
+                  .runJavaScriptReturningResult(
+                      'setTimeout(function() {observeWindow()}, 1000);')
+                  .then((value) {
+                log("This is value " + value.toString());
+              });
+            });
+          },
+          onWebResourceError: (WebResourceError error) {},
+        ),
+      )
+      ..loadRequest(Uri.parse(
+          'https://fello-assets.s3.ap-south-1.amazonaws.com/freshdesk/freshdesk.html'));
   }
 
   exitLoading() {
@@ -64,45 +100,8 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
       body: SafeArea(
         child: Stack(
           children: [
-            WebView(
-              initialUrl: 'https://www.fello.in/',
-              javascriptMode: JavascriptMode.unrestricted,
-              onPageFinished: (_) async {
-                //Open Widget on startup
-                await _webViewController.runJavascript('openWidget()');
-                //prefill form with name email mobile and userid
-                await _webViewController.runJavascript(
-                    'prefillForm("${_userService!.baseUser!.name}","${_userService!.baseUser!.email}","${_userService!.baseUser!.mobile}","${_userService!.baseUser!.uid}" )');
-                //hide fields which are disabled and uneditable
-                await _webViewController.runJavascript('hideFields()');
-                exitLoading();
-                //observe for window existence
-                Future.delayed(Duration(seconds: 3), () async {
-                  _webViewController
-                      .runJavascriptReturningResult(
-                          'setTimeout(function() {observeWindow()}, 1000);')
-                      .then((value) {
-                    log("This is value " + value);
-                  });
-                });
-              },
-              javascriptChannels: Set.from([
-                JavascriptChannel(
-                    name: 'Print',
-                    onMessageReceived: (JavascriptMessage message) {
-                      log(message.message);
-                      exitCounter++;
-                      if (message.message == 'Close the window' &&
-                          exitCounter == 1) {
-                        log("Close the freshdesk window");
-                        AppState.backButtonDispatcher!.didPopRoute();
-                      }
-                    })
-              ]),
-              onWebViewCreated: (WebViewController controller) {
-                _webViewController = controller;
-                _loadHtmlFromAssets();
-              },
+            WebViewWidget(
+              controller: _webViewController!,
             ),
             Positioned(
               top: 0,
@@ -133,8 +132,8 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
                       icon: Icon(Icons.arrow_back),
                       color: Colors.white,
                       onPressed: () async {
-                        if (await _webViewController.canGoBack())
-                          _webViewController.goBack();
+                        if (await _webViewController!.canGoBack())
+                          _webViewController!.goBack();
                       },
                     ),
                   ),

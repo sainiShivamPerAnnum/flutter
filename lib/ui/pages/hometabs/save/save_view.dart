@@ -59,6 +59,8 @@ class SaveViewWrapper extends StatelessWidget {
       properties: const [UserServiceProperties.mySegments],
       builder: (_, prop, ___) {
         return ListView(
+          physics: BouncingScrollPhysics(),
+          cacheExtent: 1000,
           padding: EdgeInsets.zero,
           children: (prop!.userSegments.contains("NEW_USER"))
               ? model.getNewUserSaveViewItems(model)

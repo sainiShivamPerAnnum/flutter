@@ -13,7 +13,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
@@ -99,7 +98,7 @@ class Root extends StatelessWidget {
                     },
                   ),
                 ),
-                const BottomNavBar(),
+                // const BottomNavBar(),
                 // const BaseAnimation(),
                 const CircularAnim(),
                 const DEVBanner(),

@@ -1,6 +1,10 @@
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/walkthrough_video_section.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SaveWelcomeCard extends StatelessWidget {
   const SaveWelcomeCard({super.key});
@@ -52,10 +56,13 @@ class SaveWelcomeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Fello Balance", style: TextStyles.rajdhaniSB.title3),
-                    Text(
-                      "₹10",
-                      style: TextStyles.sourceSansB.title4,
-                    )
+                    Selector<UserService, UserFundWallet?>(
+                        builder: (_, wallet, child) => Text(
+                              "₹${wallet?.netWorth ?? 0}",
+                              style: TextStyles.sourceSansB.title4,
+                            ),
+                        selector: (_, userService) =>
+                            userService.userFundWallet)
                   ],
                 ),
                 const Spacer(),
@@ -71,22 +78,7 @@ class SaveWelcomeCard extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: SizeConfig.screenWidth! * 0.4,
-            width: SizeConfig.screenWidth,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 4,
-              itemBuilder: (ctx, i) => Card(
-                color: Colors.black,
-                margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
-                child: SizedBox(
-                  width: SizeConfig.screenWidth! * 0.66,
-                  height: SizeConfig.screenWidth! * 0.4,
-                ),
-              ),
-            ),
-          ),
+          const WalthroughVideosSection(),
           SizedBox(
             height: SizeConfig.padding32,
           ),

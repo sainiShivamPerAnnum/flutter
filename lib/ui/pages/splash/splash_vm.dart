@@ -25,8 +25,8 @@ import '../../../core/repository/user_repo.dart';
 
 class LauncherViewModel extends BaseViewModel {
   bool _isSlowConnection = false;
-  late Timer _timer3;
-  late Stopwatch _logoWatch;
+  Timer? _timer3;
+  Stopwatch? _logoWatch;
   bool _isPerformanceCollectionEnabled = false, _isFetchingData = true;
   String _performanceCollectionMessage =
       'Unknown status of performance collection.';
@@ -72,10 +72,11 @@ class LauncherViewModel extends BaseViewModel {
     isFetchingData = true;
     unawaited(initLogic());
     loopingLottieAnimationController!.addListener(() {
-      if (loopingLottieAnimationController!.status ==
-          AnimationStatus.completed) {
+      if (loopingLottieAnimationController!.status == AnimationStatus.forward) {
+        print("Looping lottie completed");
         if (!isFetchingData) {
           notifyListeners();
+          loopingLottieAnimationController!.stop();
           unawaited(loopOutlottieAnimationController!.forward());
           Future.delayed(const Duration(milliseconds: 900)).then((_) {
             exitSplash();
@@ -86,7 +87,7 @@ class LauncherViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       unawaited(
         loopingLottieAnimationController!.forward(from: 0.6).then((_) {
-          if (isFetchingData) loopingLottieAnimationController!.repeat();
+          loopingLottieAnimationController!.repeat();
         }),
       );
     });
@@ -96,8 +97,8 @@ class LauncherViewModel extends BaseViewModel {
   }
 
   void exit() {
-    _timer3.cancel();
-    _logoWatch.stop();
+    _timer3?.cancel();
+    _logoWatch?.stop();
   }
 
   Future<void> initLogic() async {
@@ -134,7 +135,7 @@ class LauncherViewModel extends BaseViewModel {
       ));
     }
 
-    _timer3.cancel();
+    _timer3?.cancel();
     _isFetchingData = false;
 
     // if (isStillLooping && !isPreExecuted) {
@@ -160,11 +161,13 @@ class LauncherViewModel extends BaseViewModel {
           state: PageState.replaceAll,
           page: OnBoardingViewPageConfig,
         );
+        return;
       } else {
         navigator.currentAction = PageAction(
           state: PageState.replaceAll,
           page: LoginPageConfig,
         );
+        return;
       }
     }
 

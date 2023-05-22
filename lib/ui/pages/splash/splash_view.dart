@@ -38,7 +38,8 @@ class _LauncherViewState extends State<LauncherView>
 
                 model.init();
               }, onModelDispose: (model) {
-                model.loopOutlottieAnimationController!.dispose();
+                model.loopOutlottieAnimationController?.dispose();
+                model.loopingLottieAnimationController?.dispose();
                 model.exit();
               }, builder: (ctx, model, child) {
                 return Scaffold(
