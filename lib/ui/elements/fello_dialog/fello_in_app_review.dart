@@ -2,6 +2,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/svg.dart';
 
 class FelloInAppReview extends HookWidget {
   const FelloInAppReview({Key? key}) : super(key: key);
@@ -97,7 +98,7 @@ class FelloInAppReview extends HookWidget {
             if (selected.value >= 0)
               AppPositiveBtn(btnText: 'SUBMIT', onPressed: () {}),
             SizedBox(
-              height: SizeConfig.padding54,
+              height: SizeConfig.padding24,
             ),
           ],
         ),
@@ -184,6 +185,111 @@ class ReasonWidget extends StatelessWidget {
             style: TextStyles.sourceSans.body3.colour(
               UiConstants.kTextColor,
             ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class FelloInAppReviewSuccess extends StatelessWidget {
+  const FelloInAppReviewSuccess({Key? key, required this.emoji})
+      : super(key: key);
+
+  final String emoji;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+          decoration: BoxDecoration(
+            color: const Color(0xff39393C),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.padding16),
+              topRight: Radius.circular(SizeConfig.padding16),
+            ),
+          ),
+          child: Stack(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding16,
+                  ),
+                  Container(
+                    width: SizeConfig.padding90 + SizeConfig.padding6,
+                    height: SizeConfig.padding4,
+                    decoration: BoxDecoration(
+                      color: const Color(0xffD9D9D9),
+                      borderRadius: BorderRadius.circular(SizeConfig.padding4),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding54,
+                  ),
+                  Container(
+                    width: SizeConfig.padding54 - SizeConfig.padding4,
+                    height: SizeConfig.padding54 - SizeConfig.padding4,
+                    decoration: const BoxDecoration(
+                      color: Color(0xff62E3C4),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        emoji,
+                        style:
+                            TextStyles.sourceSansB.title4.colour(Colors.white),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Text(
+                    "Thanks for your feedback!",
+                    textAlign: TextAlign.center,
+                    style: TextStyles.sourceSansSB.title5.colour(Colors.white),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Text(
+                    "We’re so glad you’re enjoying Fello!\nPlease take a few seconds to rate us on the Store.",
+                    textAlign: TextAlign.center,
+                    style: TextStyles.sourceSans.body2.colour(
+                      Colors.white.withOpacity(0.6),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  AppPositiveBtn(btnText: 'SUBMIT', onPressed: () {}),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.padding32,
+                    ),
+                    SvgPicture.asset(
+                      'assets/svg/in_app_review_success_bg.svg',
+                      width: SizeConfig.screenWidth! * 0.6,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],
