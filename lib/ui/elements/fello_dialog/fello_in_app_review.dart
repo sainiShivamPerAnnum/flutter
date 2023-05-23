@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 class FelloInAppReview extends HookWidget {
   const FelloInAppReview({Key? key}) : super(key: key);
@@ -37,7 +39,7 @@ class FelloInAppReview extends HookWidget {
 
     return Padding(
       padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
         decoration: BoxDecoration(
@@ -192,7 +194,7 @@ class ReasonWidget extends StatelessWidget {
           "Let us know what went wrong",
           textAlign: TextAlign.center,
           style:
-              TextStyles.sourceSans.body2.colour(Colors.white.withOpacity(0.6)),
+          TextStyles.sourceSans.body2.colour(Colors.white.withOpacity(0.6)),
         ),
         SizedBox(
           height: SizeConfig.padding16,
@@ -230,8 +232,7 @@ class ReasonWidget extends StatelessWidget {
 }
 
 class FelloInAppReviewSuccess extends StatelessWidget {
-  const FelloInAppReviewSuccess(
-      {Key? key, required this.emoji, required this.showButton})
+  const FelloInAppReviewSuccess({Key? key, required this.emoji, required this.showButton})
       : super(key: key);
 
   final String emoji;
@@ -282,7 +283,7 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                       child: Text(
                         showButton ? "😍" : '🙂',
                         style:
-                            TextStyles.sourceSansB.title4.colour(Colors.white),
+                        TextStyles.sourceSansB.title4.colour(Colors.white),
                       ),
                     ),
                   ),
@@ -313,35 +314,26 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                     AppPositiveBtn(
                       btnText: 'Rate us on play store'.toUpperCase(),
                       onPressed: () async {
-                        if (Platform.isAndroid) {
-                          BaseUtil.launchUrl(
-                              'https://play.google.com/store/apps/details?id=in.fello.felloapp');
-                        } else {
-                          BaseUtil.launchUrl(
-                              'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+                        final InAppReview inAppReview = InAppReview.instance;
+
+                        try {
+                          if (await inAppReview.isAvailable()) {
+                            await inAppReview.requestReview();
+                          } else {
+                            log("In app review not available, opening native application store");
+                            await inAppReview.openStoreListing(
+                                appStoreId: '1558445254');
+                          }
+                        } catch (e) {
+                          log(e.toString());
+                          if (Platform.isAndroid) {
+                            BaseUtil.launchUrl(
+                                'https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                          } else {
+                            BaseUtil.launchUrl(
+                                'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+                          }
                         }
-
-                        // final InAppReview inAppReview = InAppReview.instance;
-
-                        // try {
-                        //   if (await inAppReview.isAvailable()) {
-                        //     await inAppReview.requestReview();
-                        //   } else {
-                        //     log(
-                        //         "In app review not available, opening native application store");
-                        //     await inAppReview.openStoreListing(
-                        //         appStoreId: '1558445254');
-                        //   }
-                        // } catch (e) {
-                        //   log(e.toString());
-                        //   if (Platform.isAndroid) {
-                        //     BaseUtil.launchUrl(
-                        //         'https://play.google.com/store/apps/details?id=in.fello.felloapp');
-                        //   } else {
-                        //     BaseUtil.launchUrl(
-                        //         'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
-                        //   }
-                        // }
 
                         AppState.backButtonDispatcher?.didPopRoute();
 
