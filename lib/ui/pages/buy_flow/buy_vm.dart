@@ -647,8 +647,8 @@ class BuyViewModel extends BaseViewModel {
   // }
 
   updateGoldAmount() {
-    if (amountController!.text.isEmpty ||
-        double.tryParse(amountController!.text) == null) {
+    if ((amountController?.text.isEmpty ?? false) ||
+        double.tryParse(amountController?.text ?? '') == null) {
       goldAmountInGrams = 0.0;
     } else {
       double? netTax =
@@ -665,7 +665,8 @@ class BuyViewModel extends BaseViewModel {
       }
     }
     fieldWidth = SizeConfig.padding40 *
-        ((amountController!.text != null && amountController!.text.isNotEmpty)
+        ((amountController?.text != null &&
+                (amountController?.text.isNotEmpty ?? false))
             ? amountController!.text.length.toDouble()
             : 0.5);
     refresh();

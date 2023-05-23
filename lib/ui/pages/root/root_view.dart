@@ -121,12 +121,6 @@ class _RootPageViewState extends State<RootPageView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // return PageView(
-    //   physics: const NeverScrollableScrollPhysics(),
-    //   controller: AppState.homeTabPageController,
-    //   children: widget.model.navBarItems.keys.toList(),
-    // );
-
     return Consumer<AppState>(builder: (context, m, child) {
       return LazyLoadIndexedStack(
         index: m.getCurrentTabIndex,

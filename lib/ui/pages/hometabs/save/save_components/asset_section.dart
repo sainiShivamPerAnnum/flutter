@@ -144,7 +144,7 @@ class SaveNetWorthSection extends StatelessWidget {
           // ),
           PropertyChangeConsumer<UserService, UserServiceProperties>(
             properties: const [UserServiceProperties.myUserFund],
-            builder: (context, model, property) => Container(
+            builder: (context, model, property) => SizedBox(
               height: SizeConfig.screenWidth! * 0.22,
               child: model?.userFundWallet?.netWorth != null &&
                       model?.userFundWallet?.netWorth != 0

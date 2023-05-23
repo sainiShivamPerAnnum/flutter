@@ -32,19 +32,20 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
   @override
   void initState() {
     controller =
-        AnimationController(vsync: this, duration: Duration(minutes: 3));
-    animation = Tween<Duration>(begin: Duration(minutes: 3), end: Duration.zero)
-        .animate(controller)
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener(
-        (status) {
-          print(status.toString());
-          if (status == AnimationStatus.completed) {
-            widget.fetchGoldRates!();
-            controller.reset();
-            controller.forward();
+        AnimationController(vsync: this, duration: const Duration(minutes: 3));
+    animation =
+        Tween<Duration>(begin: const Duration(minutes: 3), end: Duration.zero)
+            .animate(controller)
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener(
+            (status) {
+              print(status.toString());
+              if (status == AnimationStatus.completed) {
+                widget.fetchGoldRates!();
+                controller.reset();
+                controller.forward();
           } else if (status == AnimationStatus.dismissed) {
             controller.forward();
           }
@@ -106,7 +107,7 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                       locale.currentPrice,
                       style: TextStyles.body1.colour(UiConstants.primaryColor),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     widget.isFetching!
                         ? SpinKitThreeBounce(
                             size: SizeConfig.body2,
@@ -151,12 +152,14 @@ class NewCurrentGoldPriceWidget extends StatefulWidget {
     this.goldprice,
     this.isFetching,
     this.mini = false,
+    this.textColor,
     Key? key,
   }) : super(key: key);
   final Function? fetchGoldRates;
   final double? goldprice;
   final bool? isFetching;
   final bool mini;
+  final Color? textColor;
 
   @override
   State<NewCurrentGoldPriceWidget> createState() =>
@@ -171,19 +174,20 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
   @override
   void initState() {
     controller =
-        AnimationController(vsync: this, duration: Duration(minutes: 3));
-    animation = Tween<Duration>(begin: Duration(minutes: 3), end: Duration.zero)
-        .animate(controller)
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener(
-        (status) {
-          print(status.toString());
-          if (status == AnimationStatus.completed) {
-            widget.fetchGoldRates!();
-            controller.reset();
-            controller.forward();
+        AnimationController(vsync: this, duration: const Duration(minutes: 3));
+    animation =
+        Tween<Duration>(begin: const Duration(minutes: 3), end: Duration.zero)
+            .animate(controller)
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener(
+            (status) {
+              print(status.toString());
+              if (status == AnimationStatus.completed) {
+                widget.fetchGoldRates!();
+                controller.reset();
+                controller.forward();
           } else if (status == AnimationStatus.dismissed) {
             controller.forward();
           }
@@ -205,9 +209,9 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
   Widget build(BuildContext context) {
     return widget.mini
         ? Text(
-            " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
+      " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
             style: TextStyles.sourceSans.body4
-                .colour(UiConstants.kTextFieldTextColor),
+                .colour(widget.textColor ?? UiConstants.kTextFieldTextColor),
           )
         : Container();
   }
