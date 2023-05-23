@@ -252,6 +252,8 @@ class LendboxSuccessView extends StatelessWidget {
                 ],
               ),
             ),
+            const AutopaySetupWidget(),
+            SizedBox(height: SizeConfig.padding20),
             TextButton(
               onPressed: () {
                 AppState.isRepeated = true;
