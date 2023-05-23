@@ -64,10 +64,14 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: SizedBox(
             height: SizeConfig.padding175,
+            width: SizeConfig.screenWidth,
             child: Stack(
               children: [
                 if (model.selectedAssetOption != 0)
-                  SvgPicture.network(model.getGoals()),
+                  SvgPicture.network(
+                    model.getGoals(),
+                    width: SizeConfig.screenWidth,
+                  ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(

@@ -76,7 +76,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   ),
                   actions: [
                     Row(
-                      children: [const FaqPill(type: FaqsType.autosave)],
+                      children: const [FaqPill(type: FaqsType.autosave)],
                 )
                   ],
                 ),
