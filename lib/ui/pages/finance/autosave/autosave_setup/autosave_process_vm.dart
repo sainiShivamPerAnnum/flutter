@@ -426,72 +426,72 @@ class AutosaveProcessViewModel extends BaseViewModel {
     if (selectedAssetOption == 1) {
       int floAmount = int.tryParse(floAmountFieldController?.text ?? "0") ?? 0;
       if (floAmount <= 100) {
-        return Assets.goalsBg;
+        return Assets.goaGoalsBg;
       } else if (floAmount >= 101 && floAmount <= 500) {
-        return Assets.goalsBg;
+        return Assets.iphoneGoalsBg;
       } else if (floAmount >= 501) {
-        return Assets.goalsBg;
+        return Assets.carGoalsBg;
       }
     } else if (selectedAssetOption == 2) {
       int goldAmount =
           int.tryParse(goldAmountFieldController?.text ?? "0") ?? 0;
       if (goldAmount <= 100) {
-        return Assets.goalsBg;
+        return Assets.goaGoalsBg;
       } else if (goldAmount >= 101 && goldAmount <= 500) {
-        return Assets.goalsBg;
+        return Assets.iphoneGoalsBg;
       } else if (goldAmount >= 501) {
-        return Assets.goalsBg;
+        return Assets.carGoalsBg;
       }
     }
-    return Assets.goalsBg;
+    return Assets.goaGoalsBg;
   }
 
   String getWeeklyGoals() {
     if (selectedAssetOption == 1) {
       int floAmount = int.tryParse(floAmountFieldController?.text ?? "0") ?? 0;
       if (floAmount <= 1000) {
-        return Assets.goalsBg;
+        return Assets.goaGoalsBg;
       } else if (floAmount > 1000 && floAmount <= 5000) {
-        return Assets.goalsBg;
+        return Assets.carGoalsBg;
       } else if (floAmount > 5000) {
-        return Assets.goalsBg;
+        return Assets.baliGoalsBg;
       }
     } else if (selectedAssetOption == 2) {
       int goldAmount =
           int.tryParse(goldAmountFieldController?.text ?? "0") ?? 0;
       if (goldAmount <= 1000) {
-        return Assets.goalsBg;
+        return Assets.goaGoalsBg;
       } else if (goldAmount > 1000 && goldAmount <= 5000) {
-        return Assets.goalsBg;
+        return Assets.carGoalsBg;
       } else if (goldAmount > 5000) {
-        return Assets.goalsBg;
+        return Assets.baliGoalsBg;
       }
     }
-    return Assets.goalsBg;
+    return Assets.goaGoalsBg;
   }
 
   String getMonthlyGoals() {
     if (selectedAssetOption == 1) {
       int floAmount = int.tryParse(floAmountFieldController?.text ?? "0") ?? 0;
       if (floAmount <= 5000) {
-        return Assets.goalsBg;
+        return Assets.goaGoalsBg;
       } else if (floAmount > 5000 && floAmount <= 10000) {
-        return Assets.goalsBg;
+        return Assets.iphoneGoalsBg;
       } else if (floAmount > 10000) {
-        return Assets.goalsBg;
+        return Assets.carGoalsBg;
       }
     } else if (selectedAssetOption == 2) {
       int goldAmount =
           int.tryParse(goldAmountFieldController?.text ?? "0") ?? 0;
       if (goldAmount <= 5000) {
-        return Assets.goalsBg;
+        return Assets.goaGoalsBg;
       } else if (goldAmount > 5000 && goldAmount <= 10000) {
-        return Assets.goalsBg;
+        return Assets.iphoneGoalsBg;
       } else if (goldAmount > 10000) {
-        return Assets.goalsBg;
+        return Assets.carGoalsBg;
       }
     }
-    return Assets.goalsBg;
+    return Assets.goaGoalsBg;
   }
 
   bool checkForLowAmount() {

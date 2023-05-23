@@ -376,5 +376,8 @@ class Assets {
   static const goldCoinIcon =
       "https://d37gtxigg82zaw.cloudfront.net/weekly-recap/investments.svg";
 
-  static const goalsBg = "${assetBaseUrl}autosave/save-for-car.svg";
+  static const carGoalsBg = "${assetBaseUrl}autosave/save-for-car.svg";
+  static const iphoneGoalsBg = "${assetBaseUrl}autosave/save-for-iphone.svg";
+  static const goaGoalsBg = "${assetBaseUrl}autosave/save-for-goa.svg";
+  static const baliGoalsBg = "${assetBaseUrl}autosave/save-for-bali.svg";
 }
