@@ -37,105 +37,111 @@ class FelloInAppReview extends HookWidget {
       );
     }
 
-    return Padding(
-      padding:
-      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-        decoration: BoxDecoration(
-          color: const Color(0xff39393C),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.padding16),
-            topRight: Radius.circular(SizeConfig.padding16),
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.backButtonDispatcher?.didPopRoute();
+        return true;
+      },
+      child: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+          decoration: BoxDecoration(
+            color: const Color(0xff39393C),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.padding16),
+              topRight: Radius.circular(SizeConfig.padding16),
+            ),
           ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            Container(
-              width: SizeConfig.padding90 + SizeConfig.padding6,
-              height: SizeConfig.padding4,
-              decoration: BoxDecoration(
-                color: const Color(0xffD9D9D9),
-                borderRadius: BorderRadius.circular(SizeConfig.padding4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: SizeConfig.padding16,
               ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Text(
-              "How was your experience?",
-              textAlign: TextAlign.center,
-              style: TextStyles.sourceSansSB.title5.colour(Colors.white),
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Text(
-              "Your feedback would help make Fello better!",
-              textAlign: TextAlign.center,
-              style: TextStyles.sourceSans.body2.colour(
-                Colors.white.withOpacity(0.6),
+              Container(
+                width: SizeConfig.padding90 + SizeConfig.padding6,
+                height: SizeConfig.padding4,
+                decoration: BoxDecoration(
+                  color: const Color(0xffD9D9D9),
+                  borderRadius: BorderRadius.circular(SizeConfig.padding4),
+                ),
               ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            SizedBox(
-              height: SizeConfig.padding54,
-              child: ListView.separated(
-                itemCount: emojis.value.length,
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Emoji(
-                    emoji: emojis.value[index],
-                    onTap: () {
-                      selected.value = index;
-                    },
-                    selected: selected.value == index,
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return SizedBox(
-                    width: SizeConfig.padding1,
-                  );
-                },
-              ),
-            ),
-            if (selected.value <= 2 && selected.value >= 0)
-              ReasonWidget(textController: textController),
-            if (selected.value >= 0)
               SizedBox(
                 height: SizeConfig.padding24,
               ),
-            if (selected.value >= 0)
-              AppPositiveBtn(
-                btnText: 'SUBMIT',
-                onPressed: () {
-                  submitted.value = true;
-
-                  // debugPrint("Rating given: ${selected.value + 1}");
-                  // debugPrint("Reason: ${textController.text}");
-
-                  locator<AnalyticsService>().track(
-                    eventName: AnalyticsEvents.reviewPopupSuccess,
-                    properties: {
-                      "Rating given": selected.value + 1,
-                      "Reason": textController.text,
-                    },
-                  );
-                },
+              Text(
+                "How was your experience?",
+                textAlign: TextAlign.center,
+                style: TextStyles.sourceSansSB.title5.colour(Colors.white),
               ),
-            SizedBox(
-              height: SizeConfig.padding54,
-            ),
-          ],
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+              Text(
+                "Your feedback would help make Fello better!",
+                textAlign: TextAlign.center,
+                style: TextStyles.sourceSans.body2.colour(
+                  Colors.white.withOpacity(0.6),
+                ),
+              ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+              SizedBox(
+                height: SizeConfig.padding54,
+                child: ListView.separated(
+                  itemCount: emojis.value.length,
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Emoji(
+                      emoji: emojis.value[index],
+                      onTap: () {
+                        selected.value = index;
+                      },
+                      selected: selected.value == index,
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      width: SizeConfig.padding1,
+                    );
+                  },
+                ),
+              ),
+              if (selected.value <= 2 && selected.value >= 0)
+                ReasonWidget(textController: textController),
+              if (selected.value >= 0)
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+              if (selected.value >= 0)
+                AppPositiveBtn(
+                  btnText: 'SUBMIT',
+                  onPressed: () {
+                    submitted.value = true;
+
+                    // debugPrint("Rating given: ${selected.value + 1}");
+                    // debugPrint("Reason: ${textController.text}");
+
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.reviewPopupSuccess,
+                      properties: {
+                        "Rating given": selected.value + 1,
+                        "Reason": textController.text,
+                      },
+                    );
+                  },
+                ),
+              SizedBox(
+                height: SizeConfig.padding54,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -240,135 +246,143 @@ class FelloInAppReviewSuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-          decoration: BoxDecoration(
-            color: const Color(0xff39393C),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.padding16),
-              topRight: Radius.circular(SizeConfig.padding16),
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.backButtonDispatcher?.didPopRoute();
+        return true;
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+            decoration: BoxDecoration(
+              color: const Color(0xff39393C),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.padding16),
+                topRight: Radius.circular(SizeConfig.padding16),
+              ),
             ),
-          ),
-          child: Stack(
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: SizeConfig.padding16,
-                  ),
-                  Container(
-                    width: SizeConfig.padding90 + SizeConfig.padding6,
-                    height: SizeConfig.padding4,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffD9D9D9),
-                      borderRadius: BorderRadius.circular(SizeConfig.padding4),
+            child: Stack(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.padding16,
                     ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding54,
-                  ),
-                  Container(
-                    width: SizeConfig.padding54 - SizeConfig.padding4,
-                    height: SizeConfig.padding54 - SizeConfig.padding4,
-                    decoration: const BoxDecoration(
-                      color: Color(0xff62E3C4),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        showButton ? "😍" : '🙂',
-                        style:
-                        TextStyles.sourceSansB.title4.colour(Colors.white),
+                    Container(
+                      width: SizeConfig.padding90 + SizeConfig.padding6,
+                      height: SizeConfig.padding4,
+                      decoration: BoxDecoration(
+                        color: const Color(0xffD9D9D9),
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.padding4),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding24,
-                  ),
-                  Text(
-                    "Thanks for your feedback!",
-                    textAlign: TextAlign.center,
-                    style: TextStyles.sourceSansSB.title5.colour(Colors.white),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding24,
-                  ),
-                  Text(
-                    showButton
-                        ? "We’re so glad you’re enjoying Fello!\nPlease take a few seconds to rate us on the Store."
-                        : "We will try our best to live upto your expectation\nand make your experience better on fello",
-                    textAlign: TextAlign.center,
-                    style: TextStyles.sourceSans.body2.colour(
-                      Colors.white.withOpacity(0.6),
+                    SizedBox(
+                      height: SizeConfig.padding54,
                     ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding24,
-                  ),
-                  if (showButton)
-                    AppPositiveBtn(
-                      btnText: 'Rate us on play store'.toUpperCase(),
-                      onPressed: () async {
-                        final InAppReview inAppReview = InAppReview.instance;
-
-                        try {
-                          if (await inAppReview.isAvailable()) {
-                            await inAppReview.requestReview();
-                          } else {
-                            log("In app review not available, opening native application store");
-                            await inAppReview.openStoreListing(
-                                appStoreId: '1558445254');
-                          }
-                        } catch (e) {
-                          log(e.toString());
-                          if (Platform.isAndroid) {
-                            BaseUtil.launchUrl(
-                                'https://play.google.com/store/apps/details?id=in.fello.felloapp');
-                          } else {
-                            BaseUtil.launchUrl(
-                                'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
-                          }
-                        }
-
-                        AppState.backButtonDispatcher?.didPopRoute();
-
-                        PreferenceHelper.setBool(
-                            PreferenceHelper.APP_RATING_SUBMITTED, true);
-                        locator<AnalyticsService>().track(
-                          eventName: AnalyticsEvents.rateOnPlayStoreTapped,
-                        );
-                      },
+                    Container(
+                      width: SizeConfig.padding54 - SizeConfig.padding4,
+                      height: SizeConfig.padding54 - SizeConfig.padding4,
+                      decoration: const BoxDecoration(
+                        color: Color(0xff62E3C4),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          showButton ? "😍" : '🙂',
+                          style: TextStyles.sourceSansB.title4
+                              .colour(Colors.white),
+                        ),
+                      ),
                     ),
-                  if (showButton)
                     SizedBox(
                       height: SizeConfig.padding24,
                     ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+                    Text(
+                      "Thanks for your feedback!",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyles.sourceSansSB.title5.colour(Colors.white),
+                    ),
                     SizedBox(
-                      height: SizeConfig.padding32,
+                      height: SizeConfig.padding24,
                     ),
-                    SvgPicture.asset(
-                      'assets/svg/in_app_review_success_bg.svg',
-                      width: SizeConfig.screenWidth! * 0.6,
+                    Text(
+                      showButton
+                          ? "We’re so glad you’re enjoying Fello!\nPlease take a few seconds to rate us on the Store."
+                          : "We will try our best to live upto your expectation\nand make your experience better on fello",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.sourceSans.body2.colour(
+                        Colors.white.withOpacity(0.6),
+                      ),
                     ),
+                    SizedBox(
+                      height: SizeConfig.padding24,
+                    ),
+                    if (showButton)
+                      AppPositiveBtn(
+                        btnText: 'Rate us on play store'.toUpperCase(),
+                        onPressed: () async {
+                          final InAppReview inAppReview = InAppReview.instance;
+
+                          try {
+                            if (await inAppReview.isAvailable()) {
+                              await inAppReview.requestReview();
+                            } else {
+                              log("In app review not available, opening native application store");
+                              await inAppReview.openStoreListing(
+                                  appStoreId: '1558445254');
+                            }
+                          } catch (e) {
+                            log(e.toString());
+                            if (Platform.isAndroid) {
+                              BaseUtil.launchUrl(
+                                  'https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                            } else {
+                              BaseUtil.launchUrl(
+                                  'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+                            }
+                          }
+
+                          AppState.backButtonDispatcher?.didPopRoute();
+
+                          PreferenceHelper.setBool(
+                              PreferenceHelper.APP_RATING_SUBMITTED, true);
+                          locator<AnalyticsService>().track(
+                            eventName: AnalyticsEvents.rateOnPlayStoreTapped,
+                          );
+                        },
+                      ),
+                    if (showButton)
+                      SizedBox(
+                        height: SizeConfig.padding24,
+                      ),
                   ],
                 ),
-              ),
-            ],
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height: SizeConfig.padding32,
+                      ),
+                      SvgPicture.asset(
+                        'assets/svg/in_app_review_success_bg.svg',
+                        width: SizeConfig.screenWidth! * 0.6,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

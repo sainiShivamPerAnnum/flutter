@@ -26,6 +26,7 @@ import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -358,6 +359,8 @@ class WinViewModel extends BaseViewModel {
   }
 
   void showRatingSheet() {
+    Haptic.vibrate();
+
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
       enableDrag: false,

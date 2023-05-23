@@ -545,6 +545,8 @@ class BaseUtil extends ChangeNotifier {
   static void showFelloRatingSheet() {
     if (!PreferenceHelper.getBool(PreferenceHelper.APP_RATING_SUBMITTED)) {
       Future.delayed(const Duration(milliseconds: 300), () {
+        Haptic.vibrate();
+
         BaseUtil.openModalBottomSheet(
           addToScreenStack: true,
           enableDrag: false,
