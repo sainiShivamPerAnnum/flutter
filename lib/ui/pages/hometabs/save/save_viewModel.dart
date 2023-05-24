@@ -23,13 +23,12 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
-import 'package:felloapp/ui/pages/hometabs/home/cards_home.dart';
+import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_welcome_card.dart';
-import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
@@ -39,6 +38,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
@@ -202,16 +202,22 @@ class SaveViewModel extends BaseViewModel {
   List<Widget> getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
     saveViewItems.addAll([
-      const Cards(),
-      SizedBox(height: SizeConfig.pageHorizontalMargins),
+      Selector<CardActionsNotifier, bool>(
+        selector: (p0, p1) => p1.isVerticalView,
+        builder: (context, value, child) => AnimatedContainer(
+          curve: Curves.easeIn,
+          duration: const Duration(milliseconds: 300),
+          height: SizeConfig.screenWidth! * (value ? 1.54 : 0.8),
+        ),
+      ),
       const TambolaMiniInfoCard()
     ]);
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
-        case "PP":
-          saveViewItems.add(const PowerPlayCard());
-          break;
+        // case "PP":
+        //   saveViewItems.add(const PowerPlayCard());
+        //   break;
         case 'NAS':
           saveViewItems.add(const AutosaveCard());
           break;
@@ -239,9 +245,9 @@ class SaveViewModel extends BaseViewModel {
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
-        case "PP":
-          saveViewItems.add(const PowerPlayCard());
-          break;
+        // case "PP":
+        //   saveViewItems.add(const PowerPlayCard());
+        //   break;
         case 'NAS':
           saveViewItems.add(const AutosaveCard());
           break;

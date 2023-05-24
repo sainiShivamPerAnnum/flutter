@@ -13,6 +13,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
@@ -51,7 +52,7 @@ class Root extends StatelessWidget {
                 const NewSquareBackground(),
                 Column(
                   children: [
-                    const RootAppBar(),
+                    RootAppBar(),
                     Expanded(
                       child: RefreshIndicator(
                         triggerMode: RefreshIndicatorTriggerMode.onEdge,
@@ -70,7 +71,6 @@ class Root extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 PropertyChangeProvider<MarketingEventHandlerService,
                     MarketingEventsHandlerProperties>(
                   value: locator<MarketingEventHandlerService>(),
@@ -98,8 +98,7 @@ class Root extends StatelessWidget {
                     },
                   ),
                 ),
-                // const BottomNavBar(),
-                // const BaseAnimation(),
+                const BottomNavBar(),
                 const CircularAnim(),
                 const DEVBanner(),
                 const QABanner(),
@@ -156,7 +155,7 @@ bool _showHappyHour() {
 }
 
 class RootAppBar extends StatelessWidget {
-  const RootAppBar({super.key});
+  RootAppBar({super.key, this.showTitle = true});
 
   FaqsType getFaqType() {
     final NavBarItemModel navItem =
@@ -175,6 +174,8 @@ class RootAppBar extends StatelessWidget {
       return FaqsType.gettingStarted;
     }
   }
+
+  final bool showTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -197,13 +198,15 @@ class RootAppBar extends StatelessWidget {
                           child: FAppBar(
                             showAvatar: true,
                             leadingPadding: false,
-                            titleWidget: Expanded(
-                              child: Salutation(
-                                leftMargin: SizeConfig.padding8,
-                                textStyle: TextStyles.rajdhaniSB.body0
-                                    .colour(Colors.white),
-                              ),
-                            ),
+                            titleWidget: showTitle
+                                ? Expanded(
+                                    child: Salutation(
+                                      leftMargin: SizeConfig.padding8,
+                                      textStyle: TextStyles.rajdhaniSB.body0
+                                          .colour(Colors.white),
+                                    ),
+                                  )
+                                : null,
                             backgroundColor: UiConstants.kBackgroundColor,
                             showCoinBar: false,
                             action: Row(

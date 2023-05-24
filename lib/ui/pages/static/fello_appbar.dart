@@ -84,8 +84,7 @@ class NotificationButton extends StatelessWidget {
               child: Stack(
                 children: [
                   CircleAvatar(
-                    backgroundColor:
-                        UiConstants.kTextFieldColor.withOpacity(0.4),
+                    backgroundColor: Colors.white.withOpacity(0.1),
                     radius: SizeConfig.avatarRadius * 1.1,
                     child: Padding(
                       padding: EdgeInsets.all(SizeConfig.padding12),

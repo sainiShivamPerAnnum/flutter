@@ -21,6 +21,8 @@ class WalthroughVideosSection extends StatelessWidget {
       height: SizeConfig.screenWidth! * 0.36,
       width: SizeConfig.screenWidth,
       child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding14),
         scrollDirection: Axis.horizontal,
         itemCount: videos.length,
         itemBuilder: (ctx, i) => Card(

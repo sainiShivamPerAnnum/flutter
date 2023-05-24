@@ -15,6 +15,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
@@ -202,15 +203,24 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     // If the root tab is not 0 at the time of exit
 
     else if (_userService!.isUserOnboarded &&
-        AppState.screenStack.length == 1 &&
-        AppState.delegate!.appState.rootIndex != 0) {
+        AppState.screenStack.length == 1) {
       logger!.w("Checking if app can be closed");
-      AppState.delegate!.appState.setCurrentTabIndex = 0;
-      locator<RootController>()
-          .onChange(locator<RootController>().navItems.values.toList()[0]);
 
-      _journeyService!.checkForMilestoneLevelChange();
-      return Future.value(true);
+      if (AppState.delegate!.appState.rootIndex != 0) {
+        AppState.delegate!.appState.setCurrentTabIndex = 0;
+        locator<RootController>()
+            .onChange(locator<RootController>().navItems.values.toList()[0]);
+        return Future.value(true);
+      } else if (AppState.delegate!.appState.rootIndex ==
+              locator<RootController>()
+                  .navItems
+                  .values
+                  .toList()
+                  .indexWhere((element) => element.title == "Save") &&
+          locator<CardActionsNotifier>().isVerticalView) {
+        locator<CardActionsNotifier>().isVerticalView = false;
+        return Future.value(true);
+      }
     }
 
     return _routerDelegate!.popRoute();

@@ -1,6 +1,7 @@
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/news_component.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/refer_and_earn_card.dart';
@@ -8,9 +9,9 @@ import 'package:felloapp/ui/pages/hometabs/win/win_components/scratch_card_info_
 import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/dev_rel.dart';
+import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
@@ -38,23 +39,28 @@ class Win extends StatelessWidget {
           }
           return Scaffold(
             backgroundColor: Colors.black,
-            appBar: AppBar(
-              backgroundColor: Colors.black,
-              title: const Text("Accounts"),
+            appBar: FAppBar(
+              title: "My Account",
+              showHelpButton: true,
+              type: FaqsType.yourAccount,
+              showCoinBar: false,
+              showAvatar: false,
+              leadingPadding: false,
+              action: Row(children: [NotificationButton()]),
             ),
             body: ListView(
               padding: EdgeInsets.zero,
               children: [
                 // const Salutation(),
-                AccountInfoTiles(
-                  title: 'App Walkthrough',
-                  uri: "",
-                  onTap: () {
-                    locator<AnalyticsService>()
-                        .track(eventName: 'App Walkthrough');
-                    SpotLightController.instance.startQuickTour();
-                  },
-                ),
+                // AccountInfoTiles(
+                //   title: 'App Walkthrough',
+                //   uri: "",
+                //   onTap: () {
+                //     locator<AnalyticsService>()
+                //         .track(eventName: 'App Walkthrough');
+                //     SpotLightController.instance.startQuickTour();
+                //   },
+                // ),
                 AccountInfoTiles(title: locale.abMyProfile, uri: "/profile"),
                 AccountInfoTiles(title: locale.kycTitle, uri: "/kycVerify"),
 
