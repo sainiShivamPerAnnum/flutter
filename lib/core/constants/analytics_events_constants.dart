@@ -174,6 +174,8 @@ class AnalyticsEvents {
   static const scratchCardSectionOpen = 'Scratch Card section open';
   static const signupEnterMobile = "Entered Mobile number";
   static const mobileOtpDone = "Entered OTP";
+  static const reviewPopupSuccess = "Review Popup Rating Success";
+  static const rateOnPlayStoreTapped = "Rate on Play Store Tapped";
 
   //Marketing Events
 
