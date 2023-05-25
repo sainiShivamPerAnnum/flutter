@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart'; //Pub Imports
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -56,9 +57,13 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+enum FileType { SVG, Lottie, Unknown, png }
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
@@ -557,6 +562,58 @@ class BaseUtil extends ChangeNotifier {
           content: const FelloInAppReview(),
         );
       });
+    }
+  }
+
+  static FileType getFileType(String fileUrl) {
+    String extension = fileUrl.toLowerCase().split('.').last;
+
+    switch (extension) {
+      case "svg":
+        return FileType.SVG;
+      case "json":
+      case "lottie":
+        return FileType.Lottie;
+      case "png":
+      case "jpeg":
+      case "webp":
+      case "jpg":
+        return FileType.png;
+      default:
+        return FileType.Unknown;
+    }
+  }
+
+  static Widget getWidgetBasedOnUrl(String fileUrl,
+      {double? height, double? width}) {
+    FileType fileType = getFileType(fileUrl);
+
+    switch (fileType) {
+      case FileType.SVG:
+        return SvgPicture.network(
+          fileUrl,
+          fit: BoxFit.contain,
+          height: height,
+          width: width,
+        );
+        break;
+      case FileType.Lottie:
+        return Lottie.network(fileUrl,
+            fit: BoxFit.contain, height: height, width: width);
+        break;
+      case FileType.png:
+        return CachedNetworkImage(
+          fit: BoxFit.contain,
+          imageUrl: fileUrl,
+          height: height,
+          width: width,
+        );
+        break;
+      default:
+        return const Icon(
+          Icons.add,
+          color: Colors.white,
+        );
     }
   }
 

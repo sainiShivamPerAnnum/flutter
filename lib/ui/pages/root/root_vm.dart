@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -10,6 +9,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -43,16 +43,13 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
-
-enum FileType { SVG, Lottie, Unknown, png }
 
 class RootViewModel extends BaseViewModel {
   RootViewModel({S? l})
@@ -220,44 +217,9 @@ class RootViewModel extends BaseViewModel {
       return defaultCenterButton();
     }
 
-    if (quickSaveData.length != 1) {
+    if (quickSaveData.length == 1) {
       String fileUrl = quickSaveData[1].icon!;
-
-      FileType fileType = getFileType(fileUrl);
-
-      switch (fileType) {
-        case FileType.SVG:
-          childWidget = Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: SvgPicture.network(
-              fileUrl,
-              fit: BoxFit.contain,
-            ),
-          );
-          break;
-        case FileType.Lottie:
-          childWidget = Expanded(
-            child: Lottie.network(
-              fileUrl,
-              fit: BoxFit.fitHeight,
-            ),
-          );
-          break;
-        case FileType.png:
-          childWidget = Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: CachedNetworkImage(
-              fit: BoxFit.contain,
-              imageUrl: fileUrl,
-            ),
-          );
-          break;
-        default:
-          childWidget = const Icon(
-            Icons.add,
-            color: Colors.white,
-          );
-      }
+      childWidget = BaseUtil.getWidgetBasedOnUrl(fileUrl);
     } else {
       childWidget = const Icon(
         Icons.add,
@@ -276,8 +238,16 @@ class RootViewModel extends BaseViewModel {
           AppState.delegate!.parseRoute(Uri.parse(quickSaveData[0].action!));
         }
       } else {
-        BaseUtil().openRechargeModalSheet(
-          investmentType: InvestmentType.AUGGOLD99,
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: true,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: QuickSaveModalSheet(
+            quickSaveData: quickSaveData,
+          ),
         );
       }
     }
@@ -293,9 +263,17 @@ class RootViewModel extends BaseViewModel {
   Widget defaultCenterButton() {
     return FloatingActionButton(
       elevation: 10,
+      backgroundColor: Colors.black,
       onPressed: () {
         BaseUtil.openModalBottomSheet(
-            isBarrierDismissible: true, content: const QuickSaveModalSheet());
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: true,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: const DefaultQuickSaveModalSheet(),
+        );
       },
       child: const Icon(
         Icons.add,
@@ -579,10 +557,263 @@ class RootViewModel extends BaseViewModel {
 }
 
 class QuickSaveModalSheet extends StatelessWidget {
-  const QuickSaveModalSheet({Key? key}) : super(key: key);
+  const QuickSaveModalSheet({Key? key, required this.quickSaveData})
+      : super(key: key);
+
+  final List<QuickSaveData> quickSaveData;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Padding(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+        decoration: BoxDecoration(
+          color: const Color(0xff1B262C),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.padding16),
+            topRight: Radius.circular(SizeConfig.padding16),
+          ),
+        ),
+        child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //Quick Actions with Fello
+              Padding(
+                padding: EdgeInsets.only(top: SizeConfig.padding24),
+                child: Text('Quick Actions with Fello',
+                    style: TextStyles.rajdhaniSB.body1),
+              ),
+              SizedBox(height: SizeConfig.padding4),
+              //Select anyone option to perform a quick action
+              Text('Select anyone option to perform a quick action',
+                  style: TextStyles.sourceSans.body3
+                      .colour(Colors.white.withOpacity(0.6))),
+              SizedBox(height: SizeConfig.padding20),
+
+              ...quickSaveData
+                  .map((data) => GestureDetector(
+                        onTap: () {
+                          if (data.misc?.asset == 'AUGGOLD99') {
+                            BaseUtil().openRechargeModalSheet(
+                                investmentType: InvestmentType.AUGGOLD99,
+                                amt: data.misc?.amount);
+                          } else if (data.misc?.asset == 'LENDBOXP2P') {
+                            BaseUtil().openRechargeModalSheet(
+                                investmentType: InvestmentType.LENDBOXP2P,
+                                amt: data.misc?.amount);
+                          } else if (data.misc?.asset == "HH") {
+                            BaseUtil.openDepositOptionsModalSheet(
+                                amount: data.misc?.amount, timer: 0);
+                          } else {
+                            AppState.delegate!
+                                .parseRoute(Uri.parse(data.action!));
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding26,
+                              vertical: SizeConfig.padding16),
+                          // height: SizeConfig.padding70,
+                          margin: EdgeInsets.only(bottom: SizeConfig.padding16),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness8),
+                              border: Border.all(
+                                  color: const Color(0xffD3D3D3)
+                                      .withOpacity(0.2))),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: SizeConfig.padding38,
+                                child: BaseUtil.getWidgetBasedOnUrl(
+                                  data.icon!,
+                                  width: SizeConfig.padding54,
+                                ),
+                              ),
+                              SizedBox(width: SizeConfig.padding26),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(data.title!,
+                                      style: TextStyles.rajdhaniB.title5),
+                                  Flexible(
+                                    child: Text(
+                                      data.subTitle!,
+                                      style: TextStyles.sourceSans.body4.colour(
+                                          Colors.white.withOpacity(0.6)),
+                                      maxLines: 3,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ))
+                  .toList(),
+
+              SizedBox(height: SizeConfig.padding20),
+            ]),
+      ),
+    );
+  }
+}
+
+class DefaultQuickSaveModalSheet extends StatelessWidget {
+  const DefaultQuickSaveModalSheet({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.backButtonDispatcher?.didPopRoute();
+        return true;
+      },
+      child: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+          decoration: BoxDecoration(
+            color: const Color(0xff1B262C),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.padding16),
+              topRight: Radius.circular(SizeConfig.padding16),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //Quick Actions with Fello
+              Padding(
+                padding: EdgeInsets.only(top: SizeConfig.padding24),
+                child: Text('Quick Actions with Fello',
+                    style: TextStyles.rajdhaniSB.body1),
+              ),
+              SizedBox(height: SizeConfig.padding4),
+              //Select anyone option to perform a quick action
+              Text('Select anyone option to perform a quick action',
+                  style: TextStyles.sourceSans.body3
+                      .colour(Colors.white.withOpacity(0.6))),
+              SizedBox(height: SizeConfig.padding20),
+
+              GestureDetector(
+                onTap: () {
+                  AppState.backButtonDispatcher?.didPopRoute();
+                  BaseUtil().openRechargeModalSheet(
+                      investmentType: InvestmentType.AUGGOLD99, amt: 500);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding26,
+                      vertical: SizeConfig.padding16),
+                  // height: SizeConfig.padding70,
+                  margin: EdgeInsets.only(bottom: SizeConfig.padding16),
+                  decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness8),
+                      border: Border.all(
+                          color: const Color(0xffD3D3D3).withOpacity(0.2))),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: SizeConfig.padding38,
+                        child: Lottie.asset(
+                          'assets/lotties/nav/journey.json',
+                          fit: BoxFit.contain,
+                          width: SizeConfig.padding54,
+                        ),
+                        // child: SvgPicture.asset(
+                        //   'assets/svg/digitalgold.svg',
+                        //   fit: BoxFit.contain,
+                        //   width: SizeConfig.padding54,
+                        // ),
+                      ),
+                      SizedBox(width: SizeConfig.padding32),
+                      // const Spacer(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Save ₹500 in Gold',
+                              style: TextStyles.rajdhaniB.title5),
+                          Flexible(
+                            child: Text(
+                              'Buy Gold worth ₹500 with fello',
+                              style: TextStyles.sourceSans.body4
+                                  .colour(Colors.white.withOpacity(0.6)),
+                              maxLines: 3,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  AppState.backButtonDispatcher?.didPopRoute();
+                  BaseUtil().openRechargeModalSheet(
+                      investmentType: InvestmentType.LENDBOXP2P, amt: 1000);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding26,
+                      vertical: SizeConfig.padding16),
+                  // height: SizeConfig.padding70,
+                  // margin: EdgeInsets.only(bottom: SizeConfig.padding16),
+                  decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness8),
+                      border: Border.all(
+                          color: const Color(0xffD3D3D3).withOpacity(0.2))),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                          width: SizeConfig.padding38,
+                          child: SvgPicture.asset(
+                            'assets/svg/fello_flo.svg',
+                            fit: BoxFit.cover,
+                            width: SizeConfig.padding54,
+                            // height: SizeConfig.padding46,
+                          )),
+                      SizedBox(width: SizeConfig.padding32),
+                      // const Spacer(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Save ₹1000 in Flo',
+                              style: TextStyles.rajdhaniB.title5),
+                          Flexible(
+                            child: Text(
+                              'Invest in Fello flo worth ₹1000',
+                              style: TextStyles.sourceSans.body4
+                                  .colour(Colors.white.withOpacity(0.6)),
+                              maxLines: 3,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+
+              SizedBox(height: SizeConfig.padding20),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
