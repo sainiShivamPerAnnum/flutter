@@ -46,7 +46,7 @@ class ScratchCardGridItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      key: Key(ticket.timestamp.toString()),
+      key: Key(ticket.gtId.toString()),
       tag: ticket.timestamp.toString(),
       createRectTween: (begin, end) {
         return CustomRectTween(begin: begin, end: end);
@@ -104,8 +104,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraint) {
-        print("I rebuilded");
-        return Container(
+        return SizedBox(
           child: AnimatedContainer(
             height: width,
             width: width,

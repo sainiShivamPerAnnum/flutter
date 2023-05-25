@@ -176,14 +176,14 @@ class GoldSellViewModel extends BaseViewModel {
     if (val == null || val.isEmpty) {
       val = '0';
     }
-    print(val);
-    print(val.split('').where((element) => element == '.').toList().length);
-    if (val.split('').where((element) => element == '.').toList().length > 1 &&
-        val.characters.last == '.') {
-      val = val.substring(0, val.length - 1);
-      goldAmountController!.text = val;
-      refresh();
-    }
+    // print(val);
+    // print(val.split('').where((element) => element == '.').toList().length);
+    // if (val.split('').where((element) => element == '.').toList().isNotEmpty &&
+    //     val.characters.last == '.') {
+    //   val = val.substring(0, val.length - 1);
+    //   goldAmountController!.text = val;
+    //   refresh();
+    // }
     if (val.isNotEmpty) {
       if (val.contains('.')) {
         if (val.split('.').last.length > 4) {

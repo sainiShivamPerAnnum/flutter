@@ -51,10 +51,13 @@ class TambolaService extends ChangeNotifier {
   Map<String, int> ticketCodeWinIndex = {};
   int tambolaTicketCount = 0;
   int _matchedTicketCount = 0;
+  int expiringTicketsCount = 0;
+
   bool _isScreenLoading = true;
   bool _isLoading = false;
   bool isEligible = false;
   bool showWinScreen = false;
+  bool noMoreTickets = false;
 
   //GETTERS SETTERS
   bool get isLoading => _isLoading;
@@ -107,6 +110,7 @@ class TambolaService extends ChangeNotifier {
     tambolaTicketCount = 0;
     _matchedTicketCount = 0;
     ticketCodeWinIndex = {};
+    noMoreTickets = false;
     _isScreenLoading = true;
     _isLoading = false;
     isEligible = false;
@@ -160,8 +164,17 @@ class TambolaService extends ChangeNotifier {
     final ticketsResponse = await _tambolaRepo.getTickets(
         allTickets.isEmpty ? 0 : allTickets.length + 1, limit);
     if (ticketsResponse.isSuccess()) {
-      if (ticketsResponse.model!.isEmpty) return;
-      allTickets = ticketsResponse.model!;
+      if (ticketsResponse.model!.isEmpty) {
+        noMoreTickets = true;
+        return;
+      }
+      if (allTickets.isEmpty) {
+        allTickets = ticketsResponse.model!;
+      } else {
+        allTickets.addAll(ticketsResponse.model!);
+      }
+      expiringTicketsCount = TambolaRepo.expiringTicketCount;
+
       notifyListeners();
     } else {
       //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE

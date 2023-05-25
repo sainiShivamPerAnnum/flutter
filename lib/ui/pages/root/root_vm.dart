@@ -117,16 +117,8 @@ class RootViewModel extends BaseViewModel {
     AppState.isUserSignedIn = true;
     appState.setRootLoadValue = true;
 
-    if (!await verifyUserBootupDetails()) return;
-    await checkForBootUpAlerts();
-
     _rootController.currentNavBarItemModel =
         _rootController.navItems.values.first;
-
-    await Future.wait([
-      _referralService.verifyReferral(),
-      _referralService.initDynamicLinks(),
-    ]);
 
     await initialize();
   }
@@ -136,14 +128,20 @@ class RootViewModel extends BaseViewModel {
       (timeStamp) async {
         await _userService.userBootUpEE();
 
+        if (!await verifyUserBootupDetails()) return;
+        await checkForBootUpAlerts();
         await showLastWeekOverview();
 
         if (AppState.isFirstTime) {
           Future.delayed(const Duration(seconds: 1),
               SpotLightController.instance.showTourDialog);
         }
+        await Future.wait([
+          _referralService.verifyReferral(),
+          _referralService.initDynamicLinks(),
+        ]);
 
-        handleStartUpNotificationData();
+        unawaited(handleStartUpNotificationData());
 
         await Future.wait([
           _userService.checkForNewNotifications(),
@@ -425,7 +423,6 @@ class RootViewModel extends BaseViewModel {
     log('showLastWeekOverview called', name: 'HomeVM');
 
     if (isWelcomeAnimationInProgress &&
-        AppState.isFirstTime == false &&
         await BaseUtil.isFirstTimeThisWeek()) {
       log('showLastWeekOverview condition ok', name: 'HomeVM');
 
