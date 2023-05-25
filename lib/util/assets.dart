@@ -380,4 +380,6 @@ class Assets {
   static const iphoneGoalsBg = "${assetBaseUrl}autosave/save-for-iphone.svg";
   static const goaGoalsBg = "${assetBaseUrl}autosave/save-for-goa.svg";
   static const baliGoalsBg = "${assetBaseUrl}autosave/save-for-bali.svg";
+
+  static const String inAppReviewBg = 'assets/svg/in_app_review_success_bg.svg';
 }

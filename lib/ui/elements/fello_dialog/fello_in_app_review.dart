@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/constants/strings.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -335,16 +337,14 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                             } else {
                               log("In app review not available, opening native application store");
                               await inAppReview.openStoreListing(
-                                  appStoreId: '1558445254');
+                                  appStoreId: Strings.appStoreId);
                             }
                           } catch (e) {
                             log(e.toString());
                             if (Platform.isAndroid) {
-                              BaseUtil.launchUrl(
-                                  'https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                              BaseUtil.launchUrl(Strings.playStoreUrl);
                             } else {
-                              BaseUtil.launchUrl(
-                                  'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+                              BaseUtil.launchUrl(Strings.appStoreUrl);
                             }
                           }
 
@@ -372,7 +372,7 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                         height: SizeConfig.padding32,
                       ),
                       SvgPicture.asset(
-                        'assets/svg/in_app_review_success_bg.svg',
+                        Assets.inAppReviewBg,
                         width: SizeConfig.screenWidth! * 0.6,
                       ),
                     ],

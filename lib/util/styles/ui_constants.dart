@@ -116,6 +116,8 @@ class UiConstants {
 
   static const Color kSecondaryLeaderBoardTextColor = Color(0xffF4F1EC);
   static const Color kScratchHereStripColor = Color(0xffEFAF4E);
+  static const Color kAutoSaveOnboardingColor = Color(0xff025155);
+  static const Color kAutoSaveOnboardingTextColor = Color(0xff01646B);
 
   static LinearGradient kTextFieldGradient1 = const LinearGradient(
     colors: [Color(0xff111111), Colors.transparent],

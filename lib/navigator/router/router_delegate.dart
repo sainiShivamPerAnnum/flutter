@@ -678,9 +678,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     return List.of(_pages);
   }
 
-  void parseRoute(Uri uri, {String? title}) {
+  void parseRoute(Uri uri, {String? title, bool isExternal = false}) {
     _logger.d("Url: ${uri.toString()}");
     if (uri.scheme == "http" || uri.scheme == "https") {
+      if (isExternal) {
+        BaseUtil.launchUrl(uri.toString());
+        return;
+      }
+
       AppState.delegate!.appState.currentAction = PageAction(
         page: WebViewPageConfig,
         state: PageState.addWidget,

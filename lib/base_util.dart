@@ -63,7 +63,7 @@ import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-enum FileType { SVG, Lottie, Unknown, png }
+enum FileType { svg, lottie, unknown, png }
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
@@ -570,17 +570,17 @@ class BaseUtil extends ChangeNotifier {
 
     switch (extension) {
       case "svg":
-        return FileType.SVG;
+        return FileType.svg;
       case "json":
       case "lottie":
-        return FileType.Lottie;
+      return FileType.lottie;
       case "png":
       case "jpeg":
       case "webp":
       case "jpg":
         return FileType.png;
       default:
-        return FileType.Unknown;
+        return FileType.unknown;
     }
   }
 
@@ -589,7 +589,7 @@ class BaseUtil extends ChangeNotifier {
     FileType fileType = getFileType(fileUrl);
 
     switch (fileType) {
-      case FileType.SVG:
+      case FileType.svg:
         return SvgPicture.network(
           fileUrl,
           fit: BoxFit.contain,
@@ -597,7 +597,7 @@ class BaseUtil extends ChangeNotifier {
           width: width,
         );
         break;
-      case FileType.Lottie:
+      case FileType.lottie:
         return Lottie.network(fileUrl,
             fit: BoxFit.contain, height: height, width: width);
         break;

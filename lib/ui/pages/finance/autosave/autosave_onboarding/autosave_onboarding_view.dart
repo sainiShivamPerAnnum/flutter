@@ -73,12 +73,12 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
               Container(
                 width: SizeConfig.screenWidth! / 2,
                 height: SizeConfig.fToolBarHeight,
-                color: const Color(0xff025155),
+                color: UiConstants.kAutoSaveOnboardingColor,
               ),
               Container(
                 width: SizeConfig.screenWidth! / 2,
                 height: SizeConfig.fToolBarHeight,
-                color: const Color(0xff01646B),
+                color: UiConstants.kAutoSaveOnboardingTextColor,
               )
             ],
           ),
