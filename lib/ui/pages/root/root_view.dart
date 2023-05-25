@@ -120,36 +120,36 @@ class Root extends StatelessWidget {
   }
 }
 
-class RootPageView extends StatefulWidget {
-  const RootPageView({
-    Key? key,
-    required this.model,
-  }) : super(key: key);
-
-  final RootViewModel model;
-
-  @override
-  State<RootPageView> createState() => _RootPageViewState();
-}
-
-class _RootPageViewState extends State<RootPageView>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return Consumer<AppState>(
-      builder: (context, m, child) {
-        return LazyLoadIndexedStack(
-          index: m.getCurrentTabIndex,
-          children: widget.model.navBarItems.keys.toList(),
-        );
-      },
-    );
-  }
-
-  @override
-  bool get wantKeepAlive => true;
-}
+// class RootPageView extends StatefulWidget {
+//   const RootPageView({
+//     Key? key,
+//     required this.model,
+//   }) : super(key: key);
+//
+//   final RootViewModel model;
+//
+//   @override
+//   State<RootPageView> createState() => _RootPageViewState();
+// }
+//
+// class _RootPageViewState extends State<RootPageView>
+//     with AutomaticKeepAliveClientMixin {
+//   @override
+//   Widget build(BuildContext context) {
+//     super.build(context);
+//     return Consumer<AppState>(
+//       builder: (context, m, child) {
+//         return LazyLoadIndexedStack(
+//           index: m.getCurrentTabIndex,
+//           children: widget.model.navBarItems.keys.toList(),
+//         );
+//       },
+//     );
+//   }
+//
+//   @override
+//   bool get wantKeepAlive => true;
+// }
 
 bool _showHappyHour() {
   if (locator<RootController>().currentNavBarItemModel ==

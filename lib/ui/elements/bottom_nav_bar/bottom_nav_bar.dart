@@ -28,49 +28,53 @@ class BottomNavBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(navItemsLength, (index) {
-            if (index == (navItemsLength / 2).floor()) {
-              return const Expanded(
-                child: SizedBox(),
-              );
-            }
+          children: List.generate(
+            navItemsLength,
+            (index) {
+              if (index == (navItemsLength / 2).floor()) {
+                return const Expanded(
+                  child: SizedBox(),
+                );
+              }
 
-            final navbarItems = rootController.navItems.values.toList()[index];
-            return superModel.getCurrentTabIndex == index
-                ? Expanded(
-                    key: ValueKey(navbarItems.title),
-                    child: NavBarIcon(
-                      callBack: () => superModel.onItemTapped(index),
+              final navbarItems =
+                  rootController.navItems.values.toList()[index];
+              return superModel.getCurrentTabIndex == index
+                  ? Expanded(
                       key: ValueKey(navbarItems.title),
-                      animate: true,
-                      item: navbarItems,
-                      style:
-                          TextStyles.rajdhaniSB.colour(UiConstants.kTextColor),
-                    ),
-                  )
-                : Expanded(
-                    child: Container(
-                      height: SizeConfig.navBarHeight,
-                      key: ValueKey(navbarItems.title),
-                      alignment: Alignment.center,
-                      width: SizeConfig.screenWidth! * 0.2,
-                      child: GestureDetector(
-                        onTap: () {
-                          superModel.onItemTapped(index);
-                        },
-                        child: NavBarIcon(
-                          callBack: () {
+                      child: NavBarIcon(
+                        callBack: () => superModel.onItemTapped(index),
+                        key: ValueKey(navbarItems.title),
+                        animate: true,
+                        item: navbarItems,
+                        style: TextStyles.rajdhaniSB
+                            .colour(UiConstants.kTextColor),
+                      ),
+                    )
+                  : Expanded(
+                      child: Container(
+                        height: SizeConfig.navBarHeight,
+                        key: ValueKey(navbarItems.title),
+                        alignment: Alignment.center,
+                        width: SizeConfig.screenWidth! * 0.2,
+                        child: GestureDetector(
+                          onTap: () {
                             superModel.onItemTapped(index);
                           },
-                          animate: false,
-                          item: navbarItems,
-                          style: TextStyles.rajdhaniSB
-                              .colour(UiConstants.kTextColor2),
+                          child: NavBarIcon(
+                            callBack: () {
+                              superModel.onItemTapped(index);
+                            },
+                            animate: false,
+                            item: navbarItems,
+                            style: TextStyles.rajdhaniSB
+                                .colour(UiConstants.kTextColor2),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-          }),
+                    );
+            },
+          ),
         ),
       ),
     );

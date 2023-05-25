@@ -6,6 +6,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 class WebViewScreen extends StatefulWidget {
   final String url;
   final String? title;
+
   WebViewScreen({required this.url, this.title});
 
   @override
@@ -15,14 +16,15 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   bool _viewLoader = false;
 
-  get viewLoader => this._viewLoader;
+  get viewLoader => _viewLoader;
 
   set viewLoader(value) {
-    if (mounted)
+    if (mounted) {
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-        this._viewLoader = value;
+        _viewLoader = value;
         setState(() {});
       });
+    }
   }
 
   @override
@@ -30,7 +32,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
-       
         actions: [
           if (viewLoader)
             Row(
@@ -38,9 +39,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 Container(
                   width: kToolbarHeight / 2.5,
                   height: kToolbarHeight / 2.5,
-                  child: CircularProgressIndicator(strokeWidth: 2),
                   margin:
                       EdgeInsets.only(right: SizeConfig.pageHorizontalMargins),
+                  child: const CircularProgressIndicator(strokeWidth: 2),
                 ),
               ],
             )

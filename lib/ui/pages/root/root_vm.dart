@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -36,7 +37,6 @@ import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -47,9 +47,12 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
+
+enum FileType { SVG, Lottie, Unknown, png }
 
 class RootViewModel extends BaseViewModel {
   RootViewModel({S? l})
@@ -188,28 +191,120 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  Widget centerTab(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
+  FileType getFileType(String fileUrl) {
+    String extension = fileUrl.toLowerCase().split('.').last;
+
+    switch (extension) {
+      case "svg":
+        return FileType.SVG;
+      case "json":
+      case "lottie":
+        return FileType.Lottie;
+      case "png":
+      case "jpeg":
+      case "webp":
+      case "jpg":
+        return FileType.png;
+      default:
+        return FileType.Unknown;
+    }
+  }
+
+  Widget centerTab(
+    BuildContext context,
+  ) {
+    Widget childWidget;
+    final quickSaveData = _userService.quickSaveModel?.data;
+
+    if (quickSaveData == null || quickSaveData.isEmpty) {
+      return defaultCenterButton();
+    }
+
+    if (quickSaveData.length != 1) {
+      String fileUrl = quickSaveData[1].icon!;
+
+      FileType fileType = getFileType(fileUrl);
+
+      switch (fileType) {
+        case FileType.SVG:
+          childWidget = Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: SvgPicture.network(
+              fileUrl,
+              fit: BoxFit.contain,
+            ),
+          );
+          break;
+        case FileType.Lottie:
+          childWidget = Expanded(
+            child: Lottie.network(
+              fileUrl,
+              fit: BoxFit.fitHeight,
+            ),
+          );
+          break;
+        case FileType.png:
+          childWidget = Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: CachedNetworkImage(
+              fit: BoxFit.contain,
+              imageUrl: fileUrl,
+            ),
+          );
+          break;
+        default:
+          childWidget = const Icon(
+            Icons.add,
+            color: Colors.white,
+          );
+      }
+    } else {
+      childWidget = const Icon(
+        Icons.add,
+        color: Colors.white,
+      );
+    }
+
+    void onTap() {
+      if (quickSaveData.length == 1) {
+        if (quickSaveData[0].action == null ||
+            (quickSaveData[0].action?.isEmpty ?? false)) {
+          BaseUtil().openRechargeModalSheet(
+            investmentType: InvestmentType.AUGGOLD99,
+          );
+        } else {
+          AppState.delegate!.parseRoute(Uri.parse(quickSaveData[0].action!));
+        }
+      } else {
         BaseUtil().openRechargeModalSheet(
           investmentType: InvestmentType.AUGGOLD99,
         );
-      },
-      backgroundColor: Theme.of(context).primaryColor,
-      child: true
-          ? Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: SvgPicture.network(
-                Assets.powerPlayMain,
-                fit: BoxFit.contain,
-              ),
-            )
-          : const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
+      }
+    }
+
+    return FloatingActionButton(
+      elevation: 10,
+      onPressed: onTap,
+      backgroundColor: Colors.black,
+      child: childWidget,
     );
   }
+
+  Widget defaultCenterButton() {
+    return FloatingActionButton(
+      elevation: 10,
+      onPressed: () {
+        BaseUtil.openModalBottomSheet(
+            isBarrierDismissible: true, content: const QuickSaveModalSheet());
+      },
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  void onCenterButtonTap() {}
 
   Future<void> openJourneyView() async {
     AppState.delegate!.appState.currentAction =
@@ -439,8 +534,6 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<void> showLastWeekOverview() async {
-    log('showLastWeekOverview called', name: 'HomeVM');
-
     if (isWelcomeAnimationInProgress &&
         AppState.isFirstTime == false &&
         await BaseUtil.isFirstTimeThisWeek()) {
@@ -482,5 +575,14 @@ class RootViewModel extends BaseViewModel {
         debugPrint(e.toString());
       }
     }
+  }
+}
+
+class QuickSaveModalSheet extends StatelessWidget {
+  const QuickSaveModalSheet({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
