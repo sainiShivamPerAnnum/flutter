@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -44,12 +43,13 @@ class CampaignCardSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        // left: SizeConfig.padding16,
-        top: SizeConfig.padding8,
-        // right: SizeConfig.padding16,
-      ),
+          // left: SizeConfig.padding
+          top: SizeConfig.padding8,
+          bottom: SizeConfig.pageHorizontalMargins
+          // right: SizeConfig.padding16,
+          ),
       child: SizedBox(
-        height: SizeConfig.screenWidth! * 0.5,
+        height: SizeConfig.screenWidth! * 0.24,
         width: SizeConfig.screenWidth,
         child: saveVm.isChallengesLoading
             ? const SizedBox()
@@ -60,10 +60,7 @@ class CampaignCardSection extends StatelessWidget {
                   final event = saveVm.ongoingEvents![index];
                   return GestureDetector(
                     onTap: () {
-                      if (_userService.baseUser!.username!.isEmpty) {
-                        BaseUtil.showUsernameInputModalSheet();
-                      }
-                      saveVm.trackChallangeTapped(event.type, index);
+                      saveVm.trackChallengeTapped(event.type, index);
                       AppState.delegate!.parseRoute(Uri.parse(event.type));
                     },
                     child: Padding(
@@ -143,9 +140,9 @@ class IOSCampaignCard extends StatelessWidget {
                     decoration: const BoxDecoration(
                       color: UiConstants.kSecondaryBackgroundColor,
                     ),
-            ),
-          ),
-        ),
+                  ),
+                ),
+              ),
             )
           : Container(
               decoration: BoxDecoration(
@@ -239,9 +236,9 @@ class CampaignCard extends StatelessWidget {
                   decoration: const BoxDecoration(
                     color: UiConstants.kSecondaryBackgroundColor,
                   ),
-          ),
-        ),
-      ),
+                ),
+              ),
+            ),
           )
         : event.bgImage.isNotEmpty
             ? Container(

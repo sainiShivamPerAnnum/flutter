@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:advertising_id/advertising_id.dart';
+import 'package:android_play_install_referrer/android_play_install_referrer.dart';
 import 'package:app_set_id/app_set_id.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -17,7 +18,6 @@ import 'package:felloapp/core/repository/analytics_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_service.dart';
@@ -38,6 +38,7 @@ import 'package:felloapp/ui/pages/login/screens/otp_input/otp_input_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -55,23 +56,23 @@ class LoginControllerViewModel extends BaseViewModel {
   //Locators
   final FcmListener? fcmListener = locator<FcmListener>();
   final AugmontService? augmontProvider = locator<AugmontService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final UserService userService = locator<UserService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger logger = locator<CustomLogger>();
   final ApiPath? apiPaths = locator<ApiPath>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
   final DBModel? dbProvider = locator<DBModel>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  final AnalyticsRepository? _analyticsRepo = locator<AnalyticsRepository>();
-  final JourneyService? _journeyService = locator<JourneyService>();
-  final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final AnalyticsRepository _analyticsRepo = locator<AnalyticsRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final ReferralService _referralService = locator<ReferralService>();
 
   S locale = locator<S>();
 
   // static LocalDBModel? lclDbProvider = locator<LocalDBModel>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
   //Controllers
   PageController? _controller;
@@ -146,6 +147,7 @@ class LoginControllerViewModel extends BaseViewModel {
     switch (currentPage) {
       case LoginMobileView.index:
         {
+          _analyticsService.track(eventName: "Mobile Screen next tapped");
           //in mobile input screen. Get and set mobile/ set error interface if not correct
           if (_mobileScreenKey.currentState!.model.formKey.currentState
               .validate()) {
@@ -174,6 +176,8 @@ class LoginControllerViewModel extends BaseViewModel {
         }
       case LoginOtpView.index:
         {
+          _analyticsService.track(eventName: "OTP screen next tapped");
+
           String? otp = _otpScreenKey.currentState?.model?.otp;
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             logger.d("OTP is $otp");
@@ -216,6 +220,8 @@ class LoginControllerViewModel extends BaseViewModel {
 
       case LoginNameInputView.index:
         {
+          _analyticsService.track(eventName: "Name screen finish tapped");
+
           if (_nameKey.currentState!.model.formKey.currentState!.validate()) {
             String refCode = _nameKey.currentState!.model.getReferralCode();
             if (refCode.isNotEmpty) {
@@ -228,7 +234,7 @@ class LoginControllerViewModel extends BaseViewModel {
                 .trim()
                 .replaceAll(RegExp(r"\s+\b|\b\s"), " ");
             String gender =
-                _formatGender(_nameKey.currentState!.model.genderValue);
+            _formatGender(_nameKey.currentState!.model.genderValue);
 
             userService.baseUser ??= BaseUser.newUser(
                 userService.firebaseUser!.uid,
@@ -248,15 +254,20 @@ class LoginControllerViewModel extends BaseViewModel {
               final token = await _getBearerToken();
               userService.baseUser!.mobile = userMobile;
               final ApiResponse response =
-                  await _userRepo!.setNewUser(userService.baseUser!, token);
+              await _userRepo!.setNewUser(userService.baseUser!, token);
               logger!.i(response.toString());
               if (response.code == 400) {
+                _analyticsService.track(
+                    eventName: "Signup: setNewUser responded with 400");
+
                 message = response.errorMessage ??
                     "Unable to create account, please try again later.";
                 _nameKey.currentState!.model.enabled = true;
                 setState(ViewState.Idle);
                 flag = false;
               } else {
+                _analyticsService.track(
+                    eventName: "Signup: setNewUser responded with 200");
                 final gtId = response.model['gtId'];
                 response.model['flag'] ? flag = true : flag = false;
 
@@ -266,6 +277,8 @@ class LoginControllerViewModel extends BaseViewModel {
                 }
               }
             } catch (e) {
+              _analyticsService.track(
+                  eventName: "Signup: setNewUser failed with exception");
               logger!.d(e);
               _nameKey.currentState!.model.enabled = true;
               flag = false;
@@ -292,6 +305,8 @@ class LoginControllerViewModel extends BaseViewModel {
 
               setState(ViewState.Idle);
             }
+          } else {
+            _analyticsService.track(eventName: "Name screen validation failed");
           }
 
           break;
@@ -300,69 +315,87 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   Future<void> sendInstallInformation() async {
-    String? _appSetId;
-    String? _androidId;
-    String? _advertisingId;
-    String? _osVersion;
+    String? appSetId;
+    String? androidId;
+    String? advertisingId;
+    String? osVersion;
     String? installReferrerData;
     const BASE_CHANNEL = 'methodChannel/deviceData';
     const platform = MethodChannel(BASE_CHANNEL);
     try {
-      _appSetId = await AppSetId().getIdentifier();
-      logger.d('AppSetId: Package found an appropriate ID value: $_appSetId');
+      appSetId = await AppSetId().getIdentifier();
+      logger.d('AppSetId: Package found an appropriate ID value: $appSetId');
     } catch (e) {
       logger.e('AppSetId: Package failed to set an appropriate ID value');
+      unawaited(_internalOpsService.logFailure(
+          userService.baseUser!.uid,
+          FailType.InstallInformationFetchFailed,
+          {"information": "app_set_id"}));
     }
-
     if (Platform.isAndroid) {
       try {
-        _androidId = await platform.invokeMethod('getAndroidId');
-        logger.d('AndroidId: Service found an Android Id: $_androidId');
+        androidId = await platform.invokeMethod('getAndroidId');
+        logger.d('AndroidId: Service found an Android Id: $androidId');
       } catch (e) {
         logger.e('AndroidId: Service failed to find a Android Id');
+        unawaited(_internalOpsService.logFailure(
+            userService.baseUser!.uid,
+            FailType.InstallInformationFetchFailed,
+            {"information": "android_id"}));
       }
     }
-
     try {
-      _advertisingId = await AdvertisingId.id(true);
+      advertisingId = await AdvertisingId.id(true);
       logger
-          .d('AdvertisingId: Service found an Advertising Id: $_advertisingId');
+          .d('AdvertisingId: Service found an Advertising Id: $advertisingId');
     } catch (e) {
       logger.e('AdvertisingId: Service failed to find a Advertising Id');
+      unawaited(_internalOpsService.logFailure(
+          userService.baseUser!.uid,
+          FailType.InstallInformationFetchFailed,
+          {"information": "advertising_id"}));
     }
-
     try {
-      if (!_internalOpsService!.isDeviceInfoInitiated) {
-        await _internalOpsService!.initDeviceInfo();
+      if (!_internalOpsService.isDeviceInfoInitiated) {
+        await _internalOpsService.initDeviceInfo();
       }
-      _osVersion = _internalOpsService!.osVersion;
+      osVersion = _internalOpsService.osVersion;
     } catch (e) {
       logger.e('DeviceData: Service failed to find a Device Data');
+      unawaited(_internalOpsService.logFailure(
+          userService.baseUser!.uid,
+          FailType.InstallInformationFetchFailed,
+          {"information": "device_data"}));
     }
-
     try {
-      const _channel = MethodChannel('my_plugin');
-      installReferrerData = await _channel.invokeMethod('getInstallReferrer');
-
+      ReferrerDetails referrerDetails =
+          await AndroidPlayInstallReferrer.installReferrer;
       //cleanup data
       RegExp nullPattern = RegExp(r'null');
-      installReferrerData = installReferrerData!.replaceAll(nullPattern, '');
+      installReferrerData =
+          referrerDetails.toString().replaceAll(nullPattern, '');
     } catch (e) {
       logger
           .e('InstallReferrer: Service failed to find a Install Referrer Data');
+      unawaited(
+        _internalOpsService.logFailure(
+          userService.baseUser!.uid,
+          FailType.InstallInformationFetchFailed,
+          {"information": "install_referrer_id"},
+        ),
+      );
     }
-
     logger.d(
-        'Received the following information: {InstallReferrerData: $installReferrerData,' +
-            'AppSetId: $_appSetId, AndroidId: $_androidId, AdvertisingId: $_advertisingId, OSVersion: $_osVersion}');
-
-    final ApiResponse response = await _analyticsRepo!.setInstallInfo(
-        userService.baseUser!,
-        installReferrerData,
-        _appSetId,
-        _androidId,
-        _osVersion,
-        _advertisingId);
+        'Received the following information: {InstallReferrerData: $installReferrerData,'
+        'AppSetId: $appSetId, AndroidId: $androidId, AdvertisingId: $advertisingId, OSVersion: $osVersion}');
+    final ApiResponse response = await _analyticsRepo.setInstallInfo(
+      userService.baseUser!,
+      installReferrerData,
+      appSetId,
+      androidId,
+      osVersion,
+      advertisingId,
+    );
     logger.d('Data sent to API with the following response: ${response.model}');
   }
 
@@ -374,14 +407,14 @@ class LoginControllerViewModel extends BaseViewModel {
     await CacheService.invalidateByKey(CacheKeys.USER);
     ApiResponse<BaseUser> user =
         await _userRepo!.getUserById(id: userService.firebaseUser!.uid);
-    logger!.d("User data found: ${user.model}");
+    logger.d("User data found: ${user.model}");
     if (user.code == 400) {
       BaseUtil.showNegativeAlert(user.errorMessage ?? locale.accountMaintenance,
           locale.customerSupportText);
       setState(ViewState.Idle);
-      _controller!.animateToPage(LoginMobileView.index,
+      unawaited(_controller!.animateToPage(LoginMobileView.index,
           duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInToLinear);
+          curve: Curves.easeInToLinear));
     } else if (user.model == null ||
         (user.model != null && user.model!.hasIncompleteDetails())) {
       if (user.model == null) {
@@ -447,13 +480,14 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   Future _onSignUpComplete() async {
+    _analyticsService.track(eventName: "SignIn: user service init called");
     await userService.init();
+    _analyticsService.track(eventName: "SignIn: base util  init called");
     baseProvider!.init();
+    _analyticsService.track(eventName: "SignIn: referral service init called");
     _referralService.init();
-    AnalyticsProperties().init();
+
     if (_isSignup) {
-      unawaited(_userRepo!.updateUserAppFlyer(userService!.baseUser!,
-          await userService.firebaseUser!.getIdToken()));
       await _analyticsService!.login(
           isOnBoarded: userService.isUserOnboarded,
           baseUser: userService.baseUser);
@@ -464,7 +498,10 @@ class LoginControllerViewModel extends BaseViewModel {
 
       logger.d(
           'invoke an API to send device related and install referrer related information to the server');
+      _analyticsService.track(
+          eventName: "SignUp: sendInstallInformation called called");
       unawaited(sendInstallInformation());
+
       unawaited(userService.logUserInstalledApps().then(
         (value) {
           logger.i(value);
@@ -495,7 +532,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
     AppState.isOnboardingInProgress = false;
     appStateProvider.rootIndex = 0;
-
+    _analyticsService.track(eventName: "SignUp: initDeviceInfo called called");
     unawaited(_internalOpsService!
         .initDeviceInfo()
         .then((Map<String, dynamic> response) {
@@ -523,11 +560,16 @@ class LoginControllerViewModel extends BaseViewModel {
 
     ///check if the account is blocked
     if (userService.baseUser != null && userService.baseUser!.isBlocked!) {
+      _analyticsService.track(
+          eventName: "SignIn: moving user to blocked screen");
+
       AppState.isUpdateScreen = true;
       appStateProvider.currentAction =
           PageAction(state: PageState.replaceAll, page: BlockedUserPageConfig);
       return;
     }
+
+    _analyticsService.track(eventName: "SignIn: moving user to home screen");
 
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);

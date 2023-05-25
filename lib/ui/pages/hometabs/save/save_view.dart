@@ -6,16 +6,17 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/new_user_save.dart';
+import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
+import 'package:felloapp/ui/pages/hometabs/home/cards_home.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
+
+import '../../../../util/styles/styles.dart';
 
 const HtmlEscape htmlEscape = HtmlEscape();
 
@@ -54,7 +55,7 @@ class Save extends StatelessWidget {
 }
 
 class SaveViewWrapper extends StatelessWidget {
-  const SaveViewWrapper({Key? key, required this.model}) : super(key: key);
+  SaveViewWrapper({Key? key, required this.model}) : super(key: key);
   final SaveViewModel model;
 
   @override
@@ -62,13 +63,76 @@ class SaveViewWrapper extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: const [UserServiceProperties.mySegments],
       builder: (_, prop, ___) {
-        if (prop!.userSegments.contains("NEW_USER")) {
-          return NewUserSaveView(model: model);
-        }
-        return ListView(
-          padding: EdgeInsets.zero,
-          children: model.getSaveViewItems(model),
-        );
+        return (!prop!.userSegments.contains("NEW_USER"))
+            ? Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Stack(
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: model.getSaveViewItems(model),
+                        ),
+                        const Cards(),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    bottom: 0,
+                    child: Consumer<CardActionsNotifier>(
+                      builder: (context, cardActions, child) => cardActions
+                              .isVerticalView
+                          ? SizedBox(
+                              height: SizeConfig.screenHeight,
+                              width: SizeConfig.screenWidth,
+                              child: Column(
+                                children: [
+                                  IgnorePointer(
+                                    child: AnimatedContainer(
+                                      curve: Curves.easeIn,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      height: SizeConfig.screenWidth! * 1.54,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (cardActions.isVerticalView) {
+                                          cardActions.isVerticalView = false;
+                                        }
+                                      },
+                                      onVerticalDragUpdate: (details) {
+                                        // double currentOffset =
+                                        //     details.primaryDelta ?? 0;
+                                        if (details.delta.dy < 0) {
+                                          if (cardActions.isVerticalView) {
+                                            cardActions.isVerticalView = false;
+                                          }
+                                        }
+
+                                        // _previousOffset = currentOffset;
+                                      },
+                                      child: Container(
+                                          color: Colors.black.withOpacity(0.2)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
+                    ),
+                  ),
+                ],
+              )
+            : ListView(
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                cacheExtent: 1000,
+                padding: EdgeInsets.zero,
+                children: model.getNewUserSaveViewItems(model),
+              );
       },
     );
   }

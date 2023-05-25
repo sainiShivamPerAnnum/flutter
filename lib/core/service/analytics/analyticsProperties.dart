@@ -23,21 +23,6 @@ class AnalyticsProperties {
   static final BaseUtil? _baseUtil = locator<BaseUtil>();
   final ReferralRepo? _referralRepo = locator<ReferralRepo>();
 
-  init() {
-    // _paytmService!.init();
-
-    // if (!_baseUtil!.referralsFetched!) {
-    //   _referralRepo!.getReferralHistory().then((refHisModel) {
-    //     if (refHisModel.isSuccess()) {
-    //       _baseUtil!.referralsFetched = true;
-    //       _baseUtil!.userReferralsList = refHisModel.model ?? [];
-    //     } else {
-    //       BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
-    //     }
-    //   });
-    // }
-  }
-
   static getTotalReferralCount() {
     if (!_baseUtil!.referralsFetched!) {
       return 0;

@@ -15,7 +15,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 class AutosaveCard extends StatelessWidget {
   final InvestmentType? investmentType;
@@ -80,86 +79,81 @@ class InitAutosaveCard extends StatelessWidget {
           children: [
             const TitleSubtitleContainer(
               title: 'Introducing Autosave',
-              subTitle: 'Automated payments for Fello Flo & Digital Gold',
+              // subTitle: 'Automated payments for Fello Flo & Digital Gold',
             ),
-            SizedBox(
-              height: SizeConfig.padding32,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: SizeConfig.padding24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+            SizedBox(height: SizeConfig.padding16),
+            Container(
+              decoration: BoxDecoration(
+                color: UiConstants.kTambolaMidTextColor,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              ),
+              margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding20,
+                  vertical: SizeConfig.padding32),
+              child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 45,
-                    backgroundColor: UiConstants.kSecondaryBackgroundColor,
-                    child: SvgPicture.asset(
-                      Assets.autoSaveDefault,
-                      width: 75,
-                      height: 70,
-                    ),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding24,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: SizeConfig.screenWidth! * 0.5,
+                      CircleAvatar(
+                        radius: 45,
+                        backgroundColor: UiConstants.kSecondaryBackgroundColor,
+                        child: SvgPicture.asset(
+                          Assets.autoSaveDefault,
+                          width: 75,
+                          height: 70,
                         ),
-                        child: Text("Setup Autosave Now",
-                            style: TextStyles.sourceSans.bold.body1),
                       ),
                       SizedBox(
-                        height: SizeConfig.padding20,
+                        width: SizeConfig.padding24,
                       ),
-                      Row(
-                        children: [
-                          Shimmer(
-                              gradient: new LinearGradient(
-                                colors: [
-                                  UiConstants.kTextColor2,
-                                  Colors.white,
-                                  UiConstants.kTextColor2
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: SizeConfig.screenWidth! * 0.5,
                               ),
-                              child: Text(locale.btnStart.toUpperCase(),
-                                  style: TextStyles.rajdhaniSB.body3)),
-                          SizedBox(
-                            height: SizeConfig.padding4,
+                              child: Text("Get started with a daily/weekly SIP",
+                                  style: TextStyles.rajdhani.bold.body1),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding20,
+                            ),
+                            Text(
+                              "Invest safely with our Auto SIP to win tokens",
+                              style: TextStyles.body3.colour(Colors.grey[600]),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: SizeConfig.padding24),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        Assets.scratchCard,
+                        width: SizeConfig.padding24,
+                      ),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            "  Win a scratch card on successful autosave setup",
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor2),
                           ),
-                          SvgPicture.asset(
-                            Assets.chevRonRightArrow,
-                          )
-                        ],
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: SizeConfig.padding54,
-              child: Row(
-                children: [
-                  SizedBox(width: SizeConfig.pageHorizontalMargins * 1.6),
-                  SvgPicture.asset(
-                    Assets.scratchCard,
-                    width: SizeConfig.padding24,
-                  ),
-                  Text(
-                    "  Win a scratch card on successful autosave setup",
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTextColor2),
-                  ),
-                ],
-              ),
-            ),
-            Divider(color: UiConstants.kTextColor2.withOpacity(0.5)),
           ],
         ),
       ),

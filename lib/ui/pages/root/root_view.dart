@@ -3,7 +3,10 @@ import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -11,18 +14,23 @@ import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
+import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
+import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/lazy_load_indexed_stack.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 GlobalKey felloAppBarKey = GlobalKey();
 
@@ -106,10 +114,18 @@ class Root extends StatelessWidget {
               ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.miniCenterDocked,
-              floatingActionButton:
-                  rootController.navItems.values.length % 2 != 0
-                      ? model.centerTab(ctx)
-                      : const SizedBox(),
+              floatingActionButton: Selector<CardActionsNotifier, bool>(
+                  selector: (_, notifier) => notifier.isVerticalView,
+                  builder: (context, isCardsOpen, child) {
+                    if (isCardsOpen) return const SizedBox();
+                    return AnimatedContainer(
+                      curve: Curves.easeIn,
+                      duration: const Duration(milliseconds: 300),
+                      child: rootController.navItems.values.length % 2 != 0
+                          ? model.centerTab(ctx)
+                          : const SizedBox(),
+                    );
+                  }),
               bottomNavigationBar: const BottomNavBar(),
             ),
             const CircularAnim(),
@@ -162,7 +178,7 @@ bool _showHappyHour() {
 }
 
 class RootAppBar extends StatelessWidget {
-  const RootAppBar({super.key});
+  const RootAppBar({super.key, this.showTitle = true});
 
   FaqsType getFaqType() {
     final NavBarItemModel navItem =
@@ -179,6 +195,8 @@ class RootAppBar extends StatelessWidget {
       return FaqsType.gettingStarted;
     }
   }
+
+  final bool showTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -198,29 +216,67 @@ class RootAppBar extends StatelessWidget {
                           width: SizeConfig.screenWidth,
                           height: kToolbarHeight + SizeConfig.viewInsets.top,
                           alignment: Alignment.bottomCenter,
-                          color: (locator<RootController>()
-                                      .currentNavBarItemModel ==
-                                  RootController.saveNavBarItem)
-                              ? (userservice!.userSegments.contains("NEW_USER"))
-                                  ? UiConstants.kBackgroundColor
-                                  : UiConstants.kSecondaryBackgroundColor
-                              : UiConstants.kBackgroundColor,
                           child: FAppBar(
-                            type: getFaqType(),
-                            backgroundColor: ((locator<RootController>()
-                                            .currentNavBarItemModel ==
-                                        RootController.tambolaNavBar) &&
-                                    ticketCount == 0)
-                                ? const Color(0XFF141414)
-                                : (locator<RootController>()
-                                            .currentNavBarItemModel ==
-                                        RootController.saveNavBarItem)
-                                    ? (userservice!.userSegments
-                                            .contains("NEW_USER"))
-                                        ? UiConstants.kBackgroundColor
-                                        : UiConstants.kSecondaryBackgroundColor
-                                    : UiConstants.kBackgroundColor,
                             showAvatar: true,
+                            leadingPadding: false,
+                            titleWidget: showTitle
+                                ? Expanded(
+                                    child: Salutation(
+                                      leftMargin: SizeConfig.padding8,
+                                      textStyle: TextStyles.rajdhaniSB.body0
+                                          .colour(Colors.white),
+                                    ),
+                                  )
+                                : null,
+                            backgroundColor: UiConstants.kBackgroundColor,
+                            showCoinBar: false,
+                            action: Row(
+                              children: [
+                                Selector2<UserService, ScratchCardService,
+                                    Tuple2<UserFundWallet?, int>>(
+                                  builder: (context, value, child) =>
+                                      FelloInfoBar(
+                                    svgAsset: Assets.scratchCard,
+                                    size: SizeConfig.padding16,
+                                    child:
+                                        "₹${value.item1?.unclaimedBalance.toInt() ?? 0}",
+                                    onPressed: () {
+                                      Haptic.vibrate();
+                                      AppState.delegate!
+                                          .parseRoute(Uri.parse("myWinnings"));
+                                    },
+                                    mark: value.item2 > 0,
+                                  ),
+                                  selector: (p0, userService,
+                                          scratchCardService) =>
+                                      Tuple2(
+                                          userService.userFundWallet,
+                                          scratchCardService
+                                              .unscratchedTicketsCount),
+                                ),
+                                Selector2<UserService, ScratchCardService,
+                                    Tuple2<UserJourneyStatsModel?, int>>(
+                                  builder: (context, value, child) =>
+                                      FelloInfoBar(
+                                    svgAsset: Assets.journeyIcon,
+                                    size: SizeConfig.padding20,
+                                    child: "Level ${value.item1?.level ?? 0}",
+                                    onPressed: () {
+                                      Haptic.vibrate();
+                                      AppState.delegate!
+                                          .parseRoute(Uri.parse("journey"));
+                                    },
+                                    mark: value.item2 > 0,
+                                  ),
+                                  selector: (p0, userService,
+                                          scratchCardService) =>
+                                      Tuple2(
+                                          userService.userJourneyStats,
+                                          scratchCardService
+                                              .unscratchedTicketsCount),
+                                )
+                              ],
+                            ),
                           ),
                         )
                       : const SizedBox();

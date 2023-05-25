@@ -27,6 +27,33 @@ class _WebViewScreenState extends State<WebViewScreen> {
     }
   }
 
+  WebViewController? controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageStarted: (_) => viewLoader = true,
+          onPageFinished: (_) => viewLoader = false,
+          onWebResourceError: (WebResourceError error) {},
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url));
+  }
+
+  @override
+  void dispose() {
+    controller = null;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,12 +74,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
             )
         ],
       ),
-      body: WebView(
-        backgroundColor: Colors.white,
-        initialUrl: widget.url,
-        javascriptMode: JavascriptMode.unrestricted,
-        onPageFinished: (_) => viewLoader = false,
-        onPageStarted: (_) => viewLoader = true,
+      body: WebViewWidget(
+        controller: controller!,
       ),
     );
   }

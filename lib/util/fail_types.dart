@@ -72,6 +72,7 @@ enum FailType {
   PanImageUploadFailed,
   PanInfoFetchFailed,
   ScratchCardListFailed,
+  InstallInformationFetchFailed
 }
 
 extension ParseToString on FailType {

@@ -26,7 +26,7 @@ class _TambolaHomeViewState extends State<TambolaHomeView> {
   Widget build(BuildContext context) {
     return BaseView<TambolaHomeViewModel>(
       onModelReady: (model) => model.init(),
-      onModelDispose: (model) => model.dispose(),
+      onModelDispose: (model) => model.dump(),
       builder: (context, model, child) => model.state == ViewState.Busy
           ? SizedBox(
               width: SizeConfig.screenWidth,

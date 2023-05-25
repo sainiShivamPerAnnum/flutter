@@ -38,7 +38,6 @@ class JourneyView extends StatefulWidget {
 
 class _JourneyViewState extends State<JourneyView>
     with TickerProviderStateMixin {
-
   @override
   Widget build(BuildContext context) {
     log("ROOT: Journey view build called");
@@ -59,55 +58,58 @@ class _JourneyViewState extends State<JourneyView>
             );
           }
 
-          return Consumer<JourneyService>(
-            builder: (context, service, child) => Scaffold(
-              key: const ValueKey(Constants.JOURNEY_SCREEN_TAG),
-              resizeToAvoidBottomInset: false,
-              backgroundColor: Colors.black,
-              body: service.isLoading && model.pages == null
-                  ? const JourneyErrorScreen()
-                  : Stack(
-                      children: [
-                        SizedBox(
-                          height: SizeConfig.screenHeight,
-                          width: SizeConfig.screenWidth,
-                          child: SingleChildScrollView(
-                            controller: model.mainController,
-                            physics: const BouncingScrollPhysics(),
-                            reverse: true,
-                            child: Container(
-                              height: model.currentFullViewHeight,
+          return Scaffold(
+            body: Consumer<JourneyService>(
+              builder: (context, service, child) => Scaffold(
+                key: const ValueKey(Constants.JOURNEY_SCREEN_TAG),
+                resizeToAvoidBottomInset: false,
+                backgroundColor: Colors.black,
+                body: service.isLoading && model.pages == null
+                    ? const JourneyErrorScreen()
+                    : Stack(
+                        children: [
+                          SizedBox(
+                            height: SizeConfig.screenHeight,
                             width: SizeConfig.screenWidth,
-                            child: Stack(
-                              children: [
-                                Background(model: model),
-                                const ActiveMilestoneBackgroundGlow(),
-                                JourneyAssetPath(model: model),
-                                if (model.avatarPath != null)
-                                  AvatarPathPainter(model: model),
-                                const ActiveMilestoneBaseGlow(),
-                                Milestones(model: model),
-                                if (service.showFocusRing) const FocusRing(),
-                                const LevelBlurView(),
-                                PrizeToolTips(model: model),
-                                MilestoneTooltip(model: model),
-                                Avatar(model: model),
-                              ],
+                            child: SingleChildScrollView(
+                              controller: model.mainController,
+                              physics: const BouncingScrollPhysics(),
+                              reverse: true,
+                              child: Container(
+                                height: model.currentFullViewHeight,
+                                width: SizeConfig.screenWidth,
+                                child: Stack(
+                                  children: [
+                                    Background(model: model),
+                                    const ActiveMilestoneBackgroundGlow(),
+                                    JourneyAssetPath(model: model),
+                                    if (model.avatarPath != null)
+                                      AvatarPathPainter(model: model),
+                                    const ActiveMilestoneBaseGlow(),
+                                    Milestones(model: model),
+                                    if (service.showFocusRing)
+                                      const FocusRing(),
+                                    const LevelBlurView(),
+                                    PrizeToolTips(model: model),
+                                    MilestoneTooltip(model: model),
+                                    Avatar(model: model),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          if (DynamicUiUtils.helpFab.actionUri.isNotEmpty)
+                            const HelpFab(),
+                          const JourneyAppBar(),
+                          const JourneyBannersView(),
+                          if (model.isRefreshing || service.isRefreshing)
+                            const JRefreshIndicator(),
+                          JPageLoader(model: model),
+                          const LevelUpAnimation(),
+                        ],
                       ),
-                      if (DynamicUiUtils.helpFab.actionUri.isNotEmpty)
-                        const HelpFab(),
-                      const JourneyAppBar(),
-                      const JourneyBannersView(),
-                      if (model.isRefreshing || service.isRefreshing)
-                        const JRefreshIndicator(),
-                      JPageLoader(model: model),
-                      const LevelUpAnimation(),
-                    ],
-                  ),
-                ),
+              ),
+            ),
           );
         },
       ),

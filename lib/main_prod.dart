@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/main.dart';
+import 'package:felloapp/util/crashlytics_widget.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -36,7 +37,9 @@ void main() async {
       .then((_) {
     runZonedGuarded(
         () => runApp(
-              const MyApp(),
+              const CrashlyticsApp(
+                child: MyApp(),
+              ),
             ), (error, stackTrace) {
       FirebaseCrashlytics.instance.recordError(error, stackTrace);
       log(error.toString(), stackTrace: stackTrace);

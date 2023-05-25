@@ -254,7 +254,7 @@ class BaseUtil extends ChangeNotifier {
   openProfileDetailsScreen() {
     // if (JourneyService.isAvatarAnimationInProgress) return;
     // if (_userService!.userJourneyStats!.mlIndex! > 1)
-    AppState.delegate!.parseRoute(Uri.parse("profile"));
+    AppState.delegate!.parseRoute(Uri.parse("accounts"));
     // else {
     // print("Reachng");
 

@@ -26,6 +26,7 @@ import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_vi
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
@@ -217,7 +218,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.UserProfileDetails:
           _addPageData(const UserProfileDetails(), UserProfileDetailsConfig);
           break;
-
+        case Pages.AccountsView:
+          _addPageData(const Win(), AccountsViewConfig);
+          break;
         case Pages.TxnHistory:
           _addPageData(
               const TransactionsHistory(), TransactionsHistoryPageConfig);
@@ -399,6 +402,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.Login:
         LoginPageConfig.currentPageAction = action;
+        break;
+
+      case Pages.AccountsView:
+        AccountsViewConfig.currentPageAction = action;
         break;
       case Pages.Onboard:
         OnboardPageConfig.currentPageAction = action;
@@ -624,6 +631,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.PowerPlaySeasonLeaderboard:
         PowerPlaySeasonLeaderboardDetailsConfig.currentPageAction = action;
         break;
+      case Pages.YoutubePlayerView:
+        YoutubePlayerViewConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -784,7 +794,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
     switch (screenKey) {
       case 'journey':
-        onTapItem(RootController.journeyNavBarItem);
+        pageConfiguration = JourneyViewPageConfig;
 
         break;
       case 'save':
@@ -804,6 +814,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       // case 'augDetails':
       //   pageConfiguration = SaveAssetsViewConfig;
       //   break;
+      case "accounts":
+        pageConfiguration = AccountsViewConfig;
+        break;
       case 'lboxDetails':
         pageConfiguration = LendboxDetailsPageConfig;
         break;

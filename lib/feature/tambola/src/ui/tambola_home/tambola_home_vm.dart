@@ -24,8 +24,7 @@ class TambolaHomeViewModel extends BaseViewModel {
     await init();
   }
 
-  @override
-  void dispose() {
+  void dump() {
     activeTambolaCardCount = 0;
     tambolaService = null;
     super.dispose();

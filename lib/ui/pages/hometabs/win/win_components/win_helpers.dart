@@ -11,13 +11,18 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class Salutation extends StatelessWidget {
   const Salutation({
     Key? key,
+    this.leftMargin,
+    this.textStyle,
   }) : super(key: key);
+
+  final double? leftMargin;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        left: SizeConfig.pageHorizontalMargins,
+        left: leftMargin ?? SizeConfig.pageHorizontalMargins,
         right: SizeConfig.pageHorizontalMargins,
         top: SizeConfig.padding10,
       ),
@@ -26,7 +31,10 @@ class Salutation extends StatelessWidget {
         builder: (context, model, child) {
           return Text(
             "Hi ${(model!.baseUser!.kycName!.isNotEmpty ? model.baseUser!.kycName! : model.baseUser!.name!.isNotEmpty ? model.baseUser!.name! : "User").trim().split(' ').first.capitalize()}",
-            style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
+            style:
+                textStyle ?? TextStyles.rajdhaniSB.title3.colour(Colors.white),
+            overflow: TextOverflow.fade,
+            maxLines: 1,
           );
         },
       ),

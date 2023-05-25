@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -19,64 +20,73 @@ class BottomNavBar extends StatelessWidget {
     final navItemsLength = rootController.navItems.values.length;
 
     return Consumer<AppState>(
-      builder: (ctx, superModel, child) => BottomAppBar(
-        notchMargin: navItemsLength % 2 != 0 ? 7 : 0,
-        shape: const CircularNotchedRectangle(),
-        color: Colors.black,
-        height: SizeConfig.navBarHeight,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(
-            navItemsLength,
-            (index) {
-              if (index == (navItemsLength / 2).floor()) {
-                return const Expanded(
-                  child: SizedBox(),
-                );
-              }
+      builder: (ctx, superModel, child) => Selector<CardActionsNotifier, bool>(
+          selector: (_, notifier) => notifier.isVerticalView,
+          builder: (context, isCardsOpen, child) {
+            if (isCardsOpen) return const SizedBox();
+            return AnimatedContainer(
+              curve: Curves.easeIn,
+              duration: const Duration(milliseconds: 300),
+              child: BottomAppBar(
+                notchMargin: navItemsLength % 2 != 0 ? 7 : 0,
+                shape: const CircularNotchedRectangle(),
+                color: Colors.black,
+                height: SizeConfig.navBarHeight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: List.generate(
+                    navItemsLength,
+                    (index) {
+                      if (index == (navItemsLength / 2).floor()) {
+                        return const Expanded(
+                          child: SizedBox(),
+                        );
+                      }
 
-              final navbarItems =
-                  rootController.navItems.values.toList()[index];
-              return superModel.getCurrentTabIndex == index
-                  ? Expanded(
-                      key: ValueKey(navbarItems.title),
-                      child: NavBarIcon(
-                        callBack: () => superModel.onItemTapped(index),
-                        key: ValueKey(navbarItems.title),
-                        animate: true,
-                        item: navbarItems,
-                        style: TextStyles.rajdhaniSB
-                            .colour(UiConstants.kTextColor),
-                      ),
-                    )
-                  : Expanded(
-                      child: Container(
-                        height: SizeConfig.navBarHeight,
-                        key: ValueKey(navbarItems.title),
-                        alignment: Alignment.center,
-                        width: SizeConfig.screenWidth! * 0.2,
-                        child: GestureDetector(
-                          onTap: () {
-                            superModel.onItemTapped(index);
-                          },
-                          child: NavBarIcon(
-                            callBack: () {
-                              superModel.onItemTapped(index);
-                            },
-                            animate: false,
-                            item: navbarItems,
-                            style: TextStyles.rajdhaniSB
-                                .colour(UiConstants.kTextColor2),
-                          ),
-                        ),
-                      ),
-                    );
-            },
-          ),
-        ),
-      ),
+                      final navbarItems =
+                          rootController.navItems.values.toList()[index];
+                      return superModel.getCurrentTabIndex == index
+                          ? Expanded(
+                              key: ValueKey(navbarItems.title),
+                              child: NavBarIcon(
+                                callBack: () => superModel.onItemTapped(index),
+                                key: ValueKey(navbarItems.title),
+                                animate: true,
+                                item: navbarItems,
+                                style: TextStyles.rajdhaniSB
+                                    .colour(UiConstants.kTextColor),
+                              ),
+                            )
+                          : Expanded(
+                              child: Container(
+                                height: SizeConfig.navBarHeight,
+                                key: ValueKey(navbarItems.title),
+                                alignment: Alignment.center,
+                                width: SizeConfig.screenWidth! * 0.2,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    superModel.onItemTapped(index);
+                                  },
+                                  child: NavBarIcon(
+                                    callBack: () {
+                                      superModel.onItemTapped(index);
+                                    },
+                                    animate: false,
+                                    item: navbarItems,
+                                    style: TextStyles.rajdhaniSB
+                                        .colour(UiConstants.kTextColor2),
+                                  ),
+                                ),
+                              ),
+                            );
+                    },
+                  ),
+                ),
+              ),
+            );
+          }),
     );
   }
 }
