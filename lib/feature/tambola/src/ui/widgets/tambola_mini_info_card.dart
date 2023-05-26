@@ -1,4 +1,5 @@
-import 'package:felloapp/feature/tambola/tambola.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -11,8 +12,8 @@ class TambolaMiniInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<TambolaService, int>(
-        builder: (context, count, child) => GestureDetector(
+    return Selector<UserService, UserFundWallet?>(
+        builder: (context, wallet, child) => GestureDetector(
               onTap: () {
                 AppState.delegate!.parseRoute(Uri.parse("tambolaHome"));
               },
@@ -45,7 +46,7 @@ class TambolaMiniInfoCard extends StatelessWidget {
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    count > 0
+                                    (wallet?.tickets?["total"] ?? 0) > 0
                                         ? "Tambola Tickets"
                                         : "Get your first free tambola ticket",
                                     style: TextStyles.rajdhaniM.body0
@@ -58,12 +59,12 @@ class TambolaMiniInfoCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (count > 0)
+                      if ((wallet?.tickets?["total"] ?? 0) > 0)
                         Row(
                           children: [
                             SizedBox(width: SizeConfig.pageHorizontalMargins),
                             Text(
-                              count.toString(),
+                              (wallet?.tickets?["total"] ?? 0).toString(),
                               style: TextStyles.rajdhaniB.title3
                                   .colour(Colors.white),
                             ),
@@ -77,6 +78,6 @@ class TambolaMiniInfoCard extends StatelessWidget {
                     ]),
                   )),
             ),
-        selector: (p0, p1) => p1.tambolaTicketCount);
+        selector: (p0, p1) => p1.userFundWallet);
   }
 }
