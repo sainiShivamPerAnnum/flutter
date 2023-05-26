@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/fund_breakdown_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/static/blur_filter.dart';
@@ -78,6 +79,9 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
               },
             );
           }
+        }
+        if (controller!.offset > controller!.position.minScrollExtent) {
+          if (hasReachedEnd) hasReachedEnd = false;
         }
       });
     super.initState();
@@ -162,7 +166,6 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                 onVerticalDragUpdate: (details) {
                   if (cardActions.isHorizontalView) {
                     cardActions.isHorizontalView = false;
-                    hasReachedEnd = false;
                   }
                   double currentOffset = details.primaryDelta ?? 0;
                   if (details.delta.dy > 0) {
@@ -174,7 +177,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                 onHorizontalDragEnd: (_) {
                   if (cardActions.isVerticalView) return;
                   cardActions.isHorizontalView = true;
-                  hasReachedEnd = false;
+
                   controller?.jumpTo(0);
                 },
                 onTap: () {
@@ -685,7 +688,19 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                               const Spacer(),
                                               cardActions.isVerticalView
                                                   ? OutlinedButton(
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        BaseUtil.openDialog(
+                                                          isBarrierDismissible:
+                                                              false,
+                                                          addToScreenStack:
+                                                              true,
+                                                          hapticVibrate: true,
+                                                          barrierColor:
+                                                              Colors.black45,
+                                                          content:
+                                                              const FundBreakdownDialog(),
+                                                        );
+                                                      },
                                                       style: OutlinedButton
                                                           .styleFrom(
                                                         side: const BorderSide(
@@ -897,18 +912,29 @@ class CardContent extends StatelessWidget {
                     asset,
                     width: SizeConfig.padding64,
                   ),
-                SizedBox(
-                    width: title != "Fello Rewards"
-                        ? SizeConfig.padding14
-                        : SizeConfig.padding8),
+                SizedBox(width: SizeConfig.padding8),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        title,
-                        style: TextStyles.rajdhaniM.body0.colour(Colors.white),
+                      Row(
+                        children: [
+                          Text(
+                            title,
+                            style:
+                                TextStyles.rajdhaniM.body0.colour(Colors.white),
+                          ),
+                          if (isVerticalView)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: SizeConfig.iconSize2,
+                                color: Colors.white,
+                              ),
+                            )
+                        ],
                       ),
                       if (isHorizontalView)
                         FittedBox(

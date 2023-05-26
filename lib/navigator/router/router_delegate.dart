@@ -41,6 +41,7 @@ import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
+import 'package:felloapp/ui/pages/static/earn_more_returns_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/pages/support/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/support/referral_policy_page.dart';
@@ -321,7 +322,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.PowerPlayFTUX:
           _addPageData(const PowerPlayWelcomePage(), pageConfig);
           break;
-
+        case Pages.EarnMoreReturnsView:
+          _addPageData(const EarnMoreReturns(), EarnMoreReturnsViewPageConfig);
+          break;
         // case Pages.TransactionDetailsPage:
         //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);
         //   break;
@@ -634,6 +637,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.YoutubePlayerView:
         YoutubePlayerViewConfig.currentPageAction = action;
         break;
+      case Pages.EarnMoreReturnsView:
+        EarnMoreReturnsViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -790,7 +796,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     switch (screenKey) {
       case 'journey':
         pageConfiguration = JourneyViewPageConfig;
-
         break;
       case 'save':
         onTapItem(RootController.saveNavBarItem);
@@ -806,9 +811,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
-      // case 'augDetails':
-      //   pageConfiguration = SaveAssetsViewConfig;
-      //   break;
       case "accounts":
         pageConfiguration = AccountsViewConfig;
         break;
@@ -937,6 +939,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'powerPlayPrizes':
         openPowerPlayModalSheet();
         break;
+      case "earnMoreReturns":
+        pageConfiguration = EarnMoreReturnsViewPageConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
@@ -946,6 +951,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void onTapItem(NavBarItemModel item) {
     log('onTapItem ${item.title}');
+    while (AppState.screenStack.length > 1) {
+      AppState.backButtonDispatcher!.didPopRoute();
+    }
     var _rootController = locator<RootController>();
 
     _rootController.onChange(_rootController.navItems.values

@@ -102,9 +102,9 @@ class RootViewModel extends BaseViewModel {
     await Future.wait([
       _userCoinService.getUserCoinBalance(),
       _userService.getUserFundWalletData(),
-      _journeyService.checkForMilestoneLevelChange(),
+      // _journeyService.checkForMilestoneLevelChange(),
       _gtService.updateUnscratchedGTCount(),
-      _journeyService.getUnscratchedGT(),
+      // _journeyService.getUnscratchedGT(),
       _subscriptionService.getSubscription(),
     ]);
 

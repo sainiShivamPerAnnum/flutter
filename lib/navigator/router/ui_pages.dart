@@ -83,6 +83,7 @@ const String LastWeekOverviewPath = '/lastWeekOverview';
 const String AccountsPath = "/accountsViewPath";
 
 const String YoutubePlayerViewPath = "/youtubePlayerViewPath";
+const String EarnMoreReturnsViewPath = "/earnMoreReturnsViewPath";
 //POWER PLAY PATHS
 const String PowerPlayPath = '/powerPlayPath';
 const String PowerPlayLeaderBoardPath = '/powerPlayLeaderBoardPath';
@@ -171,6 +172,7 @@ enum Pages {
 
   AccountsView,
   YoutubePlayerView,
+  EarnMoreReturnsView,
   //POWER PLAY
   PowerPlayHome,
   PowerPlayLeaderBoard,
@@ -754,3 +756,9 @@ PageConfiguration YoutubePlayerViewConfig = PageConfiguration(
     path: YoutubePlayerViewPath,
     uiPage: Pages.YoutubePlayerView,
     name: "Youtube Player View Screen");
+
+PageConfiguration EarnMoreReturnsViewPageConfig = PageConfiguration(
+    key: 'EarnMoreReturnsViewPath',
+    path: EarnMoreReturnsViewPath,
+    uiPage: Pages.EarnMoreReturnsView,
+    name: "Earn more rewards view screen");

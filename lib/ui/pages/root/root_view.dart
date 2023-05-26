@@ -252,7 +252,7 @@ class RootAppBar extends StatelessWidget {
                                       Tuple2(
                                           userService.userJourneyStats,
                                           scratchCardService
-                                              .unscratchedTicketsCount),
+                                              .unscratchedMilestoneScratchCardCount),
                                 )
                               ],
                             ),

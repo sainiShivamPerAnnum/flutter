@@ -24,6 +24,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/blogs/all_blogs_view.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
+import 'package:felloapp/ui/pages/hometabs/journey/elements/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
@@ -210,7 +211,13 @@ class SaveViewModel extends BaseViewModel {
           height: SizeConfig.screenWidth! * (value ? 1.54 : 0.8),
         ),
       ),
-      const TambolaMiniInfoCard()
+      const TambolaMiniInfoCard(),
+      TextButton(
+        onPressed: () {
+          AppState.delegate!.parseRoute(Uri.parse("earnMoreReturns"));
+        },
+        child: Text("Earn more rewards"),
+      )
     ]);
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
@@ -229,9 +236,13 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     });
-    saveViewItems.add(SizedBox(
-      height: SizeConfig.navBarHeight * 1.6,
-    ));
+
+    saveViewItems.addAll([
+      const HelpFooter(),
+      SizedBox(
+        height: SizeConfig.navBarHeight * 1.6,
+      )
+    ]);
     return saveViewItems;
   }
 
@@ -259,9 +270,12 @@ class SaveViewModel extends BaseViewModel {
           break;
       }
     });
-    saveViewItems.add(SizedBox(
-      height: SizeConfig.navBarHeight * 1.6,
-    ));
+    saveViewItems.addAll([
+      const HelpFooter(),
+      SizedBox(
+        height: SizeConfig.navBarHeight * 1.6,
+      )
+    ]);
     return saveViewItems;
   }
 
