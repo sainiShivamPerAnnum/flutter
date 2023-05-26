@@ -117,11 +117,11 @@ class Root extends StatelessWidget {
               floatingActionButton: Selector<CardActionsNotifier, bool>(
                   selector: (_, notifier) => notifier.isVerticalView,
                   builder: (context, isCardsOpen, child) {
-                    if (isCardsOpen) return const SizedBox();
-                    return AnimatedContainer(
+                    return AnimatedScale(
+                      scale: isCardsOpen ? 0 : 1,
                       curve: Curves.easeIn,
                       duration: const Duration(milliseconds: 300),
-                      child: rootController.navItems.values.length % 2 != 0
+                      child: rootController.navItems.values.length % 2 == 0
                           ? model.centerTab(ctx)
                           : const SizedBox(),
                     );

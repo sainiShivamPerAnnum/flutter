@@ -9,6 +9,7 @@ class SizeConfig {
   // dimens
   static double? screenWidth;
   static double? screenHeight;
+  static EdgeInsets? padding;
   static double? safeScreenHeight;
 
   static double? pixelRatio;
@@ -50,6 +51,7 @@ class SizeConfig {
     globalMargin = blockSizeHorizontal * 3;
     scaffoldMargin = blockSizeHorizontal * 5;
     fToolBarHeight = viewInsets.top + kToolbarHeight;
+    padding = _mediaQueryData.padding;
   }
 
   // TEXT SIZES
@@ -144,7 +146,7 @@ class SizeConfig {
   static double get navBarAspectRatio => 4.16;
   static double get navBarHeight =>
       kBottomNavigationBarHeight +
-      math.max(SizeConfig.viewInsets.bottom / 2, SizeConfig.padding8);
+      math.max(SizeConfig.viewInsets.bottom, SizeConfig.padding8);
 
   //Avatar
   static double get avatarRadius => screenWidth! * 0.048;

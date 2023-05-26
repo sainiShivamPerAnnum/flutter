@@ -18,20 +18,21 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     RootController rootController = locator<RootController>();
     final navItemsLength = rootController.navItems.values.length;
-
+    print(navItemsLength);
     return Consumer<AppState>(
       builder: (ctx, superModel, child) => Selector<CardActionsNotifier, bool>(
           selector: (_, notifier) => notifier.isVerticalView,
           builder: (context, isCardsOpen, child) {
-            if (isCardsOpen) return const SizedBox();
+            // if (isCardsOpen) return const SizedBox();
             return AnimatedContainer(
               curve: Curves.easeIn,
               duration: const Duration(milliseconds: 300),
+              height: isCardsOpen ? 0 : SizeConfig.navBarHeight,
               child: BottomAppBar(
-                notchMargin: navItemsLength % 2 != 0 ? 7 : 0,
+                notchMargin: navItemsLength % 2 == 0 ? 7 : 0,
                 shape: const CircularNotchedRectangle(),
                 color: Colors.black,
-                height: SizeConfig.navBarHeight,
+                padding: EdgeInsets.zero,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,11 +40,11 @@ class BottomNavBar extends StatelessWidget {
                   children: List.generate(
                     navItemsLength,
                     (index) {
-                      if (index == (navItemsLength / 2).floor()) {
-                        return const Expanded(
-                          child: SizedBox(),
-                        );
-                      }
+                      // if (index == (navItemsLength / 2).floor()) {
+                      //   return const Expanded(
+                      //     child: SizedBox(),
+                      //   );
+                      // }
 
                       final navbarItems =
                           rootController.navItems.values.toList()[index];
@@ -64,7 +65,7 @@ class BottomNavBar extends StatelessWidget {
                                 height: SizeConfig.navBarHeight,
                                 key: ValueKey(navbarItems.title),
                                 alignment: Alignment.center,
-                                width: SizeConfig.screenWidth! * 0.2,
+                                // width: SizeConfig.screenWidth! * 0.2,
                                 child: GestureDetector(
                                   onTap: () {
                                     superModel.onItemTapped(index);
@@ -125,24 +126,21 @@ class NavBarIcon extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Transform.translate(
-              offset: Offset(0, -SizeConfig.navBarHeight * 0.05),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: SizeConfig.navBarHeight * 0.6,
-                    width: SizeConfig.navBarHeight * 0.6,
-                    child: Lottie.asset(
-                      item.lottie,
-                      fit: BoxFit.contain,
-                      animate: animate,
-                      repeat: false,
-                    ),
+            Column(
+              children: [
+                SizedBox(
+                  height: SizeConfig.navBarHeight * 0.42,
+                  width: SizeConfig.navBarHeight * 0.42,
+                  child: Lottie.asset(
+                    item.lottie,
+                    fit: BoxFit.contain,
+                    animate: animate,
+                    repeat: false,
                   ),
-                  Text(item.title, style: style),
-                  SizedBox(height: SizeConfig.navBarHeight * 0.1)
-                ],
-              ),
+                ),
+                Text(item.title, style: style),
+                // SizedBox(height: SizeConfig.navBarHeight * 0.1)
+              ],
             ),
           ],
         ),
