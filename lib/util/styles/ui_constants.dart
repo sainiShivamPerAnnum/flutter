@@ -19,10 +19,12 @@ class UiConstants {
   static const Color darkPrimaryColor3 = Color(0xff0C5055);
   static const Color darkPrimaryColor4 = Color(0xff173B3F);
   static const Color secondaryColor = Color.fromARGB(255, 241, 227, 243);
+
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color? chipColor = Colors.grey[200];
   static final Color? positiveAlertColor = Colors.blueAccent[400];
   static const Color negativeAlertColor = Colors.blueGrey;
+
 //  static final Color secondaryColor = Colors.greenAccent;
   static final Color? spinnerColor = Colors.grey[400];
   static final Color? spinnerColor2 = Colors.grey[200];
@@ -122,6 +124,8 @@ class UiConstants {
 
   static const Color kSecondaryLeaderBoardTextColor = Color(0xffF4F1EC);
   static const Color kScratchHereStripColor = Color(0xffEFAF4E);
+  static const Color kAutoSaveOnboardingColor = Color(0xff025155);
+  static const Color kAutoSaveOnboardingTextColor = Color(0xff01646B);
 
   static LinearGradient kTextFieldGradient1 = const LinearGradient(
     colors: [Color(0xff111111), Colors.transparent],

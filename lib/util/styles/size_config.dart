@@ -9,6 +9,7 @@ class SizeConfig {
   // dimens
   static double? screenWidth;
   static double? screenHeight;
+  static EdgeInsets? padding;
   static double? safeScreenHeight;
 
   static double? pixelRatio;
@@ -50,10 +51,12 @@ class SizeConfig {
     globalMargin = blockSizeHorizontal * 3;
     scaffoldMargin = blockSizeHorizontal * 5;
     fToolBarHeight = viewInsets.top + kToolbarHeight;
+    padding = _mediaQueryData.padding;
   }
 
   // TEXT SIZES
   static double get titleSize => screenWidth! * 0.1;
+
   static double get title68 => screenWidth! * 0.181; //68
   static double get title50 => screenWidth! * 0.133; //50
   static double get title0 => screenWidth! * 0.106; //40
@@ -101,13 +104,17 @@ class SizeConfig {
   static double get padding38 => screenWidth! * 0.101; //38
   static double get padding34 => screenWidth! * 0.091; //34
   static double get padding40 => screenWidth! * 0.096;
+
   static double get padding44 => screenWidth! * 0.117; //44
   static double get padding46 => screenWidth! * 0.122; //46
   static double get padding54 => screenWidth! * 0.130;
+
   static double get padding64 => screenWidth! * 0.154; //56
   static double get padding70 => screenWidth! * 0.186; //70
   static double get padding80 => screenWidth! * 0.193; //56
   static double get padding90 => screenWidth! * 0.245;
+
+  static double get padding175 => screenWidth! * 0.466; //100
 
   // MARGINS
   static double get pageHorizontalMargins => screenWidth! * 0.0579; //
@@ -139,7 +146,7 @@ class SizeConfig {
   static double get navBarAspectRatio => 4.16;
   static double get navBarHeight =>
       kBottomNavigationBarHeight +
-      math.max(SizeConfig.viewInsets.bottom / 2, SizeConfig.padding8);
+      math.max(SizeConfig.viewInsets.bottom, SizeConfig.padding8);
 
   //Avatar
   static double get avatarRadius => screenWidth! * 0.048;

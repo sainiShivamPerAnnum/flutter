@@ -42,7 +42,7 @@ class ScratchCardsView extends StatelessWidget {
                     ],
                   )
                 : GridView.builder(
-                    physics: const ClampingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
                     itemCount: model.allScratchCards.length,
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

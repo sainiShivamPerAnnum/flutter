@@ -49,6 +49,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
 
   AnimationController? gradientController;
   CardActionsNotifier? cardActionsNotifier;
+
   @override
   void initState() {
     cardActionsNotifier = locator<CardActionsNotifier>();
@@ -875,6 +876,7 @@ class CardContent extends StatelessWidget {
   final String? message;
   final Color secondaryColor;
   final VoidCallback onCardPressed, onButtonPressed;
+
   @override
   Widget build(BuildContext context) {
     return AnimatedOpacity(
@@ -1128,6 +1130,7 @@ class GradientBorder extends CustomPainter {
   final AnimationController gradientController;
   final bool isVerticalView;
   final double borderRadius;
+
   GradientBorder(
       {required this.gradientController,
       required this.isVerticalView,

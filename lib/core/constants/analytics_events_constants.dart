@@ -176,6 +176,8 @@ class AnalyticsEvents {
   static const mobileOtpDone = "Entered OTP";
   static const lastWeekCrossButton = "Last Week Cross Tapped";
   static const lastWeekSaveNow = "Last Week Save Now Tapped";
+  static const reviewPopupSuccess = "Review Popup Rating Success";
+  static const rateOnPlayStoreTapped = "Rate on Play Store Tapped";
 
   //Marketing Events
 

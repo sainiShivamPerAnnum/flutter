@@ -23,6 +23,7 @@ class GTInstantViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final ApiPath? _apiPaths = locator<ApiPath>();
   final ScratchCardService? _gtService = locator<ScratchCardService>();
+
   // final PaytmService? _paytmService = locator<PaytmService>();
   final JourneyService _journeyService = locator<JourneyService>();
   final MarketingEventHandlerService _marketingEventHandlerService =
@@ -82,6 +83,7 @@ class GTInstantViewModel extends BaseViewModel {
   }
 
   bool _isCardScratchStarted = false;
+
   bool get isCardScratchStarted => this._isCardScratchStarted;
 
   set isCardScratchStarted(bool value) {
@@ -157,6 +159,7 @@ class GTInstantViewModel extends BaseViewModel {
       AppState.isInstantGtViewInView = false;
       _marketingEventHandlerService.showModalsheet = true;
       AppState.backButtonDispatcher!.didPopRoute();
+      BaseUtil.showFelloRatingSheet();
     });
   }
 

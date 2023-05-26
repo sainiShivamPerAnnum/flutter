@@ -146,6 +146,7 @@ class SaveBlogSection extends StatelessWidget {
 class BlogWebView extends StatefulWidget {
   final String? initialUrl;
   final String? title;
+
   const BlogWebView({Key? key, this.initialUrl, this.title}) : super(key: key);
 
   @override

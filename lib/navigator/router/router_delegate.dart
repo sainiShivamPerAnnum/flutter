@@ -15,7 +15,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/elements/fello_dialog/fello_rating_dialog.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
@@ -265,7 +265,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.ScratchCardsView:
-          _addPageData(ScratchCardsView(), ScratchCardsViewPageConfig);
+          _addPageData(const ScratchCardsView(), ScratchCardsViewPageConfig);
           break;
         case Pages.AutosaveOnboardingView:
           _addPageData(
@@ -694,9 +694,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     return List.of(_pages);
   }
 
-  void parseRoute(Uri uri, {String? title}) {
+  void parseRoute(Uri uri, {String? title, bool isExternal = false}) {
     _logger.d("Url: ${uri.toString()}");
     if (uri.scheme == "http" || uri.scheme == "https") {
+      if (isExternal) {
+        BaseUtil.launchUrl(uri.toString());
+        return;
+      }
+
       AppState.delegate!.appState.currentAction = PageAction(
         page: WebViewPageConfig,
         state: PageState.addWidget,
@@ -742,7 +747,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         );
         break;
       case "appRating":
-        if (checkForRatingDialog()) dialogWidget = FelloRatingDialog();
+        if (checkForRatingDialog()) dialogWidget = const FelloInAppReview();
         break;
     }
     if (dialogWidget != null) {

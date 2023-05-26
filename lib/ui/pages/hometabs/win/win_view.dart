@@ -71,6 +71,11 @@ class Win extends StatelessWidget {
                   uri: "",
                   onTap: () => model.showLastWeekSummary(),
                 ),
+                AccountInfoTiles(
+                  title: 'Rate Us',
+                  uri: "",
+                  onTap: () => model.showRatingSheet(),
+                ),
                 //Scratch Cards count and navigation
                 const ScratchCardsInfoStrip(),
                 //Current Winnings Information

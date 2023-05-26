@@ -44,7 +44,7 @@ class AutosaveSummary extends StatelessWidget {
               style: TextStyles.sourceSans.body1,
             ),
             trailing: Text(
-              "₹" + model.goldAmountFieldController!.text,
+              "₹${model.goldAmountFieldController!.text}",
               style: TextStyles.sourceSansB.body1,
             ),
           ),
@@ -60,11 +60,11 @@ class AutosaveSummary extends StatelessWidget {
               style: TextStyles.sourceSans.body1,
             ),
             trailing: Text(
-              "₹" + model.floAmountFieldController!.text,
+              "₹${model.floAmountFieldController!.text}",
               style: TextStyles.sourceSansB.body1,
             ),
           ),
-        Divider(
+        const Divider(
           color: Colors.white24,
         ),
         ListTile(
@@ -77,9 +77,7 @@ class AutosaveSummary extends StatelessWidget {
             style: TextStyles.sourceSans.body1,
           ),
           trailing: Text(
-            "₹" +
-                model.totalInvestingAmount.toString() +
-                "/${model.selectedFrequency.rename()}",
+            "₹${model.totalInvestingAmount}/${model.selectedFrequency.rename()}",
             style: TextStyles.sourceSansB.body1,
           ),
         ),

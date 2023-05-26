@@ -72,6 +72,7 @@ class GameView extends StatefulWidget {
   final bool inLandscapeMode;
   final String initialUrl;
   WebGameViewModel model;
+
   GameView(
       {required this.inLandscapeMode,
       required this.initialUrl,

@@ -406,7 +406,7 @@ class SaveViewModel extends BaseViewModel {
       _analyticsService!.track(
           eventName: AnalyticsEvents.assetBannerTapped,
           properties:
-              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+          AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
             'Asset': 'Flo',
             "Failed transaction count": AnalyticsProperties.getFailedTxnCount(),
             "Successs transaction count":

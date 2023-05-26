@@ -169,7 +169,6 @@ enum Pages {
   SettingsView,
   TransactionDetailsPage,
   LastWeekOverview,
-
   AccountsView,
   YoutubePlayerView,
   EarnMoreReturnsView,
