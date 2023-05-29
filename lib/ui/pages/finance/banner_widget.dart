@@ -82,11 +82,10 @@ class _BannerWidgetState extends TimerUtil<BannerWidget> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: showHappyHour
-              ? const Color(0xff1A1A1A).withOpacity(0.5)
-              : UiConstants.kModalSheetSecondaryBackgroundColor
-                  .withOpacity(0.1),
-          borderRadius: BorderRadius.circular(5),
+          color: const Color(0xff1A1A1A).withOpacity(0.5),
+          // : UiConstants.kModalSheetSecondaryBackgroundColor
+          //     .withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
         ),
         margin:
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),

@@ -34,7 +34,7 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
 import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
-import 'package:felloapp/ui/pages/buy_flow/buy_modal_sheet.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
@@ -57,6 +57,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import 'ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
@@ -350,18 +352,24 @@ class BaseUtil extends ChangeNotifier {
       double amount = 0;
 
       BaseUtil.openModalBottomSheet(
-          addToScreenStack: true,
-          enableDrag: false,
-          hapticVibrate: true,
-          isBarrierDismissible: false,
-          backgroundColor: Colors.transparent,
-          isScrollControlled: true,
-          content: BuyModalSheet(
-            onChanged: (p0) => amount = p0,
-            amount: amt,
-            skipMl: isSkipMl ?? false,
-            investmentType: investmentType,
-          )).then((value) {
+        addToScreenStack: true,
+        enableDrag: false,
+        hapticVibrate: true,
+        isBarrierDismissible: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        content: investmentType == InvestmentType.AUGGOLD99
+            ? GoldBuyView(
+                onChanged: (p0) => amount = p0,
+                amount: amt,
+                skipMl: isSkipMl ?? false,
+              )
+            : LendboxBuyView(
+                amount: amt,
+                skipMl: isSkipMl ?? false,
+                onChanged: (p0) => amount = p0,
+              ),
+      ).then((value) {
         AppState.isRepeated = false;
         AppState.onTap = null;
         locator<BackButtonActions>().isTransactionCancelled = false;

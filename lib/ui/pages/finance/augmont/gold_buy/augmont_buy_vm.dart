@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -17,6 +18,7 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
@@ -93,6 +95,7 @@ class GoldBuyViewModel extends BaseViewModel {
   double _goldAmountInGrams = 0.0;
 
   double? get goldBuyAmount => _goldBuyAmount;
+
   set goldBuyAmount(double? value) {
     _goldBuyAmount = value;
     notifyListeners();
@@ -141,6 +144,7 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   get status => _status;
+
   set status(value) {
     _status = value;
     notifyListeners();
@@ -201,6 +205,28 @@ class GoldBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  int? numberOfTambolaTickets;
+
+  int? totalTickets;
+  int? happyHourTickets;
+
+  late bool _showHappyHour;
+
+  bool _showInfoIcon = false;
+
+  bool get showInfoIcon => _showInfoIcon;
+
+  set showInfoIcon(bool value) {
+    _showInfoIcon = value;
+  }
+
+  bool get showHappyHour => _showHappyHour;
+
+  set showHappyHour(bool value) {
+    _showHappyHour = value;
+    notifyListeners();
+  }
+
   bool readOnly = true;
 
   init(int? amount, bool isSkipMilestone, TickerProvider vsync) async {
@@ -208,8 +234,9 @@ class GoldBuyViewModel extends BaseViewModel {
 
     setState(ViewState.Busy);
 
+    showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     animationController = AnimationController(
-        vsync: vsync, duration: Duration(milliseconds: 500));
+        vsync: vsync, duration: const Duration(milliseconds: 500));
     await getAssetOptionsModel();
     animationController?.addListener(listnear);
     skipMl = isSkipMilestone;
@@ -423,6 +450,7 @@ class GoldBuyViewModel extends BaseViewModel {
     });
     notifyListeners();
   }
+
   // UI ESSENTIALS
 
   // Widget amountChip(int index) {
@@ -699,6 +727,43 @@ class GoldBuyViewModel extends BaseViewModel {
       showCoupons = true;
     }
   }
+
+  String showHappyHourSubtitle() {
+    final int tambolaCost = AppConfig.getValue(AppConfigKey.tambola_cost);
+    final HappyHourCampign? happyHourModel =
+        locator.isRegistered<HappyHourCampign>()
+            ? locator<HappyHourCampign>()
+            : null;
+
+    final int parsedGoldAmount =
+        int.tryParse(goldAmountController?.text ?? '0') ?? 0;
+    final num minAmount =
+        num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
+
+    if (parsedGoldAmount < tambolaCost) {
+      showInfoIcon = false;
+      return "";
+    }
+
+    numberOfTambolaTickets = parsedGoldAmount ~/ tambolaCost;
+    totalTickets = numberOfTambolaTickets;
+
+    showHappyHour
+        ? happyHourTickets = (happyHourModel?.data != null &&
+                happyHourModel?.data?.rewards?[0].type == 'tt')
+            ? happyHourModel?.data!.rewards![0].value
+            : null
+        : happyHourTickets = null;
+
+    if (parsedGoldAmount >= minAmount && happyHourTickets != null) {
+      totalTickets = numberOfTambolaTickets! + happyHourTickets!;
+      showInfoIcon = true;
+    } else {
+      showInfoIcon = false;
+    }
+
+    return "+$totalTickets Tambola Tickets";
+  }
 }
 
 class PendingDialog extends StatelessWidget {
@@ -722,7 +787,5 @@ class PendingDialog extends StatelessWidget {
   }
 }
 
-
-
-//Remove 
+//Remove
 //Leaderboard and Prices

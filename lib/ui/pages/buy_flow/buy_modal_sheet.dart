@@ -10,8 +10,6 @@ import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart'
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/buy_flow/buy_input_view.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_loading_view.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_loading_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_success_view.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -196,23 +194,24 @@ class _GoldBuyViewState extends State<BuyModalSheet>
 
       case InvestmentType.AUGGOLD99:
       default:
-        if (augmontTransactionService.currentTransactionState ==
-            TransactionState.idle) {
-          return BuyInputView(
-            amount: widget.amount,
-            skipMl: widget.skipMl,
-            model: model,
-            investmentType: widget.investmentType,
-          );
-        } else if (augmontTransactionService.currentTransactionState ==
-            TransactionState.ongoing) {
-          return GoldBuyLoadingView(model: model);
-        } else if (augmontTransactionService.currentTransactionState ==
-            TransactionState.success) {
-          return GoldBuySuccessView();
-        }
+        // if (augmontTransactionService.currentTransactionState ==
+        //     TransactionState.idle) {
+        //   return BuyInputView(
+        //     amount: widget.amount,
+        //     skipMl: widget.skipMl,
+        //     model: model,
+        //     investmentType: widget.investmentType,
+        //   );
+        // } else if (augmontTransactionService.currentTransactionState ==
+        //     TransactionState.ongoing) {
+        //   return GoldBuyLoadingView(model: model);
+        // } else if (augmontTransactionService.currentTransactionState ==
+        //     TransactionState.success) {
+        //   return GoldBuySuccessView();
+        // }
 
-        return GoldBuyLoadingView(model: model);
+        // return GoldBuyLoadingView(model: model);
+        return SizedBox();
     }
   }
 
