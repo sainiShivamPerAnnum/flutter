@@ -30,7 +30,8 @@ class LendboxWithdrawalInputView extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             SizedBox(height: SizeConfig.padding16),
-            LendboxAppBar(
+            LendBoxAppBar(
+              title: 'Fello Flo Premium - 12%',
               isEnabled: !model.inProgress,
               trackClosingEvent: () =>
                   AppState.backButtonDispatcher!.didPopRoute(),

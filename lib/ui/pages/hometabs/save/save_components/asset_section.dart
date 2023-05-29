@@ -3,10 +3,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
-import 'package:felloapp/ui/pages/buy_flow/buy_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
 import 'package:felloapp/util/assets.dart';
@@ -183,36 +180,6 @@ class SaveNetWorthSection extends StatelessWidget {
             ),
           ),
           getAssetsOrder(),
-
-          GestureDetector(
-            onTap: () {
-              BaseUtil.openModalBottomSheet(
-                  addToScreenStack: true,
-                  enableDrag: false,
-                  hapticVibrate: true,
-                  isBarrierDismissible: false,
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  content: BuyModalSheet(
-                    onChanged: (p0) => p0,
-                    skipMl: false,
-                  )).then((value) {
-                AppState.isRepeated = false;
-                AppState.onTap = null;
-                locator<BackButtonActions>().isTransactionCancelled = false;
-              });
-            },
-            child: Container(
-                width: SizeConfig.screenWidth,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(SizeConfig.roundness16),
-                    bottomRight: Radius.circular(SizeConfig.roundness16),
-                  ),
-                )),
-          ),
           const SizedBox(
             height: 15,
           ),

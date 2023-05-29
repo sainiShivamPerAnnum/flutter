@@ -71,8 +71,8 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(height: SizeConfig.padding16),
-              LendboxAppBar(
+              LendBoxAppBar(
+                title: 'Fello Flo Premium - 12%',
                 isEnabled: !widget.model.isBuyInProgress,
                 trackClosingEvent: () {
                   _analyticsService!.track(

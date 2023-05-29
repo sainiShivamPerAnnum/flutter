@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/repository/getters_repo.dart';
 
+enum FloPrograms { lendBox8, lendBox10, lendBox12 }
+
 class LendboxBuyViewModel extends BaseViewModel {
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();

@@ -4,7 +4,6 @@ import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_input_view.dart';
@@ -166,7 +165,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
 
   double? _getHeight(lboxTxnService) {
     if (lboxTxnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight! * 0.8;
+      return SizeConfig.screenHeight! * 0.95;
     } else if (lboxTxnService.currentTransactionState ==
         TransactionState.ongoing) {
       return SizeConfig.screenHeight! * 0.95;
