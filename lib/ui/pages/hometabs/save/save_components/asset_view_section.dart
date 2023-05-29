@@ -224,7 +224,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 ]
                               ],
                               if (!isNewUser) ...[
-                                _CircularSlider(
+                                CircularSlider(
                                   isNewUser: isNewUser,
                                   type: widget.type,
                                   interest: _isGold ? 8 : 12,
@@ -257,7 +257,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 SizedBox(
                                   height: SizeConfig.padding24,
                                 ),
-                                _CircularSlider(
+                                CircularSlider(
                                   isNewUser: isNewUser,
                                   type: widget.type,
                                   interest: _isGold ? 8 : 12,
@@ -511,15 +511,17 @@ class _BuildOwnAsset extends StatelessWidget {
 
 class FloBalanceBriefRow extends StatelessWidget {
   const FloBalanceBriefRow({
-    super.key,
     required this.lead,
     required this.trail,
     required this.leadPercent,
     this.mini = false,
+    this.leftAlign = false,
+    super.key,
   });
 
   final double lead, trail, leadPercent;
   final bool mini;
+  final bool leftAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -528,16 +530,18 @@ class FloBalanceBriefRow extends StatelessWidget {
         Expanded(
           flex: 6,
           child: Column(
-            crossAxisAlignment:
-                mini ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+            crossAxisAlignment: (mini || leftAlign)
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.center,
             children: [
               Text(
                 "Current",
                 style: TextStyles.rajdhaniM.colour(Colors.white60),
               ),
               Row(
-                mainAxisAlignment:
-                    mini ? MainAxisAlignment.start : MainAxisAlignment.center,
+                mainAxisAlignment: (mini || leftAlign)
+                    ? MainAxisAlignment.start
+                    : MainAxisAlignment.center,
                 children: [
                   Text(
                     "₹${BaseUtil.digitPrecision(lead, 2)}",
@@ -571,8 +575,9 @@ class FloBalanceBriefRow extends StatelessWidget {
         Expanded(
           flex: 4,
           child: Column(
-            crossAxisAlignment:
-                mini ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+            crossAxisAlignment: (mini || leftAlign)
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.center,
             children: [
               Text(
                 "Invested",
@@ -1109,8 +1114,8 @@ class _Footer extends StatelessWidget {
   }
 }
 
-class _CircularSlider extends StatefulWidget {
-  const _CircularSlider(
+class CircularSlider extends StatefulWidget {
+  const CircularSlider(
       {Key? key,
       required this.type,
       required this.isNewUser,
@@ -1120,10 +1125,10 @@ class _CircularSlider extends StatefulWidget {
   final bool isNewUser;
   final int interest;
   @override
-  State<_CircularSlider> createState() => _CircularSliderState();
+  State<CircularSlider> createState() => CircularSliderState();
 }
 
-class _CircularSliderState extends State<_CircularSlider> {
+class CircularSliderState extends State<CircularSlider> {
   double _volumeValue = 10000;
   bool isEventSent = false;
   void onVolumeChanged(double value) {

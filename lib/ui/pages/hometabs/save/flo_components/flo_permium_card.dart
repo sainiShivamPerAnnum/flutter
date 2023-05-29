@@ -2,6 +2,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,10 @@ class FloPremiumTierCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => AppState.delegate!.parseRoute(Uri.parse(actionUri)),
+      onTap: () {
+        Haptic.vibrate();
+        AppState.delegate!.parseRoute(Uri.parse(actionUri));
+      },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
         decoration: BoxDecoration(

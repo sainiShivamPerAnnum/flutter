@@ -22,7 +22,7 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_det
 import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_update/autosave_update_view.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
@@ -246,9 +246,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.Notifications:
           _addPageData(NotificationsPage(), NotificationsConfig);
-          break;
-        case Pages.LendboxDetails:
-          _addPageData(const LendboxDetailsView(), LendboxDetailsPageConfig);
           break;
         case Pages.ReferralDetails:
           _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
@@ -510,8 +507,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AugGoldDetails:
         AugmontGoldDetailsPageConfig.currentPageAction = action;
         break;
-      case Pages.LendboxDetails:
-        LendboxDetailsPageConfig.currentPageAction = action;
+      case Pages.FloPremiumDetails:
+        FloPremiumDetailsPageConfig.currentPageAction = action;
         break;
       case Pages.ReferralDetails:
         ReferralDetailsPageConfig.currentPageAction = action;
@@ -819,17 +816,25 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "accounts":
         pageConfiguration = AccountsViewConfig;
         break;
-      case 'lboxDetails':
-        pageConfiguration = LendboxDetailsPageConfig;
+      case "flo10Details":
+        appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: FloPremiumDetailsPageConfig,
+            widget: FloPremiumDetailsView(is12: false));
         break;
+      case "flo12Details":
+        appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: FloPremiumDetailsPageConfig,
+            widget: FloPremiumDetailsView(is12: true));
+        break;
+
       case 'quickTour':
         Future.delayed(const Duration(seconds: 2),
             SpotLightController.instance.startQuickTour);
 
         break;
-      case 'lendboxDetails':
-        pageConfiguration = LendboxDetailsPageConfig;
-        break;
+
       case 'kycVerify':
         pageConfiguration = KycDetailsPageConfig;
         break;
