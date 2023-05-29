@@ -1102,9 +1102,9 @@ class CardContent extends StatelessWidget {
   String getFirstValue(UserFundWallet? wallet, String title) {
     switch (title) {
       case "Fello Flo":
-        return "₹${wallet?.wLbBalance ?? 0.0}";
+        return "₹${BaseUtil.digitPrecision(wallet?.wLbBalance ?? 0.0, 2)}";
       case "Digital Gold":
-        return "₹${wallet?.augGoldBalance ?? 0}";
+        return "₹${BaseUtil.digitPrecision(wallet?.augGoldBalance ?? 0, 2)}";
       case "Fello Rewards":
         return "₹${wallet?.unclaimedBalance ?? 0}";
       default:
@@ -1115,9 +1115,9 @@ class CardContent extends StatelessWidget {
   String getSecondValue(UserFundWallet? wallet, String title) {
     switch (title) {
       case "Fello Flo":
-        return "₹${wallet?.wLbPrinciple ?? 0.0}";
+        return "₹${BaseUtil.digitPrecision(wallet?.wLbPrinciple ?? 0.0, 2)}";
       case "Digital Gold":
-        return "${wallet?.augGoldQuantity ?? 0}g";
+        return "${BaseUtil.digitPrecision(wallet?.augGoldQuantity ?? 0, 4, false)}g";
       case "Fello Rewards":
         return "₹${wallet?.processingRedemptionBalance ?? 0}";
       default:
