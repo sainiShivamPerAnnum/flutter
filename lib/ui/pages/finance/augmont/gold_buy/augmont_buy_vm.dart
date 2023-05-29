@@ -260,9 +260,6 @@ class GoldBuyViewModel extends BaseViewModel {
     // _paytmService!.getActiveSubscriptionDetails();
     getAvailableCoupons();
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
-    // await _userService.fetchUserAugmontDetail();
-    // delayedAugmontCall();
-    // checkIfDepositIsLocked();
 
     setState(ViewState.Idle);
   }
@@ -519,7 +516,7 @@ class GoldBuyViewModel extends BaseViewModel {
     return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
   }
 
-  fetchGoldRates() async {
+  Future<void> fetchGoldRates() async {
     isGoldRateFetching = true;
     goldRates = await _augmontModel!.getRates();
     updateGoldAmount();
