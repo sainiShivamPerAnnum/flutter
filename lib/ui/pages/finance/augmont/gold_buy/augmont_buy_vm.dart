@@ -24,6 +24,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
+import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -33,6 +34,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
+
+import '../../../../../util/styles/ui_constants.dart';
 
 //TODO : add location for save checkout [ journey, save, asset details, challenges,promos]
 class GoldBuyViewModel extends BaseViewModel {
@@ -597,21 +600,21 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   void showOfferModal(GoldBuyViewModel? model) {
-    // BaseUtil.openModalBottomSheet(
-    //   content: CouponModalSheet(model: model),
-    //   addToScreenStack: true,
-    //   backgroundColor: UiConstants.kSecondaryBackgroundColor,
-    //   borderRadius: BorderRadius.only(
-    //     topLeft: Radius.circular(SizeConfig.roundness12),
-    //     topRight: Radius.circular(SizeConfig.roundness12),
-    //   ),
-    //   boxContraints: BoxConstraints(
-    //     maxHeight: SizeConfig.screenHeight! * 0.75,
-    //     minHeight: SizeConfig.screenHeight! * 0.75,
-    //   ),
-    //   isBarrierDismissible: false,
-    //   isScrollControlled: true,
-    // );
+    BaseUtil.openModalBottomSheet(
+      content: CouponModalSheet(model: model),
+      addToScreenStack: true,
+      backgroundColor: UiConstants.kSecondaryBackgroundColor,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness12),
+        topRight: Radius.circular(SizeConfig.roundness12),
+      ),
+      boxContraints: BoxConstraints(
+        maxHeight: SizeConfig.screenHeight! * 0.75,
+        minHeight: SizeConfig.screenHeight! * 0.75,
+      ),
+      isBarrierDismissible: false,
+      isScrollControlled: true,
+    );
   }
 
   getAmount(double amount) {

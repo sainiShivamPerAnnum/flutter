@@ -2,7 +2,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/buy_flow/buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -16,23 +16,22 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CouponModalSheet extends StatelessWidget {
   CouponModalSheet({Key? key, required this.model}) : super(key: key);
-  final BuyViewModel? model;
-  final TextEditingController couponCodeController =
-      new TextEditingController();
+  final GoldBuyViewModel? model;
+  final TextEditingController couponCodeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    final _analyticsService = locator<AnalyticsService>();
+    final analyticsService = locator<AnalyticsService>();
 
     List<String?> taggedCoupons = [];
     for (CouponModel cm in model!.couponList!) {
       taggedCoupons.add(cm.code);
     }
-    _analyticsService
+    analyticsService
         .track(eventName: AnalyticsEvents.applyCouponTapped, properties: {
-      'Amount entered': model!.amountController!.text,
+      'Amount entered': model!.goldAmountController!.text,
       'Gold weight': model!.goldAmountInGrams,
       "per gram rate": model!.isGoldBuyInProgress
           ? "Not fetched"
@@ -111,13 +110,14 @@ class CouponModalSheet extends StatelessWidget {
                     }
                   },
                 ),
-                suffixIconConstraints: BoxConstraints(
+                suffixIconConstraints: const BoxConstraints(
                   minWidth: 40,
                 ),
                 validator: (val) {
-                  if (val!.trim().length == 0) return locale.txnEnterCode;
-                  if (val.trim().length < 3 || val.trim().length > 10)
+                  if (val!.trim().isEmpty) return locale.txnEnterCode;
+                  if (val.trim().length < 3 || val.trim().length > 10) {
                     return locale.txnInvalidCouponCode;
+                  }
                   return null;
                 },
                 isEnabled: true,
@@ -132,12 +132,12 @@ class CouponModalSheet extends StatelessWidget {
             child: ListView(
               shrinkWrap: true,
               padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               children: List.generate(
                 model!.couponList!.length,
                 (i) => model!.couponList![i].code == null ||
                         model!.couponList![i].description == null
-                    ? SizedBox()
+                    ? const SizedBox()
                     : Container(
                         margin:
                             EdgeInsets.symmetric(vertical: SizeConfig.padding4),
@@ -217,7 +217,7 @@ class CouponModalSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               TextButton(
                 onPressed: onTap as void Function()?,
                 child: Text(

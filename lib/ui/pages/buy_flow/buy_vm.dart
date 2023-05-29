@@ -30,7 +30,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
-import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
 import 'package:felloapp/ui/pages/buy_flow/buy_modal_sheet.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -38,7 +37,6 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
@@ -784,21 +782,21 @@ class BuyViewModel extends BaseViewModel {
   }
 
   void showOfferModal(BuyViewModel? model) {
-    BaseUtil.openModalBottomSheet(
-      content: CouponModalSheet(model: model),
-      addToScreenStack: true,
-      backgroundColor: UiConstants.kSecondaryBackgroundColor,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness12),
-        topRight: Radius.circular(SizeConfig.roundness12),
-      ),
-      boxContraints: BoxConstraints(
-        maxHeight: SizeConfig.screenHeight! * 0.75,
-        minHeight: SizeConfig.screenHeight! * 0.75,
-      ),
-      isBarrierDismissible: false,
-      isScrollControlled: true,
-    );
+    // BaseUtil.openModalBottomSheet(
+    //   content: CouponModalSheet(model: model),
+    //   addToScreenStack: true,
+    //   backgroundColor: UiConstants.kSecondaryBackgroundColor,
+    //   borderRadius: BorderRadius.only(
+    //     topLeft: Radius.circular(SizeConfig.roundness12),
+    //     topRight: Radius.circular(SizeConfig.roundness12),
+    //   ),
+    //   boxContraints: BoxConstraints(
+    //     maxHeight: SizeConfig.screenHeight! * 0.75,
+    //     minHeight: SizeConfig.screenHeight! * 0.75,
+    //   ),
+    //   isBarrierDismissible: false,
+    //   isScrollControlled: true,
+    // );
   }
 
   getAmount(double amount) {

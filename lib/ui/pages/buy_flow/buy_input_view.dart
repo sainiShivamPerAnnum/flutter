@@ -153,19 +153,19 @@ class _BuyInputViewState extends State<BuyInputView> {
                         SizedBox(
                           height: SizeConfig.padding24,
                         ),
-                        if (widget.model.showCoupons)
-                          Showcase(
-                            key: ShowCaseKeys.couponKey,
-                            description:
-                                'You can apply a coupon to get extra gold!',
-                            child: CouponWidget(
-                              widget.model.couponList,
-                              widget.model,
-                              onTap: (coupon) {
-                                widget.model.applyCoupon(coupon.code, false);
-                              },
-                            ),
-                          ),
+                        // if (widget.model.showCoupons)
+                        //   Showcase(
+                        //     key: ShowCaseKeys.couponKey,
+                        //     description:
+                        //         'You can apply a coupon to get extra gold!',
+                        //     child: CouponWidget(
+                        //       widget.model.couponList,
+                        //       widget.model,
+                        //       onTap: (coupon) {
+                        //         widget.model.applyCoupon(coupon.code, false);
+                        //       },
+                        //     ),
+                        //   ),
 
                         SizedBox(
                           height: SizeConfig.navBarHeight * 2,
