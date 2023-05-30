@@ -52,8 +52,6 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   bool _isBuyInProgress = false;
 
-  bool get isBuyInProgress => _isBuyInProgress;
-
   TextEditingController? amountController;
   TextEditingController? vpaController;
 
@@ -75,8 +73,13 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool isLendboxOldUser = false;
   late String floAssetType;
   double _fieldWidth = 0.0;
+  bool _forcedBuy = false;
+
+  ///  ---------- getter and setter ------------
 
   int? get buyAmount => _buyAmount;
+
+  bool get isBuyInProgress => _isBuyInProgress;
 
   set buyAmount(int? value) {
     _buyAmount = value;
@@ -148,6 +151,14 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool get forcedBuy => _forcedBuy;
+
+  set forcedBuy(bool value) {
+    _forcedBuy = value;
+    log("forcedBuy $value");
+    notifyListeners();
+  }
+
   Future<void> init(int? amount, bool isSkipMilestone,
       {required String assetTypeFlow}) async {
     setState(ViewState.Busy);
@@ -171,7 +182,7 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   resetBuyOptions() {
     buyAmount = assetOptionsModel?.data.userOptions[1].value.toInt();
-
+    forcedBuy = false;
     amountController?.text = assetOptionsModel!.data.userOptions[2].toString();
     lastTappedChipIndex = 2;
     notifyListeners();
@@ -185,6 +196,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   Future<void> initiateBuy() async {
+    log("amountController ${amountController?.text}");
     if (couponApplyInProgress || _isBuyInProgress) return;
 
     _isBuyInProgress = true;
@@ -192,6 +204,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     final amount = await initChecks();
     if (amount == 0) {
       _isBuyInProgress = false;
+      forcedBuy = false;
       BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
       notifyListeners();
       return;
@@ -199,6 +212,7 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     if (amount < minAmount) {
       _isBuyInProgress = false;
+      forcedBuy = false;
       BaseUtil.showNegativeAlert(
           locale.enterAmountGreaterThan, locale.enterAmount);
       notifyListeners();
@@ -211,6 +225,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     trackCheckOut(amount.toDouble());
     await _txnService!.initiateTransaction(amount.toDouble(), skipMl);
     _isBuyInProgress = false;
+    forcedBuy = false;
     notifyListeners();
   }
 
@@ -242,7 +257,7 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   //2 Basic Checks
   Future<int> initChecks() async {
-    buyAmount = int.tryParse(amountController!.text) ?? 0;
+    buyAmount = int.tryParse(amountController?.text ?? "0") ?? 0;
 
     if (buyAmount == 0) {
       BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
@@ -354,7 +369,8 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   onChipClick(int index) {
-    if (couponApplyInProgress || _isBuyInProgress) return;
+    log("_isBuyInProgress $_isBuyInProgress");
+    if (couponApplyInProgress || _isBuyInProgress || forcedBuy) return;
     Haptic.vibrate();
     lastTappedChipIndex = index;
     SystemChannels.textInput.invokeMethod('TextInput.hide');

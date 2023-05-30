@@ -13,6 +13,7 @@ import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/amount_input_view.dart';
 import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -124,7 +125,8 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                 amountController: widget.model.amountController,
                 focusNode: widget.model.buyFieldNode,
                 chipAmounts: widget.model.assetOptionsModel!.data.userOptions,
-                isEnabled: !widget.model.isBuyInProgress,
+                isEnabled:
+                    !widget.model.isBuyInProgress || !widget.model.forcedBuy,
                 maxAmount: widget.model.maxAmount,
                 maxAmountMsg: locale.upto50000,
                 minAmount: widget.model.minAmount,
@@ -170,16 +172,37 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                 builder: (ctx, isKYCVerified, child) {
                   return (!isKYCVerified)
                       ? _kycWidget(widget.model, context)
-                      : widget.model.isBuyInProgress
-                          ? Container(
-                              height: SizeConfig.screenWidth! * 0.1556,
-                              alignment: Alignment.center,
-                              width: SizeConfig.screenWidth! * 0.7,
-                              child: const LinearProgressIndicator(
-                                color: UiConstants.primaryColor,
-                                backgroundColor:
-                                    UiConstants.kDarkBackgroundColor,
-                              ),
+                      : (widget.model.isBuyInProgress || widget.model.forcedBuy)
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (widget.model.forcedBuy) ...[
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            SizeConfig.pageHorizontalMargins),
+                                    child: Text(
+                                      "We will contact you before the end of 6 months (Maturity) to confirm.",
+                                      style: TextStyles.sourceSans.body2.colour(
+                                          Colors.white.withOpacity(0.8)),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  SizedBox(height: SizeConfig.padding24),
+                                ],
+                                Container(
+                                  height: SizeConfig.screenWidth! * 0.1556,
+                                  alignment: Alignment.center,
+                                  width: SizeConfig.screenWidth! * 0.7,
+                                  child: const LinearProgressIndicator(
+                                    color: UiConstants.primaryColor,
+                                    backgroundColor:
+                                        UiConstants.kDarkBackgroundColor,
+                                  ),
+                                ),
+                              ],
                             )
                           : FloBuyNavBar(
                               model: widget.model,
@@ -307,14 +330,20 @@ class FloBuyNavBar extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   BaseUtil.openModalBottomSheet(
-                    isBarrierDismissible: false,
-                    backgroundColor: const Color(0xff1A1A1A),
+                    isBarrierDismissible: true,
                     addToScreenStack: true,
-                    enableDrag: false,
-                    hapticVibrate: true,
-                    content: ViewBreakdown(
+                    backgroundColor: const Color(0xff1B262C),
+                    content: ReInvestPrompt(
+                      amount: model.amountController?.text ?? '0',
+                      assetType: model.floAssetType,
                       model: model,
                     ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.roundness24),
+                      topRight: Radius.circular(SizeConfig.roundness24),
+                    ),
+                    hapticVibrate: true,
+                    isScrollControlled: true,
                   );
                 },
                 child: Text(

@@ -15,7 +15,7 @@ class AppToasts {
   static showNegativeToast(
       {required String? title, required String? subtitle, int? seconds}) async {
     if (handleToastPreChecks(title, subtitle)) {
-      if (flushbar != null) await flushbar!.dismiss();
+      if (flushbar != null) await flushbar?.dismiss();
       flushbar = Flushbar(
         flushbarPosition:
             isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
