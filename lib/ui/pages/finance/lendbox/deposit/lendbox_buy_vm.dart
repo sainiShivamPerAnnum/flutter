@@ -21,6 +21,7 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -418,6 +419,25 @@ class LendboxBuyViewModel extends BaseViewModel {
     updateFieldWidth();
 
     appliedCoupon = null;
+  }
+
+  void openReinvestBottomSheet() {
+    BaseUtil.openModalBottomSheet(
+      isBarrierDismissible: true,
+      addToScreenStack: true,
+      backgroundColor: const Color(0xff1B262C),
+      content: ReInvestPrompt(
+        amount: amountController?.text ?? '0',
+        assetType: floAssetType,
+        model: this,
+      ),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness24),
+        topRight: Radius.circular(SizeConfig.roundness24),
+      ),
+      hapticVibrate: true,
+      isScrollControlled: true,
+    );
   }
 
   void updateFieldWidth() {

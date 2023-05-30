@@ -5,10 +5,11 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../../../../../util/constants.dart';
 
-class ReInvestPrompt extends StatefulWidget {
+class ReInvestPrompt extends HookWidget {
   const ReInvestPrompt(
       {Key? key,
       required this.amount,
@@ -21,14 +22,8 @@ class ReInvestPrompt extends StatefulWidget {
   final LendboxBuyViewModel model;
 
   @override
-  State<ReInvestPrompt> createState() => _ReInvestPromptState();
-}
-
-class _ReInvestPromptState extends State<ReInvestPrompt> {
-  int selectedOption = -1;
-
-  @override
   Widget build(BuildContext context) {
+    final selectedOption = useState(-1);
     return Container(
       // height: SizeConfig.screenHeight! * 0.6,
       padding: EdgeInsets.all(SizeConfig.padding16),
@@ -37,8 +32,9 @@ class _ReInvestPromptState extends State<ReInvestPrompt> {
           // mainAxisSize: MainAxisSize.min,
           children: [
             InvestmentForeseenWidget(
-              amount: widget.amount,
-              assetType: widget.assetType,
+              amount: amount,
+              assetType: assetType,
+              isLendboxOldUser: model.isLendboxOldUser,
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
@@ -88,36 +84,30 @@ class _ReInvestPromptState extends State<ReInvestPrompt> {
             OptionContainer(
               optionIndex: 1,
               title:
-                  'Re-invest ₹${widget.amount} in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
+                  'Re-invest ₹${amount} in ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
               description: "At the end of 6 months (Maturity)",
-              isSelected: selectedOption == 1,
+              isSelected: selectedOption.value == 1,
               onTap: () {
-                setState(() {
-                  selectedOption = 1;
-                });
+                selectedOption.value = 1;
               },
             ),
             OptionContainer(
               optionIndex: 2,
               title:
-                  "Move ₹${widget.amount} to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
+                  "Move ₹${amount} to ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
               description: "At the end of 6 months (Maturity)",
-              isSelected: selectedOption == 2,
+              isSelected: selectedOption.value == 2,
               onTap: () {
-                setState(() {
-                  selectedOption = 2;
-                });
+                selectedOption.value = 2;
               },
             ),
             OptionContainer(
               optionIndex: 3,
               title: "Withdraw to Bank",
               description: "At the end of 6 months (Maturity)",
-              isSelected: selectedOption == 3,
+              isSelected: selectedOption.value == 3,
               onTap: () {
-                setState(() {
-                  selectedOption = 3;
-                });
+                selectedOption.value = 3;
               },
             ),
             SizedBox(
@@ -140,18 +130,15 @@ class _ReInvestPromptState extends State<ReInvestPrompt> {
                     ),
                     // color: Colors.white,
                     onPressed: () {
-                      BaseUtil.openModalBottomSheet(
-                        isBarrierDismissible: true,
-                        addToScreenStack: true,
-                        backgroundColor: const Color(0xff1B262C),
-                        content: WarningBottomSheet(model: widget.model),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness24),
-                          topRight: Radius.circular(SizeConfig.roundness24),
-                        ),
-                        hapticVibrate: true,
-                        isScrollControlled: true,
-                      );
+                      AppState.backButtonDispatcher?.didPopRoute();
+
+                      model.forcedBuy = true;
+
+                      Future.delayed(const Duration(seconds: 3), () async {
+                        if (!model.isBuyInProgress) {
+                          await model.initiateBuy();
+                        }
+                      });
                     },
                     child: Center(
                       child: Text(
@@ -167,7 +154,35 @@ class _ReInvestPromptState extends State<ReInvestPrompt> {
                         borderRadius: BorderRadius.circular(5)),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     color: Colors.white,
-                    onPressed: () {},
+                    onPressed: () {
+                      if (selectedOption.value == -1) {
+                        BaseUtil.showNegativeAlert(
+                            "Please select an option", "");
+                        return;
+                      }
+
+                      if (selectedOption.value == 3) {
+                        BaseUtil.openModalBottomSheet(
+                          isBarrierDismissible: true,
+                          addToScreenStack: true,
+                          backgroundColor: const Color(0xff1B262C),
+                          content: WarningBottomSheet(model: model),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness24),
+                            topRight: Radius.circular(SizeConfig.roundness24),
+                          ),
+                          hapticVibrate: true,
+                          isScrollControlled: true,
+                        );
+                        return;
+                      }
+
+                      AppState.backButtonDispatcher?.didPopRoute();
+
+                      if (!model.isBuyInProgress) {
+                        model.initiateBuy();
+                      }
+                    },
                     child: Center(
                       child: Text(
                         'Proceed'.toUpperCase(),
@@ -359,11 +374,15 @@ class WarningBottomSheet extends StatelessWidget {
 
 class InvestmentForeseenWidget extends StatelessWidget {
   const InvestmentForeseenWidget(
-      {Key? key, required this.amount, required this.assetType})
+      {Key? key,
+      required this.amount,
+      required this.assetType,
+      required this.isLendboxOldUser})
       : super(key: key);
 
   final String amount;
   final String assetType;
+  final bool isLendboxOldUser;
 
   String getTitle() {
     if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
@@ -391,6 +410,11 @@ class InvestmentForeseenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // debugPrint("isLendboxOldUser => $isLendboxOldUser");
+    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3 && isLendboxOldUser) {
+      return const SizedBox();
+    }
+
     return Container(
       padding: EdgeInsets.all(SizeConfig.padding16),
       margin: EdgeInsets.only(bottom: SizeConfig.padding24),

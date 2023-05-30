@@ -207,6 +207,18 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                           : FloBuyNavBar(
                               model: widget.model,
                               onTap: () {
+                                if (widget.model.floAssetType ==
+                                    Constants.ASSET_TYPE_FLO_FIXED_6) {
+                                  widget.model.openReinvestBottomSheet();
+                                  return;
+                                }
+                                if (widget.model.floAssetType ==
+                                        Constants.ASSET_TYPE_FLO_FIXED_3 &&
+                                    !widget.model.isLendboxOldUser) {
+                                  widget.model.openReinvestBottomSheet();
+                                  return;
+                                }
+
                                 if (!widget.model.isBuyInProgress) {
                                   FocusScope.of(context).unfocus();
                                   widget.model.initiateBuy();
@@ -332,12 +344,8 @@ class FloBuyNavBar extends StatelessWidget {
                   BaseUtil.openModalBottomSheet(
                     isBarrierDismissible: true,
                     addToScreenStack: true,
-                    backgroundColor: const Color(0xff1B262C),
-                    content: ReInvestPrompt(
-                      amount: model.amountController?.text ?? '0',
-                      assetType: model.floAssetType,
-                      model: model,
-                    ),
+                    backgroundColor: const Color(0xff1A1A1A),
+                    content: ViewBreakdown(model: model),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(SizeConfig.roundness24),
                       topRight: Radius.circular(SizeConfig.roundness24),
@@ -438,7 +446,12 @@ class ViewBreakdown extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: SizeConfig.padding28,
+              height: SizeConfig.padding20,
+            ),
+            InvestmentForeseenWidget(
+              amount: model.amountController?.text ?? '0',
+              assetType: model.floAssetType,
+              isLendboxOldUser: model.isLendboxOldUser,
             ),
             Row(
               children: [
@@ -586,6 +599,16 @@ class ViewBreakdown extends StatelessWidget {
               width: SizeConfig.screenWidth!,
               onPressed: () async {
                 AppState.backButtonDispatcher?.didPopRoute();
+
+                if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+                  model.openReinvestBottomSheet();
+                  return;
+                }
+                if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3 &&
+                    !model.isLendboxOldUser) {
+                  model.openReinvestBottomSheet();
+                  return;
+                }
 
                 if (!model.isBuyInProgress) {
                   FocusScope.of(context).unfocus();
