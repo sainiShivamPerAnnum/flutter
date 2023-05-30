@@ -25,6 +25,7 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_update/autosave_upda
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
@@ -815,6 +816,23 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "accounts":
         pageConfiguration = AccountsViewConfig;
+        break;
+      case "goldDetails":
+        appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: SaveAssetsViewConfig,
+            widget: AssetSectionView(
+              type: InvestmentType.AUGGOLD99,
+            ));
+        break;
+      case "floDetails":
+        appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: SaveAssetsViewConfig,
+          widget: AssetSectionView(
+            type: InvestmentType.LENDBOXP2P,
+          ),
+        );
         break;
       case "flo10Details":
         appState.currentAction = PageAction(

@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/assets.dart';
@@ -11,9 +12,9 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class SaveAssetsGroupCard extends StatelessWidget {
@@ -122,6 +123,102 @@ class SaveAssetsGroupCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
       child: getAssetsOrder(),
+    );
+  }
+}
+
+class MiniAssetsGroupSection extends StatelessWidget {
+  const MiniAssetsGroupSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Row(
+        children: [
+          const MiniAssetCard(
+            color: UiConstants.kSaveStableFelloCardBg,
+            asset: Assets.floAsset,
+            title: "Fello Flo",
+            subtitle: "Know Fello Flo",
+            actionUri: "floDetails",
+          ),
+          SizedBox(width: SizeConfig.padding16),
+          const MiniAssetCard(
+            color: UiConstants.kSaveDigitalGoldCardBg,
+            asset: Assets.goldAsset,
+            title: "Digital Gold",
+            subtitle: "Know Digital Gold",
+            actionUri: "goldDetails",
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MiniAssetCard extends StatelessWidget {
+  final String asset, title, subtitle, actionUri;
+  final Color color;
+
+  const MiniAssetCard(
+      {super.key,
+      required this.asset,
+      required this.title,
+      required this.subtitle,
+      required this.actionUri,
+      required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          Haptic.vibrate();
+          AppState.delegate!.parseRoute(Uri.parse(actionUri));
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16)),
+          padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins / 2),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(
+                    asset,
+                    width: SizeConfig.padding70,
+                  ),
+                  const Spacer(),
+                  SvgPicture.asset(
+                    Assets.chevRonRightArrow,
+                    color: Colors.white,
+                    width: SizeConfig.iconSize0,
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "  $title",
+                    style: TextStyles.rajdhaniSB.body0.colour(Colors.white),
+                  ),
+                  Text(
+                    "    $subtitle",
+                    style: TextStyles.sourceSans.body3.colour(Colors.white54),
+                  ),
+                ],
+              ),
+              SizedBox(height: SizeConfig.padding14)
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
