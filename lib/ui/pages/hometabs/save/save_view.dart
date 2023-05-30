@@ -9,7 +9,6 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/home/cards_home.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -46,27 +45,7 @@ class Save extends StatelessWidget {
             },
             builder: Builder(builder: (context) {
               SpotLightController.instance.saveViewContext = context;
-              return Stack(
-                children: [
-                  SaveViewWrapper(model: model),
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.padding40,
-                    color: UiConstants.kFloContainerColor,
-                    child: const MarqueeText(
-                      infoList: [
-                        "Gold Deposits are disabled",
-                        "Flo Deposits are disabled",
-                        "Gold Deposits are disabled",
-                        "Flo Deposits are disabled"
-                      ],
-                      showBullet: true,
-                      bulletColor: Colors.white,
-                      textColor: Colors.white,
-                    ),
-                  ),
-                ],
-              );
+              return SaveViewWrapper(model: model);
             }),
           );
         },
@@ -84,7 +63,7 @@ class SaveViewWrapper extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: const [UserServiceProperties.mySegments],
       builder: (_, prop, ___) {
-        return (!prop!.userSegments.contains("NEW_USER"))
+        return (prop!.userSegments.contains("NEW_USER"))
             ? Stack(
                 children: [
                   SingleChildScrollView(
@@ -94,17 +73,7 @@ class SaveViewWrapper extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: model.getSaveViewItems(model),
                         ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: SizeConfig.screenWidth,
-                              height: SizeConfig.padding40,
-                              color: UiConstants.kGoldContainerColor,
-                            ),
-                            const Cards(),
-                          ],
-                        ),
+                        const Cards(),
                       ],
                     ),
                   ),

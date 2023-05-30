@@ -190,10 +190,11 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 height: SizeConfig.padding4,
                               ),
                               if (balance == 0) ...[
-                                SizedBox(
-                                  height: SizeConfig.padding10,
-                                ),
-                                _buildInfoSection(),
+                                if (_isGold)
+                                  SizedBox(
+                                    height: SizeConfig.padding10,
+                                  ),
+                                if (_isGold) _buildInfoSection(),
                                 SizedBox(
                                   height: SizeConfig.padding10,
                                 ),

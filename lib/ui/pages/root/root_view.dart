@@ -22,6 +22,7 @@ import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/lazy_load_indexed_stack.dart';
@@ -58,6 +59,25 @@ class Root extends StatelessWidget {
                   Column(
                     children: [
                       const RootAppBar(),
+                      Positioned(
+                        top: 0,
+                        child: Container(
+                          width: SizeConfig.screenWidth,
+                          height: SizeConfig.padding40,
+                          color: UiConstants.kFloContainerColor,
+                          child: const MarqueeText(
+                            infoList: [
+                              "Gold Deposits are disabled",
+                              "Flo Deposits are disabled",
+                              "Gold Deposits are disabled",
+                              "Flo Deposits are disabled"
+                            ],
+                            showBullet: true,
+                            bulletColor: Colors.white,
+                            textColor: Colors.white,
+                          ),
+                        ),
+                      ),
                       Expanded(
                         child: RefreshIndicator(
                           triggerMode: RefreshIndicatorTriggerMode.onEdge,

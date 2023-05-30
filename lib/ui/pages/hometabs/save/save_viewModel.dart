@@ -203,11 +203,6 @@ class SaveViewModel extends BaseViewModel {
   List<Widget> getSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
     saveViewItems.addAll([
-      Container(
-        width: SizeConfig.screenWidth,
-        height: SizeConfig.padding40,
-        color: UiConstants.kGoldContainerColor,
-      ),
       Selector<CardActionsNotifier, bool>(
         selector: (p0, p1) => p1.isVerticalView,
         builder: (context, value, child) => AnimatedContainer(
@@ -250,11 +245,6 @@ class SaveViewModel extends BaseViewModel {
   List<Widget> getNewUserSaveViewItems(SaveViewModel smodel) {
     List<Widget> saveViewItems = [];
     saveViewItems.addAll([
-      Container(
-        width: SizeConfig.screenWidth,
-        height: SizeConfig.padding40,
-        color: UiConstants.kGoldContainerColor,
-      ),
       const SaveWelcomeCard(),
       SaveAssetsGroupCard(saveViewModel: smodel),
       const TambolaMiniInfoCard(),
