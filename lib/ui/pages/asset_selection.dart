@@ -1,10 +1,11 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/buy_flow/buy_vm.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -24,6 +25,7 @@ class AssetSelectionPage extends StatelessWidget {
               horizontal: SizeConfig.pageHorizontalMargins),
           child: Column(
             children: [
+              SizedBox(height: SizeConfig.fToolBarHeight / 2),
               AppBar(
                 elevation: 0,
                 backgroundColor: Colors.transparent,
@@ -109,14 +111,14 @@ class AssetSelectionPage extends StatelessWidget {
                           const Spacer(),
                           model.isGoldRateFetching
                               ? SpinKitThreeBounce(
-                                  size: SizeConfig.body2,
-                                  color: Colors.white,
-                                )
+                            size: SizeConfig.body2,
+                            color: Colors.white,
+                          )
                               : Text(
-                                  "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
-                                  style: TextStyles.sourceSansSB.body1
-                                      .colour(Colors.white),
-                                ),
+                            "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
+                            style: TextStyles.sourceSansSB.body1
+                                .colour(Colors.white),
+                          ),
                           NewCurrentGoldPriceWidget(
                             fetchGoldRates: model.fetchGoldRates,
                             goldprice: model.goldRates != null
@@ -133,73 +135,79 @@ class AssetSelectionPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: SizeConfig.padding24),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding16,
-                  vertical: SizeConfig.padding16,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xff01656B),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/svg/fello_flo.svg',
-                          height: SizeConfig.padding44,
-                          width: SizeConfig.padding44,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(width: SizeConfig.padding12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Save in Fello Flo',
-                              style: TextStyles.rajdhaniSB.body0,
-                            ),
-                            SizedBox(height: SizeConfig.padding4),
-                            Text(
-                              'P2P Asset • RBI Certified',
-                              style: TextStyles.sourceSans.body4
-                                  .colour(Colors.white.withOpacity(0.8)),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        SvgPicture.asset(
-                          'assets/svg/Arrow_dotted.svg',
-                          height: SizeConfig.padding24,
-                          width: SizeConfig.padding24,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: SizeConfig.padding16),
-                    Row(
-                      children: [
-                        const FelloFloPrograms(
-                            title: '1 week lock-in',
-                            percentage: '8%',
-                            isRecommended: false),
-                        SizedBox(width: SizeConfig.padding12),
-                        const FelloFloPrograms(
-                            title: '3 month lock-in',
-                            percentage: '10%',
-                            isRecommended: false),
-                        SizedBox(width: SizeConfig.padding12),
-                        const FelloFloPrograms(
-                            title: '6 month lock-in',
-                            percentage: '12%',
-                            isRecommended: true),
-                      ],
-                    )
-                  ],
+              GestureDetector(
+                onTap: () {
+                  BaseUtil().openFloBuySheet(
+                      floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding16,
+                    vertical: SizeConfig.padding16,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff01656B),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/svg/fello_flo.svg',
+                            height: SizeConfig.padding44,
+                            width: SizeConfig.padding44,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(width: SizeConfig.padding12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Save in Fello Flo',
+                                style: TextStyles.rajdhaniSB.body0,
+                              ),
+                              SizedBox(height: SizeConfig.padding4),
+                              Text(
+                                'P2P Asset • RBI Certified',
+                                style: TextStyles.sourceSans.body4
+                                    .colour(Colors.white.withOpacity(0.8)),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          SvgPicture.asset(
+                            'assets/svg/Arrow_dotted.svg',
+                            height: SizeConfig.padding24,
+                            width: SizeConfig.padding24,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: SizeConfig.padding16),
+                      Row(
+                        children: [
+                          const FelloFloPrograms(
+                              title: '1 week lock-in',
+                              percentage: '8%',
+                              isRecommended: false),
+                          SizedBox(width: SizeConfig.padding12),
+                          const FelloFloPrograms(
+                              title: '3 month lock-in',
+                              percentage: '10%',
+                              isRecommended: false),
+                          SizedBox(width: SizeConfig.padding12),
+                          const FelloFloPrograms(
+                              title: '6 month lock-in',
+                              percentage: '12%',
+                              isRecommended: true),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               )
             ],
@@ -211,11 +219,10 @@ class AssetSelectionPage extends StatelessWidget {
 }
 
 class FelloFloPrograms extends StatelessWidget {
-  const FelloFloPrograms(
-      {Key? key,
-      required this.title,
-      required this.percentage,
-      required this.isRecommended})
+  const FelloFloPrograms({Key? key,
+    required this.title,
+    required this.percentage,
+    required this.isRecommended})
       : super(key: key);
 
   final String title;

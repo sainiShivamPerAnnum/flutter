@@ -31,10 +31,11 @@ class LendboxWithdrawalInputView extends StatelessWidget {
           children: [
             SizedBox(height: SizeConfig.padding16),
             LendBoxAppBar(
-              title: 'Fello Flo Premium - 12%',
               isEnabled: !model.inProgress,
               trackClosingEvent: () =>
                   AppState.backButtonDispatcher!.didPopRoute(),
+              assetType: 'Fello Flo',
+              isOldUser: true,
             ),
             SizedBox(height: SizeConfig.padding32),
             if (model.state == ViewState.Idle &&

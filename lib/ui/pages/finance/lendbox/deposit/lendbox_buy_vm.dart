@@ -15,12 +15,14 @@ import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -69,6 +71,8 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool _showCoupons = false;
 
   int? _buyAmount = 0;
+  bool isLendboxOldUser = false;
+  late String floAssetType;
 
   int? get buyAmount => _buyAmount;
 
@@ -135,13 +139,15 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> init(
-    int? amount,
-    bool isSkipMilestone,
-  ) async {
+  Future<void> init(int? amount, bool isSkipMilestone,
+      {required String assetTypeFlow}) async {
     setState(ViewState.Busy);
+    floAssetType = assetTypeFlow;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     await getAssetOptionsModel();
+    isLendboxOldUser =
+        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+    log("isLendboxOldUser $isLendboxOldUser");
     skipMl = isSkipMilestone;
     amountController = TextEditingController(
       text: amount?.toString() ??

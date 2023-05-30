@@ -36,6 +36,7 @@ import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
 import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
+import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
@@ -370,11 +371,43 @@ class BaseUtil extends ChangeNotifier {
                 amount: amt,
                 skipMl: isSkipMl ?? false,
               )
-            : LendboxBuyView(
-                amount: amt,
-                skipMl: isSkipMl ?? false,
-                onChanged: (p0) => amount = p0,
-              ),
+            : const AssetSelectionPage(),
+      ).then((value) {
+        AppState.isRepeated = false;
+        AppState.onTap = null;
+        locator<BackButtonActions>().isTransactionCancelled = false;
+      });
+    });
+  }
+
+  void openFloBuySheet(
+      {int? amt, bool? isSkipMl, required String floAssetType}) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final bool? islBoxlDepositBanned = _userService
+          .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
+      final String? lBoxDepositBanNotice = _userService
+          .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
+
+      if (islBoxlDepositBanned != null && islBoxlDepositBanned) {
+        return BaseUtil.showNegativeAlert(
+          lBoxDepositBanNotice ?? locale.assetNotAvailable,
+          locale.tryLater,
+        );
+      }
+
+      BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        enableDrag: false,
+        hapticVibrate: true,
+        isBarrierDismissible: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        content: LendboxBuyView(
+          amount: amt,
+          skipMl: isSkipMl ?? false,
+          onChanged: (p0) => p0,
+          floAssetType: floAssetType,
+        ),
       ).then((value) {
         AppState.isRepeated = false;
         AppState.onTap = null;

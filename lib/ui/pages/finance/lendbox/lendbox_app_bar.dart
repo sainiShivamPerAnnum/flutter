@@ -1,4 +1,5 @@
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -8,13 +9,33 @@ import 'package:flutter/material.dart';
 class LendBoxAppBar extends StatelessWidget {
   final bool isEnabled;
   final Function? trackClosingEvent;
-  final String title;
+  final bool isOldUser;
+  final String assetType;
 
   const LendBoxAppBar(
       {super.key,
       required this.isEnabled,
       this.trackClosingEvent,
-      required this.title});
+      required this.isOldUser,
+      required this.assetType});
+
+  String getTitle() {
+    if (assetType == Constants.ASSET_TYPE_FLO_FELXI && isOldUser) {
+      return 'Fello Flo Premium - 10%';
+    } else if (assetType == Constants.ASSET_TYPE_FLO_FELXI && !isOldUser) {
+      return 'Fello Flo Premium - 8%';
+    }
+
+    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return 'Fello Flo Premium - 10%';
+    }
+
+    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return 'Fello Flo Premium - 12%';
+    }
+
+    return 'Fello Flo';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,51 +78,11 @@ class LendBoxAppBar extends StatelessWidget {
           ),
           SizedBox(width: SizeConfig.padding8),
           Text(
-            title,
+            getTitle(),
             style: TextStyles.rajdhaniSB.title5,
           ),
         ],
       ),
     );
-    // return ListTile(
-    //   leading: Container(
-    //     width: SizeConfig.screenWidth! * 0.168,
-    //     height: SizeConfig.screenWidth! * 0.168,
-    //     decoration: BoxDecoration(
-    //       shape: BoxShape.circle,
-    //       gradient: RadialGradient(
-    //         colors: [
-    //           UiConstants.primaryColor.withOpacity(0.4),
-    //           UiConstants.primaryColor.withOpacity(0.2),
-    //           UiConstants.primaryColor.withOpacity(0.04),
-    //           Colors.transparent,
-    //         ],
-    //       ),
-    //     ),
-    //     alignment: Alignment.center,
-    //     child: Transform(
-    //       alignment: Alignment.center,
-    //       transform: Matrix4.rotationY(math.pi),
-    //       child: Image.asset(
-    //         Assets.felloFlo,
-    //         width: SizeConfig.screenWidth! * 0.27,
-    //         height: SizeConfig.screenWidth! * 0.27,
-    //       ),
-    //     ),
-    //   ),
-    //   title: Text(locale.felloFloText, style: TextStyles.rajdhaniSB.body2),
-    //   subtitle: Text(
-    //     locale.flo10PercentReturns,
-    //     style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
-    //   ),
-    //   trailing: !isEnabled
-    //       ? const SizedBox()
-    //       : IconButton(
-    //           icon: Icon(Icons.close, color: Colors.white),
-    //           onPressed: () {
-    //             if (trackClosingEvent != null) trackClosingEvent!();
-    //           },
-    //         ),
-    // );
   }
 }

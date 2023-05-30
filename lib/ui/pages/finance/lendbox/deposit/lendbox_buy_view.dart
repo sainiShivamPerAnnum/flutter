@@ -22,11 +22,14 @@ class LendboxBuyView extends StatefulWidget {
   final int? amount;
   final bool skipMl;
   final OnAmountChanged onChanged;
+  final String floAssetType;
+
   const LendboxBuyView(
       {Key? key,
       this.amount = 250,
       this.skipMl = false,
-      required this.onChanged})
+      required this.onChanged,
+      required this.floAssetType})
       : super(key: key);
 
   @override
@@ -40,6 +43,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   AppLifecycleState? appLifecycleState;
 
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
+
   @override
   void initState() {
     super.initState();
@@ -102,6 +106,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                   onModelReady: (model) => model.init(
                     widget.amount,
                     widget.skipMl,
+                    assetTypeFlow: widget.floAssetType,
                   ),
                   builder: (ctx, model, child) {
                     _secureScreenshots(lboxTxnService);
@@ -142,13 +147,14 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
     LendboxTransactionService lboxTxnService,
     LendboxBuyViewModel model,
   ) {
-    final type = TransactionType.DEPOSIT;
+    const type = TransactionType.DEPOSIT;
 
     if (lboxTxnService.currentTransactionState == TransactionState.idle) {
       return LendboxBuyInputView(
         amount: widget.amount,
         skipMl: widget.skipMl,
         model: model,
+        // floAssetType: widget.floAssetType,
       );
     } else if (lboxTxnService.currentTransactionState ==
         TransactionState.ongoing) {

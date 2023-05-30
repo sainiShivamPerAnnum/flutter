@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
@@ -33,11 +35,14 @@ class LendboxBuyInputView extends StatefulWidget {
   final bool? skipMl;
   final LendboxBuyViewModel model;
 
+  // final String floAssetType;
+
   const LendboxBuyInputView({
     Key? key,
     this.amount,
     this.skipMl,
     required this.model,
+    // required this.floAssetType,
   }) : super(key: key);
 
   @override
@@ -53,6 +58,8 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
 
   @override
   Widget build(BuildContext context) {
+    log("floAssetType ${widget.model.floAssetType}");
+
     S locale = S.of(context);
     final AnalyticsService? _analyticsService = locator<AnalyticsService>();
     if (widget.model.state == ViewState.Busy) {
@@ -76,7 +83,8 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
             children: [
               SizedBox(height: SizeConfig.fToolBarHeight / 2),
               LendBoxAppBar(
-                title: 'Fello Flo Premium - 12%',
+                isOldUser: widget.model.isLendboxOldUser,
+                assetType: widget.model.floAssetType,
                 isEnabled: !widget.model.isBuyInProgress,
                 trackClosingEvent: () {
                   _analyticsService!.track(
@@ -89,9 +97,9 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                     if (!AppState.isRepeated) {
                       locator<BackButtonActions>()
                           .showWantToCloseTransactionBottomSheet(
-                          double.parse(widget.model.amountController!.text)
-                              .round(),
-                          InvestmentType.LENDBOXP2P, () {
+                              double.parse(widget.model.amountController!.text)
+                                  .round(),
+                              InvestmentType.LENDBOXP2P, () {
                         widget.model.initiateBuy();
                         AppState.backButtonDispatcher!.didPopRoute();
                       });
@@ -109,7 +117,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
               BannerWidget(
                 model: widget.model.assetOptionsModel!.data.banner,
                 happyHourCampign:
-                locator.isRegistered<HappyHourCampign>() ? locator() : null,
+                    locator.isRegistered<HappyHourCampign>() ? locator() : null,
               ),
               AmountInputView(
                 amountController: widget.model.amountController,
@@ -162,20 +170,20 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   return (!isKYCVerified)
                       ? _kycWidget(widget.model, context)
                       : widget.model.isBuyInProgress
-                          ? Container(
-                              height: SizeConfig.screenWidth! * 0.1556,
-                              alignment: Alignment.center,
-                              width: SizeConfig.screenWidth! * 0.7,
-                              child: const LinearProgressIndicator(
-                                color: UiConstants.primaryColor,
-                                backgroundColor:
-                                    UiConstants.kDarkBackgroundColor,
-                              ),
-                            )
-                          : FloBuyNavBar(
-                              model: widget.model,
-                              onTap: () {},
-                            );
+                      ? Container(
+                    height: SizeConfig.screenWidth! * 0.1556,
+                    alignment: Alignment.center,
+                    width: SizeConfig.screenWidth! * 0.7,
+                    child: const LinearProgressIndicator(
+                      color: UiConstants.primaryColor,
+                      backgroundColor:
+                      UiConstants.kDarkBackgroundColor,
+                    ),
+                  )
+                      : FloBuyNavBar(
+                    model: widget.model,
+                    onTap: () {},
+                  );
                 },
               ),
             ],
@@ -209,7 +217,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
           Showcase(
             key: ShowCaseKeys.floKYCKey,
             description:
-            'Complete your KYC to start your journey towards 10% returns',
+                'Complete your KYC to start your journey towards 10% returns',
             child: AppNegativeBtn(
               btnText: locale.completeKYCText,
               onPressed: model.navigateToKycScreen,
@@ -336,7 +344,7 @@ class ViewBreakdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
