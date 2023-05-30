@@ -54,7 +54,7 @@ class AmountInputView extends StatefulWidget {
 }
 
 class _AmountInputViewState extends State<AmountInputView> {
-  double _fieldWidth = 0;
+  // double _fieldWidth = 0;
   int _selectedIndex = 1;
 
   @override
@@ -67,16 +67,16 @@ class _AmountInputViewState extends State<AmountInputView> {
     } else {
       widget.amountController!.text = '1';
     }
-    updateFieldWidth();
+    widget.model?.updateFieldWidth();
   }
 
-  void updateFieldWidth() {
-    int n = widget.amountController!.text.length;
-    if (n == 0) n++;
-    _fieldWidth = SizeConfig.padding40 * n.toDouble();
-    widget.amountController!.selection = TextSelection.fromPosition(
-        TextPosition(offset: widget.amountController!.text.length));
-  }
+  // void updateFieldWidth() {
+  //   int n = widget.amountController!.text.length;
+  //   if (n == 0) n++;
+  //   _fieldWidth = SizeConfig.padding40 * n.toDouble();
+  //   widget.amountController!.selection = TextSelection.fromPosition(
+  //       TextPosition(offset: widget.amountController!.text.length));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +131,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                     AnimatedContainer(
                       duration: const Duration(seconds: 0),
                       curve: Curves.easeIn,
-                      width: _fieldWidth,
+                      width: widget.model?.fieldWidth ?? 0.0,
                       child: TextFormField(
                         autofocus: true,
                         showCursor: true,
@@ -153,7 +153,9 @@ class _AmountInputViewState extends State<AmountInputView> {
                           FilteringTextInputFormatter.digitsOnly,
                         ],
                         onChanged: (String val) {
-                          setState(updateFieldWidth);
+                          widget.model?.onValueChanged(val);
+
+                          // setState(updateFieldWidth);
                         },
                         decoration: const InputDecoration(
                           focusedBorder: InputBorder.none,
@@ -204,7 +206,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                     ],
                   ),
                 ),
-              if (currentAmt > widget.maxAmount)
+              if (currentAmt >= widget.maxAmount)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
@@ -237,7 +239,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                   isBest: item.best,
                   onClick: (index) {
                     widget.model?.onChipClick(index);
-                    updateFieldWidth();
+                    // updateFieldWidth();
                     // setState(
                     //   () {
                     //     _selectedIndex = i;

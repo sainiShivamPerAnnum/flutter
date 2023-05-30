@@ -18,6 +18,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
@@ -170,20 +171,25 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   return (!isKYCVerified)
                       ? _kycWidget(widget.model, context)
                       : widget.model.isBuyInProgress
-                      ? Container(
-                    height: SizeConfig.screenWidth! * 0.1556,
-                    alignment: Alignment.center,
-                    width: SizeConfig.screenWidth! * 0.7,
-                    child: const LinearProgressIndicator(
-                      color: UiConstants.primaryColor,
-                      backgroundColor:
-                      UiConstants.kDarkBackgroundColor,
-                    ),
-                  )
-                      : FloBuyNavBar(
-                    model: widget.model,
-                    onTap: () {},
-                  );
+                          ? Container(
+                              height: SizeConfig.screenWidth! * 0.1556,
+                              alignment: Alignment.center,
+                              width: SizeConfig.screenWidth! * 0.7,
+                              child: const LinearProgressIndicator(
+                                color: UiConstants.primaryColor,
+                                backgroundColor:
+                                    UiConstants.kDarkBackgroundColor,
+                              ),
+                            )
+                          : FloBuyNavBar(
+                              model: widget.model,
+                              onTap: () {
+                                if (!widget.model.isBuyInProgress) {
+                                  FocusScope.of(context).unfocus();
+                                  widget.model.initiateBuy();
+                                }
+                              },
+                            );
                 },
               ),
             ],
@@ -240,93 +246,123 @@ class FloBuyNavBar extends StatelessWidget {
   final LendboxBuyViewModel model;
   final Function onTap;
 
+  String getSubtitle() {
+    if (model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
+        model.isLendboxOldUser) {
+      return 'in Flo 10% P.A';
+    } else if (model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
+        !model.isLendboxOldUser) {
+      return 'in Flo 8% P.A';
+    }
+
+    if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return "in Flo 12% P.A";
+    }
+    if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return "in Flo 10% P.A";
+    }
+
+    return "";
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Showcase(
-      key: ShowCaseKeys.saveNowGold,
-      description: 'Once done, tap on SAVE to make your first transaction',
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding32,
-          vertical: SizeConfig.padding16,
-        ),
-        color: UiConstants.kArrowButtonBackgroundColor,
-        child: Row(
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "₹${model.amountController?.text ?? '0'}",
-                  style: TextStyles.sourceSansSB.title5
-                      .copyWith(color: Colors.white),
-                ),
-                //
-                Text('in Digital Gold',
-                    style: TextStyles.rajdhaniSB.body3
-                        .colour(UiConstants.kTextFieldTextColor)),
-                SizedBox(
-                  height: SizeConfig.padding4,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    BaseUtil.openModalBottomSheet(
-                      isBarrierDismissible: true,
-                      backgroundColor: const Color(0xff1A1A1A),
-                      addToScreenStack: true,
-                      content: ViewBreakdown(
-                        model: model,
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'View Breakdown',
-                    style: TextStyles.sourceSans.body3.copyWith(
-                        color: UiConstants.kTextFieldTextColor,
-                        decorationStyle: TextDecorationStyle.solid,
-                        decoration: TextDecoration.underline),
-                  ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                if (model.appliedCoupon != null) ...[
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        Assets.ticketTilted,
-                      ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        '${model.appliedCoupon?.code} coupon applied',
-                        style: TextStyles.sourceSans.body3
-                            .colour(UiConstants.kTealTextColor),
-                      ),
-                    ],
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding32,
+        vertical: SizeConfig.padding16,
+      ),
+      color: UiConstants.kArrowButtonBackgroundColor,
+      child: Row(
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "₹${model.amountController?.text ?? '0'}",
+                    style: TextStyles.sourceSansSB.title5
+                        .copyWith(color: Colors.white),
                   ),
                   SizedBox(
-                    height: SizeConfig.padding4,
-                  )
+                    width: SizeConfig.padding8,
+                  ),
+                  Text(
+                    getSubtitle(),
+                    style: TextStyles.rajdhaniB.body2
+                        .copyWith(color: UiConstants.kTabBorderColor),
+                  ),
                 ],
-                AppPositiveBtn(
-                  width: SizeConfig.screenWidth! * 0.32,
-                  height: SizeConfig.screenWidth! * 0.12,
-                  onPressed: () => onTap(),
-                  btnText: 'Proceed'.toUpperCase(),
-                  style: TextStyles.rajdhaniB.body1,
+              ),
+              //
+              Text('Maturity on 3rd Sept 2023',
+                  style: TextStyles.rajdhaniSB.body3
+                      .colour(UiConstants.kTextFieldTextColor)),
+              SizedBox(
+                height: SizeConfig.padding4,
+              ),
+              GestureDetector(
+                onTap: () {
+                  BaseUtil.openModalBottomSheet(
+                    isBarrierDismissible: false,
+                    backgroundColor: const Color(0xff1A1A1A),
+                    addToScreenStack: true,
+                    enableDrag: false,
+                    hapticVibrate: true,
+                    content: ViewBreakdown(
+                      model: model,
+                    ),
+                  );
+                },
+                child: Text(
+                  'View Breakdown',
+                  style: TextStyles.sourceSans.body3.copyWith(
+                      color: UiConstants.kTextFieldTextColor,
+                      decorationStyle: TextDecorationStyle.solid,
+                      decoration: TextDecoration.underline),
                 ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if (model.appliedCoupon != null) ...[
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      Assets.ticketTilted,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      '${model.appliedCoupon?.code} coupon applied',
+                      style: TextStyles.sourceSans.body3
+                          .colour(UiConstants.kTealTextColor),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: SizeConfig.padding4,
+                )
               ],
-            ),
-          ],
-        ),
+              AppPositiveBtn(
+                width: SizeConfig.screenWidth! * 0.32,
+                height: SizeConfig.screenWidth! * 0.12,
+                onPressed: () => onTap(),
+                btnText: 'Proceed'.toUpperCase(),
+                style: TextStyles.rajdhaniB.body1,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -342,192 +378,198 @@ class ViewBreakdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:
-      EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            height: SizeConfig.padding28,
-          ),
-          Row(
-            children: [
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.white,
+    return WillPopScope(
+      onWillPop: () async {
+        // AppState.backButtonDispatcher?.didPopRoute();
+        return true;
+      },
+      child: Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: SizeConfig.padding28,
+            ),
+            Row(
+              children: [
+                const Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding28,
-          ),
-          Row(
-            children: [
-              Text("Fello Flo Amount", style: TextStyles.sourceSansSB.body1),
-              const Spacer(),
-              Text(
-                "₹${model.amountController?.text ?? '0'}",
-                style: TextStyles.sourceSansSB.body1,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          Row(
-            children: [
-              Text(
-                "Investment date",
-                style: TextStyles.sourceSans.body2,
-              ),
-              const Spacer(),
-              Text(
-                "3rd Mar 2023",
-                style: TextStyles.sourceSansSB.body2,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          Row(
-            children: [
-              Text(
-                "Maturity date",
-                style: TextStyles.sourceSans.body2,
-              ),
-              const Spacer(),
-              Text(
-                '3rd Sep 2023',
-                style: TextStyles.sourceSansSB.body2,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
-          Container(
-            height: 1,
-            color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-          ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                height: SizeConfig.padding28,
-                width: SizeConfig.padding28,
-                child: SvgPicture.asset(
-                  Assets.howToPlayAsset1Tambola,
-                  fit: BoxFit.contain,
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding28,
+            ),
+            Row(
+              children: [
+                Text("Fello Flo Amount", style: TextStyles.sourceSansSB.body1),
+                const Spacer(),
+                Text(
+                  "₹${model.amountController?.text ?? '0'}",
+                  style: TextStyles.sourceSansSB.body1,
                 ),
-              ),
-              SizedBox(
-                width: SizeConfig.padding4,
-              ),
-              Text(
-                "Total Tambola Tickets",
-                style: TextStyles.sourceSansSB.body1,
-              ),
-              const Spacer(),
-              Text(
-                "${model.totalTickets}",
-                style: TextStyles.sourceSansSB.body1,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
-          if (model.showHappyHour) ...[
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding16,
+            ),
             Row(
               children: [
                 Text(
-                  "Happy Hour Tambola Tickets",
+                  "Investment date",
                   style: TextStyles.sourceSans.body2,
                 ),
                 const Spacer(),
                 Text(
-                  "${model.happyHourTickets}",
+                  "3rd Mar 2023",
+                  style: TextStyles.sourceSansSB.body2,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding16,
+            ),
+            Row(
+              children: [
+                Text(
+                  "Maturity date",
                   style: TextStyles.sourceSans.body2,
+                ),
+                const Spacer(),
+                Text(
+                  '3rd Sep 2023',
+                  style: TextStyles.sourceSansSB.body2,
                 ),
               ],
             ),
             SizedBox(
               height: SizeConfig.padding24,
             ),
+            Container(
+              height: 1,
+              color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
             Row(
               children: [
+                SizedBox(
+                  height: SizeConfig.padding28,
+                  width: SizeConfig.padding28,
+                  child: SvgPicture.asset(
+                    Assets.howToPlayAsset1Tambola,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding4,
+                ),
                 Text(
-                  "Lifetime Tambola Tickets",
-                  style: TextStyles.sourceSans.body2,
+                  "Total Tambola Tickets",
+                  style: TextStyles.sourceSansSB.body1,
                 ),
                 const Spacer(),
                 Text(
-                  "${model.numberOfTambolaTickets}",
-                  style: TextStyles.sourceSans.body2,
+                  "${model.totalTickets}",
+                  style: TextStyles.sourceSansSB.body1,
                 ),
               ],
             ),
             SizedBox(
               height: SizeConfig.padding24,
             ),
-          ],
-          Container(
-            height: 1,
-            color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-          ),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
-          if (model.appliedCoupon != null) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  Assets.ticketTilted,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  '${model.appliedCoupon?.code} coupon applied',
-                  style: TextStyles.sourceSans.body3
-                      .colour(UiConstants.kTealTextColor),
-                ),
-              ],
+            if (model.showHappyHour) ...[
+              Row(
+                children: [
+                  Text(
+                    "Happy Hour Tambola Tickets",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                  const Spacer(),
+                  Text(
+                    "${model.happyHourTickets}",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Lifetime Tambola Tickets",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                  const Spacer(),
+                  Text(
+                    "${model.numberOfTambolaTickets}",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+            ],
+            Container(
+              height: 1,
+              color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
             ),
             SizedBox(
               height: SizeConfig.padding12,
-            )
-          ],
-          AppPositiveBtn(
-            width: SizeConfig.screenWidth!,
-            onPressed: () {
-              if (!model.isBuyInProgress) {
-                FocusScope.of(context).unfocus();
-                model.initiateBuy();
-              }
+            ),
+            if (model.appliedCoupon != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    Assets.ticketTilted,
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    '${model.appliedCoupon?.code} coupon applied',
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTealTextColor),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding12,
+              )
+            ],
+            AppPositiveBtn(
+              width: SizeConfig.screenWidth!,
+              onPressed: () async {
+                AppState.backButtonDispatcher?.didPopRoute();
 
-              AppState.backButtonDispatcher?.didPopRoute();
-            },
-            btnText: 'Invest'.toUpperCase(),
-          ),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
-        ],
+                if (!model.isBuyInProgress) {
+                  FocusScope.of(context).unfocus();
+                  await model.initiateBuy();
+                }
+              },
+              btnText: 'Invest'.toUpperCase(),
+            ),
+            SizedBox(
+              height: SizeConfig.padding12,
+            ),
+          ],
+        ),
       ),
     );
   }

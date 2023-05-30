@@ -1,6 +1,7 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
+import 'dart:developer' as d;
 import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart'; //Pub Imports
@@ -535,7 +536,7 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    debugPrint("Current Stack: ${AppState.screenStack}");
+    d.log("Current Stack: ${AppState.screenStack}");
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
     await showDialog(
       barrierColor: barrierColor,
@@ -561,7 +562,7 @@ class BaseUtil extends ChangeNotifier {
       AppState.screenStack.add(ScreenItem.dialog);
     }
     if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
-    debugPrint("Current Stack: ${AppState.screenStack}");
+    d.log("Current Stack: ${AppState.screenStack}");
     await showModalBottomSheet(
       enableDrag: enableDrag,
       constraints: boxContraints,

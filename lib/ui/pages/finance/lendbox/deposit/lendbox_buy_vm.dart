@@ -26,6 +26,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -73,6 +74,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   int? _buyAmount = 0;
   bool isLendboxOldUser = false;
   late String floAssetType;
+  double _fieldWidth = 0.0;
 
   int? get buyAmount => _buyAmount;
 
@@ -139,6 +141,13 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  get fieldWidth => _fieldWidth;
+
+  set fieldWidth(value) {
+    _fieldWidth = value;
+    notifyListeners();
+  }
+
   Future<void> init(int? amount, bool isSkipMilestone,
       {required String assetTypeFlow}) async {
     setState(ViewState.Busy);
@@ -175,14 +184,23 @@ class LendboxBuyViewModel extends BaseViewModel {
     log(res.model?.message ?? '');
   }
 
-  initiateBuy() async {
-    if (couponApplyInProgress) return;
+  Future<void> initiateBuy() async {
+    if (couponApplyInProgress || _isBuyInProgress) return;
 
     _isBuyInProgress = true;
     notifyListeners();
     final amount = await initChecks();
     if (amount == 0) {
       _isBuyInProgress = false;
+      BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
+      notifyListeners();
+      return;
+    }
+
+    if (amount < minAmount) {
+      _isBuyInProgress = false;
+      BaseUtil.showNegativeAlert(
+          locale.enterAmountGreaterThan, locale.enterAmount);
       notifyListeners();
       return;
     }
@@ -355,6 +373,42 @@ class LendboxBuyViewModel extends BaseViewModel {
           .value
     });
 
+    updateFieldWidth();
     notifyListeners();
+  }
+
+  onValueChanged(String val) {
+    if (val != null && val.isNotEmpty) {
+      if (int.tryParse(val.trim())! > 50000) {
+        buyAmount = 50000;
+        amountController!.text = buyAmount!.toInt().toString();
+
+        // amountController!.selection = TextSelection.fromPosition(
+        //     TextPosition(offset: amountController!.text.length));
+      } else {
+        buyAmount = int.tryParse(val);
+        // if ((buyAmount ?? 0.0) < 10.0) showMinCapText = true;
+        for (int i = 0; i < assetOptionsModel!.data.userOptions.length; i++) {
+          if (buyAmount == assetOptionsModel!.data.userOptions[i].value) {
+            lastTappedChipIndex = i;
+            break;
+          }
+        }
+      }
+    } else {
+      buyAmount = 0;
+    }
+
+    updateFieldWidth();
+
+    appliedCoupon = null;
+  }
+
+  void updateFieldWidth() {
+    int n = amountController!.text.length;
+    if (n == 0) n++;
+    _fieldWidth = SizeConfig.padding40 * n.toDouble();
+    amountController!.selection = TextSelection.fromPosition(
+        TextPosition(offset: amountController!.text.length));
   }
 }

@@ -110,8 +110,8 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                   ),
                   builder: (ctx, model, child) {
                     _secureScreenshots(lboxTxnService);
-                    widget.onChanged(
-                        double.parse(model.amountController?.text ?? "0"));
+                    // widget.onChanged(
+                    //     double.parse(model.amountController?.text ?? "0.0"));
                     return _getView(
                       lboxTxnService,
                       model,
