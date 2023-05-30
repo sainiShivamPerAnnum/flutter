@@ -59,6 +59,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -694,6 +695,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void parseRoute(Uri uri, {String? title, bool isExternal = false}) {
     _logger.d("Url: ${uri.toString()}");
+    Haptic.vibrate();
     if (uri.scheme == "http" || uri.scheme == "https") {
       if (isExternal) {
         BaseUtil.launchUrl(uri.toString());

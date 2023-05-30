@@ -502,7 +502,7 @@ class BaseUtil extends ChangeNotifier {
       AppState.screenStack.add(ScreenItem.dialog);
     }
     debugPrint("Current Stack: ${AppState.screenStack}");
-    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+    Haptic.vibrate();
     await showDialog(
       barrierColor: barrierColor,
       context: AppState.delegate!.navigatorKey.currentContext!,
@@ -526,7 +526,7 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+    Haptic.vibrate();
     debugPrint("Current Stack: ${AppState.screenStack}");
     await showModalBottomSheet(
       enableDrag: enableDrag,
@@ -573,7 +573,7 @@ class BaseUtil extends ChangeNotifier {
         return FileType.svg;
       case "json":
       case "lottie":
-      return FileType.lottie;
+        return FileType.lottie;
       case "png":
       case "jpeg":
       case "webp":

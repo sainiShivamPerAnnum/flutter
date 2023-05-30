@@ -2,13 +2,15 @@ import 'dart:ui' as ui;
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SaveCustomCard extends StatelessWidget {
   final String? title;
@@ -39,7 +41,7 @@ class SaveCustomCard extends StatelessWidget {
     return GestureDetector(
       onTap: onCardTap,
       child: Container(
-        height: SizeConfig.screenWidth! * 0.35,
+        // height: SizeConfig.screenWidth! * 0.35,
         width: SizeConfig.screenWidth,
         margin: EdgeInsets.symmetric(
           horizontal: SizeConfig.pageHorizontalMargins,
@@ -49,115 +51,126 @@ class SaveCustomCard extends StatelessWidget {
           color: cardBgColor,
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
+        child: Column(
           children: [
-            Image.asset(
-              cardAssetName!,
-              height: SizeConfig.screenWidth! * 0.2,
-              width: SizeConfig.screenWidth! * 0.2,
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(
-                    top: SizeConfig.padding20,
-                    bottom: SizeConfig.padding16,
-                    right: SizeConfig.padding20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Image.asset(
+                  cardAssetName!,
+                  height: SizeConfig.screenWidth! * 0.2,
+                  width: SizeConfig.screenWidth! * 0.2,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: SizeConfig.padding20,
+                        bottom: SizeConfig.padding16,
+                        right: SizeConfig.padding20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // AutosaveStatusText(asset: title!),
-                            Text(
-                              title!,
-                              style: TextStyles.rajdhaniSB.title5,
-                              key: ValueKey(title),
-                            ),
-                          ],
-                        ),
                         Row(
-                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              margin:
-                                  EdgeInsets.only(right: SizeConfig.padding2),
-                              width: SizeConfig.screenWidth! * 0.26,
-                              height: SizeConfig.padding24,
-                              decoration: BoxDecoration(
-                                  color: (key ==
-                                          ValueKey(
-                                              Constants.ASSET_TYPE_AUGMONT))
-                                      ? Color(0xff5567B7)
-                                      : Color(0xff326D71),
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness16)),
-                              child: AnimatedTextKit(
-                                repeatForever: true,
-                                animatedTexts: List.generate(
-                                  chipText.length,
-                                  (index) => RotateAnimatedText(
-                                    chipText[index].toUpperCase(),
-                                    duration: Duration(seconds: 2),
-                                    textStyle: TextStyles.sourceSansSB.body4
-                                        .colour(Colors.white),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    title!,
+                                    style: TextStyles.rajdhaniSB.title5,
+                                    key: ValueKey(title),
                                   ),
-                                ),
+                                  Text(
+                                    subtitle!,
+                                    style:
+                                        TextStyles.body3.colour(Colors.white54),
+                                  )
+                                ],
                               ),
                             ),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
+                            SvgPicture.asset(
+                              Assets.chevRonRightArrow,
                               color: Colors.white,
-                              size: SizeConfig.padding16,
+                              width: SizeConfig.padding32,
                             ),
                           ],
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  subtitle ?? locale.balanceText,
-                                  style: TextStyles.sourceSansM.body4,
-                                ),
-                                SizedBox(width: SizeConfig.padding4),
-                                if (key ==
-                                    ValueKey(Constants.ASSET_TYPE_LENDBOX))
-                                  LboxGrowthArrow()
-                              ],
-                            ),
-                            UserFundQuantitySE(
-                              style: TextStyles.sourceSansSB.title4,
-                              investmentType: investmentType,
-                            )
-                          ],
-                        ),
-                        CustomSaveButton(
-                          onTap: onTap,
-                          title: locale.btnSave.toUpperCase(),
-                          width: SizeConfig.screenWidth! * 0.2,
-                          height: SizeConfig.screenWidth! * 0.11,
-                        )
-                      ],
-                    )
-                  ],
+                  ),
                 ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(right: SizeConfig.padding2),
+                    width: SizeConfig.screenWidth! * 0.32,
+                    height: SizeConfig.padding40,
+                    decoration: BoxDecoration(
+                        color: (key == ValueKey(Constants.ASSET_TYPE_AUGMONT))
+                            ? Color(0xff5567B7)
+                            : Color(0xff326D71),
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness8)),
+                    child: AnimatedTextKit(
+                      repeatForever: true,
+                      animatedTexts: List.generate(
+                        chipText.length,
+                        (index) => RotateAnimatedText(
+                          chipText[index].toUpperCase(),
+                          duration: const Duration(seconds: 2),
+                          textStyle: TextStyles.sourceSansSB.body4
+                              .colour(Colors.white)
+                              .letterSpace(2),
+                        ),
+                      ),
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: onTap,
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness5)),
+                    child: Text(
+                      "INVEST",
+                      style: TextStyles.rajdhaniB.body2.colour(Colors.black),
+                    ),
+                  )
+                ],
               ),
             ),
+            SizedBox(height: SizeConfig.padding16),
+            if (investmentType == InvestmentType.LENDBOXP2P)
+              Container(
+                height: SizeConfig.padding32,
+                width: SizeConfig.screenWidth,
+                decoration: BoxDecoration(
+                  color: UiConstants.kFloContainerColor,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(SizeConfig.roundness12),
+                    bottomLeft: Radius.circular(SizeConfig.roundness12),
+                  ),
+                ),
+                alignment: Alignment.center,
+                child:
+                    "Introducing  12% returns on your investment with *12% Flo*"
+                        .beautify(
+                            alignment: TextAlign.center,
+                            style: TextStyles.body4.colour(Colors.white60)),
+              )
           ],
         ),
       ),

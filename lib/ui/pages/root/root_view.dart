@@ -178,7 +178,7 @@ bool _showHappyHour() {
 }
 
 class RootAppBar extends StatelessWidget {
-  const RootAppBar({super.key, this.showTitle = true});
+  const RootAppBar({super.key});
 
   FaqsType getFaqType() {
     final NavBarItemModel navItem =
@@ -196,8 +196,6 @@ class RootAppBar extends StatelessWidget {
     }
   }
 
-  final bool showTitle;
-
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
@@ -209,7 +207,6 @@ class RootAppBar extends StatelessWidget {
                 selector: (_, tambolaService) =>
                     tambolaService.tambolaTicketCount,
                 builder: (_, ticketCount, child) {
-                  print("Tambola Ticket count: $ticketCount");
                   return (locator<RootController>().currentNavBarItemModel !=
                           RootController.journeyNavBarItem)
                       ? Container(
@@ -219,15 +216,16 @@ class RootAppBar extends StatelessWidget {
                           child: FAppBar(
                             showAvatar: true,
                             leadingPadding: false,
-                            titleWidget: showTitle
-                                ? Expanded(
-                                    child: Salutation(
-                                      leftMargin: SizeConfig.padding8,
-                                      textStyle: TextStyles.rajdhaniSB.body0
-                                          .colour(Colors.white),
-                                    ),
-                                  )
-                                : null,
+                            titleWidget:
+                                !userservice!.userSegments.contains("NEW_USER")
+                                    ? Expanded(
+                                        child: Salutation(
+                                          leftMargin: SizeConfig.padding8,
+                                          textStyle: TextStyles.rajdhaniSB.body0
+                                              .colour(Colors.white),
+                                        ),
+                                      )
+                                    : null,
                             backgroundColor: UiConstants.kBackgroundColor,
                             showCoinBar: false,
                             action: Row(
