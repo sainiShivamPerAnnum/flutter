@@ -44,6 +44,7 @@ class FloPremiumTierCard extends StatelessWidget {
         child: Column(
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,15 +57,17 @@ class FloPremiumTierCard extends StatelessWidget {
                           style: TextStyles.sourceSansB.title5,
                         ),
                         Transform.translate(
-                          offset: Offset(0, SizeConfig.padding2),
+                          offset:
+                              Offset(SizeConfig.padding4, SizeConfig.padding2),
                           child: Icon(
                             Icons.arrow_forward_ios_rounded,
                             color: Colors.white,
-                            size: SizeConfig.iconSize0,
+                            size: SizeConfig.iconSize1,
                           ),
                         )
                       ],
                     ),
+                    SizedBox(height: SizeConfig.padding6),
                     Row(
                       children: [
                         FloPremiumTierChip(value: lockIn),

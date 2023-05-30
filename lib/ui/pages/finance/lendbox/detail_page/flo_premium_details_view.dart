@@ -66,257 +66,264 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView> {
                     ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                   ),
                 ),
-                AnimatedOpacity(
-                  opacity: model.opacity,
-                  curve: Curves.easeIn,
-                  duration: const Duration(milliseconds: 200),
-                  child: SafeArea(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kToolbarHeight * 0.8),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            controller: controller,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.pageHorizontalMargins),
-                                  child: Column(
+                SafeArea(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: kToolbarHeight * 0.8),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          controller: controller,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Fello Flo Premium",
+                                              style:
+                                                  TextStyles.rajdhaniSB.title4,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: UiConstants
+                                                            .primaryColor
+                                                            .withOpacity(0.95),
+                                                        blurRadius: 50,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  child: AnimatedCrossFade(
+                                                      firstChild: Text(
+                                                        "12% Flo",
+                                                        style: TextStyles
+                                                            .rajdhaniB.title2
+                                                            .colour(
+                                                          UiConstants
+                                                              .primaryColor,
+                                                        ),
+                                                      ),
+                                                      secondChild: Text(
+                                                        "10% Flo",
+                                                        style: TextStyles
+                                                            .rajdhaniB.title2
+                                                            .colour(
+                                                                Colors.white),
+                                                      ),
+                                                      crossFadeState: model.is12
+                                                          ? CrossFadeState
+                                                              .showFirst
+                                                          : CrossFadeState
+                                                              .showSecond,
+                                                      firstCurve:
+                                                          Curves.decelerate,
+                                                      secondCurve:
+                                                          Curves.decelerate,
+                                                      duration: const Duration(
+                                                          milliseconds: 1500)),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        )),
+                                        SvgPicture.asset(
+                                          Assets.floAsset,
+                                          height:
+                                              SizeConfig.screenHeight! * 0.1,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: SizeConfig.padding10),
+                                    Text(
+                                      model.is12
+                                          ? model.flo12Highlights
+                                          : model.flo10Highlights,
+                                      style: TextStyles.sourceSans.body2
+                                          .colour(UiConstants.primaryColor),
+                                    ),
+                                    SizedBox(height: SizeConfig.padding4),
+                                    Text(
+                                      model.is12
+                                          ? model.flo12Description
+                                          : model.flo10Description,
+                                      style: TextStyles.sourceSans.body2
+                                          .colour(Colors.white54),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: SizeConfig.padding24),
+                              if (model.isInvested)
+                                FloBalanceBriefRow(
+                                  lead: model.userService.userFundWallet
+                                          ?.wLbBalance ??
+                                      0,
+                                  trail: model.userService.userFundWallet
+                                          ?.wLbPrinciple ??
+                                      0,
+                                  leadPercent: 0.02,
+                                ),
+                              const FloPremiumTransactionsList(),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding16),
+                                child: Text(
+                                  "100% Safe & Secure with Fello",
+                                  style: TextStyles.rajdhaniSB.title4
+                                      .colour(Colors.white),
+                                ),
+                              ),
+                              const SaveAssetsFooter(),
+                              SizedBox(
+                                  height: SizeConfig.pageHorizontalMargins),
+                              CircularSlider(
+                                  type: InvestmentType.LENDBOXP2P,
+                                  isNewUser: false,
+                                  interest: model.is12 ? 12 : 10),
+                              SizedBox(
+                                  height: SizeConfig.pageHorizontalMargins),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding16),
+                                child: Text(
+                                  "Frequently Asked Questions",
+                                  style: TextStyles.rajdhaniSB.title4
+                                      .colour(Colors.white),
+                                ),
+                              ),
+                              SizedBox(
+                                width: SizeConfig.screenWidth,
+                                child: Column(
+                                  children: [
+                                    Theme(
+                                      data: ThemeData(
+                                          brightness: Brightness.dark),
+                                      child: ExpansionPanelList(
+                                        animationDuration:
+                                            const Duration(milliseconds: 600),
+                                        expandedHeaderPadding:
+                                            const EdgeInsets.all(0),
+                                        dividerColor: UiConstants.kDividerColor
+                                            .withOpacity(0.3),
+                                        elevation: 0,
+                                        children: List.generate(
+                                          model.faqHeaders.length,
+                                          (index) => ExpansionPanel(
+                                            backgroundColor: Colors.transparent,
+                                            canTapOnHeader: true,
+                                            headerBuilder: (ctx, isOpen) =>
+                                                Padding(
+                                              padding: EdgeInsets.only(
+                                                top: SizeConfig.padding20,
+                                                left: SizeConfig
+                                                    .pageHorizontalMargins,
+                                                bottom: SizeConfig.padding20,
+                                              ),
+                                              child: Text(
+                                                  model.faqHeaders[index] ?? "",
+                                                  style: TextStyles
+                                                      .sourceSans.body2
+                                                      .colour(Colors.white)),
+                                            ),
+                                            isExpanded: model.detStatus[index],
+                                            body: Container(
+                                              margin: EdgeInsets.symmetric(
+                                                  horizontal: SizeConfig
+                                                      .pageHorizontalMargins),
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                  model.faqResponses[index]!,
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyles.body3
+                                                      .colour(UiConstants
+                                                          .kFAQsAnswerColor)),
+                                            ),
+                                          ),
+                                        ),
+                                        expansionCallback: (i, isOpen) {
+                                          model.updateDetStatus(i, !isOpen);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: UiConstants.kSaveStableFelloCardBg,
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness16),
+                                    border: Border.all(
+                                        color: Colors.white, width: 2)),
+                                margin: EdgeInsets.all(
+                                    SizeConfig.pageHorizontalMargins),
+                                padding: EdgeInsets.all(
+                                    SizeConfig.pageHorizontalMargins),
+                                child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      Text(
+                                        "Wanna Know more?",
+                                        style: TextStyles.rajdhaniSB.title5,
+                                      ),
+                                      SizedBox(height: SizeConfig.padding12),
                                       Row(
                                         children: [
                                           Expanded(
-                                              child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Fello Flo Premium",
-                                                style: TextStyles
-                                                    .rajdhaniSB.title4,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: UiConstants
-                                                              .primaryColor
-                                                              .withOpacity(
-                                                                  0.95),
-                                                          blurRadius: 50,
-                                                        )
-                                                      ],
-                                                    ),
-                                                    child: Text(
-                                                      model.is12
-                                                          ? "12% Flo"
-                                                          : "10% Flo",
-                                                      style: TextStyles
-                                                          .rajdhaniB.title2
-                                                          .colour(model.is12
-                                                              ? UiConstants
-                                                                  .primaryColor
-                                                              : Colors.white),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          )),
-                                          SvgPicture.asset(
-                                            Assets.floAsset,
-                                            height:
-                                                SizeConfig.screenHeight! * 0.1,
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: SizeConfig.padding10),
-                                      Text(
-                                        model.is12
-                                            ? model.flo12Highlights
-                                            : model.flo10Highlights,
-                                        style: TextStyles.sourceSans.body2
-                                            .colour(UiConstants.primaryColor),
-                                      ),
-                                      SizedBox(height: SizeConfig.padding4),
-                                      Text(
-                                        model.is12
-                                            ? model.flo12Description
-                                            : model.flo10Description,
-                                        style: TextStyles.sourceSans.body2
-                                            .colour(Colors.white54),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: SizeConfig.padding24),
-                                if (model.isInvested)
-                                  FloBalanceBriefRow(
-                                    lead: model.userService.userFundWallet
-                                            ?.wLbBalance ??
-                                        0,
-                                    trail: model.userService.userFundWallet
-                                            ?.wLbPrinciple ??
-                                        0,
-                                    leadPercent: 0.02,
-                                  ),
-                                const FloPremiumTransactionsList(),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: SizeConfig.padding16),
-                                  child: Text(
-                                    "100% Safe & Secure with Fello",
-                                    style: TextStyles.rajdhaniSB.title4
-                                        .colour(Colors.white),
-                                  ),
-                                ),
-                                const SaveAssetsFooter(),
-                                SizedBox(
-                                    height: SizeConfig.pageHorizontalMargins),
-                                CircularSlider(
-                                    type: InvestmentType.LENDBOXP2P,
-                                    isNewUser: false,
-                                    interest: model.is12 ? 12 : 10),
-                                SizedBox(
-                                    height: SizeConfig.pageHorizontalMargins),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: SizeConfig.padding16),
-                                  child: Text(
-                                    "Frequently Asked Questions",
-                                    style: TextStyles.rajdhaniSB.title4
-                                        .colour(Colors.white),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.screenWidth,
-                                  child: Column(
-                                    children: [
-                                      Theme(
-                                        data: ThemeData(
-                                            brightness: Brightness.dark),
-                                        child: ExpansionPanelList(
-                                          animationDuration:
-                                              const Duration(milliseconds: 600),
-                                          expandedHeaderPadding:
-                                              const EdgeInsets.all(0),
-                                          dividerColor: UiConstants
-                                              .kDividerColor
-                                              .withOpacity(0.3),
-                                          elevation: 0,
-                                          children: List.generate(
-                                            model.faqHeaders.length,
-                                            (index) => ExpansionPanel(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              canTapOnHeader: true,
-                                              headerBuilder: (ctx, isOpen) =>
-                                                  Padding(
-                                                padding: EdgeInsets.only(
-                                                  top: SizeConfig.padding20,
-                                                  left: SizeConfig
-                                                      .pageHorizontalMargins,
-                                                  bottom: SizeConfig.padding20,
-                                                ),
-                                                child: Text(
-                                                    model.faqHeaders[index] ??
-                                                        "",
-                                                    style: TextStyles
-                                                        .sourceSans.body2
-                                                        .colour(Colors.white)),
-                                              ),
-                                              isExpanded:
-                                                  model.detStatus[index],
-                                              body: Container(
-                                                margin: EdgeInsets.symmetric(
-                                                    horizontal: SizeConfig
-                                                        .pageHorizontalMargins),
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                    model.faqResponses[index]!,
-                                                    textAlign: TextAlign.start,
-                                                    style: TextStyles.body3
-                                                        .colour(UiConstants
-                                                            .kFAQsAnswerColor)),
-                                              ),
+                                            child: Text(
+                                              "Wanna know more about the asset or need help with your Investment",
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white),
                                             ),
                                           ),
-                                          expansionCallback: (i, isOpen) {
-                                            model.updateDetStatus(i, !isOpen);
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: UiConstants.kSaveStableFelloCardBg,
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness16),
-                                      border: Border.all(
-                                          color: Colors.white, width: 2)),
-                                  margin: EdgeInsets.all(
-                                      SizeConfig.pageHorizontalMargins),
-                                  padding: EdgeInsets.all(
-                                      SizeConfig.pageHorizontalMargins),
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Wanna Know more?",
-                                          style: TextStyles.rajdhaniSB.title5,
-                                        ),
-                                        SizedBox(height: SizeConfig.padding12),
-                                        Row(
-                                          children: [
-                                            Expanded(
+                                          SizedBox(width: SizeConfig.padding10),
+                                          OutlinedButton(
+                                              onPressed: () {},
+                                              style: ButtonStyle(
+                                                  side:
+                                                      MaterialStateProperty.all(
+                                                          const BorderSide(
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 1.0,
+                                                              style: BorderStyle
+                                                                  .solid))),
                                               child: Text(
-                                                "Wanna know more about the asset or need help with your Investment",
-                                                style: TextStyles.body2
+                                                "ASK FELLO",
+                                                style: TextStyles
+                                                    .rajdhaniB.body2
                                                     .colour(Colors.white),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                                width: SizeConfig.padding10),
-                                            OutlinedButton(
-                                                onPressed: () {},
-                                                style: ButtonStyle(
-                                                    side: MaterialStateProperty
-                                                        .all(const BorderSide(
-                                                            color: Colors.white,
-                                                            width: 1.0,
-                                                            style: BorderStyle
-                                                                .solid))),
-                                                child: Text(
-                                                  "ASK FELLO",
-                                                  style: TextStyles
-                                                      .rajdhaniB.body2
-                                                      .colour(Colors.white),
-                                                ))
-                                          ],
-                                        )
-                                      ]),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.navBarHeight * 2,
-                                )
-                              ],
-                            ),
+                                              ))
+                                        ],
+                                      )
+                                    ]),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.navBarHeight * 2,
+                              )
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Align(
@@ -379,20 +386,14 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView> {
                                       ),
                                       onPressed: () async {
                                         Haptic.vibrate();
-                                        await controller?.animateTo(0,
-                                            duration: const Duration(
-                                                milliseconds: 200),
-                                            curve: Curves.decelerate);
-                                        // model.opacity = 0.8;
-                                        // model.offset = const Offset(0, -2);
-                                        await Future.delayed(
-                                            const Duration(milliseconds: 300),
-                                            () {
+                                        await controller
+                                            ?.animateTo(0,
+                                                duration: const Duration(
+                                                    milliseconds: 200),
+                                                curve: Curves.decelerate)
+                                            .then((_) {
                                           model.is12 = true;
-                                          // model.opacity = 1;
-                                          // model.offset = const Offset(0, 0);
                                         });
-                                        // model.is12 = true;
                                       }),
                                 ),
                               if (!model.is12)

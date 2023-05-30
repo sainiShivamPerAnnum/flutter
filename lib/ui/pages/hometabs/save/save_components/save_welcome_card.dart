@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/walkthrough_video_section.dart';
@@ -68,7 +69,11 @@ class SaveWelcomeCard extends StatelessWidget {
                 const Spacer(),
                 MaterialButton(
                   color: Colors.white,
-                  onPressed: () {},
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  ),
+                  onPressed: () =>
+                      BaseUtil.openDepositOptionsModalSheet(timer: 0),
                   child: Text(
                     "SAVE",
                     style: TextStyles.rajdhaniB.body2
