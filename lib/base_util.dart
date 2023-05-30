@@ -62,9 +62,9 @@ import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-enum FileType { svg, lottie, unknown, png }
-
 import 'ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
+
+enum FileType { svg, lottie, unknown, png }
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
