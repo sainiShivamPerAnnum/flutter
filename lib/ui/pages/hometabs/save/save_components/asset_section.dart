@@ -133,8 +133,10 @@ class MiniAssetsGroupSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+        vertical: SizeConfig.padding16,
+      ),
       child: Row(
         children: [
           const MiniAssetCard(

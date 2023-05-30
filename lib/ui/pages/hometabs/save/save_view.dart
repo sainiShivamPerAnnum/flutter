@@ -9,6 +9,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/home/cards_home.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,27 @@ class Save extends StatelessWidget {
             },
             builder: Builder(builder: (context) {
               SpotLightController.instance.saveViewContext = context;
-              return SaveViewWrapper(model: model);
+              return Stack(
+                children: [
+                  SaveViewWrapper(model: model),
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.padding40,
+                    color: UiConstants.kFloContainerColor,
+                    child: const MarqueeText(
+                      infoList: [
+                        "Gold Deposits are disabled",
+                        "Flo Deposits are disabled",
+                        "Gold Deposits are disabled",
+                        "Flo Deposits are disabled"
+                      ],
+                      showBullet: true,
+                      bulletColor: Colors.white,
+                      textColor: Colors.white,
+                    ),
+                  ),
+                ],
+              );
             }),
           );
         },
@@ -73,7 +94,17 @@ class SaveViewWrapper extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: model.getSaveViewItems(model),
                         ),
-                        const Cards(),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: SizeConfig.screenWidth,
+                              height: SizeConfig.padding40,
+                              color: UiConstants.kGoldContainerColor,
+                            ),
+                            const Cards(),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -128,7 +159,7 @@ class SaveViewWrapper extends StatelessWidget {
               )
             : ListView(
                 shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 cacheExtent: 1000,
                 padding: EdgeInsets.zero,
                 children: model.getNewUserSaveViewItems(model),
