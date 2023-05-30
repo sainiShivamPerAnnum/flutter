@@ -5,7 +5,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -15,6 +14,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
@@ -30,7 +30,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final CustomLogger? logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
   final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
-  final JourneyService _journeyService = locator<JourneyService>();
+  // final JourneyService _journeyService = locator<JourneyService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
@@ -64,24 +64,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   @override
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
-
-    // if (AppState.showAutosaveBt &&
-    //     AppState.screenStack.last != ScreenItem.dialog) {
-    //   AppState.showAutosaveBt = false;
-    //   _analyticsService.track(eventName: AnalyticsEvents.asHardBackTapped);
-    //   BaseUtil.openModalBottomSheet(
-    //       isBarrierDismissible: true,
-    //       addToScreenStack: true,
-    //       backgroundColor: UiConstants.kBackgroundColor,
-    //       borderRadius: BorderRadius.only(
-    //         topLeft: Radius.circular(SizeConfig.roundness32),
-    //         topRight: Radius.circular(SizeConfig.roundness32),
-    //       ),
-    //       isScrollControlled: true,
-    //       hapticVibrate: true,
-    //       content: AutosaveConfirmExitModalSheet());
-    //   return Future.value(true);
-    // }
 
     if (SpotLightController.instance.startShowCase) {
       SpotLightController.instance.startShowCase = false;
@@ -172,7 +154,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.isWebGameLInProgress = false;
           didPopRoute();
           didPopRoute();
-          _webGameViewModel!.handleGameSessionEnd();
+          _webGameViewModel.handleGameSessionEnd();
         },
         true,
       );
@@ -184,7 +166,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.isWebGamePInProgress = false;
           didPopRoute();
           didPopRoute();
-          _webGameViewModel!.handleGameSessionEnd(
+          _webGameViewModel.handleGameSessionEnd(
               duration: const Duration(milliseconds: 500));
         },
         false,
@@ -201,16 +183,24 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
     // If the root tab is not 0 at the time of exit
 
-    else if (_userService!.isUserOnboarded &&
-        AppState.screenStack.length == 1 &&
-        AppState.delegate!.appState.rootIndex != 0) {
+    else if (_userService.isUserOnboarded && AppState.screenStack.length == 1) {
       logger!.w("Checking if app can be closed");
-      AppState.delegate!.appState.setCurrentTabIndex = 0;
-      locator<RootController>()
-          .onChange(locator<RootController>().navItems.values.toList()[0]);
 
-      _journeyService!.checkForMilestoneLevelChange();
-      return Future.value(true);
+      if (AppState.delegate!.appState.rootIndex != 0) {
+        AppState.delegate!.appState.setCurrentTabIndex = 0;
+        locator<RootController>()
+            .onChange(locator<RootController>().navItems.values.toList()[0]);
+        return Future.value(true);
+      } else if (AppState.delegate!.appState.rootIndex ==
+              locator<RootController>()
+                  .navItems
+                  .values
+                  .toList()
+                  .indexWhere((element) => element.title == "Save") &&
+          locator<CardActionsNotifier>().isVerticalView) {
+        locator<CardActionsNotifier>().isVerticalView = false;
+        return Future.value(true);
+      }
     }
 
     return _routerDelegate!.popRoute();

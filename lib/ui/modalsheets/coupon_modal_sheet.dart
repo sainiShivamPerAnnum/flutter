@@ -93,9 +93,7 @@ class CouponModalSheet extends StatelessWidget {
                 fillColor: UiConstants.kBackgroundColor,
                 textEditingController: couponCodeController,
                 hintText: locale.txnEnterCode,
-                inputFormatters: [
-                  UpperCaseTextFormatter(),
-                ],
+                textCapitalization: TextCapitalization.characters,
                 suffixIcon: InkWell(
                   child: Text(
                     locale.txnApply,

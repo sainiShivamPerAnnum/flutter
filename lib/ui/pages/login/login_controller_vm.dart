@@ -234,7 +234,7 @@ class LoginControllerViewModel extends BaseViewModel {
                 .trim()
                 .replaceAll(RegExp(r"\s+\b|\b\s"), " ");
             String gender =
-                _formatGender(_nameKey.currentState!.model.genderValue);
+            _formatGender(_nameKey.currentState!.model.genderValue);
 
             userService.baseUser ??= BaseUser.newUser(
                 userService.firebaseUser!.uid,
@@ -254,7 +254,7 @@ class LoginControllerViewModel extends BaseViewModel {
               final token = await _getBearerToken();
               userService.baseUser!.mobile = userMobile;
               final ApiResponse response =
-                  await _userRepo!.setNewUser(userService.baseUser!, token);
+              await _userRepo!.setNewUser(userService.baseUser!, token);
               logger!.i(response.toString());
               if (response.code == 400) {
                 _analyticsService.track(

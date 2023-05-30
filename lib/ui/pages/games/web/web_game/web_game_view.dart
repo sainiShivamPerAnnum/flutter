@@ -68,15 +68,60 @@ class WebGameView extends StatelessWidget {
   }
 }
 
-class GameView extends StatelessWidget {
+class GameView extends StatefulWidget {
   final bool inLandscapeMode;
   final String initialUrl;
-  int exitCounter = 0;
   WebGameViewModel model;
+
   GameView(
       {required this.inLandscapeMode,
       required this.initialUrl,
       required this.model});
+
+  @override
+  State<GameView> createState() => _GameViewState();
+}
+
+class _GameViewState extends State<GameView> {
+  int exitCounter = 0;
+
+  WebViewController? controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setBackgroundColor(Colors.black)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..addJavaScriptChannel(
+        'Print',
+        onMessageReceived: (message) {
+          log(message.message);
+          exitCounter++;
+          if (message.message == 'insufficient tokens' && exitCounter == 1) {
+            widget.model.updateFlcBalance();
+
+            locator<UserStatsRepo>().getGameStats();
+            BaseUtil.openModalBottomSheet(
+              addToScreenStack: true,
+              backgroundColor: UiConstants.gameCardColor,
+              content: WantMoreTicketsModalSheet(
+                isInsufficientBalance: true,
+              ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness24),
+                topRight: Radius.circular(SizeConfig.roundness24),
+              ),
+              hapticVibrate: true,
+              isScrollControlled: true,
+              isBarrierDismissible: true,
+            );
+          }
+        },
+      )
+      ..loadRequest(Uri.parse(widget.initialUrl));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,40 +131,8 @@ class GameView extends StatelessWidget {
             margin: EdgeInsets.symmetric(
                 horizontal:
                     Platform.isIOS ? MediaQuery.of(context).padding.right : 0),
-            child: WebView(
-              initialUrl: initialUrl,
-              javascriptMode: JavascriptMode.unrestricted,
-              javascriptChannels: Set.from(
-                [
-                  JavascriptChannel(
-                    name: 'Print',
-                    onMessageReceived: (JavascriptMessage message) {
-                      log(message.message);
-                      exitCounter++;
-                      if (message.message == 'insufficient tokens' &&
-                          exitCounter == 1) {
-                        model.updateFlcBalance();
-
-                        locator<UserStatsRepo>().getGameStats();
-                        BaseUtil.openModalBottomSheet(
-                          addToScreenStack: true,
-                          backgroundColor: UiConstants.gameCardColor,
-                          content: WantMoreTicketsModalSheet(
-                            isInsufficientBalance: true,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.roundness24),
-                            topRight: Radius.circular(SizeConfig.roundness24),
-                          ),
-                          hapticVibrate: true,
-                          isScrollControlled: true,
-                          isBarrierDismissible: true,
-                        );
-                      }
-                    },
-                  )
-                ],
-              ),
+            child: WebViewWidget(
+              controller: controller!,
             ),
           ),
           // inLandscapeMode
@@ -127,7 +140,7 @@ class GameView extends StatelessWidget {
           Positioned(
             top: SizeConfig.padding16,
             right: SizeConfig.padding16,
-            child: Close(inLandScape: inLandscapeMode),
+            child: Close(inLandScape: widget.inLandscapeMode),
           )
           // : Positioned(
           //     bottom: SizeConfig.padding16,

@@ -219,4 +219,6 @@ class ApiPath {
   static const String powerPlayReward = "/powerplay/rewards";
 
   static const String lastWeekRecap = "/recap";
+
+  static const String quickSave = "/global/quick_save";
 }

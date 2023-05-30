@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
+import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -78,6 +79,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   UserAugmontDetail? _userAugmontDetails;
   UserBootUpDetailsModel? userBootUp;
   DynamicUI? pageConfigs;
+  QuickSaveModel? quickSaveModel;
 
   bool? _isEmailVerified;
   bool? _isSimpleKycVerified;
@@ -358,9 +360,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       if (baseUser != null) {
         // await getUserJourneyStats();
         final res = await _gettersRepo.getPageConfigs();
+        final QuickSaveRes = await _gettersRepo.getQuickSave();
         if (res.isSuccess()) {
           setPageConfigs(res.model!);
           _appState.setCurrentTabIndex = 0;
+        }
+
+        if (QuickSaveRes.isSuccess()) {
+          quickSaveModel = QuickSaveRes.model;
         }
       }
     } catch (e) {

@@ -213,10 +213,10 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                           },
                         ),
                       ),
-                      if (!widget.isStandAloneScreen)
-                        SizedBox(
-                          height: SizeConfig.navBarHeight,
-                        )
+                      // if (!widget.isStandAloneScreen)
+                      //   SizedBox(
+                      //     height: SizeConfig.navBarHeight,
+                      //   )
                     ],
                   ),
                 ),

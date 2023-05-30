@@ -12,6 +12,7 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
+import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
@@ -263,7 +264,7 @@ class GetterRepository extends BaseRepo {
     try {
       // final token = await getBearerToken();
 
-      return (await (_cacheService.cachedApi(
+      return await _cacheService.cachedApi(
         '${CacheKeys.FAQS}/${type.name}',
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
@@ -276,7 +277,7 @@ class GetterRepository extends BaseRepo {
           final faqs = FAQDataModel.helper.fromMapArray(response["data"]);
           return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
         },
-      )));
+      );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
@@ -318,9 +319,9 @@ class GetterRepository extends BaseRepo {
         (response) {
           final responseData = response["dynamicUi"];
 
-          logger.d("Page Config: $responseData");
+          // logger.d("Page Config: $responseData");
           final pageConfig = DynamicUI.fromMap(responseData);
-          logger.d("Page Config: $responseData");
+          logger.d("Page Config: ${pageConfig.toString()}");
           return ApiResponse<DynamicUI>(model: pageConfig, code: 200);
         },
       );
@@ -330,34 +331,52 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  //TODO: Not working
-  //Triggered on: Share button click on win view
-  // Future<ApiResponse<List<ScratchCard>>> getScratchCards() async {
-  //   try {
-  //     // final token = await getBearerToken();
-  //     final response = await APIService.instance.getData(
-  //       ApiPath.scratchCards(userService.baseUser.uid),
-  //       cBaseUrl: "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev",
-  //       queryParams: {},
-  //     );
+  Future<ApiResponse<QuickSaveModel>> getQuickSave() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.quickSave,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
 
-  //     // final response2 = await APIService.instance.getData(
-  //     //   "/user/ojUP6fumUgOb9wDMB6Jmoy32GOE3/golden_tickets",
-  //     //   cBaseUrl: _baseUrl,
-  //     //   queryParams: {},
-  //     // );
+      final quickSave = QuickSaveModel.fromJson(response);
 
-  //     final responseData = response["data"]["gts"];
+      return ApiResponse<QuickSaveModel>(model: quickSave, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
 
-  //     print("Test123 ${response.toString()}");
-  //     // final scratchCards = ScratchCard.fromJson(json, docId);
+//TODO: Not working
+//Triggered on: Share button click on win view
+// Future<ApiResponse<List<ScratchCard>>> getScratchCards() async {
+//   try {
+//     // final token = await getBearerToken();
+//     final response = await APIService.instance.getData(
+//       ApiPath.scratchCards(userService.baseUser.uid),
+//       cBaseUrl: "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev",
+//       queryParams: {},
+//     );
 
-  //     // return ApiResponse<List<ScratchCard>>(model: events, code: 200);
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //     print("Test123 ${e.toString()}");
+//     // final response2 = await APIService.instance.getData(
+//     //   "/user/ojUP6fumUgOb9wDMB6Jmoy32GOE3/golden_tickets",
+//     //   cBaseUrl: _baseUrl,
+//     //   queryParams: {},
+//     // );
 
-  //     return ApiResponse.withError("Unable to fetch golden tickets", 400);
-  //   }
-  // }
+//     final responseData = response["data"]["gts"];
+
+//     print("Test123 ${response.toString()}");
+//     // final scratchCards = ScratchCard.fromJson(json, docId);
+
+//     // return ApiResponse<List<ScratchCard>>(model: events, code: 200);
+//   } catch (e) {
+//     logger.e(e.toString());
+//     print("Test123 ${e.toString()}");
+
+//     return ApiResponse.withError("Unable to fetch golden tickets", 400);
+//   }
+// }
 }

@@ -36,7 +36,7 @@ const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
 const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
-const String LendboxDetailsPath = '/lendboxDetails';
+const String FloPremiumDetailsPath = '/floDetailsView';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
@@ -80,7 +80,10 @@ const String TNewUserViewPath = '/tnewUserViewPath';
 const String TransactionDetailsPath = '/transactionDetailsPage';
 const String AssetViewPath = '/assetViewSection';
 const String LastWeekOverviewPath = '/lastWeekOverview';
+const String AccountsPath = "/accountsViewPath";
 
+const String YoutubePlayerViewPath = "/youtubePlayerViewPath";
+const String EarnMoreReturnsViewPath = "/earnMoreReturnsViewPath";
 //POWER PLAY PATHS
 const String PowerPlayPath = '/powerPlayPath';
 const String PowerPlayLeaderBoardPath = '/powerPlayLeaderBoardPath';
@@ -127,7 +130,7 @@ enum Pages {
   BankDetails,
   AugGoldSell,
   AugGoldDetails,
-  LendboxDetails,
+  FloPremiumDetails,
   ReferralDetails,
   ReferralHistory,
   MyWinnings,
@@ -166,7 +169,9 @@ enum Pages {
   SettingsView,
   TransactionDetailsPage,
   LastWeekOverview,
-
+  AccountsView,
+  YoutubePlayerView,
+  EarnMoreReturnsView,
   //POWER PLAY
   PowerPlayHome,
   PowerPlayLeaderBoard,
@@ -466,10 +471,10 @@ PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
   name: 'About Digital Gold Screen',
 );
 
-PageConfiguration LendboxDetailsPageConfig = PageConfiguration(
+PageConfiguration FloPremiumDetailsPageConfig = PageConfiguration(
   key: 'lendboxDetails',
-  path: LendboxDetailsPath,
-  uiPage: Pages.LendboxDetails,
+  path: FloPremiumDetailsPath,
+  uiPage: Pages.FloPremiumDetails,
 );
 
 PageConfiguration ReferralDetailsPageConfig = PageConfiguration(
@@ -738,3 +743,21 @@ PageConfiguration LastWeekOverviewConfig = PageConfiguration(
     path: LastWeekOverviewPath,
     uiPage: Pages.LastWeekOverview,
     name: "Last Week Overview Screen");
+
+PageConfiguration AccountsViewConfig = PageConfiguration(
+    key: 'AccountsViewPath',
+    path: AccountsPath,
+    uiPage: Pages.AccountsView,
+    name: "Accounts View Screen");
+
+PageConfiguration YoutubePlayerViewConfig = PageConfiguration(
+    key: 'YoutubePlayerPath',
+    path: YoutubePlayerViewPath,
+    uiPage: Pages.YoutubePlayerView,
+    name: "Youtube Player View Screen");
+
+PageConfiguration EarnMoreReturnsViewPageConfig = PageConfiguration(
+    key: 'EarnMoreReturnsViewPath',
+    path: EarnMoreReturnsViewPath,
+    uiPage: Pages.EarnMoreReturnsView,
+    name: "Earn more rewards view screen");

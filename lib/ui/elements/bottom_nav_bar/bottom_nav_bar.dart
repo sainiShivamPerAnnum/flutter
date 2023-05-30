@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -15,64 +16,78 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RootController _rootController = locator<RootController>();
+    RootController rootController = locator<RootController>();
+    final navItemsLength = rootController.navItems.values.length;
+    print(navItemsLength);
     return Consumer<AppState>(
-      builder: (ctx, superModel, child) => Positioned(
-        bottom:
-            0, // model.avatarRemoteMlIndex > 2 ? 0 : -SizeConfig.navBarHeight,
-        child: Container(
-          width: SizeConfig.screenWidth,
-          height: SizeConfig.navBarHeight,
-              decoration: const BoxDecoration(
-            color: Colors.black,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_rootController.navItems.values.length,
-                  (index) {
-                final navbarItems =
-                    _rootController.navItems.values.toList()[index];
-                return superModel.getCurrentTabIndex == index
-                    ? Expanded(
-                        key: ValueKey(navbarItems.title),
-                        child: NavBarIcon(
-                          callBack: () => superModel.onItemTapped(index),
-                          key: ValueKey(navbarItems.title),
-                          animate: true,
-                          item: navbarItems,
-                          style: TextStyles.rajdhaniSB
-                              .colour(UiConstants.kTextColor),
-                        ),
-                      )
-                    : Expanded(
-                        child: Container(
-                          key: ValueKey(navbarItems.title),
-                          alignment: Alignment.center,
-                          width: SizeConfig.screenWidth! * 0.2,
-                          child: GestureDetector(
-                            onTap: () {
-                              superModel.onItemTapped(index);
-                            },
-                            child: NavBarIcon(
-                              callBack: () {
-                                superModel.onItemTapped(index);
-                              },
-                              animate: false,
-                              item: navbarItems,
-                              style: TextStyles.rajdhaniSB
-                                  .colour(UiConstants.kTextColor2),
-                            ),
-                          ),
-                        ),
-                      );
-              }),
-            ),
-          ),
-        ),
-      ),
+      builder: (ctx, superModel, child) => Selector<CardActionsNotifier, bool>(
+          selector: (_, notifier) => notifier.isVerticalView,
+          builder: (context, isCardsOpen, child) {
+            // if (isCardsOpen) return const SizedBox();
+            return AnimatedContainer(
+              curve: Curves.easeIn,
+              duration: const Duration(milliseconds: 300),
+              height: isCardsOpen ? 0 : SizeConfig.navBarHeight,
+              child: BottomAppBar(
+                notchMargin: navItemsLength % 2 == 0 ? 7 : 0,
+                shape: const CircularNotchedRectangle(),
+                color: Colors.black,
+                padding: EdgeInsets.zero,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: List.generate(
+                    navItemsLength,
+                    (index) {
+                      // if (index == (navItemsLength / 2).floor()) {
+                      //   return const Expanded(
+                      //     child: SizedBox(),
+                      //   );
+                      // }
+
+                      final navbarItems =
+                          rootController.navItems.values.toList()[index];
+                      return superModel.getCurrentTabIndex == index
+                          ? Expanded(
+                              key: ValueKey(navbarItems.title),
+                              child: NavBarIcon(
+                                callBack: () => superModel.onItemTapped(index),
+                                key: ValueKey(navbarItems.title),
+                                animate: true,
+                                item: navbarItems,
+                                style: TextStyles.rajdhaniSB
+                                    .colour(UiConstants.kTextColor),
+                              ),
+                            )
+                          : Expanded(
+                              child: Container(
+                                height: SizeConfig.navBarHeight,
+                                key: ValueKey(navbarItems.title),
+                                alignment: Alignment.center,
+                                // width: SizeConfig.screenWidth! * 0.2,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    superModel.onItemTapped(index);
+                                  },
+                                  child: NavBarIcon(
+                                    callBack: () {
+                                      superModel.onItemTapped(index);
+                                    },
+                                    animate: false,
+                                    item: navbarItems,
+                                    style: TextStyles.rajdhaniSB
+                                        .colour(UiConstants.kTextColor2),
+                                  ),
+                                ),
+                              ),
+                            );
+                    },
+                  ),
+                ),
+              ),
+            );
+          }),
     );
   }
 }
@@ -104,31 +119,32 @@ class NavBarIcon extends StatelessWidget {
               ? 'What are you waiting for?\nStart your savings journey now!'
               : 'You can find your scratch cards here. Tap on Account Section',
       child: Container(
-          key: key,
-          alignment: Alignment.center,
-          color: Colors.black,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Transform.translate(
-                offset: Offset(0, -SizeConfig.navBarHeight * 0.05),
-                child: Column(
-                  children: [
-                    SizedBox(
-                        height: SizeConfig.navBarHeight * 0.6,
-                        width: SizeConfig.navBarHeight * 0.6,
-                        child: Lottie.asset(item.lottie,
-                            fit: BoxFit.contain,
-                            animate: animate,
-                            repeat: false)),
-                    Text(item.title, style: style),
-                    SizedBox(height: SizeConfig.navBarHeight * 0.1)
-                  ],
+        key: key,
+        alignment: Alignment.center,
+        // color: Colors.black,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                SizedBox(
+                  height: SizeConfig.navBarHeight * 0.42,
+                  width: SizeConfig.navBarHeight * 0.42,
+                  child: Lottie.asset(
+                    item.lottie,
+                    fit: BoxFit.contain,
+                    animate: animate,
+                    repeat: false,
+                  ),
                 ),
-              ),
-            ],
-          )),
+                Text(item.title, style: style),
+                // SizedBox(height: SizeConfig.navBarHeight * 0.1)
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

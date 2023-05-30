@@ -48,6 +48,7 @@ class Assets {
   static const String prizeRankOne = "assets/vectors/rank_first.svg";
   static const String prizeRankTwo = "assets/vectors/rank_second.svg";
   static const String prizeRankThird = "assets/vectors/rank_third.svg";
+
 // ONBOARDING
   static const String bankLottie = "assets/lotties/bank.json";
   static const String truecaller = "assets/images/truecaller.png";
@@ -305,6 +306,8 @@ class Assets {
     "assets/vectors/aus3.svg",
   ];
 
+  static String journeyIcon = "assets/vectors/icons/journeyIcon.svg";
+
   static String multiAvatars = "assets/vectors/multiAvatars.svg";
   static String multiRealAvatars = "assets/images/cus_photos.png";
   static final String infoWhyPan =
@@ -374,4 +377,11 @@ class Assets {
       "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/RCB.svg";
   static const goldCoinIcon =
       "https://d37gtxigg82zaw.cloudfront.net/weekly-recap/investments.svg";
+
+  static const carGoalsBg = "${assetBaseUrl}autosave/save-for-car.svg";
+  static const iphoneGoalsBg = "${assetBaseUrl}autosave/save-for-iphone.svg";
+  static const goaGoalsBg = "${assetBaseUrl}autosave/save-for-goa.svg";
+  static const baliGoalsBg = "${assetBaseUrl}autosave/save-for-bali.svg";
+
+  static const String inAppReviewBg = 'assets/svg/in_app_review_success_bg.svg';
 }

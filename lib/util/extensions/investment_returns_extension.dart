@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:felloapp/core/enums/investment_type.dart';
 
 extension ReturnInvestments on int {
-  String getReturns(InvestmentType investmentType, double amount,
+  String getReturns(InvestmentType investmentType, double amount, int? interest,
       [decimalPoint = 2]) {
     final month = this;
     final int returnPercentage =
-        investmentType == InvestmentType.AUGGOLD99 ? 8 : 10;
+        investmentType == InvestmentType.AUGGOLD99 ? 8 : (interest ?? 10);
 
     return (amount +
             ((calculatePercentageInterest(month, returnPercentage) * amount)))
@@ -15,11 +15,10 @@ extension ReturnInvestments on int {
   }
 
   String calculateCompoundInterest(
-    InvestmentType investmentType,
-    double principalAmount,
-  ) {
+      InvestmentType investmentType, double principalAmount, int? interest) {
     final period = this;
-    final interestRate = investmentType == InvestmentType.AUGGOLD99 ? 8 : 10;
+    final interestRate =
+        investmentType == InvestmentType.AUGGOLD99 ? 8 : (interest ?? 10);
 
     return (principalAmount * (pow((1 + interestRate / 100), period)))
         .toStringAsFixed(0);

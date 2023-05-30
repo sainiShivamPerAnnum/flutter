@@ -22,9 +22,13 @@ class CurrentPicks extends StatelessWidget {
         children: [
           Selector<TambolaService, List<int>?>(
             selector: (_, tambolaService) => tambolaService.todaysPicks,
-            builder: (context, todaysPicks, child) => todaysPicks != null
-                ? TodayPicksBallsAnimation(picksList: todaysPicks)
-                : child!,
+            builder: (context, todaysPicks, child) {
+              return todaysPicks != null &&
+                      !todaysPicks.contains(-1) &&
+                      !todaysPicks.contains(0)
+                  ? TodayPicksBallsAnimation(picksList: todaysPicks)
+                  : child!;
+            },
             child: AppCountdownTimer(
               endTime: TimestampModel.fromTimestamp(
                 Timestamp.fromDate(

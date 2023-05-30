@@ -148,3 +148,23 @@ class _HelpFabState extends State<HelpFab> {
 //     return FloatingActionButton(onPressed: onPressed);
 //   }
 // }
+
+class HelpFooter extends StatelessWidget {
+  const HelpFooter({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: SizeConfig.padding16,
+      ),
+      child: TextButton(
+        onPressed: () {},
+        child: Text(
+          "Need Help ?",
+          style: TextStyles.sourceSansB.body2,
+        ),
+      ),
+    );
+  }
+}

@@ -64,6 +64,17 @@ class ScratchCardService
   //ALL GOLDEN TICKETS VIEW FIELDS -- START
 
   // static bool hasScratchCard = false;
+
+  int _unscratchedMilestoneScratchCardCount = 0;
+
+  int get unscratchedMilestoneScratchCardCount =>
+      _unscratchedMilestoneScratchCardCount;
+
+  set unscratchedMilestoneScratchCardCount(int value) {
+    _unscratchedMilestoneScratchCardCount = value;
+    notifyListeners();
+  }
+
   int _unscratchedTicketsCount = 0;
 
   int get unscratchedTicketsCount => _unscratchedTicketsCount;
@@ -217,6 +228,9 @@ class ScratchCardService
     final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
     if (res.isSuccess()) {
       unscratchedTicketsCount = res.model!.length;
+      unscratchedMilestoneScratchCardCount = res.model!
+          .map((sc) => sc.prizeSubtype!.toLowerCase().contains("milestone"))
+          .length;
     } else {
       unscratchedTicketsCount = 0;
     }

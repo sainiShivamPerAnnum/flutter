@@ -1,0 +1,85 @@
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+
+class TambolaMiniInfoCard extends StatelessWidget {
+  const TambolaMiniInfoCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<UserService, UserFundWallet?>(
+        builder: (context, wallet, child) => GestureDetector(
+              onTap: () {
+                Haptic.vibrate();
+                AppState.delegate!.parseRoute(Uri.parse("tambolaHome"));
+              },
+              child: Card(
+                  margin: EdgeInsets.only(
+                    left: SizeConfig.pageHorizontalMargins,
+                    right: SizeConfig.pageHorizontalMargins,
+                    top: SizeConfig.pageHorizontalMargins,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12)),
+                  color: UiConstants.darkPrimaryColor4,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding16,
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    child: Row(children: [
+                      SvgPicture.asset(
+                        Assets.tambolaCardAsset,
+                        width: SizeConfig.padding40,
+                      ),
+                      SizedBox(width: SizeConfig.padding10),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    (wallet?.tickets?["total"] ?? 0) > 0
+                                        ? "Tambola Tickets"
+                                        : "Get your first free tambola ticket",
+                                    style: TextStyles.rajdhaniM.body0
+                                        .colour(Colors.white),
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if ((wallet?.tickets?["total"] ?? 0) > 0)
+                        Row(
+                          children: [
+                            SizedBox(width: SizeConfig.pageHorizontalMargins),
+                            Text(
+                              (wallet?.tickets?["total"] ?? 0).toString(),
+                              style: TextStyles.rajdhaniB.title3
+                                  .colour(Colors.white),
+                            ),
+                            SizedBox(width: SizeConfig.padding4),
+                            SvgPicture.asset(
+                              Assets.chevRonRightArrow,
+                              color: Colors.white,
+                            )
+                          ],
+                        )
+                    ]),
+                  )),
+            ),
+        selector: (p0, p1) => p1.userFundWallet);
+  }
+}

@@ -22,28 +22,33 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showLeading;
   final Widget? leading;
   final Widget? subtitle;
+  final Widget? titleWidget;
   final bool? centerTitle;
+  final bool leadingPadding;
 
   // final bool hasBackButton;
   final TextStyle? style;
 
-  const FAppBar({
-    Key? key,
-    this.type,
-    this.title,
-    this.showCoinBar = true,
-    this.leading,
-    this.showLeading = true,
-    this.showAvatar = true,
-    this.showHelpButton = true,
-    this.backgroundColor,
-    this.style,
-    this.action,
-    this.leftPad,
-    this.subtitle,
-    this.centerTitle,
-    // this.hasBackButton = true
-  }) : super(key: key);
+  const FAppBar(
+      {Key? key,
+      this.type,
+      this.title,
+      this.showCoinBar = true,
+      this.leading,
+      this.showLeading = true,
+      this.showAvatar = true,
+      this.showHelpButton = true,
+      this.backgroundColor,
+      this.style,
+      this.action,
+      this.leftPad,
+      this.subtitle,
+      this.centerTitle,
+      this.titleWidget,
+      this.leadingPadding = true
+      // this.hasBackButton = true
+      })
+      : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -55,19 +60,24 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: SizeConfig.padding8),
-          showAvatar ? const ProfileImageSE() : const SizedBox(),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title ?? '',
-                style: TextStyles.rajdhaniSB.title5.merge(style),
+          if (leadingPadding) SizedBox(width: SizeConfig.padding8),
+          showAvatar
+              ? ProfileImageSE(
+                  radius: SizeConfig.avatarRadius * 0.9,
+                )
+              : const SizedBox(),
+          titleWidget ??
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title ?? '',
+                    style: TextStyles.rajdhaniSB.title5.merge(style),
+                  ),
+                  subtitle ?? const SizedBox(),
+                ],
               ),
-              subtitle ?? const SizedBox(),
-            ],
-          ),
         ],
       ),
       centerTitle: centerTitle ?? false,

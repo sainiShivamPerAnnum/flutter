@@ -148,7 +148,7 @@ class GoldSellInputView extends StatelessWidget {
                                       textInputAction: TextInputAction.done,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.allow(
-                                          RegExp(r'[0-9.]'),
+                                          RegExp(r'^\d*\.?\d*$'),
                                         )
                                       ],
                                       decoration: const InputDecoration(

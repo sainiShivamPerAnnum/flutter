@@ -10,7 +10,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_svg/svg.dart';
 
 class TransactionCancelBottomSheet extends StatelessWidget {
@@ -128,11 +127,11 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                         height: SizeConfig.padding2,
                       ),
                       Text(
-                        "₹ " +
-                            3.calculateCompoundInterest(
-                              investMentType,
-                              amt * 1.0,
-                            ),
+                        "₹${3.calculateCompoundInterest(
+                          investMentType,
+                          amt * 1.0,
+                          10,
+                        )}",
                         style:
                             TextStyles.sourceSansSB.body1.colour(Colors.white),
                       )
@@ -141,7 +140,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                 ],
               ),
             ),
-            Spacer(),
+            const Spacer(),
             SizedBox(
                 width: SizeConfig.screenWidth! * 0.8,
                 child: AppPositiveBtn(

@@ -423,7 +423,11 @@ class _InvestmentDetails extends StatelessWidget {
                 valueListenable: _onValueChanged,
                 builder: (context, snapshot, child) {
                   return Text(
-                      "₹${3.calculateCompoundInterest(type, _onValueChanged.value * 1.0)}",
+                      "₹${3.calculateCompoundInterest(
+                        type,
+                        _onValueChanged.value * 1.0,
+                        10,
+                      )}",
                       style: TextStyles.rajdhaniSB.title4);
                 },
               )

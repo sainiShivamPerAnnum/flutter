@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:felloapp/util/crashlytics_widget.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/util/crashlytics_widget.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
