@@ -121,7 +121,33 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                 bestChipIndex: 2,
                 readOnly: widget.model.readOnly,
                 onTap: () => widget.model.showKeyBoard(),
+                model: widget.model,
               ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+              Container(
+                height: 1,
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins),
+                color: UiConstants.kModalSheetSecondaryBackgroundColor
+                    .withOpacity(0.2),
+              ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+              // if (widget.model.showCoupons)
+              //   Showcase(
+              //     key: ShowCaseKeys.couponKey,
+              //     description: 'You can apply a coupon to get extra gold!',
+              //     child: CouponWidget(
+              //       widget.model.couponList,
+              //       widget.model,
+              //       onTap: (coupon) {
+              //         widget.model.applyCoupon(coupon.code, false);
+              //       },
+              //     ),
+              //   ),
               const Spacer(),
               SizedBox(
                 height: SizeConfig.padding32,

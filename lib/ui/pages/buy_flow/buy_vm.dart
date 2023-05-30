@@ -502,13 +502,6 @@ class BuyViewModel extends BaseViewModel {
 
   trackCheckOOutEvent(String errorMessage) {
     augTxnService.currentTransactionAnalyticsDetails = {
-      //   "Asset": "Flo",
-      // "Amount Entered": lboxAmount!.text,
-      // "Best flag": goldAmountController!.text ==
-      //         assetOptionsModel?.data.userOptions[2].value.toString()
-      //     ? true
-      //     : false,
-      // "Error message": errorMessage,
       "iplPrediction": PowerPlayService.powerPlayDepositFlow,
       "Asset": "Gold",
       "Coupon Code":
