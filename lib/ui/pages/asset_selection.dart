@@ -1,10 +1,12 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -12,58 +14,63 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AssetSelectionPage extends StatelessWidget {
-  const AssetSelectionPage({Key? key, required this.showOnlyFlo})
+  const AssetSelectionPage(
+      {Key? key, required this.showOnlyFlo, this.amount, this.isSkipMl})
       : super(key: key);
 
   final bool showOnlyFlo;
+  final int? amount;
+  final bool? isSkipMl;
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<GoldBuyViewModel>(onModelReady: (model) {
-      // model.fetchGoldRates();
-    }, builder: (ctx, model, child) {
-      return Scaffold(
-        backgroundColor: const Color(0xff232326),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins),
-          child: Column(
-            children: [
-              SizedBox(height: SizeConfig.fToolBarHeight / 2),
-              AppBar(
-                elevation: 0,
-                backgroundColor: Colors.transparent,
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    AppState.backButtonDispatcher?.didPopRoute();
-                  },
+    return Scaffold(
+      backgroundColor: const Color(0xff232326),
+      body: Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+        child: Column(
+          children: [
+            SizedBox(height: SizeConfig.fToolBarHeight / 2),
+            AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
                 ),
-                title: Text(
-                  'Select plan to save',
-                  style: TextStyles.rajdhaniSB.title5,
-                ),
+                onPressed: () {
+                  AppState.backButtonDispatcher?.didPopRoute();
+                },
               ),
-              SizedBox(height: SizeConfig.padding24),
-              GoldPlanWidget(model: model),
-              SizedBox(height: SizeConfig.padding24),
-              const FloPlanWidget()
-            ],
-          ),
+              title: Text(
+                'Select plan to save',
+                style: TextStyles.rajdhaniSB.title5,
+              ),
+            ),
+            if (!showOnlyFlo) SizedBox(height: SizeConfig.padding24),
+            if (!showOnlyFlo) GoldPlanWidget(fetchGoldRate: !showOnlyFlo),
+            SizedBox(height: SizeConfig.padding24),
+            FloPlanWidget(amount: amount, isSkipMl: isSkipMl),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 }
 
 class FloPlanWidget extends StatelessWidget {
-  const FloPlanWidget({super.key});
+  const FloPlanWidget({super.key, this.amount, this.isSkipMl});
+
+  final int? amount;
+  final bool? isSkipMl;
 
   @override
   Widget build(BuildContext context) {
+    bool isLendboxOldUser =
+        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+
     return GestureDetector(
       onTap: () {},
       child: Container(
@@ -114,29 +121,36 @@ class FloPlanWidget extends StatelessWidget {
               ],
             ),
             SizedBox(height: SizeConfig.padding16),
-            const FelloFloPrograms(
+            FelloFloPrograms(
               percentage: '12%',
               isRecommended: true,
               chipString1: '6 month maturity',
               chipString2: 'Min - ₹25,000',
               floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
+              amount: amount,
+              isSkipMl: isSkipMl,
             ),
             SizedBox(width: SizeConfig.padding12),
-            const FelloFloPrograms(
+            FelloFloPrograms(
               percentage: '10%',
               isRecommended: false,
               chipString1: '3 month maturity',
               chipString2: 'Min - ₹10,000',
               floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3,
+              amount: amount,
+              isSkipMl: isSkipMl,
             ),
             SizedBox(width: SizeConfig.padding12),
-            const FelloFloPrograms(
-              percentage: '8%',
-              isRecommended: false,
-              chipString1: '1 week lockin',
-              chipString2: 'Min - ₹100',
-              floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
-            ),
+            if (!isLendboxOldUser)
+              FelloFloPrograms(
+                percentage: '8%',
+                isRecommended: false,
+                chipString1: '1 week lockin',
+                chipString2: 'Min - ₹100',
+                floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
+                amount: amount,
+                isSkipMl: isSkipMl,
+              ),
           ],
         ),
       ),
@@ -147,103 +161,109 @@ class FloPlanWidget extends StatelessWidget {
 class GoldPlanWidget extends StatelessWidget {
   const GoldPlanWidget({
     super.key,
-    required this.model,
+    required this.fetchGoldRate,
   });
 
-  final GoldBuyViewModel model;
+  final bool fetchGoldRate;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding16,
-        vertical: SizeConfig.padding16,
-      ),
-      decoration: BoxDecoration(
-        color: const Color(0xff495DB2),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SvgPicture.asset(
-                'assets/svg/digitalgold.svg',
-                height: SizeConfig.padding44,
-                width: SizeConfig.padding44,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(width: SizeConfig.padding12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Save in Digital Gold',
-                    style: TextStyles.rajdhaniSB.body0,
-                  ),
-                  SizedBox(height: SizeConfig.padding4),
-                  Text(
-                    '24K Gold • Withdraw anytime • 100% Secure',
-                    style: TextStyles.sourceSans.body4
-                        .colour(Colors.white.withOpacity(0.8)),
-                  ),
-                ],
-              ),
-              SvgPicture.asset(
-                'assets/svg/Arrow_dotted.svg',
-                height: SizeConfig.padding24,
-                width: SizeConfig.padding24,
-              ),
-            ],
-          ),
-          SizedBox(height: SizeConfig.padding34),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding16,
-              vertical: SizeConfig.padding16,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xffD9D9D9).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+    return BaseView<GoldBuyViewModel>(onModelReady: (model) {
+      if (fetchGoldRate) {
+        model.fetchGoldRates();
+      }
+    }, builder: (ctx, model, child) {
+      return Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding16,
+          vertical: SizeConfig.padding16,
+        ),
+        decoration: BoxDecoration(
+          color: const Color(0xff495DB2),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Market Rate',
-                  style: TextStyles.sourceSans.body3,
+                SvgPicture.asset(
+                  'assets/svg/digitalgold.svg',
+                  height: SizeConfig.padding44,
+                  width: SizeConfig.padding44,
+                  fit: BoxFit.cover,
                 ),
-                const Spacer(),
-                model.isGoldRateFetching
-                    ? SpinKitThreeBounce(
-                        size: SizeConfig.body2,
-                        color: Colors.white,
-                      )
-                    : Text(
-                        "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
-                        style:
-                            TextStyles.sourceSansSB.body1.colour(Colors.white),
-                      ),
-                NewCurrentGoldPriceWidget(
-                  fetchGoldRates: model.fetchGoldRates,
-                  goldprice: model.goldRates != null
-                      ? model.goldRates!.goldBuyPrice
-                      : 0.0,
-                  isFetching: model.isGoldRateFetching,
-                  mini: true,
-                  textColor: Colors.white,
+                SizedBox(width: SizeConfig.padding12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Save in Digital Gold',
+                      style: TextStyles.rajdhaniSB.body0,
+                    ),
+                    SizedBox(height: SizeConfig.padding4),
+                    Text(
+                      '24K Gold • Withdraw anytime • 100% Secure',
+                      style: TextStyles.sourceSans.body4
+                          .colour(Colors.white.withOpacity(0.8)),
+                    ),
+                  ],
+                ),
+                SvgPicture.asset(
+                  'assets/svg/Arrow_dotted.svg',
+                  height: SizeConfig.padding24,
+                  width: SizeConfig.padding24,
                 ),
               ],
             ),
-          )
-        ],
-      ),
-    );
+            SizedBox(height: SizeConfig.padding34),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding16,
+                vertical: SizeConfig.padding16,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xffD9D9D9).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Market Rate',
+                    style: TextStyles.sourceSans.body3,
+                  ),
+                  const Spacer(),
+                  model.isGoldRateFetching
+                      ? SpinKitThreeBounce(
+                          size: SizeConfig.body2,
+                          color: Colors.white,
+                        )
+                      : Text(
+                          "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
+                          style: TextStyles.sourceSansSB.body1
+                              .colour(Colors.white),
+                        ),
+                  NewCurrentGoldPriceWidget(
+                    fetchGoldRates: model.fetchGoldRates,
+                    goldprice: model.goldRates != null
+                        ? model.goldRates!.goldBuyPrice
+                        : 0.0,
+                    isFetching: model.isGoldRateFetching,
+                    mini: true,
+                    textColor: Colors.white,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -254,7 +274,9 @@ class FelloFloPrograms extends StatelessWidget {
       required this.isRecommended,
       required this.chipString1,
       required this.chipString2,
-      required this.floAssetType})
+      required this.floAssetType,
+      this.amount,
+      this.isSkipMl})
       : super(key: key);
 
   final String percentage;
@@ -262,6 +284,8 @@ class FelloFloPrograms extends StatelessWidget {
   final String chipString1;
   final String chipString2;
   final String floAssetType;
+  final int? amount;
+  final bool? isSkipMl;
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +314,8 @@ class FelloFloPrograms extends StatelessWidget {
         // if (!isRecommended) const Spacer(),
         GestureDetector(
           onTap: () {
-            BaseUtil().openFloBuySheet(floAssetType: floAssetType);
+            BaseUtil().openFloBuySheet(
+                floAssetType: floAssetType, amt: amount, isSkipMl: isSkipMl);
           },
           child: Container(
             margin:

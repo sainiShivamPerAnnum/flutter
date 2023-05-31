@@ -35,7 +35,6 @@ import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
-import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
@@ -372,7 +371,11 @@ class BaseUtil extends ChangeNotifier {
                 amount: amt,
                 skipMl: isSkipMl ?? false,
               )
-            : const AssetSelectionPage(showOnlyFlo: false),
+            : AssetSelectionPage(
+                showOnlyFlo: true,
+                amount: amt,
+                isSkipMl: isSkipMl ?? false,
+              ),
       ).then((value) {
         AppState.isRepeated = false;
         AppState.onTap = null;
@@ -480,27 +483,29 @@ class BaseUtil extends ChangeNotifier {
     //       content: CompleteProfileDialog());
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
-    Future.delayed(Duration(milliseconds: timer), () {
-      return openModalBottomSheet(
-          addToScreenStack: true,
-          enableDrag: false,
-          hapticVibrate: true,
-          backgroundColor:
-              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-          isBarrierDismissible: true,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(
-              SizeConfig.roundness12,
-            ),
-            topRight: Radius.circular(SizeConfig.roundness24),
-          ),
-          content: DepositOptionModalSheet(
-            amount: amount,
-            isSkipMl: isSkipMl,
-            title: title,
-            subtitle: subtitle,
-          ));
-    });
+    Future.delayed(
+      Duration(milliseconds: timer),
+      () {
+        return openModalBottomSheet(
+            addToScreenStack: true,
+            hapticVibrate: true,
+            backgroundColor:
+                UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+            isBarrierDismissible: true,
+            isScrollControlled: true,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness12),
+                topRight: Radius.circular(SizeConfig.roundness24)),
+            content: const AssetSelectionPage(showOnlyFlo: false)
+            // content: DepositOptionModalSheet(
+            //   amount: amount,
+            //   isSkipMl: isSkipMl,
+            //   title: title,
+            //   subtitle: subtitle,
+            // ),
+            );
+      },
+    );
   }
 
   static showPositiveAlert(String? title, String? message, {int seconds = 2}) {

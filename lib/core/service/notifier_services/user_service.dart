@@ -136,6 +136,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   set userSegments(List userSeg) {
     _userSegments = userSeg;
+    log('userSeg  $userSeg');
     notifyListeners(UserServiceProperties.mySegments);
   }
 
