@@ -62,6 +62,7 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
+            SizedBox(height: SizeConfig.fToolBarHeight / 2),
             RechargeModalSheetAppBar(
               txnService: widget.augTxnService,
               trackCloseTapped: () {

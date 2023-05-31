@@ -143,9 +143,9 @@ class _GoldBuyViewState extends State<GoldBuyView>
 
   double? _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight! * 0.95;
+      return SizeConfig.screenHeight!;
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
-      return SizeConfig.screenHeight! * 0.95;
+      return SizeConfig.screenHeight!;
     } else if (txnService.currentTransactionState == TransactionState.success) {
       return SizeConfig.screenHeight;
     }

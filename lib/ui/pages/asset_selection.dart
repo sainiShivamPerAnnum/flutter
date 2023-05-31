@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -72,7 +73,9 @@ class FloPlanWidget extends StatelessWidget {
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        //todo: redirect to flo details page
+      },
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: SizeConfig.padding16,
@@ -162,9 +165,13 @@ class GoldPlanWidget extends StatelessWidget {
   const GoldPlanWidget({
     super.key,
     required this.fetchGoldRate,
+    this.amount,
+    this.isSkipMl,
   });
 
   final bool fetchGoldRate;
+  final int? amount;
+  final bool? isSkipMl;
 
   @override
   Widget build(BuildContext context) {
@@ -173,94 +180,102 @@ class GoldPlanWidget extends StatelessWidget {
         model.fetchGoldRates();
       }
     }, builder: (ctx, model, child) {
-      return Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding16,
-          vertical: SizeConfig.padding16,
-        ),
-        decoration: BoxDecoration(
-          color: const Color(0xff495DB2),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SvgPicture.asset(
-                  'assets/svg/digitalgold.svg',
-                  height: SizeConfig.padding44,
-                  width: SizeConfig.padding44,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(width: SizeConfig.padding12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Save in Digital Gold',
-                      style: TextStyles.rajdhaniSB.body0,
-                    ),
-                    SizedBox(height: SizeConfig.padding4),
-                    Text(
-                      '24K Gold • Withdraw anytime • 100% Secure',
-                      style: TextStyles.sourceSans.body4
-                          .colour(Colors.white.withOpacity(0.8)),
-                    ),
-                  ],
-                ),
-                SvgPicture.asset(
-                  'assets/svg/Arrow_dotted.svg',
-                  height: SizeConfig.padding24,
-                  width: SizeConfig.padding24,
-                ),
-              ],
-            ),
-            SizedBox(height: SizeConfig.padding34),
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding16,
-                vertical: SizeConfig.padding16,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xffD9D9D9).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+      return GestureDetector(
+        onTap: () {
+          BaseUtil().openRechargeModalSheet(
+              investmentType: InvestmentType.AUGGOLD99,
+              amt: amount,
+              isSkipMl: isSkipMl);
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding16,
+            vertical: SizeConfig.padding16,
+          ),
+          decoration: BoxDecoration(
+            color: const Color(0xff495DB2),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Market Rate',
-                    style: TextStyles.sourceSans.body3,
+                  SvgPicture.asset(
+                    'assets/svg/digitalgold.svg',
+                    height: SizeConfig.padding44,
+                    width: SizeConfig.padding44,
+                    fit: BoxFit.cover,
                   ),
-                  const Spacer(),
-                  model.isGoldRateFetching
-                      ? SpinKitThreeBounce(
-                          size: SizeConfig.body2,
-                          color: Colors.white,
-                        )
-                      : Text(
-                          "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
-                          style: TextStyles.sourceSansSB.body1
-                              .colour(Colors.white),
-                        ),
-                  NewCurrentGoldPriceWidget(
-                    fetchGoldRates: model.fetchGoldRates,
-                    goldprice: model.goldRates != null
-                        ? model.goldRates!.goldBuyPrice
-                        : 0.0,
-                    isFetching: model.isGoldRateFetching,
-                    mini: true,
-                    textColor: Colors.white,
+                  SizedBox(width: SizeConfig.padding12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Save in Digital Gold',
+                        style: TextStyles.rajdhaniSB.body0,
+                      ),
+                      SizedBox(height: SizeConfig.padding4),
+                      Text(
+                        '24K Gold • Withdraw anytime • 100% Secure',
+                        style: TextStyles.sourceSans.body4
+                            .colour(Colors.white.withOpacity(0.8)),
+                      ),
+                    ],
+                  ),
+                  SvgPicture.asset(
+                    'assets/svg/Arrow_dotted.svg',
+                    height: SizeConfig.padding24,
+                    width: SizeConfig.padding24,
                   ),
                 ],
               ),
-            )
-          ],
+              SizedBox(height: SizeConfig.padding34),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding16,
+                  vertical: SizeConfig.padding16,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xffD9D9D9).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Market Rate',
+                      style: TextStyles.sourceSans.body3,
+                    ),
+                    const Spacer(),
+                    model.isGoldRateFetching
+                        ? SpinKitThreeBounce(
+                            size: SizeConfig.body2,
+                            color: Colors.white,
+                          )
+                        : Text(
+                            "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
+                            style: TextStyles.sourceSansSB.body1
+                                .colour(Colors.white),
+                          ),
+                    NewCurrentGoldPriceWidget(
+                      fetchGoldRates: model.fetchGoldRates,
+                      goldprice: model.goldRates != null
+                          ? model.goldRates!.goldBuyPrice
+                          : 0.0,
+                      isFetching: model.isGoldRateFetching,
+                      mini: true,
+                      textColor: Colors.white,
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       );
     });
