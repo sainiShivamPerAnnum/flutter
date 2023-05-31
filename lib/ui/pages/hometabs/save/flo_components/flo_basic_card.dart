@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
@@ -17,6 +18,7 @@ class FloBasicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isLendboxOldUser = model.userSegments.contains(Constants.US_FLO_OLD);
+    List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
     //if true => user will se 10%
     //else => user will se 8%
     double basicPrinciple = getPrinciple(isLendboxOldUser);
@@ -51,7 +53,11 @@ class FloBasicCard extends StatelessWidget {
                     Text(isLendboxOldUser ? "Flo 10%" : 'Flo 8%',
                         style: TextStyles.sourceSansB.title5),
                     const Spacer(),
-                    const FloPremiumTierChip(value: "1 Week Lockin"),
+                    FloPremiumTierChip(
+                        value: isLendboxOldUser
+                            ? lendboxDetails[2]["maturityPeriodText"]
+                            : lendboxDetails[3]["maturityPeriodText"] ??
+                                "1 Week Lockin"),
                   ],
                 )
               : Row(children: [
@@ -62,9 +68,10 @@ class FloBasicCard extends StatelessWidget {
                           style: TextStyles.sourceSansB.title5),
                       SizedBox(height: SizeConfig.padding4),
                       FloPremiumTierChip(
-                          value: isLendboxOldUser
-                              ? "1 Month Lockin"
-                              : "1 Week Lockin"),
+                        value: isLendboxOldUser
+                            ? lendboxDetails[2]["minAmountText"]
+                            : lendboxDetails[3]["minAmountText"],
+                      ),
                     ],
                   ),
                   const Spacer(),
@@ -77,8 +84,9 @@ class FloBasicCard extends StatelessWidget {
                               BorderRadius.circular(SizeConfig.roundness5)),
                       // height: SizeConfig.padding44,
                       padding: EdgeInsets.all(SizeConfig.padding6),
-                      onPressed: () => BaseUtil().openRechargeModalSheet(
-                          investmentType: InvestmentType.LENDBOXP2P),
+                      onPressed: () => BaseUtil.openFloBuySheet(
+                          floAssetType: Constants.ASSET_TYPE_FLO_FELXI),
+
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
@@ -100,7 +108,10 @@ class FloBasicCard extends StatelessWidget {
                 )
               : SizedBox(
                   child: Text(
-                    "Ideal for diversifying portfolios, long term gains especially for salaried individuals",
+                    isLendboxOldUser
+                        ? lendboxDetails[2]["descText"]
+                        : lendboxDetails[3]["descText"] ??
+                            "Ideal for diversifying portfolios, long term gains especially for salaried individuals",
                     style: TextStyles.body3.colour(
                       Colors.white.withOpacity(0.6),
                     ),
@@ -131,7 +142,8 @@ class FloBasicCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   ),
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () => BaseUtil.openFloBuySheet(
+                      floAssetType: Constants.ASSET_TYPE_FLO_FELXI),
                   child: Text(
                     "INVEST",
                     style: TextStyles.rajdhaniB.body2.colour(Colors.black),
@@ -148,7 +160,7 @@ class FloBasicCard extends StatelessWidget {
     if (isLendboxOldUser) {
       return model.userFundWallet?.wLbPrinciple ?? 0;
     } else {
-      return 0;
+      return model.userFundWallet?.wLbPrinciple ?? 0;
     }
   }
 
@@ -156,7 +168,7 @@ class FloBasicCard extends StatelessWidget {
     if (isLendboxOldUser) {
       return model.userFundWallet?.wLbBalance ?? 0;
     } else {
-      return 0;
+      return model.userFundWallet?.wLbBalance ?? 0;
     }
   }
 
@@ -164,7 +176,7 @@ class FloBasicCard extends StatelessWidget {
     if (isLendboxOldUser) {
       return 0.05;
     } else {
-      return 0;
+      return 0.05;
     }
   }
 }

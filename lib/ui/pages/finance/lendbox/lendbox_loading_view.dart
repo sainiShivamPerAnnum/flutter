@@ -37,7 +37,7 @@ class LendboxLoadingView extends StatelessWidget {
           width: SizeConfig.screenWidth,
         ),
         Text(
-          locale.floEarn10Percent,
+          "Earn up to 12% Returns",
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
         Expanded(

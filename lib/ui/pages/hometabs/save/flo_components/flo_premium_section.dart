@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
 import 'package:felloapp/util/constants.dart';
@@ -16,6 +17,9 @@ class FloPremiumSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isLendboxOldUser = model.userSegments.contains(Constants.US_FLO_OLD);
+
+    List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
+
     return Container(
       margin: EdgeInsets.symmetric(
           vertical: SizeConfig.pageHorizontalMargins / 2,
@@ -65,30 +69,32 @@ class FloPremiumSection extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding6),
           FloPremiumTierCard(
-            userService: model,
-            title: "12% Flo",
-            summary:
-                "Ideal for diversifying portfolios, long term gains especially for salaried individuals",
-            lockIn: "6 months maturity",
-            minInvestment: "Min - ₹25,000",
-            tier: Constants.ASSET_TYPE_FLO_FIXED_6,
-            actionUri: "flo12Details",
-            cta: () => BaseUtil().openRechargeModalSheet(
-                investmentType: InvestmentType.LENDBOXP2P),
-          ),
+              userService: model,
+              title: "12% Flo",
+              summary: lendboxDetails[0]["descText"] ??
+                  "Ideal for diversifying portfolios, long term gains especially for salaried individuals",
+              lockIn: lendboxDetails[0]["maturityPeriodText"] ??
+                  "6 months maturity",
+              minInvestment:
+                  lendboxDetails[0]["minAmountText"] ?? "Min - ₹25,000",
+              tier: Constants.ASSET_TYPE_FLO_FIXED_6,
+              actionUri: "flo12Details",
+              cta: () => BaseUtil.openFloBuySheet(
+                  floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6)),
           if (!isLendboxOldUser)
             FloPremiumTierCard(
-              userService: model,
-              title: "10% Flo",
-              lockIn: "3 months maturity",
-              minInvestment: "Min - ₹10,000",
-              summary:
-                  "Ideal for diversifying portfolios, long term gains especially for salaried individuals",
-              tier: Constants.ASSET_TYPE_FLO_FIXED_3,
-              actionUri: "flo10Details",
-              cta: () => BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.LENDBOXP2P),
-            ),
+                userService: model,
+                title: "10% Flo",
+                summary: lendboxDetails[1]["descText"] ??
+                    "Ideal for diversifying portfolios, long term gains especially for salaried individuals",
+                lockIn: lendboxDetails[1]["maturityPeriodText"] ??
+                    "6 months maturity",
+                minInvestment:
+                    lendboxDetails[1]["minAmountText"] ?? "Min - ₹25,000",
+                tier: Constants.ASSET_TYPE_FLO_FIXED_3,
+                actionUri: "flo10Details",
+                cta: () => BaseUtil.openFloBuySheet(
+                    floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3)),
           SizedBox(height: SizeConfig.padding6)
         ],
       ),

@@ -384,19 +384,22 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  void openFloBuySheet(
+  static void openFloBuySheet(
       {int? amt, bool? isSkipMl, required String floAssetType}) {
+    final UserService _userService = locator<UserService>();
+    final S locale = locator<S>();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final bool? islBoxlDepositBanned = _userService
+      final bool? islBoxDepositBanned = _userService
           .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
       final String? lBoxDepositBanNotice = _userService
           .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
 
-      if (islBoxlDepositBanned != null && islBoxlDepositBanned) {
-        return BaseUtil.showNegativeAlert(
+      if (islBoxDepositBanned != null && islBoxDepositBanned) {
+        BaseUtil.showNegativeAlert(
           lBoxDepositBanNotice ?? locale.assetNotAvailable,
           locale.tryLater,
         );
+        return;
       }
 
       BaseUtil.openModalBottomSheet(
@@ -613,7 +616,7 @@ class BaseUtil extends ChangeNotifier {
         return FileType.svg;
       case "json":
       case "lottie":
-      return FileType.lottie;
+        return FileType.lottie;
       case "png":
       case "jpeg":
       case "webp":

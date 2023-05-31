@@ -335,7 +335,7 @@ class FelloFloPrograms extends StatelessWidget {
         GestureDetector(
           onTap: () {
             AppState.backButtonDispatcher?.didPopRoute();
-            BaseUtil().openFloBuySheet(
+            BaseUtil.openFloBuySheet(
                 floAssetType: floAssetType, amt: amount, isSkipMl: isSkipMl);
           },
           child: Container(
