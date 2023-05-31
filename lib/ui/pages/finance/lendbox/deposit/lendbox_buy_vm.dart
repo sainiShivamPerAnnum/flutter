@@ -75,6 +75,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   late String floAssetType;
   double _fieldWidth = 0.0;
   bool _forcedBuy = false;
+  String maturityPref = "NA";
 
   ///  ---------- getter and setter ------------
 
@@ -235,7 +236,8 @@ class LendboxBuyViewModel extends BaseViewModel {
     _isBuyInProgress = true;
     notifyListeners();
     trackCheckOut(amount.toDouble());
-    await _txnService!.initiateTransaction(amount.toDouble(), skipMl);
+    await _txnService!.initiateTransaction(
+        amount.toDouble(), skipMl, floAssetType, maturityPref);
     _isBuyInProgress = false;
     forcedBuy = false;
     notifyListeners();

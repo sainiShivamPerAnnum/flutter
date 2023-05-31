@@ -186,6 +186,7 @@ class GoldPlanWidget extends StatelessWidget {
     }, builder: (ctx, model, child) {
       return GestureDetector(
         onTap: () {
+          AppState.backButtonDispatcher?.didPopRoute();
           BaseUtil().openRechargeModalSheet(
               investmentType: InvestmentType.AUGGOLD99,
               amt: amount,
@@ -333,6 +334,7 @@ class FelloFloPrograms extends StatelessWidget {
         // if (!isRecommended) const Spacer(),
         GestureDetector(
           onTap: () {
+            AppState.backButtonDispatcher?.didPopRoute();
             BaseUtil().openFloBuySheet(
                 floAssetType: floAssetType, amt: amount, isSkipMl: isSkipMl);
           },

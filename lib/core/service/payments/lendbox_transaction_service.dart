@@ -45,9 +45,11 @@ class LendboxTransactionService extends BaseTransactionService {
   S locale = locator<S>();
   TransactionResponseModel? _model;
   bool skipMl = false;
+  String? floAssetType;
+  String? maturityPref;
 
   Future<void> initiateWithdrawal(double txnAmount, String? txnId) async {
-    this.currentTransactionState = TransactionState.success;
+    currentTransactionState = TransactionState.success;
     await _txnHistoryService!.updateTransactions(InvestmentType.LENDBOXP2P);
   }
 
@@ -57,10 +59,13 @@ class LendboxTransactionService extends BaseTransactionService {
 
   TransactionResponseModel? get transactionReponseModel => _model;
 
-  Future<void> initiateTransaction(double txnAmount, bool skipMl) async {
-    this.currentTxnAmount = txnAmount;
+  Future<void> initiateTransaction(double txnAmount, bool skipMl,
+      String floAssetType, String maturityPref) async {
+    this.floAssetType = floAssetType;
+    this.maturityPref = maturityPref;
+    currentTxnAmount = txnAmount;
     this.skipMl = skipMl;
-    String paymentMode = this.getPaymentMode();
+    String paymentMode = getPaymentMode();
 
     switch (paymentMode) {
       case "PAYTM-PG":
@@ -120,15 +125,15 @@ class LendboxTransactionService extends BaseTransactionService {
   }
 
   Future<CreatePaytmTransactionModel?> createPaytmTransaction() async {
-    if (this.currentTxnAmount == null) return null;
+    if (currentTxnAmount == null) return null;
     final mid = AppConfig.getValue(AppConfigKey.paytmMid);
     final ApiResponse<CreatePaytmTransactionModel>
         paytmSubscriptionApiResponse = await _paytmRepo!.createTransaction(
-      this.currentTxnAmount!.toDouble(),
+      currentTxnAmount!.toDouble(),
       null,
       {},
       null,
-      this.skipMl ?? false,
+      skipMl ?? false,
       mid,
       InvestmentType.LENDBOXP2P,
     );
@@ -136,7 +141,7 @@ class LendboxTransactionService extends BaseTransactionService {
     if (!paytmSubscriptionApiResponse.isSuccess())
       return BaseUtil.showNegativeAlert(
           paytmSubscriptionApiResponse.errorMessage, "");
-    this.currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
+    currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
     return paytmSubscriptionApiResponse.model;
   }
 
@@ -144,12 +149,15 @@ class LendboxTransactionService extends BaseTransactionService {
     AppState.blockNavigation();
 
     await _razorpayService!.initiateRazorpayTxn(
-      amount: this.currentTxnAmount,
+      amount: currentTxnAmount,
       augMap: {},
-      lbMap: {},
+      lbMap: {
+        "fundType": floAssetType,
+        "maturityPref": maturityPref,
+      },
       email: _userService!.baseUser!.email,
       mobile: _userService!.baseUser!.mobile,
-      skipMl: this.skipMl,
+      skipMl: skipMl,
       investmentType: InvestmentType.LENDBOXP2P,
     );
   }
@@ -175,7 +183,7 @@ class LendboxTransactionService extends BaseTransactionService {
             transactionReponseModel = res.model!;
             timer!.cancel();
             return transactionResponseUpdate(
-              amount: this.currentTxnAmount,
+              amount: currentTxnAmount,
               gtIds: transactionReponseModel?.data?.gtIds ?? [],
             );
           }

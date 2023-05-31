@@ -28,6 +28,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -281,7 +282,7 @@ class FloBuyNavBar extends StatelessWidget {
   final LendboxBuyViewModel model;
   final Function onTap;
 
-  String getSubtitle() {
+  String getTitle() {
     if (model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         model.isLendboxOldUser) {
       return 'in Flo 10% P.A';
@@ -297,6 +298,18 @@ class FloBuyNavBar extends StatelessWidget {
       return "in Flo 10% P.A";
     }
 
+    return "";
+  }
+
+  String getSubString() {
+    if (model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI) {
+      return 'Lock-in till ${DateFormat('d MMM yyyy').format(model.assetOptionsModel!.data.maturityAt!)}';
+    }
+
+    if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ||
+        model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return "Maturity on ${DateFormat('d MMM yyyy').format(model.assetOptionsModel!.data.maturityAt!)}";
+    }
     return "";
   }
 
@@ -326,14 +339,14 @@ class FloBuyNavBar extends StatelessWidget {
                     width: SizeConfig.padding8,
                   ),
                   Text(
-                    getSubtitle(),
+                    getTitle(),
                     style: TextStyles.rajdhaniB.body2
                         .copyWith(color: UiConstants.kTabBorderColor),
                   ),
                 ],
               ),
               //
-              Text(model.assetOptionsModel?.data.nearCtaText ?? "",
+              Text(getSubString(),
                   style: TextStyles.rajdhaniSB.body3
                       .colour(UiConstants.kTextFieldTextColor)),
               SizedBox(
@@ -474,7 +487,8 @@ class ViewBreakdown extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  "3rd Mar 2023",
+                  // format today's date like this "3rd Mar 2023",
+                  DateFormat('d MMM yyyy').format(DateTime.now()),
                   style: TextStyles.sourceSansSB.body2,
                 ),
               ],
@@ -490,7 +504,8 @@ class ViewBreakdown extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '3rd Sep 2023',
+                  DateFormat('d MMM, yyyy')
+                      .format(model.assetOptionsModel!.data.maturityAt!),
                   style: TextStyles.sourceSansSB.body2,
                 ),
               ],

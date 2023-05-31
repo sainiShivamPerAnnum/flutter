@@ -88,6 +88,7 @@ class ReInvestPrompt extends HookWidget {
               description: "At the end of 6 months (Maturity)",
               isSelected: selectedOption.value == 1,
               onTap: () {
+                model.maturityPref = "1";
                 selectedOption.value = 1;
               },
             ),
@@ -98,6 +99,7 @@ class ReInvestPrompt extends HookWidget {
               description: "At the end of 6 months (Maturity)",
               isSelected: selectedOption.value == 2,
               onTap: () {
+                model.maturityPref = "2";
                 selectedOption.value = 2;
               },
             ),
@@ -107,6 +109,7 @@ class ReInvestPrompt extends HookWidget {
               description: "At the end of 6 months (Maturity)",
               isSelected: selectedOption.value == 3,
               onTap: () {
+                model.maturityPref = "0";
                 selectedOption.value = 3;
               },
             ),
@@ -133,6 +136,7 @@ class ReInvestPrompt extends HookWidget {
                       AppState.backButtonDispatcher?.didPopRoute();
 
                       model.forcedBuy = true;
+                      model.maturityPref = "NA";
 
                       Future.delayed(const Duration(seconds: 3), () async {
                         if (!model.isBuyInProgress) {
@@ -156,8 +160,8 @@ class ReInvestPrompt extends HookWidget {
                     color: Colors.white,
                     onPressed: () {
                       if (selectedOption.value == -1) {
-                        BaseUtil.showNegativeAlert(
-                            "Please select an option", "");
+                        BaseUtil.showNegativeAlert("Please select an option",
+                            "proceed by choosing an option");
                         return;
                       }
 
@@ -392,7 +396,7 @@ class InvestmentForeseenWidget extends StatelessWidget {
     if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
       return "in 10% Flo";
     }
-    return "in 12% Flo";
+    return "";
   }
 
   String calculateAmountAfter6Months(String amount) {
@@ -410,8 +414,7 @@ class InvestmentForeseenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // debugPrint("isLendboxOldUser => $isLendboxOldUser");
-    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3 && isLendboxOldUser) {
+    if (assetType == Constants.ASSET_TYPE_FLO_FELXI && isLendboxOldUser) {
       return const SizedBox();
     }
 

@@ -404,7 +404,7 @@ class BuyViewModel extends BaseViewModel {
     _isBuyInProgress = true;
     notifyListeners();
     trackFloCheckOut(amount.toDouble());
-    await _lendBoxTxnService.initiateTransaction(amount.toDouble(), skipMl);
+    // await _lendBoxTxnService.initiateTransaction(amount.toDouble(), skipMl);
     _isBuyInProgress = false;
     notifyListeners();
   }

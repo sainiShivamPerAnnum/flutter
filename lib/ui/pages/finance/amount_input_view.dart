@@ -1,10 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/list_utils.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -13,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import '../../../util/show_case_key.dart';
+import 'lendbox/deposit/lendbox_buy_input_view.dart';
 
 class AmountInputView extends StatefulWidget {
   final TextEditingController? amountController;
@@ -60,23 +60,53 @@ class _AmountInputViewState extends State<AmountInputView> {
   @override
   void initState() {
     super.initState();
-    if (widget.chipAmounts.isNotEmpty) {
-      _selectedIndex = widget.chipAmounts.indexWhere(
-        (e) => e.value.toString() == (widget.amountController?.text ?? ''),
-      );
-    } else {
-      widget.amountController!.text = '1';
-    }
+    // if (widget.chipAmounts.isNotEmpty) {
+    //   _selectedIndex = widget.chipAmounts.indexWhere(
+    //     (e) => e.value.toString() == (widget.amountController?.text ?? ''),
+    //   );
+    // } else {
+    //   widget.amountController!.text = '1';
+    // }
     widget.model?.updateFieldWidth();
   }
 
-  // void updateFieldWidth() {
-  //   int n = widget.amountController!.text.length;
-  //   if (n == 0) n++;
-  //   _fieldWidth = SizeConfig.padding40 * n.toDouble();
-  //   widget.amountController!.selection = TextSelection.fromPosition(
-  //       TextPosition(offset: widget.amountController!.text.length));
-  // }
+  String getString() {
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
+        (widget.model?.isLendboxOldUser ?? false)) {
+      return 'Fello Flo 10%';
+    } else if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
+        (widget.model?.isLendboxOldUser ?? true) == false) {
+      return 'Fello Flo 8%';
+    }
+
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return "Fello Flo 12%";
+    }
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return "Fello Flo 10%";
+    }
+
+    return "";
+  }
+
+  String getSubString() {
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
+        (widget.model?.isLendboxOldUser ?? false)) {
+      return '1 Month Maturity';
+    } else if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
+        (widget.model?.isLendboxOldUser ?? true) == false) {
+      return '1 Week Lock-in';
+    }
+
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return "6 Month Maturity";
+    }
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return "3 Month Maturity";
+    }
+
+    return "";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -194,9 +224,18 @@ class _AmountInputViewState extends State<AmountInputView> {
                       ),
                       if (widget.model?.showInfoIcon ?? false)
                         GestureDetector(
-                          onTap: () => locator<BaseUtil>().showHappyHourDialog(
-                              locator<HappyHourCampign>(),
-                              isComingFromSave: true),
+                          onTap: () => BaseUtil.openModalBottomSheet(
+                            isBarrierDismissible: true,
+                            addToScreenStack: true,
+                            backgroundColor: const Color(0xff1A1A1A),
+                            content: ViewBreakdown(model: widget.model!),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness24),
+                              topRight: Radius.circular(SizeConfig.roundness24),
+                            ),
+                            hapticVibrate: true,
+                            isScrollControlled: true,
+                          ),
                           child: const Icon(
                             Icons.info_outline,
                             size: 20,
@@ -263,7 +302,7 @@ class _AmountInputViewState extends State<AmountInputView> {
               Padding(
                 padding: EdgeInsets.only(right: SizeConfig.padding20),
                 child: Text(
-                  "Fello Flo 12%",
+                  getString(),
                   style: TextStyles.sourceSans.body3,
                 ),
               ),
@@ -275,7 +314,7 @@ class _AmountInputViewState extends State<AmountInputView> {
               Padding(
                 padding: EdgeInsets.only(left: SizeConfig.padding20),
                 child: Text(
-                  "6 Month Maturity",
+                  getSubString(),
                   style: TextStyles.sourceSans.body3,
                 ),
               ),
