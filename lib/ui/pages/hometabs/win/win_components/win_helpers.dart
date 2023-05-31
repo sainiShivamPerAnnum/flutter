@@ -23,7 +23,7 @@ class Salutation extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         left: leftMargin ?? SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
+        right: SizeConfig.padding4,
         top: SizeConfig.padding10,
       ),
       child: PropertyChangeConsumer<UserService, UserServiceProperties>(

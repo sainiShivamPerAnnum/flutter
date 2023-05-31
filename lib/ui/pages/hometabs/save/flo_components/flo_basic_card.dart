@@ -50,7 +50,7 @@ class FloBasicCard extends StatelessWidget {
           basicPrinciple > 0
               ? Row(
                   children: [
-                    Text(isLendboxOldUser ? "Flo 10%" : 'Flo 8%',
+                    Text(isLendboxOldUser ? "10% Flo" : '8% Flo',
                         style: TextStyles.sourceSansB.title5),
                     const Spacer(),
                     FloPremiumTierChip(
@@ -64,7 +64,7 @@ class FloBasicCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(isLendboxOldUser ? "Flo 10%" : '8% Flo',
+                      Text(isLendboxOldUser ? "10% Flo" : '8% Flo',
                           style: TextStyles.sourceSansB.title5),
                       SizedBox(height: SizeConfig.padding4),
                       FloPremiumTierChip(
@@ -176,7 +176,7 @@ class FloBasicCard extends StatelessWidget {
     if (isLendboxOldUser) {
       return 0.05;
     } else {
-      return 0.05;
+      return 0.01;
     }
   }
 }

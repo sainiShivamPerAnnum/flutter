@@ -574,7 +574,7 @@ class BaseUtil extends ChangeNotifier {
       AppState.screenStack.add(ScreenItem.dialog);
     }
     d.log("Current Stack: ${AppState.screenStack}");
-    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+    Haptic.vibrate();
     await showDialog(
       barrierColor: barrierColor,
       context: AppState.delegate!.navigatorKey.currentContext!,
@@ -598,7 +598,7 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+    Haptic.vibrate();
     d.log("Current Stack: ${AppState.screenStack}");
     await showModalBottomSheet(
       enableDrag: enableDrag,

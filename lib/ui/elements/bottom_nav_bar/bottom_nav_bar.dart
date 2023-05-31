@@ -9,7 +9,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({super.key});
@@ -109,42 +108,21 @@ class NavBarIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Showcase(
-      onTargetClick: callBack,
-      disposeOnTap: false,
-      key: item.key,
-      description: item.title == 'Play'
-          ? 'Tap on the Play section'
-          : item.title == 'Save'
-              ? 'What are you waiting for?\nStart your savings journey now!'
-              : 'You can find your scratch cards here. Tap on Account Section',
-      child: Container(
-        key: key,
-        alignment: Alignment.center,
-        // color: Colors.black,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: SizeConfig.navBarHeight * 0.42,
-                  width: SizeConfig.navBarHeight * 0.42,
-                  child: Lottie.asset(
-                    item.lottie,
-                    fit: BoxFit.contain,
-                    animate: animate,
-                    repeat: false,
-                  ),
-                ),
-                Text(item.title, style: style),
-                // SizedBox(height: SizeConfig.navBarHeight * 0.1)
-              ],
-            ),
-          ],
+    return Column(
+      children: [
+        SizedBox(
+          height: SizeConfig.navBarHeight * 0.42,
+          width: SizeConfig.navBarHeight * 0.42,
+          child: Lottie.asset(
+            item.lottie,
+            fit: BoxFit.contain,
+            animate: animate,
+            repeat: false,
+          ),
         ),
-      ),
+        Text(item.title, style: style),
+        // SizedBox(height: SizeConfig.navBarHeight * 0.1)
+      ],
     );
   }
 }

@@ -36,7 +36,7 @@ class SaveAssetsGroupCard extends StatelessWidget {
                   'You can also invest in P2P asset Fello Flo, which gives you 10% returns per annum',
               child: SaveCustomCard(
                 title: locale.felloFloMainTitle,
-                subtitle: locale.currentValue,
+                subtitle: "Multi tire Investment as per your need",
                 chipText: const ["P2P Asset", "Safe & Secure", "10% Returns"],
                 key: const Key(Constants.ASSET_TYPE_LENDBOX),
                 cardBgColor: UiConstants.kSaveStableFelloCardBg,
@@ -76,7 +76,7 @@ class SaveAssetsGroupCard extends StatelessWidget {
                   'You can start your savings journey on Fello with Digital Gold - a secure and stable asset',
               child: SaveCustomCard(
                 title: locale.digitalGoldMailTitle,
-                subtitle: locale.youOwn,
+                subtitle: "Gold investment withdraw-able anytime",
                 chipText: const [
                   "Safe & Secure",
                   "24K Gold",
@@ -133,8 +133,10 @@ class MiniAssetsGroupSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+        vertical: SizeConfig.padding16,
+      ),
       child: Row(
         children: [
           const MiniAssetCard(

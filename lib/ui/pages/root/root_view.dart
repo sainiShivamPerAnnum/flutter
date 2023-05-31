@@ -1,6 +1,8 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -18,6 +20,7 @@ import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
+import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/lazy_load_indexed_stack.dart';
@@ -54,6 +57,22 @@ class Root extends StatelessWidget {
                   Column(
                     children: [
                       const RootAppBar(),
+                      Container(
+                        width: SizeConfig.screenWidth,
+                        height: SizeConfig.padding40,
+                        color: UiConstants.kFloContainerColor,
+                        child: const MarqueeText(
+                          infoList: [
+                            "Gold Deposits are disabled",
+                            "Flo Deposits are disabled",
+                            "Gold Deposits are disabled",
+                            "Flo Deposits are disabled"
+                          ],
+                          showBullet: true,
+                          bulletColor: Colors.white,
+                          textColor: Colors.white,
+                        ),
+                      ),
                       Expanded(
                         child: RefreshIndicator(
                           triggerMode: RefreshIndicatorTriggerMode.onEdge,
@@ -132,25 +151,7 @@ class Root extends StatelessWidget {
 // }
 
 class RootAppBar extends StatelessWidget {
-  const RootAppBar({super.key, this.showTitle = true});
-
-  FaqsType getFaqType() {
-    final NavBarItemModel navItem =
-        locator<RootController>().currentNavBarItemModel;
-    if (navItem == RootController.playNavBarItem) {
-      return FaqsType.play;
-    } else if (navItem == RootController.saveNavBarItem) {
-      return FaqsType.savings;
-    } else if (navItem == RootController.winNavBarItem) {
-      return FaqsType.winnings;
-    } else if (navItem == RootController.tambolaNavBar) {
-      return FaqsType.tambola;
-    } else {
-      return FaqsType.gettingStarted;
-    }
-  }
-
-  final bool showTitle;
+  const RootAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +164,6 @@ class RootAppBar extends StatelessWidget {
                 selector: (_, tambolaService) =>
                     tambolaService.tambolaTicketCount,
                 builder: (_, ticketCount, child) {
-                  print("Tambola Ticket count: $ticketCount");
                   return (locator<RootController>().currentNavBarItemModel !=
                           RootController.journeyNavBarItem)
                       ? Container(
@@ -173,15 +173,16 @@ class RootAppBar extends StatelessWidget {
                           child: FAppBar(
                             showAvatar: true,
                             leadingPadding: false,
-                            titleWidget: showTitle
-                                ? Expanded(
-                                    child: Salutation(
-                                      leftMargin: SizeConfig.padding8,
-                                      textStyle: TextStyles.rajdhaniSB.body0
-                                          .colour(Colors.white),
-                                    ),
-                                  )
-                                : null,
+                            titleWidget:
+                                !userservice!.userSegments.contains("NEW_USER")
+                                    ? Expanded(
+                                        child: Salutation(
+                                          leftMargin: SizeConfig.padding8,
+                                          textStyle: TextStyles.rajdhaniSB.body0
+                                              .colour(Colors.white),
+                                        ),
+                                      )
+                                    : null,
                             backgroundColor: UiConstants.kBackgroundColor,
                             showCoinBar: false,
                             action: Row(

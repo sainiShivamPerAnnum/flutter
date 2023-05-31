@@ -27,17 +27,33 @@ class FloPremiumDetailsView extends StatefulWidget {
   State<FloPremiumDetailsView> createState() => _FloPremiumDetailsViewState();
 }
 
-class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView> {
+class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
+    with SingleTickerProviderStateMixin {
   ScrollController? controller;
+
+  AnimationController? _animController;
+  Animation<double>? offsetAnim;
   @override
   void initState() {
     super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    )..addListener(() {
+        setState(() {});
+      });
+
+    offsetAnim = CurvedAnimation(
+        curve: Curves.easeInCubic,
+        parent: _animController!,
+        reverseCurve: Curves.decelerate);
     controller = ScrollController();
   }
 
   @override
   void dispose() {
     controller?.dispose();
+    _animController!.dispose();
     super.dispose();
   }
 
@@ -54,23 +70,24 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView> {
             // await state.refreshTransactions(widget.type);
           },
           child: Scaffold(
-            backgroundColor: UiConstants.kBackgroundColor,
-            body: Stack(
-              children: [
-                Container(
-                  height: SizeConfig.screenHeight! * 0.5,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      UiConstants.kFloContainerColor,
-                      const Color(0xff297264).withOpacity(0),
-                    ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+            backgroundColor: Colors.black,
+            body: Container(
+              color: UiConstants.kBackgroundColor,
+              child: Stack(
+                children: [
+                  Container(
+                    height: SizeConfig.screenHeight! * 0.5,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [
+                            UiConstants.kFloContainerColor,
+                            const Color(0xff297264).withOpacity(0),
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter),
+                    ),
                   ),
-                ),
-                AnimatedOpacity(
-                  opacity: model.opacity,
-                  curve: Curves.easeIn,
-                  duration: const Duration(milliseconds: 200),
-                  child: SafeArea(
+                  SafeArea(
                     child: Column(
                       children: [
                         const SizedBox(height: kToolbarHeight * 0.8),
@@ -79,97 +96,78 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView> {
                             controller: controller,
                             child: Column(
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.pageHorizontalMargins),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                              child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                Transform.translate(
+                                  offset:
+                                      Offset(0, -1 * offsetAnim!.value * 50),
+                                  child: AnimatedSwitcher(
+                                    duration: const Duration(seconds: 2),
+                                    child: model.is12
+                                        ? Column(
                                             children: [
-                                              Text(
-                                                "Fello Flo Premium",
-                                                style: TextStyles
-                                                    .rajdhaniSB.title4,
+                                              FloPremiumHeader(
+                                                  key: const ValueKey(
+                                                      "12floHeader"),
+                                                  model: model),
+                                              SizedBox(
+                                                  height: SizeConfig.padding24),
+                                              if (model.isInvested)
+                                                FloBalanceBriefRow(
+                                                  key: const ValueKey(
+                                                      "12floBalance"),
+                                                  lead: model
+                                                          .userService
+                                                          .userFundWallet
+                                                          ?.wLbBalance ??
+                                                      0,
+                                                  trail: model
+                                                          .userService
+                                                          .userFundWallet
+                                                          ?.wLbPrinciple ??
+                                                      0,
+                                                  leadPercent: 0.02,
+                                                ),
+                                              const FloPremiumTransactionsList(
+                                                key: ValueKey("12floTxns"),
                                               ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: UiConstants
-                                                              .primaryColor
-                                                              .withOpacity(
-                                                                  0.95),
-                                                          blurRadius: 50,
-                                                        )
-                                                      ],
-                                                    ),
-                                                    child: Text(
-                                                      model.is12
-                                                          ? "12% Flo"
-                                                          : "10% Flo",
-                                                      style: TextStyles
-                                                          .rajdhaniB.title2
-                                                          .colour(model.is12
-                                                              ? UiConstants
-                                                                  .primaryColor
-                                                              : Colors.white),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
                                             ],
-                                          )),
-                                          SvgPicture.asset(
-                                            Assets.floAsset,
-                                            height:
-                                                SizeConfig.screenHeight! * 0.1,
+                                          )
+                                        : Column(
+                                            children: [
+                                              FloPremiumHeader(
+                                                  key: const ValueKey(
+                                                      "10floHeader"),
+                                                  model: model),
+                                              SizedBox(
+                                                  height: SizeConfig.padding24),
+                                              if (model.isInvested)
+                                                FloBalanceBriefRow(
+                                                  key: const ValueKey(
+                                                      "10floBalance"),
+                                                  lead: model
+                                                          .userService
+                                                          .userFundWallet
+                                                          ?.wLbBalance ??
+                                                      0,
+                                                  trail: model
+                                                          .userService
+                                                          .userFundWallet
+                                                          ?.wLbPrinciple ??
+                                                      0,
+                                                  leadPercent: 0.02,
+                                                ),
+                                              const FloPremiumTransactionsList(
+                                                key: ValueKey("10floTxns"),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      SizedBox(height: SizeConfig.padding10),
-                                      Text(
-                                        model.is12
-                                            ? model.flo12Highlights
-                                            : model.flo10Highlights,
-                                        style: TextStyles.sourceSans.body2
-                                            .colour(UiConstants.primaryColor),
-                                      ),
-                                      SizedBox(height: SizeConfig.padding4),
-                                      Text(
-                                        model.is12
-                                            ? model.flo12Description
-                                            : model.flo10Description,
-                                        style: TextStyles.sourceSans.body2
-                                            .colour(Colors.white54),
-                                      ),
-                                    ],
+                                    transitionBuilder: (child, animation) {
+                                      return FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      );
+                                    },
                                   ),
                                 ),
-                                SizedBox(height: SizeConfig.padding24),
-                                if (model.isInvested)
-                                  FloBalanceBriefRow(
-                                    lead: model.userService.userFundWallet
-                                            ?.wLbBalance ??
-                                        0,
-                                    trail: model.userService.userFundWallet
-                                            ?.wLbPrinciple ??
-                                        0,
-                                    leadPercent: 0.02,
-                                  ),
-                                const FloPremiumTransactionsList(),
                                 Padding(
                                   padding: EdgeInsets.symmetric(
                                       vertical: SizeConfig.padding16),
@@ -318,136 +316,208 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView> {
                       ],
                     ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    color: const Color(0xff232326).withOpacity(0.95),
-                    padding:
-                        EdgeInsets.symmetric(vertical: SizeConfig.padding14)
-                            .copyWith(top: 2),
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              Assets.floAsset,
-                              height: SizeConfig.screenHeight! * 0.03,
-                              width: SizeConfig.screenHeight! * 0.03,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding1,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding4),
-                              child: Text(
-                                DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
-                                style: TextStyles.sourceSans.body4.colour(
-                                  UiConstants.kTextColor2,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding4,
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          width: SizeConfig.screenWidth!,
-                          child: Row(
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      color: const Color(0xff232326).withOpacity(0.95),
+                      padding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding14)
+                              .copyWith(top: 2),
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              if (!model.is12)
-                                Expanded(
-                                  child: OutlinedButton(
-                                      style: ButtonStyle(
-                                          side: MaterialStateProperty.all(
-                                              const BorderSide(
-                                                  color: Colors.white,
-                                                  width: 1.0,
-                                                  style: BorderStyle.solid))),
-                                      child: Text(
-                                        "UPGRADE TO 12%",
-                                        style: TextStyles.rajdhaniSB.body2
-                                            .colour(Colors.white),
-                                      ),
-                                      onPressed: () async {
-                                        Haptic.vibrate();
-                                        await controller?.animateTo(0,
-                                            duration: const Duration(
-                                                milliseconds: 200),
-                                            curve: Curves.decelerate);
-                                        // model.opacity = 0.8;
-                                        // model.offset = const Offset(0, -2);
-                                        await Future.delayed(
-                                            const Duration(milliseconds: 300),
-                                            () {
-                                          model.is12 = true;
-                                          // model.opacity = 1;
-                                          // model.offset = const Offset(0, 0);
-                                        });
-                                        // model.is12 = true;
-                                      }),
+                              SvgPicture.asset(
+                                Assets.floAsset,
+                                height: SizeConfig.screenHeight! * 0.03,
+                                width: SizeConfig.screenHeight! * 0.03,
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding1,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding4),
+                                child: Text(
+                                  DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
+                                  style: TextStyles.sourceSans.body4.colour(
+                                    UiConstants.kTextColor2,
+                                  ),
                                 ),
-                              if (!model.is12)
-                                SizedBox(width: SizeConfig.padding12),
-                              Expanded(
-                                child: MaterialButton(
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness5),
-                                    ),
-                                    child: Text(
-                                      "INVEST",
-                                      style: TextStyles.rajdhaniB.body2
-                                          .colour(Colors.black),
-                                    ),
-                                    onPressed: () {
-                                      BaseUtil().openRechargeModalSheet(
-                                          investmentType:
-                                              InvestmentType.LENDBOXP2P);
-                                    }),
                               ),
                             ],
                           ),
+                          SizedBox(
+                            height: SizeConfig.padding4,
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins),
+                            width: SizeConfig.screenWidth!,
+                            child: Row(
+                              children: [
+                                if (!model.is12)
+                                  Expanded(
+                                    child: OutlinedButton(
+                                        style: ButtonStyle(
+                                            side: MaterialStateProperty.all(
+                                                const BorderSide(
+                                                    color: Colors.white,
+                                                    width: 1.0,
+                                                    style: BorderStyle.solid))),
+                                        child: Text(
+                                          "UPGRADE TO 12%",
+                                          style: TextStyles.rajdhaniSB.body2
+                                              .colour(Colors.white),
+                                        ),
+                                        onPressed: () async {
+                                          Haptic.vibrate();
+                                          await controller
+                                              ?.animateTo(0,
+                                                  duration: const Duration(
+                                                      milliseconds: 200),
+                                                  curve: Curves.decelerate)
+                                              .then((_) {
+                                            _animController!
+                                                .forward()
+                                                .then((value) {
+                                              _animController!.reverse();
+                                              model.is12 = true;
+                                            });
+                                          });
+                                        }),
+                                  ),
+                                if (!model.is12)
+                                  SizedBox(width: SizeConfig.padding12),
+                                Expanded(
+                                  child: MaterialButton(
+                                      color: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            SizeConfig.roundness5),
+                                      ),
+                                      child: Text(
+                                        "INVEST",
+                                        style: TextStyles.rajdhaniB.body2
+                                            .colour(Colors.black),
+                                      ),
+                                      onPressed: () {
+                                        BaseUtil().openRechargeModalSheet(
+                                            investmentType:
+                                                InvestmentType.LENDBOXP2P);
+                                      }),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SafeArea(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        BackButton(
+                          color: Colors.white,
+                          onPressed: () => Navigator.of(context).pop(),
                         ),
-                        SizedBox(
-                          height: SizeConfig.padding2,
+                        Padding(
+                          padding: EdgeInsets.only(right: SizeConfig.padding8),
+                          child: const FaqPill(
+                            type: FaqsType.savings,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                SafeArea(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      BackButton(
-                        color: Colors.white,
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: SizeConfig.padding8),
-                        child: const FaqPill(
-                          type: FaqsType.savings,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class FloPremiumHeader extends StatelessWidget {
+  final FloPremiumDetailsViewModel model;
+  const FloPremiumHeader({
+    super.key,
+    required this.model,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Fello Flo Premium",
+                    style: TextStyles.rajdhaniSB.title4,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: UiConstants.primaryColor.withOpacity(0.95),
+                              blurRadius: 50,
+                            )
+                          ],
+                        ),
+                        child: Text(
+                          model.is12 ? "12% Flo" : "10% Flo",
+                          style: TextStyles.rajdhaniB.title2.colour(
+                            model.is12
+                                ? UiConstants.primaryColor
+                                : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              )),
+              SvgPicture.asset(
+                Assets.floAsset,
+                height: SizeConfig.screenHeight! * 0.1,
+              ),
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding10),
+          Text(
+            model.is12 ? model.flo12Highlights : model.flo10Highlights,
+            style: TextStyles.sourceSans.body2.colour(UiConstants.primaryColor),
+          ),
+          SizedBox(height: SizeConfig.padding4),
+          Text(
+            model.is12 ? model.flo12Description : model.flo10Description,
+            style: TextStyles.sourceSans.body2.colour(Colors.white54),
+          ),
+        ],
+      ),
     );
   }
 }

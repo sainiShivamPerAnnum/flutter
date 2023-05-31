@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/walkthrough_video_section.dart';
@@ -58,7 +59,7 @@ class SaveWelcomeCard extends StatelessWidget {
                     Text("Fello Balance", style: TextStyles.rajdhaniSB.title3),
                     Selector<UserService, UserFundWallet?>(
                         builder: (_, wallet, child) => Text(
-                              "₹${wallet?.netWorth ?? 0}",
+                              "₹${BaseUtil.digitPrecision(wallet?.netWorth ?? 0, 2)}",
                               style: TextStyles.sourceSansB.title4,
                             ),
                         selector: (_, userService) =>
@@ -68,7 +69,11 @@ class SaveWelcomeCard extends StatelessWidget {
                 const Spacer(),
                 MaterialButton(
                   color: Colors.white,
-                  onPressed: () {},
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  ),
+                  onPressed: () =>
+                      BaseUtil.openDepositOptionsModalSheet(timer: 0),
                   child: Text(
                     "SAVE",
                     style: TextStyles.rajdhaniB.body2

@@ -19,6 +19,7 @@ import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -202,7 +203,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         return Future.value(true);
       }
     }
-
+    Haptic.vibrate();
     return _routerDelegate!.popRoute();
   }
 }

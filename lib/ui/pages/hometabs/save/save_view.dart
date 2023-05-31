@@ -104,15 +104,11 @@ class SaveViewWrapper extends StatelessWidget {
                                         }
                                       },
                                       onVerticalDragUpdate: (details) {
-                                        // double currentOffset =
-                                        //     details.primaryDelta ?? 0;
                                         if (details.delta.dy < 0) {
                                           if (cardActions.isVerticalView) {
                                             cardActions.isVerticalView = false;
                                           }
                                         }
-
-                                        // _previousOffset = currentOffset;
                                       },
                                       child: Container(
                                           color: Colors.black.withOpacity(0.2)),
@@ -128,7 +124,7 @@ class SaveViewWrapper extends StatelessWidget {
               )
             : ListView(
                 shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 cacheExtent: 1000,
                 padding: EdgeInsets.zero,
                 children: model.getNewUserSaveViewItems(model),

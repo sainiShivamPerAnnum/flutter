@@ -81,6 +81,7 @@ const String TransactionDetailsPath = '/transactionDetailsPage';
 const String AssetViewPath = '/assetViewSection';
 const String LastWeekOverviewPath = '/lastWeekOverview';
 const String AccountsPath = "/accountsViewPath";
+const String PlayViewPath = "/playViewPath";
 
 const String YoutubePlayerViewPath = "/youtubePlayerViewPath";
 const String EarnMoreReturnsViewPath = "/earnMoreReturnsViewPath";
@@ -172,6 +173,7 @@ enum Pages {
   TransactionDetailsPage,
   LastWeekOverview,
   AccountsView,
+  PlayView,
   YoutubePlayerView,
   EarnMoreReturnsView,
   //POWER PLAY
@@ -753,6 +755,12 @@ PageConfiguration AccountsViewConfig = PageConfiguration(
     path: AccountsPath,
     uiPage: Pages.AccountsView,
     name: "Accounts View Screen");
+
+PageConfiguration PlayViewConfig = PageConfiguration(
+    key: 'PlayViewConfig',
+    path: PlayViewPath,
+    uiPage: Pages.PlayView,
+    name: "Play View Screen");
 
 PageConfiguration YoutubePlayerViewConfig = PageConfiguration(
     key: 'YoutubePlayerPath',

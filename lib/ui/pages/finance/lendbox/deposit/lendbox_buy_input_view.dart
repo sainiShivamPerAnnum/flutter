@@ -263,7 +263,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
           Showcase(
             key: ShowCaseKeys.floKYCKey,
             description:
-                'Complete your KYC to start your journey towards 10% returns',
+                'Complete your KYC to start your journey towards 12% returns',
             child: AppNegativeBtn(
               btnText: locale.completeKYCText,
               onPressed: model.navigateToKycScreen,

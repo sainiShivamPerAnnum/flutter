@@ -190,10 +190,11 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 height: SizeConfig.padding4,
                               ),
                               if (balance == 0) ...[
-                                SizedBox(
-                                  height: SizeConfig.padding10,
-                                ),
-                                _buildInfoSection(),
+                                if (_isGold)
+                                  SizedBox(
+                                    height: SizeConfig.padding10,
+                                  ),
+                                if (_isGold) _buildInfoSection(),
                                 SizedBox(
                                   height: SizeConfig.padding10,
                                 ),
@@ -688,7 +689,7 @@ class ComparisonBox extends StatelessWidget {
                               width: SizeConfig.padding20,
                             ),
                             Text(
-                              isGold ? "100%" : "10%",
+                              isGold ? "100%" : "12%",
                               style: TextStyles.rajdhaniSB.title1,
                             ),
 

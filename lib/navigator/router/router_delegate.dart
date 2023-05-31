@@ -25,6 +25,7 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_update/autosave_upda
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
@@ -59,6 +60,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -323,9 +325,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.EarnMoreReturnsView:
           _addPageData(const EarnMoreReturns(), EarnMoreReturnsViewPageConfig);
           break;
-        // case Pages.TransactionDetailsPage:
-        //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);
-        //   break;
+        case Pages.PlayView:
+          _addPageData(const Play(), TransactionDetailsPageConfig);
+          break;
 
         default:
           break;
@@ -638,6 +640,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.EarnMoreReturnsView:
         EarnMoreReturnsViewPageConfig.currentPageAction = action;
         break;
+      case Pages.PlayView:
+        PlayViewConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -694,6 +699,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void parseRoute(Uri uri, {String? title, bool isExternal = false}) {
     _logger.d("Url: ${uri.toString()}");
+    Haptic.vibrate();
     if (uri.scheme == "http" || uri.scheme == "https") {
       if (isExternal) {
         BaseUtil.launchUrl(uri.toString());
@@ -805,7 +811,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
         break;
       case 'play':
-        onTapItem(RootController.playNavBarItem);
+        pageConfiguration = PlayViewConfig;
         break;
       case 'win':
         onTapItem(RootController.winNavBarItem);

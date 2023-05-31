@@ -59,7 +59,7 @@ class BlockedUserView extends StatelessWidget {
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: new TextSpan(
-                    text: locale.obBlockedSubtitle1,
+                    text: locale.obBlockedSubtitle1 + " ",
                     style: TextStyles.rajdhani.colour(Colors.grey),
                     children: [
                       new TextSpan(

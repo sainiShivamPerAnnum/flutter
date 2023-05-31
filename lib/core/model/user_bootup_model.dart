@@ -407,30 +407,36 @@ class InvestmentsBanMap {
 class InvestmentTypeBanMap {
   AssetBanMap? augmont;
   AssetBanMap? lendBox;
+  AssetBanMap? lendBoxFd;
   InvestmentTypeBanMap({
     @required this.augmont,
     @required this.lendBox,
+    @required this.lendBoxFd,
   });
 
   InvestmentTypeBanMap copyWith({
     AssetBanMap? augmont,
     AssetBanMap? lendBox,
+    AssetBanMap? lendBoxFd,
   }) {
     return InvestmentTypeBanMap(
       augmont: augmont ?? this.augmont,
       lendBox: lendBox ?? this.lendBox,
+      lendBoxFd: lendBoxFd ?? this.lendBoxFd,
     );
   }
 
   InvestmentTypeBanMap.base() {
     augmont = AssetBanMap.base();
     lendBox = AssetBanMap.base();
+    lendBoxFd = AssetBanMap.base();
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'augmont': augmont!.toMap(),
       'lendBox': lendBox!.toMap(),
+      'lendboxFd': lendBoxFd!.toMap(),
     };
   }
 
@@ -445,6 +451,11 @@ class InvestmentTypeBanMap {
           ? AssetBanMap.fromMap(
               map[Constants.ASSET_TYPE_LENDBOX] as Map<String, dynamic>,
               Constants.ASSET_TYPE_LENDBOX)
+          : AssetBanMap.base(),
+      lendBoxFd: map[Constants.ASSET_TYPE_LENDBOX_FD] != null
+          ? AssetBanMap.fromMap(
+              map[Constants.ASSET_TYPE_LENDBOX_FD] as Map<String, dynamic>,
+              Constants.ASSET_TYPE_LENDBOX_FD)
           : AssetBanMap.base(),
     );
   }

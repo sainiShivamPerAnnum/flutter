@@ -217,7 +217,8 @@ class SaveViewModel extends BaseViewModel {
           AppState.delegate!.parseRoute(Uri.parse("earnMoreReturns"));
         },
         child: Text("Earn more rewards"),
-      )
+      ),
+      SizedBox(height: SizeConfig.padding16),
     ]);
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {

@@ -7,12 +7,14 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modalsheets/autosave_combo_input_modalsheet.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -32,6 +34,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final ScratchCardService _gtService = ScratchCardService();
   final SubService _subService = locator<SubService>();
+  final UserService _userService = locator<UserService>();
   final S locale = locator<S>();
 
   List<AmountChipsModel> augDailyChips = defaultAmountChipList;
@@ -270,7 +273,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
         AutosaveAssetModel(
           asset: Assets.felloFlo,
           title: "Fello Flo",
-          subtitle: "The 10% fund is now available for Autosave",
+          subtitle:
+              "The ${_userService.userSegments.contains(Constants.US_FLO_OLD) ? '10%' : '8%'} fund is now available for Autosave",
         ),
         AutosaveAssetModel(
           asset: Assets.digitalGoldBar,
@@ -346,7 +350,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
       AutosaveAssetModel(
         asset: Assets.felloFlo,
         title: "Fello Flo",
-        subtitle: "The 10% fund is now available for Autosave",
+        subtitle:
+            "The ${_userService.userSegments.contains(Constants.US_FLO_OLD) ? '10%' : '8%'} fund is now available for Autosave",
       ),
       AutosaveAssetModel(
         asset: Assets.digitalGoldBar,

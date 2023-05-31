@@ -22,7 +22,7 @@ class EarnMoreReturns extends StatelessWidget {
           title: "Get more Tambola Tickets",
           subtitle: "Earn upto 10K in interest every week",
           asset: Assets.tambola_instant_view,
-          actionUrl: '/tambolaHome'),
+          actionUrl: '/play'),
       EMRModel(
           title: "Get more Tambola Tickets",
           subtitle: "Earn upto 10K in interest every week",
