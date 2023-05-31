@@ -99,8 +99,9 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                       });
                   if (locator<BackButtonActions>().isTransactionCancelled) {
                     if (AppState.delegate!.currentConfiguration!.key ==
-                            'AssetSelectionViewPath' &&
-                        AppState.screenStack.last != ScreenItem.modalsheet &&
+                            'LendboxBuyViewPath' &&
+                        (AppState.screenStack.last != ScreenItem.modalsheet ||
+                            AppState.screenStack.last != ScreenItem.dialog) &&
                         !AppState.isRepeated) {
                       locator<BackButtonActions>()
                           .showWantToCloseTransactionBottomSheet(

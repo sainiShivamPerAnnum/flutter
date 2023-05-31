@@ -31,6 +31,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final CustomLogger? logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
   final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
+
   // final JourneyService _journeyService = locator<JourneyService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
@@ -77,7 +78,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       if (AppState.onTap != null &&
           AppState.type != null &&
           AppState.amt != null) {
-        if (!AppState.isRepeated) {
+        if (AppState.delegate!.currentConfiguration!.key ==
+                'LendboxBuyViewPath' &&
+            AppState.screenStack.last != ScreenItem.dialog &&
+            !AppState.isRepeated) {
           locator<BackButtonActions>().showWantToCloseTransactionBottomSheet(
             AppState.amt!.round(),
             AppState.type!,
