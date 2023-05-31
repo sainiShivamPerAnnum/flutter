@@ -63,7 +63,7 @@ class SaveViewWrapper extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: const [UserServiceProperties.mySegments],
       builder: (_, prop, ___) {
-        return (prop!.userSegments.contains("NEW_USER"))
+        return (!prop!.userSegments.contains("NEW_USER"))
             ? Stack(
                 children: [
                   SingleChildScrollView(
@@ -104,15 +104,11 @@ class SaveViewWrapper extends StatelessWidget {
                                         }
                                       },
                                       onVerticalDragUpdate: (details) {
-                                        // double currentOffset =
-                                        //     details.primaryDelta ?? 0;
                                         if (details.delta.dy < 0) {
                                           if (cardActions.isVerticalView) {
                                             cardActions.isVerticalView = false;
                                           }
                                         }
-
-                                        // _previousOffset = currentOffset;
                                       },
                                       child: Container(
                                           color: Colors.black.withOpacity(0.2)),

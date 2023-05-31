@@ -33,12 +33,12 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
   final UserService userService = locator<UserService>();
   final String flo10Highlights = "P2P Asset  • 10% Returns • RBI Certified";
 
-  final String flo12Highlights = "P2P Asset  • 10% Returns • RBI Certified";
+  final String flo12Highlights = "Nice Asset  • 12% Returns • Good For you";
 
   final String flo10Description =
-      "Fello Flo Premium 12% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 3 months!";
+      "Fello Flo Premium 10% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 3 months!";
   final String flo12Description =
-      "Fello Flo Premium 12% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 3 months!";
+      "Fello Flo Premium 12% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 6 months!";
 
   bool isInvested = false;
 

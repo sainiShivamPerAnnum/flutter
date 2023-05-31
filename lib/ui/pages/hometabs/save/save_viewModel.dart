@@ -212,6 +212,12 @@ class SaveViewModel extends BaseViewModel {
         ),
       ),
       const TambolaMiniInfoCard(),
+      TextButton(
+        onPressed: () {
+          AppState.delegate!.parseRoute(Uri.parse("earnMoreReturns"));
+        },
+        child: Text("Earn more rewards"),
+      ),
       SizedBox(height: SizeConfig.padding16),
     ]);
 

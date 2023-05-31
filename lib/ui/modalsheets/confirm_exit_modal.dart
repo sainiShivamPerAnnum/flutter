@@ -31,7 +31,7 @@ class ConfirmExitModal extends StatelessWidget {
             height: SizeConfig.padding16,
           ),
           Text(
-            "Don’t miss a chance to invest &\ngrow your savings by 10%",
+            "Don’t miss a chance to invest &\ngrow your savings upto 12%",
             textAlign: TextAlign.center,
             style: TextStyles.sourceSans.body2.colour(
               const Color(0xffD9D9D9),

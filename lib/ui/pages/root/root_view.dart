@@ -1,7 +1,5 @@
-import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -59,23 +57,20 @@ class Root extends StatelessWidget {
                   Column(
                     children: [
                       const RootAppBar(),
-                      Positioned(
-                        top: 0,
-                        child: Container(
-                          width: SizeConfig.screenWidth,
-                          height: SizeConfig.padding40,
-                          color: UiConstants.kFloContainerColor,
-                          child: const MarqueeText(
-                            infoList: [
-                              "Gold Deposits are disabled",
-                              "Flo Deposits are disabled",
-                              "Gold Deposits are disabled",
-                              "Flo Deposits are disabled"
-                            ],
-                            showBullet: true,
-                            bulletColor: Colors.white,
-                            textColor: Colors.white,
-                          ),
+                      Container(
+                        width: SizeConfig.screenWidth,
+                        height: SizeConfig.padding40,
+                        color: UiConstants.kFloContainerColor,
+                        child: const MarqueeText(
+                          infoList: [
+                            "Gold Deposits are disabled",
+                            "Flo Deposits are disabled",
+                            "Gold Deposits are disabled",
+                            "Flo Deposits are disabled"
+                          ],
+                          showBullet: true,
+                          bulletColor: Colors.white,
+                          textColor: Colors.white,
                         ),
                       ),
                       Expanded(
@@ -199,22 +194,6 @@ bool _showHappyHour() {
 
 class RootAppBar extends StatelessWidget {
   const RootAppBar({super.key});
-
-  FaqsType getFaqType() {
-    final NavBarItemModel navItem =
-        locator<RootController>().currentNavBarItemModel;
-    if (navItem == RootController.playNavBarItem) {
-      return FaqsType.play;
-    } else if (navItem == RootController.saveNavBarItem) {
-      return FaqsType.savings;
-    } else if (navItem == RootController.winNavBarItem) {
-      return FaqsType.winnings;
-    } else if (navItem == RootController.tambolaNavBar) {
-      return FaqsType.tambola;
-    } else {
-      return FaqsType.gettingStarted;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

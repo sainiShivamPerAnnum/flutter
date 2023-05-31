@@ -59,7 +59,7 @@ class SaveWelcomeCard extends StatelessWidget {
                     Text("Fello Balance", style: TextStyles.rajdhaniSB.title3),
                     Selector<UserService, UserFundWallet?>(
                         builder: (_, wallet, child) => Text(
-                              "₹${wallet?.netWorth ?? 0}",
+                              "₹${BaseUtil.digitPrecision(wallet?.netWorth ?? 0, 2)}",
                               style: TextStyles.sourceSansB.title4,
                             ),
                         selector: (_, userService) =>
