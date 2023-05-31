@@ -24,7 +24,7 @@ class MarqueeText extends StatelessWidget {
         children: List.generate(
           infoList.length,
           (index) => Container(
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(
               children: [
                 showBullet
@@ -33,9 +33,9 @@ class MarqueeText extends StatelessWidget {
                         backgroundColor: bulletColor ??
                             FelloColorPalette.augmontFundPalette().primaryColor,
                       )
-                    : SizedBox(),
-                SizedBox(
-                  width: 5,
+                    : const SizedBox(),
+                const SizedBox(
+                  width: 15,
                 ),
                 Text(
                   infoList[index],

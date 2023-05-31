@@ -1,9 +1,6 @@
-import 'package:felloapp/core/enums/faqTypes.dart';
-import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
-import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -57,22 +54,7 @@ class Root extends StatelessWidget {
                   Column(
                     children: [
                       const RootAppBar(),
-                      Container(
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.padding40,
-                        color: UiConstants.kFloContainerColor,
-                        child: const MarqueeText(
-                          infoList: [
-                            "Gold Deposits are disabled",
-                            "Flo Deposits are disabled",
-                            "Gold Deposits are disabled",
-                            "Flo Deposits are disabled"
-                          ],
-                          showBullet: true,
-                          bulletColor: Colors.white,
-                          textColor: Colors.white,
-                        ),
-                      ),
+                      const HeadAlerts(),
                       Expanded(
                         child: RefreshIndicator(
                           triggerMode: RefreshIndicatorTriggerMode.onEdge,
@@ -116,6 +98,33 @@ class Root extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class HeadAlerts extends StatelessWidget {
+  const HeadAlerts({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<UserService, UserBootUpDetailsModel?>(
+        builder: (ctx, bootUp, child) {
+          return ((bootUp?.data?.marqueeMessages ?? []).isNotEmpty)
+              ? Container(
+                  width: SizeConfig.screenWidth,
+                  height: SizeConfig.padding40,
+                  color: UiConstants.kGoldContainerColor,
+                  child: MarqueeText(
+                    infoList: bootUp?.data?.marqueeMessages ?? [],
+                    showBullet: true,
+                    bulletColor: Colors.white,
+                    textColor: Colors.white,
+                  ),
+                )
+              : const SizedBox();
+        },
+        selector: (ctx, userService) => userService.userBootUp);
   }
 }
 

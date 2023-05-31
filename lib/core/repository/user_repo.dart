@@ -537,7 +537,7 @@ class UserRepository extends BaseRepo {
         queryParams: queryParameters,
         cBaseUrl: _baseUrl,
       );
-
+      print("Bootup Response: $respone");
       userBootUp = UserBootUpDetailsModel.fromMap(respone);
 
       return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);

@@ -24,21 +24,12 @@ class UserBootUpDetailsModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'message': message,
-      'data': data!.toMap(),
-    };
-  }
-
   factory UserBootUpDetailsModel.fromMap(Map<String, dynamic> map) {
     return UserBootUpDetailsModel(
       message: map['message'] as String,
       data: Data.fromMap(map['data'] as Map<String, dynamic>),
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory UserBootUpDetailsModel.fromJson(String source) =>
       UserBootUpDetailsModel.fromMap(
@@ -59,6 +50,7 @@ class UserBootUpDetailsModel {
 }
 
 class Data {
+  final List<String>? marqueeMessages;
   final Cache? cache;
   final bool? isBlocked;
   final bool? isAppUpdateRequired;
@@ -67,6 +59,7 @@ class Data {
   final bool? signOutUser;
   final BanMap? banMap;
   Data({
+    this.marqueeMessages,
     @required this.cache,
     @required this.isBlocked,
     @required this.isAppUpdateRequired,
@@ -76,41 +69,12 @@ class Data {
     @required this.banMap,
   });
 
-  Data copyWith({
-    Cache? cache,
-    bool? isBlocked,
-    bool? isAppUpdateRequired,
-    bool? isAppForcedUpdateRequired,
-    Notice? notice,
-    bool? signOutUser,
-    BanMap? banMap,
-  }) {
-    return Data(
-      cache: cache ?? this.cache,
-      isBlocked: isBlocked ?? this.isBlocked,
-      isAppUpdateRequired: isAppUpdateRequired ?? this.isAppUpdateRequired,
-      isAppForcedUpdateRequired:
-          isAppForcedUpdateRequired ?? this.isAppForcedUpdateRequired,
-      notice: notice ?? this.notice,
-      signOutUser: signOutUser ?? this.signOutUser,
-      banMap: banMap ?? this.banMap,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'cache': cache?.toMap(),
-      'isBlocked': isBlocked,
-      'isAppUpdateRequired': isAppUpdateRequired,
-      'isAppForcedUpdateRequired': isAppForcedUpdateRequired,
-      'notice': notice?.toMap(),
-      'signOutUser': signOutUser,
-      'banMap': banMap?.toMap(),
-    };
-  }
-
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
+      marqueeMessages: map["marqueeMessages"] != null
+          ? (List<String>.from(
+              map['marqueeMessages'].cast<String>() as List<String>))
+          : [],
       cache: map['cache'] != null
           ? Cache.fromMap(map['cache'] as Map<String, dynamic>)
           : Cache.base(),
@@ -126,8 +90,6 @@ class Data {
           : BanMap.base(),
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory Data.fromJson(String source) =>
       Data.fromMap(json.decode(source) as Map<String, dynamic>);

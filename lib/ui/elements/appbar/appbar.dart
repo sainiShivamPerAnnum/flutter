@@ -63,7 +63,7 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
           if (leadingPadding) SizedBox(width: SizeConfig.padding8),
           showAvatar
               ? Transform.translate(
-                  offset: Offset(0, SizeConfig.padding4),
+                  offset: Offset(0, SizeConfig.padding2),
                   child: ProfileImageSE(
                     radius: SizeConfig.avatarRadius * 0.9,
                   ),

@@ -306,6 +306,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               dayOpenCount: dayOpenCount);
       if (res.isSuccess()) {
         userBootUp = res.model;
+        notifyListeners();
       }
     } else {
       //No user logged in
@@ -695,7 +696,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
                                   width: SizeConfig.screenWidth! * 0.16),
                             ],
                           ),
-                    content: const Text(
+                          content: const Text(
                               "Fello protects your data to avoid unauthorized access. Please unlock Fello to continue."),
                           actions: [
                             CupertinoDialogAction(
