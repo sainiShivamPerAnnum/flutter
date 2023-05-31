@@ -84,7 +84,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(height: SizeConfig.fToolBarHeight / 2),
+              // SizedBox(height: SizeConfig.fToolBarHeight / 2),
               LendBoxAppBar(
                 isOldUser: widget.model.isLendboxOldUser,
                 assetType: widget.model.floAssetType,

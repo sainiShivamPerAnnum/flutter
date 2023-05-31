@@ -38,7 +38,7 @@ class LendboxBuyView extends StatefulWidget {
 
 class _LendboxBuyViewState extends State<LendboxBuyView>
     with WidgetsBindingObserver {
-  final LendboxTransactionService? _txnService =
+  final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
   AppLifecycleState? appLifecycleState;
 
@@ -72,57 +72,59 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LendboxTransactionService>(
-      builder: (transactionContext, lboxTxnService, transactionProperty) {
-        return AnimatedContainer(
-          width: double.infinity,
-          height: _getHeight(lboxTxnService),
-          decoration: BoxDecoration(
-            color: UiConstants.kSecondaryBackgroundColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.padding16),
-              topRight: Radius.circular(SizeConfig.padding16),
+    return Scaffold(
+      body: Consumer<LendboxTransactionService>(
+        builder: (transactionContext, lboxTxnService, transactionProperty) {
+          return AnimatedContainer(
+            width: double.infinity,
+            height: _getHeight(lboxTxnService),
+            decoration: BoxDecoration(
+              color: UiConstants.kSecondaryBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.padding16),
+                topRight: Radius.circular(SizeConfig.padding16),
+              ),
             ),
-          ),
-          duration: const Duration(milliseconds: 500),
-          child: Stack(
-            children: [
-              _getBackground(lboxTxnService!),
-              PageTransitionSwitcher(
-                duration: const Duration(milliseconds: 500),
-                transitionBuilder: (
-                  Widget child,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                ) {
-                  return FadeThroughTransition(
-                    fillColor: Colors.transparent,
-                    child: child,
-                    animation: animation,
-                    secondaryAnimation: secondaryAnimation,
-                  );
-                },
-                child: BaseView<LendboxBuyViewModel>(
-                  onModelReady: (model) => model.init(
-                    widget.amount,
-                    widget.skipMl,
-                    assetTypeFlow: widget.floAssetType,
-                  ),
-                  builder: (ctx, model, child) {
-                    _secureScreenshots(lboxTxnService);
-                    // widget.onChanged(
-                    //     double.parse(model.amountController?.text ?? "0.0"));
-                    return _getView(
-                      lboxTxnService,
-                      model,
+            duration: const Duration(milliseconds: 500),
+            child: Stack(
+              children: [
+                _getBackground(lboxTxnService!),
+                PageTransitionSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  transitionBuilder: (
+                    Widget child,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                  ) {
+                    return FadeThroughTransition(
+                      fillColor: Colors.transparent,
+                      child: child,
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
                     );
                   },
+                  child: BaseView<LendboxBuyViewModel>(
+                    onModelReady: (model) => model.init(
+                      widget.amount,
+                      widget.skipMl,
+                      assetTypeFlow: widget.floAssetType,
+                    ),
+                    builder: (ctx, model, child) {
+                      _secureScreenshots(lboxTxnService);
+                      // widget.onChanged(
+                      //     double.parse(model.amountController?.text ?? "0.0"));
+                      return _getView(
+                        lboxTxnService,
+                        model,
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
