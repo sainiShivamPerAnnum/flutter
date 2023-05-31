@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -84,7 +85,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(height: SizeConfig.fToolBarHeight / 2),
+              // SizedBox(height: SizeConfig.fToolBarHeight / 2),
               LendBoxAppBar(
                 isOldUser: widget.model.isLendboxOldUser,
                 assetType: widget.model.floAssetType,
@@ -97,7 +98,10 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                         "Asset": 'Flo',
                       });
                   if (locator<BackButtonActions>().isTransactionCancelled) {
-                    if (!AppState.isRepeated) {
+                    if (AppState.delegate!.currentConfiguration!.key ==
+                            'AssetSelectionViewPath' &&
+                        AppState.screenStack.last != ScreenItem.modalsheet &&
+                        !AppState.isRepeated) {
                       locator<BackButtonActions>()
                           .showWantToCloseTransactionBottomSheet(
                               double.parse(widget.model.amountController!.text)

@@ -9,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -32,6 +33,7 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
@@ -358,29 +360,36 @@ class BaseUtil extends ChangeNotifier {
       }
       double amount = 0;
 
-      BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        enableDrag: false,
-        hapticVibrate: true,
-        isBarrierDismissible: false,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        content: investmentType == InvestmentType.AUGGOLD99
-            ? GoldBuyView(
-                onChanged: (p0) => amount = p0,
-                amount: amt,
-                skipMl: isSkipMl ?? false,
-              )
-            : AssetSelectionPage(
-                showOnlyFlo: true,
-                amount: amt,
-                isSkipMl: isSkipMl ?? false,
-              ),
-      ).then((value) {
-        AppState.isRepeated = false;
-        AppState.onTap = null;
-        locator<BackButtonActions>().isTransactionCancelled = false;
-      });
+      if (investmentType == InvestmentType.LENDBOXP2P) {
+        AppState.delegate!.appState.currentAction = PageAction(
+          page: LendboxBuyViewConfig,
+          state: PageState.addWidget,
+          widget: AssetSelectionPage(
+            showOnlyFlo: true,
+            amount: amt,
+            isSkipMl: isSkipMl ?? false,
+          ),
+        );
+      }
+
+      if (investmentType == InvestmentType.AUGGOLD99) {
+        BaseUtil.openModalBottomSheet(
+            addToScreenStack: true,
+            enableDrag: false,
+            hapticVibrate: true,
+            isBarrierDismissible: false,
+            backgroundColor: Colors.transparent,
+            isScrollControlled: true,
+            content: GoldBuyView(
+              onChanged: (p0) => amount = p0,
+              amount: amt,
+              skipMl: isSkipMl ?? false,
+            ));
+      }
+
+      AppState.isRepeated = false;
+      AppState.onTap = null;
+      locator<BackButtonActions>().isTransactionCancelled = false;
     });
   }
 
@@ -402,24 +411,39 @@ class BaseUtil extends ChangeNotifier {
         return;
       }
 
-      BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        enableDrag: false,
-        hapticVibrate: true,
-        isBarrierDismissible: false,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        content: LendboxBuyView(
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: LendboxBuyViewConfig,
+        state: PageState.addWidget,
+        widget: LendboxBuyView(
           amount: amt,
           skipMl: isSkipMl ?? false,
           onChanged: (p0) => p0,
           floAssetType: floAssetType,
         ),
-      ).then((value) {
-        AppState.isRepeated = false;
-        AppState.onTap = null;
-        locator<BackButtonActions>().isTransactionCancelled = false;
-      });
+      );
+
+      AppState.isRepeated = false;
+      AppState.onTap = null;
+      locator<BackButtonActions>().isTransactionCancelled = false;
+
+      // BaseUtil.openModalBottomSheet(
+      //   addToScreenStack: true,
+      //   enableDrag: false,
+      //   hapticVibrate: true,
+      //   isBarrierDismissible: false,
+      //   backgroundColor: Colors.transparent,
+      //   isScrollControlled: true,
+      //   content: LendboxBuyView(
+      //     amount: amt,
+      //     skipMl: isSkipMl ?? false,
+      //     onChanged: (p0) => p0,
+      //     floAssetType: floAssetType,
+      //   ),
+      // ).then((value) {
+      //   AppState.isRepeated = false;
+      //   AppState.onTap = null;
+      //   locator<BackButtonActions>().isTransactionCancelled = false;
+      // });
     });
   }
 
@@ -499,7 +523,12 @@ class BaseUtil extends ChangeNotifier {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(SizeConfig.roundness12),
                 topRight: Radius.circular(SizeConfig.roundness24)),
-            content: const AssetSelectionPage(showOnlyFlo: false)
+            content: AssetSelectionPage(
+              showOnlyFlo: false,
+              amount: amount,
+              isSkipMl: isSkipMl,
+              isFromGlobal: true,
+            )
             // content: DepositOptionModalSheet(
             //   amount: amount,
             //   isSkipMl: isSkipMl,

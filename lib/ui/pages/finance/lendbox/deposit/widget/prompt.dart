@@ -329,19 +329,20 @@ class WarningBottomSheet extends StatelessWidget {
                     vertical: 10,
                   ),
                   // color: Colors.white,
-                  onPressed: () {
-                    AppState.backButtonDispatcher?.didPopRoute();
-                    AppState.backButtonDispatcher?.didPopRoute();
+                  onPressed: () async {
+                    await AppState.backButtonDispatcher?.didPopRoute();
+                    await AppState.backButtonDispatcher?.didPopRoute();
 
-                    model.forcedBuy = true;
+                    if (!model.isBuyInProgress) {
+                      debugPrint("Buy in progress => ${model.isBuyInProgress}");
+                      await model.initiateBuy();
+                    }
 
-                    Future.delayed(const Duration(seconds: 3), () async {
-                      if (!model.isBuyInProgress) {
-                        debugPrint(
-                            "Buy in progress => ${model.isBuyInProgress}");
-                        await model.initiateBuy();
-                      }
-                    });
+                    // model.forcedBuy = true;
+
+                    // Future.delayed(const Duration(seconds: 3), () async {
+                    //
+                    // });
                   },
                   child: Center(
                     child: Text(

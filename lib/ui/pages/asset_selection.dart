@@ -1,10 +1,16 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -13,15 +19,32 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 class AssetSelectionPage extends StatelessWidget {
   const AssetSelectionPage(
-      {Key? key, required this.showOnlyFlo, this.amount, this.isSkipMl})
+      {Key? key,
+      required this.showOnlyFlo,
+      this.amount,
+      this.isSkipMl,
+      this.isFromGlobal = false})
       : super(key: key);
 
   final bool showOnlyFlo;
   final int? amount;
   final bool? isSkipMl;
+  final bool isFromGlobal;
+
+  bool _showHappyHour() {
+    if (locator<RootController>().currentNavBarItemModel ==
+        RootController.tambolaNavBar) {
+      return (locator<TambolaService>().bestTickets?.data?.totalTicketCount ??
+              0) >
+          0;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +55,7 @@ class AssetSelectionPage extends StatelessWidget {
             EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
         child: Column(
           children: [
-            SizedBox(height: SizeConfig.fToolBarHeight / 2),
+            if (isFromGlobal) SizedBox(height: SizeConfig.fToolBarHeight / 2),
             AppBar(
               elevation: 0,
               backgroundColor: Colors.transparent,
@@ -55,6 +78,36 @@ class AssetSelectionPage extends StatelessWidget {
             SizedBox(height: SizeConfig.padding24),
             FloPlanWidget(amount: amount, isSkipMl: isSkipMl),
           ],
+        ),
+      ),
+      bottomNavigationBar: PropertyChangeProvider<MarketingEventHandlerService,
+          MarketingEventsHandlerProperties>(
+        value: locator<MarketingEventHandlerService>(),
+        child: PropertyChangeConsumer<MarketingEventHandlerService,
+            MarketingEventsHandlerProperties>(
+          properties: const [MarketingEventsHandlerProperties.HappyHour],
+          builder: (context, state, _) {
+            return !state!.showHappyHourBanner
+                ? const SizedBox()
+                : Consumer<AppState>(
+                    builder: (ctx, m, child) {
+                      return AnimatedContainer(
+                        height: !(locator<RootController>()
+                                        .currentNavBarItemModel ==
+                                    RootController.journeyNavBarItem ||
+                                !_showHappyHour())
+                            ? SizeConfig.navBarHeight
+                            : -50,
+                        alignment: Alignment.bottomCenter,
+                        duration: const Duration(milliseconds: 400),
+                        child: HappyHourBanner(
+                          model: locator<HappyHourCampign>(),
+                          isComingFromSave: true,
+                        ),
+                      );
+                    },
+                  );
+          },
         ),
       ),
     );

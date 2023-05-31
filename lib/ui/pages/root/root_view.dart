@@ -72,38 +72,6 @@ class Root extends StatelessWidget {
                       ),
                     ],
                   ),
-
-                  // PropertyChangeProvider<MarketingEventHandlerService,
-                  //     MarketingEventsHandlerProperties>(
-                  //   value: locator<MarketingEventHandlerService>(),
-                  //   child: PropertyChangeConsumer<MarketingEventHandlerService,
-                  //       MarketingEventsHandlerProperties>(
-                  //     properties: const [
-                  //       MarketingEventsHandlerProperties.HappyHour
-                  //     ],
-                  //     builder: (context, state, _) {
-                  //       return !state!.showHappyHourBanner
-                  //           ? Container()
-                  //           : Consumer<AppState>(
-                  //               builder: (ctx, m, child) => AnimatedPositioned(
-                  //                 bottom: !(locator<RootController>()
-                  //                                 .currentNavBarItemModel ==
-                  //                             RootController
-                  //                                 .journeyNavBarItem ||
-                  //                         !_showHappyHour())
-                  //                     ? SizeConfig.navBarHeight
-                  //                     : -50,
-                  //                 duration: const Duration(milliseconds: 400),
-                  //                 child: HappyHourBanner(
-                  //                     model: locator<HappyHourCampign>()),
-                  //               ),
-                  //             );
-                  //     },
-                  //   ),
-                  // ),
-
-                  // const BaseAnimation(),
-
                   const DEVBanner(),
                   const QABanner(),
                 ],
@@ -162,16 +130,6 @@ class Root extends StatelessWidget {
 //   @override
 //   bool get wantKeepAlive => true;
 // }
-
-bool _showHappyHour() {
-  if (locator<RootController>().currentNavBarItemModel ==
-      RootController.tambolaNavBar) {
-    return (locator<TambolaService>().bestTickets?.data?.totalTicketCount ??
-            0) >
-        0;
-  }
-  return true;
-}
 
 class RootAppBar extends StatelessWidget {
   const RootAppBar({super.key, this.showTitle = true});

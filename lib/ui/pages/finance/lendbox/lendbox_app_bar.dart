@@ -1,6 +1,5 @@
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -39,20 +38,22 @@ class LendBoxAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
-
     return AppBar(
       elevation: 0,
       backgroundColor: Colors.transparent,
       leading: !isEnabled
           ? const SizedBox()
-          : IconButton(
-              icon: Icon(Icons.arrow_back_ios,
-                  color: Colors.white.withOpacity(0.4)),
-              onPressed: () {
-                if (trackClosingEvent != null) trackClosingEvent!();
-              },
+          : Container(
+              margin: EdgeInsets.only(left: SizeConfig.padding16),
+              child: IconButton(
+                icon: Icon(Icons.arrow_back_ios,
+                    color: Colors.white.withOpacity(0.4)),
+                onPressed: () {
+                  if (trackClosingEvent != null) trackClosingEvent!();
+                },
+              ),
             ),
+      leadingWidth: SizeConfig.screenWidth! * 0.1,
       title: Row(
         children: [
           Container(
