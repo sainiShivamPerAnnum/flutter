@@ -394,8 +394,11 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                             _animController!
                                                 .forward()
                                                 .then((value) {
+                                              model.cleanTransactionsList();
                                               _animController!.reverse();
                                               model.is12 = true;
+
+                                              model.getTransactions();
                                             });
                                           });
                                         }),

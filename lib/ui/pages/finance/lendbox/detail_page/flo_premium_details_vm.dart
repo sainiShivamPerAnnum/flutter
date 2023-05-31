@@ -62,15 +62,20 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
   ];
 
   List<UserTransaction> transactionsList = [];
-  init(bool is12View) {
+  void init(bool is12View) {
     _is12 = is12View;
     getTransactions();
   }
 
-  dump() {}
+  void dump() {}
 
-  updateDetStatus(int i, bool val) {
+  void updateDetStatus(int i, bool val) {
     detStatus[i] = val;
+    notifyListeners();
+  }
+
+  void cleanTransactionsList() {
+    transactionsList = [];
     notifyListeners();
   }
 
