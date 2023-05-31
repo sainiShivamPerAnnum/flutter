@@ -372,7 +372,7 @@ class BaseUtil extends ChangeNotifier {
                 amount: amt,
                 skipMl: isSkipMl ?? false,
               )
-            : const AssetSelectionPage(),
+            : const AssetSelectionPage(showOnlyFlo: false),
       ).then((value) {
         AppState.isRepeated = false;
         AppState.onTap = null;

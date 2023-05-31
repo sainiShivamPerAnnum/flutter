@@ -487,13 +487,14 @@ class GoldBuyViewModel extends BaseViewModel {
   // }
 
   updateGoldAmount() {
-    if (goldAmountController!.text.isEmpty ||
-        double.tryParse(goldAmountController!.text) == null) {
+    if ((goldAmountController?.text.isEmpty ?? false) ||
+        double.tryParse(goldAmountController?.text ?? "0.0") == null) {
       goldAmountInGrams = 0.0;
     } else {
       double? netTax =
           (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
-      double enteredAmount = double.tryParse(goldAmountController!.text)!;
+      double enteredAmount =
+          double.tryParse(goldAmountController?.text ?? "0") ?? 0;
       double postTaxAmount = BaseUtil.digitPrecision(
           enteredAmount - getTaxOnAmount(enteredAmount, netTax));
 
@@ -505,9 +506,9 @@ class GoldBuyViewModel extends BaseViewModel {
       }
     }
     fieldWidth = SizeConfig.padding40 *
-        ((goldAmountController!.text != null &&
-                goldAmountController!.text.isNotEmpty)
-            ? goldAmountController!.text.length.toDouble()
+        ((goldAmountController?.text != null &&
+                (goldAmountController?.text.isNotEmpty ?? false))
+            ? (goldAmountController?.text ?? "0").length.toDouble()
             : 0.5);
     refresh();
   }
