@@ -104,6 +104,7 @@ class ApiPath {
   static String tambolaTickets(String? uid) => "/$uid/tickets";
 
   static String tambolaBestTickets(String uid) => "/$uid/winning-tickets";
+
   static String buyTambolaTicket(String uid) => "/user/$uid/tickets";
 
   static String ticketCount(String? uid) => "/user/$uid/tickets/count";
@@ -144,8 +145,7 @@ class ApiPath {
   static String pastWinners(String? type, String? freq) =>
       "/leaderboard/past/type/$type/freq/$freq";
 
-  static String getAssetOptions(String freq, String type) =>
-      '/asset/options?freq=$freq&type=$type';
+  static String getAssetOptions() => '/asset/options';
 
   // Internal Ops
   static const String failureReport = '/fail/report';

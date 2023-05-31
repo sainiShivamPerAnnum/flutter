@@ -716,8 +716,8 @@ class CustomKeyboardSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("size config bottom insets: ${SizeConfig.viewInsets.bottom}");
-    print(
+    debugPrint("size config bottom insets: ${SizeConfig.viewInsets.bottom}");
+    debugPrint(
         "Media query bottom insets ${MediaQuery.of(context).viewInsets.bottom}");
     return Positioned(
       bottom: MediaQuery.of(context).viewInsets.bottom,

@@ -66,14 +66,14 @@ class AnimatedBuyTambolaTicketCardState
             child: child,
           );
         },
-        child: ButTicketsComponent(),
+        child: const ButTicketsComponent(),
       ),
     );
   }
 }
 
 class ButTicketsComponent extends StatefulWidget {
-  ButTicketsComponent({
+  const ButTicketsComponent({
     Key? key,
     // required this.model,
   }) : super(key: key);

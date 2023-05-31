@@ -92,6 +92,8 @@ const String PowerPlayHowItWorksPath = '/powerPlayHowItWorksPath';
 const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
 const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
 const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
+const String LendboxBuyViewPath = "/LendboxBuyViewPath";
+const String AssetSelectionViewPath = "/assetSelectionViewPath";
 
 enum Pages {
   Splash,
@@ -181,6 +183,8 @@ enum Pages {
   FppCompletedMatchDetails,
   PowerPlayFTUX,
   PowerPlaySeasonLeaderboard,
+  LendboxBuyView,
+  AssetSelectionView,
 }
 
 class PageConfiguration {
@@ -769,3 +773,15 @@ PageConfiguration EarnMoreReturnsViewPageConfig = PageConfiguration(
     path: EarnMoreReturnsViewPath,
     uiPage: Pages.EarnMoreReturnsView,
     name: "Earn more rewards view screen");
+
+PageConfiguration LendboxBuyViewConfig = PageConfiguration(
+    key: 'LendboxBuyViewPath',
+    path: LendboxBuyViewPath,
+    uiPage: Pages.LendboxBuyView,
+    name: "Lendbox Buy View Screen");
+
+PageConfiguration AssetSelectionViewConfig = PageConfiguration(
+    key: 'AssetSelectionViewPath',
+    path: AssetSelectionViewPath,
+    uiPage: Pages.AssetSelectionView,
+    name: "Asset Selection View Screen");

@@ -1,9 +1,10 @@
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
@@ -15,7 +16,6 @@ import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
@@ -91,38 +91,6 @@ class Root extends StatelessWidget {
                       ),
                     ],
                   ),
-
-                  PropertyChangeProvider<MarketingEventHandlerService,
-                      MarketingEventsHandlerProperties>(
-                    value: locator<MarketingEventHandlerService>(),
-                    child: PropertyChangeConsumer<MarketingEventHandlerService,
-                        MarketingEventsHandlerProperties>(
-                      properties: const [
-                        MarketingEventsHandlerProperties.HappyHour
-                      ],
-                      builder: (context, state, _) {
-                        return !state!.showHappyHourBanner
-                            ? Container()
-                            : Consumer<AppState>(
-                                builder: (ctx, m, child) => AnimatedPositioned(
-                                  bottom: !(locator<RootController>()
-                                                  .currentNavBarItemModel ==
-                                              RootController
-                                                  .journeyNavBarItem ||
-                                          !_showHappyHour())
-                                      ? SizeConfig.navBarHeight
-                                      : -50,
-                                  duration: const Duration(milliseconds: 400),
-                                  child: HappyHourBanner(
-                                      model: locator<HappyHourCampign>()),
-                                ),
-                              );
-                      },
-                    ),
-                  ),
-
-                  // const BaseAnimation(),
-
                   const DEVBanner(),
                   const QABanner(),
                 ],
@@ -181,16 +149,6 @@ class Root extends StatelessWidget {
 //   @override
 //   bool get wantKeepAlive => true;
 // }
-
-bool _showHappyHour() {
-  if (locator<RootController>().currentNavBarItemModel ==
-      RootController.tambolaNavBar) {
-    return (locator<TambolaService>().bestTickets?.data?.totalTicketCount ??
-            0) >
-        0;
-  }
-  return true;
-}
 
 class RootAppBar extends StatelessWidget {
   const RootAppBar({super.key});

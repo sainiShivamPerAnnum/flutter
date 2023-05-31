@@ -37,30 +37,32 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 
 class AugmontTransactionService extends BaseTransactionService {
-  final UserService? _userService = locator<UserService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
+  final UserService _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final PaytmRepository _paytmRepo = locator<PaytmRepository>();
   final _gtService = ScratchCardService();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   // final PaytmService? _paytmService = locator<PaytmService>();
-  final RazorpayService? _razorpayService = locator<RazorpayService>();
-  final TambolaService? _tambolaService = locator<TambolaService>();
+  final RazorpayService _razorpayService = locator<RazorpayService>();
+  final TambolaService _tambolaService = locator<TambolaService>();
   S locale = locator<S>();
   double? currentTxnGms = 0.0;
   DepositFcmResponseModel? depositFcmResponseModel;
   bool _isGoldBuyInProgress = false;
   bool _isGoldSellInProgress = false;
 
+  TransactionState get currentTxnState => currentTransactionState;
+
   late GoldPurchaseDetails currentGoldPurchaseDetails;
 
-  get isGoldBuyInProgress => this._isGoldBuyInProgress;
+  get isGoldBuyInProgress => _isGoldBuyInProgress;
 
   set isGoldBuyInProgress(value) {
-    this._isGoldBuyInProgress = value;
+    _isGoldBuyInProgress = value;
     notifyListeners();
   }
 
@@ -72,17 +74,17 @@ class AugmontTransactionService extends BaseTransactionService {
     _model = model;
   }
 
-  bool get isGoldSellInProgress => this._isGoldSellInProgress;
+  bool get isGoldSellInProgress => _isGoldSellInProgress;
 
   set isGoldSellInProgress(bool value) {
-    this._isGoldSellInProgress = value;
+    _isGoldSellInProgress = value;
     notifyListeners();
   }
 
   Future<void>? initiateAugmontTransaction(
       {required GoldPurchaseDetails details}) {
     currentGoldPurchaseDetails = details;
-    String paymentMode = this.getPaymentMode();
+    String paymentMode = getPaymentMode();
 
     switch (paymentMode) {
       case "PAYTM-PG":
@@ -347,8 +349,8 @@ class AugmontTransactionService extends BaseTransactionService {
           paytmSubscriptionApiResponse.errorMessage, "");
     }
 
-    this.currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
-    this.currentTxnAmount = amount;
+    currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
+    currentTxnAmount = amount;
     return paytmSubscriptionApiResponse.model;
   }
 

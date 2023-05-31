@@ -24,6 +24,7 @@ enum AppConfigKey {
   unknown,
   powerplayConfig,
   predictScreen,
+  lendbox,
 }
 
 extension AppConfigKeys on String {
@@ -77,6 +78,9 @@ extension AppConfigKeys on String {
 
       case 'predictScreen':
         return AppConfigKey.predictScreen;
+
+      case "LENDBOXP2P":
+        return AppConfigKey.lendbox;
       default:
         return AppConfigKey.unknown;
     }

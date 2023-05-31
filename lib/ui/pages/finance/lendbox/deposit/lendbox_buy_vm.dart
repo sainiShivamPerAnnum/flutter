@@ -3,26 +3,44 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
+import 'package:felloapp/core/model/coupon_card_model.dart';
+import 'package:felloapp/core/model/eligible_coupon_model.dart';
+import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../../core/repository/getters_repo.dart';
 
+enum FloPrograms { lendBox8, lendBox10, lendBox12 }
+
 class LendboxBuyViewModel extends BaseViewModel {
-  final LendboxTransactionService? _txnService =
+  final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final CouponRepository _couponRepo = locator<CouponRepository>();
+
   S locale = locator<S>();
 
   double? incomingAmount;
@@ -34,7 +52,6 @@ class LendboxBuyViewModel extends BaseViewModel {
   String? buyNotice;
 
   bool _isBuyInProgress = false;
-  bool get isBuyInProgress => this._isBuyInProgress;
 
   TextEditingController? amountController;
   TextEditingController? vpaController;
@@ -42,46 +59,175 @@ class LendboxBuyViewModel extends BaseViewModel {
   final double minAmount = 100;
   final double maxAmount = 50000;
   AssetOptionsModel? assetOptionsModel;
-  bool get skipMl => this._skipMl;
+  List<CouponModel>? _couponList;
+  int? numberOfTambolaTickets;
 
-  set skipMl(bool value) {
-    this._skipMl = value;
+  int? totalTickets;
+  int? happyHourTickets;
+
+  CouponModel? _focusCoupon;
+  EligibleCouponResponseModel? _appliedCoupon;
+  bool _couponApplyInProgress = false;
+  bool _showCoupons = false;
+
+  int? _buyAmount = 0;
+  bool isLendboxOldUser = false;
+  late String floAssetType;
+  double _fieldWidth = 0.0;
+  bool _forcedBuy = false;
+  String maturityPref = "NA";
+
+  ///  ---------- getter and setter ------------
+
+  int? get buyAmount => _buyAmount;
+
+  bool get isBuyInProgress => _isBuyInProgress;
+
+  set buyAmount(int? value) {
+    _buyAmount = value;
+    notifyListeners();
   }
 
-  init(
-    int? amount,
-    bool isSkipMilestone,
-  ) async {
+  bool get skipMl => _skipMl;
+
+  set skipMl(bool value) {
+    _skipMl = value;
+  }
+
+  late bool _showHappyHour;
+
+  bool _showInfoIcon = false;
+
+  bool get showInfoIcon => _showInfoIcon;
+
+  set showInfoIcon(bool value) {
+    _showInfoIcon = value;
+  }
+
+  bool get showHappyHour => _showHappyHour;
+
+  set showHappyHour(bool value) {
+    _showHappyHour = value;
+    notifyListeners();
+  }
+
+  bool get showCoupons => _showCoupons;
+
+  EligibleCouponResponseModel? get appliedCoupon => _appliedCoupon;
+
+  set appliedCoupon(EligibleCouponResponseModel? value) {
+    _appliedCoupon = value;
+    notifyListeners();
+  }
+
+  CouponModel? get focusCoupon => _focusCoupon;
+
+  set focusCoupon(CouponModel? coupon) {
+    _focusCoupon = coupon;
+    notifyListeners();
+  }
+
+  set showCoupons(bool val) {
+    _showCoupons = val;
+    notifyListeners();
+  }
+
+  bool get couponApplyInProgress => _couponApplyInProgress;
+
+  set couponApplyInProgress(bool val) {
+    _couponApplyInProgress = val;
+    notifyListeners();
+  }
+
+  List<CouponModel>? get couponList => _couponList;
+
+  set couponList(List<CouponModel>? list) {
+    _couponList = list;
+    notifyListeners();
+  }
+
+  get fieldWidth => _fieldWidth;
+
+  set fieldWidth(value) {
+    _fieldWidth = value;
+    notifyListeners();
+  }
+
+  bool get forcedBuy => _forcedBuy;
+
+  set forcedBuy(bool value) {
+    _forcedBuy = value;
+    log("forcedBuy $value");
+    notifyListeners();
+  }
+
+  Future<void> init(int? amount, bool isSkipMilestone,
+      {required String assetTypeFlow}) async {
     setState(ViewState.Busy);
+    floAssetType = assetTypeFlow;
+    showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
+    isLendboxOldUser =
+        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
     await getAssetOptionsModel();
+
+    log("isLendboxOldUser $isLendboxOldUser");
     skipMl = isSkipMilestone;
+
+    int? data = assetOptionsModel?.data.userOptions
+        .firstWhere((element) => element.best,
+            orElse: () => assetOptionsModel!.data.userOptions[1])
+        .value;
+
     amountController = TextEditingController(
-      text: amount?.toString() ??
-          assetOptionsModel!.data.userOptions[1].value.toString(),
+      text: amount?.toString() ?? data.toString(),
     );
+    buyAmount = amount ?? data;
+
+    lastTappedChipIndex = assetOptionsModel?.data.userOptions
+            .indexWhere((element) => element.best) ??
+        1;
+
+    // getAvailableCoupons();
 
     setState(ViewState.Idle);
   }
 
   resetBuyOptions() {
+    buyAmount = assetOptionsModel?.data.userOptions[1].value.toInt();
+    forcedBuy = false;
     amountController?.text = assetOptionsModel!.data.userOptions[2].toString();
     lastTappedChipIndex = 2;
     notifyListeners();
   }
 
   Future<void> getAssetOptionsModel() async {
-    final res =
-        await locator<GetterRepository>().getAssetOptions('weekly', 'flo');
+    final res = await locator<GetterRepository>().getAssetOptions(
+        'weekly', 'flo',
+        subType: floAssetType, isOldLendboxUser: isLendboxOldUser);
     if (res.code == 200) assetOptionsModel = res.model;
     log(res.model?.message ?? '');
   }
 
-  initiateBuy() async {
+  Future<void> initiateBuy() async {
+    log("amountController ${amountController?.text}");
+    if (couponApplyInProgress || _isBuyInProgress) return;
+
     _isBuyInProgress = true;
     notifyListeners();
     final amount = await initChecks();
     if (amount == 0) {
       _isBuyInProgress = false;
+      forcedBuy = false;
+      BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
+      notifyListeners();
+      return;
+    }
+
+    if (amount < minAmount) {
+      _isBuyInProgress = false;
+      forcedBuy = false;
+      BaseUtil.showNegativeAlert(
+          locale.enterAmountGreaterThan, locale.enterAmount);
       notifyListeners();
       return;
     }
@@ -90,8 +236,10 @@ class LendboxBuyViewModel extends BaseViewModel {
     _isBuyInProgress = true;
     notifyListeners();
     trackCheckOut(amount.toDouble());
-    await _txnService!.initiateTransaction(amount.toDouble(), skipMl);
+    await _txnService!.initiateTransaction(
+        amount.toDouble(), skipMl, floAssetType, maturityPref);
     _isBuyInProgress = false;
+    forcedBuy = false;
     notifyListeners();
   }
 
@@ -123,25 +271,25 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   //2 Basic Checks
   Future<int> initChecks() async {
-    final buyAmount = int.tryParse(this.amountController!.text) ?? 0;
+    buyAmount = int.tryParse(amountController?.text ?? "0") ?? 0;
 
     if (buyAmount == 0) {
       BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
       return 0;
     }
 
-    if (buyAmount < minAmount) {
+    if (buyAmount! < minAmount) {
       BaseUtil.showNegativeAlert(
-        locale.minAmountIs + '${this.minAmount}',
-        locale.enterAmountGreaterThan + '${this.minAmount}',
+        '${locale.minAmountIs}$minAmount',
+        '${locale.enterAmountGreaterThan}$minAmount',
       );
       return 0;
     }
 
-    if (buyAmount > maxAmount) {
+    if (buyAmount! > maxAmount) {
       BaseUtil.showNegativeAlert(
-        locale.maxAmountIs + '${this.maxAmount}',
-        locale.enterAmountLowerThan + '${this.maxAmount}',
+        '${locale.maxAmountIs}$maxAmount',
+        '${locale.enterAmountLowerThan}$maxAmount',
       );
       return 0;
     }
@@ -160,7 +308,7 @@ class LendboxBuyViewModel extends BaseViewModel {
                   orElse: () => UserOption(order: 0, value: 0, best: false))
               .value
         }));
-    return buyAmount;
+    return buyAmount!;
   }
 
   void navigateToKycScreen() {
@@ -179,10 +327,137 @@ class LendboxBuyViewModel extends BaseViewModel {
     );
   }
 
+  getAvailableCoupons() async {
+    final ApiResponse<List<CouponModel>> couponsRes =
+        await _couponRepo!.getCoupons();
+    if (couponsRes.code == 200) {
+      couponList = couponsRes.model;
+      if (couponList![0].priority == 1) focusCoupon = couponList![0];
+      showCoupons = true;
+    }
+  }
+
   int getAmount(int amount) {
-    if (amount > amount.toInt())
+    if (amount > amount.toInt()) {
       return amount;
-    else
+    } else {
       return amount.toInt();
+    }
+  }
+
+  String showHappyHourSubtitle() {
+    final int tambolaCost = AppConfig.getValue(AppConfigKey.tambola_cost);
+    final HappyHourCampign? happyHourModel =
+        locator.isRegistered<HappyHourCampign>()
+            ? locator<HappyHourCampign>()
+            : null;
+
+    final int parsedGoldAmount =
+        int.tryParse(amountController?.text ?? '0') ?? 0;
+    final num minAmount =
+        num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
+
+    if (parsedGoldAmount < tambolaCost) {
+      showInfoIcon = false;
+      return "";
+    }
+
+    numberOfTambolaTickets = parsedGoldAmount ~/ tambolaCost;
+    totalTickets = numberOfTambolaTickets;
+
+    showHappyHour
+        ? happyHourTickets = (happyHourModel?.data != null &&
+                happyHourModel?.data?.rewards?[0].type == 'tt')
+            ? happyHourModel?.data!.rewards![0].value
+            : null
+        : happyHourTickets = null;
+
+    if (parsedGoldAmount >= minAmount && happyHourTickets != null) {
+      totalTickets = numberOfTambolaTickets! + happyHourTickets!;
+      showInfoIcon = true;
+    } else {
+      showInfoIcon = false;
+    }
+
+    return "+$totalTickets Tambola Tickets";
+  }
+
+  onChipClick(int index) {
+    log("_isBuyInProgress $_isBuyInProgress");
+    if (couponApplyInProgress || _isBuyInProgress || forcedBuy) return;
+    Haptic.vibrate();
+    lastTappedChipIndex = index;
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    buyAmount = assetOptionsModel?.data.userOptions[index].value.toInt();
+    amountController!.text = buyAmount!.toString();
+
+    appliedCoupon = null;
+
+    _analyticsService!
+        .track(eventName: AnalyticsEvents.suggestedAmountTapped, properties: {
+      'order': index,
+      'Amount': assetOptionsModel?.data.userOptions[index].value,
+      'Best flag': assetOptionsModel?.data.userOptions
+          .firstWhere((element) => element.best,
+              orElse: () => UserOption(order: 0, value: 0, best: false))
+          .value
+    });
+
+    updateFieldWidth();
+    notifyListeners();
+  }
+
+  onValueChanged(String val) {
+    if (val != null && val.isNotEmpty) {
+      if (int.tryParse(val.trim())! > 50000) {
+        buyAmount = 50000;
+        amountController!.text = buyAmount!.toInt().toString();
+
+        // amountController!.selection = TextSelection.fromPosition(
+        //     TextPosition(offset: amountController!.text.length));
+      } else {
+        buyAmount = int.tryParse(val);
+        // if ((buyAmount ?? 0.0) < 10.0) showMinCapText = true;
+        for (int i = 0; i < assetOptionsModel!.data.userOptions.length; i++) {
+          if (buyAmount == assetOptionsModel!.data.userOptions[i].value) {
+            lastTappedChipIndex = i;
+            break;
+          }
+        }
+      }
+    } else {
+      buyAmount = 0;
+    }
+
+    updateFieldWidth();
+
+    appliedCoupon = null;
+  }
+
+  void openReinvestBottomSheet() {
+    BaseUtil.openModalBottomSheet(
+      isBarrierDismissible: true,
+      addToScreenStack: true,
+      backgroundColor: const Color(0xff1B262C),
+      content: ReInvestPrompt(
+        amount: amountController?.text ?? '0',
+        assetType: floAssetType,
+        model: this,
+      ),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness24),
+        topRight: Radius.circular(SizeConfig.roundness24),
+      ),
+      hapticVibrate: true,
+      isScrollControlled: true,
+    );
+  }
+
+  void updateFieldWidth() {
+    int n = amountController!.text.length;
+    if (n == 0) n++;
+    _fieldWidth = SizeConfig.padding40 * n.toDouble();
+    amountController!.selection = TextSelection.fromPosition(
+        TextPosition(offset: amountController!.text.length));
   }
 }

@@ -242,7 +242,7 @@ class SaveViewModel extends BaseViewModel {
     saveViewItems.addAll([
       const HelpFooter(),
       SizedBox(
-        height: SizeConfig.navBarHeight * 1.6,
+        height: SizeConfig.navBarHeight * 0.5,
       )
     ]);
     return saveViewItems;
@@ -275,7 +275,7 @@ class SaveViewModel extends BaseViewModel {
     saveViewItems.addAll([
       const HelpFooter(),
       SizedBox(
-        height: SizeConfig.navBarHeight * 1.6,
+        height: SizeConfig.navBarHeight * 0.5,
       )
     ]);
     return saveViewItems;

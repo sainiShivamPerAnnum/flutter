@@ -1,6 +1,7 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
+import 'dart:developer' as d;
 import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart'; //Pub Imports
@@ -8,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -31,14 +33,14 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
-import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
+import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
@@ -62,6 +64,8 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import 'ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
 
 enum FileType { svg, lottie, unknown, png }
 
@@ -332,13 +336,13 @@ class BaseUtil extends ChangeNotifier {
       //     content: CompleteProfileDialog(),
       //   );
       final bool? isAugDepositBanned = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
+          .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
       final String? augDepositBanNotice = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.reason;
+          .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.reason;
       final bool? islBoxlDepositBanned = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
+          .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
       final String? lBoxDepositBanNotice = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
+          .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
       if (investmentType == InvestmentType.AUGGOLD99 &&
           isAugDepositBanned != null &&
           isAugDepositBanned) {
@@ -356,29 +360,90 @@ class BaseUtil extends ChangeNotifier {
       }
       double amount = 0;
 
-      BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        enableDrag: false,
-        hapticVibrate: true,
-        isBarrierDismissible: false,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        content: investmentType == InvestmentType.AUGGOLD99
-            ? GoldBuyView(
-                onChanged: (p0) => amount = p0,
-                amount: amt,
-                skipMl: isSkipMl ?? false,
-              )
-            : LendboxBuyView(
-                amount: amt,
-                skipMl: isSkipMl ?? false,
-                onChanged: (p0) => amount = p0,
-              ),
-      ).then((value) {
-        AppState.isRepeated = false;
-        AppState.onTap = null;
-        locator<BackButtonActions>().isTransactionCancelled = false;
-      });
+      if (investmentType == InvestmentType.LENDBOXP2P) {
+        AppState.delegate!.appState.currentAction = PageAction(
+          page: LendboxBuyViewConfig,
+          state: PageState.addWidget,
+          widget: AssetSelectionPage(
+            showOnlyFlo: true,
+            amount: amt,
+            isSkipMl: isSkipMl ?? false,
+          ),
+        );
+      }
+
+      if (investmentType == InvestmentType.AUGGOLD99) {
+        BaseUtil.openModalBottomSheet(
+            addToScreenStack: true,
+            enableDrag: false,
+            hapticVibrate: true,
+            isBarrierDismissible: false,
+            backgroundColor: Colors.transparent,
+            isScrollControlled: true,
+            content: GoldBuyView(
+              onChanged: (p0) => amount = p0,
+              amount: amt,
+              skipMl: isSkipMl ?? false,
+            ));
+      }
+
+      AppState.isRepeated = false;
+      AppState.onTap = null;
+      locator<BackButtonActions>().isTransactionCancelled = false;
+    });
+  }
+
+  static void openFloBuySheet(
+      {int? amt, bool? isSkipMl, required String floAssetType}) {
+    final UserService _userService = locator<UserService>();
+    final S locale = locator<S>();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final bool? islBoxDepositBanned = _userService
+          .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
+      final String? lBoxDepositBanNotice = _userService
+          .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
+
+      if (islBoxDepositBanned != null && islBoxDepositBanned) {
+        BaseUtil.showNegativeAlert(
+          lBoxDepositBanNotice ?? locale.assetNotAvailable,
+          locale.tryLater,
+        );
+        return;
+      }
+
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: LendboxBuyViewConfig,
+        state: PageState.addWidget,
+        widget: LendboxBuyView(
+          amount: amt,
+          skipMl: isSkipMl ?? false,
+          onChanged: (p0) => p0,
+          floAssetType: floAssetType,
+        ),
+      );
+
+      AppState.isRepeated = false;
+      AppState.onTap = null;
+      locator<BackButtonActions>().isTransactionCancelled = false;
+
+      // BaseUtil.openModalBottomSheet(
+      //   addToScreenStack: true,
+      //   enableDrag: false,
+      //   hapticVibrate: true,
+      //   isBarrierDismissible: false,
+      //   backgroundColor: Colors.transparent,
+      //   isScrollControlled: true,
+      //   content: LendboxBuyView(
+      //     amount: amt,
+      //     skipMl: isSkipMl ?? false,
+      //     onChanged: (p0) => p0,
+      //     floAssetType: floAssetType,
+      //   ),
+      // ).then((value) {
+      //   AppState.isRepeated = false;
+      //   AppState.onTap = null;
+      //   locator<BackButtonActions>().isTransactionCancelled = false;
+      // });
     });
   }
 
@@ -445,27 +510,34 @@ class BaseUtil extends ChangeNotifier {
     //       content: CompleteProfileDialog());
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
-    Future.delayed(Duration(milliseconds: timer), () {
-      return openModalBottomSheet(
-          addToScreenStack: true,
-          enableDrag: false,
-          hapticVibrate: true,
-          backgroundColor:
-              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-          isBarrierDismissible: true,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(
-              SizeConfig.roundness12,
-            ),
-            topRight: Radius.circular(SizeConfig.roundness24),
-          ),
-          content: DepositOptionModalSheet(
-            amount: amount,
-            isSkipMl: isSkipMl,
-            title: title,
-            subtitle: subtitle,
-          ));
-    });
+    Future.delayed(
+      Duration(milliseconds: timer),
+      () {
+        return openModalBottomSheet(
+            addToScreenStack: true,
+            hapticVibrate: true,
+            backgroundColor:
+                UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+            isBarrierDismissible: true,
+            isScrollControlled: true,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness12),
+                topRight: Radius.circular(SizeConfig.roundness24)),
+            content: AssetSelectionPage(
+              showOnlyFlo: false,
+              amount: amount,
+              isSkipMl: isSkipMl,
+              isFromGlobal: true,
+            )
+            // content: DepositOptionModalSheet(
+            //   amount: amount,
+            //   isSkipMl: isSkipMl,
+            //   title: title,
+            //   subtitle: subtitle,
+            // ),
+            );
+      },
+    );
   }
 
   static showPositiveAlert(String? title, String? message, {int seconds = 2}) {
@@ -501,7 +573,7 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    debugPrint("Current Stack: ${AppState.screenStack}");
+    d.log("Current Stack: ${AppState.screenStack}");
     Haptic.vibrate();
     await showDialog(
       barrierColor: barrierColor,
@@ -527,7 +599,7 @@ class BaseUtil extends ChangeNotifier {
       AppState.screenStack.add(ScreenItem.dialog);
     }
     Haptic.vibrate();
-    debugPrint("Current Stack: ${AppState.screenStack}");
+    d.log("Current Stack: ${AppState.screenStack}");
     await showModalBottomSheet(
       enableDrag: enableDrag,
       constraints: boxContraints,

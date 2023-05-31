@@ -1,0 +1,475 @@
+import 'dart:math';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
+import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+
+import '../../../../../../util/constants.dart';
+
+class ReInvestPrompt extends HookWidget {
+  const ReInvestPrompt(
+      {Key? key,
+      required this.amount,
+      required this.assetType,
+      required this.model})
+      : super(key: key);
+
+  final String amount;
+  final String assetType;
+  final LendboxBuyViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedOption = useState(-1);
+    return Container(
+      // height: SizeConfig.screenHeight! * 0.6,
+      padding: EdgeInsets.all(SizeConfig.padding16),
+      child: SingleChildScrollView(
+        child: Column(
+          // mainAxisSize: MainAxisSize.min,
+          children: [
+            InvestmentForeseenWidget(
+              amount: amount,
+              assetType: assetType,
+              isLendboxOldUser: model.isLendboxOldUser,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      text: "What do you want to do ",
+                      style: TextStyles.sourceSans.body2,
+                      children: [
+                        TextSpan(
+                          text: "after 6 months?",
+                          style: TextStyles.sourceSansB.body2,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(
+                    Icons.info_outline,
+                    color: Colors.white,
+                    size: 15,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.padding20,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding8,
+                vertical: SizeConfig.padding2,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(SizeConfig.roundness5),
+                  topRight: Radius.circular(SizeConfig.roundness5),
+                ),
+                color: UiConstants.kSnackBarPositiveContentColor,
+              ),
+              child: Text(
+                'Recommended',
+                style: TextStyles.sourceSansSB.body4,
+              ),
+            ),
+            OptionContainer(
+              optionIndex: 1,
+              title:
+                  'Re-invest ₹${amount} in ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
+              description: "At the end of 6 months (Maturity)",
+              isSelected: selectedOption.value == 1,
+              onTap: () {
+                model.maturityPref = "1";
+                selectedOption.value = 1;
+              },
+            ),
+            OptionContainer(
+              optionIndex: 2,
+              title:
+                  "Move ₹${amount} to ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
+              description: "At the end of 6 months (Maturity)",
+              isSelected: selectedOption.value == 2,
+              onTap: () {
+                model.maturityPref = "2";
+                selectedOption.value = 2;
+              },
+            ),
+            OptionContainer(
+              optionIndex: 3,
+              title: "Withdraw to Bank",
+              description: "At the end of 6 months (Maturity)",
+              isSelected: selectedOption.value == 3,
+              onTap: () {
+                model.maturityPref = "0";
+                selectedOption.value = 3;
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.padding8,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  MaterialButton(
+                    minWidth: SizeConfig.screenWidth! * 0.4,
+                    height: SizeConfig.padding40,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      side: const BorderSide(color: Colors.white),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                    ),
+                    // color: Colors.white,
+                    onPressed: () {
+                      AppState.backButtonDispatcher?.didPopRoute();
+
+                      model.forcedBuy = true;
+                      model.maturityPref = "NA";
+
+                      Future.delayed(const Duration(seconds: 3), () async {
+                        if (!model.isBuyInProgress) {
+                          await model.initiateBuy();
+                        }
+                      });
+                    },
+                    child: Center(
+                      child: Text(
+                        'Decide later'.toUpperCase(),
+                        style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+                      ),
+                    ),
+                  ),
+                  MaterialButton(
+                    height: SizeConfig.padding40,
+                    minWidth: SizeConfig.screenWidth! * 0.4,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    color: Colors.white,
+                    onPressed: () {
+                      if (selectedOption.value == -1) {
+                        BaseUtil.showNegativeAlert("Please select an option",
+                            "proceed by choosing an option");
+                        return;
+                      }
+
+                      if (selectedOption.value == 3) {
+                        BaseUtil.openModalBottomSheet(
+                          isBarrierDismissible: true,
+                          addToScreenStack: true,
+                          backgroundColor: const Color(0xff1B262C),
+                          content: WarningBottomSheet(model: model),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(SizeConfig.roundness24),
+                            topRight: Radius.circular(SizeConfig.roundness24),
+                          ),
+                          hapticVibrate: true,
+                          isScrollControlled: true,
+                        );
+                        return;
+                      }
+
+                      AppState.backButtonDispatcher?.didPopRoute();
+
+                      if (!model.isBuyInProgress) {
+                        model.initiateBuy();
+                      }
+                    },
+                    child: Center(
+                      child: Text(
+                        'Proceed'.toUpperCase(),
+                        style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OptionContainer extends StatelessWidget {
+  final int optionIndex;
+  final String title;
+  final String description;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const OptionContainer({
+    Key? key,
+    required this.optionIndex,
+    required this.title,
+    required this.description,
+    required this.isSelected,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(
+          bottom: SizeConfig.padding16,
+          left: SizeConfig.padding16,
+          right: SizeConfig.padding16,
+        ),
+        padding: EdgeInsets.all(SizeConfig.padding16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          border: Border.all(
+            color: isSelected
+                ? Colors.white // Change color when selected
+                : const Color(0xFFD3D3D3).withOpacity(0.2),
+            width: SizeConfig.border0,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: SizeConfig.padding24,
+              height: SizeConfig.padding24,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected
+                      ? Colors.white // Change color when selected
+                      : const Color(0xFFD3D3D3).withOpacity(0.2),
+                  width: SizeConfig.border0,
+                ),
+                color: isSelected ? Colors.white : null,
+              ),
+            ),
+            SizedBox(
+              width: SizeConfig.padding16,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyles.rajdhaniB.body1,
+                ),
+                SizedBox(
+                  height: SizeConfig.padding2,
+                ),
+                Text(
+                  description,
+                  style: TextStyles.sourceSans.body3
+                      .colour(const Color(0xffA9C6D6)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WarningBottomSheet extends StatelessWidget {
+  const WarningBottomSheet({Key? key, required this.model}) : super(key: key);
+
+  final LendboxBuyViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(SizeConfig.padding24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Are you sure you want to withdraw your investment after 6 months (Maturity)?',
+            style: TextStyles.sourceSans.body2,
+            maxLines: 2,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: SizeConfig.padding20,
+          ),
+          Text(
+            'You will miss out on extra returns for the next tenure!',
+            style: TextStyles.sourceSans.body3
+                .colour(Colors.white.withOpacity(0.8)),
+            maxLines: 2,
+          ),
+          SizedBox(
+            height: SizeConfig.padding20,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MaterialButton(
+                  minWidth: SizeConfig.screenWidth! * 0.4,
+                  height: SizeConfig.padding40,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    side: const BorderSide(color: Colors.white),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                  ),
+                  // color: Colors.white,
+                  onPressed: () async {
+                    await AppState.backButtonDispatcher?.didPopRoute();
+                    await AppState.backButtonDispatcher?.didPopRoute();
+
+                    if (!model.isBuyInProgress) {
+                      debugPrint("Buy in progress => ${model.isBuyInProgress}");
+                      await model.initiateBuy();
+                    }
+
+                    // model.forcedBuy = true;
+
+                    // Future.delayed(const Duration(seconds: 3), () async {
+                    //
+                    // });
+                  },
+                  child: Center(
+                    child: Text(
+                      'YES',
+                      style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+                    ),
+                  ),
+                ),
+                MaterialButton(
+                  height: SizeConfig.padding40,
+                  minWidth: SizeConfig.screenWidth! * 0.4,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  color: Colors.white,
+                  onPressed: () {
+                    AppState.backButtonDispatcher?.didPopRoute();
+                  },
+                  child: Center(
+                    child: Text(
+                      'NO',
+                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class InvestmentForeseenWidget extends StatelessWidget {
+  const InvestmentForeseenWidget(
+      {Key? key,
+      required this.amount,
+      required this.assetType,
+      required this.isLendboxOldUser})
+      : super(key: key);
+
+  final String amount;
+  final String assetType;
+  final bool isLendboxOldUser;
+
+  String getTitle() {
+    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return "in 12% Flo";
+    }
+
+    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return "in 10% Flo";
+    }
+    return "";
+  }
+
+  String calculateAmountAfter6Months(String amount) {
+    int interest = assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
+
+    double principal = double.tryParse(amount) ?? 0.0;
+    double rateOfInterest = interest / 100.0;
+    int timeInMonths = 6;
+
+    double amountAfter6Months =
+        principal * pow(1 + rateOfInterest / 12, timeInMonths);
+
+    return amountAfter6Months.toStringAsFixed(2);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (assetType == Constants.ASSET_TYPE_FLO_FELXI && isLendboxOldUser) {
+      return const SizedBox();
+    }
+
+    return Container(
+      padding: EdgeInsets.all(SizeConfig.padding16),
+      margin: EdgeInsets.only(bottom: SizeConfig.padding24),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+        color: Colors.white.withOpacity(0.1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "You Invest",
+                style: TextStyles.rajdhaniSB.body3,
+              ),
+              Text(
+                "₹${amount}",
+                style: TextStyles.sourceSansB.title5,
+              )
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                getTitle(),
+                style: TextStyles.rajdhaniB.body2
+                    .colour(UiConstants.kTabBorderColor),
+              ),
+              Text(
+                "for 6 month",
+                style: TextStyles.sourceSansB.body3,
+              )
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "You get",
+                style: TextStyles.rajdhaniSB.body3,
+              ),
+              Text(
+                "₹${calculateAmountAfter6Months(amount)}*",
+                style: TextStyles.sourceSansB.title5,
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}

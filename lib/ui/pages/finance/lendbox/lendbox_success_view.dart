@@ -7,6 +7,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -137,7 +138,11 @@ class LendboxSuccessView extends StatelessWidget {
                 style: TextStyles.sourceSans.body2.setOpacity(0.7),
               ),
             SizedBox(
-              height: SizeConfig.padding20,
+              height: SizeConfig.padding10,
+            ),
+            Text(
+              "#whatafello",
+              style: TextStyles.sourceSansBL.body2.colour(Colors.white),
             ),
             Container(
               margin: EdgeInsets.only(
@@ -151,69 +156,133 @@ class LendboxSuccessView extends StatelessWidget {
                   Radius.circular(SizeConfig.roundness12),
                 ),
               ),
-              child: IntrinsicHeight(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(
-                          left: SizeConfig.pageHorizontalMargins,
-                          top: SizeConfig.padding16,
-                          bottom: SizeConfig.padding16,
-                          right: SizeConfig.padding8,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(locale.invested,
-                                style: TextStyles.sourceSans.body2
-                                    .colour(UiConstants.kTextColor2)),
-                            SizedBox(height: SizeConfig.padding16),
-                            Text(
-                              "₹ ${_txnService!.currentTxnAmount!.toStringAsFixed(2)}",
-                              style: TextStyles.rajdhaniB.title3,
+              child: Column(
+                children: [
+                  IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(
+                              left: SizeConfig.pageHorizontalMargins,
+                              top: SizeConfig.padding16,
+                              bottom: SizeConfig.padding16,
+                              right: SizeConfig.padding8,
                             ),
-                            SizedBox(
-                              height: SizeConfig.padding12,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(locale.invested,
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(UiConstants.kTextColor2)),
+                                SizedBox(height: SizeConfig.padding16),
+                                Text(
+                                  "₹ ${_txnService!.currentTxnAmount!.toStringAsFixed(2)}",
+                                  style: TextStyles.rajdhaniB.title3,
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding12,
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
+                        VerticalDivider(
+                          width: 3,
+                          thickness: 0.5,
+                          indent: SizeConfig.padding6,
+                          endIndent: SizeConfig.padding6,
+                          color: UiConstants.kTextColor2,
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                left: SizeConfig.pageHorizontalMargins,
+                                top: SizeConfig.padding16,
+                                bottom: SizeConfig.padding16,
+                                right: SizeConfig.padding16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _txnService
+                                              ?.transactionReponseModel
+                                              ?.data
+                                              ?.floDepositDetails
+                                              ?.maturityDate !=
+                                          null
+                                      ? "Return %"
+                                      : locale.totalBalance,
+                                  style: TextStyles.sourceSans.body2
+                                      .colour(UiConstants.kTextColor2),
+                                ),
+                                SizedBox(height: SizeConfig.padding16),
+                                _txnService?.transactionReponseModel?.data
+                                            ?.floDepositDetails?.maturityDate !=
+                                        null
+                                    ? Text(
+                                        getFundType(_txnService
+                                            ?.transactionReponseModel
+                                            ?.data
+                                            ?.floDepositDetails
+                                            ?.fundType),
+                                        style: TextStyles.rajdhaniB.title3,
+                                      )
+                                    : UserFundQuantitySE(
+                                        style: TextStyles.rajdhaniB.title3,
+                                        investmentType:
+                                            InvestmentType.LENDBOXP2P,
+                                      ),
+                                SizedBox(
+                                  height: SizeConfig.padding12,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  if (_txnService?.transactionReponseModel?.data
+                          ?.floDepositDetails?.maturityDate !=
+                      null)
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins,
+                          vertical: SizeConfig.padding6),
+                      child: Text(
+                        _txnService?.transactionReponseModel?.data
+                                ?.floDepositDetails?.maturityDate ??
+                            "",
+                        style: TextStyles.sourceSans.body2
+                            .colour(UiConstants.kFAQsAnswerColor),
                       ),
                     ),
-                    VerticalDivider(
-                      width: 3,
-                      thickness: 0.5,
-                      color: UiConstants.kTextColor2,
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            left: SizeConfig.pageHorizontalMargins,
-                            top: SizeConfig.padding16,
-                            bottom: SizeConfig.padding16,
-                            right: SizeConfig.padding16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              locale.totalBalance,
-                              style: TextStyles.sourceSans.body2
-                                  .colour(UiConstants.kTextColor2),
-                            ),
-                            SizedBox(height: SizeConfig.padding16),
-                            UserFundQuantitySE(
-                              style: TextStyles.rajdhaniB.title3,
-                              investmentType: InvestmentType.LENDBOXP2P,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding12,
-                            ),
-                          ],
-                        ),
+                  if (_txnService?.transactionReponseModel?.data
+                          ?.floDepositDetails?.maturityString !=
+                      null)
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(top: SizeConfig.padding6),
+                      decoration: BoxDecoration(
+                          color: UiConstants.kBackgroundColor,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft:
+                                  Radius.circular(SizeConfig.roundness12),
+                              bottomRight:
+                                  Radius.circular(SizeConfig.roundness12))),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins,
+                          vertical: SizeConfig.padding6),
+                      child: Text(
+                        _txnService?.transactionReponseModel?.data
+                                ?.floDepositDetails?.maturityString ??
+                            "",
+                        style: TextStyles.sourceSans.body2.colour(Colors.white),
                       ),
                     )
-                  ],
-                ),
+                ],
               ),
             ),
             Container(
@@ -282,5 +351,16 @@ class LendboxSuccessView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String getFundType(String? fundType) {
+    switch (fundType) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return "12%";
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return "10%";
+      default:
+        return "NA";
+    }
   }
 }

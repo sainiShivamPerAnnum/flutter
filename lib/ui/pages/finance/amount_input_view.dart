@@ -1,9 +1,9 @@
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/list_utils.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import '../../../util/show_case_key.dart';
+import 'lendbox/deposit/lendbox_buy_input_view.dart';
 
 class AmountInputView extends StatefulWidget {
   final TextEditingController? amountController;
@@ -28,6 +29,7 @@ class AmountInputView extends StatefulWidget {
   final Function(int val) onAmountChange;
   final bool readOnly;
   final void Function() onTap;
+  final LendboxBuyViewModel? model;
 
   const AmountInputView(
       {Key? key,
@@ -43,7 +45,8 @@ class AmountInputView extends StatefulWidget {
       this.bestChipIndex = 1,
       this.notice,
       required this.readOnly,
-      required this.onTap})
+      required this.onTap,
+      this.model})
       : super(key: key);
 
   @override
@@ -51,41 +54,71 @@ class AmountInputView extends StatefulWidget {
 }
 
 class _AmountInputViewState extends State<AmountInputView> {
-  double _fieldWidth = 0;
+  // double _fieldWidth = 0;
   int _selectedIndex = 1;
 
   @override
   void initState() {
     super.initState();
-    if (widget.chipAmounts.isNotEmpty) {
-      _selectedIndex = widget.chipAmounts.indexWhere(
-        (e) => e.value.toString() == (widget.amountController?.text ?? ''),
-      );
-    } else {
-      widget.amountController!.text = '1';
-    }
-    updateFieldWidth();
+    // if (widget.chipAmounts.isNotEmpty) {
+    //   _selectedIndex = widget.chipAmounts.indexWhere(
+    //     (e) => e.value.toString() == (widget.amountController?.text ?? ''),
+    //   );
+    // } else {
+    //   widget.amountController!.text = '1';
+    // }
+    widget.model?.updateFieldWidth();
   }
 
-  void updateFieldWidth() {
-    int n = widget.amountController!.text.length;
-    if (n == 0) n++;
-    _fieldWidth = (SizeConfig.padding40 * n.toDouble());
-    widget.amountController!.selection = TextSelection.fromPosition(
-        TextPosition(offset: widget.amountController!.text.length));
+  String getString() {
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
+        (widget.model?.isLendboxOldUser ?? false)) {
+      return 'Fello Flo 10%';
+    } else if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
+        (widget.model?.isLendboxOldUser ?? true) == false) {
+      return 'Fello Flo 8%';
+    }
+
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return "Fello Flo 12%";
+    }
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return "Fello Flo 10%";
+    }
+
+    return "";
+  }
+
+  String getSubString() {
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
+        (widget.model?.isLendboxOldUser ?? false)) {
+      return '1 Month Maturity';
+    } else if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
+        (widget.model?.isLendboxOldUser ?? true) == false) {
+      return '1 Week Lock-in';
+    }
+
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return "6 Month Maturity";
+    }
+    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return "3 Month Maturity";
+    }
+
+    return "";
   }
 
   @override
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
     if (currentAmt == null) widget.amountController!.text = "0.0";
-    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+    // final AnalyticsService analyticsService = locator<AnalyticsService>();
     return Column(
       children: [
         Container(
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding12,
-            vertical: SizeConfig.padding20,
+            vertical: SizeConfig.padding16,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,19 +147,21 @@ class _AmountInputViewState extends State<AmountInputView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "₹",
-                      style: TextStyles.rajdhaniB.title0.colour(
-                        widget.amountController!.text == "0"
-                            ? UiConstants.kTextColor2
-                            : UiConstants.kTextColor,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "₹",
+                        style: TextStyles.rajdhaniB.title50.colour(
+                          widget.amountController!.text == "0"
+                              ? UiConstants.kTextColor2
+                              : UiConstants.kTextColor,
+                        ),
                       ),
                     ),
-                    SizedBox(width: SizeConfig.padding10),
                     AnimatedContainer(
-                      duration: Duration(seconds: 0),
+                      duration: const Duration(seconds: 0),
                       curve: Curves.easeIn,
-                      width: _fieldWidth,
+                      width: widget.model?.fieldWidth ?? 0.0,
                       child: TextFormField(
                         autofocus: true,
                         showCursor: true,
@@ -141,18 +176,18 @@ class _AmountInputViewState extends State<AmountInputView> {
                           return null;
                         },
                         maxLength: widget.maxAmount.toString().length,
-                        keyboardType: TextInputType.numberWithOptions(
+                        keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
                         onChanged: (String val) {
-                          setState(() {
-                            this.updateFieldWidth();
-                          });
+                          widget.model?.onValueChanged(val);
+
+                          // setState(updateFieldWidth);
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           focusedBorder: InputBorder.none,
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
@@ -162,7 +197,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                           counter: Offstage(),
                         ),
                         textAlign: TextAlign.center,
-                        style: TextStyles.rajdhaniB.title68.colour(
+                        style: TextStyles.rajdhaniB.title50.colour(
                           widget.amountController!.text == "0"
                               ? UiConstants.kTextColor2
                               : UiConstants.kTextColor,
@@ -172,7 +207,45 @@ class _AmountInputViewState extends State<AmountInputView> {
                   ],
                 ),
               ),
-              if (currentAmt > widget.maxAmount)
+              if (widget.model != null)
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        widget.model?.showHappyHourSubtitle() ?? "",
+                        style: TextStyles.sourceSans.body3.bold
+                            .colour(UiConstants.primaryColor),
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding4,
+                      ),
+                      if (widget.model?.showInfoIcon ?? false)
+                        GestureDetector(
+                          onTap: () => BaseUtil.openModalBottomSheet(
+                            isBarrierDismissible: true,
+                            addToScreenStack: true,
+                            backgroundColor: const Color(0xff1A1A1A),
+                            content: ViewBreakdown(model: widget.model!),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness24),
+                              topRight: Radius.circular(SizeConfig.roundness24),
+                            ),
+                            hapticVibrate: true,
+                            isScrollControlled: true,
+                          ),
+                          child: const Icon(
+                            Icons.info_outline,
+                            size: 20,
+                            color: Color(0xff62E3C4),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              if (currentAmt >= widget.maxAmount)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
@@ -197,28 +270,57 @@ class _AmountInputViewState extends State<AmountInputView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: widget.chipAmounts
-              .mapIndexed((item, i) => AmountChip(
-                  isActive: _selectedIndex == i,
+              .mapIndexed(
+                (item, i) => AmountChipV2(
+                  isActive: widget.model?.lastTappedChipIndex == i,
                   index: i,
                   amt: item.value,
                   isBest: item.best,
-                  onClick: (amt) {
-                    _analyticsService!.track(
-                        eventName: AnalyticsEvents.suggestedAmountTapped,
-                        properties: {
-                          'order': i,
-                          'Amount': amt,
-                          'Best flag': item.best
-                        });
-                    setState(() {
-                      _selectedIndex = i;
-                      widget.amountController!.text =
-                          widget.chipAmounts[i].value.toString();
-                      this.updateFieldWidth();
-                    });
-                  }))
+                  onClick: (index) {
+                    widget.model?.onChipClick(index);
+                  },
+                ),
+              )
               .toList(),
         ),
+        SizedBox(
+          height: SizeConfig.padding16,
+        ),
+        Container(
+          // width: SizeConfig.screenWidth! * 0.72,
+          decoration: BoxDecoration(
+            color: UiConstants.kArrowButtonBackgroundColor.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          ),
+          // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding64),
+          height: SizeConfig.padding38,
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: SizeConfig.padding20),
+                child: Text(
+                  getString(),
+                  style: TextStyles.sourceSans.body3,
+                ),
+              ),
+              VerticalDivider(
+                color: UiConstants.kModalSheetSecondaryBackgroundColor
+                    .withOpacity(0.2),
+                width: 4,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: SizeConfig.padding20),
+                child: Text(
+                  getSubString(),
+                  style: TextStyles.sourceSans.body3,
+                ),
+              ),
+            ],
+          ),
+        )
       ],
     );
   }

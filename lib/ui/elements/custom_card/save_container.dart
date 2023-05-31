@@ -49,7 +49,7 @@ final _floMarquee = [
 ];
 
 class SaveContainer extends StatefulWidget {
-  SaveContainer({
+  const SaveContainer({
     Key? key,
     required this.investmentType,
     this.isPopular = false,
