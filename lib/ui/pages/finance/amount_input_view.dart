@@ -239,15 +239,6 @@ class _AmountInputViewState extends State<AmountInputView> {
                   isBest: item.best,
                   onClick: (index) {
                     widget.model?.onChipClick(index);
-                    // updateFieldWidth();
-                    // setState(
-                    //   () {
-                    //     _selectedIndex = i;
-                    //     widget.amountController!.text =
-                    //         widget.chipAmounts[i].value.toString();
-                    //
-                    //   },
-                    // );
                   },
                 ),
               )

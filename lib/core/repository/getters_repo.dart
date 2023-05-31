@@ -90,19 +90,38 @@ class GetterRepository extends BaseRepo {
   }
 
   Future<ApiResponse<AssetOptionsModel>> getAssetOptions(
-      String freq, String type) async {
+      String freq, String type,
+      {String? subType, bool? isOldLendboxUser}) async {
     try {
+      Map<String, dynamic>? map;
+
+      if (type == "flo") {
+        map = {
+          "type": type,
+          "freq": freq,
+          "subType": subType,
+          "isOldLbUser": isOldLendboxUser.toString(),
+        };
+      }
+      if (type == "gold") {
+        map = {
+          "type": type,
+          "freq": freq,
+        };
+      }
+
       final token = await getBearerToken();
-      return await _cacheService.cachedApi(
-        'AssetsOptions-$freq-$type',
-        TTL.ONE_HOUR,
-        () => APIService.instance.getData(ApiPath.getAssetOptions(freq, type),
-            cBaseUrl: _baseUrl, token: token),
-        (p0) => ApiResponse<AssetOptionsModel>(
-          code: 200,
-          model: AssetOptionsModel.fromJson(
-            p0,
-          ),
+
+      final response = await APIService.instance.getData(
+          ApiPath.getAssetOptions(),
+          queryParams: map,
+          cBaseUrl: _baseUrl,
+          token: token);
+
+      return ApiResponse<AssetOptionsModel>(
+        code: 200,
+        model: AssetOptionsModel.fromJson(
+          response,
         ),
       );
     } catch (e) {

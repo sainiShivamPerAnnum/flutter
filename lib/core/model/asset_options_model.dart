@@ -2,8 +2,6 @@
 //
 //     final assetOptionsModel = assetOptionsModelFromJson(jsonString);
 
-import 'dart:convert';
-
 class AssetOptionsModel {
   AssetOptionsModel({
     required this.message,
@@ -29,20 +27,24 @@ class Data {
   Data({
     required this.banner,
     required this.userOptions,
+    this.nearCtaText,
   });
 
   Banner banner;
   List<UserOption> userOptions;
+  final String? nearCtaText;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         banner: Banner.fromJson(json["banner"]),
         userOptions: List<UserOption>.from(
             json["userOptions"].map((x) => UserOption.fromJson(x))),
+        nearCtaText: json["nearCtaText"],
       );
 
   Map<String, dynamic> toJson() => {
         "banner": banner.toJson(),
         "userOptions": List<dynamic>.from(userOptions.map((x) => x.toJson())),
+        "nearCtaText": nearCtaText,
       };
 }
 

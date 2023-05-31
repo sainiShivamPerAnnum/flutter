@@ -115,12 +115,12 @@ class FloPlanWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Spacer(),
-                SvgPicture.asset(
-                  'assets/svg/Arrow_dotted.svg',
-                  height: SizeConfig.padding24,
-                  width: SizeConfig.padding24,
-                ),
+                // const Spacer(),
+                // SvgPicture.asset(
+                //   'assets/svg/Arrow_dotted.svg',
+                //   height: SizeConfig.padding24,
+                //   width: SizeConfig.padding24,
+                // ),
               ],
             ),
             SizedBox(height: SizeConfig.padding16),
@@ -139,7 +139,11 @@ class FloPlanWidget extends StatelessWidget {
               isRecommended: false,
               chipString1: '3 month maturity',
               chipString2: 'Min - ₹10,000',
-              floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3,
+              floAssetType: locator<UserService>()
+                      .userSegments
+                      .contains(Constants.US_FLO_OLD)
+                  ? Constants.ASSET_TYPE_FLO_FELXI
+                  : Constants.ASSET_TYPE_FLO_FIXED_3,
               amount: amount,
               isSkipMl: isSkipMl,
             ),

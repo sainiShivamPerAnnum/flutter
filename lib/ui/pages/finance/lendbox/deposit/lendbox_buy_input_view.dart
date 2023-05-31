@@ -333,7 +333,7 @@ class FloBuyNavBar extends StatelessWidget {
                 ],
               ),
               //
-              Text('Maturity on 3rd Sept 2023',
+              Text(model.assetOptionsModel?.data.nearCtaText ?? "",
                   style: TextStyles.rajdhaniSB.body3
                       .colour(UiConstants.kTextFieldTextColor)),
               SizedBox(

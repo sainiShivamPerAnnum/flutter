@@ -165,18 +165,28 @@ class LendboxBuyViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
-    await getAssetOptionsModel();
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+    await getAssetOptionsModel();
+
     log("isLendboxOldUser $isLendboxOldUser");
     skipMl = isSkipMilestone;
-    amountController = TextEditingController(
-      text: amount?.toString() ??
-          assetOptionsModel!.data.userOptions[1].value.toString(),
-    );
-    buyAmount = amount ?? assetOptionsModel!.data.userOptions[1].value.toInt();
 
-    getAvailableCoupons();
+    int? data = assetOptionsModel?.data.userOptions
+        .firstWhere((element) => element.best,
+            orElse: () => assetOptionsModel!.data.userOptions[1])
+        .value;
+
+    amountController = TextEditingController(
+      text: amount?.toString() ?? data.toString(),
+    );
+    buyAmount = amount ?? data;
+
+    lastTappedChipIndex = assetOptionsModel?.data.userOptions
+            .indexWhere((element) => element.best) ??
+        1;
+
+    // getAvailableCoupons();
 
     setState(ViewState.Idle);
   }
@@ -190,8 +200,9 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   Future<void> getAssetOptionsModel() async {
-    final res =
-        await locator<GetterRepository>().getAssetOptions('weekly', 'flo');
+    final res = await locator<GetterRepository>().getAssetOptions(
+        'weekly', 'flo',
+        subType: floAssetType, isOldLendboxUser: isLendboxOldUser);
     if (res.code == 200) assetOptionsModel = res.model;
     log(res.model?.message ?? '');
   }
