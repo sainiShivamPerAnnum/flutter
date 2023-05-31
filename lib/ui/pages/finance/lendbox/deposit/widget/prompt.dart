@@ -235,27 +235,33 @@ class OptionContainer extends StatelessWidget {
           borderRadius: BorderRadius.circular(SizeConfig.roundness8),
           border: Border.all(
             color: isSelected
-                ? Colors.white // Change color when selected
+                ? UiConstants.kTabBorderColor // Change color when selected
                 : const Color(0xFFD3D3D3).withOpacity(0.2),
-            width: SizeConfig.border0,
+            width: SizeConfig.border1,
           ),
         ),
         child: Row(
           children: [
             Container(
-              width: SizeConfig.padding24,
-              height: SizeConfig.padding24,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isSelected
-                      ? Colors.white // Change color when selected
-                      : const Color(0xFFD3D3D3).withOpacity(0.2),
-                  width: SizeConfig.border0,
+                width: SizeConfig.padding24,
+                height: SizeConfig.padding24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected
+                        ? UiConstants.kTabBorderColor
+                        : const Color(0xFFD3D3D3).withOpacity(0.2),
+                    width: SizeConfig.border1,
+                  ),
+                  // color: isSelected ? Colors.white : null,
                 ),
-                color: isSelected ? Colors.white : null,
-              ),
-            ),
+                child: Container(
+                  margin: EdgeInsets.all(SizeConfig.padding4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSelected ? UiConstants.kTabBorderColor : null,
+                  ),
+                )),
             SizedBox(
               width: SizeConfig.padding16,
             ),
@@ -329,20 +335,22 @@ class WarningBottomSheet extends StatelessWidget {
                     vertical: 10,
                   ),
                   // color: Colors.white,
-                  onPressed: () async {
-                    await AppState.backButtonDispatcher?.didPopRoute();
-                    await AppState.backButtonDispatcher?.didPopRoute();
+                  onPressed: () {
+                    debugPrint("scrrenStack => ${AppState.screenStack}");
 
-                    if (!model.isBuyInProgress) {
-                      debugPrint("Buy in progress => ${model.isBuyInProgress}");
-                      await model.initiateBuy();
-                    }
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
 
+                    // debugPrint("scrrenStack => ${AppState.screenStack}");
                     // model.forcedBuy = true;
 
-                    // Future.delayed(const Duration(seconds: 3), () async {
-                    //
-                    // });
+                    Future.delayed(const Duration(milliseconds: 100), () async {
+                      if (!model.isBuyInProgress) {
+                        debugPrint(
+                            "Buy in progress => ${model.isBuyInProgress}");
+                        await model.initiateBuy();
+                      }
+                    });
                   },
                   child: Center(
                     child: Text(
