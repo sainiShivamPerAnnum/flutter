@@ -447,6 +447,19 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
+  static String getMaturityPref(String maturityEnum) {
+    switch (maturityEnum) {
+      case '0':
+        return "Withdraw to bank";
+      case '1':
+        return "Auto-investing in 12% Flo after maturity";
+      case '2':
+        return "Move to Flo Basic after maturity";
+      default:
+        return "What will happen to your investment after maturity";
+    }
+  }
+
   Future<void> showConfirmExit() async {
     await openModalBottomSheet(
         isBarrierDismissible: false,

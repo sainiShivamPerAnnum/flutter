@@ -30,7 +30,7 @@ class AmountInputView extends StatefulWidget {
   final bool readOnly;
   final void Function() onTap;
   final LendboxBuyViewModel? model;
-
+  final bool isbuyView;
   const AmountInputView(
       {Key? key,
       required this.chipAmounts,
@@ -46,6 +46,7 @@ class AmountInputView extends StatefulWidget {
       this.notice,
       required this.readOnly,
       required this.onTap,
+      this.isbuyView = true,
       this.model})
       : super(key: key);
 
@@ -286,41 +287,42 @@ class _AmountInputViewState extends State<AmountInputView> {
         SizedBox(
           height: SizeConfig.padding16,
         ),
-        Container(
-          // width: SizeConfig.screenWidth! * 0.72,
-          decoration: BoxDecoration(
-            color: UiConstants.kArrowButtonBackgroundColor.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-          ),
-          // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding64),
-          height: SizeConfig.padding38,
-          padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: SizeConfig.padding20),
-                child: Text(
-                  getString(),
-                  style: TextStyles.sourceSans.body3,
+        if (widget.isbuyView)
+          Container(
+            // width: SizeConfig.screenWidth! * 0.72,
+            decoration: BoxDecoration(
+              color: UiConstants.kArrowButtonBackgroundColor.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            ),
+            // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding64),
+            height: SizeConfig.padding38,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: SizeConfig.padding20),
+                  child: Text(
+                    getString(),
+                    style: TextStyles.sourceSans.body3,
+                  ),
                 ),
-              ),
-              VerticalDivider(
-                color: UiConstants.kModalSheetSecondaryBackgroundColor
-                    .withOpacity(0.2),
-                width: 4,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: SizeConfig.padding20),
-                child: Text(
-                  getSubString(),
-                  style: TextStyles.sourceSans.body3,
+                VerticalDivider(
+                  color: UiConstants.kModalSheetSecondaryBackgroundColor
+                      .withOpacity(0.2),
+                  width: 4,
                 ),
-              ),
-            ],
-          ),
-        )
+                Padding(
+                  padding: EdgeInsets.only(left: SizeConfig.padding20),
+                  child: Text(
+                    getSubString(),
+                    style: TextStyles.sourceSans.body3,
+                  ),
+                ),
+              ],
+            ),
+          )
       ],
     );
   }

@@ -145,6 +145,7 @@ class Assets {
   static const String txnHistory = "assets/vectors/icons/txnHistory.svg";
   static const String bank = "assets/vectors/icons/bank.svg";
   static const String repeat = "assets/vectors/icons/repeat.svg";
+  static const String bankLogo = "assets/vectors/bankLogo.svg";
 
   // REFERRAL
   static const String google = "assets/vectors/icons/google.svg";

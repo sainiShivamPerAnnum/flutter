@@ -61,6 +61,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               notice: model!.buyNotice,
               bestChipIndex: 1,
               onAmountChange: (int amount) {},
+              isbuyView: false,
             ),
             Spacer(),
             model.withdrawableResponseMessage.isNotEmpty

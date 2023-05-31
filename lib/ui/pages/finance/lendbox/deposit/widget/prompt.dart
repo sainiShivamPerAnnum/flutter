@@ -1,21 +1,26 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/repository/lendbox_repo.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../../../../util/constants.dart';
 
 class ReInvestPrompt extends HookWidget {
-  const ReInvestPrompt(
-      {Key? key,
-      required this.amount,
-      required this.assetType,
-      required this.model})
-      : super(key: key);
+  const ReInvestPrompt({
+    Key? key,
+    required this.amount,
+    required this.assetType,
+    required this.model,
+  }) : super(key: key);
 
   final String amount;
   final String assetType;
@@ -469,6 +474,216 @@ class InvestmentForeseenWidget extends StatelessWidget {
             ],
           )
         ],
+      ),
+    );
+  }
+}
+
+class MaturityPrefModalSheet extends StatefulWidget {
+  const MaturityPrefModalSheet(
+      {super.key,
+      required this.amount,
+      required this.assetType,
+      required this.txnId});
+  final String amount;
+  final String assetType;
+  final String txnId;
+  @override
+  State<MaturityPrefModalSheet> createState() => _MaturityPrefModalSheetState();
+}
+
+class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
+  String maturityPref = "NA";
+  int _selectedOption = -1;
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  set isLoading(bool value) {
+    setState(() {
+      _isLoading = value;
+    });
+  }
+
+  int get selectedOption => _selectedOption;
+
+  set selectedOption(int value) {
+    setState(() {
+      _selectedOption = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // height: SizeConfig.screenHeight! * 0.6,
+      padding: EdgeInsets.all(SizeConfig.padding16),
+      child: SingleChildScrollView(
+        child: Column(
+          // mainAxisSize: MainAxisSize.min,
+          children: [
+            InvestmentForeseenWidget(
+              amount: widget.amount,
+              assetType: widget.assetType,
+              isLendboxOldUser: locator<UserService>()
+                  .userSegments
+                  .contains(Constants.US_FLO_OLD),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      text: "What do you want to do ",
+                      style: TextStyles.sourceSans.body2,
+                      children: [
+                        TextSpan(
+                          text: "after 6 months?",
+                          style: TextStyles.sourceSansB.body2,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(
+                    Icons.info_outline,
+                    color: Colors.white,
+                    size: 15,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.padding20,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding8,
+                vertical: SizeConfig.padding2,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(SizeConfig.roundness5),
+                  topRight: Radius.circular(SizeConfig.roundness5),
+                ),
+                color: UiConstants.kSnackBarPositiveContentColor,
+              ),
+              child: Text(
+                'Recommended',
+                style: TextStyles.sourceSansSB.body4,
+              ),
+            ),
+            OptionContainer(
+              optionIndex: 1,
+              title:
+                  'Re-invest ₹${widget.amount} in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
+              description: "At the end of 6 months (Maturity)",
+              isSelected: selectedOption == 1,
+              onTap: () {
+                maturityPref = "1";
+                selectedOption = 1;
+              },
+            ),
+            OptionContainer(
+              optionIndex: 2,
+              title:
+                  "Move ₹${widget.amount} to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
+              description: "At the end of 6 months (Maturity)",
+              isSelected: selectedOption == 2,
+              onTap: () {
+                maturityPref = "2";
+                selectedOption = 2;
+              },
+            ),
+            OptionContainer(
+              optionIndex: 3,
+              title: "Withdraw to Bank",
+              description: "At the end of 6 months (Maturity)",
+              isSelected: selectedOption == 3,
+              onTap: () {
+                maturityPref = "0";
+                selectedOption = 3;
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.padding8,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  MaterialButton(
+                    minWidth: SizeConfig.screenWidth! * 0.43,
+                    height: SizeConfig.padding40,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      side: const BorderSide(color: Colors.white),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                    ),
+                    // color: Colors.white,
+                    onPressed: () {
+                      AppState.backButtonDispatcher?.didPopRoute();
+                    },
+                    child: Center(
+                      child: Text(
+                        'Decide later'.toUpperCase(),
+                        style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+                      ),
+                    ),
+                  ),
+                  MaterialButton(
+                    height: SizeConfig.padding40,
+                    minWidth: SizeConfig.screenWidth! * 0.43,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    color: Colors.white,
+                    onPressed: () async {
+                      if (selectedOption == -1) {
+                        BaseUtil.showNegativeAlert("Please select an option",
+                            "proceed by choosing an option");
+                        return;
+                      }
+
+                      if (!isLoading) {
+                        isLoading = true;
+                        final res = await locator<LendboxRepo>()
+                            .updateUserInvestmentPreference(
+                                widget.txnId, maturityPref);
+                        if (res.isSuccess()) {
+                          unawaited(
+                              AppState.backButtonDispatcher!.didPopRoute());
+                          BaseUtil.showPositiveAlert(
+                              "You preference recorded successfully",
+                              "We'll contact you if required");
+                        } else {
+                          BaseUtil.showNegativeAlert(
+                              res.errorMessage, "Please try again");
+                        }
+                      }
+                    },
+                    child: Center(
+                      child: isLoading
+                          ? SpinKitThreeBounce(
+                              color: Colors.black,
+                              size: SizeConfig.padding24,
+                            )
+                          : Text(
+                              'Proceed'.toUpperCase(),
+                              style: TextStyles.rajdhaniB.body1
+                                  .colour(Colors.black),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -1,10 +1,16 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -123,7 +129,32 @@ class FloBasicCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (locator<BankAndPanService>().isBankDetailsAdded) {
+                        BaseUtil().openSellModalSheet(
+                            investmentType: InvestmentType.LENDBOXP2P);
+                      } else {
+                        BaseUtil.openDialog(
+                          isBarrierDismissible: false,
+                          addToScreenStack: true,
+                          barrierColor: Colors.black45,
+                          hapticVibrate: true,
+                          content: MoreInfoDialog(
+                            title:
+                                "Add Bank Information to withdraw your inveinvestment ",
+                            text:
+                                "Your Bank account will be register and verified in x working days",
+                            btnText: "ADD BANK INFORMATION",
+                            imagePath: Assets.bankLogo,
+                            onPressed: () {
+                              AppState.backButtonDispatcher!.didPopRoute();
+                              AppState.delegate!
+                                  .parseRoute(Uri.parse("bankDetails"));
+                            },
+                          ),
+                        );
+                      }
+                    },
                     style: ButtonStyle(
                         side: MaterialStateProperty.all(const BorderSide(
                             color: Colors.white,

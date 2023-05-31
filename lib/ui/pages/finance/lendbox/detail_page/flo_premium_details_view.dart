@@ -1,8 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_vm.dart';
+import 'package:felloapp/ui/pages/finance/transactions_history/transaction_details_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
@@ -10,6 +16,7 @@ import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/user_service/lendbox_principle_value.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -18,6 +25,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class FloPremiumDetailsView extends StatefulWidget {
   final bool is12;
@@ -126,9 +134,9 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                       0,
                                                   leadPercent: 0.02,
                                                 ),
-                                              const FloPremiumTransactionsList(
-                                                key: ValueKey("12floTxns"),
-                                              ),
+                                              FloPremiumTransactionsList(
+                                                  key: ValueKey("12floTxns"),
+                                                  model: model),
                                             ],
                                           )
                                         : Column(
@@ -155,8 +163,9 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                       0,
                                                   leadPercent: 0.02,
                                                 ),
-                                              const FloPremiumTransactionsList(
+                                              FloPremiumTransactionsList(
                                                 key: ValueKey("10floTxns"),
+                                                model: model,
                                               ),
                                             ],
                                           ),
@@ -523,125 +532,177 @@ class FloPremiumHeader extends StatelessWidget {
 }
 
 class FloPremiumTransactionsList extends StatelessWidget {
-  const FloPremiumTransactionsList({
-    super.key,
-  });
+  FloPremiumDetailsViewModel model;
+  FloPremiumTransactionsList({
+    Key? key,
+    required this.model,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: 2,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (ctx, i) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.white10,
-              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-            ),
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins,
-                vertical: SizeConfig.padding10),
-            child: Column(children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: SizeConfig.padding12,
-                  bottom: SizeConfig.padding12,
-                  left: SizeConfig.pageHorizontalMargins,
-                  right: SizeConfig.padding12,
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Invested on",
-                              style: TextStyles.body3
-                                  .colour(UiConstants.kTextFieldTextColor),
-                            ),
-                            FloPremiumTierChip(
-                              value: "1st March 2023",
-                            )
-                          ],
-                        ),
-                        SizedBox(width: SizeConfig.padding16),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Matures on",
-                              style: TextStyles.body3
-                                  .colour(UiConstants.kTextFieldTextColor),
-                            ),
-                            FloPremiumTierChip(
-                              value: "3rd Sept 2023",
-                            )
-                          ],
-                        ),
-                        Spacer(),
-                        const Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: UiConstants.kTextFieldTextColor,
-                        )
-                      ],
-                    ),
-                    SizedBox(height: SizeConfig.padding16),
-                    FloBalanceBriefRow(
-                      lead: 150,
-                      trail: 140,
-                      leadPercent: 0.02,
-                      leftAlign: true,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: SizeConfig.screenWidth,
-                padding: EdgeInsets.symmetric(
-                  vertical: SizeConfig.padding16,
-                  horizontal: SizeConfig.padding16,
-                ),
+    return AnimatedContainer(
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeIn,
+      child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: model.transactionsList.length,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (ctx, i) {
+            String formattedInvestmentDate = DateFormat('dd MMM, yyyy').format(
+                DateTime.fromMillisecondsSinceEpoch(model
+                    .transactionsList[i].timestamp!.millisecondsSinceEpoch));
+
+            String formattedMaturityDate = DateFormat('dd MMM, yyyy').format(
+                DateTime.fromMillisecondsSinceEpoch(model.transactionsList[i]
+                    .lbMap.maturityAt!.millisecondsSinceEpoch));
+
+            double currentValue = BaseUtil.digitPrecision(
+                model.transactionsList[i].amount +
+                    (model.transactionsList[i].lbMap.gainAmount ?? 0));
+
+            double gain = BaseUtil.digitPrecision(
+                model.transactionsList[i].lbMap.gainAmount ?? 0, 2, false);
+
+            bool hasUserDecided =
+                model.transactionsList[i].lbMap.maturityPref != "NA";
+            String userMaturityPref = BaseUtil.getMaturityPref(
+                model.transactionsList[i].lbMap.maturityPref ?? "NA");
+
+            return InkWell(
+              onTap: () {
+                Haptic.vibrate();
+                AppState.delegate!.appState.currentAction = PageAction(
+                  state: PageState.addWidget,
+                  page: TransactionDetailsPageConfig,
+                  widget: TransactionDetailsPage(
+                    txn: model.transactionsList[i],
+                  ),
+                );
+              },
+              child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white10,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(SizeConfig.roundness16),
-                      bottomRight: Radius.circular(SizeConfig.roundness16)),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                 ),
-                alignment: Alignment.center,
-                child: i == 0
-                    ? Text(
-                        "Auto-investing to Flo 12% on maturity",
-                        style: TextStyles.sourceSans.body2,
-                      )
-                    : Row(children: [
-                        Expanded(
-                          child: Text(
-                            "What will happen to your investment after maturity?",
-                            style: TextStyles.sourceSans.body2,
-                          ),
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                    vertical: SizeConfig.padding10),
+                child: Column(children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.padding12,
+                      bottom: SizeConfig.padding12,
+                      left: SizeConfig.pageHorizontalMargins,
+                      right: SizeConfig.padding12,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Invested on",
+                                  style: TextStyles.body3
+                                      .colour(UiConstants.kTextFieldTextColor),
+                                ),
+                                FloPremiumTierChip(
+                                  value: formattedInvestmentDate,
+                                )
+                              ],
+                            ),
+                            SizedBox(width: SizeConfig.padding16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Matures on",
+                                  style: TextStyles.body3
+                                      .colour(UiConstants.kTextFieldTextColor),
+                                ),
+                                FloPremiumTierChip(
+                                  value: formattedMaturityDate,
+                                )
+                              ],
+                            ),
+                            Spacer(),
+                            const Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: UiConstants.kTextFieldTextColor,
+                            )
+                          ],
                         ),
-                        SizedBox(width: SizeConfig.padding10),
-                        MaterialButton(
-                          onPressed: () {},
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness5),
-                          ),
-                          child: Text(
-                            "KNOW MORE",
-                            style:
-                                TextStyles.rajdhaniB.body2.colour(Colors.black),
-                          ),
-                        )
-                      ]),
-              )
-            ]),
-          );
-        });
+                        SizedBox(height: SizeConfig.padding16),
+                        FloBalanceBriefRow(
+                          lead: currentValue,
+                          trail: currentValue - gain,
+                          leadPercent: gain,
+                          leftAlign: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding16,
+                      horizontal: SizeConfig.padding16,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white10,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(SizeConfig.roundness16),
+                          bottomRight: Radius.circular(SizeConfig.roundness16)),
+                    ),
+                    alignment: Alignment.center,
+                    child: hasUserDecided
+                        ? Text(
+                            userMaturityPref,
+                            style: TextStyles.sourceSans.body2,
+                          )
+                        : Row(children: [
+                            Expanded(
+                              child: Text(
+                                userMaturityPref,
+                                style: TextStyles.sourceSans.body2,
+                              ),
+                            ),
+                            SizedBox(width: SizeConfig.padding10),
+                            MaterialButton(
+                              onPressed: () {
+                                BaseUtil.openModalBottomSheet(
+                                  isBarrierDismissible: false,
+                                  addToScreenStack: true,
+                                  hapticVibrate: true,
+                                  isScrollControlled: true,
+                                  content: MaturityPrefModalSheet(
+                                    amount: "${currentValue - gain}",
+                                    txnId: model.transactionsList[i].docKey!,
+                                    assetType: model.is12
+                                        ? Constants.ASSET_TYPE_FLO_FIXED_6
+                                        : Constants.ASSET_TYPE_FLO_FIXED_3,
+                                  ),
+                                ).then((value) => model.getTransactions());
+                              },
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness5),
+                              ),
+                              child: Text(
+                                "KNOW MORE",
+                                style: TextStyles.rajdhaniB.body2
+                                    .colour(Colors.black),
+                              ),
+                            )
+                          ]),
+                  )
+                ]),
+              ),
+            );
+          }),
+    );
   }
 }
 

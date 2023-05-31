@@ -88,7 +88,7 @@ class APIService implements API {
       // logger!.d("Get Response: ${response.body}");
 
       logger?.i(
-          "API:: GET REQUEST \n=> PATH: $url  \n=> StatusCode: ${response.statusCode} \n queryParam: $queryParams \n"
+          "API:: GET REQUEST \n=> PATH: $finalPath  \n=> StatusCode: ${response.statusCode} \n queryParam: $queryParams \n"
           "=> Response Body: ${response.body}");
 
       if (decryptData) {
@@ -155,7 +155,7 @@ class APIService implements API {
       );
       // log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
 
-      logger?.i("API:: POST REQUEST \n=> PATH: $url  "
+      logger?.i("API:: POST REQUEST \n=> PATH: $_url  "
           "\n=> StatusCode: ${response.statusCode} "
           "\nRequest Body: $body \n"
           "=> Response Body: ${response.body}");
@@ -203,7 +203,7 @@ class APIService implements API {
         body: jsonEncode(body ?? {}),
       );
 
-      logger?.i("API:: PUT REQUEST \n=> PATH: $url  "
+      logger?.i("API:: PUT REQUEST \n=> PATH: $_url  "
           "\n=> StatusCode: ${response.statusCode} "
           "\nRequest Body: $body \n"
           "=> Response Body: ${response.body}");

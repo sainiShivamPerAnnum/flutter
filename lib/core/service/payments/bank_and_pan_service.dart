@@ -138,7 +138,7 @@ class BankAndPanService
     }
   }
 
-  verifyBankDetails() async {
+  void verifyBankDetails() {
     if (activeBankAccountDetails != null &&
         activeBankAccountDetails!.account != null &&
         activeBankAccountDetails!.account!.isNotEmpty) {
