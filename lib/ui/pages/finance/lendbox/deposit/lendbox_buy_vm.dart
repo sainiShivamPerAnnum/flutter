@@ -11,6 +11,7 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_modal_sheet.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -54,7 +56,8 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool _isBuyInProgress = false;
 
   TextEditingController? amountController;
-  TextEditingController? vpaController;
+
+  // TextEditingController? vpaController;
 
   double minAmount = 100;
   double maxAmount = 50000;
@@ -78,6 +81,10 @@ class LendboxBuyViewModel extends BaseViewModel {
   String maturityPref = "NA";
   bool _showMaxCapText = false;
   bool _showMinCapText = false;
+  String? couponCode;
+  bool isSpecialCoupon = true;
+  bool showCouponAppliedText = false;
+  bool _addSpecialCoupon = false;
 
   ///  ---------- getter and setter ------------
 
@@ -177,6 +184,13 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  get addSpecialCoupon => _addSpecialCoupon;
+
+  set addSpecialCoupon(value) {
+    _addSpecialCoupon = value;
+    notifyListeners();
+  }
+
   Future<void> init(int? amount, bool isSkipMilestone,
       {required String assetTypeFlow}) async {
     setState(ViewState.Busy);
@@ -205,7 +219,7 @@ class LendboxBuyViewModel extends BaseViewModel {
             .indexWhere((element) => element.best) ??
         1;
 
-    // getAvailableCoupons();
+    getAvailableCoupons();
 
     setState(ViewState.Idle);
   }
@@ -363,7 +377,7 @@ class LendboxBuyViewModel extends BaseViewModel {
         await _couponRepo!.getCoupons();
     if (couponsRes.code == 200) {
       couponList = couponsRes.model;
-      if (couponList![0].priority == 1) focusCoupon = couponList![0];
+      if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       showCoupons = true;
     }
   }
@@ -483,6 +497,115 @@ class LendboxBuyViewModel extends BaseViewModel {
       hapticVibrate: true,
       isScrollControlled: true,
     );
+  }
+
+  void showOfferModal(LendboxBuyViewModel? model) {
+    BaseUtil.openModalBottomSheet(
+      content: FloCouponModalSheet(model: model),
+      addToScreenStack: true,
+      backgroundColor: UiConstants.kSecondaryBackgroundColor,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness12),
+        topRight: Radius.circular(SizeConfig.roundness12),
+      ),
+      boxContraints: BoxConstraints(
+        maxHeight: SizeConfig.screenHeight! * 0.75,
+        minHeight: SizeConfig.screenHeight! * 0.75,
+      ),
+      isBarrierDismissible: false,
+      isScrollControlled: true,
+    );
+  }
+
+  Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
+    if (couponApplyInProgress || isBuyInProgress) return;
+
+    int order = -1;
+    int? minTransaction = -1;
+    int counter = 0;
+    isSpecialCoupon = true;
+    for (final CouponModel c in couponList!) {
+      if (c.code == couponCode) {
+        order = counter;
+        isSpecialCoupon = false;
+        minTransaction = c.minPurchase;
+        break;
+      }
+      counter++;
+    }
+
+    buyFieldNode.unfocus();
+    this.couponCode = couponCode;
+    couponApplyInProgress = true;
+
+    ApiResponse<EligibleCouponResponseModel> response =
+        await _couponRepo!.getEligibleCoupon(
+      uid: locator<UserService>().baseUser!.uid,
+      amount: buyAmount!.toInt(),
+      couponcode: couponCode,
+    );
+
+    couponApplyInProgress = false;
+    this.couponCode = null;
+    if (response.code == 200) {
+      if (response.model!.flag == true) {
+        if (response.model!.minAmountRequired != null &&
+            response.model!.minAmountRequired.toString().isNotEmpty &&
+            response.model!.minAmountRequired != 0) {
+          amountController!.text =
+              response.model!.minAmountRequired!.toInt().toString();
+          buyAmount = response.model!.minAmountRequired?.toInt();
+          // updateGoldAmount();
+          showMaxCapText = false;
+          showMinCapText = false;
+        }
+        checkForSpecialCoupon(response.model!);
+
+        appliedCoupon = response.model;
+
+        BaseUtil.showPositiveAlert(
+            locale.couponAppliedSucc, response.model?.message);
+      } else {
+        BaseUtil.showNegativeAlert(
+            locale.couponCannotBeApplied, response.model?.message);
+      }
+    } else if (response.code == 400) {
+      BaseUtil.showNegativeAlert(locale.couponNotApplied,
+          response.errorMessage ?? locale.anotherCoupon);
+    } else {
+      BaseUtil.showNegativeAlert(locale.couponNotApplied, locale.anotherCoupon);
+    }
+    _analyticsService!
+        .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
+      "Manual Code entry": isManuallyTyped,
+      "Order of coupon in list": order == -1 ? "Not in list" : order.toString(),
+      "Coupon Name": couponCode,
+      "Error message": response.code == 400 ? response?.model?.message : "",
+      "Asset": "Flo - $floAssetType",
+      "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
+    });
+  }
+
+  void checkForSpecialCoupon(EligibleCouponResponseModel model) {
+    if (couponList!.firstWhere((coupon) => coupon.code == model.code,
+            orElse: CouponModel.none) ==
+        CouponModel.none()) {
+      showCoupons = false;
+      couponList!.insert(
+          0,
+          CouponModel(
+              code: model.code,
+              createdOn: TimestampModel.currentTimeStamp(),
+              description: model.message,
+              expiresOn: TimestampModel.currentTimeStamp(),
+              highlight: '',
+              maxUse: 0,
+              minPurchase: model.minAmountRequired?.toInt(),
+              priority: 0,
+              id: ''));
+      addSpecialCoupon = true;
+      showCoupons = true;
+    }
   }
 
   void updateFieldWidth() {

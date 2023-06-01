@@ -1,5 +1,6 @@
 //Project Imports
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -104,7 +105,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog ||
         AppState.screenStack.last == ScreenItem.modalsheet) {
-      Navigator.pop(_routerDelegate!.navigatorKey.currentContext!);
+      log("AppState.screenStack.last ${AppState.screenStack.last.name}");
+
+      try {
+        Navigator.pop(_routerDelegate!.navigatorKey.currentContext!);
+      } catch (e) {
+        logger!.e(e);
+      }
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
       return Future.value(true);

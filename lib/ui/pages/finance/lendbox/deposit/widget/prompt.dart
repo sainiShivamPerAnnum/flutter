@@ -142,9 +142,9 @@ class ReInvestPrompt extends HookWidget {
                       model.forcedBuy = true;
                       model.maturityPref = "NA";
 
-                      Future.delayed(const Duration(seconds: 3), () async {
+                      Future.delayed(const Duration(seconds: 2), () async {
                         if (!model.isBuyInProgress) {
-                          FocusScope.of(context).unfocus();
+                          // FocusScope.of(context).unfocus();
                           await model.initiateBuy();
                         }
                       });

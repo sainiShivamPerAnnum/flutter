@@ -14,6 +14,7 @@ import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/amount_input_view.dart';
 import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -80,169 +81,176 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
       value: locator<BankAndPanService>(),
       child: Stack(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              // SizedBox(height: SizeConfig.fToolBarHeight / 2),
-              LendBoxAppBar(
-                isOldUser: widget.model.isLendboxOldUser,
-                assetType: widget.model.floAssetType,
-                isEnabled: !widget.model.isBuyInProgress,
-                trackClosingEvent: () {
-                  _analyticsService!.track(
-                      eventName: AnalyticsEvents.savePageClosed,
-                      properties: {
-                        "Amount entered": widget.model.amountController!.text,
-                        "Asset": 'Flo',
-                      });
-                  if (locator<BackButtonActions>().isTransactionCancelled) {
-                    if (AppState.delegate!.currentConfiguration!.key ==
-                            'LendboxBuyViewPath' &&
-                        (AppState.screenStack.last != ScreenItem.modalsheet ||
-                            AppState.screenStack.last != ScreenItem.dialog) &&
-                        !AppState.isRepeated) {
-                      locator<BackButtonActions>()
-                          .showWantToCloseTransactionBottomSheet(
-                              double.parse(widget.model.amountController!.text)
-                                  .round(),
-                              InvestmentType.LENDBOXP2P, () {
-                        widget.model.initiateBuy();
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                // SizedBox(height: SizeConfig.fToolBarHeight / 2),
+                LendBoxAppBar(
+                  isOldUser: widget.model.isLendboxOldUser,
+                  assetType: widget.model.floAssetType,
+                  isEnabled: !widget.model.isBuyInProgress,
+                  trackClosingEvent: () {
+                    _analyticsService!.track(
+                        eventName: AnalyticsEvents.savePageClosed,
+                        properties: {
+                          "Amount entered": widget.model.amountController!.text,
+                          "Asset": 'Flo',
+                        });
+                    if (locator<BackButtonActions>().isTransactionCancelled) {
+                      if (AppState.delegate!.currentConfiguration!.key ==
+                              'LendboxBuyViewPath' &&
+                          (AppState.screenStack.last != ScreenItem.modalsheet ||
+                              AppState.screenStack.last != ScreenItem.dialog) &&
+                          !AppState.isRepeated) {
+                        locator<BackButtonActions>()
+                            .showWantToCloseTransactionBottomSheet(
+                                double.parse(
+                                        widget.model.amountController!.text)
+                                    .round(),
+                                InvestmentType.LENDBOXP2P, () {
+                          widget.model.initiateBuy();
+                          AppState.backButtonDispatcher!.didPopRoute();
+                        });
+                        AppState.isRepeated = true;
+                        return;
+                      } else {
                         AppState.backButtonDispatcher!.didPopRoute();
-                      });
-                      AppState.isRepeated = true;
-                      return;
+                      }
                     } else {
                       AppState.backButtonDispatcher!.didPopRoute();
                     }
-                  } else {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  }
-                },
-              ),
-              SizedBox(height: SizeConfig.padding32),
-              BannerWidget(
-                model: widget.model.assetOptionsModel!.data.banner,
-                happyHourCampign:
-                    locator.isRegistered<HappyHourCampign>() ? locator() : null,
-              ),
-              AmountInputView(
-                amountController: widget.model.amountController,
-                focusNode: widget.model.buyFieldNode,
-                chipAmounts: widget.model.assetOptionsModel!.data.userOptions,
-                isEnabled:
-                    !widget.model.isBuyInProgress || !widget.model.forcedBuy,
-                maxAmount: widget.model.maxAmount,
-                maxAmountMsg: locale.upto50000,
-                minAmount: widget.model.minAmount,
-                minAmountMsg:
-                    "Minimum purchase amount is ₹ ${widget.model.minAmount.toInt()}",
-                notice: widget.model.buyNotice,
-                onAmountChange: (int amount) {},
-                bestChipIndex: 2,
-                readOnly: widget.model.readOnly,
-                onTap: () => widget.model.showKeyBoard(),
-                model: widget.model,
-              ),
-              SizedBox(
-                height: SizeConfig.padding24,
-              ),
-              Container(
-                height: 1,
-                margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins),
-                color: UiConstants.kModalSheetSecondaryBackgroundColor
-                    .withOpacity(0.2),
-              ),
-              SizedBox(
-                height: SizeConfig.padding24,
-              ),
-              // if (widget.model.showCoupons)
-              //   Showcase(
-              //     key: ShowCaseKeys.couponKey,
-              //     description: 'You can apply a coupon to get extra gold!',
-              //     child: CouponWidget(
-              //       widget.model.couponList,
-              //       widget.model,
-              //       onTap: (coupon) {
-              //         widget.model.applyCoupon(coupon.code, false);
-              //       },
-              //     ),
-              //   ),
-              const Spacer(),
-              // SizedBox(
-              //   height: SizeConfig.padding32,
-              // ),
-              Selector<BankAndPanService, bool>(
-                selector: (p0, p1) => p1.isKYCVerified,
-                builder: (ctx, isKYCVerified, child) {
-                  return (!isKYCVerified)
-                      ? _kycWidget(widget.model, context)
-                      : (widget.model.isBuyInProgress || widget.model.forcedBuy)
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (widget.model.forcedBuy) ...[
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal:
-                                            SizeConfig.pageHorizontalMargins),
-                                    child: Text(
-                                      "We will contact you before the end of 6 months (Maturity) to confirm.",
-                                      style: TextStyles.sourceSans.body2.colour(
-                                          Colors.white.withOpacity(0.8)),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  SizedBox(height: SizeConfig.padding24),
-                                ],
-                                Container(
-                                  height: SizeConfig.screenWidth! * 0.1556,
-                                  alignment: Alignment.center,
-                                  width: SizeConfig.screenWidth! * 0.7,
-                                  child: const LinearProgressIndicator(
-                                    color: UiConstants.primaryColor,
-                                    backgroundColor:
-                                        UiConstants.kDarkBackgroundColor,
+                  },
+                ),
+                SizedBox(height: SizeConfig.padding32),
+                BannerWidget(
+                  model: widget.model.assetOptionsModel!.data.banner,
+                  happyHourCampign: locator.isRegistered<HappyHourCampign>()
+                      ? locator()
+                      : null,
+                ),
+                AmountInputView(
+                  amountController: widget.model.amountController,
+                  focusNode: widget.model.buyFieldNode,
+                  chipAmounts: widget.model.assetOptionsModel!.data.userOptions,
+                  isEnabled:
+                      !widget.model.isBuyInProgress || !widget.model.forcedBuy,
+                  maxAmount: widget.model.maxAmount,
+                  maxAmountMsg: locale.upto50000,
+                  minAmount: widget.model.minAmount,
+                  minAmountMsg:
+                      "Minimum purchase amount is ₹ ${widget.model.minAmount.toInt()}",
+                  notice: widget.model.buyNotice,
+                  onAmountChange: (int amount) {},
+                  bestChipIndex: 2,
+                  readOnly: widget.model.readOnly,
+                  onTap: () => widget.model.showKeyBoard(),
+                  model: widget.model,
+                ),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+                Container(
+                  height: 1,
+                  margin: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  color: UiConstants.kModalSheetSecondaryBackgroundColor
+                      .withOpacity(0.2),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+                if (widget.model.showCoupons)
+                  Showcase(
+                    key: ShowCaseKeys.couponKey,
+                    description: 'You can apply a coupon to get extra gold!',
+                    child: FloCouponWidget(
+                      widget.model.couponList,
+                      widget.model,
+                      onTap: (coupon) {
+                        widget.model.applyCoupon(coupon.code, false);
+                      },
+                    ),
+                  ),
+                // const Spacer(),
+                SizedBox(
+                  height: SizeConfig.padding32,
+                ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Selector<BankAndPanService, bool>(
+              selector: (p0, p1) => p1.isKYCVerified,
+              builder: (ctx, isKYCVerified, child) {
+                return (!isKYCVerified)
+                    ? _kycWidget(widget.model, context)
+                    : (widget.model.isBuyInProgress || widget.model.forcedBuy)
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (widget.model.forcedBuy) ...[
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          SizeConfig.pageHorizontalMargins),
+                                  child: Text(
+                                    "We will contact you before the end of 6 months (Maturity) to confirm.",
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(Colors.white.withOpacity(0.8)),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
+                                SizedBox(height: SizeConfig.padding24),
                               ],
-                            )
-                          : FloBuyNavBar(
-                              model: widget.model,
-                              onTap: () {
-                                if ((widget.model.buyAmount ?? 0) <
-                                    widget.model.minAmount) {
-                                  BaseUtil.showNegativeAlert(
-                                      locale.enterAmountGreaterThan,
-                                      locale.enterAmount);
-                                  return;
-                                }
+                              Container(
+                                height: SizeConfig.screenWidth! * 0.1556,
+                                alignment: Alignment.center,
+                                width: SizeConfig.screenWidth! * 0.7,
+                                child: const LinearProgressIndicator(
+                                  color: UiConstants.primaryColor,
+                                  backgroundColor:
+                                      UiConstants.kDarkBackgroundColor,
+                                ),
+                              ),
+                            ],
+                          )
+                        : FloBuyNavBar(
+                            model: widget.model,
+                            onTap: () {
+                              if ((widget.model.buyAmount ?? 0) <
+                                  widget.model.minAmount) {
+                                BaseUtil.showNegativeAlert(
+                                    locale.enterAmountGreaterThan,
+                                    locale.enterAmount);
+                                return;
+                              }
 
-                                if (widget.model.floAssetType ==
-                                    Constants.ASSET_TYPE_FLO_FIXED_6) {
-                                  widget.model.openReinvestBottomSheet();
-                                  return;
-                                }
-                                if (widget.model.floAssetType ==
-                                        Constants.ASSET_TYPE_FLO_FIXED_3 &&
-                                    !widget.model.isLendboxOldUser) {
-                                  widget.model.openReinvestBottomSheet();
-                                  return;
-                                }
+                              if (widget.model.floAssetType ==
+                                  Constants.ASSET_TYPE_FLO_FIXED_6) {
+                                widget.model.openReinvestBottomSheet();
+                                return;
+                              }
+                              if (widget.model.floAssetType ==
+                                      Constants.ASSET_TYPE_FLO_FIXED_3 &&
+                                  !widget.model.isLendboxOldUser) {
+                                widget.model.openReinvestBottomSheet();
+                                return;
+                              }
 
-                                if (!widget.model.isBuyInProgress) {
-                                  FocusScope.of(context).unfocus();
-                                  widget.model.initiateBuy();
-                                }
-                              },
-                            );
-                },
-              ),
-            ],
+                              if (!widget.model.isBuyInProgress) {
+                                FocusScope.of(context).unfocus();
+                                widget.model.initiateBuy();
+                              }
+                            },
+                          );
+              },
+            ),
           ),
           CustomKeyboardSubmitButton(
             onSubmit: () => widget.model.buyFieldNode.unfocus(),
@@ -362,12 +370,11 @@ class FloBuyNavBar extends StatelessWidget {
                   ),
                 ],
               ),
-              //
               Text(getSubString(),
                   style: TextStyles.rajdhaniSB.body3
                       .colour(UiConstants.kTextFieldTextColor)),
               SizedBox(
-                height: SizeConfig.padding4,
+                height: SizeConfig.padding10,
               ),
               GestureDetector(
                 onTap: () {
@@ -400,21 +407,32 @@ class FloBuyNavBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (model.appliedCoupon != null) ...[
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset(
-                      Assets.ticketTilted,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      '${model.appliedCoupon?.code} coupon applied',
-                      style: TextStyles.sourceSans.body3
-                          .colour(UiConstants.kTealTextColor),
-                    ),
-                  ],
+                SizedBox(
+                  width: SizeConfig.screenWidth! * 0.35,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SvgPicture.asset(
+                        Assets.ticketTilted,
+                        width: SizeConfig.padding16,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding6,
+                      ),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '${model.appliedCoupon?.code} coupon applied',
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTealTextColor),
+                            maxLines: 2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: SizeConfig.padding4,

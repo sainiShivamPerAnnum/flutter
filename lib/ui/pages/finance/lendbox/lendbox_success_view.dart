@@ -19,7 +19,7 @@ import 'package:lottie/lottie.dart';
 
 class LendboxSuccessView extends StatelessWidget {
   final TransactionType transactionType;
-  final LendboxTransactionService? _txnService =
+  final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
 
   LendboxSuccessView({Key? key, required this.transactionType})
@@ -51,9 +51,9 @@ class LendboxSuccessView extends StatelessWidget {
                       AppState.isRepeated = true;
                       AppState.unblockNavigation();
                       AppState.backButtonDispatcher!.didPopRoute();
-                      this.showGtIfAvailable();
+                      showGtIfAvailable();
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.close,
                       color: Colors.white,
                     ),
@@ -327,17 +327,15 @@ class LendboxSuccessView extends StatelessWidget {
               onPressed: () {
                 AppState.isRepeated = true;
                 AppState.unblockNavigation();
-
                 AppState.backButtonDispatcher!.didPopRoute();
+                // AppState.backButtonDispatcher!.didPopRoute();
+
                 AppState.delegate!.appState.setCurrentTabIndex = DynamicUiUtils
                     .navBar
                     .indexWhere((element) => element == 'SV');
 
-                final _tambolaService = locator<TambolaService>();
-                // _tambolaService.weeklyTicksFetched = false;
-                _tambolaService.getBestTambolaTickets();
-
-                this.showGtIfAvailable();
+                locator<TambolaService>().getBestTambolaTickets();
+                showGtIfAvailable();
               },
               child: Text(
                 PowerPlayService.powerPlayDepositFlow
