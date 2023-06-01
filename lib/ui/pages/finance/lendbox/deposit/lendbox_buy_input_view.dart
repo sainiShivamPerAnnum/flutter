@@ -516,7 +516,9 @@ class ViewBreakdown extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  "Maturity date",
+                  model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI
+                      ? "Lockin Period"
+                      : "Maturity date",
                   style: TextStyles.sourceSans.body2,
                 ),
                 const Spacer(),
@@ -632,6 +634,12 @@ class ViewBreakdown extends StatelessWidget {
             AppPositiveBtn(
               width: SizeConfig.screenWidth!,
               onPressed: () async {
+                if ((model.buyAmount ?? 0) < model.minAmount) {
+                  BaseUtil.showNegativeAlert("Invalid Amount",
+                      "Please Enter Amount Greater than ${model.minAmount}");
+                  return;
+                }
+
                 AppState.backButtonDispatcher?.didPopRoute();
 
                 if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
