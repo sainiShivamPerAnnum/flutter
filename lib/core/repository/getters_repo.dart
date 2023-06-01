@@ -368,34 +368,20 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-//TODO: Not working
-//Triggered on: Share button click on win view
-// Future<ApiResponse<List<ScratchCard>>> getScratchCards() async {
-//   try {
-//     // final token = await getBearerToken();
-//     final response = await APIService.instance.getData(
-//       ApiPath.scratchCards(userService.baseUser.uid),
-//       cBaseUrl: "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev",
-//       queryParams: {},
-//     );
+  Future<ApiResponse<List>> getIncentivesList() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.incentives,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
 
-//     // final response2 = await APIService.instance.getData(
-//     //   "/user/ojUP6fumUgOb9wDMB6Jmoy32GOE3/golden_tickets",
-//     //   cBaseUrl: _baseUrl,
-//     //   queryParams: {},
-//     // );
-
-//     final responseData = response["data"]["gts"];
-
-//     print("Test123 ${response.toString()}");
-//     // final scratchCards = ScratchCard.fromJson(json, docId);
-
-//     // return ApiResponse<List<ScratchCard>>(model: events, code: 200);
-//   } catch (e) {
-//     logger.e(e.toString());
-//     print("Test123 ${e.toString()}");
-
-//     return ApiResponse.withError("Unable to fetch golden tickets", 400);
-//   }
-// }
+      return ApiResponse<List>(
+          model: response["data"]["earnMoreRewards"], code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
 }

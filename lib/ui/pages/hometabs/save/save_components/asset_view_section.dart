@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -30,6 +31,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -497,10 +499,8 @@ class _BuildOwnAsset extends StatelessWidget {
               vertical: SizeConfig.pageHorizontalMargins,
               horizontal: SizeConfig.pageHorizontalMargins / 2,
             ),
-            child: FloBalanceBriefRow(
-              lead: userService.userFundWallet?.wLbBalance ?? 0,
-              trail: userService.userFundWallet?.wLbPrinciple ?? 0,
-              leadPercent: 0.05,
+            child: const FloBalanceBriefRow(
+              tier: Constants.ASSET_TYPE_LENDBOX,
             ),
           );
   }
@@ -512,89 +512,156 @@ class _BuildOwnAsset extends StatelessWidget {
 
 class FloBalanceBriefRow extends StatelessWidget {
   const FloBalanceBriefRow({
-    required this.lead,
-    required this.trail,
-    required this.leadPercent,
+    required this.tier,
     this.mini = false,
     this.leftAlign = false,
     super.key,
+    this.lead,
+    this.trail,
+    this.percent,
   });
-
-  final double lead, trail, leadPercent;
+  final double? lead, trail, percent;
+  final String tier;
   final bool mini;
   final bool leftAlign;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 6,
-          child: Column(
-            crossAxisAlignment: (mini || leftAlign)
-                ? CrossAxisAlignment.start
-                : CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Current",
-                style: TextStyles.rajdhaniM.colour(Colors.white60),
-              ),
-              Row(
-                mainAxisAlignment: (mini || leftAlign)
-                    ? MainAxisAlignment.start
-                    : MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "₹${BaseUtil.digitPrecision(lead, 2)}",
-                    style: mini
-                        ? TextStyles.sourceSansSB.body0
-                        : TextStyles.sourceSansSB.title4,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Icon(
-                        Icons.arrow_drop_up_outlined,
-                        color: UiConstants.primaryColor,
-                        size: SizeConfig.padding20,
-                      ),
-                      Text(
-                        "$leadPercent%",
-                        style: mini
-                            ? TextStyles.sourceSansM.body3
-                                .colour(UiConstants.primaryColor)
-                            : TextStyles.sourceSansM.body2
-                                .colour(UiConstants.primaryColor),
-                      ),
-                    ],
-                  )
-                ],
-              )
-            ],
+    return Selector<UserService, Portfolio>(
+      builder: (context, portfolio, child) => Row(
+        children: [
+          Expanded(
+            flex: 6,
+            child: Column(
+              crossAxisAlignment: (mini || leftAlign)
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Current",
+                  style: TextStyles.rajdhaniM.colour(Colors.white60),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: (mini || leftAlign)
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "₹${BaseUtil.digitPrecision(lead ?? getCurrentValue(tier, portfolio), 2)}",
+                      style: mini
+                          ? TextStyles.sourceSansSB.body0
+                          : TextStyles.sourceSansSB.title4,
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            SizedBox(width: SizeConfig.padding6),
+                            Transform.translate(
+                              offset: Offset(0, -SizeConfig.padding4),
+                              child: RotatedBox(
+                                quarterTurns:
+                                    getPercValue(tier, portfolio) >= 0 ? 0 : 2,
+                                child: SvgPicture.asset(
+                                  Assets.arrow,
+                                  width: mini
+                                      ? SizeConfig.iconSize3
+                                      : SizeConfig.iconSize2,
+                                  color: getPercValue(tier, portfolio) >= 0
+                                      ? UiConstants.primaryColor
+                                      : Colors.red,
+                                ),
+                              ),
+                            ),
+                            Text(
+                                " ${BaseUtil.digitPrecision(
+                                  getPercValue(tier, portfolio),
+                                  2,
+                                  false,
+                                )}%",
+                                style: TextStyles.sourceSans.body3.colour(
+                                    getPercValue(tier, portfolio) >= 0
+                                        ? UiConstants.primaryColor
+                                        : Colors.red)),
+                          ],
+                        ),
+                        SizedBox(
+                          height:
+                              mini ? SizeConfig.padding2 : SizeConfig.padding4,
+                        )
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          flex: 4,
-          child: Column(
-            crossAxisAlignment: (mini || leftAlign)
-                ? CrossAxisAlignment.start
-                : CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Invested",
-                style: TextStyles.rajdhaniM.colour(Colors.white60),
-              ),
-              Text(
-                "₹${BaseUtil.digitPrecision(trail, 2)}",
-                style: mini
-                    ? TextStyles.sourceSansSB.body0
-                    : TextStyles.sourceSansSB.title4,
-              )
-            ],
-          ),
-        )
-      ],
+          Expanded(
+            flex: 4,
+            child: Column(
+              crossAxisAlignment: (mini || leftAlign)
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Invested",
+                  style: TextStyles.rajdhaniM.colour(Colors.white60),
+                ),
+                Text(
+                  "₹${BaseUtil.digitPrecision(trail ?? getInvestedValue(tier, portfolio), 2)}",
+                  style: mini
+                      ? TextStyles.sourceSansSB.body0
+                      : TextStyles.sourceSansSB.title4,
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+      selector: (p0, p1) => p1.userPortfolio,
     );
+  }
+
+  double getPercValue(String tier, Portfolio portfolio) {
+    if (percent != null) return percent!;
+    switch (tier) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return portfolio.flo.fixed2.percGains;
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return portfolio.flo.fixed1.percGains;
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        return portfolio.flo.flexi.percGains;
+      default:
+        return portfolio.flo.percGains;
+    }
+  }
+
+  double getCurrentValue(String tier, Portfolio portfolio) {
+    switch (tier) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return portfolio.flo.fixed2.balance;
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return portfolio.flo.fixed1.balance;
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        return portfolio.flo.flexi.balance;
+      default:
+        return portfolio.flo.balance;
+    }
+  }
+
+  double getInvestedValue(String tier, Portfolio portfolio) {
+    switch (tier) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return portfolio.flo.fixed2.principle;
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return portfolio.flo.fixed1.principle;
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        return portfolio.flo.flexi.principle;
+      default:
+        return portfolio.flo.principle;
+    }
   }
 }
 

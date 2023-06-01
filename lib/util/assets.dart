@@ -311,6 +311,8 @@ class Assets {
 
   static String multiAvatars = "assets/vectors/multiAvatars.svg";
   static String multiRealAvatars = "assets/images/cus_photos.png";
+
+  static String arrow = "assets/vectors/arrow.svg";
   static final String infoWhyPan =
       'Your PAN Card is used as your unique ID to set up your investment profile in different assets';
 

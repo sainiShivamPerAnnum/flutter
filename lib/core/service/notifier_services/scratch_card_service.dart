@@ -229,7 +229,7 @@ class ScratchCardService
     if (res.isSuccess()) {
       unscratchedTicketsCount = res.model!.length;
       unscratchedMilestoneScratchCardCount = res.model!
-          .map((sc) => sc.prizeSubtype!.toLowerCase().contains("milestone"))
+          .map((sc) => sc.prizeSubtype!.toLowerCase().contains("_mlst_"))
           .length;
     } else {
       unscratchedTicketsCount = 0;

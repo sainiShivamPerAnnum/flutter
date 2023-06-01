@@ -223,4 +223,8 @@ class ApiPath {
   static const String quickSave = "/global/quick_save";
 
   static const String investmentPrefs = "/lb/investment-prefs";
+
+  static String portfolio(String uid) => "/$uid/portfolio";
+
+  static String incentives = "/app/incentives";
 }

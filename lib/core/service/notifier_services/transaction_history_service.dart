@@ -205,7 +205,7 @@ class TxnHistoryService extends ChangeNotifier {
   getFormattedDateAndTime(Timestamp time) {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
-    return DateFormat('d MMMM, yyyy at hh:mm a').format(now);
+    return DateFormat('d MMMM, yyyy | hh:mm a').format(now);
   }
 
   String getFormattedSIPDate(DateTime time) {

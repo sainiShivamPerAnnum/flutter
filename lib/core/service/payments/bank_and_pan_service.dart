@@ -134,7 +134,6 @@ class BankAndPanService
     final res = await _paymentRepo!.getActiveBankAccountDetails();
     if (res.isSuccess()) {
       activeBankAccountDetails = res.model;
-      isBankDetailsAdded = true;
     }
   }
 

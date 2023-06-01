@@ -358,7 +358,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                 widget.txn.type ==
                                         UserTransaction.TRAN_TYPE_WITHDRAW
                                     ? "Rewards Deducted:"
-                                    : (widget.txn.augmnt != null &&
+                                    : (widget.txn.subType !=
+                                                Constants.ASSET_TYPE_LENDBOX &&
+                                            widget.txn.augmnt != null &&
                                             widget.txn.augmnt!["aBlockId"] ==
                                                 null)
                                         ? "You redeemed ₹${widget.txn.amount} from your total winnings."

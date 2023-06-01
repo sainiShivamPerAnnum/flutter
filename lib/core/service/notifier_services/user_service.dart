@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
@@ -57,6 +58,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final GetterRepository _gettersRepo = locator<GetterRepository>();
   final AppState _appState = locator<AppState>();
   final RootController _rootController = locator<RootController>();
+  Portfolio _userPortfolio = Portfolio.base();
+
+  Portfolio get userPortfolio => _userPortfolio;
+
+  set userPortfolio(Portfolio value) {
+    _userPortfolio = value;
+    notifyListeners();
+  }
+
   S locale = locator<S>();
 
   User? _firebaseUser;
@@ -202,6 +212,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   set userFundWallet(UserFundWallet? wallet) {
+    if ((_userFundWallet?.netWorth ?? 0) != (wallet?.netWorth ?? 0)) {
+      updatePortFolio();
+    }
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
     _logger.d("Wallet updated in userservice, property listeners notified");
@@ -256,6 +269,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool checkIfUsernameHasAddedUsername() {
     _logger.d(baseUser!.username ?? "No username");
     return baseUser!.username != null && baseUser!.username!.isNotEmpty;
+  }
+
+  Future<void> updatePortFolio() async {
+    final res = await _userRepo!.getPortfolioData();
+    if (res.isSuccess()) {
+      userPortfolio = res.model!;
+    } else {
+      userPortfolio = Portfolio.base();
+    }
   }
 
   bool get isUserOnboarded {

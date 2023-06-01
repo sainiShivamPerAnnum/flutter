@@ -10,7 +10,7 @@ class FloPremiumTierCard extends StatelessWidget {
   const FloPremiumTierCard({
     super.key,
     required this.userService,
-    this.tier,
+    required this.tier,
     this.title,
     this.lockIn,
     this.minInvestment,
@@ -19,7 +19,7 @@ class FloPremiumTierCard extends StatelessWidget {
     required this.cta,
   });
 
-  final String? tier;
+  final String tier;
   final String? title;
   final String? lockIn;
   final String? summary;
@@ -107,9 +107,7 @@ class FloPremiumTierCard extends StatelessWidget {
             SizedBox(height: SizeConfig.padding16),
             isUserInvestedInThisTier()
                 ? FloBalanceBriefRow(
-                    lead: getLead(),
-                    trail: getTrail(),
-                    leadPercent: 0.05,
+                    tier: tier!,
                     mini: true,
                   )
                 : SizedBox(

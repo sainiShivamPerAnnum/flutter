@@ -119,20 +119,10 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                               SizedBox(
                                                   height: SizeConfig.padding24),
                                               if (model.isInvested)
-                                                FloBalanceBriefRow(
-                                                  key: const ValueKey(
-                                                      "12floBalance"),
-                                                  lead: model
-                                                          .userService
-                                                          .userFundWallet
-                                                          ?.wLbBalance ??
-                                                      0,
-                                                  trail: model
-                                                          .userService
-                                                          .userFundWallet
-                                                          ?.wLbPrinciple ??
-                                                      0,
-                                                  leadPercent: 0.02,
+                                                const FloBalanceBriefRow(
+                                                  key: ValueKey("12floBalance"),
+                                                  tier: Constants
+                                                      .ASSET_TYPE_FLO_FIXED_6,
                                                 ),
                                               FloPremiumTransactionsList(
                                                   key: ValueKey("12floTxns"),
@@ -148,20 +138,10 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                               SizedBox(
                                                   height: SizeConfig.padding24),
                                               if (model.isInvested)
-                                                FloBalanceBriefRow(
-                                                  key: const ValueKey(
-                                                      "10floBalance"),
-                                                  lead: model
-                                                          .userService
-                                                          .userFundWallet
-                                                          ?.wLbBalance ??
-                                                      0,
-                                                  trail: model
-                                                          .userService
-                                                          .userFundWallet
-                                                          ?.wLbPrinciple ??
-                                                      0,
-                                                  leadPercent: 0.02,
+                                                const FloBalanceBriefRow(
+                                                  key: ValueKey("10floBalance"),
+                                                  tier: Constants
+                                                      .ASSET_TYPE_FLO_FIXED_3,
                                                 ),
                                               FloPremiumTransactionsList(
                                                 key: ValueKey("10floTxns"),
@@ -649,8 +629,11 @@ class FloPremiumTransactionsList extends StatelessWidget {
                         FloBalanceBriefRow(
                           lead: currentValue,
                           trail: currentValue - gain,
-                          leadPercent: gain,
+                          percent: gain,
                           leftAlign: true,
+                          tier: model.is12
+                              ? Constants.ASSET_TYPE_FLO_FIXED_6
+                              : Constants.ASSET_TYPE_FLO_FIXED_3,
                         ),
                       ],
                     ),

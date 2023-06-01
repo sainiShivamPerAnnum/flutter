@@ -82,10 +82,8 @@ class APIService implements API {
         'uid': userService?.firebaseUser?.uid ?? '',
         if (headers != null) ...headers
       });
-      // log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-      // logger!.d("response from $token");
-      // logger!.d("Get Response: ${response.statusCode}");
-      // logger!.d("Get Response: ${response.body}");
+
+      log(token.toString());
 
       logger?.i(
           "API:: GET REQUEST \n=> PATH: $finalPath  \n=> StatusCode: ${response.statusCode} \n queryParam: $queryParams \n"
@@ -202,7 +200,6 @@ class APIService implements API {
         headers: headers,
         body: jsonEncode(body ?? {}),
       );
-
       logger?.i("API:: PUT REQUEST \n=> PATH: $_url  "
           "\n=> StatusCode: ${response.statusCode} "
           "\nRequest Body: $body \n"

@@ -1,44 +1,74 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class EarnMoreReturns extends StatelessWidget {
+class EarnMoreReturns extends StatefulWidget {
   const EarnMoreReturns({super.key});
 
   @override
+  State<EarnMoreReturns> createState() => _EarnMoreReturnsState();
+}
+
+class _EarnMoreReturnsState extends State<EarnMoreReturns> {
+  final _getterRepo = locator<GetterRepository>();
+  List<dynamic> incentivesList = [];
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
+
+  set isLoading(bool value) {
+    setState(() {
+      _isLoading = value;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getterRepo.getIncentivesList().then((res) {
+      if (res.isSuccess()) {
+        incentivesList = res.model!;
+      }
+      isLoading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List<EMRModel> emrOptions = [
-      EMRModel(
-          title: "Get more Tambola Tickets",
-          subtitle: "Earn upto 10K in interest every week",
-          asset: Assets.tambola_instant_view,
-          actionUrl: '/tambolaHome'),
-      EMRModel(
-          title: "Get more Tambola Tickets",
-          subtitle: "Earn upto 10K in interest every week",
-          asset: Assets.tambola_instant_view,
-          actionUrl: '/play'),
-      EMRModel(
-          title: "Get more Tambola Tickets",
-          subtitle: "Earn upto 10K in interest every week",
-          asset: Assets.tambola_instant_view,
-          actionUrl: '/tambolaHome'),
-      EMRModel(
-          title: "Get more Tambola Tickets",
-          subtitle: "Earn upto 10K in interest every week",
-          asset: Assets.tambola_instant_view,
-          actionUrl: '/tambolaHome'),
-      EMRModel(
-          title: "Get more Tambola Tickets",
-          subtitle: "Earn upto 10K in interest every week",
-          asset: Assets.tambola_instant_view,
-          actionUrl: '/tambolaHome')
-    ];
+    // List<EMRModel> emrOptions = [
+    //   EMRModel(
+    //       title: "Get more Tambola Tickets",
+    //       subtitle: "Earn upto 10K in interest every week",
+    //       asset: Assets.tambola_instant_view,
+    //       actionUrl: '/tambolaHome'),
+    //   EMRModel(
+    //       title: "Get more Tambola Tickets",
+    //       subtitle: "Earn upto 10K in interest every week",
+    //       asset: Assets.tambola_instant_view,
+    //       actionUrl: '/play'),
+    //   EMRModel(
+    //       title: "Get more Tambola Tickets",
+    //       subtitle: "Earn upto 10K in interest every week",
+    //       asset: Assets.tambola_instant_view,
+    //       actionUrl: '/tambolaHome'),
+    //   EMRModel(
+    //       title: "Get more Tambola Tickets",
+    //       subtitle: "Earn upto 10K in interest every week",
+    //       asset: Assets.tambola_instant_view,
+    //       actionUrl: '/tambolaHome'),
+    //   EMRModel(
+    //       title: "Get more Tambola Tickets",
+    //       subtitle: "Earn upto 10K in interest every week",
+    //       asset: Assets.tambola_instant_view,
+    //       actionUrl: '/tambolaHome')
+    // ];
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -48,36 +78,57 @@ class EarnMoreReturns extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor,
       ),
       backgroundColor: UiConstants.kBackgroundColor,
-      body: ListView.builder(
-        itemCount: emrOptions.length,
-        itemBuilder: (ctx, i) => Card(
-          color: UiConstants.kTambolaMidTextColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-          ),
-          margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.pageHorizontalMargins,
-            vertical: SizeConfig.padding8,
-          ),
-          child: ListTile(
-            onTap: () => AppState.delegate!
-                .parseRoute(Uri.parse(emrOptions[i].actionUrl)),
-            leading: Transform.translate(
-              offset: Offset(0, SizeConfig.padding8),
-              child: SvgPicture.asset(
-                emrOptions[i].asset,
-                width: SizeConfig.padding54,
-              ),
+      body: isLoading
+          ? const FullScreenLoader()
+          : ListView.builder(
+              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding20),
+              itemCount: incentivesList.length,
+              itemBuilder: (ctx, i) => Card(
+                  color: UiConstants.kTambolaMidTextColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(SizeConfig.cardBorderRadius),
+                  ),
+                  margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                    vertical: SizeConfig.padding8,
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      if (incentivesList[i]["actionUri"].contains("Https")) {
+                        BaseUtil.launchUrl(incentivesList[i]["actionUri"]);
+                      } else {
+                        AppState.delegate!.parseRoute(
+                            Uri.parse(incentivesList[i]["actionUri"]));
+                      }
+                    },
+                    child: ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.cardBorderRadius),
+                      child: SvgPicture.network(
+                        incentivesList[i]["cardImageUrl"],
+                      ),
+                    ),
+                  )
+                  //  ListTile(
+                  //   onTap: () => AppState.delegate!
+                  //       .parseRoute(Uri.parse(incentivesList[i].actionUrl)),
+                  //   leading: Transform.translate(
+                  //     offset: Offset(0, SizeConfig.padding8),
+                  //     child: SvgPicture.asset(
+                  //       emrOptions[i].asset,
+                  //       width: SizeConfig.padding54,
+                  //     ),
+                  //   ),
+                  //   title:
+                  //       Text(emrOptions[i].title, style: TextStyles.rajdhaniSB.body2),
+                  //   subtitle: Text(
+                  //     emrOptions[i].subtitle,
+                  //     style: TextStyles.sourceSans.body3.colour(Colors.grey),
+                  //   ),
+                  // ),
+                  ),
             ),
-            title:
-                Text(emrOptions[i].title, style: TextStyles.rajdhaniSB.body2),
-            subtitle: Text(
-              emrOptions[i].subtitle,
-              style: TextStyles.sourceSans.body3.colour(Colors.grey),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
