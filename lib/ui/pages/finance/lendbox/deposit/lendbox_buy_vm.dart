@@ -56,8 +56,8 @@ class LendboxBuyViewModel extends BaseViewModel {
   TextEditingController? amountController;
   TextEditingController? vpaController;
 
-  final double minAmount = 100;
-  final double maxAmount = 50000;
+  double minAmount = 100;
+  double maxAmount = 50000;
   AssetOptionsModel? assetOptionsModel;
   List<CouponModel>? _couponList;
   int? numberOfTambolaTickets;
@@ -168,6 +168,8 @@ class LendboxBuyViewModel extends BaseViewModel {
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+
+    updateMinValues();
     await getAssetOptionsModel();
 
     log("isLendboxOldUser $isLendboxOldUser");
@@ -190,6 +192,18 @@ class LendboxBuyViewModel extends BaseViewModel {
     // getAvailableCoupons();
 
     setState(ViewState.Idle);
+  }
+
+  void updateMinValues() {
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI) {
+      minAmount = 100;
+    }
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      minAmount = 1000;
+    }
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      minAmount = 10000;
+    }
   }
 
   resetBuyOptions() {
@@ -273,6 +287,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   Future<int> initChecks() async {
     buyAmount = int.tryParse(amountController?.text ?? "0") ?? 0;
 
+    log("buyAmount $buyAmount && minAmount $minAmount && maxAmount $maxAmount");
     if (buyAmount == 0) {
       BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
       return 0;
@@ -294,7 +309,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       return 0;
     }
 
-    _analyticsService!.track(
+    _analyticsService.track(
         eventName: AnalyticsEvents.saveCheckout,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -352,17 +367,18 @@ class LendboxBuyViewModel extends BaseViewModel {
             ? locator<HappyHourCampign>()
             : null;
 
-    final int parsedGoldAmount =
+    final int parsedFloAmount =
         int.tryParse(amountController?.text ?? '0') ?? 0;
     final num minAmount =
         num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
 
-    if (parsedGoldAmount < tambolaCost) {
+    if (parsedFloAmount < tambolaCost) {
+      totalTickets = 0;
       showInfoIcon = false;
       return "";
     }
 
-    numberOfTambolaTickets = parsedGoldAmount ~/ tambolaCost;
+    numberOfTambolaTickets = parsedFloAmount ~/ tambolaCost;
     totalTickets = numberOfTambolaTickets;
 
     showHappyHour
@@ -372,7 +388,7 @@ class LendboxBuyViewModel extends BaseViewModel {
             : null
         : happyHourTickets = null;
 
-    if (parsedGoldAmount >= minAmount && happyHourTickets != null) {
+    if (parsedFloAmount >= minAmount && happyHourTickets != null) {
       totalTickets = numberOfTambolaTickets! + happyHourTickets!;
       showInfoIcon = true;
     } else {

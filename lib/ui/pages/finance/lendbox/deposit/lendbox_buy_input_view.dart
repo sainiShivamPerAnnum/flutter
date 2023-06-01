@@ -136,7 +136,8 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                 maxAmount: widget.model.maxAmount,
                 maxAmountMsg: locale.upto50000,
                 minAmount: widget.model.minAmount,
-                minAmountMsg: locale.minPurchaseText1,
+                minAmountMsg:
+                    "Minimum purchase amount is ₹ ${widget.model.minAmount.toInt()}",
                 notice: widget.model.buyNotice,
                 onAmountChange: (int amount) {},
                 bestChipIndex: 2,
@@ -213,6 +214,14 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                           : FloBuyNavBar(
                               model: widget.model,
                               onTap: () {
+                                if ((widget.model.buyAmount ?? 0) <
+                                    widget.model.minAmount) {
+                                  BaseUtil.showNegativeAlert(
+                                      locale.enterAmountGreaterThan,
+                                      locale.enterAmount);
+                                  return;
+                                }
+
                                 if (widget.model.floAssetType ==
                                     Constants.ASSET_TYPE_FLO_FIXED_6) {
                                   widget.model.openReinvestBottomSheet();
@@ -270,6 +279,9 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
               onPressed: model.navigateToKycScreen,
               width: SizeConfig.screenWidth,
             ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
           ),
         ],
       ),
@@ -518,82 +530,84 @@ class ViewBreakdown extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding24,
             ),
-            Container(
-              height: 1,
-              color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  height: SizeConfig.padding28,
-                  width: SizeConfig.padding28,
-                  child: SvgPicture.asset(
-                    Assets.howToPlayAsset1Tambola,
-                    fit: BoxFit.contain,
+            if ((model.totalTickets ?? 0) > 0) ...[
+              Container(
+                height: 1,
+                color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+              ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding28,
+                    width: SizeConfig.padding28,
+                    child: SvgPicture.asset(
+                      Assets.howToPlayAsset1Tambola,
+                      fit: BoxFit.contain,
+                    ),
                   ),
+                  SizedBox(
+                    width: SizeConfig.padding4,
+                  ),
+                  Text(
+                    "Total Tambola Tickets",
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
+                  const Spacer(),
+                  Text(
+                    "${model.totalTickets}",
+                    style: TextStyles.sourceSansSB.body1,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding24,
+              ),
+              if (model.showHappyHour) ...[
+                Row(
+                  children: [
+                    Text(
+                      "Happy Hour Tambola Tickets",
+                      style: TextStyles.sourceSans.body2,
+                    ),
+                    const Spacer(),
+                    Text(
+                      "${model.happyHourTickets}",
+                      style: TextStyles.sourceSans.body2,
+                    ),
+                  ],
                 ),
                 SizedBox(
-                  width: SizeConfig.padding4,
+                  height: SizeConfig.padding24,
                 ),
-                Text(
-                  "Total Tambola Tickets",
-                  style: TextStyles.sourceSansSB.body1,
+                Row(
+                  children: [
+                    Text(
+                      "Lifetime Tambola Tickets",
+                      style: TextStyles.sourceSans.body2,
+                    ),
+                    const Spacer(),
+                    Text(
+                      "${model.numberOfTambolaTickets}",
+                      style: TextStyles.sourceSans.body2,
+                    ),
+                  ],
                 ),
-                const Spacer(),
-                Text(
-                  "${model.totalTickets}",
-                  style: TextStyles.sourceSansSB.body1,
+                SizedBox(
+                  height: SizeConfig.padding24,
                 ),
               ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            if (model.showHappyHour) ...[
-              Row(
-                children: [
-                  Text(
-                    "Happy Hour Tambola Tickets",
-                    style: TextStyles.sourceSans.body2,
-                  ),
-                  const Spacer(),
-                  Text(
-                    "${model.happyHourTickets}",
-                    style: TextStyles.sourceSans.body2,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding24,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Lifetime Tambola Tickets",
-                    style: TextStyles.sourceSans.body2,
-                  ),
-                  const Spacer(),
-                  Text(
-                    "${model.numberOfTambolaTickets}",
-                    style: TextStyles.sourceSans.body2,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding24,
-              ),
             ],
-            Container(
-              height: 1,
-              color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-            ),
-            SizedBox(
-              height: SizeConfig.padding12,
-            ),
             if (model.appliedCoupon != null) ...[
+              Container(
+                height: 1,
+                color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+              ),
+              SizedBox(
+                height: SizeConfig.padding12,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
