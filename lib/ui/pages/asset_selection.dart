@@ -181,7 +181,7 @@ class FloPlanWidget extends StatelessWidget {
               percentage: '12%',
               isRecommended: true,
               chipString1: '6 month maturity',
-              chipString2: 'Min - ₹25,000',
+              chipString2: 'Min - ₹10,000',
               floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
               amount: amount,
               isSkipMl: isSkipMl,
@@ -190,11 +190,10 @@ class FloPlanWidget extends StatelessWidget {
             FelloFloPrograms(
               percentage: '10%',
               isRecommended: false,
-              chipString1: '3 month maturity',
-              chipString2: 'Min - ₹10,000',
-              floAssetType: locator<UserService>()
-                      .userSegments
-                      .contains(Constants.US_FLO_OLD)
+              chipString1:
+                  isLendboxOldUser ? "1 month lockin" : '3 month maturity',
+              chipString2: isLendboxOldUser ? 'Min - ₹100' : 'Min - ₹1000',
+              floAssetType: isLendboxOldUser
                   ? Constants.ASSET_TYPE_FLO_FELXI
                   : Constants.ASSET_TYPE_FLO_FIXED_3,
               amount: amount,
@@ -387,7 +386,7 @@ class FelloFloPrograms extends StatelessWidget {
         // if (!isRecommended) const Spacer(),
         GestureDetector(
           onTap: () {
-            AppState.backButtonDispatcher?.didPopRoute();
+            // AppState.backButtonDispatcher?.didPopRoute();
             BaseUtil.openFloBuySheet(
                 floAssetType: floAssetType, amt: amount, isSkipMl: isSkipMl);
           },

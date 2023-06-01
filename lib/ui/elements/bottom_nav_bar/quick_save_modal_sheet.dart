@@ -81,6 +81,7 @@ class QuickSaveModalSheet extends StatelessWidget {
                             children: [
                               SizedBox(
                                 width: SizeConfig.padding38,
+                                height: SizeConfig.padding38,
                                 child: BaseUtil.getWidgetBasedOnUrl(
                                   data.icon!,
                                   width: SizeConfig.padding54,

@@ -145,6 +145,7 @@ class ReInvestPrompt extends HookWidget {
 
                       Future.delayed(const Duration(seconds: 3), () async {
                         if (!model.isBuyInProgress) {
+                          FocusScope.of(context).unfocus();
                           await model.initiateBuy();
                         }
                       });
@@ -189,6 +190,7 @@ class ReInvestPrompt extends HookWidget {
                       AppState.backButtonDispatcher?.didPopRoute();
 
                       if (!model.isBuyInProgress) {
+                        FocusScope.of(context).unfocus();
                         model.initiateBuy();
                       }
                     },
@@ -353,6 +355,7 @@ class WarningBottomSheet extends StatelessWidget {
                       if (!model.isBuyInProgress) {
                         debugPrint(
                             "Buy in progress => ${model.isBuyInProgress}");
+                        FocusScope.of(context).unfocus();
                         await model.initiateBuy();
                       }
                     });
@@ -428,7 +431,7 @@ class InvestmentForeseenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (assetType == Constants.ASSET_TYPE_FLO_FELXI && isLendboxOldUser) {
+    if (assetType == Constants.ASSET_TYPE_FLO_FELXI) {
       return const SizedBox();
     }
 
