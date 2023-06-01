@@ -1,9 +1,11 @@
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/modalsheets/transaction_details_model_sheet.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -53,6 +55,30 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
     super.initState();
   }
 
+  String floSubtype() {
+    if (widget.txn.subType == "LENDBOXP2P") {
+      if (widget.txn.lbMap != null) {
+        switch (widget.txn.lbMap.fundType) {
+          case Constants.ASSET_TYPE_FLO_FIXED_6:
+            return "12% Flo";
+          case Constants.ASSET_TYPE_FLO_FIXED_3:
+            return "10% Flo";
+          case Constants.ASSET_TYPE_FLO_FELXI:
+            if (locator<UserService>()
+                .userSegments
+                .contains(Constants.US_FLO_OLD)) {
+              return "10% Flo";
+            } else {
+              return "8% Flo";
+            }
+          default:
+            return "10% Flo";
+        }
+      }
+    }
+    return "";
+  }
+
   @override
   Widget build(BuildContext context) {
     final isGold =
@@ -93,7 +119,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                         width: SizeConfig.screenWidth! * 0.12,
                       ),
                       Text(
-                        isGold ? locale.digitalGoldText : locale.felloFloText,
+                        isGold ? locale.digitalGoldText : floSubtype(),
                         style: TextStyles.rajdhaniSB.body2,
                       )
                     ],

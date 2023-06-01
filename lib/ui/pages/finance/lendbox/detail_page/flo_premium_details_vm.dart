@@ -1,3 +1,5 @@
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -11,6 +13,7 @@ import '../../../../../base_util.dart';
 class FloPremiumDetailsViewModel extends BaseViewModel {
   final TransactionHistoryRepository _txnHistoryRepo =
       locator<TransactionHistoryRepository>();
+  List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
   bool _is12 = true;
 
   double _opacity = 1;
@@ -42,9 +45,9 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
 
   final String flo12Highlights = "Nice Asset  • 12% Returns • Good For you";
 
-  final String flo10Description =
+  String flo10Description =
       "Fello Flo Premium 10% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 3 months!";
-  final String flo12Description =
+  String flo12Description =
       "Fello Flo Premium 12% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 6 months!";
 
   bool isInvested = false;
@@ -63,6 +66,8 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
 
   List<UserTransaction> transactionsList = [];
   void init(bool is12View) {
+    flo12Description = lendboxDetails[0]["descText"];
+    flo10Description = lendboxDetails[1]["descText"];
     _is12 = is12View;
     getTransactions();
   }

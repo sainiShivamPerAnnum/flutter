@@ -297,7 +297,16 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                             SizedBox(
                                                 width: SizeConfig.padding10),
                                             OutlinedButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  Haptic.vibrate();
+                                                  AppState.delegate!.appState
+                                                          .currentAction =
+                                                      PageAction(
+                                                    state: PageState.addPage,
+                                                    page:
+                                                        FreshDeskHelpPageConfig,
+                                                  );
+                                                },
                                                 style: ButtonStyle(
                                                     side: MaterialStateProperty
                                                         .all(const BorderSide(
