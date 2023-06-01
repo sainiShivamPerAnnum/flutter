@@ -212,20 +212,11 @@ class SaveViewModel extends BaseViewModel {
         ),
       ),
       const TambolaMiniInfoCard(),
-      TextButton(
-        onPressed: () {
-          AppState.delegate!.parseRoute(Uri.parse("earnMoreReturns"));
-        },
-        child: Text("Earn more rewards"),
-      ),
       SizedBox(height: SizeConfig.padding16),
     ]);
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
-        // case "PP":
-        //   saveViewItems.add(const PowerPlayCard());
-        //   break;
         case 'NAS':
           saveViewItems.add(const AutosaveCard());
           saveViewItems.add(const MiniAssetsGroupSection());

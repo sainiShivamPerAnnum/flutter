@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
@@ -171,6 +172,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                   double currentOffset = details.primaryDelta ?? 0;
                   if (details.delta.dy > 0) {
                     if (!cardActions.isVerticalView && mounted) {
+                      cardActions.isHorizontalView = false;
                       cardActions.isVerticalView = true;
                     }
                   }
@@ -183,6 +185,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                 },
                 onTap: () {
                   if (!cardActions.isVerticalView) {
+                    cardActions.isHorizontalView = false;
                     cardActions.isVerticalView = true;
                   }
                 },
@@ -747,28 +750,51 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                 selector: (_, userService) =>
                                                     userService.userFundWallet,
                                               ),
-                                              Row(
+                                              Column(
                                                 children: [
-                                                  Icon(
-                                                    Icons
-                                                        .arrow_drop_up_outlined,
-                                                    color: UiConstants
-                                                        .primaryColor,
-                                                    size: SizeConfig.titleSize,
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
+                                                    children: [
+                                                      SizedBox(
+                                                          width: SizeConfig
+                                                              .padding12),
+                                                      Transform.translate(
+                                                        offset: Offset(
+                                                            0,
+                                                            -SizeConfig
+                                                                .padding4),
+                                                        child: SvgPicture.asset(
+                                                          Assets.arrow,
+                                                          width: SizeConfig
+                                                              .iconSize1,
+                                                          color: UiConstants
+                                                              .primaryColor,
+                                                        ),
+                                                      ),
+                                                      Selector<UserService,
+                                                          Portfolio>(
+                                                        builder: (context,
+                                                                value, child) =>
+                                                            Text(
+                                                                " ${BaseUtil.digitPrecision(
+                                                                  value.absolute
+                                                                      .percGains,
+                                                                  2,
+                                                                )}%",
+                                                                style: TextStyles
+                                                                    .sourceSans
+                                                                    .body0
+                                                                    .colour(UiConstants
+                                                                        .primaryColor)),
+                                                        selector: (p0, p1) =>
+                                                            p1.userPortfolio,
+                                                      ),
+                                                    ],
                                                   ),
-                                                  Text(
-                                                    "0.05%",
-                                                    style:
-                                                        GoogleFonts.sourceSans3(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: UiConstants
-                                                          .primaryColor,
-                                                      fontSize:
-                                                          SizeConfig.titleSize *
-                                                              0.4,
-                                                    ),
-                                                  ),
+                                                  SizedBox(
+                                                      height:
+                                                          SizeConfig.padding16)
                                                 ],
                                               ),
                                             ],
@@ -1035,22 +1061,47 @@ class CardContent extends StatelessWidget {
                                 userService.userFundWallet,
                           ),
                           if (title != "Fello Rewards")
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                            Column(
                               children: [
-                                Icon(
-                                  Icons.arrow_drop_up_outlined,
-                                  color: UiConstants.primaryColor,
-                                  size: SizeConfig.padding20,
-                                ),
-                                Text(
-                                  "0.05%",
-                                  style: GoogleFonts.sourceSans3(
-                                    fontWeight: FontWeight.w500,
-                                    color: UiConstants.primaryColor,
-                                    fontSize: SizeConfig.body3,
+                                Selector<UserService, Portfolio>(
+                                  builder: (context, value, child) => Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      SizedBox(width: SizeConfig.padding6),
+                                      Transform.translate(
+                                        offset: Offset(0, -SizeConfig.padding4),
+                                        child: RotatedBox(
+                                          quarterTurns:
+                                              getPercValue(value, title) >= 0
+                                                  ? 0
+                                                  : 2,
+                                          child: SvgPicture.asset(
+                                            Assets.arrow,
+                                            width: SizeConfig.iconSize3,
+                                            color:
+                                                getPercValue(value, title) >= 0
+                                                    ? UiConstants.primaryColor
+                                                    : Colors.red,
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                          " ${BaseUtil.digitPrecision(
+                                            getPercValue(value, title),
+                                            2,
+                                            false,
+                                          )}%",
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(
+                                                  getPercValue(value, title) >=
+                                                          0
+                                                      ? UiConstants.primaryColor
+                                                      : Colors.red)),
+                                    ],
                                   ),
+                                  selector: (p0, p1) => p1.userPortfolio,
                                 ),
+                                SizedBox(height: SizeConfig.padding2)
                               ],
                             )
                         ],
@@ -1122,6 +1173,19 @@ class CardContent extends StatelessWidget {
         return "₹${wallet?.processingRedemptionBalance ?? 0}";
       default:
         return "-";
+    }
+  }
+
+  double getPercValue(Portfolio? portfolio, String title) {
+    switch (title) {
+      case "Fello Flo":
+        return portfolio?.flo.percGains ?? 0.0;
+      case "Digital Gold":
+        return portfolio?.gold.percGains ?? 0.0;
+      case "Fello Rewards":
+        return 0.0;
+      default:
+        return 0.0;
     }
   }
 }

@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -582,6 +583,20 @@ class UserRepository extends BaseRepo {
       final res = await APIService.instance.getData(ApiPath.isUsernameAvailable,
           queryParams: query, cBaseUrl: _baseUrl, token: token);
       return ApiResponse(code: 200, model: res['data']['isAvailable']);
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<Portfolio>> getPortfolioData() async {
+    try {
+      final uid = userService.baseUser!.uid;
+      final token = await getBearerToken();
+      final res = await APIService.instance
+          .getData(ApiPath.portfolio(uid!), cBaseUrl: _baseUrl, token: token);
+      final Portfolio portfolio = Portfolio.fromMap(res['data']);
+      return ApiResponse(code: 200, model: portfolio);
     } catch (e) {
       logger.d(e);
       return ApiResponse.withError(e.toString(), 400);

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -13,6 +15,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class FloBasicCard extends StatelessWidget {
   final UserService model;
@@ -106,10 +109,8 @@ class FloBasicCard extends StatelessWidget {
                 ]),
           SizedBox(height: SizeConfig.padding16),
           basicPrinciple > 0
-              ? FloBalanceBriefRow(
-                  lead: basicBalance,
-                  trail: basicPrinciple,
-                  leadPercent: percent,
+              ? const FloBalanceBriefRow(
+                  tier: Constants.ASSET_TYPE_FLO_FELXI,
                   mini: true,
                 )
               : SizedBox(
@@ -130,14 +131,17 @@ class FloBasicCard extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
+                      log(locator<BankAndPanService>()
+                          .isBankDetailsAdded
+                          .toString());
                       if (locator<BankAndPanService>().isBankDetailsAdded) {
                         BaseUtil().openSellModalSheet(
                             investmentType: InvestmentType.LENDBOXP2P);
                       } else {
                         BaseUtil.openDialog(
-                          isBarrierDismissible: false,
+                          isBarrierDismissible: true,
                           addToScreenStack: true,
-                          barrierColor: Colors.black45,
+                          barrierColor: Colors.black87,
                           hapticVibrate: true,
                           content: MoreInfoDialog(
                             title:
@@ -145,7 +149,17 @@ class FloBasicCard extends StatelessWidget {
                             text:
                                 "Your Bank account will be register and verified in x working days",
                             btnText: "ADD BANK INFORMATION",
-                            imagePath: Assets.bankLogo,
+                            asset: Container(
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.black,
+                              ),
+                              padding: EdgeInsets.all(SizeConfig.padding12),
+                              child: SvgPicture.asset(
+                                Assets.bankLogo,
+                                width: SizeConfig.padding70,
+                              ),
+                            ),
                             onPressed: () {
                               AppState.backButtonDispatcher!.didPopRoute();
                               AppState.delegate!

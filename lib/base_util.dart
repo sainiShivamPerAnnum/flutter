@@ -589,7 +589,7 @@ class BaseUtil extends ChangeNotifier {
     d.log("Current Stack: ${AppState.screenStack}");
     Haptic.vibrate();
     await showDialog(
-      barrierColor: barrierColor,
+      barrierColor: barrierColor ?? Colors.black.withOpacity(0.7),
       context: AppState.delegate!.navigatorKey.currentContext!,
       barrierDismissible: isBarrierDismissible,
       builder: (ctx) => content!,

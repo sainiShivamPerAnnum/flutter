@@ -37,7 +37,6 @@ import 'package:felloapp/ui/elements/bottom_nav_bar/quick_save_modal_sheet.dart'
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -133,10 +132,10 @@ class RootViewModel extends BaseViewModel {
         await checkForBootUpAlerts();
         await showLastWeekOverview();
 
-        if (AppState.isFirstTime) {
-          Future.delayed(const Duration(seconds: 1),
-              SpotLightController.instance.showTourDialog);
-        }
+        // if (AppState.isFirstTime) {
+        //   Future.delayed(const Duration(seconds: 1),
+        //       SpotLightController.instance.showTourDialog);
+        // }
         await Future.wait([
           _referralService.verifyReferral(),
           _referralService.initDynamicLinks(),
@@ -193,7 +192,7 @@ class RootViewModel extends BaseViewModel {
         return FileType.svg;
       case "json":
       case "lottie":
-      return FileType.lottie;
+        return FileType.lottie;
       case "png":
       case "jpeg":
       case "webp":
@@ -552,6 +551,3 @@ class RootViewModel extends BaseViewModel {
     }
   }
 }
-
-
-
