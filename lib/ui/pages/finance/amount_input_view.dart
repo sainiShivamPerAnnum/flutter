@@ -246,13 +246,13 @@ class _AmountInputViewState extends State<AmountInputView> {
                     ],
                   ),
                 ),
-              if (currentAmt >= widget.maxAmount)
+              if (widget.model?.showMaxCapText)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Text(
                     widget.maxAmountMsg,
                     style: TextStyles.sourceSans.body4.bold
-                        .colour(Colors.red[400]),
+                        .colour(UiConstants.primaryColor),
                   ),
                 ),
               if (currentAmt < widget.minAmount)

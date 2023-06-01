@@ -76,6 +76,8 @@ class LendboxBuyViewModel extends BaseViewModel {
   double _fieldWidth = 0.0;
   bool _forcedBuy = false;
   String maturityPref = "NA";
+  bool _showMaxCapText = false;
+  bool _showMinCapText = false;
 
   ///  ---------- getter and setter ------------
 
@@ -158,6 +160,20 @@ class LendboxBuyViewModel extends BaseViewModel {
   set forcedBuy(bool value) {
     _forcedBuy = value;
     log("forcedBuy $value");
+    notifyListeners();
+  }
+
+  get showMaxCapText => _showMaxCapText;
+
+  set showMaxCapText(value) {
+    _showMaxCapText = value;
+    notifyListeners();
+  }
+
+  get showMinCapText => _showMinCapText;
+
+  set showMinCapText(value) {
+    _showMinCapText = value;
     notifyListeners();
   }
 
@@ -424,16 +440,16 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   onValueChanged(String val) {
+    if (showMaxCapText) showMaxCapText = false;
+    if (showMinCapText) showMinCapText = false;
     if (val != null && val.isNotEmpty) {
       if (int.tryParse(val.trim())! > 50000) {
         buyAmount = 50000;
+        showMaxCapText = true;
         amountController!.text = buyAmount!.toInt().toString();
-
-        // amountController!.selection = TextSelection.fromPosition(
-        //     TextPosition(offset: amountController!.text.length));
       } else {
         buyAmount = int.tryParse(val);
-        // if ((buyAmount ?? 0.0) < 10.0) showMinCapText = true;
+        if ((buyAmount ?? 0.0) < 10.0) showMinCapText = true;
         for (int i = 0; i < assetOptionsModel!.data.userOptions.length; i++) {
           if (buyAmount == assetOptionsModel!.data.userOptions[i].value) {
             lastTappedChipIndex = i;
