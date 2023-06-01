@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
@@ -421,12 +420,15 @@ class InvestmentForeseenWidget extends StatelessWidget {
 
     double principal = double.tryParse(amount) ?? 0.0;
     double rateOfInterest = interest / 100.0;
-    int timeInMonths = 6;
+    int timeInMonths = assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 2 : 4;
 
-    double amountAfter6Months =
-        principal * pow(1 + rateOfInterest / 12, timeInMonths);
+    // 0.12 / 365 * amt * (365 / 2)
+    //0.10 / 365 * amt * (365 / 4)
 
-    return amountAfter6Months.toStringAsFixed(2);
+    double amountAfterMonths =
+        rateOfInterest / 365 * principal * (365 / timeInMonths);
+
+    return (principal + amountAfterMonths).toStringAsFixed(2);
   }
 
   @override
@@ -479,7 +481,7 @@ class InvestmentForeseenWidget extends StatelessWidget {
                 style: TextStyles.rajdhaniSB.body3,
               ),
               Text(
-                "₹${calculateAmountAfter6Months(amount)}*",
+                "₹${calculateAmountAfter6Months(amount)}",
                 style: TextStyles.sourceSansB.title5,
               )
             ],
@@ -496,9 +498,11 @@ class MaturityPrefModalSheet extends StatefulWidget {
       required this.amount,
       required this.assetType,
       required this.txnId});
+
   final String amount;
   final String assetType;
   final String txnId;
+
   @override
   State<MaturityPrefModalSheet> createState() => _MaturityPrefModalSheetState();
 }
