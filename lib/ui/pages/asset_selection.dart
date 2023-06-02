@@ -238,7 +238,7 @@ class GoldPlanWidget extends StatelessWidget {
     }, builder: (ctx, model, child) {
       return GestureDetector(
         onTap: () {
-          AppState.backButtonDispatcher?.didPopRoute();
+          // AppState.backButtonDispatcher?.didPopRoute();
           BaseUtil().openRechargeModalSheet(
               investmentType: InvestmentType.AUGGOLD99,
               amt: amount,

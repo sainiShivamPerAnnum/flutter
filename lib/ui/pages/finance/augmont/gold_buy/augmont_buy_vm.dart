@@ -742,6 +742,7 @@ class GoldBuyViewModel extends BaseViewModel {
         num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
 
     if (parsedGoldAmount < tambolaCost) {
+      totalTickets = 0;
       showInfoIcon = false;
       return "";
     }
