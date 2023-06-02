@@ -11,6 +11,7 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_modal_sheet.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -54,10 +56,11 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool _isBuyInProgress = false;
 
   TextEditingController? amountController;
-  TextEditingController? vpaController;
 
-  final double minAmount = 100;
-  final double maxAmount = 50000;
+  // TextEditingController? vpaController;
+
+  double minAmount = 100;
+  double maxAmount = 50000;
   AssetOptionsModel? assetOptionsModel;
   List<CouponModel>? _couponList;
   int? numberOfTambolaTickets;
@@ -76,6 +79,12 @@ class LendboxBuyViewModel extends BaseViewModel {
   double _fieldWidth = 0.0;
   bool _forcedBuy = false;
   String maturityPref = "NA";
+  bool _showMaxCapText = false;
+  bool _showMinCapText = false;
+  String? couponCode;
+  bool isSpecialCoupon = true;
+  bool showCouponAppliedText = false;
+  bool _addSpecialCoupon = false;
 
   ///  ---------- getter and setter ------------
 
@@ -161,6 +170,27 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  get showMaxCapText => _showMaxCapText;
+
+  set showMaxCapText(value) {
+    _showMaxCapText = value;
+    notifyListeners();
+  }
+
+  get showMinCapText => _showMinCapText;
+
+  set showMinCapText(value) {
+    _showMinCapText = value;
+    notifyListeners();
+  }
+
+  get addSpecialCoupon => _addSpecialCoupon;
+
+  set addSpecialCoupon(value) {
+    _addSpecialCoupon = value;
+    notifyListeners();
+  }
+
   Future<void> init(int? amount, bool isSkipMilestone,
       {required String assetTypeFlow}) async {
     setState(ViewState.Busy);
@@ -168,9 +198,14 @@ class LendboxBuyViewModel extends BaseViewModel {
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+
+    updateMinValues();
     await getAssetOptionsModel();
 
     log("isLendboxOldUser $isLendboxOldUser");
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      maxAmount = 99999;
+    }
     skipMl = isSkipMilestone;
 
     int? data = assetOptionsModel?.data.userOptions
@@ -187,9 +222,21 @@ class LendboxBuyViewModel extends BaseViewModel {
             .indexWhere((element) => element.best) ??
         1;
 
-    // getAvailableCoupons();
+    getAvailableCoupons();
 
     setState(ViewState.Idle);
+  }
+
+  void updateMinValues() {
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI) {
+      minAmount = 100;
+    }
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      minAmount = 1000;
+    }
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      minAmount = 10000;
+    }
   }
 
   resetBuyOptions() {
@@ -227,7 +274,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       _isBuyInProgress = false;
       forcedBuy = false;
       BaseUtil.showNegativeAlert(
-          locale.enterAmountGreaterThan, locale.enterAmount);
+          "Invalid Amount", "Please Enter Amount Greater than $minAmount");
       notifyListeners();
       return;
     }
@@ -273,6 +320,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   Future<int> initChecks() async {
     buyAmount = int.tryParse(amountController?.text ?? "0") ?? 0;
 
+    log("buyAmount $buyAmount && minAmount $minAmount && maxAmount $maxAmount");
     if (buyAmount == 0) {
       BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
       return 0;
@@ -294,7 +342,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       return 0;
     }
 
-    _analyticsService!.track(
+    _analyticsService.track(
         eventName: AnalyticsEvents.saveCheckout,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -332,7 +380,7 @@ class LendboxBuyViewModel extends BaseViewModel {
         await _couponRepo!.getCoupons();
     if (couponsRes.code == 200) {
       couponList = couponsRes.model;
-      if (couponList![0].priority == 1) focusCoupon = couponList![0];
+      if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       showCoupons = true;
     }
   }
@@ -352,17 +400,18 @@ class LendboxBuyViewModel extends BaseViewModel {
             ? locator<HappyHourCampign>()
             : null;
 
-    final int parsedGoldAmount =
+    final int parsedFloAmount =
         int.tryParse(amountController?.text ?? '0') ?? 0;
     final num minAmount =
         num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
 
-    if (parsedGoldAmount < tambolaCost) {
+    if (parsedFloAmount < tambolaCost) {
+      totalTickets = 0;
       showInfoIcon = false;
       return "";
     }
 
-    numberOfTambolaTickets = parsedGoldAmount ~/ tambolaCost;
+    numberOfTambolaTickets = parsedFloAmount ~/ tambolaCost;
     totalTickets = numberOfTambolaTickets;
 
     showHappyHour
@@ -372,7 +421,7 @@ class LendboxBuyViewModel extends BaseViewModel {
             : null
         : happyHourTickets = null;
 
-    if (parsedGoldAmount >= minAmount && happyHourTickets != null) {
+    if (parsedFloAmount >= minAmount && happyHourTickets != null) {
       totalTickets = numberOfTambolaTickets! + happyHourTickets!;
       showInfoIcon = true;
     } else {
@@ -408,16 +457,16 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   onValueChanged(String val) {
+    if (showMaxCapText) showMaxCapText = false;
+    if (showMinCapText) showMinCapText = false;
     if (val != null && val.isNotEmpty) {
-      if (int.tryParse(val.trim())! > 50000) {
-        buyAmount = 50000;
+      if (int.tryParse(val.trim())! > maxAmount) {
+        buyAmount = maxAmount.toInt();
+        showMaxCapText = true;
         amountController!.text = buyAmount!.toInt().toString();
-
-        // amountController!.selection = TextSelection.fromPosition(
-        //     TextPosition(offset: amountController!.text.length));
       } else {
         buyAmount = int.tryParse(val);
-        // if ((buyAmount ?? 0.0) < 10.0) showMinCapText = true;
+        if ((buyAmount ?? 0.0) < 10.0) showMinCapText = true;
         for (int i = 0; i < assetOptionsModel!.data.userOptions.length; i++) {
           if (buyAmount == assetOptionsModel!.data.userOptions[i].value) {
             lastTappedChipIndex = i;
@@ -432,6 +481,22 @@ class LendboxBuyViewModel extends BaseViewModel {
     updateFieldWidth();
 
     appliedCoupon = null;
+  }
+
+  String calculateAmountAfter6Months(String amount) {
+    int interest = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
+
+    double principal = double.tryParse(amount) ?? 0.0;
+    double rateOfInterest = interest / 100.0;
+    int timeInMonths = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 2 : 4;
+
+    // 0.12 / 365 * amt * (365 / 2)
+    //0.10 / 365 * amt * (365 / 4)
+
+    double amountAfterMonths =
+        rateOfInterest / 365 * principal * (365 / timeInMonths);
+
+    return (principal + amountAfterMonths).toStringAsFixed(2);
   }
 
   void openReinvestBottomSheet() {
@@ -451,6 +516,115 @@ class LendboxBuyViewModel extends BaseViewModel {
       hapticVibrate: true,
       isScrollControlled: true,
     );
+  }
+
+  void showOfferModal(LendboxBuyViewModel? model) {
+    BaseUtil.openModalBottomSheet(
+      content: FloCouponModalSheet(model: model),
+      addToScreenStack: true,
+      backgroundColor: UiConstants.kSecondaryBackgroundColor,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness12),
+        topRight: Radius.circular(SizeConfig.roundness12),
+      ),
+      boxContraints: BoxConstraints(
+        maxHeight: SizeConfig.screenHeight! * 0.75,
+        minHeight: SizeConfig.screenHeight! * 0.75,
+      ),
+      isBarrierDismissible: false,
+      isScrollControlled: true,
+    );
+  }
+
+  Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
+    if (couponApplyInProgress || isBuyInProgress) return;
+
+    int order = -1;
+    int? minTransaction = -1;
+    int counter = 0;
+    isSpecialCoupon = true;
+    for (final CouponModel c in couponList!) {
+      if (c.code == couponCode) {
+        order = counter;
+        isSpecialCoupon = false;
+        minTransaction = c.minPurchase;
+        break;
+      }
+      counter++;
+    }
+
+    buyFieldNode.unfocus();
+    this.couponCode = couponCode;
+    couponApplyInProgress = true;
+
+    ApiResponse<EligibleCouponResponseModel> response =
+        await _couponRepo!.getEligibleCoupon(
+      uid: locator<UserService>().baseUser!.uid,
+      amount: buyAmount!.toInt(),
+      couponcode: couponCode,
+    );
+
+    couponApplyInProgress = false;
+    this.couponCode = null;
+    if (response.code == 200) {
+      if (response.model!.flag == true) {
+        if (response.model!.minAmountRequired != null &&
+            response.model!.minAmountRequired.toString().isNotEmpty &&
+            response.model!.minAmountRequired != 0) {
+          amountController!.text =
+              response.model!.minAmountRequired!.toInt().toString();
+          buyAmount = response.model!.minAmountRequired?.toInt();
+          // updateGoldAmount();
+          showMaxCapText = false;
+          showMinCapText = false;
+        }
+        checkForSpecialCoupon(response.model!);
+
+        appliedCoupon = response.model;
+
+        BaseUtil.showPositiveAlert(
+            locale.couponAppliedSucc, response.model?.message);
+      } else {
+        BaseUtil.showNegativeAlert(
+            locale.couponCannotBeApplied, response.model?.message);
+      }
+    } else if (response.code == 400) {
+      BaseUtil.showNegativeAlert(locale.couponNotApplied,
+          response.errorMessage ?? locale.anotherCoupon);
+    } else {
+      BaseUtil.showNegativeAlert(locale.couponNotApplied, locale.anotherCoupon);
+    }
+    _analyticsService!
+        .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
+      "Manual Code entry": isManuallyTyped,
+      "Order of coupon in list": order == -1 ? "Not in list" : order.toString(),
+      "Coupon Name": couponCode,
+      "Error message": response.code == 400 ? response?.model?.message : "",
+      "Asset": "Flo - $floAssetType",
+      "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
+    });
+  }
+
+  void checkForSpecialCoupon(EligibleCouponResponseModel model) {
+    if (couponList!.firstWhere((coupon) => coupon.code == model.code,
+            orElse: CouponModel.none) ==
+        CouponModel.none()) {
+      showCoupons = false;
+      couponList!.insert(
+          0,
+          CouponModel(
+              code: model.code,
+              createdOn: TimestampModel.currentTimeStamp(),
+              description: model.message,
+              expiresOn: TimestampModel.currentTimeStamp(),
+              highlight: '',
+              maxUse: 0,
+              minPurchase: model.minAmountRequired?.toInt(),
+              priority: 0,
+              id: ''));
+      addSpecialCoupon = true;
+      showCoupons = true;
+    }
   }
 
   void updateFieldWidth() {

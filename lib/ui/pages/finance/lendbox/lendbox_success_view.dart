@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
@@ -19,8 +21,8 @@ import 'package:lottie/lottie.dart';
 
 class LendboxSuccessView extends StatelessWidget {
   final TransactionType transactionType;
-  final LendboxTransactionService? _txnService =
-      locator<LendboxTransactionService>();
+  final LendboxTransactionService _txnService =
+  locator<LendboxTransactionService>();
 
   LendboxSuccessView({Key? key, required this.transactionType})
       : super(key: key);
@@ -51,9 +53,9 @@ class LendboxSuccessView extends StatelessWidget {
                       AppState.isRepeated = true;
                       AppState.unblockNavigation();
                       AppState.backButtonDispatcher!.didPopRoute();
-                      this.showGtIfAvailable();
+                      showGtIfAvailable();
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.close,
                       color: Colors.white,
                     ),
@@ -121,7 +123,7 @@ class LendboxSuccessView extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding12),
             if (_txnService?.transactionReponseModel?.data?.txnDisplayMsg
-                    ?.isNotEmpty ??
+                ?.isNotEmpty ??
                 false)
               SizedBox(
                 width: SizeConfig.screenWidth! * 0.8,
@@ -206,11 +208,11 @@ class LendboxSuccessView extends StatelessWidget {
                               children: [
                                 Text(
                                   _txnService
-                                              ?.transactionReponseModel
-                                              ?.data
-                                              ?.floDepositDetails
-                                              ?.maturityDate !=
-                                          null
+                                      ?.transactionReponseModel
+                                      ?.data
+                                      ?.floDepositDetails
+                                      ?.maturityDate !=
+                                      null
                                       ? "Return %"
                                       : locale.totalBalance,
                                   style: TextStyles.sourceSans.body2
@@ -218,21 +220,21 @@ class LendboxSuccessView extends StatelessWidget {
                                 ),
                                 SizedBox(height: SizeConfig.padding16),
                                 _txnService?.transactionReponseModel?.data
-                                            ?.floDepositDetails?.maturityDate !=
-                                        null
+                                    ?.floDepositDetails?.maturityDate !=
+                                    null
                                     ? Text(
-                                        getFundType(_txnService
-                                            ?.transactionReponseModel
-                                            ?.data
-                                            ?.floDepositDetails
-                                            ?.fundType),
-                                        style: TextStyles.rajdhaniB.title3,
-                                      )
+                                  getFundType(_txnService
+                                      ?.transactionReponseModel
+                                      ?.data
+                                      ?.floDepositDetails
+                                      ?.fundType),
+                                  style: TextStyles.rajdhaniB.title3,
+                                )
                                     : UserFundQuantitySE(
-                                        style: TextStyles.rajdhaniB.title3,
-                                        investmentType:
-                                            InvestmentType.LENDBOXP2P,
-                                      ),
+                                  style: TextStyles.rajdhaniB.title3,
+                                  investmentType:
+                                  InvestmentType.LENDBOXP2P,
+                                ),
                                 SizedBox(
                                   height: SizeConfig.padding12,
                                 ),
@@ -244,7 +246,7 @@ class LendboxSuccessView extends StatelessWidget {
                     ),
                   ),
                   if (_txnService?.transactionReponseModel?.data
-                          ?.floDepositDetails?.maturityDate !=
+                      ?.floDepositDetails?.maturityDate !=
                       null)
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -252,14 +254,14 @@ class LendboxSuccessView extends StatelessWidget {
                           vertical: SizeConfig.padding6),
                       child: Text(
                         _txnService?.transactionReponseModel?.data
-                                ?.floDepositDetails?.maturityDate ??
+                            ?.floDepositDetails?.maturityDate ??
                             "",
                         style: TextStyles.sourceSans.body2
                             .colour(UiConstants.kFAQsAnswerColor),
                       ),
                     ),
                   if (_txnService?.transactionReponseModel?.data
-                          ?.floDepositDetails?.maturityString !=
+                      ?.floDepositDetails?.maturityString !=
                       null)
                     Container(
                       width: SizeConfig.screenWidth,
@@ -269,15 +271,15 @@ class LendboxSuccessView extends StatelessWidget {
                           color: UiConstants.kBackgroundColor,
                           borderRadius: BorderRadius.only(
                               bottomLeft:
-                                  Radius.circular(SizeConfig.roundness12),
+                              Radius.circular(SizeConfig.roundness12),
                               bottomRight:
-                                  Radius.circular(SizeConfig.roundness12))),
+                              Radius.circular(SizeConfig.roundness12))),
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.pageHorizontalMargins,
                           vertical: SizeConfig.padding6),
                       child: Text(
                         _txnService?.transactionReponseModel?.data
-                                ?.floDepositDetails?.maturityString ??
+                            ?.floDepositDetails?.maturityString ??
                             "",
                         style: TextStyles.sourceSans.body2.colour(Colors.white),
                       ),
@@ -324,20 +326,28 @@ class LendboxSuccessView extends StatelessWidget {
             const AutopaySetupWidget(),
             SizedBox(height: SizeConfig.padding20),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 AppState.isRepeated = true;
                 AppState.unblockNavigation();
 
-                AppState.backButtonDispatcher!.didPopRoute();
+                log("Current Configuration: ${AppState.delegate!.currentConfiguration!.key} ||  screenStack.last ${AppState.screenStack.last}");
+
+                while (AppState.screenStack.length > 1) {
+                  await AppState.backButtonDispatcher!.didPopRoute();
+                }
+
+                // if (AppState.delegate!.currentConfiguration!.key ==
+                //         'AssetSelectionViewPath' ||
+                //     AppState.screenStack.last == ScreenItem.dialog) {
+                //   AppState.backButtonDispatcher!.didPopRoute();
+                // }
+
                 AppState.delegate!.appState.setCurrentTabIndex = DynamicUiUtils
                     .navBar
                     .indexWhere((element) => element == 'SV');
 
-                final _tambolaService = locator<TambolaService>();
-                // _tambolaService.weeklyTicksFetched = false;
-                _tambolaService.getBestTambolaTickets();
-
-                this.showGtIfAvailable();
+                locator<TambolaService>().getBestTambolaTickets();
+                showGtIfAvailable();
               },
               child: Text(
                 PowerPlayService.powerPlayDepositFlow

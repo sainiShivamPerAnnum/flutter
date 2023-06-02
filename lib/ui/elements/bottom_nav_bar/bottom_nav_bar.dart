@@ -111,7 +111,7 @@ class NavBarIcon extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: SizeConfig.navBarHeight * 0.42,
+          height: SizeConfig.navBarHeight * 0.43,
           width: SizeConfig.navBarHeight * 0.42,
           child: Lottie.asset(
             item.lottie,

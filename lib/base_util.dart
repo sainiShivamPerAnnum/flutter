@@ -327,9 +327,9 @@ class BaseUtil extends ChangeNotifier {
     bool? isSkipMl,
     required InvestmentType investmentType,
   }) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // if (_userService!.userJourneyStats?.mlIndex == 1)
-      //   return BaseUtil.openDialog(
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    // if (_userService!.userJourneyStats?.mlIndex == 1)
+    //   return BaseUtil.openDialog(
       //     addToScreenStack: true,
       //     isBarrierDismissible: true,
       //     hapticVibrate: false,
@@ -362,7 +362,7 @@ class BaseUtil extends ChangeNotifier {
 
       if (investmentType == InvestmentType.LENDBOXP2P) {
         AppState.delegate!.appState.currentAction = PageAction(
-          page: LendboxBuyViewConfig,
+          page: AssetSelectionViewConfig,
           state: PageState.addWidget,
           widget: AssetSelectionPage(
             showOnlyFlo: true,
@@ -390,15 +390,15 @@ class BaseUtil extends ChangeNotifier {
       AppState.isRepeated = false;
       AppState.onTap = null;
       locator<BackButtonActions>().isTransactionCancelled = false;
-    });
+    // });
   }
 
   static void openFloBuySheet(
       {int? amt, bool? isSkipMl, required String floAssetType}) {
     final UserService _userService = locator<UserService>();
     final S locale = locator<S>();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final bool? islBoxDepositBanned = _userService
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    final bool? islBoxDepositBanned = _userService
           .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
       final String? lBoxDepositBanNotice = _userService
           .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
@@ -443,8 +443,8 @@ class BaseUtil extends ChangeNotifier {
       //   AppState.isRepeated = false;
       //   AppState.onTap = null;
       //   locator<BackButtonActions>().isTransactionCancelled = false;
-      // });
-    });
+    // });
+    // });
   }
 
   static String getMaturityPref(String maturityEnum) {
@@ -526,29 +526,33 @@ class BaseUtil extends ChangeNotifier {
     Future.delayed(
       Duration(milliseconds: timer),
       () {
+        return AppState.delegate!.appState.currentAction = PageAction(
+          page: AssetSelectionViewConfig,
+          state: PageState.addWidget,
+          widget: AssetSelectionPage(
+            showOnlyFlo: false,
+            amount: amount,
+            isSkipMl: isSkipMl,
+          ),
+        );
+
         return openModalBottomSheet(
-            addToScreenStack: true,
-            hapticVibrate: true,
-            backgroundColor:
-                UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-            isBarrierDismissible: true,
-            isScrollControlled: true,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(SizeConfig.roundness12),
-                topRight: Radius.circular(SizeConfig.roundness24)),
-            content: AssetSelectionPage(
-              showOnlyFlo: false,
-              amount: amount,
-              isSkipMl: isSkipMl,
-              isFromGlobal: true,
-            )
-            // content: DepositOptionModalSheet(
-            //   amount: amount,
-            //   isSkipMl: isSkipMl,
-            //   title: title,
-            //   subtitle: subtitle,
-            // ),
-            );
+          addToScreenStack: true,
+          hapticVibrate: true,
+          backgroundColor:
+              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+          isBarrierDismissible: false,
+          isScrollControlled: true,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.roundness12),
+              topRight: Radius.circular(SizeConfig.roundness24)),
+          content: AssetSelectionPage(
+            showOnlyFlo: false,
+            amount: amount,
+            isSkipMl: isSkipMl,
+            isFromGlobal: true,
+          ),
+        );
       },
     );
   }

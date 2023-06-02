@@ -90,82 +90,84 @@ class ViewBreakdown extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding24,
           ),
-          Container(
-            height: 1,
-            color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-          ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
-          Row(
-            children: [
-              SizedBox(
-                height: SizeConfig.padding28,
-                width: SizeConfig.padding28,
-                child: SvgPicture.asset(
-                  Assets.howToPlayAsset1Tambola,
-                  fit: BoxFit.contain,
+          if ((model.totalTickets ?? 0) > 0) ...[
+            Container(
+              height: 1,
+              color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  height: SizeConfig.padding28,
+                  width: SizeConfig.padding28,
+                  child: SvgPicture.asset(
+                    Assets.howToPlayAsset1Tambola,
+                    fit: BoxFit.contain,
+                  ),
                 ),
+                SizedBox(
+                  width: SizeConfig.padding4,
+                ),
+                Text(
+                  "Total Tambola Tickets",
+                  style: TextStyles.sourceSansSB.body1,
+                ),
+                const Spacer(),
+                Text(
+                  "${model.totalTickets}",
+                  style: TextStyles.sourceSansSB.body1,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            if (model.showHappyHour) ...[
+              Row(
+                children: [
+                  Text(
+                    "Happy Hour Tambola Tickets",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                  const Spacer(),
+                  Text(
+                    "${model.happyHourTickets}",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                ],
               ),
               SizedBox(
-                width: SizeConfig.padding4,
+                height: SizeConfig.padding24,
               ),
-              Text(
-                "Total Tambola Tickets",
-                style: TextStyles.sourceSansSB.body1,
+              Row(
+                children: [
+                  Text(
+                    "Lifetime Tambola Tickets",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                  const Spacer(),
+                  Text(
+                    "${model.numberOfTambolaTickets}",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                ],
               ),
-              const Spacer(),
-              Text(
-                "${model.totalTickets}",
-                style: TextStyles.sourceSansSB.body1,
+              SizedBox(
+                height: SizeConfig.padding24,
               ),
             ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
-          if (model.showHappyHour) ...[
-            Row(
-              children: [
-                Text(
-                  "Happy Hour Tambola Tickets",
-                  style: TextStyles.sourceSans.body2,
-                ),
-                const Spacer(),
-                Text(
-                  "${model.happyHourTickets}",
-                  style: TextStyles.sourceSans.body2,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            Row(
-              children: [
-                Text(
-                  "Lifetime Tambola Tickets",
-                  style: TextStyles.sourceSans.body2,
-                ),
-                const Spacer(),
-                Text(
-                  "${model.numberOfTambolaTickets}",
-                  style: TextStyles.sourceSans.body2,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
           ],
-          Container(
-            height: 1,
-            color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-          ),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
           if (model.appliedCoupon != null) ...[
+            Container(
+              height: 1,
+              color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+            ),
+            SizedBox(
+              height: SizeConfig.padding12,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

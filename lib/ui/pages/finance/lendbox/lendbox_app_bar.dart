@@ -20,9 +20,9 @@ class LendBoxAppBar extends StatelessWidget {
 
   String getTitle() {
     if (assetType == Constants.ASSET_TYPE_FLO_FELXI && isOldUser) {
-      return 'Fello Flo Premium - 10%';
+      return 'Fello Flo Basic - 10%';
     } else if (assetType == Constants.ASSET_TYPE_FLO_FELXI && !isOldUser) {
-      return 'Fello Flo Premium - 8%';
+      return 'Fello Flo Basic - 8%';
     }
 
     if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {

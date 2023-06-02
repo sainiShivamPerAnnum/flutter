@@ -4,7 +4,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 
 class DefaultQuickSaveModalSheet extends StatelessWidget {
   const DefaultQuickSaveModalSheet({Key? key}) : super(key: key);
@@ -66,16 +65,16 @@ class DefaultQuickSaveModalSheet extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: SizeConfig.padding38,
-                        child: Lottie.asset(
-                          'assets/lotties/nav/journey.json',
-                          fit: BoxFit.contain,
-                          width: SizeConfig.padding54,
-                        ),
-                        // child: SvgPicture.asset(
-                        //   'assets/svg/digitalgold.svg',
+                        // child: Lottie.asset(
+                        //   'assets/lotties/nav/journey.json',
                         //   fit: BoxFit.contain,
                         //   width: SizeConfig.padding54,
                         // ),
+                        child: SvgPicture.asset(
+                          'assets/svg/digitalgold.svg',
+                          fit: BoxFit.contain,
+                          width: SizeConfig.padding54,
+                        ),
                       ),
                       SizedBox(width: SizeConfig.padding32),
                       // const Spacer(),
