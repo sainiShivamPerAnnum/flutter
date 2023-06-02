@@ -30,6 +30,7 @@ class Save extends StatelessWidget {
       value: locator<BankAndPanService>(),
       child: BaseView<SaveViewModel>(
         onModelReady: (model) => model.init(),
+        onModelDispose: (model) => model.dump(),
         builder: (ctx, model, child) {
           log("ROOT: Save view baseview build called");
           return ShowCaseWidget(
@@ -63,7 +64,7 @@ class SaveViewWrapper extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: const [UserServiceProperties.mySegments],
       builder: (_, prop, ___) {
-        return (prop!.userSegments.contains("NEW_USER"))
+        return (!prop!.userSegments.contains("NEW_USER"))
             ? Stack(
                 children: [
                   SingleChildScrollView(
