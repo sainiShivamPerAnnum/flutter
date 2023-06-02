@@ -728,10 +728,21 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                           .colour(Colors.white),
                                                     ),
                                                   )
-                                                : SvgPicture.asset(
-                                                    Assets.chevRonRightArrow,
-                                                    color: Colors.white,
-                                                    width: SizeConfig.padding32,
+                                                : GestureDetector(
+                                                    onTap: () {
+                                                      if (!cardActions
+                                                          .isHorizontalView) {
+                                                        cardActions
+                                                                .isHorizontalView =
+                                                            true;
+                                                      }
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      Assets.chevRonRightArrow,
+                                                      color: Colors.white,
+                                                      width:
+                                                          SizeConfig.padding32,
+                                                    ),
                                                   )
                                           ],
                                         ),

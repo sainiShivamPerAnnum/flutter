@@ -525,11 +525,12 @@ class InvestmentForeseenWidget extends StatelessWidget {
 }
 
 class MaturityPrefModalSheet extends StatefulWidget {
-  const MaturityPrefModalSheet(
-      {super.key,
-      required this.amount,
-      required this.assetType,
-      required this.txnId});
+  const MaturityPrefModalSheet({
+    super.key,
+    required this.amount,
+    required this.assetType,
+    required this.txnId,
+  });
 
   final String amount;
   final String assetType;
@@ -543,7 +544,6 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
   String maturityPref = "NA";
   int _selectedOption = -1;
   bool _isLoading = false;
-  String? maturityAmount;
 
   bool get isLoading => _isLoading;
 
@@ -580,9 +580,9 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
                     .userSegments
                     .contains(Constants.US_FLO_OLD),
                 onChanged: (value) {
-                  setState(() {
-                    maturityAmount = value.toStringAsFixed(2);
-                  });
+                  // setState(() {
+                  //   maturityAmount = value.toStringAsFixed(2);
+                  // });
                 }),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
@@ -633,7 +633,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
             OptionContainer(
               optionIndex: 1,
               title:
-                  'Re-invest ₹$maturityAmount in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
+                  'Re-invest ₹${widget.amount} in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
               description: subtitle,
               isSelected: selectedOption == 1,
               onTap: () {
@@ -644,7 +644,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
             OptionContainer(
               optionIndex: 2,
               title:
-                  "Move ₹$maturityAmount to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
+                  "Move ₹${widget.amount} to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
               description: subtitle,
               isSelected: selectedOption == 2,
               onTap: () {

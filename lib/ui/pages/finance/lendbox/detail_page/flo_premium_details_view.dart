@@ -76,6 +76,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
           backgroundColor: Colors.black,
           onRefresh: () async {
             // await state.refreshTransactions(widget.type);
+            await model.getTransactions();
           },
           child: Scaffold(
             backgroundColor: Colors.black,
