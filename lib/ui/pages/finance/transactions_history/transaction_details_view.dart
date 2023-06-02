@@ -388,8 +388,10 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                             ),
                             Row(
                               children: [
-                                widget.txn.augmnt != null &&
-                                        widget.txn.augmnt!["aBlockId"] == null
+                                (widget.txn.subType !=
+                                            Constants.ASSET_TYPE_LENDBOX &&
+                                        widget.txn.subType !=
+                                            Constants.ASSET_TYPE_AUGMONT)
                                     ? const SizedBox()
                                     : Expanded(
                                         child: Container(

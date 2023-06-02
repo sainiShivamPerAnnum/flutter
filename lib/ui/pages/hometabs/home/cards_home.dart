@@ -1214,7 +1214,7 @@ class CardContent extends StatelessWidget {
       case "Fello Flo":
         return "₹${BaseUtil.digitPrecision(portfolio?.flo.balance ?? 0.0, 2)}";
       case "Digital Gold":
-        return "₹${BaseUtil.digitPrecision(wallet?.augGoldBalance ?? 0, 2)}";
+        return "₹${BaseUtil.digitPrecision(portfolio?.gold.balance ?? 0, 2)}";
       case "Fello Rewards":
         return "₹${wallet?.unclaimedBalance ?? 0}";
       default:
