@@ -63,7 +63,7 @@ class SaveViewWrapper extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
       properties: const [UserServiceProperties.mySegments],
       builder: (_, prop, ___) {
-        return (prop!.userSegments.contains("NEW_USER"))
+        return (!prop!.userSegments.contains("NEW_USER"))
             ? Stack(
                 children: [
                   SingleChildScrollView(
