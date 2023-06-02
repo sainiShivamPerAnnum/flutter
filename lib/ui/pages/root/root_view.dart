@@ -91,7 +91,7 @@ class Root extends StatelessWidget {
                           : const SizedBox(),
                     );
                   }),
-              bottomNavigationBar: const BottomNavBar(),
+              bottomNavigationBar: const SafeArea(child: BottomNavBar()),
             ),
             const CircularAnim(),
           ],
