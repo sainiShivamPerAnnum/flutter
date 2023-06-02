@@ -470,7 +470,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         SupportPageConfig.currentPageAction = action;
         break;
 
-        break;
       case Pages.YourFunds:
         YourFundsConfig.currentPageAction = action;
         break;
@@ -642,6 +641,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.PlayView:
         PlayViewConfig.currentPageAction = action;
+        break;
+      case Pages.AssetSelectionView:
+        AssetSelectionViewConfig.currentPageAction = action;
+        break;
+      case Pages.LendboxBuyView:
+        LendboxBuyViewConfig.currentPageAction = action;
         break;
       default:
         break;

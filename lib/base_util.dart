@@ -362,7 +362,7 @@ class BaseUtil extends ChangeNotifier {
 
       if (investmentType == InvestmentType.LENDBOXP2P) {
         AppState.delegate!.appState.currentAction = PageAction(
-          page: LendboxBuyViewConfig,
+          page: AssetSelectionViewConfig,
           state: PageState.addWidget,
           widget: AssetSelectionPage(
             showOnlyFlo: true,
@@ -527,28 +527,22 @@ class BaseUtil extends ChangeNotifier {
       Duration(milliseconds: timer),
       () {
         return openModalBottomSheet(
-            addToScreenStack: true,
-            hapticVibrate: true,
-            backgroundColor:
-                UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-            isBarrierDismissible: true,
-            isScrollControlled: true,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(SizeConfig.roundness12),
-                topRight: Radius.circular(SizeConfig.roundness24)),
-            content: AssetSelectionPage(
-              showOnlyFlo: false,
-              amount: amount,
-              isSkipMl: isSkipMl,
-              isFromGlobal: true,
-            )
-            // content: DepositOptionModalSheet(
-            //   amount: amount,
-            //   isSkipMl: isSkipMl,
-            //   title: title,
-            //   subtitle: subtitle,
-            // ),
-            );
+          addToScreenStack: true,
+          hapticVibrate: true,
+          backgroundColor:
+              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+          isBarrierDismissible: true,
+          isScrollControlled: true,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.roundness12),
+              topRight: Radius.circular(SizeConfig.roundness24)),
+          content: AssetSelectionPage(
+            showOnlyFlo: false,
+            amount: amount,
+            isSkipMl: isSkipMl,
+            isFromGlobal: true,
+          ),
+        );
       },
     );
   }
