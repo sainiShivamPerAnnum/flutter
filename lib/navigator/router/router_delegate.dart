@@ -142,9 +142,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (canPop()) {
       _removePage(_pages.last as MaterialPage<dynamic>);
       debugPrint("Current Stack: ${AppState.screenStack}");
-      if (AppState.screenStack.length == 1) {
-        _journeyService!.checkForMilestoneLevelChange();
-      }
+      // if (AppState.screenStack.length == 1) {
+      //   _journeyService!.checkForMilestoneLevelChange();
+      // }
       notifyListeners();
 
       return Future.value(true);

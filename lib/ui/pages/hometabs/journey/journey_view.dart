@@ -3,9 +3,8 @@ import 'dart:developer';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/journey_appbar/journey_appbar_view.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/avatar.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/focus_ring.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/help_fab.dart';
@@ -20,14 +19,19 @@ import 'package:felloapp/ui/pages/hometabs/journey/elements/level_up_animation.d
 import 'package:felloapp/ui/pages/hometabs/journey/elements/unscratched_gt_tooltips.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../navigator/app_state.dart';
 
 class JourneyView extends StatefulWidget {
   const JourneyView({super.key});
@@ -100,8 +104,77 @@ class _JourneyViewState extends State<JourneyView>
                           ),
                           if (DynamicUiUtils.helpFab.actionUri.isNotEmpty)
                             const HelpFab(),
-                          const JourneyAppBar(),
-                          const JourneyBannersView(),
+                          // const JourneyAppBar(),
+                          // const JourneyBannersView(),
+                          Positioned(
+                            top: 0,
+                            child: SizedBox(
+                              width: SizeConfig.screenWidth,
+                              height: SizeConfig.fToolBarHeight,
+                              child: AppBar(
+                                backgroundColor: UiConstants.kBackgroundColor,
+                                leading: IconButton(
+                                  onPressed: () {
+                                    AppState.backButtonDispatcher!
+                                        .didPopRoute();
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_back_ios_new_rounded,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                centerTitle: false,
+                                title: Text(
+                                  "Journey",
+                                  style: TextStyles.rajdhaniSB.title4,
+                                ),
+                                actions: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: UiConstants.primaryColor,
+                                            width: 2,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            SizeConfig.roundness12,
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: SizeConfig.padding8,
+                                          vertical: SizeConfig.padding4,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Transform.translate(
+                                              offset: Offset(
+                                                  0, -SizeConfig.padding4),
+                                              child: Lottie.asset(
+                                                Assets.navJourneyLottie,
+                                                repeat: false,
+                                                width: SizeConfig.padding32,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                width: SizeConfig.padding8),
+                                            Text(
+                                              "Level ${locator<UserService>().userJourneyStats?.level ?? 1}",
+                                              style:
+                                                  TextStyles.sourceSansSB.body1,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.pageHorizontalMargins,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                           if (model.isRefreshing || service.isRefreshing)
                             const JRefreshIndicator(),
                           JPageLoader(model: model),

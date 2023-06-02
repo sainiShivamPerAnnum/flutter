@@ -93,7 +93,7 @@ class RootViewModel extends BaseViewModel {
       locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
 
-  Future<void> refresh() async {
+  Future<void> pullToRefresh() async {
     if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
       return;
@@ -131,11 +131,6 @@ class RootViewModel extends BaseViewModel {
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
         await showLastWeekOverview();
-
-        // if (AppState.isFirstTime) {
-        //   Future.delayed(const Duration(seconds: 1),
-        //       SpotLightController.instance.showTourDialog);
-        // }
         await Future.wait([
           _referralService.verifyReferral(),
           _referralService.initDynamicLinks(),
@@ -144,7 +139,8 @@ class RootViewModel extends BaseViewModel {
         unawaited(handleStartUpNotificationData());
 
         await Future.wait([
-          _userService.checkForNewNotifications(),
+          // _userService.checkForNewNotifications(),
+          _gtService.updateUnscratchedGTCount(),
           _userService.getProfilePicture(),
           _fcmListener.refreshTopics(),
         ]);

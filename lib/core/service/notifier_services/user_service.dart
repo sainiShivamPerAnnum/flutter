@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -382,7 +383,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _firebaseUser = FirebaseAuth.instance.currentUser;
       await setBaseUser();
       if (baseUser != null) {
-        // await getUserJourneyStats();
+        unawaited(getUserJourneyStats());
         final res = await _gettersRepo.getPageConfigs();
         final QuickSaveRes = await _gettersRepo.getQuickSave();
         if (res.isSuccess()) {

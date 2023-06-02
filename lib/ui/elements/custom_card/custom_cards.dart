@@ -117,7 +117,7 @@ class SaveCustomCard extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(right: SizeConfig.padding2),
                     width: SizeConfig.screenWidth! * 0.32,
-                    height: SizeConfig.padding40,
+                    height: SizeConfig.padding32,
                     decoration: BoxDecoration(
                         color: (key == ValueKey(Constants.ASSET_TYPE_AUGMONT))
                             ? Color(0xff5567B7)
@@ -145,7 +145,7 @@ class SaveCustomCard extends StatelessWidget {
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness5)),
                     child: Text(
-                      "INVEST",
+                      "SAVE",
                       style: TextStyles.rajdhaniB.body2.colour(Colors.black),
                     ),
                   )

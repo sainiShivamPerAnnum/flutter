@@ -696,7 +696,7 @@ class ViewBreakdown extends StatelessWidget {
                   await model.initiateBuy();
                 }
               },
-              btnText: 'Invest'.toUpperCase(),
+              btnText: 'Save'.toUpperCase(),
             ),
             SizedBox(
               height: SizeConfig.padding12,

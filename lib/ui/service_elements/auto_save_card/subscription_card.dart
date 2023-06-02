@@ -20,24 +20,6 @@ class AutosaveCard extends StatelessWidget {
   final InvestmentType? investmentType;
   const AutosaveCard({super.key, this.investmentType});
 
-  bool showAutosaveCard(SubService service) {
-    if (investmentType != null) {
-      if (service.subscriptionData!.status == "PAUSE_FROM_APP_FOREVER") {
-        return false;
-      } else {
-        if (investmentType == InvestmentType.AUGGOLD99) {
-          return !((service.subscriptionData!.augAmt ?? "").isEmpty ||
-              service.subscriptionData!.augAmt == "0");
-        } else {
-          return !((service.subscriptionData!.lbAmt ?? "").isEmpty ||
-              service.subscriptionData!.lbAmt == "0");
-        }
-      }
-    } else {
-      return true;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<SubService>(

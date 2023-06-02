@@ -67,7 +67,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                         height: SizeConfig.padding28,
                       ),
                       Text(
-                        "Invest Today",
+                        "Save Today",
                         style: TextStyles.sourceSans.body3
                             .colour(UiConstants.kTextColor2),
                       ),

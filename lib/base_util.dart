@@ -410,7 +410,7 @@ class BaseUtil extends ChangeNotifier {
         );
         return;
       }
-
+      Haptic.vibrate();
       AppState.delegate!.appState.currentAction = PageAction(
         page: LendboxBuyViewConfig,
         state: PageState.addWidget,

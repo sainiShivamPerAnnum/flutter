@@ -29,13 +29,14 @@ class SaveWelcomeCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(
-            height: SizeConfig.padding20,
-          ),
+          // SizedBox(
+          //   height: SizeConfig.padding20,
+          // ),
           Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.pageHorizontalMargins),
             child: Salutation(
+              leftMargin: 0,
               textStyle: TextStyles.rajdhaniSB.title3.colour(Colors.white),
             ),
           ),
@@ -44,7 +45,7 @@ class SaveWelcomeCard extends StatelessWidget {
             style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
           ),
           SizedBox(
-            height: SizeConfig.padding14,
+            height: SizeConfig.padding10,
           ),
           Padding(
             padding: EdgeInsets.symmetric(

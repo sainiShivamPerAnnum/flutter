@@ -18,11 +18,11 @@ class TxnHistoryService extends ChangeNotifier {
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
   List<UserTransaction>? _txnList = [];
-  String? lastTxnDocId;
-  String? lastPrizeTxnDocId;
-  String? lastDepositTxnDocId;
-  String? lastWithdrawalTxnDocId;
-  String? lastRefundedTxnDocId;
+  // String? lastTxnDocId;
+  // String? lastPrizeTxnDocId;
+  // String? lastDepositTxnDocId;
+  // String? lastWithdrawalTxnDocId;
+  // String? lastRefundedTxnDocId;
   bool hasMoreTxns = true;
   bool hasMorePrizeTxns = true;
   bool hasMoreDepositTxns = true;
@@ -57,7 +57,7 @@ class TxnHistoryService extends ChangeNotifier {
       type: type,
       subtype: subtype.name,
       status: status,
-      start: getLastTxnDocType(status: status, type: type),
+      offset: txnList?.length ?? 0,
     );
 
     if (!response.isSuccess()) {
@@ -67,61 +67,54 @@ class TxnHistoryService extends ChangeNotifier {
       );
     }
     // if transaction list is empty
-    if (_txnList == null || _txnList!.length == 0) {
+    if (_txnList == null || _txnList!.isEmpty) {
       txnList = response.model!.transactions;
     } else {
       // if transaction list already have some items
       appendTxns(response.model!.transactions!);
     }
     _logger!.d("Current Transaction List length: ${_txnList!.length}");
-    // set proper lastDocument snapshot for further fetches
-    if (response.model!.transactions!.isNotEmpty) {
-      setLastTxnDocType(
-        status: status,
-        type: type,
-        lastDocId: response.model!.transactions!.last.docKey,
-      );
-    }
+
     // check and set which category has no more items to fetch
-    if (response.model!.isLastPage!) {
+    if (response.model!.transactions!.length < 30) {
       setHasMoreTxnsValue(type: type, status: status);
     }
   }
 
-  String? getLastTxnDocType({String? status, String? type}) {
-    if (status == null && type == null) return lastTxnDocId;
-    if (status != null) return lastRefundedTxnDocId;
-    if (type != null) {
-      if (type == UserTransaction.TRAN_TYPE_DEPOSIT) return lastDepositTxnDocId;
-      if (type == UserTransaction.TRAN_TYPE_PRIZE) return lastPrizeTxnDocId;
-      if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-        return lastWithdrawalTxnDocId;
-      }
-    }
-    return lastTxnDocId;
-  }
+  // String? getLastTxnDocType({String? status, String? type}) {
+  //   if (status == null && type == null) return lastTxnDocId;
+  //   if (status != null) return lastRefundedTxnDocId;
+  //   if (type != null) {
+  //     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) return lastDepositTxnDocId;
+  //     if (type == UserTransaction.TRAN_TYPE_PRIZE) return lastPrizeTxnDocId;
+  //     if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
+  //       return lastWithdrawalTxnDocId;
+  //     }
+  //   }
+  //   return lastTxnDocId;
+  // }
 
-  setLastTxnDocType({String? status, String? type, String? lastDocId}) {
-    if (status == null && type == null) {
-      lastTxnDocId = lastDocId;
-      lastRefundedTxnDocId = lastDocId;
-      lastDepositTxnDocId = lastDocId;
-      lastWithdrawalTxnDocId = lastDocId;
-      lastPrizeTxnDocId = lastDocId;
-    } else if (status != null) {
-      lastRefundedTxnDocId = lastDocId;
-    } else if (type != null) {
-      if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
-        lastDepositTxnDocId = lastDocId;
-      }
-      if (type == UserTransaction.TRAN_TYPE_PRIZE) {
-        lastPrizeTxnDocId = lastDocId;
-      }
-      if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-        lastWithdrawalTxnDocId = lastDocId;
-      }
-    }
-  }
+  // setLastTxnDocType({String? status, String? type, String? lastDocId}) {
+  //   if (status == null && type == null) {
+  //     lastTxnDocId = lastDocId;
+  //     lastRefundedTxnDocId = lastDocId;
+  //     lastDepositTxnDocId = lastDocId;
+  //     lastWithdrawalTxnDocId = lastDocId;
+  //     lastPrizeTxnDocId = lastDocId;
+  //   } else if (status != null) {
+  //     lastRefundedTxnDocId = lastDocId;
+  //   } else if (type != null) {
+  //     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
+  //       lastDepositTxnDocId = lastDocId;
+  //     }
+  //     if (type == UserTransaction.TRAN_TYPE_PRIZE) {
+  //       lastPrizeTxnDocId = lastDocId;
+  //     }
+  //     if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
+  //       lastWithdrawalTxnDocId = lastDocId;
+  //     }
+  //   }
+  // }
 
   setHasMoreTxnsValue({String? status, String? type}) {
     if (status == null && type == null) {
@@ -158,7 +151,7 @@ class TxnHistoryService extends ChangeNotifier {
   }
 
   Future<void> updateTransactions(InvestmentType investmentType) async {
-    lastTxnDocId = null;
+    // lastTxnDocId = null;
     hasMoreTxns = true;
     hasMorePrizeTxns = true;
     hasMoreDepositTxns = true;
@@ -171,7 +164,7 @@ class TxnHistoryService extends ChangeNotifier {
 
   // Clear transactions
   void signOut() {
-    lastTxnDocId = null;
+    // lastTxnDocId = null;
     hasMoreTxns = true;
     hasMorePrizeTxns = true;
     hasMoreDepositTxns = true;

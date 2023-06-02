@@ -23,6 +23,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -344,11 +345,12 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                             SizeConfig.roundness5),
                                       ),
                                       child: Text(
-                                        "INVEST",
+                                        "SAVE",
                                         style: TextStyles.rajdhaniB.body1
                                             .colour(Colors.black),
                                       ),
                                       onPressed: () {
+                                        Haptic.vibrate();
                                         BaseUtil().openRechargeModalSheet(
                                             investmentType: widget.type);
                                       }),
@@ -1262,7 +1264,7 @@ class CircularSliderState extends State<CircularSlider> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Invest Today",
+                            "Save Today",
                             style: TextStyles.sourceSans.body2.colour(
                               Color(0xffA9C6D6),
                             ),

@@ -316,109 +316,134 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Container(
-                      color: const Color(0xff232326).withOpacity(0.95),
-                      padding:
-                          EdgeInsets.symmetric(vertical: SizeConfig.padding14)
-                              .copyWith(top: 2),
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
+                    child: SafeArea(
+                      child: Container(
+                        color: UiConstants.kBackgroundColor.withOpacity(0.96),
+                        width: SizeConfig.screenWidth,
+                        height: SizeConfig.screenWidth! * 0.24,
+                        child: Stack(
+                          children: [
+                            if (model.is12)
                               SvgPicture.asset(
-                                Assets.floAsset,
-                                height: SizeConfig.screenHeight! * 0.03,
-                                width: SizeConfig.screenHeight! * 0.03,
+                                Assets.btnBg,
+                                width: SizeConfig.screenWidth,
                               ),
-                              SizedBox(
-                                height: SizeConfig.padding1,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding4),
-                                child: Text(
-                                  DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
-                                  style: TextStyles.sourceSans.body4.colour(
-                                    UiConstants.kTextColor2,
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(height: SizeConfig.padding4),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                      Assets.floAsset,
+                                      height: SizeConfig.screenHeight! * 0.03,
+                                      width: SizeConfig.screenHeight! * 0.03,
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding1,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: SizeConfig.padding4),
+                                      child: Text(
+                                        DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
+                                        style:
+                                            TextStyles.sourceSans.body4.colour(
+                                          UiConstants.kTextColor2,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding4,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          SizeConfig.pageHorizontalMargins),
+                                  width: SizeConfig.screenWidth!,
+                                  child: Row(
+                                    children: [
+                                      if (!model.is12)
+                                        Expanded(
+                                          child: OutlinedButton(
+                                              style: ButtonStyle(
+                                                  side:
+                                                      MaterialStateProperty.all(
+                                                          const BorderSide(
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 1.0,
+                                                              style: BorderStyle
+                                                                  .solid))),
+                                              child: Text(
+                                                "UPGRADE TO 12%",
+                                                style: TextStyles
+                                                    .rajdhaniSB.body2
+                                                    .colour(Colors.white),
+                                              ),
+                                              onPressed: () async {
+                                                Haptic.vibrate();
+                                                await controller
+                                                    ?.animateTo(0,
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    200),
+                                                        curve:
+                                                            Curves.decelerate)
+                                                    .then((_) {
+                                                  _animController!
+                                                      .forward()
+                                                      .then((value) {
+                                                    model
+                                                        .cleanTransactionsList();
+                                                    _animController!.reverse();
+                                                    model.is12 = true;
+
+                                                    model.getTransactions();
+                                                  });
+                                                });
+                                              }),
+                                        ),
+                                      if (!model.is12)
+                                        SizedBox(width: SizeConfig.padding12),
+                                      Expanded(
+                                        child: MaterialButton(
+                                            color: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      SizeConfig.roundness5),
+                                            ),
+                                            child: Text(
+                                              "SAVE",
+                                              style: TextStyles.rajdhaniB.body2
+                                                  .colour(Colors.black),
+                                            ),
+                                            onPressed: () {
+                                              BaseUtil.openFloBuySheet(
+                                                floAssetType: model.is12
+                                                    ? Constants
+                                                        .ASSET_TYPE_FLO_FIXED_6
+                                                    : Constants
+                                                        .ASSET_TYPE_FLO_FIXED_3,
+                                              );
+                                            }),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding4,
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins),
-                            width: SizeConfig.screenWidth!,
-                            child: Row(
-                              children: [
-                                if (!model.is12)
-                                  Expanded(
-                                    child: OutlinedButton(
-                                        style: ButtonStyle(
-                                            side: MaterialStateProperty.all(
-                                                const BorderSide(
-                                                    color: Colors.white,
-                                                    width: 1.0,
-                                                    style: BorderStyle.solid))),
-                                        child: Text(
-                                          "UPGRADE TO 12%",
-                                          style: TextStyles.rajdhaniSB.body2
-                                              .colour(Colors.white),
-                                        ),
-                                        onPressed: () async {
-                                          Haptic.vibrate();
-                                          await controller
-                                              ?.animateTo(0,
-                                                  duration: const Duration(
-                                                      milliseconds: 200),
-                                                  curve: Curves.decelerate)
-                                              .then((_) {
-                                            _animController!
-                                                .forward()
-                                                .then((value) {
-                                              model.cleanTransactionsList();
-                                              _animController!.reverse();
-                                              model.is12 = true;
-
-                                              model.getTransactions();
-                                            });
-                                          });
-                                        }),
-                                  ),
-                                if (!model.is12)
-                                  SizedBox(width: SizeConfig.padding12),
-                                Expanded(
-                                  child: MaterialButton(
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            SizeConfig.roundness5),
-                                      ),
-                                      child: Text(
-                                        "INVEST",
-                                        style: TextStyles.rajdhaniB.body2
-                                            .colour(Colors.black),
-                                      ),
-                                      onPressed: () {
-                                        BaseUtil().openRechargeModalSheet(
-                                            investmentType:
-                                                InvestmentType.LENDBOXP2P);
-                                      }),
+                                SizedBox(
+                                  height: SizeConfig.padding2,
                                 ),
                               ],
                             ),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding2,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -560,142 +585,152 @@ class FloPremiumTransactionsList extends StatelessWidget {
             String userMaturityPref = BaseUtil.getMaturityPref(
                 model.transactionsList[i].lbMap.maturityPref ?? "NA");
 
-            return InkWell(
-              onTap: () {
-                Haptic.vibrate();
-                AppState.delegate!.appState.currentAction = PageAction(
-                  state: PageState.addWidget,
-                  page: TransactionDetailsPageConfig,
-                  widget: TransactionDetailsPage(
-                    txn: model.transactionsList[i],
-                  ),
-                );
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white10,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                ),
-                margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins,
-                    vertical: SizeConfig.padding10),
-                child: Column(children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: SizeConfig.padding12,
-                      bottom: SizeConfig.padding12,
-                      left: SizeConfig.pageHorizontalMargins,
-                      right: SizeConfig.padding12,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Invested on",
-                                  style: TextStyles.body3
-                                      .colour(UiConstants.kTextFieldTextColor),
-                                ),
-                                FloPremiumTierChip(
-                                  value: formattedInvestmentDate,
-                                )
-                              ],
-                            ),
-                            SizedBox(width: SizeConfig.padding16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Matures on",
-                                  style: TextStyles.body3
-                                      .colour(UiConstants.kTextFieldTextColor),
-                                ),
-                                FloPremiumTierChip(
-                                  value: formattedMaturityDate,
-                                )
-                              ],
-                            ),
-                            Spacer(),
-                            const Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: UiConstants.kTextFieldTextColor,
-                            )
-                          ],
+            return (model.transactionsList[i].lbMap.fundType ?? "").isNotEmpty
+                ? InkWell(
+                    onTap: () {
+                      Haptic.vibrate();
+                      AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.addWidget,
+                        page: TransactionDetailsPageConfig,
+                        widget: TransactionDetailsPage(
+                          txn: model.transactionsList[i],
                         ),
-                        SizedBox(height: SizeConfig.padding16),
-                        FloBalanceBriefRow(
-                          lead: currentValue,
-                          trail: currentValue - gain,
-                          percent: gain,
-                          leftAlign: true,
-                          tier: model.is12
-                              ? Constants.ASSET_TYPE_FLO_FIXED_6
-                              : Constants.ASSET_TYPE_FLO_FIXED_3,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding16,
-                      horizontal: SizeConfig.padding16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white10,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(SizeConfig.roundness16),
-                          bottomRight: Radius.circular(SizeConfig.roundness16)),
-                    ),
-                    alignment: Alignment.center,
-                    child: hasUserDecided
-                        ? Text(
-                            userMaturityPref,
-                            style: TextStyles.sourceSans.body2,
-                          )
-                        : Row(children: [
-                            Expanded(
-                              child: Text(
-                                userMaturityPref,
-                                style: TextStyles.sourceSans.body2,
-                              ),
-                            ),
-                            SizedBox(width: SizeConfig.padding10),
-                            MaterialButton(
-                              onPressed: () {
-                                BaseUtil.openModalBottomSheet(
-                                  isBarrierDismissible: false,
-                                  addToScreenStack: true,
-                                  hapticVibrate: true,
-                                  isScrollControlled: true,
-                                  content: MaturityPrefModalSheet(
-                                    amount: "${currentValue - gain}",
-                                    txnId: model.transactionsList[i].docKey!,
-                                    assetType: model.is12
-                                        ? Constants.ASSET_TYPE_FLO_FIXED_6
-                                        : Constants.ASSET_TYPE_FLO_FIXED_3,
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white10,
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness16),
+                      ),
+                      margin: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins,
+                          vertical: SizeConfig.padding10),
+                      child: Column(children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.padding12,
+                            bottom: SizeConfig.padding12,
+                            left: SizeConfig.pageHorizontalMargins,
+                            right: SizeConfig.padding12,
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Invested on",
+                                        style: TextStyles.body3.colour(
+                                            UiConstants.kTextFieldTextColor),
+                                      ),
+                                      FloPremiumTierChip(
+                                        value: formattedInvestmentDate,
+                                      )
+                                    ],
                                   ),
-                                ).then((value) => model.getTransactions());
-                              },
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness5),
+                                  SizedBox(width: SizeConfig.padding16),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Matures on",
+                                        style: TextStyles.body3.colour(
+                                            UiConstants.kTextFieldTextColor),
+                                      ),
+                                      FloPremiumTierChip(
+                                        value: formattedMaturityDate,
+                                      )
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: UiConstants.kTextFieldTextColor,
+                                  )
+                                ],
                               ),
-                              child: Text(
-                                "KNOW MORE",
-                                style: TextStyles.rajdhaniB.body2
-                                    .colour(Colors.black),
+                              SizedBox(height: SizeConfig.padding16),
+                              FloBalanceBriefRow(
+                                lead: currentValue,
+                                trail: currentValue - gain,
+                                percent: gain,
+                                leftAlign: true,
+                                tier: model.is12
+                                    ? Constants.ASSET_TYPE_FLO_FIXED_6
+                                    : Constants.ASSET_TYPE_FLO_FIXED_3,
                               ),
-                            )
-                          ]),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding16,
+                            horizontal: SizeConfig.padding16,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white10,
+                            borderRadius: BorderRadius.only(
+                                bottomLeft:
+                                    Radius.circular(SizeConfig.roundness16),
+                                bottomRight:
+                                    Radius.circular(SizeConfig.roundness16)),
+                          ),
+                          alignment: Alignment.center,
+                          child: hasUserDecided
+                              ? Text(
+                                  userMaturityPref,
+                                  style: TextStyles.sourceSans.body2,
+                                )
+                              : Row(children: [
+                                  Expanded(
+                                    child: Text(
+                                      userMaturityPref,
+                                      style: TextStyles.sourceSans.body2,
+                                    ),
+                                  ),
+                                  SizedBox(width: SizeConfig.padding10),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      BaseUtil.openModalBottomSheet(
+                                        isBarrierDismissible: false,
+                                        addToScreenStack: true,
+                                        hapticVibrate: true,
+                                        isScrollControlled: true,
+                                        content: MaturityPrefModalSheet(
+                                          amount: "${currentValue - gain}",
+                                          txnId:
+                                              model.transactionsList[i].docKey!,
+                                          assetType: model.is12
+                                              ? Constants.ASSET_TYPE_FLO_FIXED_6
+                                              : Constants
+                                                  .ASSET_TYPE_FLO_FIXED_3,
+                                        ),
+                                      ).then(
+                                          (value) => model.getTransactions());
+                                    },
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness5),
+                                    ),
+                                    child: Text(
+                                      "KNOW MORE",
+                                      style: TextStyles.rajdhaniB.body2
+                                          .colour(Colors.black),
+                                    ),
+                                  )
+                                ]),
+                        )
+                      ]),
+                    ),
                   )
-                ]),
-              ),
-            );
+                : const SizedBox();
           }),
     );
   }

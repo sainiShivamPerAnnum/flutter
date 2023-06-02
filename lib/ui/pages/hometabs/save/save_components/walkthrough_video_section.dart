@@ -1,6 +1,4 @@
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -31,10 +29,14 @@ class WalthroughVideosSection extends StatelessWidget {
           color: Colors.black,
           margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
           child: GestureDetector(
-            onTap: () => AppState.delegate!.appState.currentAction = PageAction(
-                state: PageState.addWidget,
-                page: YoutubePlayerViewConfig,
-                widget: YoutubePlayerView(url: videos[i])),
+            onTap: () {
+              BaseUtil.openDialog(
+                  isBarrierDismissible: true,
+                  addToScreenStack: true,
+                  hapticVibrate: true,
+                  barrierColor: Colors.black54,
+                  content: Dialog(child: YoutubePlayerView(url: videos[i])));
+            },
             child: Container(
               width: SizeConfig.screenWidth! * 0.66,
               height: SizeConfig.screenWidth! * 0.4,

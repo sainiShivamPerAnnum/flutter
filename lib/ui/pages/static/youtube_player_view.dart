@@ -1,3 +1,5 @@
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
@@ -37,19 +39,20 @@ class _YoutubePlayerViewState extends State<YoutubePlayerView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: UiConstants.kBackgroundColor,
-        title: const Text("Youtube"),
-      ),
-      backgroundColor: Colors.black,
-      body: YoutubePlayerScaffold(
-        autoFullScreen: true,
-        controller: _controller!,
-        aspectRatio: 9 / 16,
-        builder: (context, player) {
-          return player;
-        },
+    return WillPopScope(
+      onWillPop: () async {
+        if (AppState.screenStack.last != ScreenItem.page) {
+          AppState.screenStack.removeLast();
+        }
+        return Future.value(true);
+      },
+      child: SizedBox(
+        height: SizeConfig.screenHeight! * 0.8,
+        child: YoutubePlayer(
+          // autoFullScreen: true,
+          controller: _controller!,
+          aspectRatio: 9 / 16,
+        ),
       ),
     );
   }
