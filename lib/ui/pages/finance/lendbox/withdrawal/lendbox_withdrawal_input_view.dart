@@ -1,8 +1,8 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/finance/amount_input_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/widget/lendbox_amount_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -47,7 +47,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                 ),
               ),
             SizedBox(height: SizeConfig.padding32),
-            AmountInputView(
+            LendboxAmountInputView(
               amountController: model!.amountController,
               focusNode: model!.fieldNode,
               chipAmounts: [],
@@ -61,7 +61,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               notice: model!.buyNotice,
               bestChipIndex: 1,
               onAmountChange: (int amount) {},
-              isbuyView: false,
+              // isbuyView: false,
             ),
             const Spacer(),
             model.withdrawableResponseMessage.isNotEmpty
