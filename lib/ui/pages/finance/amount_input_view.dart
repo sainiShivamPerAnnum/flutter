@@ -74,17 +74,17 @@ class _AmountInputViewState extends State<AmountInputView> {
   String getString() {
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         (widget.model?.isLendboxOldUser ?? false)) {
-      return 'Fello Flo 10%';
+      return 'Min- ₹100';
     } else if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         (widget.model?.isLendboxOldUser ?? true) == false) {
-      return 'Fello Flo 8%';
+      return 'Min- ₹100';
     }
 
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "Fello Flo 12%";
+      return "Min- ₹25,000";
     }
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "Fello Flo 10%";
+      return "Min- ₹1000";
     }
 
     return "";

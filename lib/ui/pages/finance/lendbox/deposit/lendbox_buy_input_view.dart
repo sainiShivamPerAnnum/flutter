@@ -166,21 +166,38 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   height: SizeConfig.padding24,
                 ),
                 if (widget.model.showCoupons)
-                  Showcase(
-                    key: ShowCaseKeys.couponKey,
-                    description: 'You can apply a coupon to get extra gold!',
-                    child: FloCouponWidget(
-                      widget.model.couponList,
-                      widget.model,
-                      onTap: (coupon) {
-                        widget.model.applyCoupon(coupon.code, false);
-                      },
-                    ),
+                  FloCouponWidget(
+                    widget.model.couponList,
+                    widget.model,
+                    onTap: (coupon) {
+                      widget.model.applyCoupon(coupon.code, false);
+                    },
                   ),
                 // const Spacer(),
                 SizedBox(
                   height: SizeConfig.padding32,
                 ),
+
+                if (widget.model.floAssetType ==
+                        Constants.ASSET_TYPE_FLO_FIXED_6 ||
+                    widget.model.floAssetType ==
+                        Constants.ASSET_TYPE_FLO_FIXED_3)
+                  GestureDetector(
+                    onTap: () {
+                      if (!widget.model.isBuyInProgress) {
+                        widget.model.openReinvestBottomSheet();
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                      ),
+                      child: Text('What will happen at maturity?',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTabBorderColor)),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -197,20 +214,20 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if (widget.model.forcedBuy) ...[
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.pageHorizontalMargins),
-                                  child: Text(
-                                    "We will contact you before the end of 6 months (Maturity) to confirm.",
-                                    style: TextStyles.sourceSans.body2
-                                        .colour(Colors.white.withOpacity(0.8)),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                SizedBox(height: SizeConfig.padding24),
-                              ],
+                              // if (widget.model.forcedBuy) ...[
+                              //   Padding(
+                              //     padding: EdgeInsets.symmetric(
+                              //         horizontal:
+                              //             SizeConfig.pageHorizontalMargins),
+                              //     child: Text(
+                              //       "We will contact you before the end of 6 months (Maturity) to confirm.",
+                              //       style: TextStyles.sourceSans.body2
+                              //           .colour(Colors.white.withOpacity(0.8)),
+                              //       textAlign: TextAlign.center,
+                              //     ),
+                              //   ),
+                              //   SizedBox(height: SizeConfig.padding24),
+                              // ],
                               Container(
                                 height: SizeConfig.screenWidth! * 0.1556,
                                 alignment: Alignment.center,
@@ -234,17 +251,17 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                                 return;
                               }
 
-                              if (widget.model.floAssetType ==
-                                  Constants.ASSET_TYPE_FLO_FIXED_6) {
-                                widget.model.openReinvestBottomSheet();
-                                return;
-                              }
-                              if (widget.model.floAssetType ==
-                                      Constants.ASSET_TYPE_FLO_FIXED_3 &&
-                                  !widget.model.isLendboxOldUser) {
-                                widget.model.openReinvestBottomSheet();
-                                return;
-                              }
+                              // if (widget.model.floAssetType ==
+                              //     Constants.ASSET_TYPE_FLO_FIXED_6) {
+                              //   widget.model.openReinvestBottomSheet();
+                              //   return;
+                              // }
+                              // if (widget.model.floAssetType ==
+                              //         Constants.ASSET_TYPE_FLO_FIXED_3 &&
+                              //     !widget.model.isLendboxOldUser) {
+                              //   widget.model.openReinvestBottomSheet();
+                              //   return;
+                              // }
 
                               if (!widget.model.isBuyInProgress) {
                                 FocusScope.of(context).unfocus();
@@ -664,15 +681,15 @@ class ViewBreakdown extends StatelessWidget {
 
                 AppState.backButtonDispatcher?.didPopRoute();
 
-                if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-                  model.openReinvestBottomSheet();
-                  return;
-                }
-                if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3 &&
-                    !model.isLendboxOldUser) {
-                  model.openReinvestBottomSheet();
-                  return;
-                }
+                // if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+                //   model.openReinvestBottomSheet();
+                //   return;
+                // }
+                // if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3 &&
+                //     !model.isLendboxOldUser) {
+                //   model.openReinvestBottomSheet();
+                //   return;
+                // }
 
                 if (!model.isBuyInProgress) {
                   FocusScope.of(context).unfocus();

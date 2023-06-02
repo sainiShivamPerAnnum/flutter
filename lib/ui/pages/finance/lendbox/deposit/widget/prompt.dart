@@ -150,18 +150,18 @@ class ReInvestPrompt extends HookWidget {
                     // color: Colors.white,
                     onPressed: () {
                       AppState.backButtonDispatcher?.didPopRoute();
-
-                      model.forcedBuy = true;
+                      SystemChannels.textInput.invokeMethod('TextInput.hide');
                       model.maturityPref = "NA";
 
-                      SystemChannels.textInput.invokeMethod('TextInput.hide');
-                      Future.delayed(const Duration(seconds: 2), () async {
-                        if (!model.isBuyInProgress) {
-                          //   FocusScope.of(context).unfocus();
+                      // model.forcedBuy = true;
 
-                          await model.initiateBuy();
-                        }
-                      });
+                      // Future.delayed(const Duration(seconds: 2), () async {
+                      //   if (!model.isBuyInProgress) {
+                      //     //   FocusScope.of(context).unfocus();
+                      //
+                      //     await model.initiateBuy();
+                      //   }
+                      // });
                     },
                     child: Center(
                       child: Text(
@@ -176,7 +176,9 @@ class ReInvestPrompt extends HookWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5)),
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    color: Colors.white,
+                    color: selectedOption.value == -1
+                        ? Colors.white.withOpacity(0.25)
+                        : Colors.white,
                     onPressed: () {
                       if (selectedOption.value == -1) {
                         BaseUtil.showNegativeAlert("Please select an option",
@@ -209,7 +211,7 @@ class ReInvestPrompt extends HookWidget {
                     },
                     child: Center(
                       child: Text(
-                        'Proceed'.toUpperCase(),
+                        'Continue'.toUpperCase(),
                         style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                       ),
                     ),
@@ -322,7 +324,7 @@ class WarningBottomSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Are you sure you want to withdraw your investment after 6 months (Maturity)?',
+            'Are you sure you want to withdraw your investment after ${model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)?',
             style: TextStyles.sourceSans.body2,
             maxLines: 2,
             textAlign: TextAlign.center,
@@ -363,15 +365,15 @@ class WarningBottomSheet extends StatelessWidget {
 
                     // debugPrint("scrrenStack => ${AppState.screenStack}");
                     // model.forcedBuy = true;
-
-                    Future.delayed(const Duration(milliseconds: 100), () async {
-                      if (!model.isBuyInProgress) {
-                        debugPrint(
-                            "Buy in progress => ${model.isBuyInProgress}");
-                        FocusScope.of(context).unfocus();
-                        await model.initiateBuy();
-                      }
-                    });
+                    //
+                    // Future.delayed(const Duration(milliseconds: 100), () async {
+                    //   if (!model.isBuyInProgress) {
+                    //     debugPrint(
+                    //         "Buy in progress => ${model.isBuyInProgress}");
+                    //     FocusScope.of(context).unfocus();
+                    //     await model.initiateBuy();
+                    //   }
+                    // });
                   },
                   child: Center(
                     child: Text(
@@ -388,7 +390,8 @@ class WarningBottomSheet extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   color: Colors.white,
                   onPressed: () {
-                    AppState.backButtonDispatcher?.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    AppState.backButtonDispatcher!.didPopRoute();
                   },
                   child: Center(
                     child: Text(
