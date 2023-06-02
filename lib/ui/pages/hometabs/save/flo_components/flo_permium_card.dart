@@ -95,7 +95,7 @@ class FloPremiumTierCard extends StatelessWidget {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        "INVEST",
+                        "SAVE",
                         style:
                             TextStyles.sourceSansB.body2.colour(Colors.black),
                       ),

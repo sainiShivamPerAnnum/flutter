@@ -293,10 +293,12 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                           false)
                                         Text(
                                             "+ " +
-                                                (widget.txn
-                                                        .couponMap?["goldQty"]
-                                                        .toString() ??
-                                                    "") +
+                                                (BaseUtil.digitPrecision(
+                                                        widget.txn.couponMap?[
+                                                            "goldQty"],
+                                                        4,
+                                                        false)
+                                                    .toString()) +
                                                 " gms",
                                             style: TextStyles.sourceSans.body3
                                                 .colour(Color(0xffA5FCE7))),

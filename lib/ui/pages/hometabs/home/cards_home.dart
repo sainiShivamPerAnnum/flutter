@@ -22,6 +22,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../../../util/styles/styles.dart';
 
@@ -648,110 +649,117 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             ? 0
                                             : SizeConfig.titleSize / 3),
                                   ),
-                                  child: Hero(
-                                    tag: "main",
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(height: SizeConfig.padding8),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "Fello Balance",
-                                                    style: GoogleFonts.rajdhani(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.white,
-                                                      fontSize:
-                                                          SizeConfig.titleSize *
-                                                              0.6,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "Sum of all your assets on fello",
-                                                    style:
-                                                        GoogleFonts.sourceSans3(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.grey,
-                                                      fontSize:
-                                                          SizeConfig.titleSize *
-                                                              0.4,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const Spacer(),
-                                              cardActions.isVerticalView
-                                                  ? OutlinedButton(
-                                                      onPressed: () {
-                                                        BaseUtil.openDialog(
-                                                          isBarrierDismissible:
-                                                              false,
-                                                          addToScreenStack:
-                                                              true,
-                                                          hapticVibrate: true,
-                                                          barrierColor:
-                                                              Colors.black45,
-                                                          content:
-                                                              const FundBreakdownDialog(),
-                                                        );
-                                                      },
-                                                      style: OutlinedButton
-                                                          .styleFrom(
-                                                        side: const BorderSide(
-                                                            width: 1.0,
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                      child: Text(
-                                                        "View Breakdown",
-                                                        style: TextStyles
-                                                            .rajdhaniM.body3
-                                                            .colour(
-                                                                Colors.white),
-                                                      ),
-                                                    )
-                                                  : SvgPicture.asset(
-                                                      Assets.chevRonRightArrow,
-                                                      color: Colors.white,
-                                                      width:
-                                                          SizeConfig.padding32,
-                                                    )
-                                            ],
-                                          ),
-                                          const Spacer(),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Selector<UserService,
-                                                  UserFundWallet?>(
-                                                builder: (_, wallet, child) =>
-                                                    Text(
-                                                  "₹${(wallet?.netWorth ?? 0).toInt()}",
-                                                  style:
-                                                      GoogleFonts.sourceSans3(
-                                                    fontWeight: FontWeight.w800,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (cardActions.isVerticalView) {
+                                        cardActions.isVerticalView = false;
+                                      }
+                                    },
+                                    onVerticalDragUpdate: (details) {
+                                      print("Dragged");
+                                      if (details.delta.dy < dragFactor) {
+                                        cardActions.isVerticalView = false;
+                                      }
+                                      if (details.delta.dy > dragFactor) {
+                                        cardActions.isVerticalView = true;
+                                      }
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: SizeConfig.padding8),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Fello Balance",
+                                                  style: GoogleFonts.rajdhani(
+                                                    fontWeight: FontWeight.w500,
                                                     color: Colors.white,
                                                     fontSize:
                                                         SizeConfig.titleSize *
-                                                            1.2,
+                                                            0.6,
                                                   ),
                                                 ),
-                                                selector: (_, userService) =>
-                                                    userService.userFundWallet,
+                                                Text(
+                                                  "Sum of all your assets on fello",
+                                                  style:
+                                                      GoogleFonts.sourceSans3(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey,
+                                                    fontSize:
+                                                        SizeConfig.titleSize *
+                                                            0.4,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const Spacer(),
+                                            cardActions.isVerticalView
+                                                ? OutlinedButton(
+                                                    onPressed: () {
+                                                      BaseUtil.openDialog(
+                                                        isBarrierDismissible:
+                                                            false,
+                                                        addToScreenStack: true,
+                                                        hapticVibrate: true,
+                                                        barrierColor:
+                                                            Colors.black45,
+                                                        content:
+                                                            const FundBreakdownDialog(),
+                                                      );
+                                                    },
+                                                    style: OutlinedButton
+                                                        .styleFrom(
+                                                      side: const BorderSide(
+                                                          width: 1.0,
+                                                          color: Colors.white),
+                                                    ),
+                                                    child: Text(
+                                                      "View Breakdown",
+                                                      style: TextStyles
+                                                          .rajdhaniM.body3
+                                                          .colour(Colors.white),
+                                                    ),
+                                                  )
+                                                : SvgPicture.asset(
+                                                    Assets.chevRonRightArrow,
+                                                    color: Colors.white,
+                                                    width: SizeConfig.padding32,
+                                                  )
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Selector<UserService,
+                                                UserFundWallet?>(
+                                              builder: (_, wallet, child) =>
+                                                  Text(
+                                                "₹${(wallet?.netWorth ?? 0).toInt()}",
+                                                style: GoogleFonts.sourceSans3(
+                                                  fontWeight: FontWeight.w800,
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                      SizeConfig.titleSize *
+                                                          1.2,
+                                                ),
                                               ),
-                                              Column(
+                                              selector: (_, userService) =>
+                                                  userService.userFundWallet,
+                                            ),
+                                            Selector<UserService, Portfolio>(
+                                              builder:
+                                                  (context, value, child) =>
+                                                      Column(
                                                 children: [
                                                   Row(
                                                     crossAxisAlignment:
@@ -765,32 +773,42 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                             0,
                                                             -SizeConfig
                                                                 .padding4),
-                                                        child: SvgPicture.asset(
-                                                          Assets.arrow,
-                                                          width: SizeConfig
-                                                              .iconSize1,
-                                                          color: UiConstants
-                                                              .primaryColor,
+                                                        child: RotatedBox(
+                                                          quarterTurns: value
+                                                                      .absolute
+                                                                      .percGains <
+                                                                  0
+                                                              ? 2
+                                                              : 0,
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            Assets.arrow,
+                                                            width: SizeConfig
+                                                                .iconSize1,
+                                                            color: value.absolute
+                                                                        .percGains <
+                                                                    0
+                                                                ? Colors.red
+                                                                : UiConstants
+                                                                    .primaryColor,
+                                                          ),
                                                         ),
                                                       ),
-                                                      Selector<UserService,
-                                                          Portfolio>(
-                                                        builder: (context,
-                                                                value, child) =>
-                                                            Text(
-                                                                " ${BaseUtil.digitPrecision(
-                                                                  value.absolute
-                                                                      .percGains,
-                                                                  2,
-                                                                )}%",
-                                                                style: TextStyles
-                                                                    .sourceSans
-                                                                    .body0
-                                                                    .colour(UiConstants
-                                                                        .primaryColor)),
-                                                        selector: (p0, p1) =>
-                                                            p1.userPortfolio,
-                                                      ),
+                                                      Text(
+                                                          " ${BaseUtil.digitPrecision(
+                                                            value.absolute
+                                                                .percGains,
+                                                            2,
+                                                          )}%",
+                                                          style: TextStyles
+                                                              .sourceSans.body0
+                                                              .colour(value
+                                                                          .absolute
+                                                                          .percGains <
+                                                                      0
+                                                                  ? Colors.red
+                                                                  : UiConstants
+                                                                      .primaryColor)),
                                                     ],
                                                   ),
                                                   SizedBox(
@@ -798,10 +816,12 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                           SizeConfig.padding16)
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                              selector: (p0, p1) =>
+                                                  p1.userPortfolio,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -832,7 +852,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                       onPressed: () =>
                           BaseUtil.openDepositOptionsModalSheet(timer: 100),
                       child: Text(
-                        "INVEST",
+                        "SAVE",
                         style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                       ),
                     ),
@@ -853,6 +873,14 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                       cardActions.isVerticalView = false;
                     }
                   },
+                  onVerticalDragUpdate: (details) {
+                    if (details.delta.dy < dragFactor) {
+                      cardActions.isVerticalView = false;
+                    }
+                    if (details.delta.dy > dragFactor) {
+                      cardActions.isVerticalView = true;
+                    }
+                  },
                   child: Padding(
                     padding: EdgeInsets.only(
                         right: SizeConfig.pageHorizontalMargins,
@@ -870,6 +898,31 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                   ),
                 ),
               ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: GestureDetector(
+                onVerticalDragUpdate: (details) {
+                  if (details.delta.dy < dragFactor) {
+                    cardActions.isVerticalView = false;
+                  }
+                  if (details.delta.dy > dragFactor) {
+                    cardActions.isVerticalView = true;
+                  }
+                },
+                child: Container(
+                  margin: EdgeInsets.only(
+                      bottom: cardActions.isVerticalView
+                          ? SizeConfig.padding10
+                          : SizeConfig.padding20),
+                  width: SizeConfig.padding32,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       );
@@ -1052,14 +1105,16 @@ class CardContent extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Selector<UserService, UserFundWallet?>(
-                            builder: (_, wallet, child) => Text(
-                              getFirstValue(wallet, title),
+                          Selector<UserService,
+                              Tuple2<Portfolio, UserFundWallet?>>(
+                            builder: (_, value, child) => Text(
+                              getFirstValue(value.item1, value.item2, title),
                               style: TextStyles.sourceSansB.body0
                                   .colour(Colors.white),
                             ),
-                            selector: (_, userService) =>
-                                userService.userFundWallet,
+                            selector: (_, userService) => Tuple2(
+                                userService.userPortfolio,
+                                userService.userFundWallet),
                           ),
                           if (title != "Fello Rewards")
                             Column(
@@ -1114,9 +1169,10 @@ class CardContent extends StatelessWidget {
               SizedBox(width: SizeConfig.padding16),
               Expanded(
                 flex: 4,
-                child: Selector<UserService, UserFundWallet?>(
-                  builder: (_, wallet, child) => (title == "Fello Rewards" &&
-                          (wallet?.processingRedemptionBalance ?? 0) == 0)
+                child:
+                    Selector<UserService, Tuple2<Portfolio, UserFundWallet?>>(
+                  builder: (_, value, child) => (title == "Fello Rewards" &&
+                          (value.item2?.processingRedemptionBalance ?? 0) == 0)
                       ? const SizedBox()
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -1134,14 +1190,15 @@ class CardContent extends StatelessWidget {
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                getSecondValue(wallet, title),
+                                getSecondValue(value.item1, value.item2, title),
                                 style: TextStyles.sourceSansB.body0
                                     .colour(Colors.white),
                               ),
                             )
                           ],
                         ),
-                  selector: (_, userService) => userService.userFundWallet,
+                  selector: (_, userService) => Tuple2(
+                      userService.userPortfolio, userService.userFundWallet),
                 ),
               ),
             ]),
@@ -1151,10 +1208,11 @@ class CardContent extends StatelessWidget {
     );
   }
 
-  String getFirstValue(UserFundWallet? wallet, String title) {
+  String getFirstValue(
+      Portfolio? portfolio, UserFundWallet? wallet, String title) {
     switch (title) {
       case "Fello Flo":
-        return "₹${BaseUtil.digitPrecision(wallet?.wLbBalance ?? 0.0, 2)}";
+        return "₹${BaseUtil.digitPrecision(portfolio?.flo.balance ?? 0.0, 2)}";
       case "Digital Gold":
         return "₹${BaseUtil.digitPrecision(wallet?.augGoldBalance ?? 0, 2)}";
       case "Fello Rewards":
@@ -1164,10 +1222,11 @@ class CardContent extends StatelessWidget {
     }
   }
 
-  String getSecondValue(UserFundWallet? wallet, String title) {
+  String getSecondValue(
+      Portfolio? portfolio, UserFundWallet? wallet, String title) {
     switch (title) {
       case "Fello Flo":
-        return "₹${BaseUtil.digitPrecision(wallet?.wLbPrinciple ?? 0.0, 2)}";
+        return "₹${BaseUtil.digitPrecision(portfolio?.flo.principle ?? 0.0, 2)}";
       case "Digital Gold":
         return "${BaseUtil.digitPrecision(wallet?.augGoldQuantity ?? 0, 4, false)}g";
       case "Fello Rewards":

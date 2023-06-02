@@ -390,7 +390,7 @@ class _InvestmentDetails extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Invest today",
+                "Save today",
                 style: TextStyles.sourceSans.body4.colour(
                   Colors.white.withOpacity(0.7),
                 ),

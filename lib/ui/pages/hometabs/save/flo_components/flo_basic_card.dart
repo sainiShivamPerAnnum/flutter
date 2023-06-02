@@ -102,7 +102,7 @@ class FloBasicCard extends StatelessWidget {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            "INVEST",
+                            "SAVE",
                             style: TextStyles.sourceSansB.body2
                                 .colour(Colors.black),
                           ),
@@ -194,7 +194,7 @@ class FloBasicCard extends StatelessWidget {
                       onPressed: () => BaseUtil.openFloBuySheet(
                           floAssetType: Constants.ASSET_TYPE_FLO_FELXI),
                       child: Text(
-                        "INVEST",
+                        "SAVE",
                         style: TextStyles.rajdhaniB.body2.colour(Colors.black),
                       ),
                     ),

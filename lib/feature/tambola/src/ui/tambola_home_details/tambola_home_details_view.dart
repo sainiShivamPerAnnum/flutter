@@ -178,8 +178,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                       ),
                       Showcase(
                         key: ShowCaseKeys.TambolaButton,
-                        description:
-                            'You get a ticket on every ₹500 you invest!',
+                        description: 'You get a ticket on every ₹500 you save!',
                         child: AppPositiveBtn(
                           btnText: 'Save & Get Free Tickets',
                           onPressed: () {

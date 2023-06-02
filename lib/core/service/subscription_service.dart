@@ -460,10 +460,6 @@ class SubService extends ChangeNotifier {
         List<ApplicationMeta> allUpiApps =
             await UpiPay.getInstalledUpiApplications(
                 statusType: UpiApplicationDiscoveryAppStatusType.all);
-        print("Apps: found ${allUpiApps.length.toString()}");
-
-        appMetaList.add(ApplicationMeta.android(
-            UpiApplication.phonePePreprod, Uint8List(10), 0, 0));
 
         allUpiApps.forEach((element) {
           if (element.upiApplication.appName == "Paytm" &&
@@ -487,12 +483,6 @@ class SubService extends ChangeNotifier {
             appMetaList.add(element);
           }
         });
-
-        if (FlavorConfig.isDevelopment() && allUpiApps.length == 0) {
-          allUpiApps.forEach((element) {
-            print("Apps: found ${element.upiApplication.appName}");
-          });
-        }
 
         return appMetaList;
       } catch (e) {

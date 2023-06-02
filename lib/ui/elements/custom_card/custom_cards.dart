@@ -145,7 +145,7 @@ class SaveCustomCard extends StatelessWidget {
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness5)),
                     child: Text(
-                      "INVEST",
+                      "SAVE",
                       style: TextStyles.rajdhaniB.body2.colour(Colors.black),
                     ),
                   )

@@ -138,7 +138,7 @@ class DefaultQuickSaveModalSheet extends StatelessWidget {
                               style: TextStyles.rajdhaniB.title5),
                           Flexible(
                             child: Text(
-                              'Invest in Fello flo worth ₹1000',
+                              'Save in Fello flo worth ₹1000',
                               style: TextStyles.sourceSans.body4
                                   .colour(Colors.white.withOpacity(0.6)),
                               maxLines: 3,

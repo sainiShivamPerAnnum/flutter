@@ -123,6 +123,7 @@ class _JourneyViewState extends State<JourneyView>
                                     color: Colors.white,
                                   ),
                                 ),
+                                centerTitle: false,
                                 title: Text(
                                   "Journey",
                                   style: TextStyles.rajdhaniSB.title4,

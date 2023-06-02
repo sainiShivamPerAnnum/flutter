@@ -221,7 +221,7 @@ class UserPreferences {
   static const Map<Preferences, String> _index = {
     Preferences.TAMBOLANOTIFICATIONS: 'tn',
     Preferences.APPLOCK: 'al',
-    Preferences.FLOINVOICEMAIL: "fe"
+    Preferences.FLOINVOICEMAIL: "er"
   };
 
   //setup defaults

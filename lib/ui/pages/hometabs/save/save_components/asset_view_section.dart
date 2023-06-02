@@ -345,7 +345,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                             SizeConfig.roundness5),
                                       ),
                                       child: Text(
-                                        "INVEST",
+                                        "SAVE",
                                         style: TextStyles.rajdhaniB.body1
                                             .colour(Colors.black),
                                       ),
@@ -1264,7 +1264,7 @@ class CircularSliderState extends State<CircularSlider> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Invest Today",
+                            "Save Today",
                             style: TextStyles.sourceSans.body2.colour(
                               Color(0xffA9C6D6),
                             ),

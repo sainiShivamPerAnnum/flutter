@@ -76,7 +76,7 @@ class SaveWelcomeCard extends StatelessWidget {
                   onPressed: () =>
                       BaseUtil.openDepositOptionsModalSheet(timer: 0),
                   child: Text(
-                    "INVEST",
+                    "SAVE",
                     style: TextStyles.rajdhaniB.body2
                         .colour(UiConstants.kBackgroundColor),
                   ),

@@ -476,15 +476,14 @@ class LbMap {
 
   factory LbMap.fromMap(Map<String, dynamic> map) {
     return LbMap(
-      fundType: map['fundType'] != null ? map['fundType'] as String : null,
+      fundType: map['fundType'] != null ? map['fundType'] as String : "",
       maturityAt: map['maturityAt'] != null
           ? TimestampModel.fromMap(map['maturityAt'])
-          : null,
+          : TimestampModel.currentTimeStamp(),
       maturityPref:
-          map['maturityPref'] != null ? map['maturityPref'] as String : null,
-      gainAmount: map['gainAmount'] != null
-          ? (map['gainAmount'] * 1.0) as double
-          : null,
+          map['maturityPref'] != null ? map['maturityPref'] as String : "NA",
+      gainAmount:
+          map['gainAmount'] != null ? (map['gainAmount'] * 1.0) as double : 1.0,
     );
   }
 }
