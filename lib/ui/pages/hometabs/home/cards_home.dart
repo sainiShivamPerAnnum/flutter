@@ -430,8 +430,8 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             duration: duration,
                                             asset: Assets.goldAsset,
                                             title: "Digital Gold",
-                                            infoTitle1: "Gold Value",
-                                            infoTitle2: "Gold Amount",
+                                            infoTitle1: "Gold Amount",
+                                            infoTitle2: "Gold Value",
                                             secondaryColor:
                                                 UiConstants.kGoldContainerColor,
                                             subtitle:
