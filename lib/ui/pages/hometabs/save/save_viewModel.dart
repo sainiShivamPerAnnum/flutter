@@ -212,7 +212,6 @@ class SaveViewModel extends BaseViewModel {
         ),
       ),
       const TambolaMiniInfoCard(),
-      SizedBox(height: SizeConfig.padding16),
     ]);
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {

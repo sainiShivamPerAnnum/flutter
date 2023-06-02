@@ -6,6 +6,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class TambolaMiniInfoCard extends StatelessWidget {
@@ -29,56 +30,65 @@ class TambolaMiniInfoCard extends StatelessWidget {
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness12)),
                   color: UiConstants.darkPrimaryColor4,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.padding16,
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    child: Row(children: [
-                      SvgPicture.asset(
-                        Assets.tambolaCardAsset,
-                        width: SizeConfig.padding40,
-                      ),
-                      SizedBox(width: SizeConfig.padding10),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    (wallet?.tickets?["total"] ?? 0) > 0
-                                        ? "Tambola Tickets"
-                                        : "Get your first free tambola ticket",
-                                    style: TextStyles.rajdhaniM.body0
-                                        .colour(Colors.white),
-                                    maxLines: 1,
-                                  ),
-                                ),
+                  child: (wallet?.tickets?["total"] ?? 0) > 0
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                              top: SizeConfig.padding12,
+                              bottom: SizeConfig.padding12,
+                              left: SizeConfig.pageHorizontalMargins,
+                              right: SizeConfig.pageHorizontalMargins / 2),
+                          child: Row(children: [
+                            Transform.scale(
+                              scale: 1.5,
+                              child: SvgPicture.asset(
+                                Assets.tambolaCardAsset,
+                                width: SizeConfig.padding40,
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      if ((wallet?.tickets?["total"] ?? 0) > 0)
-                        Row(
-                          children: [
-                            SizedBox(width: SizeConfig.pageHorizontalMargins),
-                            Text(
-                              (wallet?.tickets?["total"] ?? 0).toString(),
-                              style: TextStyles.rajdhaniB.title3
-                                  .colour(Colors.white),
+                            SizedBox(width: SizeConfig.padding10),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          "Tambola Tickets",
+                                          style: TextStyles.rajdhaniM.body0
+                                              .colour(Colors.white),
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            SizedBox(width: SizeConfig.padding4),
-                            SvgPicture.asset(
-                              Assets.chevRonRightArrow,
-                              color: Colors.white,
+                            Row(
+                              children: [
+                                SizedBox(
+                                    width: SizeConfig.pageHorizontalMargins),
+                                Text(
+                                  (wallet?.tickets?["total"] ?? 0).toString(),
+                                  style: TextStyles.rajdhaniB.title3
+                                      .colour(Colors.white),
+                                ),
+                                SizedBox(width: SizeConfig.padding12),
+                                SvgPicture.asset(
+                                  Assets.chevRonRightArrow,
+                                  color: Colors.white,
+                                )
+                              ],
                             )
-                          ],
+                          ]),
                         )
-                    ]),
-                  )),
+                      : ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness8),
+                          child:
+                              Lottie.network(Assets.tambolaTopBannerLottie))),
             ),
         selector: (p0, p1) => p1.userFundWallet);
   }

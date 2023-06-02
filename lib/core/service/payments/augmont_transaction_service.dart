@@ -234,28 +234,29 @@ class AugmontTransactionService extends BaseTransactionService {
   }
 
   Future<void> transactionResponseUpdate({List<String>? gtIds}) async {
-    _logger!.d("Polling response processing");
+    _logger.d("Polling response processing");
     try {
       //add this to augmontBuyVM
-      unawaited(_userCoinService!.getUserCoinBalance());
-      unawaited(_userService!.getUserFundWalletData());
+      unawaited(_userCoinService.getUserCoinBalance());
+      unawaited(_userService.getUserFundWalletData());
       if (currentTransactionState == TransactionState.ongoing) {
         ScratchCardService.scratchCardsList = gtIds;
-        await _userService!.getUserJourneyStats();
+        await _userService.getUserJourneyStats();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
       }
-      _txnHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
+      unawaited(
+          _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99));
     } catch (e) {
-      _logger!.e(e);
-      unawaited(_internalOpsService!.logFailure(_userService!.baseUser!.uid,
+      _logger.e(e);
+      unawaited(_internalOpsService.logFailure(_userService.baseUser!.uid,
           FailType.DepositPayloadError, e as Map<String, dynamic>));
     }
   }
 
   Future<void> processPolling(Timer? timer) async {
-    final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
+    final res = await _paytmRepo.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
       TransactionResponseModel txnStatus = res.model!;
       switch (txnStatus.data!.status) {

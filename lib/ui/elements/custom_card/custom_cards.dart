@@ -117,7 +117,7 @@ class SaveCustomCard extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(right: SizeConfig.padding2),
                     width: SizeConfig.screenWidth! * 0.32,
-                    height: SizeConfig.padding40,
+                    height: SizeConfig.padding32,
                     decoration: BoxDecoration(
                         color: (key == ValueKey(Constants.ASSET_TYPE_AUGMONT))
                             ? Color(0xff5567B7)

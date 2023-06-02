@@ -38,6 +38,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
   Duration duration = const Duration(milliseconds: 300);
   Curve curve = Curves.decelerate;
   bool _hasReachedEnd = false;
+  final int dragFactor = 30;
 
   bool get hasReachedEnd => _hasReachedEnd;
 
@@ -169,8 +170,8 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                   if (cardActions.isHorizontalView) {
                     cardActions.isHorizontalView = false;
                   }
-                  double currentOffset = details.primaryDelta ?? 0;
-                  if (details.delta.dy > 0) {
+                  // double currentOffset = details.primaryDelta ?? 0;
+                  if (details.delta.dy > dragFactor) {
                     if (!cardActions.isVerticalView && mounted) {
                       cardActions.isHorizontalView = false;
                       cardActions.isVerticalView = true;
@@ -268,7 +269,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                 : 0.088),
                                     child: GestureDetector(
                                       onVerticalDragUpdate: (details) {
-                                        if (details.delta.dy < 0) {
+                                        if (details.delta.dy < dragFactor) {
                                           cardActions.isVerticalView = false;
                                         }
                                       },
@@ -365,7 +366,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                 : 0.088),
                                     child: GestureDetector(
                                       onVerticalDragUpdate: (details) {
-                                        if (details.delta.dy < 0) {
+                                        if (details.delta.dy < dragFactor) {
                                           cardActions.isVerticalView = false;
                                         }
                                       },
@@ -471,7 +472,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                         }
                                       },
                                       onVerticalDragUpdate: (details) {
-                                        if (details.delta.dy < 0) {
+                                        if (details.delta.dy < dragFactor) {
                                           cardActions.isVerticalView = false;
                                         }
                                       },

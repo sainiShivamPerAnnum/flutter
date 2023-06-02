@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-
 import 'package:felloapp/util/logger.dart';
 
 class BaseUser {
@@ -216,19 +214,21 @@ class BaseUser {
   }
 }
 
-enum Preferences { TAMBOLANOTIFICATIONS, APPLOCK }
+enum Preferences { TAMBOLANOTIFICATIONS, APPLOCK, FLOINVOICEMAIL }
 
 class UserPreferences {
   //setup index with firebase keys
   static const Map<Preferences, String> _index = {
     Preferences.TAMBOLANOTIFICATIONS: 'tn',
-    Preferences.APPLOCK: 'al'
+    Preferences.APPLOCK: 'al',
+    Preferences.FLOINVOICEMAIL: "fe"
   };
 
   //setup defaults
   final Map<Preferences, int> _defValues = {
     Preferences.TAMBOLANOTIFICATIONS: 1,
-    Preferences.APPLOCK: 0
+    Preferences.APPLOCK: 0,
+    Preferences.FLOINVOICEMAIL: 0
   };
 
   //current values

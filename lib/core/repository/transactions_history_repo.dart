@@ -34,7 +34,8 @@ class TransactionHistoryRepository extends BaseRepo {
   // }
 
   Future<ApiResponse<TransactionResponse>> getUserTransactions({
-    String? start,
+    int limit = 30,
+    int? offset,
     String? type,
     String? subtype,
     String? status,
@@ -47,7 +48,10 @@ class TransactionHistoryRepository extends BaseRepo {
       final _queryParams = {
         "type": type,
         "subType": subtype,
-        "start": start,
+        "limit": limit.toString(),
+        if (offset != null && offset != 0) ...{
+          "offset": offset.toString(),
+        },
         "status": status,
         if (lbFundType != null) "lbFundType": lbFundType
       };

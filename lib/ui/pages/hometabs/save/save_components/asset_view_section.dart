@@ -23,6 +23,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -349,6 +350,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                             .colour(Colors.black),
                                       ),
                                       onPressed: () {
+                                        Haptic.vibrate();
                                         BaseUtil().openRechargeModalSheet(
                                             investmentType: widget.type);
                                       }),

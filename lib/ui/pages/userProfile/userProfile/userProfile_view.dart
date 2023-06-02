@@ -480,6 +480,27 @@ class UserProfileForm extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: SizeConfig.padding40,
+                  child: Row(
+                    children: [
+                      Text(
+                        "Flo Invoice Emails",
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.kTextColor2),
+                      ),
+                      const Spacer(),
+                      AppSwitch(
+                        onToggle: model.onFloInvoiceEmailPreferenceChanged,
+                        value: model.floInvoiceEmail,
+                        isLoading: model.isFloInvoiceMailLoading,
+                        height: SizeConfig.screenWidth! * 0.059,
+                        width: SizeConfig.screenWidth! * 0.087,
+                        toggleSize: SizeConfig.screenWidth! * 0.032,
+                      ),
+                    ],
+                  ),
+                ),
                 Divider(
                   color: UiConstants.kTextColor2,
                   thickness: 0.5,

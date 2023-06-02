@@ -104,7 +104,7 @@ class SaveViewWrapper extends StatelessWidget {
                                         }
                                       },
                                       onVerticalDragUpdate: (details) {
-                                        if (details.delta.dy < 0) {
+                                        if (details.delta.dy < 30) {
                                           if (cardActions.isVerticalView) {
                                             cardActions.isVerticalView = false;
                                           }

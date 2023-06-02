@@ -11,6 +11,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/service/analytics/analytics_service.dart';
@@ -93,17 +94,19 @@ class FelloCoinBar extends StatelessWidget {
 
 class FelloInfoBar extends StatelessWidget {
   final String? svgAsset;
+  final String? lottieAsset;
   final Color? borderColor;
   final TextStyle? style;
   final double? size;
   final String? child;
   final bool mark;
-  final Function onPressed;
+  final VoidCallback onPressed;
 
   const FelloInfoBar(
       {required this.onPressed,
       super.key,
       this.svgAsset,
+      this.lottieAsset,
       this.borderColor,
       this.style,
       this.size,
@@ -113,7 +116,7 @@ class FelloInfoBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onPressed(),
+      onTap: onPressed,
       child: Container(
         margin: EdgeInsets.symmetric(
           horizontal: SizeConfig.padding2,
@@ -133,11 +136,22 @@ class FelloInfoBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(width: SizeConfig.padding12),
-                    SvgPicture.asset(
-                      svgAsset ?? Assets.token,
-                      height: size ?? SizeConfig.padding20,
-                      width: size ?? SizeConfig.padding20,
-                    ),
+                    if (lottieAsset != null)
+                      Transform.translate(
+                        offset: Offset(0, -SizeConfig.padding2),
+                        child: Lottie.asset(
+                          lottieAsset!,
+                          repeat: false,
+                          height: size ?? SizeConfig.padding20,
+                          width: size ?? SizeConfig.padding20,
+                        ),
+                      ),
+                    if (svgAsset != null)
+                      SvgPicture.asset(
+                        svgAsset ?? Assets.token,
+                        height: size ?? SizeConfig.padding20,
+                        width: size ?? SizeConfig.padding20,
+                      ),
                     SizedBox(width: SizeConfig.padding4),
                     child != null
                         ? Text(child!,

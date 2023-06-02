@@ -8,7 +8,6 @@ import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
-import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -19,7 +18,6 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
-import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -170,13 +168,13 @@ class LendboxTransactionService extends BaseTransactionService {
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
-            PowerPlayService.powerPlayDepositFlow = false;
-            MatchData? liveMatchData =
-                locator<PowerPlayService>().liveMatchData;
-            if (liveMatchData != null) {
-              unawaited(locator<PowerPlayService>()
-                  .getUserTransactionHistory(matchData: liveMatchData));
-            }
+            // PowerPlayService.powerPlayDepositFlow = false;
+            // MatchData? liveMatchData =
+            //     locator<PowerPlayService>().liveMatchData;
+            // if (liveMatchData != null) {
+            //   unawaited(locator<PowerPlayService>()
+            //       .getUserTransactionHistory(matchData: liveMatchData));
+            // }
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
             await _newUserCheck();
@@ -204,44 +202,45 @@ class LendboxTransactionService extends BaseTransactionService {
   }
 
   Future<void> _newUserCheck() async {
-    locator<MarketingEventHandlerService>().getHappyHourCampaign();
+    unawaited(locator<MarketingEventHandlerService>().getHappyHourCampaign());
 
-    if (_userService!.baseUser!.segments.contains("NEW_USER")) {
+    if (_userService.baseUser!.segments.contains("NEW_USER")) {
       await CacheService.invalidateByKey(CacheKeys.USER);
-      final list = _userService!.baseUser!.segments;
+      final list = _userService.baseUser!.segments;
       list.remove("NEW_USER");
-      _userService!.userSegments = list;
-      _userService!.baseUser!.segments = list;
+      _userService.userSegments = list;
+      _userService.baseUser!.segments = list;
     }
   }
 
   Future<void> transactionResponseUpdate(
       {List<String>? gtIds, double? amount}) async {
-    _logger!.d("Polling response processing");
+    _logger.d("Polling response processing");
     try {
       //add this to augmontBuyVM
-      _userCoinService!.getUserCoinBalance();
+      unawaited(_userCoinService.getUserCoinBalance());
       double newFlcBalance = amount ?? 0;
       if (newFlcBalance > 0) {
-        _userCoinService!.setFlcBalance(
-            (_userCoinService!.flcBalance! + newFlcBalance).toInt());
+        _userCoinService.setFlcBalance(
+            (_userCoinService.flcBalance! + newFlcBalance).toInt());
       }
-      _userService!.getUserFundWalletData();
+      unawaited(_userService.getUserFundWalletData());
       if (currentTransactionState == TransactionState.ongoing) {
         ScratchCardService.scratchCardsList = gtIds;
         // await _gtService.fetchAndVerifyScratchCardByID();
-        await _userService!.getUserJourneyStats();
+        await _userService.getUserJourneyStats();
 
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
       }
 
-      _txnHistoryService!.updateTransactions(InvestmentType.LENDBOXP2P);
+      unawaited(
+          _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P));
     } catch (e) {
-      _logger!.e(e);
-      _internalOpsService!.logFailure(_userService!.baseUser!.uid,
-          FailType.DepositPayloadError, e as Map<String, dynamic>);
+      _logger.e(e);
+      unawaited(_internalOpsService.logFailure(_userService.baseUser!.uid,
+          FailType.DepositPayloadError, e as Map<String, dynamic>));
     }
   }
 
