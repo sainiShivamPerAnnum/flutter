@@ -44,8 +44,8 @@ class AmountChip extends StatelessWidget {
                   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   border: Border.all(
                     color: isActive
-                        ? Color(0xFFFEF5DC)
-                        : Color(0xFFFEF5DC).withOpacity(0.2),
+                        ? const Color(0xFFFEF5DC)
+                        : const Color(0xFFFEF5DC).withOpacity(0.2),
                     width: SizeConfig.border0,
                   ),
                 ),
@@ -65,7 +65,7 @@ class AmountChip extends StatelessWidget {
                   horizontal: SizeConfig.padding4,
                   vertical: SizeConfig.padding2,
                 ),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: UiConstants.primaryColor,
                 ),
                 child: Text(

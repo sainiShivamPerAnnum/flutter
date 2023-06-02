@@ -63,7 +63,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               onAmountChange: (int amount) {},
               isbuyView: false,
             ),
-            Spacer(),
+            const Spacer(),
             model.withdrawableResponseMessage.isNotEmpty
                 ? Container(
                     margin: EdgeInsets.symmetric(
@@ -114,7 +114,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                               height: SizeConfig.screenWidth! * 0.1556,
                               alignment: Alignment.center,
                               width: SizeConfig.screenWidth! * 0.7,
-                              child: LinearProgressIndicator(
+                        child: const LinearProgressIndicator(
                                 color: UiConstants.primaryColor,
                                 backgroundColor:
                                     UiConstants.kDarkBackgroundColor,
