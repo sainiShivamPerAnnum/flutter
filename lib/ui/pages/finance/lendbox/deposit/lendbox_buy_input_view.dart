@@ -500,6 +500,7 @@ class ViewBreakdown extends StatelessWidget {
               amount: model.amountController?.text ?? '0',
               assetType: model.floAssetType,
               isLendboxOldUser: model.isLendboxOldUser,
+              onChanged: (_) {},
             ),
             Row(
               children: [

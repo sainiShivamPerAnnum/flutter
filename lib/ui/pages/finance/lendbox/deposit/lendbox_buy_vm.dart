@@ -271,7 +271,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       _isBuyInProgress = false;
       forcedBuy = false;
       BaseUtil.showNegativeAlert(
-          locale.enterAmountGreaterThan, locale.enterAmount);
+          "Invalid Amount", "Please Enter Amount Greater than $minAmount");
       notifyListeners();
       return;
     }
@@ -478,6 +478,22 @@ class LendboxBuyViewModel extends BaseViewModel {
     updateFieldWidth();
 
     appliedCoupon = null;
+  }
+
+  String calculateAmountAfter6Months(String amount) {
+    int interest = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
+
+    double principal = double.tryParse(amount) ?? 0.0;
+    double rateOfInterest = interest / 100.0;
+    int timeInMonths = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 2 : 4;
+
+    // 0.12 / 365 * amt * (365 / 2)
+    //0.10 / 365 * amt * (365 / 4)
+
+    double amountAfterMonths =
+        rateOfInterest / 365 * principal * (365 / timeInMonths);
+
+    return (principal + amountAfterMonths).toStringAsFixed(2);
   }
 
   void openReinvestBottomSheet() {

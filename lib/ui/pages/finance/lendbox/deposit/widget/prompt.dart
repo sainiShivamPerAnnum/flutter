@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -25,9 +26,15 @@ class ReInvestPrompt extends HookWidget {
   final String assetType;
   final LendboxBuyViewModel model;
 
+  String get subtitle =>
+      "At the end of ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)";
+
+  String get maturityAmount => model.calculateAmountAfter6Months(amount);
+
   @override
   Widget build(BuildContext context) {
     final selectedOption = useState(-1);
+    // final maturityAmount = useState("");
     return Container(
       // height: SizeConfig.screenHeight! * 0.6,
       padding: EdgeInsets.all(SizeConfig.padding16),
@@ -39,6 +46,10 @@ class ReInvestPrompt extends HookWidget {
               amount: amount,
               assetType: assetType,
               isLendboxOldUser: model.isLendboxOldUser,
+              onChanged: (value) {
+                // log("value: $value --- ${value.runtimeType}");
+                // maturityAmount.value = value.toStringAsFixed(2);
+              },
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
@@ -51,7 +62,8 @@ class ReInvestPrompt extends HookWidget {
                       style: TextStyles.sourceSans.body2,
                       children: [
                         TextSpan(
-                          text: "after 6 months?",
+                          text:
+                              "after ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months?",
                           style: TextStyles.sourceSansB.body2,
                         ),
                       ],
@@ -88,8 +100,8 @@ class ReInvestPrompt extends HookWidget {
             OptionContainer(
               optionIndex: 1,
               title:
-                  'Re-invest ₹${amount} in ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
-              description: "At the end of 6 months (Maturity)",
+                  'Re-invest ₹${maturityAmount} in ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
+              description: subtitle,
               isSelected: selectedOption.value == 1,
               onTap: () {
                 model.maturityPref = "1";
@@ -99,8 +111,8 @@ class ReInvestPrompt extends HookWidget {
             OptionContainer(
               optionIndex: 2,
               title:
-                  "Move ₹${amount} to ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
-              description: "At the end of 6 months (Maturity)",
+                  "Move ₹${maturityAmount} to ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
+              description: subtitle,
               isSelected: selectedOption.value == 2,
               onTap: () {
                 model.maturityPref = "2";
@@ -110,7 +122,7 @@ class ReInvestPrompt extends HookWidget {
             OptionContainer(
               optionIndex: 3,
               title: "Withdraw to Bank",
-              description: "At the end of 6 months (Maturity)",
+              description: subtitle,
               isSelected: selectedOption.value == 3,
               onTap: () {
                 model.maturityPref = "0";
@@ -397,12 +409,14 @@ class InvestmentForeseenWidget extends StatelessWidget {
       {Key? key,
       required this.amount,
       required this.assetType,
-      required this.isLendboxOldUser})
+      required this.isLendboxOldUser,
+      required this.onChanged})
       : super(key: key);
 
   final String amount;
   final String assetType;
   final bool isLendboxOldUser;
+  final OnAmountChanged onChanged;
 
   String getTitle() {
     if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
@@ -411,6 +425,17 @@ class InvestmentForeseenWidget extends StatelessWidget {
 
     if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
       return "in 10% Flo";
+    }
+    return "";
+  }
+
+  String getSubTitle() {
+    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return "for 6 months";
+    }
+
+    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return "for 3 months";
     }
     return "";
   }
@@ -427,6 +452,8 @@ class InvestmentForeseenWidget extends StatelessWidget {
 
     double amountAfterMonths =
         rateOfInterest / 365 * principal * (365 / timeInMonths);
+
+    onChanged(amountAfterMonths);
 
     return (principal + amountAfterMonths).toStringAsFixed(2);
   }
@@ -455,7 +482,7 @@ class InvestmentForeseenWidget extends StatelessWidget {
                 style: TextStyles.rajdhaniSB.body3,
               ),
               Text(
-                "₹${amount}",
+                "₹$amount",
                 style: TextStyles.sourceSansB.title5,
               )
             ],
@@ -468,7 +495,7 @@ class InvestmentForeseenWidget extends StatelessWidget {
                     .colour(UiConstants.kTabBorderColor),
               ),
               Text(
-                "for 6 month",
+                getSubTitle(),
                 style: TextStyles.sourceSansB.body3,
               )
             ],
@@ -511,6 +538,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
   String maturityPref = "NA";
   int _selectedOption = -1;
   bool _isLoading = false;
+  String? maturityAmount;
 
   bool get isLoading => _isLoading;
 
@@ -528,6 +556,9 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
     });
   }
 
+  String get subtitle =>
+      "At the end of ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)";
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -538,12 +569,16 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
           // mainAxisSize: MainAxisSize.min,
           children: [
             InvestmentForeseenWidget(
-              amount: widget.amount,
-              assetType: widget.assetType,
-              isLendboxOldUser: locator<UserService>()
-                  .userSegments
-                  .contains(Constants.US_FLO_OLD),
-            ),
+                amount: widget.amount,
+                assetType: widget.assetType,
+                isLendboxOldUser: locator<UserService>()
+                    .userSegments
+                    .contains(Constants.US_FLO_OLD),
+                onChanged: (value) {
+                  setState(() {
+                    maturityAmount = value.toStringAsFixed(2);
+                  });
+                }),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
               child: Row(
@@ -555,7 +590,8 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
                       style: TextStyles.sourceSans.body2,
                       children: [
                         TextSpan(
-                          text: "after 6 months?",
+                          text:
+                              "after ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months?",
                           style: TextStyles.sourceSansB.body2,
                         ),
                       ],
@@ -592,8 +628,8 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
             OptionContainer(
               optionIndex: 1,
               title:
-                  'Re-invest ₹${widget.amount} in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
-              description: "At the end of 6 months (Maturity)",
+                  'Re-invest ₹$maturityAmount in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
+              description: subtitle,
               isSelected: selectedOption == 1,
               onTap: () {
                 maturityPref = "1";
@@ -603,8 +639,8 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
             OptionContainer(
               optionIndex: 2,
               title:
-                  "Move ₹${widget.amount} to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
-              description: "At the end of 6 months (Maturity)",
+                  "Move ₹$maturityAmount to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
+              description: subtitle,
               isSelected: selectedOption == 2,
               onTap: () {
                 maturityPref = "2";
@@ -614,7 +650,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
             OptionContainer(
               optionIndex: 3,
               title: "Withdraw to Bank",
-              description: "At the end of 6 months (Maturity)",
+              description: subtitle,
               isSelected: selectedOption == 3,
               onTap: () {
                 maturityPref = "0";
