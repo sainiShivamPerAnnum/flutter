@@ -107,11 +107,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         AppState.screenStack.last == ScreenItem.modalsheet) {
       log("AppState.screenStack.last ${AppState.screenStack.last.name}");
 
-      try {
-        Navigator.pop(_routerDelegate!.navigatorKey.currentContext!);
-      } catch (e) {
-        logger!.e(e);
-      }
+      Navigator.pop(_routerDelegate!.navigatorKey.currentContext!);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
       return Future.value(true);
