@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -34,7 +35,6 @@ class ReInvestPrompt extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selectedOption = useState(-1);
-    // final maturityAmount = useState("");
     return Container(
       // height: SizeConfig.screenHeight! * 0.6,
       padding: EdgeInsets.all(SizeConfig.padding16),
@@ -154,9 +154,11 @@ class ReInvestPrompt extends HookWidget {
                       model.forcedBuy = true;
                       model.maturityPref = "NA";
 
+                      SystemChannels.textInput.invokeMethod('TextInput.hide');
                       Future.delayed(const Duration(seconds: 2), () async {
                         if (!model.isBuyInProgress) {
-                          // FocusScope.of(context).unfocus();
+                          //   FocusScope.of(context).unfocus();
+
                           await model.initiateBuy();
                         }
                       });

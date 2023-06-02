@@ -138,7 +138,10 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   isEnabled:
                       !widget.model.isBuyInProgress || !widget.model.forcedBuy,
                   maxAmount: widget.model.maxAmount,
-                  maxAmountMsg: locale.upto50000,
+                  maxAmountMsg: widget.model.floAssetType ==
+                          Constants.ASSET_TYPE_FLO_FIXED_6
+                      ? 'Upto ₹ 99,999 can be invested at one go'
+                      : locale.upto50000,
                   minAmount: widget.model.minAmount,
                   minAmountMsg:
                       "Minimum purchase amount is ₹ ${widget.model.minAmount.toInt()}",

@@ -203,6 +203,9 @@ class LendboxBuyViewModel extends BaseViewModel {
     await getAssetOptionsModel();
 
     log("isLendboxOldUser $isLendboxOldUser");
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      maxAmount = 99999;
+    }
     skipMl = isSkipMilestone;
 
     int? data = assetOptionsModel?.data.userOptions
@@ -457,8 +460,8 @@ class LendboxBuyViewModel extends BaseViewModel {
     if (showMaxCapText) showMaxCapText = false;
     if (showMinCapText) showMinCapText = false;
     if (val != null && val.isNotEmpty) {
-      if (int.tryParse(val.trim())! > 50000) {
-        buyAmount = 50000;
+      if (int.tryParse(val.trim())! > maxAmount) {
+        buyAmount = maxAmount.toInt();
         showMaxCapText = true;
         amountController!.text = buyAmount!.toInt().toString();
       } else {
