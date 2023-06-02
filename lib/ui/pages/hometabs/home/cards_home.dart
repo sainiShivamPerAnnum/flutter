@@ -430,8 +430,8 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             duration: duration,
                                             asset: Assets.goldAsset,
                                             title: "Digital Gold",
-                                            infoTitle1: "Gold Value",
-                                            infoTitle2: "Gold Amount",
+                                            infoTitle1: "Gold Amount",
+                                            infoTitle2: "Gold Value",
                                             secondaryColor:
                                                 UiConstants.kGoldContainerColor,
                                             subtitle:
@@ -740,21 +740,26 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.end,
                                           children: [
-                                            Selector<UserService,
-                                                UserFundWallet?>(
-                                              builder: (_, wallet, child) =>
+                                            Selector<UserService, Portfolio>(
+                                              builder: (_, portfolio, child) =>
                                                   Text(
-                                                "₹${(wallet?.netWorth ?? 0).toInt()}",
+                                                "₹${(portfolio.absolute.balance).toInt()}",
                                                 style: GoogleFonts.sourceSans3(
                                                   fontWeight: FontWeight.w800,
                                                   color: Colors.white,
-                                                  fontSize:
-                                                      SizeConfig.titleSize *
-                                                          1.2,
+                                                  fontSize: SizeConfig
+                                                          .titleSize *
+                                                      ((portfolio.absolute
+                                                                      .balance)
+                                                                  .toString()
+                                                                  .length >
+                                                              6
+                                                          ? 0.9
+                                                          : 1.2),
                                                 ),
                                               ),
                                               selector: (_, userService) =>
-                                                  userService.userFundWallet,
+                                                  userService.userPortfolio,
                                             ),
                                             Selector<UserService, Portfolio>(
                                               builder:
@@ -812,8 +817,14 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                     ],
                                                   ),
                                                   SizedBox(
-                                                      height:
-                                                          SizeConfig.padding16)
+                                                      height: value.absolute
+                                                                  .balance
+                                                                  .toString()
+                                                                  .length >
+                                                              6
+                                                          ? SizeConfig.padding12
+                                                          : SizeConfig
+                                                              .padding16)
                                                 ],
                                               ),
                                               selector: (p0, p1) =>
@@ -1214,7 +1225,7 @@ class CardContent extends StatelessWidget {
       case "Fello Flo":
         return "₹${BaseUtil.digitPrecision(portfolio?.flo.balance ?? 0.0, 2)}";
       case "Digital Gold":
-        return "₹${BaseUtil.digitPrecision(wallet?.augGoldBalance ?? 0, 2)}";
+        return "₹${BaseUtil.digitPrecision(portfolio?.gold.balance ?? 0, 2)}";
       case "Fello Rewards":
         return "₹${wallet?.unclaimedBalance ?? 0}";
       default:

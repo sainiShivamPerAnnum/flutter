@@ -78,8 +78,10 @@ class SaveViewModel extends BaseViewModel {
   ];
   double _nonWithdrawableQnt = 0.0;
   double _withdrawableQnt = 0.0;
+  Timer? _timer;
+
   late final PageController offersController =
-      PageController(viewportFraction: 0.9, initialPage: 1);
+      PageController(viewportFraction: 0.9, initialPage: 0);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
@@ -93,6 +95,7 @@ class SaveViewModel extends BaseViewModel {
   bool _isongoing = false;
   bool _isLockInReached = false;
   bool _isSellButtonVisible = false;
+  int _currentPage = 0;
 
   final String fetchBlogUrl =
       'https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2/blog/';
@@ -180,9 +183,28 @@ class SaveViewModel extends BaseViewModel {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _sellService!.init();
-      getCampaignEvents();
+      getCampaignEvents().then((val) {
+        _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
+          if (_currentPage < 2) {
+            _currentPage++;
+          } else {
+            _currentPage = 0;
+          }
+          if (offersController.hasClients) {
+            offersController.animateToPage(
+              _currentPage,
+              duration: Duration(milliseconds: 350),
+              curve: Curves.easeIn,
+            );
+          }
+        });
+      });
       getSaveViewBlogs();
     });
+  }
+
+  void dump() {
+    _timer?.cancel();
   }
 
   void updateIsLoading(bool value) {

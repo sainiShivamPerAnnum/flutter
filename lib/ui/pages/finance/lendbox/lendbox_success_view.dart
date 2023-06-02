@@ -172,7 +172,7 @@ class LendboxSuccessView extends StatelessWidget {
                               right: SizeConfig.padding8,
                             ),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(locale.invested,
                                     style: TextStyles.sourceSans.body2
@@ -204,7 +204,7 @@ class LendboxSuccessView extends StatelessWidget {
                                 bottom: SizeConfig.padding16,
                                 right: SizeConfig.padding16),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
                                   _txnService

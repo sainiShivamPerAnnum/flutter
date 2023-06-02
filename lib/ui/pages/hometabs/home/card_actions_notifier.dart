@@ -1,3 +1,4 @@
+import 'package:felloapp/util/haptic.dart';
 import 'package:flutter/foundation.dart';
 
 class CardActionsNotifier extends ChangeNotifier {
@@ -8,6 +9,7 @@ class CardActionsNotifier extends ChangeNotifier {
 
   set isHorizontalView(bool value) {
     _isHorizontalView = value;
+    Haptic.vibrate();
     notifyListeners();
   }
 
@@ -15,6 +17,7 @@ class CardActionsNotifier extends ChangeNotifier {
 
   set isVerticalView(bool value) {
     _isVerticalView = value;
+    Haptic.vibrate();
     // if (value == false) AppState.backButtonDispatcher!.didPopRoute();
 
     notifyListeners();

@@ -1,5 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/walkthrough_video_section.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
@@ -58,13 +58,12 @@ class SaveWelcomeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Fello Balance", style: TextStyles.rajdhaniSB.title3),
-                    Selector<UserService, UserFundWallet?>(
-                        builder: (_, wallet, child) => Text(
-                              "₹${BaseUtil.digitPrecision(wallet?.netWorth ?? 0, 2)}",
+                    Selector<UserService, Portfolio>(
+                        builder: (_, portfolio, child) => Text(
+                              "₹${BaseUtil.digitPrecision(portfolio.absolute.balance, 2, false)}",
                               style: TextStyles.sourceSansB.title4,
                             ),
-                        selector: (_, userService) =>
-                            userService.userFundWallet)
+                        selector: (_, userService) => userService.userPortfolio)
                   ],
                 ),
                 const Spacer(),

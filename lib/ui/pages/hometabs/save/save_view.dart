@@ -30,6 +30,7 @@ class Save extends StatelessWidget {
       value: locator<BankAndPanService>(),
       child: BaseView<SaveViewModel>(
         onModelReady: (model) => model.init(),
+        onModelDispose: (model) => model.dump(),
         builder: (ctx, model, child) {
           log("ROOT: Save view baseview build called");
           return ShowCaseWidget(
