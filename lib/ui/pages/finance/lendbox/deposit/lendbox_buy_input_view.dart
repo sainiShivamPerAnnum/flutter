@@ -165,7 +165,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
-                if (widget.model.showCoupons)
+                if (widget.model.showCoupons) ...[
                   FloCouponWidget(
                     widget.model.couponList,
                     widget.model,
@@ -173,10 +173,11 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                       widget.model.applyCoupon(coupon.code, false);
                     },
                   ),
-                // const Spacer(),
-                SizedBox(
-                  height: SizeConfig.padding32,
-                ),
+                  // const Spacer(),
+                  SizedBox(
+                    height: SizeConfig.padding32,
+                  ),
+                ],
 
                 if (widget.model.floAssetType ==
                         Constants.ASSET_TYPE_FLO_FIXED_6 ||
@@ -245,9 +246,8 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                             onTap: () {
                               if ((widget.model.buyAmount ?? 0) <
                                   widget.model.minAmount) {
-                                BaseUtil.showNegativeAlert(
-                                    locale.enterAmountGreaterThan,
-                                    locale.enterAmount);
+                                BaseUtil.showNegativeAlert("Invalid Amount",
+                                    "Please Enter Amount Greater than ${widget.model.minAmount}");
                                 return;
                               }
 
@@ -462,7 +462,7 @@ class FloBuyNavBar extends StatelessWidget {
                 width: SizeConfig.screenWidth! * 0.32,
                 height: SizeConfig.screenWidth! * 0.12,
                 onPressed: () => onTap(),
-                btnText: 'Proceed'.toUpperCase(),
+                btnText: 'SAVE',
                 style: TextStyles.rajdhaniB.body1,
               ),
             ],

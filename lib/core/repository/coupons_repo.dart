@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -57,13 +53,17 @@ class CouponRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<CouponModel>>> getCoupons() async {
+  Future<ApiResponse<List<CouponModel>>> getCoupons(
+      {required String assetType}) async {
     try {
       final token = await getBearerToken();
       final couponResponse = await APIService.instance.getData(
         ApiPath.getCoupons,
         cBaseUrl: _baseUrl,
         token: token,
+        queryParams: {
+          "type": assetType,
+        },
       );
 
       final List<CouponModel> coupons =

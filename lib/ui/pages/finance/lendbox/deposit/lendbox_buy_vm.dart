@@ -377,8 +377,10 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   getAvailableCoupons() async {
     final ApiResponse<List<CouponModel>> couponsRes =
-        await _couponRepo!.getCoupons();
-    if (couponsRes.code == 200) {
+        await _couponRepo!.getCoupons(assetType: floAssetType);
+    if (couponsRes.code == 200 &&
+        couponsRes.model != null &&
+        (couponsRes.model?.length ?? 0) > 1) {
       couponList = couponsRes.model;
       if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       showCoupons = true;

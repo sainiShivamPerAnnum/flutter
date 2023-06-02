@@ -819,13 +819,13 @@ class BuyViewModel extends BaseViewModel {
 //----------------------------------------------- COUPON LOGIC -------------------------------
 
   getAvailableCoupons() async {
-    final ApiResponse<List<CouponModel>> couponsRes =
-        await _couponRepo!.getCoupons();
-    if (couponsRes.code == 200) {
-      couponList = couponsRes.model;
-      if (couponList![0].priority == 1) focusCoupon = couponList![0];
-      showCoupons = true;
-    }
+    // final ApiResponse<List<CouponModel>> couponsRes =
+    //     await _couponRepo!.getCoupons(assetType: "");
+    // if (couponsRes.code == 200) {
+    //   couponList = couponsRes.model;
+    //   if (couponList![0].priority == 1) focusCoupon = couponList![0];
+    //   showCoupons = true;
+    // }
   }
 
   Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
