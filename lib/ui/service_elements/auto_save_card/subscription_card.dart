@@ -171,7 +171,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        top: SizeConfig.padding10,
+        top: SizeConfig.padding20,
         bottom: SizeConfig.padding16,
       ),
       child: Column(

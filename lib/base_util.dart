@@ -8,6 +8,7 @@ import 'package:another_flushbar/flushbar.dart'; //Pub Imports
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -29,7 +30,9 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
@@ -445,6 +448,15 @@ class BaseUtil extends ChangeNotifier {
     //   locator<BackButtonActions>().isTransactionCancelled = false;
     // });
     // });
+  }
+
+  Future<void> newUserCheck() async {
+    unawaited(locator<MarketingEventHandlerService>().getHappyHourCampaign());
+
+    if (_userService.userSegments.contains("NEW_USER")) {
+      await CacheService.invalidateByKey(CacheKeys.USER);
+      await _userService.setBaseUser();
+    }
   }
 
   static String getMaturityPref(String maturityEnum) {

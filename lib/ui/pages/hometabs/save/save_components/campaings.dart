@@ -24,9 +24,6 @@ class Campaigns extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: SizeConfig.padding24),
-        // TitleSubtitleContainer(
-        //   title: locale.offers,
-        // ),
         CampaignCardSection(saveVm: model),
       ],
     );
@@ -59,7 +56,8 @@ class CampaignCardSection extends StatelessWidget {
                   final event = saveVm.ongoingEvents![index];
                   return GestureDetector(
                     onTap: () {
-                      saveVm.trackChallengeTapped(event.type, index);
+                      saveVm.trackChallengeTapped(
+                          event.thumbnail, event.url, index);
                       AppState.delegate!.parseRoute(Uri.parse(event.type));
                     },
                     child: Padding(

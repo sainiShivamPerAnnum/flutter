@@ -222,6 +222,13 @@ class BaseRemoteConfig {
 
   static const Map<String, bool> _AUTOSAVE_ACTIVE = {'autosaveActive': false};
   static const Map<String, bool> _SHOW_NEW_AUTOSAVE = {'showNewAutosave': true};
+  static const Map<String, List<String>> _YOUTUBE_VIDEOS = {
+    'youtubeVideos': [
+      "https://www.youtube.com/watchv=mzaIjBjUM1Y",
+      "https://www.youtube.com/watch?v=CDokUdux0rc",
+      "https://www.youtube.com/watch?v=zFhYJRqz_xk"
+    ]
+  };
 
   static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
@@ -291,6 +298,7 @@ class BaseRemoteConfig {
     ..._AUTOSAVE_ACTIVE,
     "changeAppIcon": false,
     ..._SHOW_NEW_AUTOSAVE,
+    ..._YOUTUBE_VIDEOS,
   };
 
   static Future<bool> init() async {

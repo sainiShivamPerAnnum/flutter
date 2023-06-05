@@ -30,6 +30,7 @@ class Constants {
 
   //Segments
   static const String US_FLO_OLD = "OLD_LB";
+  static const String NEW_USER = "NEW_USER";
 
   //HIGHEST SAVER
   static const String HS_DAILY_SAVER = "SAVER_DAILY";

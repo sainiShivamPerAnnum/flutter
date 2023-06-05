@@ -35,6 +35,7 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/default_quick_save_modal_sheet.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/quick_save_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
+import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/util/constants.dart';
@@ -198,11 +199,21 @@ class RootViewModel extends BaseViewModel {
                 if (AppState.screenStack.last == ScreenItem.dialog) {
                   AppState.screenStack.removeLast();
                 }
+                if (await locator<ScratchCardService>()
+                    .fetchAndVerifyScratchCardByID()) {
+                  await locator<ScratchCardService>()
+                      .showInstantScratchCardView(source: GTSOURCE.newuser);
+                }
                 return Future.value(true);
               },
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   AppState.backButtonDispatcher!.didPopRoute();
+                  if (await locator<ScratchCardService>()
+                      .fetchAndVerifyScratchCardByID()) {
+                    await locator<ScratchCardService>()
+                        .showInstantScratchCardView(source: GTSOURCE.newuser);
+                  }
                 },
                 child: Image.asset(
                     _userService.userSegments.contains(Constants.US_FLO_OLD)

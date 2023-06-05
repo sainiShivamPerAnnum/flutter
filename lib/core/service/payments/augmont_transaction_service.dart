@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/payment_mode_enum.dart';
@@ -16,9 +15,7 @@ import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_mode
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -262,7 +259,7 @@ class AugmontTransactionService extends BaseTransactionService {
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
-            await _newUserCheck();
+            await locator<BaseUtil>().newUserCheck();
             PowerPlayService.powerPlayDepositFlow = false;
             MatchData? liveMatchData =
                 locator<PowerPlayService>().liveMatchData;
@@ -296,18 +293,6 @@ class AugmontTransactionService extends BaseTransactionService {
           );
           break;
       }
-    }
-  }
-
-  Future<void> _newUserCheck() async {
-    locator<MarketingEventHandlerService>().getHappyHourCampaign();
-
-    if (_userService!.baseUser!.segments.contains("NEW_USER")) {
-      await CacheService.invalidateByKey(CacheKeys.USER);
-      final list = _userService!.baseUser!.segments;
-      list.remove("NEW_USER");
-      _userService!.userSegments = list;
-      _userService!.baseUser!.segments = list;
     }
   }
 

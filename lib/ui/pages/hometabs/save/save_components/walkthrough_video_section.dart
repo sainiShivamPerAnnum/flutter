@@ -1,7 +1,10 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -39,6 +42,13 @@ class WalthroughVideosSection extends StatelessWidget {
                   hapticVibrate: true,
                   barrierColor: Colors.black54,
                   content: Dialog(child: YoutubePlayerView(url: videos[i])));
+
+              locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.videoTileTapped,
+                  properties: {
+                    "order": i + 1,
+                    "video_url": videos[i],
+                  });
             },
             child: Container(
               width: SizeConfig.screenWidth! * 0.66,

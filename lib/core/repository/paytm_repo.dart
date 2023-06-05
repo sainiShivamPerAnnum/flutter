@@ -122,7 +122,8 @@ class PaytmRepository extends BaseRepo {
       final _queryParams = {
         "orderId": orderId,
         "uid": _uid,
-        "isOldLbUser": userService.userSegments.contains(Constants.US_FLO_OLD)
+        "isOldLbUser":
+            userService.userSegments.contains(Constants.US_FLO_OLD).toString()
       };
 
       final response = await APIService.instance.getData(
