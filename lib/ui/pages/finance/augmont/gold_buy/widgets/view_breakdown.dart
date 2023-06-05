@@ -47,10 +47,39 @@ class ViewBreakdown extends StatelessWidget {
           ),
           Row(
             children: [
-              Text("Digital Gold Amount", style: TextStyles.sourceSansSB.body1),
+              Text("Invested Amount", style: TextStyles.sourceSans.body2),
               const Spacer(),
               Text(
                 "₹${model.goldAmountController?.text ?? '0'}",
+                style: TextStyles.sourceSansSB.body1,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          Row(
+            children: [
+              Text(
+                "GST (${model.goldRates?.igstPercent}%)",
+                style: TextStyles.sourceSans.body2,
+              ),
+              const Spacer(),
+              Text(
+                "₹${((model.goldRates?.igstPercent)! / 100 * double.parse(model.goldAmountController?.text ?? '0')).toStringAsFixed(2)}",
+                style: TextStyles.sourceSansSB.body1,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          Row(
+            children: [
+              Text("Digital Gold Amount", style: TextStyles.sourceSans.body2),
+              const Spacer(),
+              Text(
+                "₹${(int.tryParse(model.goldAmountController?.text ?? '0')! - ((model.goldRates?.igstPercent)! / 100 * double.parse(model.goldAmountController?.text ?? '0'))).toStringAsFixed(2)}",
                 style: TextStyles.sourceSansSB.body1,
               ),
             ],
@@ -67,22 +96,6 @@ class ViewBreakdown extends StatelessWidget {
               const Spacer(),
               Text(
                 "${model.goldAmountInGrams}gms",
-                style: TextStyles.sourceSansSB.body2,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          Row(
-            children: [
-              Text(
-                "GST (${model.goldRates?.igstPercent}%)",
-                style: TextStyles.sourceSans.body2,
-              ),
-              const Spacer(),
-              Text(
-                "₹${((model.goldRates?.igstPercent)! / 100 * double.parse(model.goldAmountController?.text ?? '0')).toStringAsFixed(2)}",
                 style: TextStyles.sourceSansSB.body2,
               ),
             ],
