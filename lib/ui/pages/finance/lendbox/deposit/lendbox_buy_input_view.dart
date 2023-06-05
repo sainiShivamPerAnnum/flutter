@@ -673,55 +673,63 @@ class MaturityDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ||
-        model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 1,
-              // margin: EdgeInsets.symmetric(
-              //     horizontal: SizeConfig.pageHorizontalMargins),
-              color: UiConstants.kModalSheetSecondaryBackgroundColor
-                  .withOpacity(0.2),
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            Text(
-              'Maturity Details',
-              style: TextStyles.sourceSansSB.body1,
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            GestureDetector(
-              onTap: () {
-                if (!model.isBuyInProgress) {
-                  model.openReinvestBottomSheet();
-                }
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  model.showReinvestSubTitle(),
-                  Text(
-                    model.selectedOption == -1 ? 'Choose Now' : "Change",
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTabBorderColor)
-                        .underline,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    return const SizedBox();
+    return Selector<BankAndPanService, bool>(
+      selector: (p0, p1) => p1.isKYCVerified,
+      builder: (ctx, isKYCVerified, child) {
+        return (!isKYCVerified)
+            ? const SizedBox()
+            : (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ||
+                    model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3)
+                ? Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 1,
+                          // margin: EdgeInsets.symmetric(
+                          //     horizontal: SizeConfig.pageHorizontalMargins),
+                          color: UiConstants.kModalSheetSecondaryBackgroundColor
+                              .withOpacity(0.2),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                        Text(
+                          'Maturity Details',
+                          style: TextStyles.sourceSansSB.body1,
+                          textAlign: TextAlign.left,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            if (!model.isBuyInProgress) {
+                              model.openReinvestBottomSheet();
+                            }
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              model.showReinvestSubTitle(),
+                              Text(
+                                model.selectedOption == -1
+                                    ? 'Choose Now'
+                                    : "Change",
+                                style: TextStyles.sourceSans.body3
+                                    .colour(UiConstants.kTabBorderColor)
+                                    .underline,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : const SizedBox();
+      },
+    );
   }
 }
