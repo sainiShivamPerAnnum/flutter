@@ -22,6 +22,7 @@ import 'package:showcaseview/showcaseview.dart';
 
 class GoldBuyInputView extends StatefulWidget {
   final bool? skipMl;
+  final int? amount;
   final AugmontTransactionService augTxnService;
   final GoldBuyViewModel model;
 
@@ -30,6 +31,7 @@ class GoldBuyInputView extends StatefulWidget {
     this.skipMl,
     required this.model,
     required this.augTxnService,
+    this.amount,
   }) : super(key: key);
 
   @override
