@@ -580,7 +580,7 @@ class UserProfileVM extends BaseViewModel {
                 _analyticsService!.signOut();
                 _bankAndKycService!.dump();
                 _powerPlayService.dump();
-                ScratchCardService.dump();
+                _gtService.dump();
                 _tambolaRepo.dump();
                 locator<JourneyRepository>().dump();
                 _appstate.dump();
@@ -824,10 +824,10 @@ class UserProfileVM extends BaseViewModel {
               Preferences.TAMBOLANOTIFICATIONS,
             ) ==
             1,
-        'mUserPrefsFe': _userService.baseUser!.userPreferences.getPreference(
+        'mUserPrefsEr': _userService.baseUser!.userPreferences.getPreference(
               Preferences.FLOINVOICEMAIL,
             ) ==
-            0,
+            1,
       },
     ).then((value) {
       _userService.setBaseUser();
@@ -881,7 +881,7 @@ class UserProfileVM extends BaseViewModel {
           'mUserPrefsEr': _userService.baseUser!.userPreferences.getPreference(
                 Preferences.FLOINVOICEMAIL,
               ) ==
-              0,
+              1,
         },
       ).then(
         (value) {

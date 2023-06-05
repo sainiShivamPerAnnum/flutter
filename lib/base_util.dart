@@ -330,66 +330,66 @@ class BaseUtil extends ChangeNotifier {
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     // if (_userService!.userJourneyStats?.mlIndex == 1)
     //   return BaseUtil.openDialog(
-      //     addToScreenStack: true,
-      //     isBarrierDismissible: true,
-      //     hapticVibrate: false,
-      //     content: CompleteProfileDialog(),
-      //   );
-      final bool? isAugDepositBanned = _userService
-          .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
-      final String? augDepositBanNotice = _userService
-          .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.reason;
-      final bool? islBoxlDepositBanned = _userService
-          .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
-      final String? lBoxDepositBanNotice = _userService
-          .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
-      if (investmentType == InvestmentType.AUGGOLD99 &&
-          isAugDepositBanned != null &&
-          isAugDepositBanned) {
-        return BaseUtil.showNegativeAlert(
-            augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
-      }
+    //     addToScreenStack: true,
+    //     isBarrierDismissible: true,
+    //     hapticVibrate: false,
+    //     content: CompleteProfileDialog(),
+    //   );
+    final bool? isAugDepositBanned = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
+    final String? augDepositBanNotice = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.reason;
+    final bool? islBoxlDepositBanned = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
+    final String? lBoxDepositBanNotice = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
+    if (investmentType == InvestmentType.AUGGOLD99 &&
+        isAugDepositBanned != null &&
+        isAugDepositBanned) {
+      return BaseUtil.showNegativeAlert(
+          augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+    }
 
-      if (investmentType == InvestmentType.LENDBOXP2P &&
-          islBoxlDepositBanned != null &&
-          islBoxlDepositBanned) {
-        return BaseUtil.showNegativeAlert(
-          lBoxDepositBanNotice ?? locale.assetNotAvailable,
-          locale.tryLater,
-        );
-      }
-      double amount = 0;
+    if (investmentType == InvestmentType.LENDBOXP2P &&
+        islBoxlDepositBanned != null &&
+        islBoxlDepositBanned) {
+      return BaseUtil.showNegativeAlert(
+        lBoxDepositBanNotice ?? locale.assetNotAvailable,
+        locale.tryLater,
+      );
+    }
+    double amount = 0;
 
-      if (investmentType == InvestmentType.LENDBOXP2P) {
-        AppState.delegate!.appState.currentAction = PageAction(
-          page: AssetSelectionViewConfig,
-          state: PageState.addWidget,
-          widget: AssetSelectionPage(
-            showOnlyFlo: true,
+    if (investmentType == InvestmentType.LENDBOXP2P) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: AssetSelectionViewConfig,
+        state: PageState.addWidget,
+        widget: AssetSelectionPage(
+          showOnlyFlo: true,
+          amount: amt,
+          isSkipMl: isSkipMl ?? false,
+        ),
+      );
+    }
+
+    if (investmentType == InvestmentType.AUGGOLD99) {
+      BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: false,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: GoldBuyView(
+            onChanged: (p0) => amount = p0,
             amount: amt,
-            isSkipMl: isSkipMl ?? false,
-          ),
-        );
-      }
+            skipMl: isSkipMl ?? false,
+          ));
+    }
 
-      if (investmentType == InvestmentType.AUGGOLD99) {
-        BaseUtil.openModalBottomSheet(
-            addToScreenStack: true,
-            enableDrag: false,
-            hapticVibrate: true,
-            isBarrierDismissible: false,
-            backgroundColor: Colors.transparent,
-            isScrollControlled: true,
-            content: GoldBuyView(
-              onChanged: (p0) => amount = p0,
-              amount: amt,
-              skipMl: isSkipMl ?? false,
-            ));
-      }
-
-      AppState.isRepeated = false;
-      AppState.onTap = null;
-      locator<BackButtonActions>().isTransactionCancelled = false;
+    AppState.isRepeated = false;
+    AppState.onTap = null;
+    locator<BackButtonActions>().isTransactionCancelled = false;
     // });
   }
 
@@ -399,50 +399,50 @@ class BaseUtil extends ChangeNotifier {
     final S locale = locator<S>();
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     final bool? islBoxDepositBanned = _userService
-          .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
-      final String? lBoxDepositBanNotice = _userService
-          .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
+        .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
+    final String? lBoxDepositBanNotice = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
 
-      if (islBoxDepositBanned != null && islBoxDepositBanned) {
-        BaseUtil.showNegativeAlert(
-          lBoxDepositBanNotice ?? locale.assetNotAvailable,
-          locale.tryLater,
-        );
-        return;
-      }
-      Haptic.vibrate();
-      AppState.delegate!.appState.currentAction = PageAction(
-        page: LendboxBuyViewConfig,
-        state: PageState.addWidget,
-        widget: LendboxBuyView(
-          amount: amt,
-          skipMl: isSkipMl ?? false,
-          onChanged: (p0) => p0,
-          floAssetType: floAssetType,
-        ),
+    if (islBoxDepositBanned != null && islBoxDepositBanned) {
+      BaseUtil.showNegativeAlert(
+        lBoxDepositBanNotice ?? locale.assetNotAvailable,
+        locale.tryLater,
       );
+      return;
+    }
+    Haptic.vibrate();
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: LendboxBuyViewConfig,
+      state: PageState.addWidget,
+      widget: LendboxBuyView(
+        amount: amt,
+        skipMl: isSkipMl ?? false,
+        onChanged: (p0) => p0,
+        floAssetType: floAssetType,
+      ),
+    );
 
-      AppState.isRepeated = false;
-      AppState.onTap = null;
-      locator<BackButtonActions>().isTransactionCancelled = false;
+    AppState.isRepeated = false;
+    AppState.onTap = null;
+    locator<BackButtonActions>().isTransactionCancelled = false;
 
-      // BaseUtil.openModalBottomSheet(
-      //   addToScreenStack: true,
-      //   enableDrag: false,
-      //   hapticVibrate: true,
-      //   isBarrierDismissible: false,
-      //   backgroundColor: Colors.transparent,
-      //   isScrollControlled: true,
-      //   content: LendboxBuyView(
-      //     amount: amt,
-      //     skipMl: isSkipMl ?? false,
-      //     onChanged: (p0) => p0,
-      //     floAssetType: floAssetType,
-      //   ),
-      // ).then((value) {
-      //   AppState.isRepeated = false;
-      //   AppState.onTap = null;
-      //   locator<BackButtonActions>().isTransactionCancelled = false;
+    // BaseUtil.openModalBottomSheet(
+    //   addToScreenStack: true,
+    //   enableDrag: false,
+    //   hapticVibrate: true,
+    //   isBarrierDismissible: false,
+    //   backgroundColor: Colors.transparent,
+    //   isScrollControlled: true,
+    //   content: LendboxBuyView(
+    //     amount: amt,
+    //     skipMl: isSkipMl ?? false,
+    //     onChanged: (p0) => p0,
+    //     floAssetType: floAssetType,
+    //   ),
+    // ).then((value) {
+    //   AppState.isRepeated = false;
+    //   AppState.onTap = null;
+    //   locator<BackButtonActions>().isTransactionCancelled = false;
     // });
     // });
   }
@@ -450,13 +450,13 @@ class BaseUtil extends ChangeNotifier {
   static String getMaturityPref(String maturityEnum) {
     switch (maturityEnum) {
       case '0':
-        return "Withdraw to bank";
+        return "Withdrawing to your bank account after maturity";
       case '1':
         return "Auto-investing in 12% Flo after maturity";
       case '2':
         return "Move to Flo Basic after maturity";
       default:
-        return "What will happen to your investment after maturity";
+        return "What will happen to your investment after maturity?";
     }
   }
 

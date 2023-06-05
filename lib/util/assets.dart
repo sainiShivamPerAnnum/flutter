@@ -121,7 +121,7 @@ class Assets {
   static const String goldAsset = "assets/svg/digital_gold.svg";
   static const String rbi = "assets/svg/rbi.svg";
   static const String icici = "assets/svg/icici.svg";
-  static const String sebi = "assets/svg/sebi.svg";
+  static const String sebi = "assets/vectors/icons/sebi_new.svg";
 
   static const String arrowIcon = "assets/svg/raising_arrow.svg";
   static const String timer = "assets/svg/timer.svg";
@@ -313,6 +313,9 @@ class Assets {
   static String multiRealAvatars = "assets/images/cus_photos.png";
   static String btnBg = "assets/vectors/btnBg.svg";
 
+  static String newUserPopUp = "assets/images/new_user_popup.png";
+  static String oldUserPopUp = "assets/images/old_user_popup.png";
+
   static String arrow = "assets/vectors/arrow.svg";
   static final String infoWhyPan =
       'Your PAN Card is used as your unique ID to set up your investment profile in different assets';
@@ -369,6 +372,8 @@ class Assets {
       'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
   static const String tambolaTopBannerLottie =
       '${assetBaseUrl}lotties/tambola_animation.json';
+  static const String tambolaTopBannerTharLottie =
+      'assets/lotties/tambola_thar.json';
 
   //POWER PLAY ASSETS
   static const String powerPlayMain =

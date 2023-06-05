@@ -41,27 +41,38 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
   }
 
   final UserService userService = locator<UserService>();
-  final String flo10Highlights = "P2P Asset  • 10% Returns • RBI Certified";
+  final String flo10Highlights = "P2P Asset  • 10% Returns • 3 months maturity";
 
-  final String flo12Highlights = "Nice Asset  • 12% Returns • Good For you";
+  final String flo12Highlights = "P2P Asset  • 12% Returns • 6 months maturity";
 
   String flo10Description =
       "Fello Flo Premium 10% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 3 months!";
   String flo12Description =
       "Fello Flo Premium 12% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 6 months!";
 
-  bool isInvested = false;
+  bool _isInvested = false;
 
-  List<bool> detStatus = [false, false, false];
+  bool get isInvested => _isInvested;
+
+  set isInvested(bool value) {
+    _isInvested = value;
+    notifyListeners();
+  }
+
+  List<bool> detStatus = [false, false, false, false, false];
   List<String?> faqHeaders = [
-    "Where can I watch?",
-    "Mauris id nibh eu fermentum mattis purus?",
-    "Eros imperdiet rhoncus?"
+    "How safe is the invested money? Who is the money lent to?",
+    "How does Lendbox (P2P Lending partner) manage the risk of default on my money?",
+    "What happens to my money after maturity?",
+    "How can I withdraw my money after maturity?",
+    "How is maturity different from a lock-in?"
   ];
   List<String?> faqResponses = [
-    "Nibh quisque suscipit fermentum netus nulla cras porttitor euismod nulla. Orci, dictumst nec aliquet id ullamcorper venenatis. ",
-    "Nibh quisque suscipit fermentum netus nulla cras porttitor euismod nulla. Orci, dictumst nec aliquet id ullamcorper venenatis. ",
-    "Nibh quisque suscipit fermentum netus nulla cras porttitor euismod nulla. Orci, dictumst nec aliquet id ullamcorper venenatis. "
+    "Your funds are safe and secure with our lending partner Lendbox. To safeguard the investments, a lender's money is distributed across borrowers who are assessed on 200+ parameters to check the creditworthiness of the borrowers to ensure the credibility of borrowers.",
+    "Lendbox follows a robust credit assessment policy to bring only the most creditworthy borrowers to the platform. They categorize borrowers by risk and allocate funds in a manner that reduces the risk of capital erosion for investors. In higher risk categories, lendbox invests as little as ₹100 per loan account and go only as high as ₹5,000 in low risk categories.",
+    "Fello Flo Premium plans allow you to decide what happens to your money after maturity. You can choose what you want to do with your money while you invest. If you do not select a preference, we will contact you and confirm what you want to do with the corpus post maturity.",
+    "You can select the option 'Withdraw to Bank' when you save any amount and the money with the interest will be credited to your respective bank account. Make sure to fill in the bank account details before the end of maturity period.",
+    "You can withdraw your money at any point post the end of a Lock-in period. In case of maturity, you need to decide before hand if your money can be re-invested into the same asset or a different asset or withdrawn to bank at the end of the period",
   ];
 
   List<UserTransaction> transactionsList = [];
@@ -85,6 +96,7 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> getTransactions() async {
+    isInvested = false;
     final response = await _txnHistoryRepo.getUserTransactions(
       type: "DEPOSIT",
       subtype: "LENDBOXP2P",
@@ -94,6 +106,9 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
     );
     if (response.isSuccess()) {
       transactionsList = response.model!.transactions!;
+      if (transactionsList.isNotEmpty) {
+        _isInvested = true;
+      }
       notifyListeners();
     } else {
       BaseUtil.showNegativeAlert("Unable to fetch transactions",

@@ -25,6 +25,7 @@ enum AppConfigKey {
   powerplayConfig,
   predictScreen,
   lendbox,
+  youtube_videos,
 }
 
 extension AppConfigKeys on String {
@@ -81,6 +82,9 @@ extension AppConfigKeys on String {
 
       case "LENDBOXP2P":
         return AppConfigKey.lendbox;
+      case 'youtubeVideos':
+        return AppConfigKey.youtube_videos;
+
       default:
         return AppConfigKey.unknown;
     }

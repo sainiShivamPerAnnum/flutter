@@ -29,6 +29,7 @@ class SizeConfig {
   static late double globalMargin;
   static double? scaffoldMargin;
   static late EdgeInsets viewInsets;
+  static EdgeInsets? viewPadding;
   static late double fToolBarHeight;
 
   void init(BuildContext context) {
@@ -52,6 +53,7 @@ class SizeConfig {
     scaffoldMargin = blockSizeHorizontal * 5;
     fToolBarHeight = viewInsets.top + kToolbarHeight;
     padding = _mediaQueryData.padding;
+    viewPadding = _mediaQueryData.viewPadding;
   }
 
   // TEXT SIZES
@@ -146,7 +148,7 @@ class SizeConfig {
   static double get navBarAspectRatio => 4.16;
   static double get navBarHeight =>
       kBottomNavigationBarHeight +
-      math.max(SizeConfig.viewInsets.bottom, SizeConfig.padding8);
+      math.max(SizeConfig.viewPadding!.bottom, SizeConfig.padding8);
 
   //Avatar
   static double get avatarRadius => screenWidth! * 0.048;

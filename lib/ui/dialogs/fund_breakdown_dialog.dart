@@ -34,6 +34,7 @@ class FundBreakdownDialog extends StatelessWidget {
               Text("Your Return Details", style: TextStyles.sourceSansM.title3),
               SizedBox(height: SizeConfig.padding16),
               ListTile(
+                minVerticalPadding: 0,
                 title:
                     Text("Fello Balance", style: TextStyles.rajdhaniSB.body1),
                 trailing: Text(
@@ -42,6 +43,7 @@ class FundBreakdownDialog extends StatelessWidget {
                 ),
               ),
               ListTile(
+                minVerticalPadding: 0,
                 title: Text("Invested Balance",
                     style: TextStyles.rajdhaniSB.body1),
                 trailing: Text(
@@ -55,6 +57,7 @@ class FundBreakdownDialog extends StatelessWidget {
                   borderRadius:
                       BorderRadius.circular(SizeConfig.cardBorderRadius),
                 ),
+                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
                 child: Column(children: [
                   ListTile(
                     title:

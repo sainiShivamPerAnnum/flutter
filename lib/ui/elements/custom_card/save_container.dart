@@ -45,7 +45,6 @@ final _goldMarquee = [
 final _floMarquee = [
   "Higher returns than FDs",
   "Your money is safe with us",
-  "7 days lock-in period"
 ];
 
 class SaveContainer extends StatefulWidget {

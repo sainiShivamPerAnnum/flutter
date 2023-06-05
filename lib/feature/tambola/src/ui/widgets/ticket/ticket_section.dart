@@ -4,10 +4,12 @@ import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_all_tickets/tambola_all_tickets_view.dart';
+import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +50,34 @@ class TicketSection extends StatelessWidget {
             bestTickets: data.item1,
             weeklyPicks: data.item2 ?? DailyPick.noPicks(),
           ),
-          const ViewAllTicketsBar()
+          ViewAllTicketsBar(
+            title: "View All Tickets",
+            onPressed: () {
+              Haptic.vibrate();
+              AppState.delegate!.appState.currentAction = PageAction(
+                state: PageState.addWidget,
+                page: AllTambolaTicketsPageConfig,
+                widget: AllTambolaTickets(
+                  weeklyPicks: locator<TambolaService>().weeklyPicks ??
+                      DailyPick.noPicks(),
+                ),
+              );
+            },
+          ),
+          ViewAllTicketsBar(
+            title: "View Prizes",
+            onPressed: () {
+              Haptic.vibrate();
+              AppState.delegate!.appState.currentAction = PageAction(
+                state: PageState.addWidget,
+                page: TambolaNewUser,
+                widget: const TambolaHomeDetailsView(
+                  isStandAloneScreen: true,
+                  showPrizeSection: true,
+                ),
+              );
+            },
+          )
         ],
       ),
     );
@@ -56,23 +85,18 @@ class TicketSection extends StatelessWidget {
 }
 
 class ViewAllTicketsBar extends StatelessWidget {
-  const ViewAllTicketsBar({super.key});
+  const ViewAllTicketsBar(
+      {super.key, required this.title, required this.onPressed});
+
+  final String title;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
       child: GestureDetector(
-        onTap: () {
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: AllTambolaTicketsPageConfig,
-            widget: AllTambolaTickets(
-              weeklyPicks:
-                  locator<TambolaService>().weeklyPicks ?? DailyPick.noPicks(),
-            ),
-          );
-        },
+        onTap: onPressed,
         child: Container(
           margin:
               EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.06),
@@ -88,7 +112,7 @@ class ViewAllTicketsBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "View All Tickets",
+                title,
                 style: TextStyles.rajdhaniSB.body1,
               ),
               Icon(

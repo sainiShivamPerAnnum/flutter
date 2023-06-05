@@ -69,7 +69,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
   final Map<String, String> _lbInfo = {
     "P2P": "Asset",
     "10%": "Returns",
-    "7 days": "Lock-in"
   };
 
   @override
@@ -331,33 +330,29 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               SizedBox(
                                 height: SizeConfig.padding4,
                               ),
-                              Showcase(
-                                key: ShowCaseKeys.SaveButton,
-                                description:
-                                    'Once you are done, tap on SAVE to start saving!',
-                                child: SizedBox(
-                                  width: SizeConfig.screenWidth! * 0.8,
-                                  // height: SizeConfig.screenHeight! * 0.07,
-                                  child: MaterialButton(
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            SizeConfig.roundness5),
-                                      ),
-                                      child: Text(
-                                        "SAVE",
-                                        style: TextStyles.rajdhaniB.body1
-                                            .colour(Colors.black),
-                                      ),
-                                      onPressed: () {
-                                        Haptic.vibrate();
-                                        BaseUtil().openRechargeModalSheet(
-                                            investmentType: widget.type);
-                                      }),
-                                ),
+                              SizedBox(
+                                width: SizeConfig.screenWidth! * 0.8,
+                                // height: SizeConfig.screenHeight! * 0.07,
+                                child: MaterialButton(
+                                    color: Colors.white,
+                                    height: SizeConfig.padding44,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness5),
+                                    ),
+                                    child: Text(
+                                      "SAVE",
+                                      style: TextStyles.rajdhaniB.body1
+                                          .colour(Colors.black),
+                                    ),
+                                    onPressed: () {
+                                      Haptic.vibrate();
+                                      BaseUtil().openRechargeModalSheet(
+                                          investmentType: widget.type);
+                                    }),
                               ),
                               SizedBox(
-                                height: SizeConfig.padding2,
+                                height: SizeConfig.padding16,
                               ),
                             ],
                           ),
@@ -497,9 +492,11 @@ class _BuildOwnAsset extends StatelessWidget {
             ),
           )
         : Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.pageHorizontalMargins,
-              horizontal: SizeConfig.pageHorizontalMargins / 2,
+            padding: EdgeInsets.only(
+              top: SizeConfig.pageHorizontalMargins,
+              bottom: SizeConfig.pageHorizontalMargins / 3,
+              left: SizeConfig.pageHorizontalMargins / 2,
+              right: SizeConfig.pageHorizontalMargins / 2,
             ),
             child: const FloBalanceBriefRow(
               tier: Constants.ASSET_TYPE_LENDBOX,
@@ -549,11 +546,14 @@ class FloBalanceBriefRow extends StatelessWidget {
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "₹${BaseUtil.digitPrecision(lead ?? getCurrentValue(tier, portfolio), 2)}",
-                      style: mini
-                          ? TextStyles.sourceSansSB.body0
-                          : TextStyles.sourceSansSB.title4,
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Text(
+                        "₹${BaseUtil.digitPrecision(lead ?? getCurrentValue(tier, portfolio), 2)}",
+                        style: mini
+                            ? TextStyles.sourceSansSB.body0
+                            : TextStyles.sourceSansSB.title4,
+                      ),
                     ),
                     Column(
                       children: [
@@ -766,7 +766,7 @@ class ComparisonBox extends StatelessWidget {
                             //   height: SizeConfig.padding10,
                             // ),
                             Text(
-                              isGold ? "Stable returns" : "Assured Returns",
+                              isGold ? "Stable returns" : "Returns*",
                               style: TextStyles.sourceSans.body3
                                   .colour(Colors.white.withOpacity(0.4)),
                             ),
@@ -1056,8 +1056,8 @@ class _WhySection extends StatelessWidget {
         ],
       ),
     ),
-    Icons.lock_outline: Text("7 days Withdrawal Lock-in",
-        style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
+    // Icons.lock_outline: Text("7 days Withdrawal Lock-in",
+    //     style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
   };
 
   @override
@@ -1291,7 +1291,9 @@ class CircularSliderState extends State<CircularSlider> {
                 style: TextStyles.rajdhaniSB.title3,
               ),
               Text(
-                "(Based on last years' returns)",
+                widget.type == InvestmentType.LENDBOXP2P
+                    ? "(Based on 12% returns*)"
+                    : "(Based on last years' returns)",
                 style: TextStyles.sourceSans.body3.colour(Color(0xffA9C6D6)),
               )
             ],

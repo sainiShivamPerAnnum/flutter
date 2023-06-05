@@ -30,8 +30,9 @@ class SaveAssetsGroupCard extends StatelessWidget {
           orderedAssets.add(
             SaveCustomCard(
               title: locale.felloFloMainTitle,
-              subtitle: "Multi tire Investment as per your need",
-              chipText: const ["P2P Asset", "Safe & Secure", "10% Returns"],
+              subtitle:
+                  "Save in Lendbox powered P2P Assets with upto 12% Returns",
+              chipText: const ["P2P Asset", "Safe & Secure", "12% Returns"],
               key: const Key(Constants.ASSET_TYPE_LENDBOX),
               cardBgColor: UiConstants.kSaveStableFelloCardBg,
               cardAssetName: Assets.felloFlo,
@@ -65,7 +66,7 @@ class SaveAssetsGroupCard extends StatelessWidget {
           orderedAssets.add(
             SaveCustomCard(
               title: locale.digitalGoldMailTitle,
-              subtitle: "Gold investment withdraw-able anytime",
+              subtitle: "Save in Augmont backed 99.9% Pure Digital Gold",
               chipText: const [
                 "Safe & Secure",
                 "24K Gold",
@@ -131,7 +132,7 @@ class MiniAssetsGroupSection extends StatelessWidget {
             color: UiConstants.kSaveStableFelloCardBg,
             asset: Assets.floAsset,
             title: "Fello Flo",
-            subtitle: "Know Fello Flo",
+            subtitle: "upto 12% returns",
             actionUri: "floDetails",
           ),
           SizedBox(width: SizeConfig.padding16),
@@ -139,7 +140,7 @@ class MiniAssetsGroupSection extends StatelessWidget {
             color: UiConstants.kSaveDigitalGoldCardBg,
             asset: Assets.goldAsset,
             title: "Digital Gold",
-            subtitle: "Know Digital Gold",
+            subtitle: "100% Safe",
             actionUri: "goldDetails",
           ),
         ],

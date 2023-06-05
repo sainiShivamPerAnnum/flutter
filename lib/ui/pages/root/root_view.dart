@@ -55,6 +55,10 @@ class Root extends StatelessWidget {
                     children: [
                       const RootAppBar(),
                       const HeadAlerts(),
+                      // TextButton(
+                      //   onPressed: model.showNewInstallPopUp,
+                      //   child: Text("Popup"),
+                      // ),
                       Expanded(
                         child: RefreshIndicator(
                           triggerMode: RefreshIndicatorTriggerMode.onEdge,
@@ -91,7 +95,7 @@ class Root extends StatelessWidget {
                           : const SizedBox(),
                     );
                   }),
-              bottomNavigationBar: const SafeArea(child: BottomNavBar()),
+              bottomNavigationBar: const BottomNavBar(),
             ),
             const CircularAnim(),
           ],

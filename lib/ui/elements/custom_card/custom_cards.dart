@@ -169,7 +169,7 @@ class SaveCustomCard extends StatelessWidget {
                     "Introducing  12% returns on your investment with *12% Flo*"
                         .beautify(
                             alignment: TextAlign.center,
-                            style: TextStyles.body4.colour(Colors.white60)),
+                            style: TextStyles.body4.colour(Colors.white)),
               )
           ],
         ),

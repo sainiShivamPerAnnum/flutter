@@ -118,13 +118,17 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                       "12floHeader"),
                                                   model: model),
                                               SizedBox(
-                                                  height: SizeConfig.padding24),
+                                                  height: SizeConfig.padding32),
                                               if (model.isInvested)
                                                 const FloBalanceBriefRow(
-                                                  key: ValueKey("12floBalance"),
+                                                  key: ValueKey("10floBalance"),
                                                   tier: Constants
                                                       .ASSET_TYPE_FLO_FIXED_6,
                                                 ),
+                                              if (model.isInvested)
+                                                SizedBox(
+                                                    height:
+                                                        SizeConfig.padding16),
                                               FloPremiumTransactionsList(
                                                   key: ValueKey("12floTxns"),
                                                   model: model),
@@ -137,13 +141,17 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                       "10floHeader"),
                                                   model: model),
                                               SizedBox(
-                                                  height: SizeConfig.padding24),
+                                                  height: SizeConfig.padding32),
                                               if (model.isInvested)
                                                 const FloBalanceBriefRow(
                                                   key: ValueKey("10floBalance"),
                                                   tier: Constants
                                                       .ASSET_TYPE_FLO_FIXED_3,
                                                 ),
+                                              if (model.isInvested)
+                                                SizedBox(
+                                                    height:
+                                                        SizeConfig.padding16),
                                               FloPremiumTransactionsList(
                                                 key: ValueKey("10floTxns"),
                                                 model: model,
@@ -167,7 +175,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                         .colour(Colors.white),
                                   ),
                                 ),
-                                const SaveAssetsFooter(),
+                                const SaveAssetsFooter(isFlo: true),
                                 SizedBox(
                                     height: SizeConfig.pageHorizontalMargins),
                                 CircularSlider(
@@ -258,52 +266,50 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                   padding: EdgeInsets.all(
                                       SizeConfig.pageHorizontalMargins),
                                   child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Wanna Know more?",
-                                          style: TextStyles.rajdhaniSB.title5,
-                                        ),
-                                        SizedBox(height: SizeConfig.padding12),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                "Wanna know more about the asset or need help with your Investment",
-                                                style: TextStyles.body2
-                                                    .colour(Colors.white),
-                                              ),
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Still not convinced?",
+                                        style: TextStyles.rajdhaniSB.title5,
+                                      ),
+                                      SizedBox(height: SizeConfig.padding12),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "Know more about the P2P Asset by talking to us",
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white),
                                             ),
-                                            SizedBox(
-                                                width: SizeConfig.padding10),
-                                            OutlinedButton(
-                                                onPressed: () {
-                                                  Haptic.vibrate();
-                                                  AppState.delegate!.appState
-                                                          .currentAction =
-                                                      PageAction(
-                                                    state: PageState.addPage,
-                                                    page:
-                                                        FreshDeskHelpPageConfig,
-                                                  );
-                                                },
-                                                style: ButtonStyle(
-                                                    side: MaterialStateProperty
-                                                        .all(const BorderSide(
-                                                            color: Colors.white,
-                                                            width: 1.0,
-                                                            style: BorderStyle
-                                                                .solid))),
-                                                child: Text(
-                                                  "ASK FELLO",
-                                                  style: TextStyles
-                                                      .rajdhaniB.body2
-                                                      .colour(Colors.white),
-                                                ))
-                                          ],
-                                        )
-                                      ]),
+                                          ),
+                                          SizedBox(width: SizeConfig.padding10),
+                                          OutlinedButton(
+                                            onPressed: () {
+                                              Haptic.vibrate();
+                                              AppState.delegate!.appState
+                                                  .currentAction = PageAction(
+                                                state: PageState.addPage,
+                                                page: FreshDeskHelpPageConfig,
+                                              );
+                                            },
+                                            style: ButtonStyle(
+                                                side: MaterialStateProperty.all(
+                                                    const BorderSide(
+                                                        color: Colors.white,
+                                                        width: 1.0,
+                                                        style: BorderStyle
+                                                            .solid))),
+                                            child: Text(
+                                              "CONTACT US",
+                                              style: TextStyles.rajdhaniB.body2
+                                                  .colour(Colors.white),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                                 SizedBox(
                                   height: SizeConfig.navBarHeight * 2,
@@ -317,59 +323,61 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: SafeArea(
-                      child: Container(
-                        color: UiConstants.kBackgroundColor.withOpacity(0.96),
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.screenWidth! * 0.24,
-                        child: Stack(
-                          children: [
-                            if (model.is12)
-                              SvgPicture.asset(
-                                Assets.btnBg,
-                                width: SizeConfig.screenWidth,
-                              ),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(height: SizeConfig.padding4),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      Assets.floAsset,
-                                      height: SizeConfig.screenHeight! * 0.03,
-                                      width: SizeConfig.screenHeight! * 0.03,
-                                    ),
-                                    SizedBox(
-                                      height: SizeConfig.padding1,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding4),
-                                      child: Text(
-                                        DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
-                                        style:
-                                            TextStyles.sourceSans.body4.colour(
-                                          UiConstants.kTextColor2,
-                                        ),
+                    child: Container(
+                      color: UiConstants.kBackgroundColor.withOpacity(0.96),
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.screenWidth! * 0.24 +
+                          MediaQuery.of(context).viewPadding.bottom / 2,
+                      child: Stack(
+                        children: [
+                          if (model.is12)
+                            SvgPicture.asset(
+                              Assets.btnBg,
+                              fit: BoxFit.cover,
+                              width: SizeConfig.screenWidth! * 1.5,
+                            ),
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(height: SizeConfig.padding6),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    Assets.floAsset,
+                                    height: SizeConfig.screenHeight! * 0.03,
+                                    width: SizeConfig.screenHeight! * 0.03,
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding1,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding4),
+                                    child: Text(
+                                      DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
+                                      style: TextStyles.sourceSans.body4.colour(
+                                        Colors.white,
                                       ),
                                     ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding4,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.pageHorizontalMargins),
-                                  width: SizeConfig.screenWidth!,
-                                  child: Row(
-                                    children: [
-                                      if (!model.is12)
-                                        Expanded(
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding4,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.pageHorizontalMargins),
+                                width: SizeConfig.screenWidth!,
+                                child: Row(
+                                  children: [
+                                    if (!model.is12)
+                                      Expanded(
+                                        child: SizedBox(
+                                          height: SizeConfig.padding44,
                                           child: OutlinedButton(
                                               style: ButtonStyle(
                                                   side:
@@ -410,41 +418,38 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                 });
                                               }),
                                         ),
-                                      if (!model.is12)
-                                        SizedBox(width: SizeConfig.padding12),
-                                      Expanded(
-                                        child: MaterialButton(
-                                            color: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      SizeConfig.roundness5),
-                                            ),
-                                            child: Text(
-                                              "SAVE",
-                                              style: TextStyles.rajdhaniB.body2
-                                                  .colour(Colors.black),
-                                            ),
-                                            onPressed: () {
-                                              BaseUtil.openFloBuySheet(
-                                                floAssetType: model.is12
-                                                    ? Constants
-                                                        .ASSET_TYPE_FLO_FIXED_6
-                                                    : Constants
-                                                        .ASSET_TYPE_FLO_FIXED_3,
-                                              );
-                                            }),
                                       ),
-                                    ],
-                                  ),
+                                    if (!model.is12)
+                                      SizedBox(width: SizeConfig.padding12),
+                                    Expanded(
+                                      child: MaterialButton(
+                                          color: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                SizeConfig.roundness5),
+                                          ),
+                                          height: SizeConfig.padding44,
+                                          child: Text(
+                                            "SAVE",
+                                            style: TextStyles.rajdhaniB.body2
+                                                .colour(Colors.black),
+                                          ),
+                                          onPressed: () {
+                                            BaseUtil.openFloBuySheet(
+                                              floAssetType: model.is12
+                                                  ? Constants
+                                                      .ASSET_TYPE_FLO_FIXED_6
+                                                  : Constants
+                                                      .ASSET_TYPE_FLO_FIXED_3,
+                                            );
+                                          }),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: SizeConfig.padding2,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -516,7 +521,7 @@ class FloPremiumHeader extends StatelessWidget {
                         ),
                         child: Text(
                           model.is12 ? "12% Flo" : "10% Flo",
-                          style: TextStyles.rajdhaniB.title2.colour(
+                          style: TextStyles.rajdhaniB.title0.colour(
                             model.is12
                                 ? UiConstants.primaryColor
                                 : Colors.white,
@@ -648,7 +653,7 @@ class FloPremiumTransactionsList extends StatelessWidget {
                                       )
                                     ],
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   const Icon(
                                     Icons.arrow_forward_ios_rounded,
                                     color: UiConstants.kTextFieldTextColor,
@@ -659,7 +664,7 @@ class FloPremiumTransactionsList extends StatelessWidget {
                               FloBalanceBriefRow(
                                 lead: currentValue,
                                 trail: currentValue - gain,
-                                percent: gain,
+                                percent: (gain / currentValue) * 100,
                                 leftAlign: true,
                                 tier: model.is12
                                     ? Constants.ASSET_TYPE_FLO_FIXED_6
@@ -721,7 +726,7 @@ class FloPremiumTransactionsList extends StatelessWidget {
                                           SizeConfig.roundness5),
                                     ),
                                     child: Text(
-                                      "KNOW MORE",
+                                      "CHOOSE",
                                       style: TextStyles.rajdhaniB.body2
                                           .colour(Colors.black),
                                     ),

@@ -43,12 +43,12 @@ class FloPremiumSection extends StatelessWidget {
                 bottomLeft: Radius.circular(SizeConfig.roundness5),
                 bottomRight: Radius.circular(SizeConfig.roundness5),
               ),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black45,
-                  offset: Offset(3, 3),
-                )
-              ],
+              // boxShadow: const [
+              //   BoxShadow(
+              //     color: Colors.black45,
+              //     offset: Offset(3, 3),
+              //   )
+              // ],
             ),
             padding: EdgeInsets.symmetric(
               vertical: SizeConfig.padding2,
@@ -56,7 +56,7 @@ class FloPremiumSection extends StatelessWidget {
             ),
             child: Text(
               "Recommended",
-              style: TextStyles.body4.colour(Colors.black54),
+              style: TextStyles.sourceSansSB.body4.colour(Colors.black),
             ),
           ),
           SizedBox(height: SizeConfig.padding16),

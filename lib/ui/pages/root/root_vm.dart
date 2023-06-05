@@ -45,6 +45,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+
+import '../../../util/assets.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -130,6 +132,7 @@ class RootViewModel extends BaseViewModel {
 
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
+        showNewInstallPopUp();
         await showLastWeekOverview();
         await Future.wait([
           _referralService.verifyReferral(),
@@ -177,6 +180,42 @@ class RootViewModel extends BaseViewModel {
               seconds: 5);
         }
       });
+    }
+  }
+
+  bool showNewInstallPopUp() {
+    if (!PreferenceHelper.getBool(PreferenceHelper.NEW_INSTALL_POPUP,
+        def: false)) {
+      BaseUtil.openDialog(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          content: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            ),
+            child: WillPopScope(
+              onWillPop: () async {
+                if (AppState.screenStack.last == ScreenItem.dialog) {
+                  AppState.screenStack.removeLast();
+                }
+                return Future.value(true);
+              },
+              child: GestureDetector(
+                onTap: () {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                },
+                child: Image.asset(
+                    _userService.userSegments.contains(Constants.US_FLO_OLD)
+                        ? Assets.oldUserPopUp
+                        : Assets.newUserPopUp),
+              ),
+            ),
+          ));
+      AppState.isRootAvailableForIncomingTaskExecution = false;
+      PreferenceHelper.setBool(PreferenceHelper.NEW_INSTALL_POPUP, true);
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -308,7 +347,7 @@ class RootViewModel extends BaseViewModel {
     if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
     if (updateAvailable) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
-      BaseUtil.openDialog(
+      unawaited(BaseUtil.openDialog(
         isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
@@ -335,11 +374,11 @@ class RootViewModel extends BaseViewModel {
             return false;
           },
         ),
-      );
+      ));
     } else if (isMsgNoticeAvailable) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
       String msg = PreferenceHelper.getString(Constants.MSG_NOTICE);
-      BaseUtil.openDialog(
+      unawaited(BaseUtil.openDialog(
         isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
@@ -357,7 +396,7 @@ class RootViewModel extends BaseViewModel {
             return false;
           },
         ),
-      );
+      ));
     }
   }
 

@@ -45,7 +45,7 @@ class CurrentWinningsInfo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      locale.currentWinings,
+                      "Fello Rewards",
                       style: TextStyles.rajdhaniSB
                           .copyWith(fontSize: SizeConfig.body0),
                       key: ValueKey(Constants.CURRENT_WINNINGS),
