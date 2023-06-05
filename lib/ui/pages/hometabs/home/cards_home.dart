@@ -337,8 +337,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             infoTitle2: "Processing Balance",
                                             secondaryColor:
                                                 UiConstants.kRewardColor,
-                                            subtitle:
-                                                "Redeem after reaching ₹200",
+                                            subtitle: "Rewards earned on Fello",
                                             onButtonPressed: onRedeemPressed,
                                             onCardPressed: () {
                                               AppState.delegate!.parseRoute(
@@ -434,8 +433,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             infoTitle2: "Gold Value",
                                             secondaryColor:
                                                 UiConstants.kGoldContainerColor,
-                                            subtitle:
-                                                "Quick Returns • Withdraw anytime",
+                                            subtitle: "100% Safe • 99.99% Pure",
                                             onButtonPressed: () => BaseUtil()
                                                 .openRechargeModalSheet(
                                                     investmentType:
@@ -531,8 +529,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             infoTitle2: "Invested",
                                             secondaryColor:
                                                 UiConstants.darkPrimaryColor3,
-                                            subtitle:
-                                                "Quick Returns • Withdraw anytime",
+                                            subtitle: "P2P Asset • 12% Returns",
                                             onButtonPressed: () => BaseUtil()
                                                 .openRechargeModalSheet(
                                                     investmentType:

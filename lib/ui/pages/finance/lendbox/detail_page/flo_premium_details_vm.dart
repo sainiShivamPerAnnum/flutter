@@ -41,9 +41,9 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
   }
 
   final UserService userService = locator<UserService>();
-  final String flo10Highlights = "P2P Asset  • 10% Returns •3 months maturity";
+  final String flo10Highlights = "P2P Asset  • 10% Returns • 3 months maturity";
 
-  final String flo12Highlights = "P2P Asset  • 12% Returns •6 months maturity";
+  final String flo12Highlights = "P2P Asset  • 12% Returns • 6 months maturity";
 
   String flo10Description =
       "Fello Flo Premium 10% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 3 months!";

@@ -175,7 +175,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                         .colour(Colors.white),
                                   ),
                                 ),
-                                const SaveAssetsFooter(),
+                                const SaveAssetsFooter(isFlo: true),
                                 SizedBox(
                                     height: SizeConfig.pageHorizontalMargins),
                                 CircularSlider(
@@ -358,7 +358,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                     child: Text(
                                       DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
                                       style: TextStyles.sourceSans.body4.colour(
-                                        UiConstants.kTextColor2,
+                                        Colors.white,
                                       ),
                                     ),
                                   ),

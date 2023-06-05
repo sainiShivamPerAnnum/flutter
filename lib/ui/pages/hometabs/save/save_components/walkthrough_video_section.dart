@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +12,12 @@ class WalthroughVideosSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List videos = [
-      "https://www.youtube.com/watch?v=mzaIjBjUM1Y",
-      "https://www.youtube.com/watch?v=CDokUdux0rc",
-      "https://www.youtube.com/watch?v=zFhYJRqz_xk"
-    ];
+    final List videos = AppConfig.getValue(AppConfigKey.youtube_videos) ??
+        [
+          "https://www.youtube.com/watch?v=mzaIjBjUM1Y",
+          "https://www.youtube.com/watch?v=CDokUdux0rc",
+          "https://www.youtube.com/watch?v=zFhYJRqz_xk"
+        ];
     return SizedBox(
       height: SizeConfig.screenWidth! * 0.36,
       width: SizeConfig.screenWidth,

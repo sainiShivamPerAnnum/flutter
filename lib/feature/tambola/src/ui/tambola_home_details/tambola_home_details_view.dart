@@ -74,7 +74,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
 
     return BaseView<TambolaHomeDetailsViewModel>(
       onModelReady: (model) => model.init(),
-      onModelDispose: (model) => model.dispose(),
+      onModelDispose: (model) => model.dump(),
       builder: (context, model, child) {
         return Scaffold(
           backgroundColor: const Color(0XFF141414),

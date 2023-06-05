@@ -456,7 +456,7 @@ class BaseUtil extends ChangeNotifier {
       case '2':
         return "Move to Flo Basic after maturity";
       default:
-        return "What will happen to your investment after maturity";
+        return "What will happen to your investment after maturity?";
     }
   }
 
