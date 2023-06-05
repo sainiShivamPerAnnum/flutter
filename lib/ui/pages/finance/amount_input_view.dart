@@ -296,8 +296,8 @@ class _AmountInputViewState extends State<AmountInputView> {
                   padding: EdgeInsets.only(right: SizeConfig.padding20),
                   child: Text(
                     getString(),
-                    style: TextStyles.sourceSans.body3,
-                  ),
+                      style: TextStyles.sourceSans.body3
+                          .colour(Colors.white.withOpacity(0.8))),
                 ),
                 VerticalDivider(
                   color: UiConstants.kModalSheetSecondaryBackgroundColor
@@ -308,7 +308,8 @@ class _AmountInputViewState extends State<AmountInputView> {
                   padding: EdgeInsets.only(left: SizeConfig.padding20),
                   child: Text(
                     getSubString(),
-                    style: TextStyles.sourceSans.body3,
+                    style: TextStyles.sourceSans.body3
+                        .colour(Colors.white.withOpacity(0.8)),
                   ),
                 ),
               ],

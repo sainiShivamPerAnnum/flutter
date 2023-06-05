@@ -553,13 +553,13 @@ class LendboxBuyViewModel extends BaseViewModel {
     );
   }
 
-  Widget showrReinvestSubTitle() {
+  Widget showReinvestSubTitle() {
     final maturityAmount =
         calculateAmountAfterMaturity(amountController?.text ?? "0");
 
     String getText() {
       if (selectedOption == -1) {
-        return "";
+        return "What will happen at maturity?";
       }
       if (selectedOption == 3) {
         return "Withdrawing to your bank account after maturity";
@@ -574,7 +574,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       if (selectedOption == -2) {
         return "We will contact you before the maturity to help you decide";
       }
-      return '';
+      return 'What will happen at maturity?';
     }
 
     return Flexible(

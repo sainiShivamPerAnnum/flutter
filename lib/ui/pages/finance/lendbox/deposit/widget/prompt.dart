@@ -56,25 +56,48 @@ class ReInvestPrompt extends HookWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text.rich(
-                    TextSpan(
-                      text: "What do you want to do ",
-                      style: TextStyles.sourceSans.body2,
-                      children: [
-                        TextSpan(
-                          text:
-                              "after ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months?",
-                          style: TextStyles.sourceSansB.body2,
-                        ),
-                      ],
+                  Flexible(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "Select what happens to your investment ",
+                        style: TextStyles.sourceSans.body2,
+                        children: [
+                          TextSpan(
+                            text:
+                                "after ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months?",
+                            style: TextStyles.sourceSansB.body2,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  const Icon(
-                    Icons.info_outline,
-                    color: Colors.white,
-                    size: 15,
+                  SizedBox(
+                    width: SizeConfig.padding34,
+                  ),
+                  Tooltip(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    triggerMode: TooltipTriggerMode.tap,
+                    preferBelow: false,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.9),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness8),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                        vertical: SizeConfig.pageHorizontalMargins),
+                    showDuration: const Duration(seconds: 10),
+                    message:
+                        "Fello Flo Premium plans allow you to decide what happens to your money after maturity. You can choose what you want to do with your money while you invest. If you do not select a preference, we will contact you and confirm what you want to do with the corpus post maturity.",
+                    child: const Icon(
+                      Icons.info_outline,
+                      color: Colors.white,
+                      size: 15,
+                    ),
                   ),
                 ],
               ),
