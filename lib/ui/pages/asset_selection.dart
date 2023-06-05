@@ -238,7 +238,18 @@ class GoldPlanWidget extends StatelessWidget {
     }, builder: (ctx, model, child) {
       return GestureDetector(
         onTap: () {
-          // AppState.backButtonDispatcher?.didPopRoute();
+          // locator<AnalyticsService>().track(
+          //     eventName:
+          // );
+
+          //       _analyticsService.track(
+          //           eventName: AnalyticsEvents.suggestedAmountTapped,
+          //           properties: {
+          //             'order': index,
+          //             'Amount': amt,
+          //             'Best flag': index == 2
+          //           });
+
           BaseUtil().openRechargeModalSheet(
               investmentType: InvestmentType.AUGGOLD99,
               amt: amount,

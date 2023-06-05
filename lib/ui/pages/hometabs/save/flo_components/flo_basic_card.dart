@@ -148,9 +148,8 @@ class FloBasicCard extends StatelessWidget {
                             hapticVibrate: true,
                             content: MoreInfoDialog(
                               title:
-                                  "Add Bank Information to withdraw your inveinvestment ",
-                              text:
-                                  "Your Bank account will be register and verified in x working days",
+                                  "Add your Bank Details to withdraw your investment ",
+                              text: "",
                               btnText: "ADD BANK INFORMATION",
                               asset: Container(
                                 decoration: const BoxDecoration(

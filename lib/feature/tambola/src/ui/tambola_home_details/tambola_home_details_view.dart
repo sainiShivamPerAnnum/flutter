@@ -17,6 +17,7 @@ import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import '../widgets/past_week_winners_section.dart';
@@ -104,8 +105,8 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SvgPicture.asset(
-                            Assets.cr1_Tambola,
+                          Lottie.asset(
+                            'assets/lotties/1cr_thar.json',
                             height: SizeConfig.screenHeight! * 0.2,
                           ),
                           SizedBox(
