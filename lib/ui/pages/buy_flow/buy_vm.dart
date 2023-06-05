@@ -31,7 +31,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/pages/buy_flow/buy_modal_sheet.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -828,77 +827,78 @@ class BuyViewModel extends BaseViewModel {
     // }
   }
 
-  Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
-    if (couponApplyInProgress ||
-        isGoldBuyInProgress ||
-        augTxnService.isGoldBuyInProgress) return;
-
-    int order = -1;
-    int? minTransaction = -1;
-    int counter = 0;
-    isSpecialCoupon = true;
-    for (final CouponModel c in couponList!) {
-      if (c.code == couponCode) {
-        order = counter;
-        isSpecialCoupon = false;
-        minTransaction = c.minPurchase;
-        break;
-      }
-      counter++;
-    }
-
-    buyFieldNode.unfocus();
-    this.couponCode = couponCode;
-    couponApplyInProgress = true;
-
-    ApiResponse<EligibleCouponResponseModel> response =
-        await _couponRepo!.getEligibleCoupon(
-      uid: _userService!.baseUser!.uid,
-      amount: goldBuyAmount!.toInt(),
-      couponcode: couponCode,
-    );
-
-    couponApplyInProgress = false;
-    this.couponCode = null;
-    if (response.code == 200) {
-      if (response.model!.flag == true) {
-        if (response.model!.minAmountRequired != null &&
-            response.model!.minAmountRequired.toString().isNotEmpty &&
-            response.model!.minAmountRequired != 0) {
-          amountController!.text =
-              response.model!.minAmountRequired!.toInt().toString();
-          goldBuyAmount = response.model!.minAmountRequired;
-          updateGoldAmount();
-          showMaxCapText = false;
-          showMinCapText = false;
-          animationController?.forward();
-        }
-        checkForSpecialCoupon(response.model!);
-
-        appliedCoupon = response.model;
-
-        BaseUtil.showPositiveAlert(
-            locale.couponAppliedSucc, response?.model?.message);
-      } else {
-        BaseUtil.showNegativeAlert(
-            locale.couponCannotBeApplied, response?.model?.message);
-      }
-    } else if (response.code == 400) {
-      BaseUtil.showNegativeAlert(locale.couponNotApplied,
-          response?.errorMessage ?? locale.anotherCoupon);
-    } else {
-      BaseUtil.showNegativeAlert(locale.couponNotApplied, locale.anotherCoupon);
-    }
-    _analyticsService!
-        .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
-      "Manual Code entry": isManuallyTyped,
-      "Order of coupon in list": order == -1 ? "Not in list" : order.toString(),
-      "Coupon Name": couponCode,
-      "Error message": response.code == 400 ? response?.model?.message : "",
-      "Asset": "Gold",
-      "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
-    });
-  }
+  // Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
+  //   if (couponApplyInProgress ||
+  //       isGoldBuyInProgress ||
+  //       augTxnService.isGoldBuyInProgress) return;
+  //
+  //   int order = -1;
+  //   int? minTransaction = -1;
+  //   int counter = 0;
+  //   isSpecialCoupon = true;
+  //   for (final CouponModel c in couponList!) {
+  //     if (c.code == couponCode) {
+  //       order = counter;
+  //       isSpecialCoupon = false;
+  //       minTransaction = c.minPurchase;
+  //       break;
+  //     }
+  //     counter++;
+  //   }
+  //
+  //   buyFieldNode.unfocus();
+  //   this.couponCode = couponCode;
+  //   couponApplyInProgress = true;
+  //
+  //   ApiResponse<EligibleCouponResponseModel> response =
+  //       await _couponRepo!.getEligibleCoupon(
+  //     uid: _userService!.baseUser!.uid,
+  //     amount: goldBuyAmount!.toInt(),
+  //     couponcode: couponCode,
+  //
+  //   );
+  //
+  //   couponApplyInProgress = false;
+  //   this.couponCode = null;
+  //   if (response.code == 200) {
+  //     if (response.model!.flag == true) {
+  //       if (response.model!.minAmountRequired != null &&
+  //           response.model!.minAmountRequired.toString().isNotEmpty &&
+  //           response.model!.minAmountRequired != 0) {
+  //         amountController!.text =
+  //             response.model!.minAmountRequired!.toInt().toString();
+  //         goldBuyAmount = response.model!.minAmountRequired;
+  //         updateGoldAmount();
+  //         showMaxCapText = false;
+  //         showMinCapText = false;
+  //         animationController?.forward();
+  //       }
+  //       checkForSpecialCoupon(response.model!);
+  //
+  //       appliedCoupon = response.model;
+  //
+  //       BaseUtil.showPositiveAlert(
+  //           locale.couponAppliedSucc, response?.model?.message);
+  //     } else {
+  //       BaseUtil.showNegativeAlert(
+  //           locale.couponCannotBeApplied, response?.model?.message);
+  //     }
+  //   } else if (response.code == 400) {
+  //     BaseUtil.showNegativeAlert(locale.couponNotApplied,
+  //         response?.errorMessage ?? locale.anotherCoupon);
+  //   } else {
+  //     BaseUtil.showNegativeAlert(locale.couponNotApplied, locale.anotherCoupon);
+  //   }
+  //   _analyticsService!
+  //       .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
+  //     "Manual Code entry": isManuallyTyped,
+  //     "Order of coupon in list": order == -1 ? "Not in list" : order.toString(),
+  //     "Coupon Name": couponCode,
+  //     "Error message": response.code == 400 ? response?.model?.message : "",
+  //     "Asset": "Gold",
+  //     "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
+  //   });
+  // }
 
   void checkForSpecialCoupon(EligibleCouponResponseModel model) {
     if (couponList!.firstWhere((coupon) => coupon.code == model.code,

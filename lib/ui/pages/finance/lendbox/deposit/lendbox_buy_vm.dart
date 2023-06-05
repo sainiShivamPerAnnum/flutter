@@ -433,9 +433,9 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     showHappyHour
         ? happyHourTickets = (happyHourModel?.data != null &&
-        happyHourModel?.data?.rewards?[0].type == 'tt')
-        ? happyHourModel?.data!.rewards![0].value
-        : null
+                happyHourModel?.data?.rewards?[0].type == 'tt')
+            ? happyHourModel?.data!.rewards![0].value
+            : null
         : happyHourTickets = null;
 
     if (parsedFloAmount >= minAmount && happyHourTickets != null) {
@@ -610,9 +610,10 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     ApiResponse<EligibleCouponResponseModel> response =
         await _couponRepo!.getEligibleCoupon(
-      uid: locator<UserService>().baseUser!.uid,
+          uid: locator<UserService>().baseUser!.uid,
       amount: buyAmount!.toInt(),
       couponcode: couponCode,
+      assetType: floAssetType,
     );
 
     couponApplyInProgress = false;
