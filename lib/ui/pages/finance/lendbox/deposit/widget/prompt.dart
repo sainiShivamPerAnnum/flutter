@@ -147,7 +147,7 @@ class ReInvestPrompt extends HookWidget {
                       AppState.backButtonDispatcher?.didPopRoute();
                       SystemChannels.textInput.invokeMethod('TextInput.hide');
                       model.maturityPref = "NA";
-                      model.selectedOption = selectedOption.value = -1;
+                      model.selectedOption = selectedOption.value = -2;
 
                       BaseUtil.showPositiveAlert(
                         'Choose your action later',
@@ -197,10 +197,10 @@ class ReInvestPrompt extends HookWidget {
 
                       AppState.backButtonDispatcher?.didPopRoute();
 
-                      if (!model.isBuyInProgress) {
-                        FocusScope.of(context).unfocus();
-                        model.initiateBuy();
-                      }
+                      // if (!model.isBuyInProgress) {
+                      //   FocusScope.of(context).unfocus();
+                      //   model.initiateBuy();
+                      // }
                     },
                     child: Center(
                       child: Text(

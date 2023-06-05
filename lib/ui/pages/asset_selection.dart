@@ -380,7 +380,7 @@ class FelloFloPrograms extends StatelessWidget {
             ),
             child: Text(
               'Recommended',
-              style: TextStyles.sourceSans.body5.colour(Colors.black),
+              style: TextStyles.sourceSansSB.body5.colour(Colors.black),
             ),
           ),
         // if (!isRecommended) const Spacer(),

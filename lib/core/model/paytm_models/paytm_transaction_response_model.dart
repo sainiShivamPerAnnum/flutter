@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 class TransactionResponseModel {
   String? message;
   Data? data;
+
   TransactionResponseModel({
     @required this.message,
     @required this.data,
@@ -60,6 +61,7 @@ class Data {
   String? gtId;
   List<String>? gtIds;
   FloDepositDetails? floDepositDetails;
+
   Data({
     @required this.status,
     @required this.isUpdating,
@@ -80,9 +82,7 @@ class Data {
         goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble(),
         txnDisplayMsg: map['displayMessage'],
         gtId: map['gtId'] ?? "",
-        gtIds: map['gtIds'] != null
-            ? List<String>.from((map['gtIds'].cast<String>() as List<String>))
-            : null,
+        gtIds: List<String>.from(map['gtIds'].map((id) => id.toString())),
         floDepositDetails: map["lbDepositDetails"] != null
             ? FloDepositDetails.fromMap(map["lbDepositDetails"])
             : null);
@@ -118,6 +118,7 @@ class FloDepositDetails {
   String? fundType;
   String? maturityDate;
   String? maturityString;
+
   FloDepositDetails({
     this.fundType,
     this.maturityDate,

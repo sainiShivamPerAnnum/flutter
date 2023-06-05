@@ -202,7 +202,7 @@ class ViewBreakdown extends StatelessWidget {
             btnText: model.status == 2 ? "Save" : 'unavailable'.toUpperCase(),
           ),
           SizedBox(
-            height: SizeConfig.padding12,
+            height: SizeConfig.padding24,
           ),
         ],
       ),

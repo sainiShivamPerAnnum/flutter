@@ -66,7 +66,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
     log("floAssetType ${widget.model.floAssetType}");
 
     S locale = S.of(context);
-    final AnalyticsService _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService analyticsService = locator<AnalyticsService>();
     if (widget.model.state == ViewState.Busy) {
       return const Center(child: FullScreenLoader());
     }
@@ -93,7 +93,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   assetType: widget.model.floAssetType,
                   isEnabled: !widget.model.isBuyInProgress,
                   trackClosingEvent: () {
-                    _analyticsService!.track(
+                    analyticsService.track(
                         eventName: AnalyticsEvents.savePageClosed,
                         properties: {
                           "Amount entered": widget.model.amountController!.text,
@@ -194,87 +194,90 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                       padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.pageHorizontalMargins,
                       ),
-                      child: Text('What will happen at maturity?',
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTabBorderColor)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('What will happen at maturity?',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(UiConstants.kTabBorderColor)),
+                          Text(
+                            'Choose Now',
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTabBorderColor)
+                                .underline,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+
+                SizedBox(
+                  height: SizeConfig.padding8,
+                ),
+
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  child: Row(
+                    children: [
+                      widget.model.showrReinvestSubTitle(),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
           Align(
-            alignment: Alignment.bottomCenter,
-            child: Selector<BankAndPanService, bool>(
-              selector: (p0, p1) => p1.isKYCVerified,
-              builder: (ctx, isKYCVerified, child) {
-                return (!isKYCVerified)
-                    ? _kycWidget(widget.model, context)
-                    : (widget.model.isBuyInProgress || widget.model.forcedBuy)
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // if (widget.model.forcedBuy) ...[
-                              //   Padding(
-                              //     padding: EdgeInsets.symmetric(
-                              //         horizontal:
-                              //             SizeConfig.pageHorizontalMargins),
-                              //     child: Text(
-                              //       "We will contact you before the end of 6 months (Maturity) to confirm.",
-                              //       style: TextStyles.sourceSans.body2
-                              //           .colour(Colors.white.withOpacity(0.8)),
-                              //       textAlign: TextAlign.center,
-                              //     ),
-                              //   ),
-                              //   SizedBox(height: SizeConfig.padding24),
-                              // ],
-                              Container(
-                                height: SizeConfig.screenWidth! * 0.1556,
-                                alignment: Alignment.center,
-                                width: SizeConfig.screenWidth! * 0.7,
-                                child: const LinearProgressIndicator(
-                                  color: UiConstants.primaryColor,
-                                  backgroundColor:
-                                      UiConstants.kDarkBackgroundColor,
-                                ),
+              alignment: Alignment.bottomCenter,
+              child: Selector<BankAndPanService, bool>(
+                selector: (p0, p1) => p1.isKYCVerified,
+                builder: (ctx, isKYCVerified, child) {
+                  return (!isKYCVerified)
+                      ? _kycWidget(widget.model, context)
+                      : (widget.model.isBuyInProgress || widget.model.forcedBuy)
+                          ? Container(
+                              height: SizeConfig.screenWidth! * 0.1556,
+                              alignment: Alignment.center,
+                              width: SizeConfig.screenWidth! * 0.7,
+                              child: const LinearProgressIndicator(
+                                color: UiConstants.primaryColor,
+                                backgroundColor:
+                                    UiConstants.kDarkBackgroundColor,
                               ),
-                            ],
-                          )
-                        : FloBuyNavBar(
-                            model: widget.model,
-                            onTap: () {
-                              if ((widget.model.buyAmount ?? 0) <
-                                  widget.model.minAmount) {
-                                BaseUtil.showNegativeAlert("Invalid Amount",
-                                    "Please Enter Amount Greater than ${widget.model.minAmount}");
-                                return;
-                              }
+                            )
+                          : FloBuyNavBar(
+                              model: widget.model,
+                              onTap: () {
+                                if ((widget.model.buyAmount ?? 0) <
+                                    widget.model.minAmount) {
+                                  BaseUtil.showNegativeAlert("Invalid Amount",
+                                      "Please Enter Amount Greater than ${widget.model.minAmount}");
+                                  return;
+                                }
 
-                              // if (widget.model.floAssetType ==
-                              //     Constants.ASSET_TYPE_FLO_FIXED_6) {
-                              //   widget.model.openReinvestBottomSheet();
-                              //   return;
-                              // }
-                              // if (widget.model.floAssetType ==
-                              //         Constants.ASSET_TYPE_FLO_FIXED_3 &&
-                              //     !widget.model.isLendboxOldUser) {
-                              //   widget.model.openReinvestBottomSheet();
-                              //   return;
-                              // }
+                                // if (widget.model.floAssetType ==
+                                //     Constants.ASSET_TYPE_FLO_FIXED_6) {
+                                //   widget.model.openReinvestBottomSheet();
+                                //   return;
+                                // }
+                                // if (widget.model.floAssetType ==
+                                //         Constants.ASSET_TYPE_FLO_FIXED_3 &&
+                                //     !widget.model.isLendboxOldUser) {
+                                //   widget.model.openReinvestBottomSheet();
+                                //   return;
+                                // }
 
-                              if (!widget.model.isBuyInProgress) {
-                                FocusScope.of(context).unfocus();
-                                widget.model.initiateBuy();
-                              }
-                            },
-                          );
-              },
-            ),
-          ),
+                                if (!widget.model.isBuyInProgress) {
+                                  FocusScope.of(context).unfocus();
+                                  widget.model.initiateBuy();
+                                }
+                              },
+                            );
+                },
+              )),
           CustomKeyboardSubmitButton(
             onSubmit: () => widget.model.buyFieldNode.unfocus(),
-          )
+          ),
         ],
       ),
     );

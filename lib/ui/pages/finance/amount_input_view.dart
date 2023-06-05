@@ -65,17 +65,17 @@ class _AmountInputViewState extends State<AmountInputView> {
   String getString() {
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         (widget.model?.isLendboxOldUser ?? false)) {
-      return 'Min- ₹100';
+      return 'Min - ₹100';
     } else if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         (widget.model?.isLendboxOldUser ?? true) == false) {
-      return 'Min- ₹100';
+      return 'Min - ₹100';
     }
 
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "Min- ₹10,000";
+      return "Min - ₹10,000";
     }
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "Min- ₹1000";
+      return "Min - ₹1000";
     }
 
     return "";
@@ -239,7 +239,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                 ),
               if (widget.model?.showMaxCapText)
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
                   child: Text(
                     widget.maxAmountMsg,
                     style: TextStyles.sourceSans.body4.bold
@@ -248,7 +248,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                 ),
               if (currentAmt < widget.minAmount)
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
                   child: Text(
                     widget.minAmountMsg,
                     style: TextStyles.sourceSans.body4.bold

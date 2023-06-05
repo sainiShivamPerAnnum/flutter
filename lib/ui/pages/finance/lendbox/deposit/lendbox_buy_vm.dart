@@ -85,7 +85,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
   bool _addSpecialCoupon = false;
-  int selectedOption = -1;
+  int _selectedOption = -1;
 
   ///  ---------- getter and setter ------------
 
@@ -189,6 +189,13 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   set addSpecialCoupon(value) {
     _addSpecialCoupon = value;
+    notifyListeners();
+  }
+
+  int get selectedOption => _selectedOption;
+
+  set selectedOption(int value) {
+    _selectedOption = value;
     notifyListeners();
   }
 
@@ -398,14 +405,20 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   String showHappyHourSubtitle() {
+    final int parsedFloAmount =
+        int.tryParse(amountController?.text ?? '0') ?? 0;
+
+    if (parsedFloAmount < this.minAmount) {
+      showInfoIcon = false;
+      return "";
+    }
+
     final int tambolaCost = AppConfig.getValue(AppConfigKey.tambola_cost);
     final HappyHourCampign? happyHourModel =
         locator.isRegistered<HappyHourCampign>()
             ? locator<HappyHourCampign>()
             : null;
 
-    final int parsedFloAmount =
-        int.tryParse(amountController?.text ?? '0') ?? 0;
     final num minAmount =
         num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
 
@@ -420,9 +433,9 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     showHappyHour
         ? happyHourTickets = (happyHourModel?.data != null &&
-                happyHourModel?.data?.rewards?[0].type == 'tt')
-            ? happyHourModel?.data!.rewards![0].value
-            : null
+        happyHourModel?.data?.rewards?[0].type == 'tt')
+        ? happyHourModel?.data!.rewards![0].value
+        : null
         : happyHourTickets = null;
 
     if (parsedFloAmount >= minAmount && happyHourTickets != null) {
@@ -537,6 +550,40 @@ class LendboxBuyViewModel extends BaseViewModel {
       ),
       isBarrierDismissible: false,
       isScrollControlled: true,
+    );
+  }
+
+  Widget showrReinvestSubTitle() {
+    final maturityAmount =
+        calculateAmountAfterMaturity(amountController?.text ?? "0");
+
+    String getText() {
+      if (selectedOption == -1) {
+        return "";
+      }
+      if (selectedOption == 3) {
+        return "Withdrawing to your bank account after maturity";
+      }
+      if (selectedOption == 1) {
+        return "Re-investing ₹$maturityAmount in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo";
+      }
+      if (selectedOption == 2) {
+        return "Investing ₹$maturityAmount in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo after maturity";
+      }
+
+      if (selectedOption == -2) {
+        return "We will contact you before the maturity to help you decide";
+      }
+      return '';
+    }
+
+    return Flexible(
+      child: Text(
+        getText(),
+        style: TextStyles.sourceSans.body3.colour(Colors.white),
+        textAlign: TextAlign.left,
+        maxLines: 2,
+      ),
     );
   }
 
