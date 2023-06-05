@@ -51,9 +51,10 @@ class PowerPlayCard extends StatelessWidget {
         }
       },
       child: Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding20,
-          vertical: SizeConfig.padding10,
+        margin: EdgeInsets.only(
+          left: SizeConfig.pageHorizontalMargins,
+          right: SizeConfig.pageHorizontalMargins,
+          top: SizeConfig.pageHorizontalMargins * 1.2,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
