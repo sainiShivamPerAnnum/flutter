@@ -30,7 +30,7 @@ class ReInvestPrompt extends HookWidget {
   String get subtitle =>
       "At the end of ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)";
 
-  String get maturityAmount => model.calculateAmountAfter6Months(amount);
+  String get maturityAmount => model.calculateAmountAfterMaturity(amount);
 
   @override
   Widget build(BuildContext context) {
@@ -487,7 +487,7 @@ class InvestmentForeseenWidget extends StatelessWidget {
                 style: TextStyles.rajdhaniSB.body3,
               ),
               Text(
-                "₹$amount",
+                "₹${double.tryParse(amount)?.toStringAsFixed(2)}",
                 style: TextStyles.sourceSansB.title5,
               )
             ],
@@ -549,7 +549,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
   void initState() {
     super.initState();
 
-    maturityAmount = calculateAmountAfter6Months(widget.amount);
+    maturityAmount = calculateAmountAfterMaturity(widget.amount);
   }
 
   bool get isLoading => _isLoading;
@@ -570,7 +570,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
 
   String maturityAmount = "";
 
-  String calculateAmountAfter6Months(String amount) {
+  String calculateAmountAfterMaturity(String amount) {
     int interest =
         widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
 

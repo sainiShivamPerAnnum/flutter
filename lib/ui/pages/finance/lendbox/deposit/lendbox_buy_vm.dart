@@ -195,6 +195,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       {required String assetTypeFlow}) async {
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
+    _txnService.floAssetType = floAssetType;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
@@ -485,7 +486,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     appliedCoupon = null;
   }
 
-  String calculateAmountAfter6Months(String amount) {
+  String calculateAmountAfterMaturity(String amount) {
     int interest = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
 
     double principal = double.tryParse(amount) ?? 0.0;
