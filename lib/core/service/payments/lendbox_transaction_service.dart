@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
+import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -18,6 +19,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
+import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -168,13 +170,13 @@ class LendboxTransactionService extends BaseTransactionService {
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
-            // PowerPlayService.powerPlayDepositFlow = false;
-            // MatchData? liveMatchData =
-            //     locator<PowerPlayService>().liveMatchData;
-            // if (liveMatchData != null) {
-            //   unawaited(locator<PowerPlayService>()
-            //       .getUserTransactionHistory(matchData: liveMatchData));
-            // }
+            PowerPlayService.powerPlayDepositFlow = false;
+            MatchData? liveMatchData =
+                locator<PowerPlayService>().liveMatchData;
+            if (liveMatchData != null) {
+              unawaited(locator<PowerPlayService>()
+                  .getUserTransactionHistory(matchData: liveMatchData));
+            }
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
             await _newUserCheck();

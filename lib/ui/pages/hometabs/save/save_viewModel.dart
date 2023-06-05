@@ -30,6 +30,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_secti
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_welcome_card.dart';
+import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
@@ -239,10 +240,14 @@ class SaveViewModel extends BaseViewModel {
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
+        case "PP":
+          saveViewItems.add(const PowerPlayCard());
+          break;
         case 'NAS':
           saveViewItems.add(const AutosaveCard());
           saveViewItems.add(const MiniAssetsGroupSection());
           break;
+
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));
           break;
@@ -273,9 +278,9 @@ class SaveViewModel extends BaseViewModel {
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
-        // case "PP":
-        //   saveViewItems.add(const PowerPlayCard());
-        //   break;
+        case "PP":
+          saveViewItems.add(const PowerPlayCard());
+          break;
         case 'NAS':
           saveViewItems.add(const AutosaveCard());
           break;

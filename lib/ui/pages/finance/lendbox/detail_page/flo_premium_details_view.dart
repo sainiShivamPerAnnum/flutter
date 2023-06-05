@@ -266,52 +266,50 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                   padding: EdgeInsets.all(
                                       SizeConfig.pageHorizontalMargins),
                                   child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Wanna Know more?",
-                                          style: TextStyles.rajdhaniSB.title5,
-                                        ),
-                                        SizedBox(height: SizeConfig.padding12),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                "Wanna know more about the asset or need help with your Investment",
-                                                style: TextStyles.body2
-                                                    .colour(Colors.white),
-                                              ),
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Still not convinced?",
+                                        style: TextStyles.rajdhaniSB.title5,
+                                      ),
+                                      SizedBox(height: SizeConfig.padding12),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "Know more about the P2P Asset by talking to us",
+                                              style: TextStyles.body2
+                                                  .colour(Colors.white),
                                             ),
-                                            SizedBox(
-                                                width: SizeConfig.padding10),
-                                            OutlinedButton(
-                                                onPressed: () {
-                                                  Haptic.vibrate();
-                                                  AppState.delegate!.appState
-                                                          .currentAction =
-                                                      PageAction(
-                                                    state: PageState.addPage,
-                                                    page:
-                                                        FreshDeskHelpPageConfig,
-                                                  );
-                                                },
-                                                style: ButtonStyle(
-                                                    side: MaterialStateProperty
-                                                        .all(const BorderSide(
-                                                            color: Colors.white,
-                                                            width: 1.0,
-                                                            style: BorderStyle
-                                                                .solid))),
-                                                child: Text(
-                                                  "ASK FELLO",
-                                                  style: TextStyles
-                                                      .rajdhaniB.body2
-                                                      .colour(Colors.white),
-                                                ))
-                                          ],
-                                        )
-                                      ]),
+                                          ),
+                                          SizedBox(width: SizeConfig.padding10),
+                                          OutlinedButton(
+                                            onPressed: () {
+                                              Haptic.vibrate();
+                                              AppState.delegate!.appState
+                                                  .currentAction = PageAction(
+                                                state: PageState.addPage,
+                                                page: FreshDeskHelpPageConfig,
+                                              );
+                                            },
+                                            style: ButtonStyle(
+                                                side: MaterialStateProperty.all(
+                                                    const BorderSide(
+                                                        color: Colors.white,
+                                                        width: 1.0,
+                                                        style: BorderStyle
+                                                            .solid))),
+                                            child: Text(
+                                              "CONTACT US",
+                                              style: TextStyles.rajdhaniB.body2
+                                                  .colour(Colors.white),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                                 SizedBox(
                                   height: SizeConfig.navBarHeight * 2,
@@ -523,7 +521,7 @@ class FloPremiumHeader extends StatelessWidget {
                         ),
                         child: Text(
                           model.is12 ? "12% Flo" : "10% Flo",
-                          style: TextStyles.rajdhaniB.title2.colour(
+                          style: TextStyles.rajdhaniB.title0.colour(
                             model.is12
                                 ? UiConstants.primaryColor
                                 : Colors.white,
@@ -728,7 +726,7 @@ class FloPremiumTransactionsList extends StatelessWidget {
                                           SizeConfig.roundness5),
                                     ),
                                     child: Text(
-                                      "KNOW MORE",
+                                      "CHOOSE",
                                       style: TextStyles.rajdhaniB.body2
                                           .colour(Colors.black),
                                     ),

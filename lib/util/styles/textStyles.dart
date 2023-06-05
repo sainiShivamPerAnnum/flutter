@@ -166,13 +166,13 @@ extension FontSize on TextStyle {
   /// Title 5 Size == 22
   TextStyle get title5 => copyWith(fontSize: SizeConfig.title5);
 
-  /// Body 3 Size == 20
+  /// Body 0 Size == 20
   TextStyle get body0 => copyWith(fontSize: SizeConfig.body0);
 
-  /// Body 3 Size == 18
+  /// Body 1 Size == 18
   TextStyle get body1 => copyWith(fontSize: SizeConfig.body1);
 
-  /// Body 3 Size == 16
+  /// Body 2 Size == 16
   TextStyle get body2 => copyWith(fontSize: SizeConfig.body2);
 
   /// Body 3 Size == 14
