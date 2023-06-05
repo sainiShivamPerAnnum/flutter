@@ -55,19 +55,10 @@ class AmountInputView extends StatefulWidget {
 }
 
 class _AmountInputViewState extends State<AmountInputView> {
-  // double _fieldWidth = 0;
-  int _selectedIndex = 1;
 
   @override
   void initState() {
     super.initState();
-    // if (widget.chipAmounts.isNotEmpty) {
-    //   _selectedIndex = widget.chipAmounts.indexWhere(
-    //     (e) => e.value.toString() == (widget.amountController?.text ?? ''),
-    //   );
-    // } else {
-    //   widget.amountController!.text = '1';
-    // }
     widget.model?.updateFieldWidth();
   }
 
@@ -81,7 +72,7 @@ class _AmountInputViewState extends State<AmountInputView> {
     }
 
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "Min- ₹25,000";
+      return "Min- ₹10,000";
     }
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
       return "Min- ₹1000";

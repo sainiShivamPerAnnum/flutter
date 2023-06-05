@@ -66,7 +66,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
     log("floAssetType ${widget.model.floAssetType}");
 
     S locale = S.of(context);
-    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService _analyticsService = locator<AnalyticsService>();
     if (widget.model.state == ViewState.Busy) {
       return const Center(child: FullScreenLoader());
     }

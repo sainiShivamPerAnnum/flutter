@@ -100,7 +100,7 @@ class ReInvestPrompt extends HookWidget {
             OptionContainer(
               optionIndex: 1,
               title:
-                  'Re-invest ₹${maturityAmount} in ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
+                  'Re-invest ₹$maturityAmount in ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
               description: subtitle,
               isSelected: selectedOption.value == 1,
               onTap: () {
@@ -111,7 +111,7 @@ class ReInvestPrompt extends HookWidget {
             OptionContainer(
               optionIndex: 2,
               title:
-                  "Move ₹${maturityAmount} to ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
+                  "Move ₹$maturityAmount to ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
               description: subtitle,
               isSelected: selectedOption.value == 2,
               onTap: () {
@@ -545,6 +545,13 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
   int _selectedOption = -1;
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+
+    maturityAmount = calculateAmountAfter6Months(widget.amount);
+  }
+
   bool get isLoading => _isLoading;
 
   set isLoading(bool value) {
@@ -559,6 +566,26 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
     setState(() {
       _selectedOption = value;
     });
+  }
+
+  String maturityAmount = "";
+
+  String calculateAmountAfter6Months(String amount) {
+    int interest =
+        widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
+
+    double principal = double.tryParse(amount) ?? 0.0;
+    double rateOfInterest = interest / 100.0;
+    int timeInMonths =
+        widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 2 : 4;
+
+    // 0.12 / 365 * amt * (365 / 2)
+    //0.10 / 365 * amt * (365 / 4)
+
+    double amountAfterMonths =
+        rateOfInterest / 365 * principal * (365 / timeInMonths);
+
+    return (principal + amountAfterMonths).toStringAsFixed(2);
   }
 
   String get subtitle =>
@@ -633,7 +660,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
             OptionContainer(
               optionIndex: 1,
               title:
-                  'Re-invest ₹${widget.amount} in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
+                  'Re-invest ₹$maturityAmount in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
               description: subtitle,
               isSelected: selectedOption == 1,
               onTap: () {
@@ -644,7 +671,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
             OptionContainer(
               optionIndex: 2,
               title:
-                  "Move ₹${widget.amount} to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
+                  "Move ₹$maturityAmount to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
               description: subtitle,
               isSelected: selectedOption == 2,
               onTap: () {
