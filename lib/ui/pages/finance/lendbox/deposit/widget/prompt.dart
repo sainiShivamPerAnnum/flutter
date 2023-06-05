@@ -27,29 +27,31 @@ class ReInvestPrompt extends HookWidget {
   final String assetType;
   final LendboxBuyViewModel model;
 
-  String get subtitle =>
-      "At the end of ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)";
-
-  String get maturityAmount => model.calculateAmountAfterMaturity(amount);
-
   @override
   Widget build(BuildContext context) {
-    final selectedOption = useState(-1);
+    final subtitle = useMemoized(
+      () =>
+          "At the end of ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)",
+      [assetType],
+    );
+
+    final maturityAmount = useMemoized(
+      () => model.calculateAmountAfterMaturity(amount),
+      [model, amount],
+    );
+
+    final selectedOption = useState(model.selectedOption);
+
     return Container(
-      // height: SizeConfig.screenHeight! * 0.6,
       padding: EdgeInsets.all(SizeConfig.padding16),
       child: SingleChildScrollView(
         child: Column(
-          // mainAxisSize: MainAxisSize.min,
           children: [
             InvestmentForeseenWidget(
               amount: amount,
               assetType: assetType,
               isLendboxOldUser: model.isLendboxOldUser,
-              onChanged: (value) {
-                // log("value: $value --- ${value.runtimeType}");
-                // maturityAmount.value = value.toStringAsFixed(2);
-              },
+              onChanged: (value) {},
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
@@ -77,9 +79,7 @@ class ReInvestPrompt extends HookWidget {
                 ],
               ),
             ),
-            SizedBox(
-              height: SizeConfig.padding20,
-            ),
+            SizedBox(height: SizeConfig.padding20),
             Container(
               padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.padding8,
@@ -105,7 +105,7 @@ class ReInvestPrompt extends HookWidget {
               isSelected: selectedOption.value == 1,
               onTap: () {
                 model.maturityPref = "1";
-                selectedOption.value = 1;
+                model.selectedOption = selectedOption.value = 1;
               },
             ),
             OptionContainer(
@@ -116,7 +116,7 @@ class ReInvestPrompt extends HookWidget {
               isSelected: selectedOption.value == 2,
               onTap: () {
                 model.maturityPref = "2";
-                selectedOption.value = 2;
+                model.selectedOption = selectedOption.value = 2;
               },
             ),
             OptionContainer(
@@ -126,12 +126,10 @@ class ReInvestPrompt extends HookWidget {
               isSelected: selectedOption.value == 3,
               onTap: () {
                 model.maturityPref = "0";
-                selectedOption.value = 3;
+                model.selectedOption = selectedOption.value = 3;
               },
             ),
-            SizedBox(
-              height: SizeConfig.padding8,
-            ),
+            SizedBox(height: SizeConfig.padding8),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
               child: Row(
@@ -144,24 +142,17 @@ class ReInvestPrompt extends HookWidget {
                       borderRadius: BorderRadius.circular(5),
                       side: const BorderSide(color: Colors.white),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    // color: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     onPressed: () {
                       AppState.backButtonDispatcher?.didPopRoute();
                       SystemChannels.textInput.invokeMethod('TextInput.hide');
                       model.maturityPref = "NA";
+                      model.selectedOption = selectedOption.value = -1;
 
-                      // model.forcedBuy = true;
-
-                      // Future.delayed(const Duration(seconds: 2), () async {
-                      //   if (!model.isBuyInProgress) {
-                      //     //   FocusScope.of(context).unfocus();
-                      //
-                      //     await model.initiateBuy();
-                      //   }
-                      // });
+                      BaseUtil.showPositiveAlert(
+                        'Choose your action later',
+                        'We will Confirm your preference once again before maturity!',
+                      );
                     },
                     child: Center(
                       child: Text(
@@ -181,8 +172,10 @@ class ReInvestPrompt extends HookWidget {
                         : Colors.white,
                     onPressed: () {
                       if (selectedOption.value == -1) {
-                        BaseUtil.showNegativeAlert("Please select an option",
-                            "proceed by choosing an option");
+                        BaseUtil.showNegativeAlert(
+                          "Please select an option",
+                          "proceed by choosing an option",
+                        );
                         return;
                       }
 
@@ -218,7 +211,7 @@ class ReInvestPrompt extends HookWidget {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -85,6 +85,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
   bool _addSpecialCoupon = false;
+  int selectedOption = -1;
 
   ///  ---------- getter and setter ------------
 
@@ -381,7 +382,7 @@ class LendboxBuyViewModel extends BaseViewModel {
         await _couponRepo!.getCoupons(assetType: floAssetType);
     if (couponsRes.code == 200 &&
         couponsRes.model != null &&
-        (couponsRes.model?.length ?? 0) > 1) {
+        (couponsRes.model?.length ?? 0) >= 1) {
       couponList = couponsRes.model;
       if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       showCoupons = true;

@@ -77,12 +77,12 @@ class ViewBreakdown extends StatelessWidget {
           Row(
             children: [
               Text(
-                "GST (${model.goldRates?.igstPercent})%",
+                "GST (${model.goldRates?.igstPercent}%)",
                 style: TextStyles.sourceSans.body2,
               ),
               const Spacer(),
               Text(
-                "₹${(model.goldRates?.igstPercent)! / 100 * double.parse(model.goldAmountController?.text ?? '0')}",
+                "₹${((model.goldRates?.igstPercent)! / 100 * double.parse(model.goldAmountController?.text ?? '0')).toStringAsFixed(2)}",
                 style: TextStyles.sourceSansSB.body2,
               ),
             ],
