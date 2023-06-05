@@ -288,7 +288,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           _baseUser!.uid!.isNotEmpty &&
           _baseUser!.mobile!.isNotEmpty &&
           _baseUser!.name!.isNotEmpty) {
-        _logger.d("Onborded User: ${_baseUser!.uid}");
+        _logger.d("Onboarded User: ${_baseUser!.uid}");
         return true;
       }
     } catch (e) {
@@ -416,6 +416,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       // await _apiCacheManager!.clearCacheMemory();
       _logger.d("UserService signout called");
       _userFundWallet = null;
+      _userPortfolio = Portfolio.base();
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;

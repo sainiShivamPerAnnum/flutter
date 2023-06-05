@@ -30,6 +30,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_secti
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_welcome_card.dart';
+import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
@@ -252,6 +253,8 @@ class SaveViewModel extends BaseViewModel {
     });
 
     saveViewItems.addAll([
+      SizedBox(height: SizeConfig.padding32),
+      const SaveAssetsFooter(),
       const HelpFooter(),
       SizedBox(
         height: SizeConfig.navBarHeight * 0.5,
@@ -285,6 +288,8 @@ class SaveViewModel extends BaseViewModel {
       }
     });
     saveViewItems.addAll([
+      SizedBox(height: SizeConfig.padding32),
+      const SaveAssetsFooter(),
       const HelpFooter(),
       SizedBox(
         height: SizeConfig.navBarHeight * 0.5,

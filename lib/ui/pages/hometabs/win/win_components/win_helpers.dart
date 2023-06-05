@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -20,23 +21,29 @@ class Salutation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: leftMargin ?? SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.padding4,
-        top: SizeConfig.padding10,
-      ),
-      child: PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: const [UserServiceProperties.myName],
-        builder: (context, model, child) {
-          return Text(
-            "Hi ${(model!.baseUser!.kycName!.isNotEmpty ? model.baseUser!.kycName! : model.baseUser!.name!.isNotEmpty ? model.baseUser!.name! : "User").trim().split(' ').first.capitalize()}",
-            style:
-                textStyle ?? TextStyles.rajdhaniSB.title3.colour(Colors.white),
-            overflow: TextOverflow.fade,
-            maxLines: 1,
-          );
-        },
+    return GestureDetector(
+      onTap: () {
+        Haptic.vibrate();
+        AppState.delegate!.parseRoute(Uri.parse('/accounts'));
+      },
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: leftMargin ?? SizeConfig.pageHorizontalMargins,
+          right: SizeConfig.padding4,
+          top: SizeConfig.padding10,
+        ),
+        child: PropertyChangeConsumer<UserService, UserServiceProperties>(
+          properties: const [UserServiceProperties.myName],
+          builder: (context, model, child) {
+            return Text(
+              "Hi ${(model!.baseUser!.kycName!.isNotEmpty ? model.baseUser!.kycName! : model.baseUser!.name!.isNotEmpty ? model.baseUser!.name! : "User").trim().split(' ').first.capitalize()}",
+              style: textStyle ??
+                  TextStyles.rajdhaniSB.title3.colour(Colors.white),
+              overflow: TextOverflow.fade,
+              maxLines: 1,
+            );
+          },
+        ),
       ),
     );
   }

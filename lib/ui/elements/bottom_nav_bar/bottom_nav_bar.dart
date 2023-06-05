@@ -17,12 +17,10 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     RootController rootController = locator<RootController>();
     final navItemsLength = rootController.navItems.values.length;
-    print(navItemsLength);
     return Consumer<AppState>(
       builder: (ctx, superModel, child) => Selector<CardActionsNotifier, bool>(
           selector: (_, notifier) => notifier.isVerticalView,
           builder: (context, isCardsOpen, child) {
-            // if (isCardsOpen) return const SizedBox();
             return AnimatedContainer(
               curve: Curves.easeIn,
               duration: const Duration(milliseconds: 300),
@@ -34,17 +32,11 @@ class BottomNavBar extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: List.generate(
                     navItemsLength,
                     (index) {
-                      // if (index == (navItemsLength / 2).floor()) {
-                      //   return const Expanded(
-                      //     child: SizedBox(),
-                      //   );
-                      // }
-
                       final navbarItems =
                           rootController.navItems.values.toList()[index];
                       return superModel.getCurrentTabIndex == index
@@ -61,7 +53,7 @@ class BottomNavBar extends StatelessWidget {
                             )
                           : Expanded(
                               child: Container(
-                                height: SizeConfig.navBarHeight,
+                                height: kBottomNavigationBarHeight,
                                 key: ValueKey(navbarItems.title),
                                 alignment: Alignment.center,
                                 // width: SizeConfig.screenWidth! * 0.2,
@@ -111,8 +103,8 @@ class NavBarIcon extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: SizeConfig.navBarHeight * 0.61,
-          width: SizeConfig.navBarHeight * 0.65,
+          height: kBottomNavigationBarHeight * 0.61,
+          width: kBottomNavigationBarHeight * 0.65,
           child: Lottie.asset(
             item.lottie,
             fit: BoxFit.contain,
@@ -120,7 +112,7 @@ class NavBarIcon extends StatelessWidget {
             repeat: false,
           ),
         ),
-        SizedBox(height: SizeConfig.navBarHeight * 0.05),
+        const SizedBox(height: kBottomNavigationBarHeight * 0.05),
         Text(item.title, style: style),
         // SizedBox(height: SizeConfig.navBarHeight * 0.1)
       ],

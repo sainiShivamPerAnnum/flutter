@@ -92,12 +92,14 @@ class ScratchCardService
   static List<String>? scratchCardsList;
   static String previousPrizeSubtype = '';
 
-  static dump() {
+  dump() {
     scratchCardId = null;
     gameEndMsgText = null;
     currentGT = null;
     lastScratchCardId = null;
     previousPrizeSubtype = '';
+    _unscratchedTicketsCount = 0;
+    _unscratchedMilestoneScratchCardCount = 0;
   }
 
   List<ScratchCard>? _unscratchedScratchCards;
@@ -228,9 +230,11 @@ class ScratchCardService
     final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
     if (res.isSuccess()) {
       unscratchedTicketsCount = res.model!.length;
-      unscratchedMilestoneScratchCardCount = res.model!
-          .map((sc) => sc.prizeSubtype!.toLowerCase().contains("_mlst_"))
-          .length;
+      res.model!.forEach((sc) {
+        if (sc.prizeSubtype!.toLowerCase().contains("_mlst_")) {
+          unscratchedMilestoneScratchCardCount += 1;
+        }
+      });
     } else {
       unscratchedTicketsCount = 0;
     }

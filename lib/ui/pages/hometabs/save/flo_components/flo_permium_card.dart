@@ -127,11 +127,12 @@ class FloPremiumTierCard extends StatelessWidget {
   double getLead() {
     switch (tier) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return userService.userFundWallet?.wLbBalance ?? 0;
+        return userService.userPortfolio.flo.fixed2.balance;
       case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return userService.userFundWallet?.wLbBalance ?? 0;
+        return userService.userPortfolio.flo.fixed1.balance;
       case Constants.ASSET_TYPE_FLO_FELXI:
-        return userService.userFundWallet?.wLbBalance ?? 0;
+        return userService.userPortfolio.flo.flexi.balance;
+
       default:
         return 0;
     }
@@ -140,11 +141,11 @@ class FloPremiumTierCard extends StatelessWidget {
   double getTrail() {
     switch (tier) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return userService.userFundWallet?.wLbPrinciple ?? 0;
+        return userService.userPortfolio.flo.fixed2.principle;
       case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return userService.userFundWallet?.wLbPrinciple ?? 0;
+        return userService.userPortfolio.flo.fixed1.principle;
       case Constants.ASSET_TYPE_FLO_FELXI:
-        return userService.userFundWallet?.wLbPrinciple ?? 0;
+        return userService.userPortfolio.flo.flexi.principle;
       default:
         return 0;
     }
@@ -153,11 +154,11 @@ class FloPremiumTierCard extends StatelessWidget {
   bool isUserInvestedInThisTier() {
     switch (tier) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return (userService.userFundWallet?.wLbPrinciple ?? 0) > 0;
+        return (userService.userPortfolio.flo.fixed2.balance) > 0;
       case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return (userService.userFundWallet?.wLbPrinciple ?? 0) > 0;
+        return (userService.userPortfolio.flo.fixed1.balance) > 0;
       case Constants.ASSET_TYPE_FLO_FELXI:
-        return (userService.userFundWallet?.wLbPrinciple ?? 0) > 0;
+        return (userService.userPortfolio.flo.flexi.balance) > 0;
       default:
         return false;
     }

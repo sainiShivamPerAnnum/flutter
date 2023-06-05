@@ -102,7 +102,7 @@ class TambolaRewardLottieStrip extends StatelessWidget {
         borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         child: (DateTime.now().weekday == 1 && DateTime.now().hour < 16)
             ? const SizedBox()
-            : Lottie.network(Assets.tambolaTopBannerLottie),
+            : Lottie.asset(Assets.tambolaTopBannerTharLottie),
       ),
     );
   }

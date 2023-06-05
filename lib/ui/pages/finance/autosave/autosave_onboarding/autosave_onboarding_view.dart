@@ -40,7 +40,7 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
     [
       Assets.autosaveBenefitsAssets[2],
       "Automated Investments",
-      "Never run out of tokens and enjoy unlimited gameplay"
+      "Automatically get Tambola Tickets when you autosave in multiples of ₹500"
     ],
   ];
   int currentPage = 0;

@@ -50,7 +50,14 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
   String flo12Description =
       "Fello Flo Premium 12% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 6 months!";
 
-  bool isInvested = false;
+  bool _isInvested = false;
+
+  bool get isInvested => _isInvested;
+
+  set isInvested(bool value) {
+    _isInvested = value;
+    notifyListeners();
+  }
 
   List<bool> detStatus = [false, false, false];
   List<String?> faqHeaders = [
@@ -85,6 +92,7 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> getTransactions() async {
+    isInvested = false;
     final response = await _txnHistoryRepo.getUserTransactions(
       type: "DEPOSIT",
       subtype: "LENDBOXP2P",
@@ -94,6 +102,9 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
     );
     if (response.isSuccess()) {
       transactionsList = response.model!.transactions!;
+      if (transactionsList.isNotEmpty) {
+        _isInvested = true;
+      }
       notifyListeners();
     } else {
       BaseUtil.showNegativeAlert("Unable to fetch transactions",

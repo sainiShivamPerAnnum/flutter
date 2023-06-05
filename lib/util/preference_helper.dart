@@ -31,6 +31,7 @@ class PreferenceHelper {
   static const POWERPLAY_IS_PLAYED = "powerplay_is_played";
   static const LAST_WEEK_NUMBER = 'lastWeekNumber';
   static const APP_RATING_SUBMITTED = 'app_rating_submitted';
+  static const NEW_INSTALL_POPUP = "new_install_popup";
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {

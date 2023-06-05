@@ -79,10 +79,19 @@ class FloBasicCard extends StatelessWidget {
                         Text(isLendboxOldUser ? "10% Flo" : '8% Flo',
                             style: TextStyles.sourceSansB.title5),
                         SizedBox(height: SizeConfig.padding4),
-                        FloPremiumTierChip(
-                          value: isLendboxOldUser
-                              ? lendboxDetails[2]["minAmountText"]
-                              : lendboxDetails[3]["minAmountText"],
+                        Row(
+                          children: [
+                            FloPremiumTierChip(
+                              value: isLendboxOldUser
+                                  ? lendboxDetails[2]["minAmountText"]
+                                  : lendboxDetails[3]["minAmountText"],
+                            ),
+                            FloPremiumTierChip(
+                                value: isLendboxOldUser
+                                    ? lendboxDetails[2]["maturityPeriodText"]
+                                    : lendboxDetails[3]["maturityPeriodText"] ??
+                                        "1 Week Lockin"),
+                          ],
                         ),
                       ],
                     ),

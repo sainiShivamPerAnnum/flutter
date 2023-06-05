@@ -62,19 +62,80 @@ class _JourneyViewState extends State<JourneyView>
             );
           }
 
-          return Scaffold(
-            body: Consumer<JourneyService>(
-              builder: (context, service, child) => Scaffold(
-                key: const ValueKey(Constants.JOURNEY_SCREEN_TAG),
-                resizeToAvoidBottomInset: false,
-                backgroundColor: Colors.black,
-                body: service.isLoading && model.pages == null
-                    ? const JourneyErrorScreen()
-                    : Stack(
-                        children: [
-                          SizedBox(
-                            height: SizeConfig.screenHeight,
-                            width: SizeConfig.screenWidth,
+          return Consumer<JourneyService>(
+            builder: (context, service, child) => Scaffold(
+              key: const ValueKey(Constants.JOURNEY_SCREEN_TAG),
+              appBar: AppBar(
+                backgroundColor: UiConstants.kBackgroundColor,
+                leading: IconButton(
+                  onPressed: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: Colors.white,
+                  ),
+                ),
+                centerTitle: false,
+                title: Text(
+                  "Journey",
+                  style: TextStyles.rajdhaniSB.title4,
+                ),
+                actions: [
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: UiConstants.primaryColor,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            SizeConfig.roundness12,
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding8,
+                          vertical: SizeConfig.padding4,
+                        ),
+                        child: Row(
+                          children: [
+                            Transform.translate(
+                              offset: Offset(0, -SizeConfig.padding4),
+                              child: Lottie.asset(
+                                Assets.navJourneyLottie,
+                                repeat: false,
+                                width: SizeConfig.padding32,
+                              ),
+                            ),
+                            SizedBox(width: SizeConfig.padding8),
+                            Text(
+                              "Level ${locator<UserService>().userJourneyStats?.level ?? 1}",
+                              style: TextStyles.sourceSansSB.body1,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: SizeConfig.pageHorizontalMargins,
+                      )
+                    ],
+                  )
+                ],
+              ),
+              resizeToAvoidBottomInset: false,
+              backgroundColor: Colors.black,
+              body: service.isLoading && model.pages == null
+                  ? const JourneyErrorScreen()
+                  : Stack(
+                      children: [
+                        SizedBox(
+                          height: SizeConfig.screenHeight,
+                          width: SizeConfig.screenWidth,
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              await service.checkForMilestoneLevelChange();
+                            },
                             child: SingleChildScrollView(
                               controller: model.mainController,
                               physics: const BouncingScrollPhysics(),
@@ -102,86 +163,15 @@ class _JourneyViewState extends State<JourneyView>
                               ),
                             ),
                           ),
-                          if (DynamicUiUtils.helpFab.actionUri.isNotEmpty)
-                            const HelpFab(),
-                          // const JourneyAppBar(),
-                          // const JourneyBannersView(),
-                          Positioned(
-                            top: 0,
-                            child: SizedBox(
-                              width: SizeConfig.screenWidth,
-                              height: SizeConfig.fToolBarHeight,
-                              child: AppBar(
-                                backgroundColor: UiConstants.kBackgroundColor,
-                                leading: IconButton(
-                                  onPressed: () {
-                                    AppState.backButtonDispatcher!
-                                        .didPopRoute();
-                                  },
-                                  icon: const Icon(
-                                    Icons.arrow_back_ios_new_rounded,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                centerTitle: false,
-                                title: Text(
-                                  "Journey",
-                                  style: TextStyles.rajdhaniSB.title4,
-                                ),
-                                actions: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: UiConstants.primaryColor,
-                                            width: 2,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            SizeConfig.roundness12,
-                                          ),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding8,
-                                          vertical: SizeConfig.padding4,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Transform.translate(
-                                              offset: Offset(
-                                                  0, -SizeConfig.padding4),
-                                              child: Lottie.asset(
-                                                Assets.navJourneyLottie,
-                                                repeat: false,
-                                                width: SizeConfig.padding32,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                                width: SizeConfig.padding8),
-                                            Text(
-                                              "Level ${locator<UserService>().userJourneyStats?.level ?? 1}",
-                                              style:
-                                                  TextStyles.sourceSansSB.body1,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: SizeConfig.pageHorizontalMargins,
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          if (model.isRefreshing || service.isRefreshing)
-                            const JRefreshIndicator(),
-                          JPageLoader(model: model),
-                          const LevelUpAnimation(),
-                        ],
-                      ),
-              ),
+                        ),
+                        if (DynamicUiUtils.helpFab.actionUri.isNotEmpty)
+                          const HelpFab(),
+                        if (model.isRefreshing || service.isRefreshing)
+                          const JRefreshIndicator(),
+                        JPageLoader(model: model),
+                        const LevelUpAnimation(),
+                      ],
+                    ),
             ),
           );
         },

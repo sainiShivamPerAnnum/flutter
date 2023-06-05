@@ -6,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -32,7 +33,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final UserService _userService = locator<UserService>();
   final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
 
-  // final JourneyService _journeyService = locator<JourneyService>();
+  final JourneyService _journeyService = locator<JourneyService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
@@ -67,13 +68,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
 
-    // if (SpotLightController.instance.startShowCase) {
-    //   SpotLightController.instance.startShowCase = false;
-    //   SpotLightController.instance.init();
-
-    //   SpotLightController.instance.userFlow = UserFlow.onSaveTab;
-    // }
-
+    _journeyService.checkForMilestoneLevelChange();
     if (locator<BackButtonActions>().isTransactionCancelled) {
       if (AppState.onTap != null &&
           AppState.type != null &&

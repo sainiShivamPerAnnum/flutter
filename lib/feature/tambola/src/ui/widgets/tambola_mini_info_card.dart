@@ -88,7 +88,7 @@ class TambolaMiniInfoCard extends StatelessWidget {
                           borderRadius:
                               BorderRadius.circular(SizeConfig.roundness8),
                           child:
-                              Lottie.network(Assets.tambolaTopBannerLottie))),
+                              Lottie.asset(Assets.tambolaTopBannerTharLottie))),
             ),
         selector: (p0, p1) => p1.userFundWallet);
   }

@@ -673,34 +673,37 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Fello Balance",
-                                                  style: GoogleFonts.rajdhani(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.white,
-                                                    fontSize:
-                                                        SizeConfig.titleSize *
-                                                            0.6,
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Fello Balance",
+                                                    style: GoogleFonts.rajdhani(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          SizeConfig.titleSize *
+                                                              0.6,
+                                                    ),
                                                   ),
-                                                ),
-                                                Text(
-                                                  "Sum of all your assets on fello",
-                                                  style:
-                                                      GoogleFonts.sourceSans3(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.grey,
-                                                    fontSize:
-                                                        SizeConfig.titleSize *
-                                                            0.4,
+                                                  Text(
+                                                    "Your current total savings on Fello",
+                                                    style:
+                                                        GoogleFonts.sourceSans3(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.grey,
+                                                      fontSize:
+                                                          SizeConfig.titleSize *
+                                                              0.4,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                            const Spacer(),
                                             cardActions.isVerticalView
                                                 ? OutlinedButton(
                                                     onPressed: () {
@@ -811,11 +814,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                         ),
                                                       ),
                                                       Text(
-                                                          " ${BaseUtil.digitPrecision(
-                                                            value.absolute
-                                                                .percGains,
-                                                            2,
-                                                          )}%",
+                                                          " ${BaseUtil.digitPrecision(value.absolute.percGains, 2, false)}%",
                                                           style: TextStyles
                                                               .sourceSans.body0
                                                               .colour(value
@@ -868,13 +867,17 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                     margin: EdgeInsets.only(
                         bottom: SizeConfig.pageHorizontalMargins * 1.4),
                     child: MaterialButton(
+                      height: SizeConfig.padding44,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness5)),
                       minWidth: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       color: Colors.white,
                       onPressed: () =>
                           BaseUtil.openDepositOptionsModalSheet(timer: 100),
                       child: Text(
-                        "SAVE",
+                        "SAVE NOW",
                         style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                       ),
                     ),
