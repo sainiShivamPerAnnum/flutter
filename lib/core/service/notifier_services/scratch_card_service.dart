@@ -209,11 +209,11 @@ class ScratchCardService
     }
   }
 
-  showMultipleScratchCardsView() {
+  void showMultipleScratchCardsView() {
     if (scratchCardsList != null && scratchCardsList!.isNotEmpty) {
       if (scratchCardsList!.length == 1) {
         scratchCardId = scratchCardsList![0];
-        return fetchAndVerifyScratchCardByID()
+        fetchAndVerifyScratchCardByID()
             .then((_) => showInstantScratchCardView(source: GTSOURCE.prize));
       } else {
         AppState.screenStack.add(ScreenItem.dialog);

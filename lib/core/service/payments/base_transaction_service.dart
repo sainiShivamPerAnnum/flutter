@@ -113,12 +113,6 @@ abstract class BaseTransactionService extends ChangeNotifier {
   void showGtIfAvailable() {
     Future.delayed(const Duration(milliseconds: 500), () {
       _gtService!.showMultipleScratchCardsView();
-      // _gtService!.showInstantScratchCardView(
-      //   amount: this.currentTxnAmount,
-      //   showAutoSavePrompt: true,
-      //   title: locale.youSaved + "₹${this.getAmount(this.currentTxnAmount!)}",
-      //   source: GTSOURCE.deposit,
-      // );
     });
   }
 }

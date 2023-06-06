@@ -276,7 +276,7 @@ class GoldBuySuccessView extends StatelessWidget {
               // _tambolaService.weeklyTicksFetched = false;
               _tambolaService.getBestTambolaTickets();
 
-              _augTxnService!.showGtIfAvailable();
+              _augTxnService.showGtIfAvailable();
             },
             child: Text(
               PowerPlayService.powerPlayDepositFlow
