@@ -80,7 +80,11 @@ class AssetSelectionPage extends StatelessWidget {
               ),
             ),
             if (!showOnlyFlo) SizedBox(height: SizeConfig.padding24),
-            if (!showOnlyFlo) GoldPlanWidget(fetchGoldRate: !showOnlyFlo),
+            if (!showOnlyFlo)
+              GoldPlanWidget(
+                fetchGoldRate: !showOnlyFlo,
+                isSkipMl: isSkipMl,
+              ),
             SizedBox(height: SizeConfig.padding24),
             FloPlanWidget(amount: amount, isSkipMl: isSkipMl),
           ],
