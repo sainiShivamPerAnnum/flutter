@@ -225,6 +225,14 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                   if (!cardActions.isVerticalView) {
                     cardActions.isHorizontalView = false;
                     cardActions.isVerticalView = true;
+                    _analyticsService.track(
+                        eventName: AnalyticsEvents.balanceCardTapped,
+                        properties: {
+                          "fello balance": locator<UserService>()
+                              .userPortfolio
+                              .absolute
+                              .balance
+                        });
                   }
                 },
                 child: AnimatedContainer(
@@ -752,6 +760,17 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                             Colors.black45,
                                                         content:
                                                             const FundBreakdownDialog(),
+                                                      );
+                                                      _analyticsService.track(
+                                                        eventName: AnalyticsEvents
+                                                            .viewBreakdownTapped,
+                                                        properties: {
+                                                          "fello balance": locator<
+                                                                  UserService>()
+                                                              .userPortfolio
+                                                              .absolute
+                                                              .balance
+                                                        },
                                                       );
                                                     },
                                                     style: OutlinedButton

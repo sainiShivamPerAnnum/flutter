@@ -192,6 +192,10 @@ class AnalyticsEvents {
 
   static const globalSaveTapped = "Global Save Now Tapped";
   static const videoTileTapped = "Video Tile Tapped";
+  static const balanceCardTapped = "Balance card tapped";
+  static const balanceCardHorizontalSwiped = "Balance card horizontal swipped";
+  static const balanceCardVerticalSwiped = "Balance card vertical swipped";
+  static const viewBreakdownTapped = "View breakdown tapped";
   static const saveOnAssetBannerTapped = "Save on Asset Banner";
   static const tambolaStripOnHomeTapped = "Tambola Strip on Home Tapped";
   static const offerBannerTapped = "Offer Banner Tapped";
