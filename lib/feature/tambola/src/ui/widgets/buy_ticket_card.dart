@@ -206,7 +206,7 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
                           // ),
                           // SizedBox(width: SizeConfig.padding4),
                           SizedBox(
-                            width: SizeConfig.screenWidth! * 0.03,
+                            width: SizeConfig.screenWidth! * 0.05,
                             child: Center(
                               child: TextField(
                                 style: TextStyles.sourceSans.body2
