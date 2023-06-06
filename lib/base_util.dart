@@ -548,23 +548,23 @@ class BaseUtil extends ChangeNotifier {
           ),
         );
 
-        return openModalBottomSheet(
-          addToScreenStack: true,
-          hapticVibrate: true,
-          backgroundColor:
-              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-          isBarrierDismissible: false,
-          isScrollControlled: true,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.roundness12),
-              topRight: Radius.circular(SizeConfig.roundness24)),
-          content: AssetSelectionPage(
-            showOnlyFlo: false,
-            amount: amount,
-            isSkipMl: isSkipMl,
-            isFromGlobal: true,
-          ),
-        );
+        // return openModalBottomSheet(
+        //   addToScreenStack: true,
+        //   hapticVibrate: true,
+        //   backgroundColor:
+        //       UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+        //   isBarrierDismissible: false,
+        //   isScrollControlled: true,
+        //   borderRadius: BorderRadius.only(
+        //       topLeft: Radius.circular(SizeConfig.roundness12),
+        //       topRight: Radius.circular(SizeConfig.roundness24)),
+        //   content: AssetSelectionPage(
+        //     showOnlyFlo: false,
+        //     amount: amount,
+        //     isSkipMl: isSkipMl,
+        //     isFromGlobal: true,
+        //   ),
+        // );
       },
     );
   }

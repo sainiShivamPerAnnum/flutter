@@ -52,42 +52,45 @@ class AssetSelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff232326),
-      body: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-        child: Column(
-          children: [
-            if (isFromGlobal) SizedBox(height: SizeConfig.fToolBarHeight / 2),
-            AppBar(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  locator<AnalyticsService>().track(
-                    eventName: AnalyticsEvents.savePageClosed,
-                  );
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins),
+          child: Column(
+            children: [
+              if (isFromGlobal) SizedBox(height: SizeConfig.fToolBarHeight / 2),
+              AppBar(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.savePageClosed,
+                    );
 
-                  AppState.backButtonDispatcher?.didPopRoute();
-                },
+                    AppState.backButtonDispatcher?.didPopRoute();
+                  },
+                ),
+                title: Text(
+                  'Select plan to save',
+                  style: TextStyles.rajdhaniSB.title5,
+                ),
               ),
-              title: Text(
-                'Select plan to save',
-                style: TextStyles.rajdhaniSB.title5,
-              ),
-            ),
-            if (!showOnlyFlo) SizedBox(height: SizeConfig.padding24),
-            if (!showOnlyFlo)
-              GoldPlanWidget(
-                fetchGoldRate: !showOnlyFlo,
-                isSkipMl: isSkipMl,
-              ),
-            SizedBox(height: SizeConfig.padding24),
-            FloPlanWidget(amount: amount, isSkipMl: isSkipMl),
-          ],
+              if (!showOnlyFlo) SizedBox(height: SizeConfig.padding24),
+              if (!showOnlyFlo)
+                GoldPlanWidget(
+                  fetchGoldRate: !showOnlyFlo,
+                  isSkipMl: isSkipMl,
+                ),
+              SizedBox(height: SizeConfig.padding24),
+              FloPlanWidget(amount: amount, isSkipMl: isSkipMl),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: PropertyChangeProvider<MarketingEventHandlerService,
@@ -402,6 +405,9 @@ class FelloFloPrograms extends StatelessWidget {
         // if (!isRecommended) const Spacer(),
         GestureDetector(
           onTap: () {
+            BaseUtil.openFloBuySheet(
+                floAssetType: floAssetType, amt: amount, isSkipMl: isSkipMl);
+
             locator<AnalyticsService>().track(
                 eventName: AnalyticsEvents.assetSelectionProceed,
                 properties: {
@@ -410,10 +416,6 @@ class FelloFloPrograms extends StatelessWidget {
                   'Slab Lockin Period': chipString1,
                   'Recommended': isRecommended,
                 });
-
-            // AppState.backButtonDispatcher?.didPopRoute();
-            BaseUtil.openFloBuySheet(
-                floAssetType: floAssetType, amt: amount, isSkipMl: isSkipMl);
           },
           child: Container(
             margin:

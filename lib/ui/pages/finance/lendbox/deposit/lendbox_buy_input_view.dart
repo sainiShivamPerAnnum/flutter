@@ -151,11 +151,10 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   onTap: () => widget.model.showKeyBoard(),
                   model: widget.model,
                 ),
-
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
                 if (widget.model.showCoupons) ...[
-                  SizedBox(
-                    height: SizeConfig.padding24,
-                  ),
                   Container(
                     height: 1,
                     margin: EdgeInsets.symmetric(
@@ -686,44 +685,46 @@ class MaturityDetailsWidget extends StatelessWidget {
             ? const SizedBox()
             : (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ||
                     model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3)
-                ? Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 1,
-                          // margin: EdgeInsets.symmetric(
-                          //     horizontal: SizeConfig.pageHorizontalMargins),
-                          color: UiConstants.kModalSheetSecondaryBackgroundColor
-                              .withOpacity(0.2),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding16,
-                        ),
-                        Text(
-                          'Maturity Details',
-                          style: TextStyles.sourceSansSB.body1,
-                          textAlign: TextAlign.left,
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding16,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (!model.isBuyInProgress) {
-                              model.openReinvestBottomSheet();
-                            }
+                ? GestureDetector(
+                    onTap: () {
+                      if (!model.isBuyInProgress) {
+                        model.openReinvestBottomSheet();
+                      }
 
-                            model.analyticsService.track(
-                                eventName: AnalyticsEvents.maturityChoiceTapped,
-                                properties: {
-                                  'amount': model.buyAmount,
-                                  "asset": model.floAssetType,
-                                });
-                          },
-                          child: Row(
+                      model.analyticsService.track(
+                          eventName: AnalyticsEvents.maturityChoiceTapped,
+                          properties: {
+                            'amount': model.buyAmount,
+                            "asset": model.floAssetType,
+                          });
+                    },
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 1,
+                            // margin: EdgeInsets.symmetric(
+                            //     horizontal: SizeConfig.pageHorizontalMargins),
+                            color: UiConstants
+                                .kModalSheetSecondaryBackgroundColor
+                                .withOpacity(0.2),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          Text(
+                            'Maturity Details',
+                            style: TextStyles.sourceSansSB.body1,
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               model.showReinvestSubTitle(),
@@ -737,8 +738,8 @@ class MaturityDetailsWidget extends StatelessWidget {
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   )
                 : const SizedBox();
