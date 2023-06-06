@@ -210,7 +210,6 @@ class AnalyticsEvents {
   static const assetSelectionProceed = "Asset Selection Proceed";
   static const tambolaTicketInfoTapped = "Tambola Ticket Info HH Tapped";
 
-  static const viewBreakdownTapped = "View Breakdown Tapped";
   static const maturityChoiceTapped = "Maturity Details Choose Tapped";
   static const maturitySelectionContinueTapped =
       "Maturity Selection Continue Tapped";

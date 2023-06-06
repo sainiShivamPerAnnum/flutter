@@ -849,13 +849,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         appState.currentAction = PageAction(
             state: PageState.addWidget,
             page: FloPremiumDetailsPageConfig,
-            widget: FloPremiumDetailsView(is12: false));
+            widget: const FloPremiumDetailsView(is12: false));
         break;
       case "flo12Details":
         appState.currentAction = PageAction(
             state: PageState.addWidget,
             page: FloPremiumDetailsPageConfig,
-            widget: FloPremiumDetailsView(is12: true));
+            widget: const FloPremiumDetailsView(is12: true));
         break;
 
       case 'quickTour':
