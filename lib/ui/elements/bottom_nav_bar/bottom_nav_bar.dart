@@ -60,7 +60,7 @@ class BottomNavBar extends StatelessWidget {
                                   height: kBottomNavigationBarHeight,
                                   key: ValueKey(navbarItems.title),
                                   alignment: Alignment.center,
-                                  // color: Colors.red,
+                                  color: Colors.transparent,
                                   child: NavBarIcon(
                                     callBack: () {
                                       superModel.onItemTapped(index);
