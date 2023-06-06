@@ -151,7 +151,7 @@ class Cache {
 
   factory Cache.fromMap(Map<String, dynamic> map) {
     return Cache(
-        before: TimestampModel.fromMap(map['before'] as Map<String, dynamic>),
+        before: TimestampModel.fromMap(map['before']),
         keys: List<String>.from((map['keys'].cast<String>() as List<String>)));
   }
 

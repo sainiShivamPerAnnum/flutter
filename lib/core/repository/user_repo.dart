@@ -520,39 +520,39 @@ class UserRepository extends BaseRepo {
       required int dayOpenCount}) async {
     UserBootUpDetailsModel userBootUp;
 
-    try {
-      Map<String, dynamic> queryParameters = {
-        'deviceId': deviceId,
-        'platform': platform,
-        'appVersion': appVersion,
-        'lastOpened': lastOpened,
-        'dayOpenCount': dayOpenCount.toString(),
-      };
+    // try {
+    Map<String, dynamic> queryParameters = {
+      'deviceId': deviceId,
+      'platform': platform,
+      'appVersion': appVersion,
+      'lastOpened': lastOpened,
+      'dayOpenCount': dayOpenCount.toString(),
+    };
 
-      final token = await getBearerToken();
+    final token = await getBearerToken();
 
-      final respone = await APIService.instance.getData(
-        ApiPath.userBootUp(
-          userService.baseUser?.uid,
-        ),
-        token: token,
-        queryParams: queryParameters,
-        cBaseUrl: _baseUrl,
-      );
-      debugPrint("Bootup Response: $respone");
-      userBootUp = UserBootUpDetailsModel.fromMap(respone);
+    final respone = await APIService.instance.getData(
+      ApiPath.userBootUp(
+        userService.baseUser?.uid,
+      ),
+      token: token,
+      queryParams: queryParameters,
+      cBaseUrl: _baseUrl,
+    );
+    debugPrint("Bootup Response: $respone");
+    userBootUp = UserBootUpDetailsModel.fromMap(respone);
 
-      return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);
-    } catch (e) {
-      logger!.d("Unable to fetch user boot up ee ${e.toString()}");
-      locator<InternalOpsService>().logFailure(
-        userService.baseUser?.uid ?? "",
-        FailType.UserBootUpDetailsFetchFailed,
-        {'message': "User Bootup details fetch failed"},
-      );
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to get user bootup details", 400);
-    }
+    return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);
+    // } catch (e) {
+    //   logger!.d("Unable to fetch user boot up ee ${e.toString()}");
+    //   locator<InternalOpsService>().logFailure(
+    //     userService.baseUser?.uid ?? "",
+    //     FailType.UserBootUpDetailsFetchFailed,
+    //     {'message': "User Bootup details fetch failed"},
+    //   );
+    //   return ApiResponse.withError(
+    //       e.toString() ?? "Unable to get user bootup details", 400);
+    // }
   }
 
   Future<ApiResponse<bool>> isEmailRegistered(String email) async {
