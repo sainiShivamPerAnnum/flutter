@@ -1,7 +1,7 @@
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
-import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
@@ -170,13 +170,13 @@ class RootAppBar extends StatelessWidget {
                             action: Row(
                               children: [
                                 Selector2<UserService, ScratchCardService,
-                                    Tuple2<UserFundWallet?, int>>(
+                                    Tuple2<Portfolio?, int>>(
                                   builder: (context, value, child) =>
                                       FelloInfoBar(
                                     svgAsset: Assets.scratchCard,
                                     size: SizeConfig.padding16,
                                     child:
-                                        "₹${value.item1?.unclaimedBalance.toInt() ?? 0}",
+                                        "₹${value.item1?.rewards.toInt() ?? 0}",
                                     onPressed: () {
                                       Haptic.vibrate();
                                       AppState.delegate!
@@ -187,7 +187,7 @@ class RootAppBar extends StatelessWidget {
                                   selector: (p0, userService,
                                           scratchCardService) =>
                                       Tuple2(
-                                          userService.userFundWallet,
+                                          userService.userPortfolio,
                                           scratchCardService
                                               .unscratchedTicketsCount),
                                 ),

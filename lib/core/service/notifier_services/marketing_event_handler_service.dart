@@ -217,6 +217,7 @@ class MarketingEventHandlerService
       _gtService.showInstantScratchCardView(
         source: GTSOURCE.game,
         onJourney: true,
+        showRatingDialog: false,
       );
     });
   }

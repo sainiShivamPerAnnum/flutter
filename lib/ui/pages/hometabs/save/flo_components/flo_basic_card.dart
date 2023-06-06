@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -24,18 +26,45 @@ class FloBasicCard extends StatelessWidget {
     super.key,
   });
 
+  void trackBasicCardWithdrawTap(bool isLendboxOldUser, String lockIn) {
+    locator<AnalyticsService>()
+        .track(eventName: AnalyticsEvents.withdrawFloTapped, properties: {
+      "asset name": isLendboxOldUser ? "10% Flo" : "8% Flo",
+      "new user":
+          locator<UserService>().userSegments.contains(Constants.NEW_USER),
+      "invested amount": getPrinciple(isLendboxOldUser),
+      "current amount": getBalance(isLendboxOldUser),
+      "lockin period": lockIn,
+    });
+  }
+
+  void trackBasicCardInvestTap(bool isLendboxOldUser, String lockIn) {
+    locator<AnalyticsService>()
+        .track(eventName: AnalyticsEvents.investFloBannerTapped, properties: {
+      "asset name": isLendboxOldUser ? "10% Flo" : "8% Flo",
+      "new user":
+          locator<UserService>().userSegments.contains(Constants.NEW_USER),
+      "invested amount": getPrinciple(isLendboxOldUser),
+      "current amount": getBalance(isLendboxOldUser),
+      "lockin period": lockIn,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isLendboxOldUser = model.userSegments.contains(Constants.US_FLO_OLD);
     List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
-    //if true => user will se 10%
-    //else => user will se 8%
     double basicPrinciple = getPrinciple(isLendboxOldUser);
-    double basicBalance = getBalance(isLendboxOldUser);
-    double percent = getPercent(isLendboxOldUser);
+
     return InkWell(
-      onTap: () => BaseUtil.openFloBuySheet(
-          floAssetType: Constants.ASSET_TYPE_FLO_FELXI),
+      onTap: () {
+        BaseUtil.openFloBuySheet(floAssetType: Constants.ASSET_TYPE_FLO_FELXI);
+        trackBasicCardWithdrawTap(
+            isLendboxOldUser,
+            isLendboxOldUser
+                ? lendboxDetails[2]["maturityPeriodText"]
+                : lendboxDetails[3]["maturityPeriodText"] ?? "1 Week Lockin");
+      },
       child: Container(
         margin: EdgeInsets.symmetric(
             vertical: SizeConfig.pageHorizontalMargins / 2,
@@ -199,8 +228,16 @@ class FloBasicCard extends StatelessWidget {
                             BorderRadius.circular(SizeConfig.roundness5),
                       ),
                       color: Colors.white,
-                      onPressed: () => BaseUtil.openFloBuySheet(
-                          floAssetType: Constants.ASSET_TYPE_FLO_FELXI),
+                      onPressed: () {
+                        BaseUtil.openFloBuySheet(
+                            floAssetType: Constants.ASSET_TYPE_FLO_FELXI);
+                        trackBasicCardInvestTap(
+                            isLendboxOldUser,
+                            isLendboxOldUser
+                                ? lendboxDetails[2]["maturityPeriodText"]
+                                : lendboxDetails[3]["maturityPeriodText"] ??
+                                    "1 Week Lockin");
+                      },
                       child: Text(
                         "SAVE",
                         style: TextStyles.rajdhaniB.body2.colour(Colors.black),

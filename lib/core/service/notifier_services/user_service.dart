@@ -298,6 +298,23 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return false;
   }
 
+  bool isUserInFirstWeekOfSignUp() {
+    int signUpDay = baseUser!.createdOn.toDate().weekday;
+    int noOfDaysForNextWeek = 7 - signUpDay;
+
+    DateTime signUpWeekEndDate = DateTime(
+      baseUser!.createdOn.toDate().year,
+      baseUser!.createdOn.toDate().month,
+      baseUser!.createdOn.toDate().day,
+    ).add(
+      noOfDaysForNextWeek != 0
+          ? Duration(days: noOfDaysForNextWeek)
+          : Duration(hours: 24 - baseUser!.createdOn.toDate().hour),
+    );
+    if (baseUser!.createdOn.toDate().isBefore(signUpWeekEndDate)) return true;
+    return false;
+  }
+
   Future<void> userBootUpEE() async {
     if (FirebaseAuth.instance.currentUser != null) {
       await setLastOpened();

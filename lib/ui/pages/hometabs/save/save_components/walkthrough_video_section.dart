@@ -1,7 +1,10 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +22,7 @@ class WalthroughVideosSection extends StatelessWidget {
           "https://www.youtube.com/watch?v=zFhYJRqz_xk"
         ];
     return SizedBox(
-      height: SizeConfig.screenWidth! * 0.36,
+      height: SizeConfig.screenWidth! * 0.32,
       width: SizeConfig.screenWidth,
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
@@ -39,10 +42,17 @@ class WalthroughVideosSection extends StatelessWidget {
                   hapticVibrate: true,
                   barrierColor: Colors.black54,
                   content: Dialog(child: YoutubePlayerView(url: videos[i])));
+
+              locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.videoTileTapped,
+                  properties: {
+                    "order": i + 1,
+                    "video_url": videos[i],
+                  });
             },
             child: Container(
-              width: SizeConfig.screenWidth! * 0.66,
-              height: SizeConfig.screenWidth! * 0.4,
+              width: SizeConfig.screenWidth! * 0.58,
+              height: SizeConfig.screenWidth! * 0.32,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12),
                 image: DecorationImage(

@@ -1,8 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -20,6 +23,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -292,6 +296,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                 state: PageState.addPage,
                                                 page: FreshDeskHelpPageConfig,
                                               );
+                                              trackHelpBannerTapped(model.is12);
                                             },
                                             style: ButtonStyle(
                                                 side: MaterialStateProperty.all(
@@ -442,6 +447,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                   : Constants
                                                       .ASSET_TYPE_FLO_FIXED_3,
                                             );
+                                            trackSaveTapped(model.is12);
                                           }),
                                     ),
                                   ],
@@ -478,6 +484,37 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
         );
       },
     );
+  }
+
+  void trackSaveTapped(bool is12) {
+    locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.investNowInFloSlabTapped,
+        properties: {
+          "asset name": is12 ? "12% Flo" : "10% Flo",
+          "new user":
+              locator<UserService>().userSegments.contains(Constants.NEW_USER),
+          "total invested amount": is12
+              ? locator<UserService>().userPortfolio.flo.fixed1.principle
+              : locator<UserService>().userPortfolio.flo.fixed2.principle,
+          "total current amount": is12
+              ? locator<UserService>().userPortfolio.flo.fixed1.balance
+              : locator<UserService>().userPortfolio.flo.fixed2.balance,
+        });
+  }
+
+  void trackHelpBannerTapped(bool is12) {
+    locator<AnalyticsService>()
+        .track(eventName: AnalyticsEvents.helpInFloSlabTapped, properties: {
+      "asset name": is12 ? "12% Flo" : "10% Flo",
+      "new user":
+          locator<UserService>().userSegments.contains(Constants.NEW_USER),
+      "total invested amount": is12
+          ? locator<UserService>().userPortfolio.flo.fixed1.principle
+          : locator<UserService>().userPortfolio.flo.fixed2.principle,
+      "total current amount": is12
+          ? locator<UserService>().userPortfolio.flo.fixed1.balance
+          : locator<UserService>().userPortfolio.flo.fixed2.balance,
+    });
   }
 }
 
@@ -561,6 +598,34 @@ class FloPremiumTransactionsList extends StatelessWidget {
     required this.model,
   }) : super(key: key);
 
+  void trackTransactionCardTap(
+      double currentAmount, double investedAmount, String maturityDate) {
+    locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.depositCardInFloSlabTapped,
+        properties: {
+          "asset name": model.is12 ? "12% Flo" : "10% Flo",
+          "new user":
+              locator<UserService>().userSegments.contains(Constants.NEW_USER),
+          "invested amount": investedAmount,
+          "current amount": currentAmount,
+          "maturity date": maturityDate
+        });
+  }
+
+  void trackDecideButtonTap(
+      double currentAmount, double investedAmount, String maturityDate) {
+    locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.decideOnDepositCardTapped,
+        properties: {
+          "asset name": model.is12 ? "12% Flo" : "10% Flo",
+          "new user":
+              locator<UserService>().userSegments.contains(Constants.NEW_USER),
+          "invested amount": investedAmount,
+          "current amount": currentAmount,
+          "maturity date": maturityDate
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -602,6 +667,8 @@ class FloPremiumTransactionsList extends StatelessWidget {
                           txn: model.transactionsList[i],
                         ),
                       );
+                      trackTransactionCardTap(currentValue, currentValue - gain,
+                          formattedMaturityDate);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -719,6 +786,11 @@ class FloPremiumTransactionsList extends StatelessWidget {
                                         ),
                                       ).then(
                                           (value) => model.getTransactions());
+                                      trackDecideButtonTap(
+                                        currentValue,
+                                        currentValue - gain,
+                                        formattedMaturityDate,
+                                      );
                                     },
                                     color: Colors.white,
                                     shape: RoundedRectangleBorder(

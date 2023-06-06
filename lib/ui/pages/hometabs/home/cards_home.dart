@@ -1,11 +1,14 @@
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -15,6 +18,7 @@ import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/static/blur_filter.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +39,7 @@ class Cards extends StatefulWidget {
 
 class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
   // double bgWidth = SizeConfig.screenWidth!;
+  final _analyticsService = locator<AnalyticsService>();
   ScrollController? controller;
   Duration duration = const Duration(milliseconds: 300);
   Curve curve = Curves.decelerate;
@@ -106,6 +111,18 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
     Haptic.vibrate();
 
     if (investmentType == InvestmentType.AUGGOLD99) {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.assetBannerTapped,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            'Asset': 'Gold',
+            "Failed transaction count": AnalyticsProperties.getFailedTxnCount(),
+            "Successs transaction count":
+                AnalyticsProperties.getSucessTxnCount(),
+            "Pending transaction count":
+                AnalyticsProperties.getPendingTxnCount(),
+          }));
+
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SaveAssetsViewConfig,
@@ -114,6 +131,18 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
         ),
       );
     } else {
+      _analyticsService.track(
+          eventName: AnalyticsEvents.assetBannerTapped,
+          properties:
+              AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+            'Asset': 'Flo',
+            "Failed transaction count": AnalyticsProperties.getFailedTxnCount(),
+            "Successs transaction count":
+                AnalyticsProperties.getSucessTxnCount(),
+            "Pending transaction count":
+                AnalyticsProperties.getPendingTxnCount(),
+          }));
+
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: SaveAssetsViewConfig,
@@ -122,6 +151,13 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
         ),
       );
     }
+  }
+
+  void trackSaveButtonAnalytics(InvestmentType type) {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.saveOnAssetBannerTapped, properties: {
+      'Asset': type == InvestmentType.AUGGOLD99 ? "Gold" : 'Flo',
+    });
   }
 
   void onRedeemPressed() {
@@ -434,11 +470,13 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             secondaryColor:
                                                 UiConstants.kGoldContainerColor,
                                             subtitle: "100% Safe • 99.99% Pure",
-                                            onButtonPressed: () => BaseUtil()
-                                                .openRechargeModalSheet(
-                                                    investmentType:
-                                                        InvestmentType
-                                                            .AUGGOLD99),
+                                            onButtonPressed: () {
+                                              BaseUtil().openRechargeModalSheet(
+                                                  investmentType:
+                                                      InvestmentType.AUGGOLD99);
+                                              trackSaveButtonAnalytics(
+                                                  InvestmentType.AUGGOLD99);
+                                            },
                                             onCardPressed: () =>
                                                 navigateToSaveAssetView(
                                                     InvestmentType.AUGGOLD99),
@@ -530,11 +568,13 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             secondaryColor:
                                                 UiConstants.darkPrimaryColor3,
                                             subtitle: "P2P Asset • 12% Returns",
-                                            onButtonPressed: () => BaseUtil()
-                                                .openRechargeModalSheet(
-                                                    investmentType:
-                                                        InvestmentType
-                                                            .LENDBOXP2P),
+                                            onButtonPressed: () {
+                                              BaseUtil().openRechargeModalSheet(
+                                                  investmentType: InvestmentType
+                                                      .LENDBOXP2P);
+                                              trackSaveButtonAnalytics(
+                                                  InvestmentType.LENDBOXP2P);
+                                            },
                                             onCardPressed: () =>
                                                 navigateToSaveAssetView(
                                                     InvestmentType.LENDBOXP2P),
@@ -694,8 +734,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                           FontWeight.w500,
                                                       color: Colors.grey,
                                                       fontSize:
-                                                          SizeConfig.titleSize *
-                                                              0.4,
+                                                          SizeConfig.body3,
                                                     ),
                                                   ),
                                                 ],
@@ -871,8 +910,24 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                       minWidth: SizeConfig.screenWidth! -
                           SizeConfig.pageHorizontalMargins * 2,
                       color: Colors.white,
-                      onPressed: () =>
-                          BaseUtil.openDepositOptionsModalSheet(timer: 100),
+                      onPressed: () {
+                        BaseUtil.openDepositOptionsModalSheet(timer: 100);
+
+                        locator<AnalyticsService>().track(
+                            eventName: AnalyticsEvents.globalSaveTapped,
+                            properties: {
+                              "new_user": locator<UserService>()
+                                  .userSegments
+                                  .contains(Constants.NEW_USER),
+                              "old_lb_user": locator<UserService>()
+                                  .userSegments
+                                  .contains(Constants.US_FLO_OLD),
+                              "fello_balance": locator<UserService>()
+                                  .userPortfolio
+                                  .absolute
+                                  .balance
+                            });
+                      },
                       child: Text(
                         "SAVE NOW",
                         style: TextStyles.rajdhaniB.body1.colour(Colors.black),

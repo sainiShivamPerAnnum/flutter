@@ -12,6 +12,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,6 +60,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: SizeConfig.padding16),
                     //1 Cr Lottie
                     const TambolaRewardLottieStrip(),
                     //Weekly/Daily Picks Card
@@ -108,6 +110,7 @@ class TambolaRewardLottieStrip extends StatelessWidget {
             ? const SizedBox()
             : InkWell(
                 onTap: () {
+                  Haptic.vibrate();
                   AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.addWidget,
                     page: TambolaNewUser,

@@ -62,7 +62,7 @@ class Win extends StatelessWidget {
                 //   },
                 // ),
                 AccountInfoTiles(title: locale.abMyProfile, uri: "/profile"),
-                AccountInfoTiles(title: locale.kycTitle, uri: "/kycVerify"),
+                const AccountInfoTiles(title: "KYC Details", uri: "/kycVerify"),
 
                 AccountInfoTiles(
                     title: locale.bankAccDetails, uri: "/bankDetails"),

@@ -1,8 +1,11 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -28,12 +31,27 @@ class FloPremiumTierCard extends StatelessWidget {
   final VoidCallback cta;
   final UserService userService;
 
+  void trackTierCardTap(
+    String assetName,
+  ) {
+    locator<AnalyticsService>()
+        .track(eventName: AnalyticsEvents.floSlabBannerTapped, properties: {
+      "asset name": assetName,
+      "new user":
+          locator<UserService>().userSegments.contains(Constants.NEW_USER),
+      "invested amount": getTrail(),
+      "current amount": getLead(),
+      "lockin period": lockIn,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Haptic.vibrate();
         AppState.delegate!.parseRoute(Uri.parse(actionUri));
+        trackTierCardTap(title!);
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),

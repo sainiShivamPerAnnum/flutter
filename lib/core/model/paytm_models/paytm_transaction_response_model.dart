@@ -82,7 +82,9 @@ class Data {
         goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble(),
         txnDisplayMsg: map['displayMessage'],
         gtId: map['gtId'] ?? "",
-        gtIds: List<String>.from(map['gtIds'].map((id) => id.toString())),
+        gtIds: map['gtIds'] != null
+            ? List<String>.from(map['gtIds'].map((id) => id.toString()))
+            : null,
         floDepositDetails: map["lbDepositDetails"] != null
             ? FloDepositDetails.fromMap(map["lbDepositDetails"])
             : null);

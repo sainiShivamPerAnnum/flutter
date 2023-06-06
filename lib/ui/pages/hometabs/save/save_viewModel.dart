@@ -186,8 +186,8 @@ class SaveViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _sellService!.init();
       getCampaignEvents().then((val) {
-        _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
-          if (_currentPage < 2) {
+        _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+          if (_currentPage < ongoingEvents!.length - 1) {
             _currentPage++;
           } else {
             _currentPage = 0;
@@ -195,7 +195,7 @@ class SaveViewModel extends BaseViewModel {
           if (offersController.hasClients) {
             offersController.animateToPage(
               _currentPage,
-              duration: Duration(milliseconds: 350),
+              duration: const Duration(milliseconds: 350),
               curve: Curves.easeIn,
             );
           }
@@ -449,14 +449,14 @@ class SaveViewModel extends BaseViewModel {
     }
   }
 
-  void trackChallengeTapped(String name, int order) {
+  void trackChallengeTapped(String bannerUri, String actionUri, int order) {
     _analyticsService!.track(
-        eventName: AnalyticsEvents.challengeCtaTapped,
+        eventName: AnalyticsEvents.offerBannerTapped,
         properties: AnalyticsProperties.getDefaultPropertiesMap(
             extraValuesMap: {
-              "Challlaneg Name": name,
-              "Order": order,
-              "Location": "Save Section"
+              "banner_uri": bannerUri,
+              "order": order,
+              "action_uri": actionUri
             }));
   }
 

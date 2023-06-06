@@ -18,6 +18,7 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -443,8 +444,11 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   //** if user is at journey screen
   //locks the screen and animate avatar
   //if any Scratch Card is present at the moment, pops up after animation
-  checkAndAnimateAvatar() {
+  void checkAndAnimateAvatar() {
     // Future.delayed(Duration(seconds: 2), () {
+    if (AppState.delegate!.currentConfiguration!.path != JourneyViewPath) {
+      return;
+    }
     if (avatarCachedMlIndex == avatarRemoteMlIndex) {
       placeAvatarAtTheCurrentMileStone();
     }

@@ -189,6 +189,20 @@ class AnalyticsEvents {
   static const transactionFailed = "Razorpay Transaction Failed";
 
   static const installedApps = "Installed Applications";
+
+  static const globalSaveTapped = "Global Save Now Tapped";
+  static const videoTileTapped = "Video Tile Tapped";
+  static const saveOnAssetBannerTapped = "Save on Asset Banner";
+  static const tambolaStripOnHomeTapped = "Tambola Strip on Home Tapped";
+  static const offerBannerTapped = "Offer Banner Tapped";
+  static const floSlabBannerTapped = "Flo Slab Banner Tapped";
+  static const withdrawFloTapped = "Withdraw on Flo Asset Tapped";
+  static const investFloBannerTapped = "Invest on Flo Slab Tapped";
+  static const depositCardInFloSlabTapped = "Deposit Card in Flo Slab Tapped";
+  static const decideOnDepositCardTapped = "Decide on Deposit Card Tapped";
+  static const decisionOnDepositCard = "Decision on Deposit Card";
+  static const helpInFloSlabTapped = "Help Banner in Flo Slab Tapped";
+  static const investNowInFloSlabTapped = "Invest Now in Flo Slab Tapped";
   static const assetSelectionProceed = "Asset Selection Proceed";
   static const tambolaTicketInfoTapped = "Tambola Ticket Info HH Tapped";
 

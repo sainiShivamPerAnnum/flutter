@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
@@ -10,9 +9,7 @@ import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -179,7 +176,7 @@ class LendboxTransactionService extends BaseTransactionService {
             }
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
-            await _newUserCheck();
+            await locator<BaseUtil>().newUserCheck();
             transactionReponseModel = res.model!;
             timer!.cancel();
             return transactionResponseUpdate(
@@ -200,18 +197,6 @@ class LendboxTransactionService extends BaseTransactionService {
           );
           break;
       }
-    }
-  }
-
-  Future<void> _newUserCheck() async {
-    unawaited(locator<MarketingEventHandlerService>().getHappyHourCampaign());
-
-    if (_userService.baseUser!.segments.contains("NEW_USER")) {
-      await CacheService.invalidateByKey(CacheKeys.USER);
-      final list = _userService.baseUser!.segments;
-      list.remove("NEW_USER");
-      _userService.userSegments = list;
-      _userService.baseUser!.segments = list;
     }
   }
 
