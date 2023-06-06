@@ -649,7 +649,8 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static void showFelloRatingSheet() {
-    if (!PreferenceHelper.getBool(PreferenceHelper.APP_RATING_SUBMITTED)) {
+    if (PreferenceHelper.getBool(PreferenceHelper.APP_RATING_SUBMITTED) ==
+        false) {
       Future.delayed(const Duration(milliseconds: 300), () {
         Haptic.vibrate();
 
