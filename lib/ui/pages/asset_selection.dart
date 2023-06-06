@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
@@ -65,6 +67,10 @@ class AssetSelectionPage extends StatelessWidget {
                   color: Colors.white,
                 ),
                 onPressed: () {
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.savePageClosed,
+                  );
+
                   AppState.backButtonDispatcher?.didPopRoute();
                 },
               ),
@@ -238,17 +244,12 @@ class GoldPlanWidget extends StatelessWidget {
     }, builder: (ctx, model, child) {
       return GestureDetector(
         onTap: () {
-          // locator<AnalyticsService>().track(
-          //     eventName:
-          // );
-
-          //       _analyticsService.track(
-          //           eventName: AnalyticsEvents.suggestedAmountTapped,
-          //           properties: {
-          //             'order': index,
-          //             'Amount': amt,
-          //             'Best flag': index == 2
-          //           });
+          locator<AnalyticsService>().track(
+              eventName: AnalyticsEvents.assetSelectionProceed,
+              properties: {
+                'Asset': 'Gold',
+                'Market Rate': model.goldRates?.goldBuyPrice,
+              });
 
           BaseUtil().openRechargeModalSheet(
               investmentType: InvestmentType.AUGGOLD99,
@@ -397,6 +398,15 @@ class FelloFloPrograms extends StatelessWidget {
         // if (!isRecommended) const Spacer(),
         GestureDetector(
           onTap: () {
+            locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.assetSelectionProceed,
+                properties: {
+                  'Asset': floAssetType,
+                  'Slab Return Percentage': percentage,
+                  'Slab Lockin Period': chipString1,
+                  'Recommended': isRecommended,
+                });
+
             // AppState.backButtonDispatcher?.didPopRoute();
             BaseUtil.openFloBuySheet(
                 floAssetType: floAssetType, amt: amount, isSkipMl: isSkipMl);

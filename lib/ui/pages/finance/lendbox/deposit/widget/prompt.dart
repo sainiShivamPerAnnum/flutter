@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -176,6 +177,16 @@ class ReInvestPrompt extends HookWidget {
                         'Choose your action later',
                         'We will Confirm your preference once again before maturity!',
                       );
+
+                      model.analyticsService.track(
+                        eventName:
+                            AnalyticsEvents.maturitySelectionContinueTapped,
+                        properties: {
+                          'Choice Tapped': 'decide later',
+                          "asset": model.floAssetType,
+                          "amount": model.buyAmount,
+                        },
+                      );
                     },
                     child: Center(
                       child: Text(
@@ -219,6 +230,18 @@ class ReInvestPrompt extends HookWidget {
                       }
 
                       AppState.backButtonDispatcher?.didPopRoute();
+
+                      SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+                      model.analyticsService.track(
+                        eventName:
+                            AnalyticsEvents.maturitySelectionContinueTapped,
+                        properties: {
+                          'Choice Tapped': model.getMaturityTitle(),
+                          "asset": model.floAssetType,
+                          "amount": model.buyAmount,
+                        },
+                      );
 
                       // if (!model.isBuyInProgress) {
                       //   FocusScope.of(context).unfocus();
@@ -379,6 +402,10 @@ class WarningBottomSheet extends StatelessWidget {
                     AppState.backButtonDispatcher!.didPopRoute();
                     AppState.backButtonDispatcher!.didPopRoute();
 
+                    model.analyticsService.track(
+                        eventName: AnalyticsEvents.maturityWithdrawPopupTapped,
+                        properties: {'Option Selected': "Yes"});
+
                     // debugPrint("scrrenStack => ${AppState.screenStack}");
                     // model.forcedBuy = true;
                     //
@@ -408,6 +435,10 @@ class WarningBottomSheet extends StatelessWidget {
                   onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
                     AppState.backButtonDispatcher!.didPopRoute();
+
+                    model.analyticsService.track(
+                        eventName: AnalyticsEvents.maturityWithdrawPopupTapped,
+                        properties: {'Option Selected': "No"});
                   },
                   child: Center(
                     child: Text(

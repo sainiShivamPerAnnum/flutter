@@ -19,7 +19,6 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -57,7 +56,7 @@ class LendboxBuyInputView extends StatefulWidget {
 class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
   @override
   void initState() {
-    SpotLightController.instance.userFlow = UserFlow.floInputView;
+    // SpotLightController.instance.userFlow = UserFlow.floInputView;
     super.initState();
   }
 
@@ -97,7 +96,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                         eventName: AnalyticsEvents.savePageClosed,
                         properties: {
                           "Amount entered": widget.model.amountController!.text,
-                          "Asset": 'Flo',
+                          "Asset": widget.model.floAssetType,
                         });
                     if (locator<BackButtonActions>().isTransactionCancelled) {
                       if (AppState.delegate!.currentConfiguration!.key ==
@@ -325,58 +324,65 @@ class FloBuyNavBar extends StatelessWidget {
       color: UiConstants.kArrowButtonBackgroundColor,
       child: Row(
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    "₹${model.amountController?.text ?? '0'}",
-                    style: TextStyles.sourceSansSB.title5
-                        .copyWith(color: Colors.white),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding8,
-                  ),
-                  Text(
-                    getTitle(),
-                    style: TextStyles.rajdhaniB.body2
-                        .copyWith(color: UiConstants.kTabBorderColor),
-                  ),
-                ],
-              ),
-              Text(getSubString(),
-                  style: TextStyles.rajdhaniSB.body3
-                      .colour(UiConstants.kTextFieldTextColor)),
-              SizedBox(
-                height: SizeConfig.padding10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  BaseUtil.openModalBottomSheet(
-                    isBarrierDismissible: true,
-                    addToScreenStack: true,
-                    backgroundColor: const Color(0xff1A1A1A),
-                    content: ViewBreakdown(model: model),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(SizeConfig.roundness24),
-                      topRight: Radius.circular(SizeConfig.roundness24),
+          GestureDetector(
+            onTap: () {
+              BaseUtil.openModalBottomSheet(
+                isBarrierDismissible: true,
+                addToScreenStack: true,
+                backgroundColor: const Color(0xff1A1A1A),
+                content: ViewBreakdown(model: model),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(SizeConfig.roundness24),
+                  topRight: Radius.circular(SizeConfig.roundness24),
+                ),
+                hapticVibrate: true,
+                isScrollControlled: true,
+              );
+              locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.viewBreakdownTapped,
+                  properties: {
+                    'Amount Filled': model.amountController?.text ?? '0',
+                    'Asset': model.floAssetType,
+                    'coupon': model.appliedCoupon
+                  });
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "₹${model.amountController?.text ?? '0'}",
+                      style: TextStyles.sourceSansSB.title5
+                          .copyWith(color: Colors.white),
                     ),
-                    hapticVibrate: true,
-                    isScrollControlled: true,
-                  );
-                },
-                child: Text(
+                    SizedBox(
+                      width: SizeConfig.padding8,
+                    ),
+                    Text(
+                      getTitle(),
+                      style: TextStyles.rajdhaniB.body2
+                          .copyWith(color: UiConstants.kTabBorderColor),
+                    ),
+                  ],
+                ),
+                Text(getSubString(),
+                    style: TextStyles.rajdhaniSB.body3
+                        .colour(UiConstants.kTextFieldTextColor)),
+                SizedBox(
+                  height: SizeConfig.padding10,
+                ),
+                Text(
                   'View Breakdown',
                   style: TextStyles.sourceSans.body3.copyWith(
                       color: UiConstants.kTextFieldTextColor,
                       decorationStyle: TextDecorationStyle.solid,
                       decoration: TextDecoration.underline),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const Spacer(),
           Column(
@@ -709,6 +715,13 @@ class MaturityDetailsWidget extends StatelessWidget {
                             if (!model.isBuyInProgress) {
                               model.openReinvestBottomSheet();
                             }
+
+                            model.analyticsService.track(
+                                eventName: AnalyticsEvents.maturityChoiceTapped,
+                                properties: {
+                                  'amount': model.buyAmount,
+                                  "asset": model.floAssetType,
+                                });
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

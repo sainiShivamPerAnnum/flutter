@@ -155,7 +155,7 @@ class GTInstantViewModel extends BaseViewModel {
           locale.gtRedeemErrorTitle, locale.getRedeemErrorSubtitle);
     }
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       AppState.isInstantGtViewInView = false;
       _marketingEventHandlerService.showModalsheet = true;
       AppState.backButtonDispatcher!.didPopRoute();

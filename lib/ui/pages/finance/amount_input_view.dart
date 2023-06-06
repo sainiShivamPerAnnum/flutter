@@ -1,9 +1,12 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/list_utils.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -31,6 +34,7 @@ class AmountInputView extends StatefulWidget {
   final void Function() onTap;
   final LendboxBuyViewModel? model;
   final bool isbuyView;
+
   const AmountInputView(
       {Key? key,
       required this.chipAmounts,
@@ -55,7 +59,6 @@ class AmountInputView extends StatefulWidget {
 }
 
 class _AmountInputViewState extends State<AmountInputView> {
-
   @override
   void initState() {
     super.initState();
@@ -104,7 +107,7 @@ class _AmountInputViewState extends State<AmountInputView> {
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
     if (currentAmt == null) widget.amountController!.text = "0.0";
-    // final AnalyticsService analyticsService = locator<AnalyticsService>();
+    final AnalyticsService analyticsService = locator<AnalyticsService>();
     return Column(
       children: [
         Container(
@@ -216,18 +219,32 @@ class _AmountInputViewState extends State<AmountInputView> {
                       ),
                       if (widget.model?.showInfoIcon ?? false)
                         GestureDetector(
-                          onTap: () => BaseUtil.openModalBottomSheet(
-                            isBarrierDismissible: true,
-                            addToScreenStack: true,
-                            backgroundColor: const Color(0xff1A1A1A),
-                            content: ViewBreakdown(model: widget.model!),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(SizeConfig.roundness24),
-                              topRight: Radius.circular(SizeConfig.roundness24),
-                            ),
-                            hapticVibrate: true,
-                            isScrollControlled: true,
-                          ),
+                          onTap: () {
+                            analyticsService.track(
+                                eventName:
+                                    AnalyticsEvents.tambolaTicketInfoTapped,
+                                properties: {
+                                  'Ticket count':
+                                      widget.model?.numberOfTambolaTickets,
+                                  'happy hour ticket count':
+                                      widget.model?.happyHourTickets,
+                                });
+
+                            BaseUtil.openModalBottomSheet(
+                              isBarrierDismissible: true,
+                              addToScreenStack: true,
+                              backgroundColor: const Color(0xff1A1A1A),
+                              content: ViewBreakdown(model: widget.model!),
+                              borderRadius: BorderRadius.only(
+                                topLeft:
+                                    Radius.circular(SizeConfig.roundness24),
+                                topRight:
+                                    Radius.circular(SizeConfig.roundness24),
+                              ),
+                              hapticVibrate: true,
+                              isScrollControlled: true,
+                            );
+                          },
                           child: const Icon(
                             Icons.info_outline,
                             size: 20,
@@ -294,8 +311,7 @@ class _AmountInputViewState extends State<AmountInputView> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(right: SizeConfig.padding20),
-                  child: Text(
-                    getString(),
+                  child: Text(getString(),
                       style: TextStyles.sourceSans.body3
                           .colour(Colors.white.withOpacity(0.8))),
                 ),
