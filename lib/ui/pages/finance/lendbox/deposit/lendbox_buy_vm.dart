@@ -40,7 +40,7 @@ enum FloPrograms { lendBox8, lendBox10, lendBox12 }
 class LendboxBuyViewModel extends BaseViewModel {
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService analyticsService = locator<AnalyticsService>();
   final CouponRepository _couponRepo = locator<CouponRepository>();
 
   S locale = locator<S>();
@@ -85,6 +85,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
   bool _addSpecialCoupon = false;
+  int _selectedOption = -1;
 
   ///  ---------- getter and setter ------------
 
@@ -191,15 +192,23 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  int get selectedOption => _selectedOption;
+
+  set selectedOption(int value) {
+    _selectedOption = value;
+    notifyListeners();
+  }
+
   Future<void> init(int? amount, bool isSkipMilestone,
       {required String assetTypeFlow}) async {
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
+    _txnService.floAssetType = floAssetType;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
 
-    updateMinValues();
+    // updateMinValues(); // TODO: uncomment after testing
     await getAssetOptionsModel();
 
     log("isLendboxOldUser $isLendboxOldUser");
@@ -305,11 +314,11 @@ class LendboxBuyViewModel extends BaseViewModel {
       "Amount Entered": amount ?? 0,
       "Error message": "",
     };
-    _analyticsService!.track(
+    analyticsService!.track(
       eventName: AnalyticsEvents.saveCheckout,
       properties: AnalyticsProperties.getDefaultPropertiesMap(
         extraValuesMap: {
-          "Asset": "Flo",
+          "Asset": floAssetType,
           "Amount Entered": amount ?? 0,
         },
       ),
@@ -342,25 +351,61 @@ class LendboxBuyViewModel extends BaseViewModel {
       return 0;
     }
 
-    _analyticsService.track(
+    analyticsService.track(
         eventName: AnalyticsEvents.saveCheckout,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
           "iplPrediction": PowerPlayService.powerPlayDepositFlow,
-          "Asset": "Flo",
+          "Asset": floAssetType,
           "Amount Entered": amountController?.text,
           "Best flag": assetOptionsModel?.data.userOptions
               .firstWhere(
                   (element) =>
                       element.value.toString() == amountController!.text,
                   orElse: () => UserOption(order: 0, value: 0, best: false))
-              .value
+              .value,
+          "Lock-in": getLockin(),
+          "Maturity Decision": getMaturityTitle(),
+          "coupon name": appliedCoupon?.code
         }));
     return buyAmount!;
   }
 
+  String getLockin() {
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI && isLendboxOldUser) {
+      return "1 month";
+    }
+
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI && !isLendboxOldUser) {
+      return "1 week";
+    }
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return "3 month";
+    }
+    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return "6 month";
+    }
+    return "";
+  }
+
+  String getMaturityTitle() {
+    if (selectedOption == 0) {
+      return "ReInvest in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10}%";
+    }
+    if (selectedOption == 1) {
+      return "Move to ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 10 : 8}%";
+    }
+    if (selectedOption == 2) {
+      return "Withdraw to bank";
+    }
+    return "NA";
+    // if(selectedOption == -2){
+    //   return "Decide Later";
+    // }
+  }
+
   void navigateToKycScreen() {
-    _analyticsService!
+    analyticsService!
         .track(eventName: AnalyticsEvents.completeKYCTapped, properties: {
       "location": "Fello Felo Invest",
       "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
@@ -380,7 +425,7 @@ class LendboxBuyViewModel extends BaseViewModel {
         await _couponRepo!.getCoupons(assetType: floAssetType);
     if (couponsRes.code == 200 &&
         couponsRes.model != null &&
-        (couponsRes.model?.length ?? 0) > 1) {
+        (couponsRes.model?.length ?? 0) >= 1) {
       couponList = couponsRes.model;
       if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       showCoupons = true;
@@ -396,14 +441,20 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   String showHappyHourSubtitle() {
+    final int parsedFloAmount =
+        int.tryParse(amountController?.text ?? '0') ?? 0;
+
+    if (parsedFloAmount < this.minAmount) {
+      showInfoIcon = false;
+      return "";
+    }
+
     final int tambolaCost = AppConfig.getValue(AppConfigKey.tambola_cost);
     final HappyHourCampign? happyHourModel =
         locator.isRegistered<HappyHourCampign>()
             ? locator<HappyHourCampign>()
             : null;
 
-    final int parsedFloAmount =
-        int.tryParse(amountController?.text ?? '0') ?? 0;
     final num minAmount =
         num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
 
@@ -444,9 +495,10 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     appliedCoupon = null;
 
-    _analyticsService!
+    analyticsService!
         .track(eventName: AnalyticsEvents.suggestedAmountTapped, properties: {
       'order': index,
+      'Asset': floAssetType,
       'Amount': assetOptionsModel?.data.userOptions[index].value,
       'Best flag': assetOptionsModel?.data.userOptions
           .firstWhere((element) => element.best,
@@ -485,7 +537,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     appliedCoupon = null;
   }
 
-  String calculateAmountAfter6Months(String amount) {
+  String calculateAmountAfterMaturity(String amount) {
     int interest = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
 
     double principal = double.tryParse(amount) ?? 0.0;
@@ -538,6 +590,40 @@ class LendboxBuyViewModel extends BaseViewModel {
     );
   }
 
+  Widget showReinvestSubTitle() {
+    final maturityAmount =
+        calculateAmountAfterMaturity(amountController?.text ?? "0");
+
+    String getText() {
+      if (selectedOption == -1) {
+        return "What will happen at maturity?";
+      }
+      if (selectedOption == 3) {
+        return "Withdrawing to your bank account after maturity";
+      }
+      if (selectedOption == 1) {
+        return "Re-investing ₹$maturityAmount in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo";
+      }
+      if (selectedOption == 2) {
+        return "Investing ₹$maturityAmount in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo after maturity";
+      }
+
+      if (selectedOption == -2) {
+        return "We will contact you before the maturity to help you decide";
+      }
+      return 'What will happen at maturity?';
+    }
+
+    return Flexible(
+      child: Text(
+        getText(),
+        style: TextStyles.sourceSans.body3.colour(Colors.white),
+        textAlign: TextAlign.left,
+        maxLines: 2,
+      ),
+    );
+  }
+
   Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
     if (couponApplyInProgress || isBuyInProgress) return;
 
@@ -545,10 +631,12 @@ class LendboxBuyViewModel extends BaseViewModel {
     int? minTransaction = -1;
     int counter = 0;
     isSpecialCoupon = true;
+    String description = '';
     for (final CouponModel c in couponList!) {
       if (c.code == couponCode) {
         order = counter;
         isSpecialCoupon = false;
+        description = c.description ?? '';
         minTransaction = c.minPurchase;
         break;
       }
@@ -561,9 +649,10 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     ApiResponse<EligibleCouponResponseModel> response =
         await _couponRepo!.getEligibleCoupon(
-      uid: locator<UserService>().baseUser!.uid,
+          uid: locator<UserService>().baseUser!.uid,
       amount: buyAmount!.toInt(),
       couponcode: couponCode,
+      assetType: floAssetType,
     );
 
     couponApplyInProgress = false;
@@ -596,13 +685,14 @@ class LendboxBuyViewModel extends BaseViewModel {
     } else {
       BaseUtil.showNegativeAlert(locale.couponNotApplied, locale.anotherCoupon);
     }
-    _analyticsService!
+    analyticsService!
         .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
+      "Asset": floAssetType,
       "Manual Code entry": isManuallyTyped,
       "Order of coupon in list": order == -1 ? "Not in list" : order.toString(),
       "Coupon Name": couponCode,
-      "Error message": response.code == 400 ? response?.model?.message : "",
-      "Asset": "Flo - $floAssetType",
+      "description": description,
+      "Error message": response.code == 400 ? response.model?.message : "",
       "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
     });
   }

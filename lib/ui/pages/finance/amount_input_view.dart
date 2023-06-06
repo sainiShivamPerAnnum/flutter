@@ -1,9 +1,12 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/list_utils.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -31,6 +34,7 @@ class AmountInputView extends StatefulWidget {
   final void Function() onTap;
   final LendboxBuyViewModel? model;
   final bool isbuyView;
+
   const AmountInputView(
       {Key? key,
       required this.chipAmounts,
@@ -55,36 +59,26 @@ class AmountInputView extends StatefulWidget {
 }
 
 class _AmountInputViewState extends State<AmountInputView> {
-  // double _fieldWidth = 0;
-  int _selectedIndex = 1;
-
   @override
   void initState() {
     super.initState();
-    // if (widget.chipAmounts.isNotEmpty) {
-    //   _selectedIndex = widget.chipAmounts.indexWhere(
-    //     (e) => e.value.toString() == (widget.amountController?.text ?? ''),
-    //   );
-    // } else {
-    //   widget.amountController!.text = '1';
-    // }
     widget.model?.updateFieldWidth();
   }
 
   String getString() {
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         (widget.model?.isLendboxOldUser ?? false)) {
-      return 'Min- ₹100';
+      return 'Min - ₹100';
     } else if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         (widget.model?.isLendboxOldUser ?? true) == false) {
-      return 'Min- ₹100';
+      return 'Min - ₹100';
     }
 
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "Min- ₹25,000";
+      return "Min - ₹10,000";
     }
     if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "Min- ₹1000";
+      return "Min - ₹1000";
     }
 
     return "";
@@ -113,7 +107,7 @@ class _AmountInputViewState extends State<AmountInputView> {
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
     if (currentAmt == null) widget.amountController!.text = "0.0";
-    // final AnalyticsService analyticsService = locator<AnalyticsService>();
+    final AnalyticsService analyticsService = locator<AnalyticsService>();
     return Column(
       children: [
         Container(
@@ -225,18 +219,32 @@ class _AmountInputViewState extends State<AmountInputView> {
                       ),
                       if (widget.model?.showInfoIcon ?? false)
                         GestureDetector(
-                          onTap: () => BaseUtil.openModalBottomSheet(
-                            isBarrierDismissible: true,
-                            addToScreenStack: true,
-                            backgroundColor: const Color(0xff1A1A1A),
-                            content: ViewBreakdown(model: widget.model!),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(SizeConfig.roundness24),
-                              topRight: Radius.circular(SizeConfig.roundness24),
-                            ),
-                            hapticVibrate: true,
-                            isScrollControlled: true,
-                          ),
+                          onTap: () {
+                            analyticsService.track(
+                                eventName:
+                                    AnalyticsEvents.tambolaTicketInfoTapped,
+                                properties: {
+                                  'Ticket count':
+                                      widget.model?.numberOfTambolaTickets,
+                                  'happy hour ticket count':
+                                      widget.model?.happyHourTickets,
+                                });
+
+                            BaseUtil.openModalBottomSheet(
+                              isBarrierDismissible: true,
+                              addToScreenStack: true,
+                              backgroundColor: const Color(0xff1A1A1A),
+                              content: ViewBreakdown(model: widget.model!),
+                              borderRadius: BorderRadius.only(
+                                topLeft:
+                                    Radius.circular(SizeConfig.roundness24),
+                                topRight:
+                                    Radius.circular(SizeConfig.roundness24),
+                              ),
+                              hapticVibrate: true,
+                              isScrollControlled: true,
+                            );
+                          },
                           child: const Icon(
                             Icons.info_outline,
                             size: 20,
@@ -248,7 +256,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                 ),
               if (widget.model?.showMaxCapText)
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
                   child: Text(
                     widget.maxAmountMsg,
                     style: TextStyles.sourceSans.body4.bold
@@ -257,7 +265,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                 ),
               if (currentAmt < widget.minAmount)
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
                   child: Text(
                     widget.minAmountMsg,
                     style: TextStyles.sourceSans.body4.bold
@@ -303,10 +311,9 @@ class _AmountInputViewState extends State<AmountInputView> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(right: SizeConfig.padding20),
-                  child: Text(
-                    getString(),
-                    style: TextStyles.sourceSans.body3,
-                  ),
+                  child: Text(getString(),
+                      style: TextStyles.sourceSans.body3
+                          .colour(Colors.white.withOpacity(0.8))),
                 ),
                 VerticalDivider(
                   color: UiConstants.kModalSheetSecondaryBackgroundColor
@@ -317,7 +324,8 @@ class _AmountInputViewState extends State<AmountInputView> {
                   padding: EdgeInsets.only(left: SizeConfig.padding20),
                   child: Text(
                     getSubString(),
-                    style: TextStyles.sourceSans.body3,
+                    style: TextStyles.sourceSans.body3
+                        .colour(Colors.white.withOpacity(0.8)),
                   ),
                 ),
               ],

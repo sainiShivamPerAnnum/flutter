@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -27,59 +28,82 @@ class ReInvestPrompt extends HookWidget {
   final String assetType;
   final LendboxBuyViewModel model;
 
-  String get subtitle =>
-      "At the end of ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)";
-
-  String get maturityAmount => model.calculateAmountAfter6Months(amount);
-
   @override
   Widget build(BuildContext context) {
-    final selectedOption = useState(-1);
+    final subtitle = useMemoized(
+      () =>
+          "At the end of ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)",
+      [assetType],
+    );
+
+    final maturityAmount = useMemoized(
+      () => model.calculateAmountAfterMaturity(amount),
+      [model, amount],
+    );
+
+    final selectedOption = useState(model.selectedOption);
+
     return Container(
-      // height: SizeConfig.screenHeight! * 0.6,
       padding: EdgeInsets.all(SizeConfig.padding16),
       child: SingleChildScrollView(
         child: Column(
-          // mainAxisSize: MainAxisSize.min,
           children: [
             InvestmentForeseenWidget(
               amount: amount,
               assetType: assetType,
               isLendboxOldUser: model.isLendboxOldUser,
-              onChanged: (value) {
-                // log("value: $value --- ${value.runtimeType}");
-                // maturityAmount.value = value.toStringAsFixed(2);
-              },
+              onChanged: (value) {},
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text.rich(
-                    TextSpan(
-                      text: "What do you want to do ",
-                      style: TextStyles.sourceSans.body2,
-                      children: [
-                        TextSpan(
-                          text:
-                              "after ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months?",
-                          style: TextStyles.sourceSansB.body2,
-                        ),
-                      ],
+                  Flexible(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "Select what happens to your investment ",
+                        style: TextStyles.sourceSans.body2,
+                        children: [
+                          TextSpan(
+                            text:
+                                "after ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months?",
+                            style: TextStyles.sourceSansB.body2,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  const Icon(
-                    Icons.info_outline,
-                    color: Colors.white,
-                    size: 15,
+                  SizedBox(
+                    width: SizeConfig.padding34,
+                  ),
+                  Tooltip(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    triggerMode: TooltipTriggerMode.tap,
+                    preferBelow: false,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.9),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness8),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                        vertical: SizeConfig.pageHorizontalMargins),
+                    showDuration: const Duration(seconds: 10),
+                    message:
+                        "Fello Flo Premium plans allow you to decide what happens to your money after maturity. You can choose what you want to do with your money while you invest. If you do not select a preference, we will contact you and confirm what you want to do with the corpus post maturity.",
+                    child: const Icon(
+                      Icons.info_outline,
+                      color: Colors.white,
+                      size: 15,
+                    ),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: SizeConfig.padding20,
-            ),
+            SizedBox(height: SizeConfig.padding20),
             Container(
               padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.padding8,
@@ -100,23 +124,23 @@ class ReInvestPrompt extends HookWidget {
             OptionContainer(
               optionIndex: 1,
               title:
-                  'Re-invest ₹${maturityAmount} in ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
+                  'Re-invest ₹$maturityAmount in ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
               description: subtitle,
               isSelected: selectedOption.value == 1,
               onTap: () {
                 model.maturityPref = "1";
-                selectedOption.value = 1;
+                model.selectedOption = selectedOption.value = 1;
               },
             ),
             OptionContainer(
               optionIndex: 2,
               title:
-                  "Move ₹${maturityAmount} to ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
+                  "Move ₹$maturityAmount to ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
               description: subtitle,
               isSelected: selectedOption.value == 2,
               onTap: () {
                 model.maturityPref = "2";
-                selectedOption.value = 2;
+                model.selectedOption = selectedOption.value = 2;
               },
             ),
             OptionContainer(
@@ -126,12 +150,10 @@ class ReInvestPrompt extends HookWidget {
               isSelected: selectedOption.value == 3,
               onTap: () {
                 model.maturityPref = "0";
-                selectedOption.value = 3;
+                model.selectedOption = selectedOption.value = 3;
               },
             ),
-            SizedBox(
-              height: SizeConfig.padding8,
-            ),
+            SizedBox(height: SizeConfig.padding8),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
               child: Row(
@@ -144,24 +166,27 @@ class ReInvestPrompt extends HookWidget {
                       borderRadius: BorderRadius.circular(5),
                       side: const BorderSide(color: Colors.white),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    // color: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     onPressed: () {
                       AppState.backButtonDispatcher?.didPopRoute();
                       SystemChannels.textInput.invokeMethod('TextInput.hide');
                       model.maturityPref = "NA";
+                      model.selectedOption = selectedOption.value = -2;
 
-                      // model.forcedBuy = true;
+                      BaseUtil.showPositiveAlert(
+                        'Choose your action later',
+                        'We will Confirm your preference once again before maturity!',
+                      );
 
-                      // Future.delayed(const Duration(seconds: 2), () async {
-                      //   if (!model.isBuyInProgress) {
-                      //     //   FocusScope.of(context).unfocus();
-                      //
-                      //     await model.initiateBuy();
-                      //   }
-                      // });
+                      model.analyticsService.track(
+                        eventName:
+                            AnalyticsEvents.maturitySelectionContinueTapped,
+                        properties: {
+                          'Choice Tapped': 'decide later',
+                          "asset": model.floAssetType,
+                          "amount": model.buyAmount,
+                        },
+                      );
                     },
                     child: Center(
                       child: Text(
@@ -181,8 +206,10 @@ class ReInvestPrompt extends HookWidget {
                         : Colors.white,
                     onPressed: () {
                       if (selectedOption.value == -1) {
-                        BaseUtil.showNegativeAlert("Please select an option",
-                            "proceed by choosing an option");
+                        BaseUtil.showNegativeAlert(
+                          "Please select an option",
+                          "proceed by choosing an option",
+                        );
                         return;
                       }
 
@@ -204,10 +231,22 @@ class ReInvestPrompt extends HookWidget {
 
                       AppState.backButtonDispatcher?.didPopRoute();
 
-                      if (!model.isBuyInProgress) {
-                        FocusScope.of(context).unfocus();
-                        model.initiateBuy();
-                      }
+                      SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+                      model.analyticsService.track(
+                        eventName:
+                            AnalyticsEvents.maturitySelectionContinueTapped,
+                        properties: {
+                          'Choice Tapped': model.getMaturityTitle(),
+                          "asset": model.floAssetType,
+                          "amount": model.buyAmount,
+                        },
+                      );
+
+                      // if (!model.isBuyInProgress) {
+                      //   FocusScope.of(context).unfocus();
+                      //   model.initiateBuy();
+                      // }
                     },
                     child: Center(
                       child: Text(
@@ -218,7 +257,7 @@ class ReInvestPrompt extends HookWidget {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -363,6 +402,10 @@ class WarningBottomSheet extends StatelessWidget {
                     AppState.backButtonDispatcher!.didPopRoute();
                     AppState.backButtonDispatcher!.didPopRoute();
 
+                    model.analyticsService.track(
+                        eventName: AnalyticsEvents.maturityWithdrawPopupTapped,
+                        properties: {'Option Selected': "Yes"});
+
                     // debugPrint("scrrenStack => ${AppState.screenStack}");
                     // model.forcedBuy = true;
                     //
@@ -392,6 +435,10 @@ class WarningBottomSheet extends StatelessWidget {
                   onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
                     AppState.backButtonDispatcher!.didPopRoute();
+
+                    model.analyticsService.track(
+                        eventName: AnalyticsEvents.maturityWithdrawPopupTapped,
+                        properties: {'Option Selected': "No"});
                   },
                   child: Center(
                     child: Text(
@@ -487,7 +534,7 @@ class InvestmentForeseenWidget extends StatelessWidget {
                 style: TextStyles.rajdhaniSB.body3,
               ),
               Text(
-                "₹$amount",
+                "₹${double.tryParse(amount)?.toStringAsFixed(2)}",
                 style: TextStyles.sourceSansB.title5,
               )
             ],
@@ -545,6 +592,13 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
   int _selectedOption = -1;
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+
+    maturityAmount = calculateAmountAfterMaturity(widget.amount);
+  }
+
   bool get isLoading => _isLoading;
 
   set isLoading(bool value) {
@@ -559,6 +613,26 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
     setState(() {
       _selectedOption = value;
     });
+  }
+
+  String maturityAmount = "";
+
+  String calculateAmountAfterMaturity(String amount) {
+    int interest =
+        widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
+
+    double principal = double.tryParse(amount) ?? 0.0;
+    double rateOfInterest = interest / 100.0;
+    int timeInMonths =
+        widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 2 : 4;
+
+    // 0.12 / 365 * amt * (365 / 2)
+    //0.10 / 365 * amt * (365 / 4)
+
+    double amountAfterMonths =
+        rateOfInterest / 365 * principal * (365 / timeInMonths);
+
+    return (principal + amountAfterMonths).toStringAsFixed(2);
   }
 
   String get subtitle =>
@@ -633,7 +707,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
             OptionContainer(
               optionIndex: 1,
               title:
-                  'Re-invest ₹${widget.amount} in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
+                  'Re-invest ₹$maturityAmount in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
               description: subtitle,
               isSelected: selectedOption == 1,
               onTap: () {
@@ -644,7 +718,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
             OptionContainer(
               optionIndex: 2,
               title:
-                  "Move ₹${widget.amount} to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
+                  "Move ₹$maturityAmount to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
               description: subtitle,
               isSelected: selectedOption == 2,
               onTap: () {

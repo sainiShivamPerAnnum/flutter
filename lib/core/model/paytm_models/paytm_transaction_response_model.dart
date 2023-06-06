@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 class TransactionResponseModel {
   String? message;
   Data? data;
+
   TransactionResponseModel({
     @required this.message,
     @required this.data,
@@ -60,6 +61,7 @@ class Data {
   String? gtId;
   List<String>? gtIds;
   FloDepositDetails? floDepositDetails;
+
   Data({
     @required this.status,
     @required this.isUpdating,
@@ -118,6 +120,7 @@ class FloDepositDetails {
   String? fundType;
   String? maturityDate;
   String? maturityString;
+
   FloDepositDetails({
     this.fundType,
     this.maturityDate,

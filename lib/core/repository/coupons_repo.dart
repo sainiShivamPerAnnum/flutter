@@ -20,13 +20,14 @@ class CouponRepository extends BaseRepo {
     String? uid,
     String? couponcode,
     int? amount,
-  }) async {
+    required String assetType}) async {
     try {
       final String _bearer = await getBearerToken();
       Map<String, dynamic> _body = {
         "uid": uid,
+        "type": assetType,
         "couponCode": couponcode,
-        "amt": amount
+        "amt": amount,
       };
       _logger!.d("initiateUserDeposit:: Pre encryption: $_body");
       if (await _rsaEncryption.init()) {

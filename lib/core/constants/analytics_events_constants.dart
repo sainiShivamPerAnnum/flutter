@@ -207,4 +207,14 @@ class AnalyticsEvents {
   static const decisionOnDepositCard = "Decision on Deposit Card";
   static const helpInFloSlabTapped = "Help Banner in Flo Slab Tapped";
   static const investNowInFloSlabTapped = "Invest Now in Flo Slab Tapped";
+  static const assetSelectionProceed = "Asset Selection Proceed";
+  static const tambolaTicketInfoTapped = "Tambola Ticket Info HH Tapped";
+
+  static const viewBreakdownTapped = "View Breakdown Tapped";
+  static const maturityChoiceTapped = "Maturity Details Choose Tapped";
+  static const maturitySelectionContinueTapped =
+      "Maturity Selection Continue Tapped";
+  static const maturityWithdrawPopupTapped = "Maturity Withdraw Popup Tapped";
+  static const quickCheckoutTapped = "Quick Checkout Tapped";
+  static const quickCheckoutTileTapped = "Quick Checkout Tile Tapped";
 }

@@ -666,6 +666,7 @@ class GoldBuyViewModel extends BaseViewModel {
       uid: _userService!.baseUser!.uid,
       amount: goldBuyAmount!.toInt(),
       couponcode: couponCode,
+      assetType: "AUGGOLD",
     );
 
     couponApplyInProgress = false;

@@ -39,7 +39,7 @@ class DefaultQuickSaveModalSheet extends StatelessWidget {
               ),
               SizedBox(height: SizeConfig.padding4),
               //Select anyone option to perform a quick action
-              Text('Select anyone option to perform a quick action',
+              Text('One click options for your favourite actions!',
                   style: TextStyles.sourceSans.body3
                       .colour(Colors.white.withOpacity(0.6))),
               SizedBox(height: SizeConfig.padding20),

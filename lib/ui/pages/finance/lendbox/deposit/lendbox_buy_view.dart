@@ -73,6 +73,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Consumer<LendboxTransactionService>(
         builder: (transactionContext, lboxTxnService, transactionProperty) {
           return AnimatedContainer(
@@ -91,11 +92,9 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                 _getBackground(lboxTxnService!),
                 PageTransitionSwitcher(
                   duration: const Duration(milliseconds: 500),
-                  transitionBuilder: (
-                    Widget child,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                  ) {
+                  transitionBuilder: (Widget child,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,) {
                     return FadeThroughTransition(
                       fillColor: Colors.transparent,
                       child: child,

@@ -19,7 +19,6 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -57,7 +56,7 @@ class LendboxBuyInputView extends StatefulWidget {
 class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
   @override
   void initState() {
-    SpotLightController.instance.userFlow = UserFlow.floInputView;
+    // SpotLightController.instance.userFlow = UserFlow.floInputView;
     super.initState();
   }
 
@@ -66,7 +65,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
     log("floAssetType ${widget.model.floAssetType}");
 
     S locale = S.of(context);
-    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService analyticsService = locator<AnalyticsService>();
     if (widget.model.state == ViewState.Busy) {
       return const Center(child: FullScreenLoader());
     }
@@ -93,11 +92,11 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   assetType: widget.model.floAssetType,
                   isEnabled: !widget.model.isBuyInProgress,
                   trackClosingEvent: () {
-                    _analyticsService!.track(
+                    analyticsService.track(
                         eventName: AnalyticsEvents.savePageClosed,
                         properties: {
                           "Amount entered": widget.model.amountController!.text,
-                          "Asset": 'Flo',
+                          "Asset": widget.model.floAssetType,
                         });
                     if (locator<BackButtonActions>().isTransactionCancelled) {
                       if (AppState.delegate!.currentConfiguration!.key ==
@@ -155,17 +154,17 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),
-                Container(
-                  height: 1,
-                  margin: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins),
-                  color: UiConstants.kModalSheetSecondaryBackgroundColor
-                      .withOpacity(0.2),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
                 if (widget.model.showCoupons) ...[
+                  Container(
+                    height: 1,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    color: UiConstants.kModalSheetSecondaryBackgroundColor
+                        .withOpacity(0.2),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
                   FloCouponWidget(
                     widget.model.couponList,
                     widget.model,
@@ -173,108 +172,64 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                       widget.model.applyCoupon(coupon.code, false);
                     },
                   ),
-                  // const Spacer(),
-                  SizedBox(
-                    height: SizeConfig.padding32,
-                  ),
+                  SizedBox(height: SizeConfig.padding24),
                 ],
 
-                if (widget.model.floAssetType ==
-                        Constants.ASSET_TYPE_FLO_FIXED_6 ||
-                    widget.model.floAssetType ==
-                        Constants.ASSET_TYPE_FLO_FIXED_3)
-                  GestureDetector(
-                    onTap: () {
-                      if (!widget.model.isBuyInProgress) {
-                        widget.model.openReinvestBottomSheet();
-                      }
-                    },
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                      ),
-                      child: Text('What will happen at maturity?',
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTabBorderColor)),
-                    ),
-                  ),
+                MaturityDetailsWidget(model: widget.model),
               ],
             ),
           ),
           Align(
-            alignment: Alignment.bottomCenter,
-            child: Selector<BankAndPanService, bool>(
-              selector: (p0, p1) => p1.isKYCVerified,
-              builder: (ctx, isKYCVerified, child) {
-                return (!isKYCVerified)
-                    ? _kycWidget(widget.model, context)
-                    : (widget.model.isBuyInProgress || widget.model.forcedBuy)
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // if (widget.model.forcedBuy) ...[
-                              //   Padding(
-                              //     padding: EdgeInsets.symmetric(
-                              //         horizontal:
-                              //             SizeConfig.pageHorizontalMargins),
-                              //     child: Text(
-                              //       "We will contact you before the end of 6 months (Maturity) to confirm.",
-                              //       style: TextStyles.sourceSans.body2
-                              //           .colour(Colors.white.withOpacity(0.8)),
-                              //       textAlign: TextAlign.center,
-                              //     ),
-                              //   ),
-                              //   SizedBox(height: SizeConfig.padding24),
-                              // ],
-                              Container(
-                                height: SizeConfig.screenWidth! * 0.1556,
-                                alignment: Alignment.center,
-                                width: SizeConfig.screenWidth! * 0.7,
-                                child: const LinearProgressIndicator(
-                                  color: UiConstants.primaryColor,
-                                  backgroundColor:
-                                      UiConstants.kDarkBackgroundColor,
-                                ),
+              alignment: Alignment.bottomCenter,
+              child: Selector<BankAndPanService, bool>(
+                selector: (p0, p1) => p1.isKYCVerified,
+                builder: (ctx, isKYCVerified, child) {
+                  return (!isKYCVerified)
+                      ? _kycWidget(widget.model, context)
+                      : (widget.model.isBuyInProgress || widget.model.forcedBuy)
+                          ? Container(
+                              height: SizeConfig.screenWidth! * 0.1556,
+                              alignment: Alignment.center,
+                              width: SizeConfig.screenWidth! * 0.7,
+                              child: const LinearProgressIndicator(
+                                color: UiConstants.primaryColor,
+                                backgroundColor:
+                                    UiConstants.kDarkBackgroundColor,
                               ),
-                            ],
-                          )
-                        : FloBuyNavBar(
-                            model: widget.model,
-                            onTap: () {
-                              if ((widget.model.buyAmount ?? 0) <
-                                  widget.model.minAmount) {
-                                BaseUtil.showNegativeAlert("Invalid Amount",
-                                    "Please Enter Amount Greater than ${widget.model.minAmount}");
-                                return;
-                              }
+                            )
+                          : FloBuyNavBar(
+                              model: widget.model,
+                              onTap: () {
+                                if ((widget.model.buyAmount ?? 0) <
+                                    widget.model.minAmount) {
+                                  BaseUtil.showNegativeAlert("Invalid Amount",
+                                      "Please Enter Amount Greater than ${widget.model.minAmount}");
+                                  return;
+                                }
 
-                              // if (widget.model.floAssetType ==
-                              //     Constants.ASSET_TYPE_FLO_FIXED_6) {
-                              //   widget.model.openReinvestBottomSheet();
-                              //   return;
-                              // }
-                              // if (widget.model.floAssetType ==
-                              //         Constants.ASSET_TYPE_FLO_FIXED_3 &&
-                              //     !widget.model.isLendboxOldUser) {
-                              //   widget.model.openReinvestBottomSheet();
-                              //   return;
-                              // }
+                                // if (widget.model.floAssetType ==
+                                //     Constants.ASSET_TYPE_FLO_FIXED_6) {
+                                //   widget.model.openReinvestBottomSheet();
+                                //   return;
+                                // }
+                                // if (widget.model.floAssetType ==
+                                //         Constants.ASSET_TYPE_FLO_FIXED_3 &&
+                                //     !widget.model.isLendboxOldUser) {
+                                //   widget.model.openReinvestBottomSheet();
+                                //   return;
+                                // }
 
-                              if (!widget.model.isBuyInProgress) {
-                                FocusScope.of(context).unfocus();
-                                widget.model.initiateBuy();
-                              }
-                            },
-                          );
-              },
-            ),
-          ),
+                                if (!widget.model.isBuyInProgress) {
+                                  FocusScope.of(context).unfocus();
+                                  widget.model.initiateBuy();
+                                }
+                              },
+                            );
+                },
+              )),
           CustomKeyboardSubmitButton(
             onSubmit: () => widget.model.buyFieldNode.unfocus(),
-          )
+          ),
         ],
       ),
     );
@@ -368,58 +323,65 @@ class FloBuyNavBar extends StatelessWidget {
       color: UiConstants.kArrowButtonBackgroundColor,
       child: Row(
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    "₹${model.amountController?.text ?? '0'}",
-                    style: TextStyles.sourceSansSB.title5
-                        .copyWith(color: Colors.white),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding8,
-                  ),
-                  Text(
-                    getTitle(),
-                    style: TextStyles.rajdhaniB.body2
-                        .copyWith(color: UiConstants.kTabBorderColor),
-                  ),
-                ],
-              ),
-              Text(getSubString(),
-                  style: TextStyles.rajdhaniSB.body3
-                      .colour(UiConstants.kTextFieldTextColor)),
-              SizedBox(
-                height: SizeConfig.padding10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  BaseUtil.openModalBottomSheet(
-                    isBarrierDismissible: true,
-                    addToScreenStack: true,
-                    backgroundColor: const Color(0xff1A1A1A),
-                    content: ViewBreakdown(model: model),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(SizeConfig.roundness24),
-                      topRight: Radius.circular(SizeConfig.roundness24),
+          GestureDetector(
+            onTap: () {
+              BaseUtil.openModalBottomSheet(
+                isBarrierDismissible: true,
+                addToScreenStack: true,
+                backgroundColor: const Color(0xff1A1A1A),
+                content: ViewBreakdown(model: model),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(SizeConfig.roundness24),
+                  topRight: Radius.circular(SizeConfig.roundness24),
+                ),
+                hapticVibrate: true,
+                isScrollControlled: true,
+              );
+              locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.viewBreakdownTapped,
+                  properties: {
+                    'Amount Filled': model.amountController?.text ?? '0',
+                    'Asset': model.floAssetType,
+                    'coupon': model.appliedCoupon
+                  });
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "₹${model.amountController?.text ?? '0'}",
+                      style: TextStyles.sourceSansSB.title5
+                          .copyWith(color: Colors.white),
                     ),
-                    hapticVibrate: true,
-                    isScrollControlled: true,
-                  );
-                },
-                child: Text(
+                    SizedBox(
+                      width: SizeConfig.padding8,
+                    ),
+                    Text(
+                      getTitle(),
+                      style: TextStyles.rajdhaniB.body2
+                          .copyWith(color: UiConstants.kTabBorderColor),
+                    ),
+                  ],
+                ),
+                Text(getSubString(),
+                    style: TextStyles.rajdhaniSB.body3
+                        .colour(UiConstants.kTextFieldTextColor)),
+                SizedBox(
+                  height: SizeConfig.padding10,
+                ),
+                Text(
                   'View Breakdown',
                   style: TextStyles.sourceSans.body3.copyWith(
                       color: UiConstants.kTextFieldTextColor,
                       decorationStyle: TextDecorationStyle.solid,
                       decoration: TextDecoration.underline),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const Spacer(),
           Column(
@@ -704,6 +666,84 @@ class ViewBreakdown extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MaturityDetailsWidget extends StatelessWidget {
+  const MaturityDetailsWidget({Key? key, required this.model})
+      : super(key: key);
+
+  final LendboxBuyViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<BankAndPanService, bool>(
+      selector: (p0, p1) => p1.isKYCVerified,
+      builder: (ctx, isKYCVerified, child) {
+        return (!isKYCVerified)
+            ? const SizedBox()
+            : (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ||
+                    model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3)
+                ? GestureDetector(
+                    onTap: () {
+                      if (!model.isBuyInProgress) {
+                        model.openReinvestBottomSheet();
+                      }
+
+                      model.analyticsService.track(
+                          eventName: AnalyticsEvents.maturityChoiceTapped,
+                          properties: {
+                            'amount': model.buyAmount,
+                            "asset": model.floAssetType,
+                          });
+                    },
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 1,
+                            // margin: EdgeInsets.symmetric(
+                            //     horizontal: SizeConfig.pageHorizontalMargins),
+                            color: UiConstants
+                                .kModalSheetSecondaryBackgroundColor
+                                .withOpacity(0.2),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          Text(
+                            'Maturity Details',
+                            style: TextStyles.sourceSansSB.body1,
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              model.showReinvestSubTitle(),
+                              Text(
+                                model.selectedOption == -1
+                                    ? 'Choose Now'
+                                    : "Change",
+                                style: TextStyles.sourceSans.body3
+                                    .colour(UiConstants.kTabBorderColor)
+                                    .underline,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : const SizedBox();
+      },
     );
   }
 }

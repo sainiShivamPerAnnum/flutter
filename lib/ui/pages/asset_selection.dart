@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/marketing_event_handler_enum.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
@@ -50,34 +52,45 @@ class AssetSelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff232326),
-      body: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-        child: Column(
-          children: [
-            if (isFromGlobal) SizedBox(height: SizeConfig.fToolBarHeight / 2),
-            AppBar(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins),
+          child: Column(
+            children: [
+              if (isFromGlobal) SizedBox(height: SizeConfig.fToolBarHeight / 2),
+              AppBar(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.savePageClosed,
+                    );
+
+                    AppState.backButtonDispatcher?.didPopRoute();
+                  },
                 ),
-                onPressed: () {
-                  AppState.backButtonDispatcher?.didPopRoute();
-                },
+                title: Text(
+                  'Select plan to save',
+                  style: TextStyles.rajdhaniSB.title5,
+                ),
               ),
-              title: Text(
-                'Select plan to save',
-                style: TextStyles.rajdhaniSB.title5,
-              ),
-            ),
-            if (!showOnlyFlo) SizedBox(height: SizeConfig.padding24),
-            if (!showOnlyFlo) GoldPlanWidget(fetchGoldRate: !showOnlyFlo),
-            SizedBox(height: SizeConfig.padding24),
-            FloPlanWidget(amount: amount, isSkipMl: isSkipMl),
-          ],
+              if (!showOnlyFlo) SizedBox(height: SizeConfig.padding24),
+              if (!showOnlyFlo)
+                GoldPlanWidget(
+                  fetchGoldRate: !showOnlyFlo,
+                  isSkipMl: isSkipMl,
+                ),
+              SizedBox(height: SizeConfig.padding24),
+              FloPlanWidget(amount: amount, isSkipMl: isSkipMl),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: PropertyChangeProvider<MarketingEventHandlerService,
@@ -238,7 +251,13 @@ class GoldPlanWidget extends StatelessWidget {
     }, builder: (ctx, model, child) {
       return GestureDetector(
         onTap: () {
-          // AppState.backButtonDispatcher?.didPopRoute();
+          locator<AnalyticsService>().track(
+              eventName: AnalyticsEvents.assetSelectionProceed,
+              properties: {
+                'Asset': 'Gold',
+                'Market Rate': model.goldRates?.goldBuyPrice,
+              });
+
           BaseUtil().openRechargeModalSheet(
               investmentType: InvestmentType.AUGGOLD99,
               amt: amount,
@@ -380,15 +399,23 @@ class FelloFloPrograms extends StatelessWidget {
             ),
             child: Text(
               'Recommended',
-              style: TextStyles.sourceSans.body5.colour(Colors.black),
+              style: TextStyles.sourceSansSB.body5.colour(Colors.black),
             ),
           ),
         // if (!isRecommended) const Spacer(),
         GestureDetector(
           onTap: () {
-            // AppState.backButtonDispatcher?.didPopRoute();
             BaseUtil.openFloBuySheet(
                 floAssetType: floAssetType, amt: amount, isSkipMl: isSkipMl);
+
+            locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.assetSelectionProceed,
+                properties: {
+                  'Asset': floAssetType,
+                  'Slab Return Percentage': percentage,
+                  'Slab Lockin Period': chipString1,
+                  'Recommended': isRecommended,
+                });
           },
           child: Container(
             margin:
