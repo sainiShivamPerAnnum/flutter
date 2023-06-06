@@ -210,7 +210,7 @@ class AnalyticsEvents {
   static const maturityChoiceTapped = "Maturity Details Choose Tapped";
   static const maturitySelectionContinueTapped =
       "Maturity Selection Continue Tapped";
-
-  //Maturity Withdraw Popup Tapped
   static const maturityWithdrawPopupTapped = "Maturity Withdraw Popup Tapped";
+  static const quickCheckoutTapped = "Quick Checkout Tapped";
+  static const quickCheckoutTileTapped = "Quick Checkout Tile Tapped";
 }

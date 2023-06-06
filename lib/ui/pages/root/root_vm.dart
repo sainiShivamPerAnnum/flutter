@@ -290,6 +290,10 @@ class RootViewModel extends BaseViewModel {
           ),
         );
       }
+
+      locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.quickCheckoutTapped,
+      );
     }
 
     return FloatingActionButton(
