@@ -1,6 +1,9 @@
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +59,7 @@ class AutosaveSummary extends StatelessWidget {
               width: SizeConfig.padding44,
             ),
             title: Text(
-              "Fello Flo",
+              "Fello Flo ${locator<UserService>().userSegments.contains(Constants.US_FLO_OLD) ? '10%' : '8%'}",
               style: TextStyles.sourceSans.body1,
             ),
             trailing: Text(
