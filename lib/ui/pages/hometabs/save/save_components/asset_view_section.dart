@@ -1292,7 +1292,9 @@ class CircularSliderState extends State<CircularSlider> {
               ),
               Text(
                 widget.type == InvestmentType.LENDBOXP2P
-                    ? "(Based on 12% returns*)"
+                    ? widget.interest == 12
+                        ? "(Based on 12% returns*)"
+                        : "(Based on 10% returns*)"
                     : "(Based on last years' returns)",
                 style: TextStyles.sourceSans.body3.colour(Color(0xffA9C6D6)),
               )

@@ -655,30 +655,30 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   List<Page> buildPages() {
     switch (appState.currentAction.state) {
-    // 3
+      // 3
       case PageState.none:
         break;
       case PageState.addPage:
-      // 4
+        // 4
         _setPageAction(appState.currentAction);
         addPage(appState.currentAction.page);
         break;
       case PageState.pop:
-      // 5
+        // 5
         pop();
         break;
       case PageState.replace:
-      // 6
+        // 6
         _setPageAction(appState.currentAction);
         replace(appState.currentAction.page);
         break;
       case PageState.replaceAll:
-      // 7
+        // 7
         _setPageAction(appState.currentAction);
         replaceAll(appState.currentAction.page);
         break;
       case PageState.addWidget:
-      // 8
+        // 8
         _setPageAction(appState.currentAction);
         pushWidget(
             appState.currentAction.widget!, appState.currentAction.page!);
@@ -689,7 +689,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
         break;
       case PageState.addAll:
-      // 9
+        // 9
         addAll(appState.currentAction.pages!);
         break;
       case PageState.replaceWidget:
@@ -945,7 +945,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'FPL':
         openTopSaverScreen('FPL');
         break;
-    // BACKWARD COMPATIBILITY --START
+      // BACKWARD COMPATIBILITY --START
       case 'footballHome':
         openWebGame(Constants.GAME_TYPE_FOOTBALL);
         break;
@@ -964,7 +964,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'bottleFlipHome':
         openWebGame(Constants.GAME_TYPE_BOTTLEFLIP);
         break;
-    // BACKWARD COMPATIBILITY --END
+      // BACKWARD COMPATIBILITY --END
       case 'pop':
         AppState.backButtonDispatcher!.didPopRoute();
         break;
@@ -1025,8 +1025,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   openWebGame(String game) {
     bool isLocked = false;
-    double netWorth = locator<UserService>().userFundWallet!.augGoldPrinciple +
-        (locator<UserService>().userFundWallet!.wLbPrinciple ?? 0.0);
+    double netWorth = locator<UserService>().userPortfolio.gold.principle +
+        (locator<UserService>().userPortfolio.flo.principle);
     for (var i in locator<GameRepo>().gameTier.data) {
       for (var j in i!.games) {
         if (j!.gameCode == game) {

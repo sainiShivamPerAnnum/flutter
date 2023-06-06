@@ -193,7 +193,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
               color: Colors.black
                   .withOpacity(cardActions.isVerticalView ? 0.5 : 0.2),
               blurRadius: 15,
-              offset: Offset(0, cardActions.isVerticalView ? 200 : 5),
+              offset: Offset(0, cardActions.isVerticalView ? 300 : 5),
               spreadRadius: 8,
             )
           ],
