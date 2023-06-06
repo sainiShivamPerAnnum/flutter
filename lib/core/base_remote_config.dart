@@ -230,6 +230,11 @@ class BaseRemoteConfig {
     ]
   };
 
+  static const Map<String, String> _APP_REFERRAL_MESSAGE = {
+    "appReferralMessage":
+        "Earn upto *₹20* and *200* tokens from every scratch card. Highest referrer wins an iPad every month"
+  };
+
   static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
@@ -299,6 +304,7 @@ class BaseRemoteConfig {
     "changeAppIcon": false,
     ..._SHOW_NEW_AUTOSAVE,
     ..._YOUTUBE_VIDEOS,
+    ..._APP_REFERRAL_MESSAGE,
   };
 
   static Future<bool> init() async {
@@ -480,6 +486,9 @@ class BaseRemoteConfig {
 
   static bool get AUTOSAVE_ACTIVE =>
       remoteConfig.getBool(_AUTOSAVE_ACTIVE.keys.first);
+
+  static String get APP_REFERRAL_MESSAGE =>
+      remoteConfig.getString(_APP_REFERRAL_MESSAGE.keys.first);
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

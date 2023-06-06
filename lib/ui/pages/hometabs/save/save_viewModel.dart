@@ -186,20 +186,20 @@ class SaveViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _sellService!.init();
       getCampaignEvents().then((val) {
-        // _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
-        //   if (_currentPage < ongoingEvents!.length) {
-        //     _currentPage++;
-        //   } else {
-        //     _currentPage = 0;
-        //   }
-        //   if (offersController.hasClients) {
-        //     offersController.animateToPage(
-        //       _currentPage,
-        //       duration: Duration(milliseconds: 350),
-        //       curve: Curves.easeIn,
-        //     );
-        //   }
-        // });
+        _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+          if (_currentPage < ongoingEvents!.length - 1) {
+            _currentPage++;
+          } else {
+            _currentPage = 0;
+          }
+          if (offersController.hasClients) {
+            offersController.animateToPage(
+              _currentPage,
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeIn,
+            );
+          }
+        });
       });
       getSaveViewBlogs();
     });

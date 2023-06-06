@@ -123,7 +123,7 @@ class GTInstantViewModel extends BaseViewModel {
   //   _gtService!.showAutosavePrompt();
   // }
 
-  Future<void> redeemTicket() async {
+  Future<void> redeemTicket(bool showRatingDialog) async {
     scratchKey.currentState!.reveal();
     Haptic.vibrate();
     AppState.isInstantGtViewInView = true;
@@ -159,7 +159,7 @@ class GTInstantViewModel extends BaseViewModel {
       AppState.isInstantGtViewInView = false;
       _marketingEventHandlerService.showModalsheet = true;
       AppState.backButtonDispatcher!.didPopRoute();
-      BaseUtil.showFelloRatingSheet();
+      if (showRatingDialog) BaseUtil.showFelloRatingSheet();
     });
   }
 

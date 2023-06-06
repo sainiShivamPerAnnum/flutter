@@ -26,6 +26,7 @@ enum AppConfigKey {
   predictScreen,
   lendbox,
   youtube_videos,
+  app_referral_message
 }
 
 extension AppConfigKeys on String {
@@ -84,6 +85,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.lendbox;
       case 'youtubeVideos':
         return AppConfigKey.youtube_videos;
+      case "appReferralMessage":
+        return AppConfigKey.app_referral_message;
 
       default:
         return AppConfigKey.unknown;

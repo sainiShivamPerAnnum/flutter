@@ -22,7 +22,7 @@ class WalthroughVideosSection extends StatelessWidget {
           "https://www.youtube.com/watch?v=zFhYJRqz_xk"
         ];
     return SizedBox(
-      height: SizeConfig.screenWidth! * 0.36,
+      height: SizeConfig.screenWidth! * 0.32,
       width: SizeConfig.screenWidth,
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
@@ -51,8 +51,8 @@ class WalthroughVideosSection extends StatelessWidget {
                   });
             },
             child: Container(
-              width: SizeConfig.screenWidth! * 0.66,
-              height: SizeConfig.screenWidth! * 0.4,
+              width: SizeConfig.screenWidth! * 0.58,
+              height: SizeConfig.screenWidth! * 0.32,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12),
                 image: DecorationImage(

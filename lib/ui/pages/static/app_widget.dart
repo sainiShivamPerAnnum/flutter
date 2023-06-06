@@ -133,7 +133,7 @@ class AppTextField extends StatelessWidget {
         inputFormatters: inputFormatters ??
             [
               FilteringTextInputFormatter.allow(
-                RegExp(r'[a-zA-Z0-9.@]'),
+                RegExp(r'[a-zA-Z0-9.@%]'),
               )
             ],
         style: textStyle ??
@@ -509,9 +509,9 @@ class ReactivePositiveAppButton extends HookWidget {
               child: MaterialButton(
                 // padding: EdgeInsets.zero,
                 onPressed:
-                model.connectivityStatus == ConnectivityStatus.Offline
-                    ? BaseUtil.showNoInternetAlert
-                    : () async {
+                    model.connectivityStatus == ConnectivityStatus.Offline
+                        ? BaseUtil.showNoInternetAlert
+                        : () async {
                             if (isLoading.value) return;
                             isLoading.value = true;
                             await onPressed();

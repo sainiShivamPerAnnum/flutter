@@ -182,6 +182,7 @@ class ScratchCardService
       String? title,
       double? amount = 0,
       bool onJourney = false,
+      bool showRatingDialog = true,
       bool showAutoSavePrompt = false}) async {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
     if (currentGT != null) {
@@ -199,6 +200,7 @@ class ScratchCardService
               source: source,
               title: title,
               amount: amount,
+              showRatingDialog: showRatingDialog,
               showAutosavePrompt: showAutoSavePrompt,
             ),
           ),
@@ -230,6 +232,7 @@ class ScratchCardService
     final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
     if (res.isSuccess()) {
       unscratchedTicketsCount = res.model!.length;
+      unscratchedMilestoneScratchCardCount = 0;
       res.model!.forEach((sc) {
         if (sc.prizeSubtype!.toLowerCase().contains("_mlst_")) {
           unscratchedMilestoneScratchCardCount += 1;

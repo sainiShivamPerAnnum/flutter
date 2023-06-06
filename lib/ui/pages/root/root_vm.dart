@@ -35,7 +35,6 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/default_quick_save_modal_sheet.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/quick_save_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
-import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/util/constants.dart';
@@ -133,8 +132,10 @@ class RootViewModel extends BaseViewModel {
 
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
-        showNewInstallPopUp();
-        await showLastWeekOverview();
+        if (showNewInstallPopUp()) {
+          await showLastWeekOverview();
+        }
+        showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),
           _referralService.initDynamicLinks(),
@@ -150,16 +151,15 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         _initAdhocNotifications();
-
-        if (!AppState.isFirstTime && fetchCampaign) {
-          showMarketingCampings();
-        }
       },
     );
   }
 
   void showMarketingCampings() {
-    Future.delayed(const Duration(seconds: 2), _marketingService.getCampaigns);
+    if (AppState.isRootAvailableForIncomingTaskExecution) {
+      Future.delayed(
+          const Duration(seconds: 2), _marketingService.getCampaigns);
+    }
   }
 
   Map<Widget, NavBarItemModel> get navBarItems =>
@@ -186,7 +186,10 @@ class RootViewModel extends BaseViewModel {
 
   bool showNewInstallPopUp() {
     if (!PreferenceHelper.getBool(PreferenceHelper.NEW_INSTALL_POPUP,
-        def: false)) {
+            def: false) &&
+        AppState.isRootAvailableForIncomingTaskExecution) {
+      fetchCampaign = false;
+      AppState.isRootAvailableForIncomingTaskExecution = false;
       BaseUtil.openDialog(
           isBarrierDismissible: true,
           addToScreenStack: true,
@@ -198,22 +201,18 @@ class RootViewModel extends BaseViewModel {
               onWillPop: () async {
                 if (AppState.screenStack.last == ScreenItem.dialog) {
                   AppState.screenStack.removeLast();
-                }
-                if (await locator<ScratchCardService>()
-                    .fetchAndVerifyScratchCardByID()) {
-                  await locator<ScratchCardService>()
-                      .showInstantScratchCardView(source: GTSOURCE.newuser);
+                  AppState.isRootAvailableForIncomingTaskExecution = true;
+
+                  showMarketingCampings();
                 }
                 return Future.value(true);
               },
               child: GestureDetector(
                 onTap: () async {
                   AppState.backButtonDispatcher!.didPopRoute();
-                  if (await locator<ScratchCardService>()
-                      .fetchAndVerifyScratchCardByID()) {
-                    await locator<ScratchCardService>()
-                        .showInstantScratchCardView(source: GTSOURCE.newuser);
-                  }
+                  AppState.isRootAvailableForIncomingTaskExecution = true;
+
+                  showMarketingCampings();
                 },
                 child: Image.asset(
                     _userService.userSegments.contains(Constants.US_FLO_OLD)
@@ -222,7 +221,6 @@ class RootViewModel extends BaseViewModel {
               ),
             ),
           ));
-      AppState.isRootAvailableForIncomingTaskExecution = false;
       PreferenceHelper.setBool(PreferenceHelper.NEW_INSTALL_POPUP, true);
       return false;
     } else {
@@ -556,6 +554,7 @@ class RootViewModel extends BaseViewModel {
   Future<void> showLastWeekOverview() async {
     if (isWelcomeAnimationInProgress &&
         AppState.isFirstTime == false &&
+        !_userService.isUserInFirstWeekOfSignUp() &&
         await BaseUtil.isFirstTimeThisWeek()) {
       log('showLastWeekOverview condition ok', name: 'HomeVM');
 
@@ -570,6 +569,7 @@ class RootViewModel extends BaseViewModel {
           if (AppState.screenStack.length == 1 &&
               (AppState.screenStack.last != ScreenItem.dialog ||
                   AppState.screenStack.last != ScreenItem.modalsheet)) {
+            AppState.isRootAvailableForIncomingTaskExecution = false;
             unawaited(BaseUtil.openModalBottomSheet(
               addToScreenStack: true,
               backgroundColor: UiConstants.gameCardColor,

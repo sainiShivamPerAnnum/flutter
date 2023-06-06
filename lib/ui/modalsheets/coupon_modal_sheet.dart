@@ -113,7 +113,7 @@ class CouponModalSheet extends StatelessWidget {
                 ),
                 validator: (val) {
                   if (val!.trim().isEmpty) return locale.txnEnterCode;
-                  if (val.trim().length < 3 || val.trim().length > 10) {
+                  if (val.trim().length < 3 || val.trim().length > 20) {
                     return locale.txnInvalidCouponCode;
                   }
                   return null;

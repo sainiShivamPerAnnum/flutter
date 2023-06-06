@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -51,43 +52,13 @@ class ReferEarnCard extends StatelessWidget {
                     children: [
                       ReferAndEarnAsset(),
                       SizedBox(height: SizeConfig.padding20),
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                                text: locale.earnUpto,
-                                style: TextStyles.sourceSans.body3
-                                    .colour(UiConstants.kTextColor3)),
-                            TextSpan(
-                                text:
-                                    '₹${AppConfig.getValue(AppConfigKey.referralBonus)} ' +
-                                        locale.and,
-                                style: TextStyles.sourceSansB.body3
-                                    .colour(UiConstants.kTextColor)),
-                            // WidgetSpan(
-                            //   child: Container(
-                            //     margin: EdgeInsets.symmetric(
-                            //         horizontal: SizeConfig.padding4),
-                            //     height: 17,
-                            //     width: 17,
-                            //     child: SvgPicture.asset(
-                            //       Assets.token,
-                            //     ),
-                            //   ),
-                            // ),
-                            TextSpan(
-                                text:
-                                    ' ${AppConfig.getValue(AppConfigKey.referralFlcBonus)}',
-                                style: TextStyles.sourceSansB.body3
-                                    .colour(UiConstants.kTextColor)),
-                            TextSpan(
-                                text: locale.winipadText,
-                                style: TextStyles.sourceSans.body3
-                                    .colour(UiConstants.kTextColor3)),
-                          ],
-                        ),
-                      ),
+                      AppConfig.getValue(AppConfigKey.app_referral_message)
+                          .toString()
+                          .beautify(
+                              style: TextStyles.body3.colour(Colors.white70),
+                              boldStyle: TextStyles.sourceSansB.body3
+                                  .colour(Colors.white),
+                              alignment: TextAlign.center),
                       SizedBox(
                         height: SizeConfig.padding28,
                       ),
