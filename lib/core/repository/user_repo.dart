@@ -22,6 +22,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/material.dart';
 
 import 'base_repo.dart';
 
@@ -538,7 +539,7 @@ class UserRepository extends BaseRepo {
         queryParams: queryParameters,
         cBaseUrl: _baseUrl,
       );
-      print("Bootup Response: $respone");
+      debugPrint("Bootup Response: $respone");
       userBootUp = UserBootUpDetailsModel.fromMap(respone);
 
       return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);

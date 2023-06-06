@@ -23,6 +23,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:flutter/material.dart';
 
 //[TODO]:Added Prod CDN url;
 class GetterRepository extends BaseRepo {
@@ -56,7 +57,7 @@ class GetterRepository extends BaseRepo {
         token: token,
       );
 
-      print("Reaching here: ${statisticsResponse.toString()}");
+      debugPrint("Reaching here: ${statisticsResponse.toString()}");
 
       return ApiResponse(model: statisticsResponse["data"], code: 200);
     } catch (e) {

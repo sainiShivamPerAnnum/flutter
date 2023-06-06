@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -25,12 +27,11 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
 class AssetSelectionPage extends StatelessWidget {
-  const AssetSelectionPage(
-      {Key? key,
-      required this.showOnlyFlo,
-      this.amount,
-      this.isSkipMl,
-      this.isFromGlobal = false})
+  const AssetSelectionPage({Key? key,
+    required this.showOnlyFlo,
+    this.amount,
+    this.isSkipMl,
+    this.isFromGlobal = false})
       : super(key: key);
 
   final bool showOnlyFlo;
@@ -42,7 +43,7 @@ class AssetSelectionPage extends StatelessWidget {
     if (locator<RootController>().currentNavBarItemModel ==
         RootController.tambolaNavBar) {
       return (locator<TambolaService>().bestTickets?.data?.totalTicketCount ??
-              0) >
+          0) >
           0;
     }
     return true;
@@ -50,6 +51,9 @@ class AssetSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("AssetSelectionPage:: amount: $amount & isSkipMl: $isSkipMl & showOnlyFlo: $showOnlyFlo & isFromGlobal: $isFromGlobal",
+        name: "AssetSelectionPage");
+
     return Scaffold(
       backgroundColor: const Color(0xff232326),
       body: SingleChildScrollView(
@@ -104,23 +108,23 @@ class AssetSelectionPage extends StatelessWidget {
             return !state!.showHappyHourBanner
                 ? const SizedBox()
                 : Consumer<AppState>(
-                    builder: (ctx, m, child) {
-                      return AnimatedContainer(
-                        height: !(locator<RootController>()
-                                        .currentNavBarItemModel ==
-                                    RootController.journeyNavBarItem ||
-                                !_showHappyHour())
-                            ? SizeConfig.navBarHeight
-                            : -50,
-                        alignment: Alignment.bottomCenter,
-                        duration: const Duration(milliseconds: 400),
-                        child: HappyHourBanner(
-                          model: locator<HappyHourCampign>(),
-                          isComingFromSave: true,
-                        ),
-                      );
-                    },
-                  );
+              builder: (ctx, m, child) {
+                return AnimatedContainer(
+                  height: !(locator<RootController>()
+                      .currentNavBarItemModel ==
+                      RootController.journeyNavBarItem ||
+                      !_showHappyHour())
+                      ? SizeConfig.navBarHeight
+                      : -50,
+                  alignment: Alignment.bottomCenter,
+                  duration: const Duration(milliseconds: 400),
+                  child: HappyHourBanner(
+                    model: locator<HappyHourCampign>(),
+                    isComingFromSave: true,
+                  ),
+                );
+              },
+            );
           },
         ),
       ),
@@ -137,7 +141,7 @@ class FloPlanWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isLendboxOldUser =
-        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+    locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
 
     return GestureDetector(
       onTap: () {
@@ -205,7 +209,7 @@ class FloPlanWidget extends StatelessWidget {
               percentage: '10%',
               isRecommended: false,
               chipString1:
-                  isLendboxOldUser ? "1 month lockin" : '3 month maturity',
+              isLendboxOldUser ? "1 month lockin" : '3 month maturity',
               chipString2: isLendboxOldUser ? 'Min - ₹100' : 'Min - ₹1000',
               floAssetType: isLendboxOldUser
                   ? Constants.ASSET_TYPE_FLO_FELXI
@@ -331,14 +335,14 @@ class GoldPlanWidget extends StatelessWidget {
                     const Spacer(),
                     model.isGoldRateFetching
                         ? SpinKitThreeBounce(
-                            size: SizeConfig.body2,
-                            color: Colors.white,
-                          )
+                      size: SizeConfig.body2,
+                      color: Colors.white,
+                    )
                         : Text(
-                            "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
-                            style: TextStyles.sourceSansSB.body1
-                                .colour(Colors.white),
-                          ),
+                      "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
+                      style: TextStyles.sourceSansSB.body1
+                          .colour(Colors.white),
+                    ),
                     NewCurrentGoldPriceWidget(
                       fetchGoldRates: model.fetchGoldRates,
                       goldprice: model.goldRates != null
@@ -360,15 +364,14 @@ class GoldPlanWidget extends StatelessWidget {
 }
 
 class FelloFloPrograms extends StatelessWidget {
-  const FelloFloPrograms(
-      {Key? key,
-      required this.percentage,
-      required this.isRecommended,
-      required this.chipString1,
-      required this.chipString2,
-      required this.floAssetType,
-      this.amount,
-      this.isSkipMl})
+  const FelloFloPrograms({Key? key,
+    required this.percentage,
+    required this.isRecommended,
+    required this.chipString1,
+    required this.chipString2,
+    required this.floAssetType,
+    this.amount,
+    this.isSkipMl})
       : super(key: key);
 
   final String percentage;
@@ -420,7 +423,7 @@ class FelloFloPrograms extends StatelessWidget {
           },
           child: Container(
             margin:
-                EdgeInsets.only(top: isRecommended ? 0 : SizeConfig.padding12),
+            EdgeInsets.only(top: isRecommended ? 0 : SizeConfig.padding12),
             padding: EdgeInsets.symmetric(
               vertical: SizeConfig.padding12,
               horizontal: SizeConfig.padding12,

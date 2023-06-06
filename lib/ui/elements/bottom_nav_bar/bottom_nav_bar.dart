@@ -52,15 +52,15 @@ class BottomNavBar extends StatelessWidget {
                               ),
                             )
                           : Expanded(
-                              child: Container(
-                                height: kBottomNavigationBarHeight,
-                                key: ValueKey(navbarItems.title),
-                                alignment: Alignment.center,
-                                // width: SizeConfig.screenWidth! * 0.2,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    superModel.onItemTapped(index);
-                                  },
+                              child: GestureDetector(
+                                onTap: () {
+                                  superModel.onItemTapped(index);
+                                },
+                                child: Container(
+                                  height: kBottomNavigationBarHeight,
+                                  key: ValueKey(navbarItems.title),
+                                  alignment: Alignment.center,
+                                  color: Colors.transparent,
                                   child: NavBarIcon(
                                     callBack: () {
                                       superModel.onItemTapped(index);
