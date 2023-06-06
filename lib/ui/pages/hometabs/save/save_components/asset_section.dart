@@ -122,9 +122,10 @@ class MiniAssetsGroupSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.pageHorizontalMargins,
-        vertical: SizeConfig.padding16,
+      padding: EdgeInsets.only(
+        left: SizeConfig.pageHorizontalMargins,
+        right: SizeConfig.pageHorizontalMargins,
+        top: SizeConfig.padding32,
       ),
       child: Row(
         children: [

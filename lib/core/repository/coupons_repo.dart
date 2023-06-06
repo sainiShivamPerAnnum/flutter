@@ -13,14 +13,14 @@ class CouponRepository extends BaseRepo {
   final CustomLogger? _logger = locator<CustomLogger>();
   final _rsaEncryption = new RSAEncryption();
   final String _baseUrl = FlavorConfig.isDevelopment()
-      ? "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com/dev"
+      ? "https://64w9v5hct9.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://mwl33qq6sd.execute-api.ap-south-1.amazonaws.com/prod";
 
-  Future<ApiResponse<EligibleCouponResponseModel>> getEligibleCoupon({
-    String? uid,
-    String? couponcode,
-    int? amount,
-    required String assetType}) async {
+  Future<ApiResponse<EligibleCouponResponseModel>> getEligibleCoupon(
+      {String? uid,
+      String? couponcode,
+      int? amount,
+      required String assetType}) async {
     try {
       final String _bearer = await getBearerToken();
       Map<String, dynamic> _body = {

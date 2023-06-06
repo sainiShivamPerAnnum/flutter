@@ -938,9 +938,14 @@ class UserProfileVM extends BaseViewModel {
       return BaseUtil.showNegativeAlert(
           "No username entered", "Please add a good username to continue");
     }
+    if (usernameController!.text.length < 4) {
+      return BaseUtil.showNegativeAlert("Username too small",
+          "Please try a username with more than 3 characters");
+    }
     AppState.blockNavigation();
     isUpdaingUserDetails = true;
     inEditMode = false;
+
     final res = await _userRepo
         .updateUser(dMap: {BaseUser.fldUsername: usernameController?.text});
     isUpdaingUserDetails = false;

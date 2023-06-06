@@ -44,6 +44,7 @@ class LendboxTransactionService extends BaseTransactionService {
   bool skipMl = false;
   String? floAssetType;
   String? maturityPref;
+  String? couponCode;
 
   Future<void> initiateWithdrawal(double txnAmount, String? txnId) async {
     currentTransactionState = TransactionState.success;
@@ -57,11 +58,13 @@ class LendboxTransactionService extends BaseTransactionService {
   TransactionResponseModel? get transactionReponseModel => _model;
 
   Future<void> initiateTransaction(double txnAmount, bool skipMl,
-      String floAssetType, String maturityPref) async {
+      String floAssetType, String maturityPref, String? couponCode) async {
+    this.couponCode = '';
     this.floAssetType = floAssetType;
     this.maturityPref = maturityPref;
     currentTxnAmount = txnAmount;
     this.skipMl = skipMl;
+    this.couponCode = couponCode;
     String paymentMode = getPaymentMode();
 
     switch (paymentMode) {
@@ -152,6 +155,7 @@ class LendboxTransactionService extends BaseTransactionService {
         "fundType": floAssetType,
         "maturityPref": maturityPref,
       },
+      couponCode: couponCode,
       email: _userService!.baseUser!.email,
       mobile: _userService!.baseUser!.mobile,
       skipMl: skipMl,
