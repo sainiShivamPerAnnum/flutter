@@ -21,7 +21,7 @@ import 'package:provider/provider.dart';
 class LendboxBuyView extends StatefulWidget {
   final int? amount;
   final bool skipMl;
-  final OnAmountChanged onChanged;
+  final OnAmountChanged? onChanged;
   final String floAssetType;
 
   const LendboxBuyView(

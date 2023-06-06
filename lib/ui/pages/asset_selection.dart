@@ -86,6 +86,7 @@ class AssetSelectionPage extends StatelessWidget {
                 GoldPlanWidget(
                   fetchGoldRate: !showOnlyFlo,
                   isSkipMl: isSkipMl,
+                  amount: amount,
                 ),
               SizedBox(height: SizeConfig.padding24),
               FloPlanWidget(amount: amount, isSkipMl: isSkipMl),

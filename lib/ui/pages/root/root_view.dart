@@ -56,7 +56,9 @@ class Root extends StatelessWidget {
                       const RootAppBar(),
                       const HeadAlerts(),
                       // TextButton(
-                      //   onPressed: model.showNewInstallPopUp,
+                      //   onPressed: (){
+                      //     AppState.delegate?.parseRoute(Uri.parse('/lboxBuy8'));
+                      //   },
                       //   child: Text("Popup"),
                       // ),
                       Expanded(
