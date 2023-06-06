@@ -130,6 +130,11 @@ class FelloInAppReview extends HookWidget {
                     // debugPrint("Rating given: ${selected.value + 1}");
                     // debugPrint("Reason: ${textController.text}");
 
+                    if (selected.value > 2) {
+                      PreferenceHelper.setBool(
+                          PreferenceHelper.APP_RATING_SUBMITTED, true);
+                    }
+
                     locator<AnalyticsService>().track(
                       eventName: AnalyticsEvents.reviewPopupSuccess,
                       properties: {
@@ -350,8 +355,6 @@ class FelloInAppReviewSuccess extends StatelessWidget {
 
                           AppState.backButtonDispatcher?.didPopRoute();
 
-                          PreferenceHelper.setBool(
-                              PreferenceHelper.APP_RATING_SUBMITTED, true);
                           locator<AnalyticsService>().track(
                             eventName: AnalyticsEvents.rateOnPlayStoreTapped,
                           );

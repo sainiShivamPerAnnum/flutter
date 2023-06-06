@@ -655,30 +655,30 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   List<Page> buildPages() {
     switch (appState.currentAction.state) {
-      // 3
+    // 3
       case PageState.none:
         break;
       case PageState.addPage:
-        // 4
+      // 4
         _setPageAction(appState.currentAction);
         addPage(appState.currentAction.page);
         break;
       case PageState.pop:
-        // 5
+      // 5
         pop();
         break;
       case PageState.replace:
-        // 6
+      // 6
         _setPageAction(appState.currentAction);
         replace(appState.currentAction.page);
         break;
       case PageState.replaceAll:
-        // 7
+      // 7
         _setPageAction(appState.currentAction);
         replaceAll(appState.currentAction.page);
         break;
       case PageState.addWidget:
-        // 8
+      // 8
         _setPageAction(appState.currentAction);
         pushWidget(
             appState.currentAction.widget!, appState.currentAction.page!);
@@ -689,7 +689,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
         break;
       case PageState.addAll:
-        // 9
+      // 9
         addAll(appState.currentAction.pages!);
         break;
       case PageState.replaceWidget:
@@ -881,6 +881,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         BaseUtil()
             .openRechargeModalSheet(investmentType: InvestmentType.LENDBOXP2P);
         break;
+      case 'lboxBuy12':
+        BaseUtil.openFloBuySheet(
+            floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6);
+        break;
+      case 'lboxBuy8':
+        BaseUtil.openFloBuySheet(floAssetType: Constants.ASSET_TYPE_FLO_FELXI);
+        break;
+
+      case 'lboxBuy10':
+        BaseUtil.openFloBuySheet(
+            floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3);
+        break;
+
       case 'lboxSell':
         BaseUtil()
             .openSellModalSheet(investmentType: InvestmentType.LENDBOXP2P);
@@ -932,7 +945,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'FPL':
         openTopSaverScreen('FPL');
         break;
-      // BACKWARD COMPATIBILITY --START
+    // BACKWARD COMPATIBILITY --START
       case 'footballHome':
         openWebGame(Constants.GAME_TYPE_FOOTBALL);
         break;
@@ -951,7 +964,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'bottleFlipHome':
         openWebGame(Constants.GAME_TYPE_BOTTLEFLIP);
         break;
-      // BACKWARD COMPATIBILITY --END
+    // BACKWARD COMPATIBILITY --END
       case 'pop':
         AppState.backButtonDispatcher!.didPopRoute();
         break;
