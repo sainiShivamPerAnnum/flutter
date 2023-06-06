@@ -141,7 +141,7 @@ class _GameTierWidget extends StatelessWidget {
                       children: gameTier.games
                           .map(
                             (e) => SizedBox(
-                              height: SizeConfig.screenHeight! * 0.22,
+                              height: SizeConfig.screenHeight! * 0.18,
                               width: SizeConfig.screenWidth! * 0.272,
                               child: TrendingGames(
                                 model: model,

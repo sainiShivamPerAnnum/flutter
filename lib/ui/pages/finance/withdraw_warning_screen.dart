@@ -339,8 +339,9 @@ class WithDrawGameViewModel {
   factory WithDrawGameViewModel.fromGames(
       GameTiers model, double withDrawingAmount) {
     final gamesWillBeLocked = <GameModel?>[];
-    final _wallet = locator<UserService>().userFundWallet!;
-    final netWorth = _wallet.augGoldPrinciple + (_wallet.wLbPrinciple ?? 0.0);
+    final _userPortfolio = locator<UserService>().userPortfolio;
+    final netWorth =
+        _userPortfolio.gold.principle + (_userPortfolio.flo.principle);
     final finalAmount = netWorth - withDrawingAmount;
 
     for (var i in model.data) {
