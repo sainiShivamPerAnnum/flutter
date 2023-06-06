@@ -535,6 +535,7 @@ class BaseUtil extends ChangeNotifier {
     //       content: CompleteProfileDialog());
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
+    Haptic.vibrate();
     Future.delayed(
       Duration(milliseconds: timer),
       () {

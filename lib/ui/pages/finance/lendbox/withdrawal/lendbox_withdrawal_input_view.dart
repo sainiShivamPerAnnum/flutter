@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/widget/lendbox_amount_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -34,7 +35,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               isEnabled: !model.inProgress,
               trackClosingEvent: () =>
                   AppState.backButtonDispatcher!.didPopRoute(),
-              assetType: 'Fello Flo',
+              assetType: Constants.ASSET_TYPE_FLO_FELXI,
               isOldUser: true,
             ),
             SizedBox(height: SizeConfig.padding32),
@@ -114,7 +115,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                               height: SizeConfig.screenWidth! * 0.1556,
                               alignment: Alignment.center,
                               width: SizeConfig.screenWidth! * 0.7,
-                        child: const LinearProgressIndicator(
+                              child: const LinearProgressIndicator(
                                 color: UiConstants.primaryColor,
                                 backgroundColor:
                                     UiConstants.kDarkBackgroundColor,
