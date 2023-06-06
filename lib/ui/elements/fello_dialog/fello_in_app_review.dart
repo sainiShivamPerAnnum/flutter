@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -14,7 +13,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:in_app_review/in_app_review.dart';
 
 class FelloInAppReview extends HookWidget {
   const FelloInAppReview({Key? key}) : super(key: key);
@@ -334,24 +332,29 @@ class FelloInAppReviewSuccess extends StatelessWidget {
                       AppPositiveBtn(
                         btnText: 'Rate us on play store'.toUpperCase(),
                         onPressed: () async {
-                          final InAppReview inAppReview = InAppReview.instance;
-
-                          try {
-                            if (await inAppReview.isAvailable()) {
-                              await inAppReview.requestReview();
-                            } else {
-                              log("In app review not available, opening native application store");
-                              await inAppReview.openStoreListing(
-                                  appStoreId: Strings.appStoreId);
-                            }
-                          } catch (e) {
-                            log(e.toString());
-                            if (Platform.isAndroid) {
-                              BaseUtil.launchUrl(Strings.playStoreUrl);
-                            } else {
-                              BaseUtil.launchUrl(Strings.appStoreUrl);
-                            }
+                          if (Platform.isAndroid) {
+                            BaseUtil.launchUrl(Strings.playStoreUrl);
+                          } else {
+                            BaseUtil.launchUrl(Strings.appStoreUrl);
                           }
+                          // final InAppReview inAppReview = InAppReview.instance;
+                          //
+                          // try {
+                          //   if (await inAppReview.isAvailable()) {
+                          //     await inAppReview.requestReview();
+                          //   } else {
+                          //     log("In app review not available, opening native application store");
+                          //     await inAppReview.openStoreListing(
+                          //         appStoreId: Strings.appStoreId);
+                          //   }
+                          // } catch (e) {
+                          //   log(e.toString());
+                          //   if (Platform.isAndroid) {
+                          //     BaseUtil.launchUrl(Strings.playStoreUrl);
+                          //   } else {
+                          //     BaseUtil.launchUrl(Strings.appStoreUrl);
+                          //   }
+                          // }
 
                           AppState.backButtonDispatcher?.didPopRoute();
 
