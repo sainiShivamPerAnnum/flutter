@@ -4,6 +4,7 @@ import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_all_tickets/tambola_all_tickets_view.dart';
+import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page.dart';
@@ -63,20 +64,20 @@ class TicketSection extends StatelessWidget {
               );
             },
           ),
-          // ViewAllTicketsBar(
-          //   title: "View Prizes",
-          //   onPressed: () {
-          //     Haptic.vibrate();
-          //     AppState.delegate!.appState.currentAction = PageAction(
-          //       state: PageState.addWidget,
-          //       page: TambolaNewUser,
-          //       widget: const TambolaHomeDetailsView(
-          //         isStandAloneScreen: true,
-          //         showPrizeSection: true,
-          //       ),
-          //     );
-          //   },
-          // )
+          ViewAllTicketsBar(
+            title: "View Prizes",
+            onPressed: () {
+              Haptic.vibrate();
+              AppState.delegate!.appState.currentAction = PageAction(
+                state: PageState.addWidget,
+                page: TambolaNewUser,
+                widget: const TambolaHomeDetailsView(
+                  isStandAloneScreen: true,
+                  showPrizeSection: true,
+                ),
+              );
+            },
+          )
         ],
       ),
     );
