@@ -1,3 +1,5 @@
+import 'package:felloapp/util/flavor_config.dart';
+
 class ApiPath {
   ApiPath();
 
@@ -77,7 +79,9 @@ class ApiPath {
   static const kRedeemGtReward = "/gt/redeem";
 
   //Fello Coupons
-  static const kFelloCoupons = "/eligible";
+  static String kFelloCoupons = FlavorConfig.isDevelopment()
+      ? "/mono-coupons-dev-couponEligible"
+      : "/eligible";
 
   //DeviceInfo
   get kSetUserDeviceId => "/setUserDeviceId";
@@ -159,7 +163,9 @@ class ApiPath {
   static const String getGames = "/games";
 
   // Coupon Apis
-  static const String getCoupons = "/coupons";
+  static String getCoupons = FlavorConfig.isDevelopment()
+      ? "/mono-coupons-dev-getCoupons"
+      : "/coupons";
 
   static String getGameByCode(String gameCode) => "/game/$gameCode";
 

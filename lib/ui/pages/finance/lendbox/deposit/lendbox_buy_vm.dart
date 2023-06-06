@@ -292,8 +292,8 @@ class LendboxBuyViewModel extends BaseViewModel {
     _isBuyInProgress = true;
     notifyListeners();
     trackCheckOut(amount.toDouble());
-    await _txnService!.initiateTransaction(
-        amount.toDouble(), skipMl, floAssetType, maturityPref);
+    await _txnService!.initiateTransaction(amount.toDouble(), skipMl,
+        floAssetType, maturityPref, appliedCoupon?.code ?? '');
     _isBuyInProgress = false;
     forcedBuy = false;
     notifyListeners();
@@ -649,7 +649,7 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     ApiResponse<EligibleCouponResponseModel> response =
         await _couponRepo!.getEligibleCoupon(
-          uid: locator<UserService>().baseUser!.uid,
+      uid: locator<UserService>().baseUser!.uid,
       amount: buyAmount!.toInt(),
       couponcode: couponCode,
       assetType: floAssetType,

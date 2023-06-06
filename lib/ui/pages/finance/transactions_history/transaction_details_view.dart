@@ -159,7 +159,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                       ),
                     ),
                   ],
-                  Divider(
+                  const Divider(
                     color: Color(0xff3E3E3E),
                   ),
 
@@ -332,12 +332,19 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     Text(
                                       (widget.txn.couponMap!
                                                   .containsKey("goldQty")
-                                              ? (widget.txn.augmnt![
-                                                          "aGoldInTxn"] +
-                                                      widget.txn.couponMap![
-                                                          "goldQty"])
+                                              ? (BaseUtil.digitPrecision(
+                                                      widget.txn.augmnt![
+                                                              "aGoldInTxn"] +
+                                                          widget.txn.couponMap![
+                                                              "goldQty"],
+                                                      4,
+                                                      false))
                                                   .toString()
-                                              : widget.txn.augmnt!["aGoldInTxn"]
+                                              : BaseUtil.digitPrecision(
+                                                      widget.txn.augmnt![
+                                                          "aGoldInTxn"],
+                                                      4,
+                                                      false)
                                                   .toString()) +
                                           " gms",
                                       style:
