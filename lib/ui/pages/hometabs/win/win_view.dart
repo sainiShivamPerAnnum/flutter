@@ -100,7 +100,7 @@ class Win extends StatelessWidget {
                 LottieBuilder.network(
                     "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
 
-                SizedBox(height: SizeConfig.navBarHeight),
+                // SizedBox(height: SizeConfig.navBarHeight),
               ],
             ),
           );

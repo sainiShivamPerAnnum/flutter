@@ -125,7 +125,7 @@ class FloPremiumTierCard extends StatelessWidget {
             SizedBox(height: SizeConfig.padding16),
             isUserInvestedInThisTier()
                 ? FloBalanceBriefRow(
-                    tier: tier!,
+                    tier: tier,
                     mini: true,
                   )
                 : SizedBox(

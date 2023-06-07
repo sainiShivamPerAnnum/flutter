@@ -1,7 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/constants.dart';
@@ -65,42 +68,44 @@ class _AmountInputViewState extends State<AmountInputView> {
     widget.model?.updateFieldWidth();
   }
 
+  List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
+
   String getString() {
-    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
-        (widget.model?.isLendboxOldUser ?? false)) {
-      return 'Min - ₹100';
-    } else if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
-        (widget.model?.isLendboxOldUser ?? true) == false) {
-      return 'Min - ₹100';
-    }
+    switch (widget.model!.floAssetType) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return lendboxDetails[0]['minAmountText'];
 
-    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "Min - ₹10,000";
-    }
-    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "Min - ₹1000";
-    }
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return lendboxDetails[1]['minAmountText'];
 
-    return "";
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        return locator<UserService>()
+                .userSegments
+                .contains(Constants.US_FLO_OLD)
+            ? lendboxDetails[2]['minAmountText']
+            : lendboxDetails[3]['minAmountText'];
+      default:
+        return "";
+    }
   }
 
   String getSubString() {
-    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
-        (widget.model?.isLendboxOldUser ?? false)) {
-      return '1 Month Maturity';
-    } else if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
-        (widget.model?.isLendboxOldUser ?? true) == false) {
-      return '1 Week Lock-in';
-    }
+    switch (widget.model!.floAssetType) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return lendboxDetails[0]['maturityPeriodText'];
 
-    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "6 Month Maturity";
-    }
-    if (widget.model?.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "3 Month Maturity";
-    }
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return lendboxDetails[1]['maturityPeriodText'];
 
-    return "";
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        return locator<UserService>()
+                .userSegments
+                .contains(Constants.US_FLO_OLD)
+            ? lendboxDetails[2]['maturityPeriodText']
+            : lendboxDetails[3]['maturityPeriodText'];
+      default:
+        return "";
+    }
   }
 
   @override

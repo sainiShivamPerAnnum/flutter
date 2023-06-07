@@ -646,7 +646,11 @@ class FloPremiumTransactionsList extends StatelessWidget {
 
             double currentValue = BaseUtil.digitPrecision(
                 model.transactionsList[i].amount +
-                    (model.transactionsList[i].lbMap.gainAmount ?? 0));
+                    (model.transactionsList[i].lbMap.gainAmount ?? 0),
+                2);
+
+            double principleValue =
+                BaseUtil.digitPrecision(model.transactionsList[i].amount, 2);
 
             double gain = BaseUtil.digitPrecision(
                 model.transactionsList[i].lbMap.gainAmount ?? 0, 2, false);
@@ -730,8 +734,8 @@ class FloPremiumTransactionsList extends StatelessWidget {
                               SizedBox(height: SizeConfig.padding16),
                               FloBalanceBriefRow(
                                 lead: currentValue,
-                                trail: currentValue - gain,
-                                percent: (gain / currentValue) * 100,
+                                trail: principleValue,
+                                percent: (gain / principleValue) * 100,
                                 leftAlign: true,
                                 tier: model.is12
                                     ? Constants.ASSET_TYPE_FLO_FIXED_6
