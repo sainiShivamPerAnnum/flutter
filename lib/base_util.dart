@@ -325,42 +325,24 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  openRechargeModalSheet({
+  void openRechargeModalSheet({
     int? amt,
     bool? isSkipMl,
     required InvestmentType investmentType,
   }) {
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    // if (_userService!.userJourneyStats?.mlIndex == 1)
-    //   return BaseUtil.openDialog(
-    //     addToScreenStack: true,
-    //     isBarrierDismissible: true,
-    //     hapticVibrate: false,
-    //     content: CompleteProfileDialog(),
-    //   );
     final bool? isAugDepositBanned = _userService
         .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
     final String? augDepositBanNotice = _userService
         .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.reason;
-    final bool? islBoxlDepositBanned = _userService
-        .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
-    final String? lBoxDepositBanNotice = _userService
-        .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
+
     if (investmentType == InvestmentType.AUGGOLD99 &&
         isAugDepositBanned != null &&
         isAugDepositBanned) {
-      return BaseUtil.showNegativeAlert(
+      BaseUtil.showNegativeAlert(
           augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+      return;
     }
 
-    if (investmentType == InvestmentType.LENDBOXP2P &&
-        islBoxlDepositBanned != null &&
-        islBoxlDepositBanned) {
-      return BaseUtil.showNegativeAlert(
-        lBoxDepositBanNotice ?? locale.assetNotAvailable,
-        locale.tryLater,
-      );
-    }
     double amount = 0;
 
     if (investmentType == InvestmentType.LENDBOXP2P) {
@@ -393,27 +375,59 @@ class BaseUtil extends ChangeNotifier {
     AppState.isRepeated = false;
     AppState.onTap = null;
     locator<BackButtonActions>().isTransactionCancelled = false;
-    // });
   }
 
   static void openFloBuySheet(
       {int? amt, bool? isSkipMl, required String floAssetType}) {
     final UserService _userService = locator<UserService>();
     final S locale = locator<S>();
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    final bool? islBoxDepositBanned = _userService
-        .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
-    final String? lBoxDepositBanNotice = _userService
-        .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
+    bool isUserBanned = false;
+    switch (floAssetType) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        final bool? islBoxDepositBanned = _userService.userBootUp?.data!.banMap
+            ?.investments?.deposit?.lendBoxFd2?.isBanned;
+        final String? lBoxDepositBanNotice = _userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd2?.reason;
+        if (islBoxDepositBanned != null && islBoxDepositBanned) {
+          BaseUtil.showNegativeAlert(
+            lBoxDepositBanNotice ?? locale.assetNotAvailable,
+            locale.tryLater,
+          );
+          isUserBanned = true;
+        }
+        break;
 
-    if (islBoxDepositBanned != null && islBoxDepositBanned) {
-      BaseUtil.showNegativeAlert(
-        lBoxDepositBanNotice ?? locale.assetNotAvailable,
-        locale.tryLater,
-      );
-      return;
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        final bool? islBoxDepositBanned = _userService.userBootUp?.data!.banMap
+            ?.investments?.deposit?.lendBoxFd1?.isBanned;
+        final String? lBoxDepositBanNotice = _userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd1?.reason;
+        if (islBoxDepositBanned != null && islBoxDepositBanned) {
+          BaseUtil.showNegativeAlert(
+            lBoxDepositBanNotice ?? locale.assetNotAvailable,
+            locale.tryLater,
+          );
+          isUserBanned = true;
+        }
+        break;
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        final bool? islBoxDepositBanned = _userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
+        final String? lBoxDepositBanNotice = _userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
+        if (islBoxDepositBanned != null && islBoxDepositBanned) {
+          BaseUtil.showNegativeAlert(
+            lBoxDepositBanNotice ?? locale.assetNotAvailable,
+            locale.tryLater,
+          );
+          isUserBanned = true;
+        }
+        break;
     }
+
     Haptic.vibrate();
+
+    if (isUserBanned) return;
     AppState.delegate!.appState.currentAction = PageAction(
       page: LendboxBuyViewConfig,
       state: PageState.addWidget,
@@ -428,26 +442,6 @@ class BaseUtil extends ChangeNotifier {
     AppState.isRepeated = false;
     AppState.onTap = null;
     locator<BackButtonActions>().isTransactionCancelled = false;
-
-    // BaseUtil.openModalBottomSheet(
-    //   addToScreenStack: true,
-    //   enableDrag: false,
-    //   hapticVibrate: true,
-    //   isBarrierDismissible: false,
-    //   backgroundColor: Colors.transparent,
-    //   isScrollControlled: true,
-    //   content: LendboxBuyView(
-    //     amount: amt,
-    //     skipMl: isSkipMl ?? false,
-    //     onChanged: (p0) => p0,
-    //     floAssetType: floAssetType,
-    //   ),
-    // ).then((value) {
-    //   AppState.isRepeated = false;
-    //   AppState.onTap = null;
-    //   locator<BackButtonActions>().isTransactionCancelled = false;
-    // });
-    // });
   }
 
   Future<void> newUserCheck() async {

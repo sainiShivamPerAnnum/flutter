@@ -10,6 +10,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/modalsheets/gold_sell_reason_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/util/assets.dart';
@@ -176,8 +177,18 @@ class FloBasicCard extends StatelessWidget {
                             .isBankDetailsAdded
                             .toString());
                         if (locator<BankAndPanService>().isBankDetailsAdded) {
-                          BaseUtil().openSellModalSheet(
-                              investmentType: InvestmentType.LENDBOXP2P);
+                          BaseUtil.openModalBottomSheet(
+                            backgroundColor:
+                                UiConstants.kModalSheetBackgroundColor,
+                            isBarrierDismissible: true,
+                            addToScreenStack: true,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(SizeConfig.roundness32),
+                              topRight: Radius.circular(SizeConfig.roundness32),
+                            ),
+                            content: const SellingReasonBottomSheet(
+                                investmentType: InvestmentType.LENDBOXP2P),
+                          );
                         } else {
                           BaseUtil.openDialog(
                             isBarrierDismissible: true,

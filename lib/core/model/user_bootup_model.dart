@@ -369,36 +369,42 @@ class InvestmentsBanMap {
 class InvestmentTypeBanMap {
   AssetBanMap? augmont;
   AssetBanMap? lendBox;
-  AssetBanMap? lendBoxFd;
+  AssetBanMap? lendBoxFd1;
+  AssetBanMap? lendBoxFd2;
   InvestmentTypeBanMap({
     @required this.augmont,
     @required this.lendBox,
-    @required this.lendBoxFd,
+    @required this.lendBoxFd1,
+    @required this.lendBoxFd2,
   });
 
   InvestmentTypeBanMap copyWith({
     AssetBanMap? augmont,
     AssetBanMap? lendBox,
-    AssetBanMap? lendBoxFd,
+    AssetBanMap? lendBoxFd1,
+    AssetBanMap? lendBoxFd2,
   }) {
     return InvestmentTypeBanMap(
       augmont: augmont ?? this.augmont,
       lendBox: lendBox ?? this.lendBox,
-      lendBoxFd: lendBoxFd ?? this.lendBoxFd,
+      lendBoxFd1: lendBoxFd1 ?? this.lendBoxFd1,
+      lendBoxFd2: lendBoxFd2 ?? this.lendBoxFd2,
     );
   }
 
   InvestmentTypeBanMap.base() {
     augmont = AssetBanMap.base();
     lendBox = AssetBanMap.base();
-    lendBoxFd = AssetBanMap.base();
+    lendBoxFd1 = AssetBanMap.base();
+    lendBoxFd2 = AssetBanMap.base();
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'augmont': augmont!.toMap(),
       'lendBox': lendBox!.toMap(),
-      'lendboxFd': lendBoxFd!.toMap(),
+      'lendboxFd1': lendBoxFd1!.toMap(),
+      'lendboxFd2': lendBoxFd2!.toMap(),
     };
   }
 
@@ -414,10 +420,15 @@ class InvestmentTypeBanMap {
               map[Constants.ASSET_TYPE_LENDBOX] as Map<String, dynamic>,
               Constants.ASSET_TYPE_LENDBOX)
           : AssetBanMap.base(),
-      lendBoxFd: map[Constants.ASSET_TYPE_LENDBOX_FD] != null
+      lendBoxFd1: map[Constants.ASSET_TYPE_LENDBOX_FD1] != null
           ? AssetBanMap.fromMap(
-              map[Constants.ASSET_TYPE_LENDBOX_FD] as Map<String, dynamic>,
-              Constants.ASSET_TYPE_LENDBOX_FD)
+              map[Constants.ASSET_TYPE_LENDBOX_FD1] as Map<String, dynamic>,
+              Constants.ASSET_TYPE_LENDBOX_FD1)
+          : AssetBanMap.base(),
+      lendBoxFd2: map[Constants.ASSET_TYPE_LENDBOX_FD2] != null
+          ? AssetBanMap.fromMap(
+              map[Constants.ASSET_TYPE_LENDBOX_FD2] as Map<String, dynamic>,
+              Constants.ASSET_TYPE_LENDBOX_FD2)
           : AssetBanMap.base(),
     );
   }
