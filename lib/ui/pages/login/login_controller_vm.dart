@@ -179,7 +179,9 @@ class LoginControllerViewModel extends BaseViewModel {
           _analyticsService.track(eventName: "OTP screen next tapped");
 
           String? otp = _otpScreenKey.currentState?.model?.otp;
-          if (otp != null && otp.isNotEmpty && otp.length == 6) {
+          logger.d("qwertyuiop OTP is $otp");
+          if (otp == null) return;
+          if (otp.isNotEmpty && otp.length == 6) {
             logger.d("OTP is $otp");
             setState(ViewState.Busy);
             final verifyOtp = await _userRepo!.verifyOtp(_verificationId, otp);
@@ -203,6 +205,7 @@ class LoginControllerViewModel extends BaseViewModel {
               _otpScreenKey.currentState!.model!.pinEditingController.clear();
               _otpScreenKey.currentState!.model!.otpFieldEnabled = true;
               _otpScreenKey.currentState!.model!.otpFocusNode.requestFocus();
+              logger.e("Invalid OTP");
               BaseUtil.showNegativeAlert(
                   verifyOtp.errorMessage ?? locale.obInValidOTP,
                   locale.obEnterValidOTP);
